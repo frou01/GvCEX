@@ -9,6 +9,7 @@ import handmadeguns.network.PacketSpawnParticle;
 import handmadeguns.tile.TileMounter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -42,6 +43,9 @@ public class CommonSideProxyHMG {
 	public void playsoundat(String sound, float soundLV, float soundSP, float tempsp, double posX, double posY, double posZ){
 	}
 	public void playsoundatEntity(String sound, float soundLV, float soundSP,Entity attached,boolean repeat){
+	
+	}
+	public void playsoundatEntity_reload(String sound, float soundLV, float soundSP, Entity attached, boolean repeat){
 	
 	}
 	public void playsoundatBullet(String sound, float soundLV, float soundSP,float mindsit,float maxdist,Entity attached,boolean repeat){

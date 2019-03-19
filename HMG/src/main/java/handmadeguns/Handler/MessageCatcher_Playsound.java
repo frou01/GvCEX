@@ -13,11 +13,6 @@ import static handmadeguns.HandmadeGunsCore.proxy;
 public class MessageCatcher_Playsound implements IMessageHandler<PacketPlaysound, IMessage> {
     @Override//IMessageHandlerのメソッド
     public IMessage onMessage(PacketPlaysound message, MessageContext ctx) {
-        //クライアントへ送った際に、EntityPlayerインスタンスはこのように取れる。
-        //EntityPlayer player = SamplePacketMod.proxy.getEntityPlayerInstance();
-        //サーバーへ送った際に、EntityPlayerインスタンス（EntityPlayerMPインスタンス）はこのように取れる。
-        //EntityPlayer entityPlayer = ctx.getServerHandler().playerEntity;
-        //Do something.
         World world;
 //        System.out.println("debug");
         if(ctx.side.isServer()) {
@@ -31,8 +26,12 @@ public class MessageCatcher_Playsound implements IMessageHandler<PacketPlaysound
                 if(shooter != null) {
                     if(!world.isRemote)
                         shooter.worldObj.playSoundEffect(shooter.posX,shooter.posY,shooter.posZ, message.sound, message.level, message.speed);
-                    else
-                        proxy.playsoundat(message.sound, message.level, message.speed, 1, (float)shooter.posX,(float)shooter.posY,(float)shooter.posZ);
+                    else {
+                        if(message.isreload)
+                            proxy.playsoundatEntity_reload(message.sound, message.level, message.speed, shooter, false);
+                        else
+                            proxy.playsoundat(message.sound, message.level, message.speed,1, shooter.posX,shooter.posY,shooter.posZ);
+                    }
                 }
             }
 //        bullet = message.bullet.setdata(bullet);

@@ -7,6 +7,7 @@ import java.lang.reflect.Field;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 import handmadeguns.client.audio.BulletSoundHMG;
 import handmadeguns.client.audio.MovingSoundHMG;
+import handmadeguns.client.audio.ReloadSoundHMG;
 import handmadeguns.emb_modelloader.MQO_ModelLoader;
 import handmadeguns.entity.*;
 import handmadeguns.entity.bullets.*;
@@ -16,6 +17,7 @@ import handmadeguns.client.render.*;
 import handmadeguns.tile.TileMounter;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.AdvancedModelLoader;
@@ -77,6 +79,11 @@ public class ClientProxyHMG extends CommonSideProxyHMG {
 	public void playsoundatEntity(String sound, float soundLV, float soundSP,Entity attached,boolean repeat){
 		Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundHMG(attached,sound,repeat,soundLV,soundSP));
 	}
+	@Override
+	public void playsoundatEntity_reload(String sound, float soundLV, float soundSP, Entity attached, boolean repeat){
+		Minecraft.getMinecraft().getSoundHandler().playSound(new ReloadSoundHMG(attached,sound,repeat,soundLV,soundSP));
+	}
+	@Override
 	public void playsoundatBullet(String sound, float soundLV, float soundSP,float mindspeed,float maxdist,Entity attached,boolean repeat){
 		Minecraft.getMinecraft().getSoundHandler().playSound(new BulletSoundHMG(attached,sound,repeat,soundLV,soundSP,mindspeed,maxdist));
 	}

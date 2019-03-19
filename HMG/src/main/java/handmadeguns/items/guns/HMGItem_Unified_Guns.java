@@ -539,17 +539,6 @@ public class HMGItem_Unified_Guns extends Item {
                     }
                     nbt.setBoolean("IsReloading", true);
                     proceedreload(itemstack, world, entity, nbt, i);
-                }else if(magazine instanceof HMGItemBullet_with_Internal_Bullet && items != null && items[5] == null){
-                    try {
-                        if(invocable!= null)
-                            invocable.invokeFunction("startreload",this,itemstack,nbt,entity);
-                    } catch (ScriptException e) {
-                        e.printStackTrace();
-                    } catch (NoSuchMethodException e) {
-                        e.printStackTrace();
-                    }
-                    nbt.setBoolean("IsReloading", true);
-                    proceedreload(itemstack, world, entity, nbt, i);
                 }
                 if (!rates.isEmpty() && rates.size()>mode)
                     this.cycle = rates.get(mode);
@@ -713,6 +702,10 @@ public class HMGItem_Unified_Guns extends Item {
                 }
                 //�}�K�W���̃X�^�b�N��nbt�ɕۑ�����d�l�ɕύX�\��
             }
+        }else if(itemstack != null){
+            checkTags(itemstack);
+            NBTTagCompound tagCompound = itemstack.getTagCompound();
+            tagCompound.setInteger("RloadTime",0);//持っていなければリロード初期化
         }
     }
     public void lockon(ItemStack itemstack, World world, Entity entity, NBTTagCompound nbt){
@@ -1134,8 +1127,8 @@ public class HMGItem_Unified_Guns extends Item {
                         || magazine == null)
 
                 ) {
-            if (reloadti == 2) {
-                world.playSoundAtEntity(entity, soundre, soundrelevel, soundrespeed);
+            if (!world.isRemote && reloadti == 2) {
+                HMGPacketHandler.INSTANCE.sendToAll(new PacketPlaysound(entity,soundre,soundrelevel,soundrespeed,true));
             }
             ++reloadti;
         }

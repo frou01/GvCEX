@@ -60,10 +60,10 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
     public float resistance = 0.9999f;
     public float acceleration = 0f;
     public String flyingSound = "handmadeguns:handmadeguns.bulletflyby";
-    public float flyingSoundLV = 2;
-    public float flyingSoundSP = 1;
-    public float flyingSoundminspeed = 3;
-    public float flyingSoundmaxdist = 3;
+    public float flyingSoundLV = 2f;
+    public float flyingSoundSP = 1f;
+    public float flyingSoundminspeed = 3f;
+    public float flyingSoundmaxdist = 3f;
     //public int fuse;
 
     /**

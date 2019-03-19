@@ -11,6 +11,8 @@ public class PacketPlaysound implements IMessage {
     public String sound;
     public float speed;
     public float level;
+    
+    public boolean isreload = false;
 
     public PacketPlaysound(){ }
     public PacketPlaysound(Entity shootentity, String so,float sp,float lv){
@@ -18,6 +20,10 @@ public class PacketPlaysound implements IMessage {
         sound = so;
         speed =sp;
         level = lv;
+    }
+    public PacketPlaysound(Entity shootentity, String so,float sp,float lv,boolean isreload){
+        this(shootentity,so,sp,lv);
+        this.isreload = isreload;
     }
 
 
@@ -34,6 +40,7 @@ public class PacketPlaysound implements IMessage {
         }
         buffer.writeFloat(speed);
         buffer.writeFloat(level);
+        buffer.writeBoolean(isreload);
 //        System.out.println("debug");
     }
     @Override
@@ -51,6 +58,7 @@ public class PacketPlaysound implements IMessage {
         }
         speed = buffer.readFloat();
         level = buffer.readFloat();
+        isreload = buffer.readBoolean();
     }
 
     public static byte[] fromObject(Object o) throws IOException {
