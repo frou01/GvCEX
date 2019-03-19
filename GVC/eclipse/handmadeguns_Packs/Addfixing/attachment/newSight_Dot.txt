@@ -1,0 +1,11 @@
+
+Texture,reddot
+Name,ドットサイト
+Model,true
+ObjModel,am_dotsight.mqo
+ObjTexture,am_dotsight.png
+Zoom,1.2F
+ZoomRender,false
+CenterPoint,0F,0.325F,0F
+
+Model_Sight,reddot_new

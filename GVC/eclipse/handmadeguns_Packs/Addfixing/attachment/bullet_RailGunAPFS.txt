@@ -1,0 +1,10 @@
+Texture,bullet_14_5_APFSDS
+Stack,64
+Name,14.5mm APFSDS
+Magazine,14.5mm APFSDS
+Recipe1,ca 
+Recipe2,ca 
+Recipe3, a 
+ItemA,minecraft,iron_block
+ItemC,minecraft,emerald
+addNewRecipe,HandmadeGuns,14.5mm APFSDS,1

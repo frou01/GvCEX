@@ -1,0 +1,10 @@
+﻿
+Texture,laser
+Name,レーザーサイト
+Model,true
+ObjModel,am_lasersight.mqo
+ObjTexture,am_lasersight.png
+CenterPoint,0F,0.0F,0F
+ColorLevel,0.8F
+
+Model_Laser,LaserSight_new

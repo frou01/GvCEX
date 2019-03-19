@@ -1,0 +1,176 @@
+{
+  "gvcmob.grenade": {
+    "category": "ambient",
+    "sounds": [
+      "grenade_voice"
+    ]
+  },
+  "gvcmob.heli": {
+    "category": "ambient",
+    "sounds": [
+      "heli"
+    ]
+  },
+  "gvcmob.tank": {
+    "category": "ambient",
+    "sounds": [
+      "tank"
+    ]
+  },
+  "gvcmob.Caterpillar": {
+    "category": "ambient",
+    "sounds": [
+      "Caterpillar"
+    ]
+  },
+  "gvcmob.rpg": {
+    "category": "ambient",
+    "sounds": [
+      "rpg_voice"
+    ]
+  },
+  "gvcmob.cannon1": {
+    "category": "ambient",
+    "sounds": [
+      "cannon1"
+    ]
+  },
+  "gvcmob.cannon2": {
+    "category": "ambient",
+    "sounds": [
+      "cannon2"
+    ]
+  },
+  "gvcmob.T80Fire": {
+    "category": "hostile",
+    "sounds": [
+      "T80Fire"
+    ]
+  },
+  "gvcmob.missile1": {
+    "category": "ambient",
+    "sounds": [
+      "missile1"
+    ]
+  },
+  "gvcmob.propellerSound": {
+    "category": "ambient",
+    "sounds": [
+      "propellerSound"
+    ]
+  },
+  "gvcmob.bombdrops": {
+    "category": "neutral",
+    "sounds": [
+      "bombdrops"
+    ]
+  },
+  "gvcmob.Gear_Moving": {
+    "category": "neutral",
+    "sounds": [
+      "Gear_Moving"
+    ]
+  },
+  "gvcmob.TankTrack": {
+    "category": "neutral",
+    "sounds": [
+      "TankTrack"
+    ]
+  },
+  "gvcmob.TankFire": {
+    "category": "neutral",
+    "sounds": [
+      "TankFire"
+    ]
+  },
+  "gvcmob.Tu-95prop": {
+    "category": "neutral",
+    "sounds": [
+      "Tu-95prop"
+    ]
+  },
+  "gvcmob.120mmFire": {
+    "category": "neutral",
+    "sounds": [
+      "120mmFire"
+    ]
+  },
+  "gvcmob.125mmFire": {
+    "category": "neutral",
+    "sounds": [
+      "125mmFire"
+    ]
+  },
+  "gvcmob.APCTrack": {
+    "category": "neutral",
+    "sounds": [
+      "APCTrack"
+    ]
+  },
+  "gvcmob.BMPTrack": {
+    "category": "neutral",
+    "sounds": [
+      "BMPTrack"
+    ]
+  },
+  "gvcmob.MBTTrack": {
+    "category": "neutral",
+    "sounds": [
+      "MBTTrack"
+    ]
+  },
+  "gvcmob.Leopard1Track": {
+    "category": "neutral",
+    "sounds": [
+      "Leopard1Track"
+    ]
+  },
+  "gvcmob.T34Track": {
+    "category": "neutral",
+    "sounds": [
+      "T34Track"
+    ]
+  },
+  "gvcmob.T-90Track": {
+    "category": "neutral",
+    "sounds": [
+      "T-90Track"
+    ]
+  },
+  "gvcmob.JeepWheel": {
+    "category": "neutral",
+    "sounds": [
+      "JeepWheel"
+    ]
+  },
+  "gvcmob.armorhit": {
+    "category": "neutral",
+    "sounds": [
+      "armorhit"
+    ]
+  },
+  "gvcmob.plane": {
+    "category": "neutral",
+    "sounds": [
+      "plane"
+    ]
+  },
+  "gvcmob.traverseSound": {
+    "category": "neutral",
+    "sounds": [
+      "traverseSound"
+    ]
+  },
+  "gvcmob.73mmLowPresureGunFire": {
+    "category": "neutral",
+    "sounds": [
+      "73mmLowPresureGunFire"
+    ]
+  },
+  "gvcmob.ArmorBounce": {
+    "category": "neutral",
+    "sounds": [
+      "ArmorBounce"
+    ]
+  }
+}

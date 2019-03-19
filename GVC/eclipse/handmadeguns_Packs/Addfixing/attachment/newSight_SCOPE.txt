@@ -1,0 +1,12 @@
+
+Texture,scope
+Name,スコープ
+Model,true
+ObjModel,am_scope.mqo
+ObjTexture,am_scope.png
+Zoom,4.0F
+ScopeTexture,scope.png
+ZoomRender,true
+CenterPoint,0F,0.325F,0F
+
+Model_Sight,scope_new

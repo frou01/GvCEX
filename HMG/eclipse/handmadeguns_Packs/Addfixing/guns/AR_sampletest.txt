@@ -1,0 +1,210 @@
+guerrila_cant_use_this
+BulletPower,8
+BulletSpeed,8.0f
+BlletSpread,6.0f
+Recoil,1.5d
+ReloadTime,50
+RemainingBullet,30
+Attacking,2.0f
+Zoom,1.0f,2.0f,4.0f
+ZoomRender,true
+ZoomRenderType,true,true,true
+ZoomRenderTypeTxture,false,false,false
+Cycle,2
+Texture,AR_sample
+GunSound,handmadeguns.fire,handmadeguns.supu
+GunSoundReload,handmadeguns.reload
+CanObj,true
+ObjModel,ar.mqo
+ObjTexture,ar.png
+ModelScala,0.5f
+CustomFlash,arrow,1
+Bursts,1,3,-1
+Rates,2,2,2
+
+ModelEquipped,-0.7f,0.7f,0.0f
+ModelHigh,0.97f,0.85f,0.85f
+ModelWidthX,0.694f,0.694f,0.694f
+ModelWidthZ,0.0f,0.0f,0.0f
+ModelRotationX,180f,180f,180f
+ModelRotationY,45f,45f,45
+ModelRotationZ,180f,180f,180f
+
+ModelArm,true
+ModelArmRotationR,-1.57f,0f,-1.57f
+ModelArmOffsetR,0.4f,0.3f,0.5f
+ModelArmRotationL,-0.0f,-2.3f,2.0f
+ModelArmOffsetL,0.1f,0.3f,-1.2f
+
+SprintingPoint,0.5f,0.0f,0.5f
+SprintingRotation,20f,60f,0f
+
+SoundSpeed,1.5f
+
+//0307
+UnderGL_Sound,handmadeguns.grenade
+UnderGL_Power,20
+UnderGL_Speed,2.0f
+UnderGL_Spread,5.0f
+UnderGL_Recoil,5.0d
+UnderGL_Gravity,0.01f
+UnderSG_Sound,handmadeguns.fire
+UnderSG_Power,4
+UnderSG_Speed,3.0f
+UnderSG_Spread,30.0f
+UnderSG_Recoil,5.0d
+UnderSG_Gravity,0.029f
+//0307
+BulletGravity,0.49f
+
+ScopeTexture,ironsight.png,reddot.png,scope.png
+RenderCross,false
+UnderBarrelWeapon,0
+RightType,0
+Magazine,0,HandmadeGuns,bullet_hmg
+MagazineSG,0,HandmadeGuns,bullet_shell_hmg
+MagazineGL,0,HandmadeGuns,bullet_rr_hmg
+
+//パーツ追加開始
+AddParts,mat1
+//パーツを回転させる中心と、デフォルトで回転させる場合の設定
+AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+//通常時に描画するか
+RenderOnNormal
+//ADS中にどのくらい移動するかと、どのくらい回転するか
+AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+//リコイル中にどのくらい移動するかと、どのくらい回転するか Stg44の排莢口蓋くらいしか用途が思いつかない。でもこれを書かないとそもそも描画されない
+AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+//コッキング中に(RY
+AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+//リローｄ(RY
+AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+AddChildParts,mat3
+    //パーツを回転させる中心と、デフォルトで回転させる場合の設定
+    AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+    //通常時に描画するか
+    RenderOnNormal
+    //ADS中にどのくらい移動するかと、どのくらい回転するか
+    AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+    //リコイル中にどのくらい移動するかと、どのくらい回転するか Stg44の排莢口蓋くらいしか用途が思いつかない。でもこれを書かないとそもそも描画されない
+    AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+    //コッキング中に(RY
+    AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+BackParts
+AddChildParts,mat20
+    AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+    RenderOnNormal
+    AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+    attachpart
+    sight
+BackParts
+AddChildParts,none
+    AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+    RenderOnNormal
+    AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+    attachpart
+    sightbase
+BackParts
+AddChildParts,mat21
+    AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+    RenderOnNormal
+    AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+    attachpart
+    gripcover
+BackParts
+AddChildParts,mat11
+    AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+    RenderOnNormal
+    AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+    attachpart
+    underSG
+BackParts
+AddChildParts,mat10
+    AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+    RenderOnNormal
+    AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+    attachpart
+    underGL
+BackParts
+AddChildParts,mat10
+    AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+    RenderOnNormal
+    AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+    attachpart
+    swordbase
+BackParts
+AddChildParts,mat10
+    AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+    RenderOnNormal
+    AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+    attachpart
+    gripBase
+BackParts
+AddChildParts,none
+    AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+    RenderOnNormal
+    AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+    attachpart
+    muzzulebase
+BackParts
+AddChildParts,none
+    AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+    RenderOnNormal
+    AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+    attachpart
+    overbarrelbase
+BackParts
+03/17
+SightSetPoint,0F,1.5F,1.5F
+LightSetPoint,0.295F,1.3F,3.2F
+LightSetAngle,0F,0F,-90F
+MuzzleSetPoint,0F,1.2F,5.8F
+GripSetPoint,0F,0.85F,3.5F
+GripSetAngle,0F,0F,0F
+
+
+Name,アサルトライフル_サンプル
+AR,AR_sample
+
+//addRecipe,AR_sample,1,abc,0ef,000,265,265,265,280,265,280,280,280,280
+
+//Recipe1,abc
+//Recipe2, ef
+//Recipe3,   
+//ItemA,minecraft,iron_ingot
+//ItemB,minecraft,iron_ingot
+//ItemC,minecraft,iron_ingot
+//ItemD,null
+//ItemE,HandmadeGuns,bullet_hmg
+//ItemF,minecraft,iron_ingot
+//ItemG,null
+//ItemH,null
+//ItemI,null
+//addNewRecipe,HandmadeGuns,AR_sample,1

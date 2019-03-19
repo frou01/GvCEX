@@ -1,0 +1,744 @@
+[23:32:37] [main/DEBUG] [FML/]: Injecting tracing printstreams for STDOUT/STDERR.
+[23:32:37] [main/INFO] [FML/]: Forge Mod Loader version 7.99.40.1614 for Minecraft 1.7.10 loading
+[23:32:37] [main/INFO] [FML/]: Java is Java HotSpot(TM) 64-Bit Server VM, version 1.8.0_91, running on Windows 8.1:amd64:6.3, installed at C:\Program Files\Java\jdk1.8.0_91\jre
+[23:32:37] [main/DEBUG] [FML/]: Java classpath at launch is C:\Users\frou01\.gradle\caches\minecraft\net\minecraftforge\forge\1.7.10-10.13.4.1614-1.7.10\start;C:\ModdingSpace2\GVCC\HMG\build\libs\HMG-EX10.5.jar;C:\Users\frou01\.gradle\caches\minecraft\net\minecraftforge\forge\1.7.10-10.13.4.1614-1.7.10\forgeSrc-1.7.10-10.13.4.1614-1.7.10.jar;C:\Users\frou01\.gradle\caches\modules-2\files-2.1\net.minecraft\launchwrapper\1.12\111e7bea9c968cdb3d06ef4632bf7ff0824d0f36\launchwrapper-1.12.jar;C:\Users\frou01\.gradle\caches\modules-2\files-2.1\com.google.code.findbugs\jsr305\1.3.9\40719ea6961c0cb6afaeb6a921eaa1f6afd4cfdf\jsr305-1.3.9.jar;C:\Users\frou01\.gradle\caches\modules-2\files-2.1\org.ow2.asm\asm-debug-all\5.0.3\f9e364ae2a66ce2a543012a4668856e84e5dab74\asm-debug-all-5.0.3.jar;C:\Users\frou01\.gradle\caches\modules-2\files-2.1\com.typesafe.akka\akka-actor_2.11\2.3.3\ed62e9fc709ca0f2ff1a3220daa8b70a2870078e\akka-actor_2.11-2.3.3.jar;C:\Users\frou01\.gradle\caches\modules-2\files-2.1\com.typesafe\config\1.2.1\f771f71fdae3df231bcd54d5ca2d57f0bf93f467\config-1.2.1.jar;C:\Users\frou01\.gradle\caches\modules-2\files-2.1\org.scala-lang\scala-actors-migration_2.11\1.1.0\dfa8bc42b181d5b9f1a5dd147f8ae308b893eb6f\scala-actors-migration_2.11-1.1.0.jar;C:\Users\frou01\.gradle\caches\modules-2\files-2.1\org.scala-lang\scala-compiler\2.11.1\56ea2e6c025e0821f28d73ca271218b8dd04926a\scala-compiler-2.11.1.jar;C:\Users\frou01\.gradle\caches\modules-2\files-2.1\org.scala-lang.plugins\scala-continuations-library_2.11\1.0.2\e517c53a7e9acd6b1668c5a35eccbaa3bab9aac\scala-continuations-library_2.11-1.0.2.jar;C:\Users\frou01\.gradle\caches\modules-2\files-2.1\org.scala-lang.plugins\scala-continuations-plugin_2.11.1\1.0.2\f361a3283452c57fa30c1ee69448995de23c60f7\scala-continuations-plugin_2.11.1-1.0.2.jar;C:\Users\frou01\.gradle\caches\modules-2\files-2.1\org.scala-lang\scala-library\2.11.1\e11da23da3eabab9f4777b9220e60d44c1aab6a\scala-library-2.11.1.jar;C:\Users\frou01\.gradle\caches\modules-2\files-2.1\org.scala-lang\scala-parser-combinators_2.11\1.0.1\f05d7345bf5a58924f2837c6c1f4d73a938e1ff0\scala-parser-combinators_2.11-1.0.1.jar;C:\Users\frou01\.gradle\caches\modules-2\files-2.1\org.scala-lang\scala-reflect\2.11.1\6580347e61cc7f8e802941e7fde40fa83b8badeb\scala-reflect-2.11.1.jar;C:\Users\frou01\.gradle\caches\modules-2\files-2.1\org.scala-lang\scala-swing_2.11\1.0.1\b1cdd92bd47b1e1837139c1c53020e86bb9112ae\scala-swing_2.11-1.0.1.jar;C:\Users\frou01\.gradle\caches\modules-2\files-2.1\org.scala-lang\scala-xml_2.11\1.0.2\7a80ec00aec122fba7cd4e0d4cdd87ff7e4cb6d0\scala-xml_2.11-1.0.2.jar;C:\Users\frou01\.gradle\caches\modules-2\files-2.1\net.sf.jopt-simple\jopt-simple\4.5\6065cc95c661255349c1d0756657be17c29a4fd3\jopt-simple-4.5.jar;C:\Users\frou01\.gradle\caches\modules-2\files-2.1\lzma\lzma\0.0.1\521616dc7487b42bef0e803bd2fa3faf668101d7\lzma-0.0.1.jar;C:\Users\frou01\.gradle\caches\modules-2\files-2.1\com.mojang\realms\1.3.5\807ae355ee63583becd7ea60e76aab1532bb42e\realms-1.3.5.jar;C:\Users\frou01\.gradle\caches\modules-2\files-2.1\org.apache.commons\commons-compress\1.8.1\a698750c16740fd5b3871425f4cb3bbaa87f529d\commons-compress-1.8.1.jar;C:\Users\frou01\.gradle\caches\modules-2\files-2.1\org.apache.httpcomponents\httpclient\4.3.3\18f4247ff4572a074444572cee34647c43e7c9c7\httpclient-4.3.3.jar;C:\Users\frou01\.gradle\caches\modules-2\files-2.1\commons-logging\commons-logging\1.1.3\f6f66e966c70a83ffbdb6f17a0919eaf7c8aca7f\commons-logging-1.1.3.jar;C:\Users\frou01\.gradle\caches\modules-2\files-2.1\org.apache.httpcomponents\httpcore\4.3.2\31fbbff1ddbf98f3aa7377c94d33b0447c646b6e\httpcore-4.3.2.jar;C:\Users\frou01\.gradle\caches\modules-2\files-2.1\java3d\vecmath\1.3.1\a0ae4f51da409fa0c20fa0ca59e6bbc9413ae71d\vecmath-1.3.1.jar;C:\Users\frou01\.gradle\caches\modules-2\files-2.1\net.sf.trove4j\trove4j\3.0.3\42ccaf4761f0dfdfa805c9e340d99a755907e2dd\trove4j-3.0.3.jar;C:\Users\frou01\.gradle\caches\modules-2\files-2.1\com.ibm.icu\icu4j-core-mojang\51.2\63d216a9311cca6be337c1e458e587f99d382b84\icu4j-core-mojang-51.2.jar;C:\Users\frou01\.gradle\caches\modules-2\files-2.1\com.paulscode\codecjorbis\20101023\c73b5636faf089d9f00e8732a829577de25237ee\codecjorbis-20101023.jar;C:\Users\frou01\.gradle\caches\modules-2\files-2.1\com.paulscode\codecwav\20101023\12f031cfe88fef5c1dd36c563c0a3a69bd7261da\codecwav-20101023.jar;C:\Users\frou01\.gradle\caches\modules-2\files-2.1\com.paulscode\libraryjavasound\20101123\5c5e304366f75f9eaa2e8cca546a1fb6109348b3\libraryjavasound-20101123.jar;C:\Users\frou01\.gradle\caches\modules-2\files-2.1\com.paulscode\librarylwjglopenal\20100824\73e80d0794c39665aec3f62eee88ca91676674ef\librarylwjglopenal-20100824.jar;C:\Users\frou01\.gradle\caches\modules-2\files-2.1\com.paulscode\soundsystem\20120107\419c05fe9be71f792b2d76cfc9b67f1ed0fec7f6\soundsystem-20120107.jar;C:\Users\frou01\.gradle\caches\modules-2\files-2.1\io.netty\netty-all\4.0.10.Final\9e50bd52ffe257a0e2cd8d971688d6ce7d174325\netty-all-4.0.10.Final.jar;C:\Users\frou01\.gradle\caches\modules-2\files-2.1\com.google.guava\guava\17.0\9c6ef172e8de35fd8d4d8783e4821e57cdef7445\guava-17.0.jar;C:\Users\frou01\.gradle\caches\modules-2\files-2.1\org.apache.commons\commons-lang3\3.3.2\90a3822c38ec8c996e84c16a3477ef632cbc87a3\commons-lang3-3.3.2.jar;C:\Users\frou01\.gradle\caches\modules-2\files-2.1\commons-io\commons-io\2.4\b1b6ea3b7e4aa4f492509a4952029cd8e48019ad\commons-io-2.4.jar;C:\Users\frou01\.gradle\caches\modules-2\files-2.1\commons-codec\commons-codec\1.9\9ce04e34240f674bc72680f8b843b1457383161a\commons-codec-1.9.jar;C:\Users\frou01\.gradle\caches\modules-2\files-2.1\net.java.jinput\jinput\2.0.5\39c7796b469a600f72380316f6b1f11db6c2c7c4\jinput-2.0.5.jar;C:\Users\frou01\.gradle\caches\modules-2\files-2.1\net.java.jutils\jutils\1.0.0\e12fe1fda814bd348c1579329c86943d2cd3c6a6\jutils-1.0.0.jar;C:\Users\frou01\.gradle\caches\modules-2\files-2.1\com.google.code.gson\gson\2.2.4\a60a5e993c98c864010053cb901b7eab25306568\gson-2.2.4.jar;C:\Users\frou01\.gradle\caches\modules-2\files-2.1\com.mojang\authlib\1.5.16\ef1582b11fd0943d069cdcb72e99008ac209a283\authlib-1.5.16.jar;C:\Users\frou01\.gradle\caches\modules-2\files-2.1\org.apache.logging.log4j\log4j-api\2.0-beta9\1dd66e68cccd907880229f9e2de1314bd13ff785\log4j-api-2.0-beta9.jar;C:\Users\frou01\.gradle\caches\modules-2\files-2.1\org.apache.logging.log4j\log4j-core\2.0-beta9\678861ba1b2e1fccb594bb0ca03114bb05da9695\log4j-core-2.0-beta9.jar;C:\Users\frou01\.gradle\caches\modules-2\files-2.1\org.lwjgl.lwjgl\lwjgl\2.9.1\f58c5aabcef0e41718a564be9f8e412fff8db847\lwjgl-2.9.1.jar;C:\Users\frou01\.gradle\caches\modules-2\files-2.1\org.lwjgl.lwjgl\lwjgl_util\2.9.1\290d7ba8a1bd9566f5ddf16ad06f09af5ec9b20e\lwjgl_util-2.9.1.jar;C:\Users\frou01\.gradle\caches\modules-2\files-2.1\tv.twitch\twitch\5.16\1f55f009c61637c10c0acfb8b5ffc600f30044b4\twitch-5.16.jar;C:\ModdingSpace2\GVCC\Depend\build\libs\Depend-1.0.jar;C:\Users\frou01\.gradle\caches\modules-2\files-2.1\org.scala-lang\scala-actors\2.11.0\8ccfb6541de179bb1c4d45cf414acee069b7f78b\scala-actors-2.11.0.jar;C:\Users\frou01\.gradle\caches\modules-2\files-2.1\org.scala-lang.modules\scala-xml_2.11\1.0.2\820fbca7e524b530fdadc594c39d49a21ea0337e\scala-xml_2.11-1.0.2.jar;C:\Users\frou01\.gradle\caches\modules-2\files-2.1\org.scala-lang.modules\scala-parser-combinators_2.11\1.0.1\f05d7345bf5a58924f2837c6c1f4d73a938e1ff0\scala-parser-combinators_2.11-1.0.1.jar;C:\Users\frou01\.gradle\caches\modules-2\files-2.1\net.java.jinput\jinput-platform\2.0.5\7ff832a6eb9ab6a767f1ade2b548092d0fa64795\jinput-platform-2.0.5-natives-linux.jar;C:\Users\frou01\.gradle\caches\modules-2\files-2.1\net.java.jinput\jinput-platform\2.0.5\385ee093e01f587f30ee1c8a2ee7d408fd732e16\jinput-platform-2.0.5-natives-windows.jar;C:\Users\frou01\.gradle\caches\modules-2\files-2.1\net.java.jinput\jinput-platform\2.0.5\53f9c919f34d2ca9de8c51fc4e1e8282029a9232\jinput-platform-2.0.5-natives-osx.jar;C:\Users\frou01\.gradle\caches\modules-2\files-2.1\tv.twitch\twitch-platform\5.16\7c6affe439099806a4f552da14c42f9d643d8b23\twitch-platform-5.16-natives-windows-32.jar;C:\Users\frou01\.gradle\caches\modules-2\files-2.1\tv.twitch\twitch-platform\5.16\39d0c3d363735b4785598e0e7fbf8297c706a9f9\twitch-platform-5.16-natives-windows-64.jar;C:\Users\frou01\.gradle\caches\modules-2\files-2.1\tv.twitch\twitch-platform\5.16\62503ee712766cf77f97252e5902786fd834b8c5\twitch-platform-5.16-natives-osx.jar;C:\Users\frou01\.gradle\caches\modules-2\files-2.1\tv.twitch\twitch-external-platform\4.5\18215140f010c05b9f86ef6f0f8871954d2ccebf\twitch-external-platform-4.5-natives-windows-32.jar;C:\Users\frou01\.gradle\caches\modules-2\files-2.1\tv.twitch\twitch-external-platform\4.5\c3cde57891b935d41b6680a9c5e1502eeab76d86\twitch-external-platform-4.5-natives-windows-64.jar;C:\Users\frou01\.gradle\caches\modules-2\files-2.1\org.lwjgl.lwjgl\lwjgl-platform\2.9.1\4c517eca808522457dd95ee8fc1fbcdbb602efbe\lwjgl-platform-2.9.1-natives-windows.jar;C:\Users\frou01\.gradle\caches\modules-2\files-2.1\org.lwjgl.lwjgl\lwjgl-platform\2.9.1\aa9aae879af8eb378e22cfc64db56ec2ca9a44d1\lwjgl-platform-2.9.1-natives-linux.jar;C:\Users\frou01\.gradle\caches\modules-2\files-2.1\org.lwjgl.lwjgl\lwjgl-platform\2.9.1\2d12c83fdfbc04ecabf02c7bc8cc54d034f0daac\lwjgl-platform-2.9.1-natives-osx.jar;C:\ModdingSpace2\GVCC\GVC\build\libs\GVC-HD10.5.jar
+[23:32:37] [main/DEBUG] [FML/]: Java library path at launch is C:\Program Files\Java\jdk1.8.0_91\bin;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files\Java\jdk1.7.0_80\bin;C:\Program Files (x86)\Skype\Phone\;C:\Program Files (x86)\GtkSharp\2.12\bin;C:\ProgramData\Oracle\Java\javapath;C:\Program Files\Git\cmd;.
+[23:32:37] [main/INFO] [FML/]: Managed to load a deobfuscated Minecraft name- we are in a deobfuscated environment. Skipping runtime deobfuscation
+[23:32:37] [main/DEBUG] [FML/]: Instantiating coremod class FMLCorePlugin
+[23:32:37] [main/DEBUG] [FML/]: Added access transformer class cpw.mods.fml.common.asm.transformers.AccessTransformer to enqueued access transformers
+[23:32:37] [main/DEBUG] [FML/]: Enqueued coremod FMLCorePlugin
+[23:32:37] [main/DEBUG] [FML/]: Instantiating coremod class FMLForgePlugin
+[23:32:37] [main/DEBUG] [FML/]: Added access transformer class net.minecraftforge.transformers.ForgeAccessTransformer to enqueued access transformers
+[23:32:37] [main/DEBUG] [FML/]: Enqueued coremod FMLForgePlugin
+[23:32:37] [main/DEBUG] [FML/]: All fundamental core mods are successfully located
+[23:32:37] [main/DEBUG] [FML/]: Attempting to load commandline specified mods, relative to C:\ModdingSpace2\GVCC\GVC\eclipse\.
+[23:32:37] [main/DEBUG] [FML/]: Discovering coremods
+[23:32:37] [main/INFO] [LaunchWrapper/]: Calling tweak class net.minecraftforge.gradle.tweakers.CoremodTweaker
+[23:32:37] [main/INFO] [GradleStart/]: Injecting location in coremod cpw.mods.fml.relauncher.FMLCorePlugin
+[23:32:37] [main/INFO] [GradleStart/]: Injecting location in coremod net.minecraftforge.classloading.FMLForgePlugin
+[23:32:37] [main/INFO] [LaunchWrapper/]: Loading tweak class name cpw.mods.fml.common.launcher.FMLInjectionAndSortingTweaker
+[23:32:37] [main/INFO] [LaunchWrapper/]: Loading tweak class name cpw.mods.fml.common.launcher.FMLDeobfTweaker
+[23:32:37] [main/INFO] [LaunchWrapper/]: Loading tweak class name net.minecraftforge.gradle.tweakers.AccessTransformerTweaker
+[23:32:37] [main/INFO] [LaunchWrapper/]: Calling tweak class cpw.mods.fml.common.launcher.FMLInjectionAndSortingTweaker
+[23:32:37] [main/INFO] [LaunchWrapper/]: Calling tweak class cpw.mods.fml.common.launcher.FMLInjectionAndSortingTweaker
+[23:32:37] [main/INFO] [LaunchWrapper/]: Calling tweak class cpw.mods.fml.relauncher.CoreModManager$FMLPluginWrapper
+[23:32:37] [main/DEBUG] [FML/]: Injecting coremod FMLCorePlugin {cpw.mods.fml.relauncher.FMLCorePlugin} class transformers
+[23:32:37] [main/TRACE] [FML/]: Registering transformer cpw.mods.fml.common.asm.transformers.MarkerTransformer
+[23:32:38] [main/TRACE] [FML/]: Registering transformer cpw.mods.fml.common.asm.transformers.SideTransformer
+[23:32:38] [main/TRACE] [FML/]: Registering transformer cpw.mods.fml.common.asm.transformers.EventSubscriptionTransformer
+[23:32:38] [main/DEBUG] [FML/]: Injection complete
+[23:32:38] [main/DEBUG] [FML/]: Running coremod plugin for FMLCorePlugin {cpw.mods.fml.relauncher.FMLCorePlugin}
+[23:32:38] [main/DEBUG] [FML/]: Running coremod plugin FMLCorePlugin
+[23:32:38] [main/ERROR] [FML/]: The binary patch set is missing. Either you are in a development environment, or things are not going to work!
+[23:32:39] [main/ERROR] [FML/]: FML appears to be missing any signature data. This is not a good thing
+[23:32:39] [main/DEBUG] [FML/]: Coremod plugin class FMLCorePlugin run successfully
+[23:32:39] [main/INFO] [LaunchWrapper/]: Calling tweak class cpw.mods.fml.relauncher.CoreModManager$FMLPluginWrapper
+[23:32:39] [main/DEBUG] [FML/]: Injecting coremod FMLForgePlugin {net.minecraftforge.classloading.FMLForgePlugin} class transformers
+[23:32:39] [main/TRACE] [FML/]: Registering transformer net.minecraftforge.classloading.FluidIdTransformer
+[23:32:39] [main/DEBUG] [FML/]: Injection complete
+[23:32:39] [main/DEBUG] [FML/]: Running coremod plugin for FMLForgePlugin {net.minecraftforge.classloading.FMLForgePlugin}
+[23:32:39] [main/DEBUG] [FML/]: Running coremod plugin FMLForgePlugin
+[23:32:39] [main/DEBUG] [FML/]: Coremod plugin class FMLForgePlugin run successfully
+[23:32:39] [main/INFO] [LaunchWrapper/]: Calling tweak class cpw.mods.fml.common.launcher.FMLDeobfTweaker
+[23:32:40] [main/DEBUG] [FML/]: Loaded 57 rules from AccessTransformer config file fml_at.cfg
+[23:32:40] [main/DEBUG] [FML/]: Loaded 89 rules from AccessTransformer config file forge_at.cfg
+[23:32:40] [main/DEBUG] [FML/]: Validating minecraft
+[23:32:41] [main/DEBUG] [FML/]: Minecraft validated, launching...
+[23:32:41] [main/INFO] [LaunchWrapper/]: Calling tweak class net.minecraftforge.gradle.tweakers.AccessTransformerTweaker
+[23:32:41] [main/INFO] [LaunchWrapper/]: Loading tweak class name cpw.mods.fml.common.launcher.TerminalTweaker
+[23:32:41] [main/INFO] [LaunchWrapper/]: Calling tweak class cpw.mods.fml.common.launcher.TerminalTweaker
+[23:32:42] [main/INFO] [LaunchWrapper/]: Launching wrapped minecraft {net.minecraft.server.MinecraftServer}
+[23:32:54] [main/WARN] [FML/]: =============================================================
+[23:32:54] [main/WARN] [FML/]: MOD HAS DIRECT REFERENCE System.exit() THIS IS NOT ALLOWED REROUTING TO FML!
+[23:32:54] [main/WARN] [FML/]: Offendor: net/minecraft/server/gui/MinecraftServerGui$1.windowClosing(Ljava/awt/event/WindowEvent;)V
+[23:32:54] [main/WARN] [FML/]: Use FMLCommonHandler.exitJava instead
+[23:32:54] [main/WARN] [FML/]: =============================================================
+[23:32:54] [Server thread/INFO] [MinecraftForge/]: Attempting early MinecraftForge initialization
+[23:32:54] [Server thread/INFO] [FML/]: MinecraftForge v10.13.4.1614 Initialized
+[23:32:54] [Server thread/INFO] [FML/]: Replaced 183 ore recipies
+[23:32:54] [Server thread/INFO] [MinecraftForge/]: Completed early MinecraftForge initialization
+[23:32:55] [Server thread/DEBUG] [FML/]: File C:\ModdingSpace2\GVCC\GVC\eclipse\config\injectedDependencies.json not found. No dependencies injected
+[23:32:55] [Server thread/DEBUG] [FML/]: Building injected Mod Containers [cpw.mods.fml.common.FMLContainer, net.minecraftforge.common.ForgeModContainer]
+[23:32:55] [Server thread/DEBUG] [FML/]: Attempting to load mods contained in the minecraft jar file and associated classes
+[23:32:55] [Server thread/DEBUG] [FML/]: Found a minecraft related directory at C:\Users\frou01\.gradle\caches\minecraft\net\minecraftforge\forge\1.7.10-10.13.4.1614-1.7.10\start, examining for mod candidates
+[23:32:55] [Server thread/DEBUG] [FML/]: Found a minecraft related file at C:\ModdingSpace2\GVCC\HMG\build\libs\HMG-EX10.5.jar, examining for mod candidates
+[23:32:55] [Server thread/DEBUG] [FML/]: Found a minecraft related file at C:\Users\frou01\.gradle\caches\minecraft\net\minecraftforge\forge\1.7.10-10.13.4.1614-1.7.10\forgeSrc-1.7.10-10.13.4.1614-1.7.10.jar, examining for mod candidates
+[23:32:55] [Server thread/DEBUG] [FML/]: Found a minecraft related file at C:\Users\frou01\.gradle\caches\modules-2\files-2.1\net.minecraft\launchwrapper\1.12\111e7bea9c968cdb3d06ef4632bf7ff0824d0f36\launchwrapper-1.12.jar, examining for mod candidates
+[23:32:55] [Server thread/DEBUG] [FML/]: Found a minecraft related file at C:\Users\frou01\.gradle\caches\modules-2\files-2.1\com.google.code.findbugs\jsr305\1.3.9\40719ea6961c0cb6afaeb6a921eaa1f6afd4cfdf\jsr305-1.3.9.jar, examining for mod candidates
+[23:32:55] [Server thread/DEBUG] [FML/]: Found a minecraft related file at C:\Users\frou01\.gradle\caches\modules-2\files-2.1\org.ow2.asm\asm-debug-all\5.0.3\f9e364ae2a66ce2a543012a4668856e84e5dab74\asm-debug-all-5.0.3.jar, examining for mod candidates
+[23:32:55] [Server thread/DEBUG] [FML/]: Found a minecraft related file at C:\Users\frou01\.gradle\caches\modules-2\files-2.1\com.typesafe.akka\akka-actor_2.11\2.3.3\ed62e9fc709ca0f2ff1a3220daa8b70a2870078e\akka-actor_2.11-2.3.3.jar, examining for mod candidates
+[23:32:55] [Server thread/DEBUG] [FML/]: Found a minecraft related file at C:\Users\frou01\.gradle\caches\modules-2\files-2.1\com.typesafe\config\1.2.1\f771f71fdae3df231bcd54d5ca2d57f0bf93f467\config-1.2.1.jar, examining for mod candidates
+[23:32:55] [Server thread/DEBUG] [FML/]: Found a minecraft related file at C:\Users\frou01\.gradle\caches\modules-2\files-2.1\org.scala-lang\scala-actors-migration_2.11\1.1.0\dfa8bc42b181d5b9f1a5dd147f8ae308b893eb6f\scala-actors-migration_2.11-1.1.0.jar, examining for mod candidates
+[23:32:55] [Server thread/DEBUG] [FML/]: Found a minecraft related file at C:\Users\frou01\.gradle\caches\modules-2\files-2.1\org.scala-lang\scala-compiler\2.11.1\56ea2e6c025e0821f28d73ca271218b8dd04926a\scala-compiler-2.11.1.jar, examining for mod candidates
+[23:32:55] [Server thread/DEBUG] [FML/]: Found a minecraft related file at C:\Users\frou01\.gradle\caches\modules-2\files-2.1\org.scala-lang.plugins\scala-continuations-library_2.11\1.0.2\e517c53a7e9acd6b1668c5a35eccbaa3bab9aac\scala-continuations-library_2.11-1.0.2.jar, examining for mod candidates
+[23:32:55] [Server thread/DEBUG] [FML/]: Found a minecraft related file at C:\Users\frou01\.gradle\caches\modules-2\files-2.1\org.scala-lang.plugins\scala-continuations-plugin_2.11.1\1.0.2\f361a3283452c57fa30c1ee69448995de23c60f7\scala-continuations-plugin_2.11.1-1.0.2.jar, examining for mod candidates
+[23:32:55] [Server thread/DEBUG] [FML/]: Found a minecraft related file at C:\Users\frou01\.gradle\caches\modules-2\files-2.1\org.scala-lang\scala-library\2.11.1\e11da23da3eabab9f4777b9220e60d44c1aab6a\scala-library-2.11.1.jar, examining for mod candidates
+[23:32:55] [Server thread/DEBUG] [FML/]: Found a minecraft related file at C:\Users\frou01\.gradle\caches\modules-2\files-2.1\org.scala-lang\scala-parser-combinators_2.11\1.0.1\f05d7345bf5a58924f2837c6c1f4d73a938e1ff0\scala-parser-combinators_2.11-1.0.1.jar, examining for mod candidates
+[23:32:55] [Server thread/DEBUG] [FML/]: Found a minecraft related file at C:\Users\frou01\.gradle\caches\modules-2\files-2.1\org.scala-lang\scala-reflect\2.11.1\6580347e61cc7f8e802941e7fde40fa83b8badeb\scala-reflect-2.11.1.jar, examining for mod candidates
+[23:32:55] [Server thread/DEBUG] [FML/]: Found a minecraft related file at C:\Users\frou01\.gradle\caches\modules-2\files-2.1\org.scala-lang\scala-swing_2.11\1.0.1\b1cdd92bd47b1e1837139c1c53020e86bb9112ae\scala-swing_2.11-1.0.1.jar, examining for mod candidates
+[23:32:55] [Server thread/DEBUG] [FML/]: Found a minecraft related file at C:\Users\frou01\.gradle\caches\modules-2\files-2.1\org.scala-lang\scala-xml_2.11\1.0.2\7a80ec00aec122fba7cd4e0d4cdd87ff7e4cb6d0\scala-xml_2.11-1.0.2.jar, examining for mod candidates
+[23:32:55] [Server thread/DEBUG] [FML/]: Found a minecraft related file at C:\Users\frou01\.gradle\caches\modules-2\files-2.1\net.sf.jopt-simple\jopt-simple\4.5\6065cc95c661255349c1d0756657be17c29a4fd3\jopt-simple-4.5.jar, examining for mod candidates
+[23:32:55] [Server thread/DEBUG] [FML/]: Found a minecraft related file at C:\Users\frou01\.gradle\caches\modules-2\files-2.1\lzma\lzma\0.0.1\521616dc7487b42bef0e803bd2fa3faf668101d7\lzma-0.0.1.jar, examining for mod candidates
+[23:32:55] [Server thread/DEBUG] [FML/]: Found a minecraft related file at C:\Users\frou01\.gradle\caches\modules-2\files-2.1\com.mojang\realms\1.3.5\807ae355ee63583becd7ea60e76aab1532bb42e\realms-1.3.5.jar, examining for mod candidates
+[23:32:55] [Server thread/DEBUG] [FML/]: Found a minecraft related file at C:\Users\frou01\.gradle\caches\modules-2\files-2.1\org.apache.commons\commons-compress\1.8.1\a698750c16740fd5b3871425f4cb3bbaa87f529d\commons-compress-1.8.1.jar, examining for mod candidates
+[23:32:55] [Server thread/DEBUG] [FML/]: Found a minecraft related file at C:\Users\frou01\.gradle\caches\modules-2\files-2.1\org.apache.httpcomponents\httpclient\4.3.3\18f4247ff4572a074444572cee34647c43e7c9c7\httpclient-4.3.3.jar, examining for mod candidates
+[23:32:55] [Server thread/DEBUG] [FML/]: Found a minecraft related file at C:\Users\frou01\.gradle\caches\modules-2\files-2.1\commons-logging\commons-logging\1.1.3\f6f66e966c70a83ffbdb6f17a0919eaf7c8aca7f\commons-logging-1.1.3.jar, examining for mod candidates
+[23:32:55] [Server thread/DEBUG] [FML/]: Found a minecraft related file at C:\Users\frou01\.gradle\caches\modules-2\files-2.1\org.apache.httpcomponents\httpcore\4.3.2\31fbbff1ddbf98f3aa7377c94d33b0447c646b6e\httpcore-4.3.2.jar, examining for mod candidates
+[23:32:55] [Server thread/DEBUG] [FML/]: Found a minecraft related file at C:\Users\frou01\.gradle\caches\modules-2\files-2.1\java3d\vecmath\1.3.1\a0ae4f51da409fa0c20fa0ca59e6bbc9413ae71d\vecmath-1.3.1.jar, examining for mod candidates
+[23:32:55] [Server thread/DEBUG] [FML/]: Found a minecraft related file at C:\Users\frou01\.gradle\caches\modules-2\files-2.1\net.sf.trove4j\trove4j\3.0.3\42ccaf4761f0dfdfa805c9e340d99a755907e2dd\trove4j-3.0.3.jar, examining for mod candidates
+[23:32:55] [Server thread/DEBUG] [FML/]: Found a minecraft related file at C:\Users\frou01\.gradle\caches\modules-2\files-2.1\com.ibm.icu\icu4j-core-mojang\51.2\63d216a9311cca6be337c1e458e587f99d382b84\icu4j-core-mojang-51.2.jar, examining for mod candidates
+[23:32:55] [Server thread/DEBUG] [FML/]: Found a minecraft related file at C:\Users\frou01\.gradle\caches\modules-2\files-2.1\com.paulscode\codecjorbis\20101023\c73b5636faf089d9f00e8732a829577de25237ee\codecjorbis-20101023.jar, examining for mod candidates
+[23:32:55] [Server thread/DEBUG] [FML/]: Found a minecraft related file at C:\Users\frou01\.gradle\caches\modules-2\files-2.1\com.paulscode\codecwav\20101023\12f031cfe88fef5c1dd36c563c0a3a69bd7261da\codecwav-20101023.jar, examining for mod candidates
+[23:32:55] [Server thread/DEBUG] [FML/]: Found a minecraft related file at C:\Users\frou01\.gradle\caches\modules-2\files-2.1\com.paulscode\libraryjavasound\20101123\5c5e304366f75f9eaa2e8cca546a1fb6109348b3\libraryjavasound-20101123.jar, examining for mod candidates
+[23:32:55] [Server thread/DEBUG] [FML/]: Found a minecraft related file at C:\Users\frou01\.gradle\caches\modules-2\files-2.1\com.paulscode\librarylwjglopenal\20100824\73e80d0794c39665aec3f62eee88ca91676674ef\librarylwjglopenal-20100824.jar, examining for mod candidates
+[23:32:55] [Server thread/DEBUG] [FML/]: Found a minecraft related file at C:\Users\frou01\.gradle\caches\modules-2\files-2.1\com.paulscode\soundsystem\20120107\419c05fe9be71f792b2d76cfc9b67f1ed0fec7f6\soundsystem-20120107.jar, examining for mod candidates
+[23:32:55] [Server thread/DEBUG] [FML/]: Found a minecraft related file at C:\Users\frou01\.gradle\caches\modules-2\files-2.1\io.netty\netty-all\4.0.10.Final\9e50bd52ffe257a0e2cd8d971688d6ce7d174325\netty-all-4.0.10.Final.jar, examining for mod candidates
+[23:32:55] [Server thread/DEBUG] [FML/]: Found a minecraft related file at C:\Users\frou01\.gradle\caches\modules-2\files-2.1\com.google.guava\guava\17.0\9c6ef172e8de35fd8d4d8783e4821e57cdef7445\guava-17.0.jar, examining for mod candidates
+[23:32:55] [Server thread/DEBUG] [FML/]: Found a minecraft related file at C:\Users\frou01\.gradle\caches\modules-2\files-2.1\org.apache.commons\commons-lang3\3.3.2\90a3822c38ec8c996e84c16a3477ef632cbc87a3\commons-lang3-3.3.2.jar, examining for mod candidates
+[23:32:55] [Server thread/DEBUG] [FML/]: Found a minecraft related file at C:\Users\frou01\.gradle\caches\modules-2\files-2.1\commons-io\commons-io\2.4\b1b6ea3b7e4aa4f492509a4952029cd8e48019ad\commons-io-2.4.jar, examining for mod candidates
+[23:32:55] [Server thread/DEBUG] [FML/]: Found a minecraft related file at C:\Users\frou01\.gradle\caches\modules-2\files-2.1\commons-codec\commons-codec\1.9\9ce04e34240f674bc72680f8b843b1457383161a\commons-codec-1.9.jar, examining for mod candidates
+[23:32:55] [Server thread/DEBUG] [FML/]: Found a minecraft related file at C:\Users\frou01\.gradle\caches\modules-2\files-2.1\net.java.jinput\jinput\2.0.5\39c7796b469a600f72380316f6b1f11db6c2c7c4\jinput-2.0.5.jar, examining for mod candidates
+[23:32:55] [Server thread/DEBUG] [FML/]: Found a minecraft related file at C:\Users\frou01\.gradle\caches\modules-2\files-2.1\net.java.jutils\jutils\1.0.0\e12fe1fda814bd348c1579329c86943d2cd3c6a6\jutils-1.0.0.jar, examining for mod candidates
+[23:32:55] [Server thread/DEBUG] [FML/]: Found a minecraft related file at C:\Users\frou01\.gradle\caches\modules-2\files-2.1\com.google.code.gson\gson\2.2.4\a60a5e993c98c864010053cb901b7eab25306568\gson-2.2.4.jar, examining for mod candidates
+[23:32:55] [Server thread/DEBUG] [FML/]: Found a minecraft related file at C:\Users\frou01\.gradle\caches\modules-2\files-2.1\com.mojang\authlib\1.5.16\ef1582b11fd0943d069cdcb72e99008ac209a283\authlib-1.5.16.jar, examining for mod candidates
+[23:32:55] [Server thread/DEBUG] [FML/]: Found a minecraft related file at C:\Users\frou01\.gradle\caches\modules-2\files-2.1\org.apache.logging.log4j\log4j-api\2.0-beta9\1dd66e68cccd907880229f9e2de1314bd13ff785\log4j-api-2.0-beta9.jar, examining for mod candidates
+[23:32:55] [Server thread/DEBUG] [FML/]: Found a minecraft related file at C:\Users\frou01\.gradle\caches\modules-2\files-2.1\org.apache.logging.log4j\log4j-core\2.0-beta9\678861ba1b2e1fccb594bb0ca03114bb05da9695\log4j-core-2.0-beta9.jar, examining for mod candidates
+[23:32:55] [Server thread/DEBUG] [FML/]: Found a minecraft related file at C:\Users\frou01\.gradle\caches\modules-2\files-2.1\org.lwjgl.lwjgl\lwjgl\2.9.1\f58c5aabcef0e41718a564be9f8e412fff8db847\lwjgl-2.9.1.jar, examining for mod candidates
+[23:32:55] [Server thread/DEBUG] [FML/]: Found a minecraft related file at C:\Users\frou01\.gradle\caches\modules-2\files-2.1\org.lwjgl.lwjgl\lwjgl_util\2.9.1\290d7ba8a1bd9566f5ddf16ad06f09af5ec9b20e\lwjgl_util-2.9.1.jar, examining for mod candidates
+[23:32:55] [Server thread/DEBUG] [FML/]: Found a minecraft related file at C:\Users\frou01\.gradle\caches\modules-2\files-2.1\tv.twitch\twitch\5.16\1f55f009c61637c10c0acfb8b5ffc600f30044b4\twitch-5.16.jar, examining for mod candidates
+[23:32:55] [Server thread/DEBUG] [FML/]: Found a minecraft related file at C:\ModdingSpace2\GVCC\Depend\build\libs\Depend-1.0.jar, examining for mod candidates
+[23:32:55] [Server thread/DEBUG] [FML/]: Found a minecraft related file at C:\Users\frou01\.gradle\caches\modules-2\files-2.1\org.scala-lang\scala-actors\2.11.0\8ccfb6541de179bb1c4d45cf414acee069b7f78b\scala-actors-2.11.0.jar, examining for mod candidates
+[23:32:55] [Server thread/DEBUG] [FML/]: Found a minecraft related file at C:\Users\frou01\.gradle\caches\modules-2\files-2.1\org.scala-lang.modules\scala-xml_2.11\1.0.2\820fbca7e524b530fdadc594c39d49a21ea0337e\scala-xml_2.11-1.0.2.jar, examining for mod candidates
+[23:32:55] [Server thread/DEBUG] [FML/]: Found a minecraft related file at C:\Users\frou01\.gradle\caches\modules-2\files-2.1\org.scala-lang.modules\scala-parser-combinators_2.11\1.0.1\f05d7345bf5a58924f2837c6c1f4d73a938e1ff0\scala-parser-combinators_2.11-1.0.1.jar, examining for mod candidates
+[23:32:55] [Server thread/DEBUG] [FML/]: Found a minecraft related file at C:\Users\frou01\.gradle\caches\modules-2\files-2.1\net.java.jinput\jinput-platform\2.0.5\7ff832a6eb9ab6a767f1ade2b548092d0fa64795\jinput-platform-2.0.5-natives-linux.jar, examining for mod candidates
+[23:32:55] [Server thread/DEBUG] [FML/]: Found a minecraft related file at C:\Users\frou01\.gradle\caches\modules-2\files-2.1\net.java.jinput\jinput-platform\2.0.5\385ee093e01f587f30ee1c8a2ee7d408fd732e16\jinput-platform-2.0.5-natives-windows.jar, examining for mod candidates
+[23:32:55] [Server thread/DEBUG] [FML/]: Found a minecraft related file at C:\Users\frou01\.gradle\caches\modules-2\files-2.1\net.java.jinput\jinput-platform\2.0.5\53f9c919f34d2ca9de8c51fc4e1e8282029a9232\jinput-platform-2.0.5-natives-osx.jar, examining for mod candidates
+[23:32:55] [Server thread/DEBUG] [FML/]: Found a minecraft related file at C:\Users\frou01\.gradle\caches\modules-2\files-2.1\tv.twitch\twitch-platform\5.16\7c6affe439099806a4f552da14c42f9d643d8b23\twitch-platform-5.16-natives-windows-32.jar, examining for mod candidates
+[23:32:55] [Server thread/DEBUG] [FML/]: Found a minecraft related file at C:\Users\frou01\.gradle\caches\modules-2\files-2.1\tv.twitch\twitch-platform\5.16\39d0c3d363735b4785598e0e7fbf8297c706a9f9\twitch-platform-5.16-natives-windows-64.jar, examining for mod candidates
+[23:32:55] [Server thread/DEBUG] [FML/]: Found a minecraft related file at C:\Users\frou01\.gradle\caches\modules-2\files-2.1\tv.twitch\twitch-platform\5.16\62503ee712766cf77f97252e5902786fd834b8c5\twitch-platform-5.16-natives-osx.jar, examining for mod candidates
+[23:32:55] [Server thread/DEBUG] [FML/]: Found a minecraft related file at C:\Users\frou01\.gradle\caches\modules-2\files-2.1\tv.twitch\twitch-external-platform\4.5\18215140f010c05b9f86ef6f0f8871954d2ccebf\twitch-external-platform-4.5-natives-windows-32.jar, examining for mod candidates
+[23:32:55] [Server thread/DEBUG] [FML/]: Found a minecraft related file at C:\Users\frou01\.gradle\caches\modules-2\files-2.1\tv.twitch\twitch-external-platform\4.5\c3cde57891b935d41b6680a9c5e1502eeab76d86\twitch-external-platform-4.5-natives-windows-64.jar, examining for mod candidates
+[23:32:55] [Server thread/DEBUG] [FML/]: Found a minecraft related file at C:\Users\frou01\.gradle\caches\modules-2\files-2.1\org.lwjgl.lwjgl\lwjgl-platform\2.9.1\4c517eca808522457dd95ee8fc1fbcdbb602efbe\lwjgl-platform-2.9.1-natives-windows.jar, examining for mod candidates
+[23:32:55] [Server thread/DEBUG] [FML/]: Found a minecraft related file at C:\Users\frou01\.gradle\caches\modules-2\files-2.1\org.lwjgl.lwjgl\lwjgl-platform\2.9.1\aa9aae879af8eb378e22cfc64db56ec2ca9a44d1\lwjgl-platform-2.9.1-natives-linux.jar, examining for mod candidates
+[23:32:55] [Server thread/DEBUG] [FML/]: Found a minecraft related file at C:\Users\frou01\.gradle\caches\modules-2\files-2.1\org.lwjgl.lwjgl\lwjgl-platform\2.9.1\2d12c83fdfbc04ecabf02c7bc8cc54d034f0daac\lwjgl-platform-2.9.1-natives-osx.jar, examining for mod candidates
+[23:32:55] [Server thread/DEBUG] [FML/]: Found a minecraft related file at C:\ModdingSpace2\GVCC\GVC\build\libs\GVC-HD10.5.jar, examining for mod candidates
+[23:32:55] [Server thread/DEBUG] [FML/]: Minecraft jar mods loaded successfully
+[23:32:55] [Server thread/INFO] [FML/]: Found 0 mods from the command line. Injecting into mod discoverer
+[23:32:55] [Server thread/INFO] [FML/]: Searching C:\ModdingSpace2\GVCC\GVC\eclipse\mods for mods
+[23:32:55] [Server thread/DEBUG] [FML/]: Found a candidate mod directory littleMaidMobX
+[23:32:55] [Server thread/DEBUG] [FML/]: Examining directory start for potential mods
+[23:32:55] [Server thread/DEBUG] [FML/]: No mcmod.info file found in directory start
+[23:32:55] [Server thread/TRACE] [FML/]: Recursing into package net
+[23:32:55] [Server thread/TRACE] [FML/]: Recursing into package net.minecraftforge
+[23:32:55] [Server thread/TRACE] [FML/]: Recursing into package net.minecraftforge.gradle
+[23:32:55] [Server thread/TRACE] [FML/]: Recursing into package net.minecraftforge.gradle.tweakers
+[23:32:55] [Server thread/DEBUG] [FML/]: Examining file HMG-EX10.5.jar for potential mods
+[23:32:55] [Server thread/TRACE] [FML/]: Located mcmod.info file in file HMG-EX10.5.jar
+[23:32:55] [Server thread/DEBUG] [FML/]: Identified a mod of type Lcpw/mods/fml/common/Mod; (handmadeguns.HandmadeGunsCore) - loading
+[23:32:55] [Server thread/TRACE] [HandmadeGuns/]: Parsed dependency info : [] [] []
+[23:32:56] [Server thread/DEBUG] [FML/]: Examining file forgeSrc-1.7.10-10.13.4.1614-1.7.10.jar for potential mods
+[23:32:56] [Server thread/DEBUG] [FML/]: The mod container forgeSrc-1.7.10-10.13.4.1614-1.7.10.jar appears to be missing an mcmod.info file
+[23:32:58] [Server thread/DEBUG] [FML/]: Examining file launchwrapper-1.12.jar for potential mods
+[23:32:58] [Server thread/DEBUG] [FML/]: The mod container launchwrapper-1.12.jar appears to be missing an mcmod.info file
+[23:32:58] [Server thread/DEBUG] [FML/]: Examining file jsr305-1.3.9.jar for potential mods
+[23:32:58] [Server thread/DEBUG] [FML/]: The mod container jsr305-1.3.9.jar appears to be missing an mcmod.info file
+[23:32:58] [Server thread/DEBUG] [FML/]: Examining file asm-debug-all-5.0.3.jar for potential mods
+[23:32:58] [Server thread/DEBUG] [FML/]: The mod container asm-debug-all-5.0.3.jar appears to be missing an mcmod.info file
+[23:32:58] [Server thread/DEBUG] [FML/]: Examining file akka-actor_2.11-2.3.3.jar for potential mods
+[23:32:58] [Server thread/DEBUG] [FML/]: The mod container akka-actor_2.11-2.3.3.jar appears to be missing an mcmod.info file
+[23:32:58] [Server thread/DEBUG] [FML/]: Examining file config-1.2.1.jar for potential mods
+[23:32:58] [Server thread/DEBUG] [FML/]: The mod container config-1.2.1.jar appears to be missing an mcmod.info file
+[23:32:58] [Server thread/DEBUG] [FML/]: Examining file scala-actors-migration_2.11-1.1.0.jar for potential mods
+[23:32:58] [Server thread/DEBUG] [FML/]: The mod container scala-actors-migration_2.11-1.1.0.jar appears to be missing an mcmod.info file
+[23:32:58] [Server thread/DEBUG] [FML/]: Examining file scala-compiler-2.11.1.jar for potential mods
+[23:32:58] [Server thread/DEBUG] [FML/]: The mod container scala-compiler-2.11.1.jar appears to be missing an mcmod.info file
+[23:33:01] [Server thread/DEBUG] [FML/]: Examining file scala-continuations-library_2.11-1.0.2.jar for potential mods
+[23:33:01] [Server thread/DEBUG] [FML/]: The mod container scala-continuations-library_2.11-1.0.2.jar appears to be missing an mcmod.info file
+[23:33:01] [Server thread/DEBUG] [FML/]: Examining file scala-continuations-plugin_2.11.1-1.0.2.jar for potential mods
+[23:33:01] [Server thread/DEBUG] [FML/]: The mod container scala-continuations-plugin_2.11.1-1.0.2.jar appears to be missing an mcmod.info file
+[23:33:01] [Server thread/DEBUG] [FML/]: Examining file scala-library-2.11.1.jar for potential mods
+[23:33:01] [Server thread/DEBUG] [FML/]: The mod container scala-library-2.11.1.jar appears to be missing an mcmod.info file
+[23:33:02] [Server thread/DEBUG] [FML/]: Examining file scala-parser-combinators_2.11-1.0.1.jar for potential mods
+[23:33:02] [Server thread/DEBUG] [FML/]: The mod container scala-parser-combinators_2.11-1.0.1.jar appears to be missing an mcmod.info file
+[23:33:02] [Server thread/DEBUG] [FML/]: Examining file scala-reflect-2.11.1.jar for potential mods
+[23:33:02] [Server thread/DEBUG] [FML/]: The mod container scala-reflect-2.11.1.jar appears to be missing an mcmod.info file
+[23:33:03] [Server thread/DEBUG] [FML/]: Examining file scala-swing_2.11-1.0.1.jar for potential mods
+[23:33:03] [Server thread/DEBUG] [FML/]: The mod container scala-swing_2.11-1.0.1.jar appears to be missing an mcmod.info file
+[23:33:03] [Server thread/DEBUG] [FML/]: Examining file scala-xml_2.11-1.0.2.jar for potential mods
+[23:33:03] [Server thread/DEBUG] [FML/]: The mod container scala-xml_2.11-1.0.2.jar appears to be missing an mcmod.info file
+[23:33:03] [Server thread/DEBUG] [FML/]: Examining file jopt-simple-4.5.jar for potential mods
+[23:33:03] [Server thread/DEBUG] [FML/]: The mod container jopt-simple-4.5.jar appears to be missing an mcmod.info file
+[23:33:03] [Server thread/DEBUG] [FML/]: Examining file lzma-0.0.1.jar for potential mods
+[23:33:03] [Server thread/DEBUG] [FML/]: The mod container lzma-0.0.1.jar appears to be missing an mcmod.info file
+[23:33:03] [Server thread/DEBUG] [FML/]: Examining file realms-1.3.5.jar for potential mods
+[23:33:03] [Server thread/DEBUG] [FML/]: The mod container realms-1.3.5.jar appears to be missing an mcmod.info file
+[23:33:03] [Server thread/DEBUG] [FML/]: Examining file commons-compress-1.8.1.jar for potential mods
+[23:33:03] [Server thread/DEBUG] [FML/]: The mod container commons-compress-1.8.1.jar appears to be missing an mcmod.info file
+[23:33:03] [Server thread/DEBUG] [FML/]: Examining file httpclient-4.3.3.jar for potential mods
+[23:33:03] [Server thread/DEBUG] [FML/]: The mod container httpclient-4.3.3.jar appears to be missing an mcmod.info file
+[23:33:03] [Server thread/DEBUG] [FML/]: Examining file commons-logging-1.1.3.jar for potential mods
+[23:33:03] [Server thread/DEBUG] [FML/]: The mod container commons-logging-1.1.3.jar appears to be missing an mcmod.info file
+[23:33:03] [Server thread/DEBUG] [FML/]: Examining file httpcore-4.3.2.jar for potential mods
+[23:33:03] [Server thread/DEBUG] [FML/]: The mod container httpcore-4.3.2.jar appears to be missing an mcmod.info file
+[23:33:03] [Server thread/DEBUG] [FML/]: Examining file vecmath-1.3.1.jar for potential mods
+[23:33:03] [Server thread/DEBUG] [FML/]: The mod container vecmath-1.3.1.jar appears to be missing an mcmod.info file
+[23:33:03] [Server thread/DEBUG] [FML/]: Examining file trove4j-3.0.3.jar for potential mods
+[23:33:03] [Server thread/DEBUG] [FML/]: The mod container trove4j-3.0.3.jar appears to be missing an mcmod.info file
+[23:33:04] [Server thread/DEBUG] [FML/]: Examining file icu4j-core-mojang-51.2.jar for potential mods
+[23:33:04] [Server thread/DEBUG] [FML/]: The mod container icu4j-core-mojang-51.2.jar appears to be missing an mcmod.info file
+[23:33:04] [Server thread/DEBUG] [FML/]: Examining file codecjorbis-20101023.jar for potential mods
+[23:33:04] [Server thread/DEBUG] [FML/]: The mod container codecjorbis-20101023.jar appears to be missing an mcmod.info file
+[23:33:04] [Server thread/DEBUG] [FML/]: Examining file codecwav-20101023.jar for potential mods
+[23:33:04] [Server thread/DEBUG] [FML/]: The mod container codecwav-20101023.jar appears to be missing an mcmod.info file
+[23:33:04] [Server thread/DEBUG] [FML/]: Examining file libraryjavasound-20101123.jar for potential mods
+[23:33:04] [Server thread/DEBUG] [FML/]: The mod container libraryjavasound-20101123.jar appears to be missing an mcmod.info file
+[23:33:04] [Server thread/DEBUG] [FML/]: Examining file librarylwjglopenal-20100824.jar for potential mods
+[23:33:04] [Server thread/DEBUG] [FML/]: The mod container librarylwjglopenal-20100824.jar appears to be missing an mcmod.info file
+[23:33:04] [Server thread/DEBUG] [FML/]: Examining file soundsystem-20120107.jar for potential mods
+[23:33:04] [Server thread/DEBUG] [FML/]: The mod container soundsystem-20120107.jar appears to be missing an mcmod.info file
+[23:33:04] [Server thread/DEBUG] [FML/]: Examining file netty-all-4.0.10.Final.jar for potential mods
+[23:33:04] [Server thread/DEBUG] [FML/]: The mod container netty-all-4.0.10.Final.jar appears to be missing an mcmod.info file
+[23:33:04] [Server thread/DEBUG] [FML/]: Examining file guava-17.0.jar for potential mods
+[23:33:04] [Server thread/DEBUG] [FML/]: The mod container guava-17.0.jar appears to be missing an mcmod.info file
+[23:33:05] [Server thread/DEBUG] [FML/]: Examining file commons-lang3-3.3.2.jar for potential mods
+[23:33:05] [Server thread/DEBUG] [FML/]: The mod container commons-lang3-3.3.2.jar appears to be missing an mcmod.info file
+[23:33:05] [Server thread/DEBUG] [FML/]: Examining file commons-io-2.4.jar for potential mods
+[23:33:05] [Server thread/DEBUG] [FML/]: The mod container commons-io-2.4.jar appears to be missing an mcmod.info file
+[23:33:05] [Server thread/DEBUG] [FML/]: Examining file commons-codec-1.9.jar for potential mods
+[23:33:05] [Server thread/DEBUG] [FML/]: The mod container commons-codec-1.9.jar appears to be missing an mcmod.info file
+[23:33:05] [Server thread/DEBUG] [FML/]: Examining file jinput-2.0.5.jar for potential mods
+[23:33:05] [Server thread/DEBUG] [FML/]: The mod container jinput-2.0.5.jar appears to be missing an mcmod.info file
+[23:33:05] [Server thread/DEBUG] [FML/]: Examining file jutils-1.0.0.jar for potential mods
+[23:33:05] [Server thread/DEBUG] [FML/]: The mod container jutils-1.0.0.jar appears to be missing an mcmod.info file
+[23:33:05] [Server thread/DEBUG] [FML/]: Examining file gson-2.2.4.jar for potential mods
+[23:33:05] [Server thread/DEBUG] [FML/]: The mod container gson-2.2.4.jar appears to be missing an mcmod.info file
+[23:33:05] [Server thread/DEBUG] [FML/]: Examining file authlib-1.5.16.jar for potential mods
+[23:33:05] [Server thread/DEBUG] [FML/]: The mod container authlib-1.5.16.jar appears to be missing an mcmod.info file
+[23:33:05] [Server thread/DEBUG] [FML/]: Examining file log4j-api-2.0-beta9.jar for potential mods
+[23:33:05] [Server thread/DEBUG] [FML/]: The mod container log4j-api-2.0-beta9.jar appears to be missing an mcmod.info file
+[23:33:05] [Server thread/DEBUG] [FML/]: Examining file log4j-core-2.0-beta9.jar for potential mods
+[23:33:05] [Server thread/DEBUG] [FML/]: The mod container log4j-core-2.0-beta9.jar appears to be missing an mcmod.info file
+[23:33:05] [Server thread/DEBUG] [FML/]: Examining file lwjgl-2.9.1.jar for potential mods
+[23:33:05] [Server thread/DEBUG] [FML/]: The mod container lwjgl-2.9.1.jar appears to be missing an mcmod.info file
+[23:33:06] [Server thread/DEBUG] [FML/]: Examining file lwjgl_util-2.9.1.jar for potential mods
+[23:33:06] [Server thread/DEBUG] [FML/]: The mod container lwjgl_util-2.9.1.jar appears to be missing an mcmod.info file
+[23:33:06] [Server thread/DEBUG] [FML/]: Examining file twitch-5.16.jar for potential mods
+[23:33:06] [Server thread/DEBUG] [FML/]: The mod container twitch-5.16.jar appears to be missing an mcmod.info file
+[23:33:06] [Server thread/DEBUG] [FML/]: Examining file Depend-1.0.jar for potential mods
+[23:33:06] [Server thread/TRACE] [FML/]: Located mcmod.info file in file Depend-1.0.jar
+[23:33:06] [Server thread/DEBUG] [FML/]: Identified a mod of type Lcpw/mods/fml/common/Mod; (com.lulan.shincolle.ShinColle) - loading
+[23:33:06] [Server thread/TRACE] [shincolle/]: Parsed dependency info : [Forge@[10.13.4.1614,)] [Forge@[10.13.4.1614,)] []
+[23:33:06] [Server thread/DEBUG] [FML/]: Identified a mod of type Lcpw/mods/fml/common/Mod; (littleMaidMobX.LMM_LittleMaidMobX) - loading
+[23:33:06] [Server thread/TRACE] [lmmx/]: Parsed dependency info : [] [] []
+[23:33:06] [Server thread/DEBUG] [lmmx/]: Attempting to load the file version.properties from Depend-1.0.jar to locate a version number for lmmx
+[23:33:06] [Server thread/WARN] [lmmx/]: Mod lmmx is missing the required element 'version' and no fallback can be found. Substituting '1.0'.
+[23:33:06] [Server thread/DEBUG] [FML/]: Identified a mod of type Lcpw/mods/fml/common/Mod; (mmmlibx.lib.MMMLib) - loading
+[23:33:06] [Server thread/TRACE] [MMMLibX/]: Parsed dependency info : [] [] []
+[23:33:06] [Server thread/DEBUG] [FML/]: Identified a mod of type Lcpw/mods/fml/common/Mod; (Sokoniyatugairuzo.Core) - loading
+[23:33:06] [Server thread/TRACE] [Sokoniyatugairuzo/]: Parsed dependency info : [] [] []
+[23:33:06] [Server thread/DEBUG] [FML/]: Identified a mod of type Lcpw/mods/fml/common/Mod; (zabuton.VZN_Zabuton) - loading
+[23:33:06] [Server thread/TRACE] [zabuton/]: Parsed dependency info : [Forge@[10.12.2.1121,)] [Forge@[10.12.2.1121,)] []
+[23:33:06] [Server thread/DEBUG] [zabuton/]: Attempting to load the file version.properties from Depend-1.0.jar to locate a version number for zabuton
+[23:33:06] [Server thread/WARN] [zabuton/]: Mod zabuton is missing the required element 'version' and no fallback can be found. Substituting '1.0'.
+[23:33:06] [Server thread/DEBUG] [FML/]: Examining file scala-actors-2.11.0.jar for potential mods
+[23:33:06] [Server thread/DEBUG] [FML/]: The mod container scala-actors-2.11.0.jar appears to be missing an mcmod.info file
+[23:33:06] [Server thread/DEBUG] [FML/]: Examining file scala-xml_2.11-1.0.2.jar for potential mods
+[23:33:06] [Server thread/DEBUG] [FML/]: The mod container scala-xml_2.11-1.0.2.jar appears to be missing an mcmod.info file
+[23:33:06] [Server thread/DEBUG] [FML/]: Examining file scala-parser-combinators_2.11-1.0.1.jar for potential mods
+[23:33:06] [Server thread/DEBUG] [FML/]: The mod container scala-parser-combinators_2.11-1.0.1.jar appears to be missing an mcmod.info file
+[23:33:06] [Server thread/DEBUG] [FML/]: Examining file jinput-platform-2.0.5-natives-linux.jar for potential mods
+[23:33:06] [Server thread/DEBUG] [FML/]: The mod container jinput-platform-2.0.5-natives-linux.jar appears to be missing an mcmod.info file
+[23:33:06] [Server thread/DEBUG] [FML/]: Examining file jinput-platform-2.0.5-natives-windows.jar for potential mods
+[23:33:06] [Server thread/DEBUG] [FML/]: The mod container jinput-platform-2.0.5-natives-windows.jar appears to be missing an mcmod.info file
+[23:33:06] [Server thread/DEBUG] [FML/]: Examining file jinput-platform-2.0.5-natives-osx.jar for potential mods
+[23:33:06] [Server thread/DEBUG] [FML/]: The mod container jinput-platform-2.0.5-natives-osx.jar appears to be missing an mcmod.info file
+[23:33:06] [Server thread/DEBUG] [FML/]: Examining file twitch-platform-5.16-natives-windows-32.jar for potential mods
+[23:33:06] [Server thread/DEBUG] [FML/]: The mod container twitch-platform-5.16-natives-windows-32.jar appears to be missing an mcmod.info file
+[23:33:06] [Server thread/DEBUG] [FML/]: Examining file twitch-platform-5.16-natives-windows-64.jar for potential mods
+[23:33:06] [Server thread/DEBUG] [FML/]: The mod container twitch-platform-5.16-natives-windows-64.jar appears to be missing an mcmod.info file
+[23:33:06] [Server thread/DEBUG] [FML/]: Examining file twitch-platform-5.16-natives-osx.jar for potential mods
+[23:33:06] [Server thread/DEBUG] [FML/]: The mod container twitch-platform-5.16-natives-osx.jar appears to be missing an mcmod.info file
+[23:33:06] [Server thread/DEBUG] [FML/]: Examining file twitch-external-platform-4.5-natives-windows-32.jar for potential mods
+[23:33:06] [Server thread/DEBUG] [FML/]: The mod container twitch-external-platform-4.5-natives-windows-32.jar appears to be missing an mcmod.info file
+[23:33:06] [Server thread/DEBUG] [FML/]: Examining file twitch-external-platform-4.5-natives-windows-64.jar for potential mods
+[23:33:06] [Server thread/DEBUG] [FML/]: The mod container twitch-external-platform-4.5-natives-windows-64.jar appears to be missing an mcmod.info file
+[23:33:06] [Server thread/DEBUG] [FML/]: Examining file lwjgl-platform-2.9.1-natives-windows.jar for potential mods
+[23:33:06] [Server thread/DEBUG] [FML/]: The mod container lwjgl-platform-2.9.1-natives-windows.jar appears to be missing an mcmod.info file
+[23:33:06] [Server thread/DEBUG] [FML/]: Examining file lwjgl-platform-2.9.1-natives-linux.jar for potential mods
+[23:33:06] [Server thread/DEBUG] [FML/]: The mod container lwjgl-platform-2.9.1-natives-linux.jar appears to be missing an mcmod.info file
+[23:33:06] [Server thread/DEBUG] [FML/]: Examining file lwjgl-platform-2.9.1-natives-osx.jar for potential mods
+[23:33:06] [Server thread/DEBUG] [FML/]: The mod container lwjgl-platform-2.9.1-natives-osx.jar appears to be missing an mcmod.info file
+[23:33:06] [Server thread/DEBUG] [FML/]: Examining file GVC-HD10.5.jar for potential mods
+[23:33:06] [Server thread/TRACE] [FML/]: Located mcmod.info file in file GVC-HD10.5.jar
+[23:33:06] [Server thread/DEBUG] [FML/]: Identified a mod of type Lcpw/mods/fml/common/Mod; (hmggvcmob.GVCMobPlus) - loading
+[23:33:06] [Server thread/TRACE] [GVCMob/]: Parsed dependency info : [GVCGuns] [GVCGuns] []
+[23:33:06] [Server thread/DEBUG] [FML/]: Identified a mod of type Lcpw/mods/fml/common/Mod; (hmggvcutil.GVCUtils) - loading
+[23:33:06] [Server thread/TRACE] [GVCGuns/]: Parsed dependency info : [HandmadeGuns] [HandmadeGuns] []
+[23:33:06] [Server thread/DEBUG] [FML/]: Examining directory littleMaidMobX for potential mods
+[23:33:06] [Server thread/DEBUG] [FML/]: No mcmod.info file found in directory littleMaidMobX
+[23:33:06] [Server thread/INFO] [FML/]: Forge Mod Loader has identified 11 mods to load
+[23:33:06] [Server thread/TRACE] [FML/]: Received a system property request ''
+[23:33:06] [Server thread/TRACE] [FML/]: System property request managing the state of 0 mods
+[23:33:06] [Server thread/DEBUG] [FML/]: After merging, found state information for 0 mods
+[23:33:06] [Server thread/DEBUG] [FML/]: Found translations in forgeSrc-1.7.10-10.13.4.1614-1.7.10.jar [en_US, af_ZA, ar_SA, br_FR, ca_ES, cs_CZ, da_DK, de_DE, el_GR, en_US, es_ES, fa_IR, fi_FI, fr_FR, he_IL, hu_HU, it_IT, ja_JP, ko_KR, lt_LT, nb_NO, nl_NL, nn_NO, no_NO, pl_PL, pt_BR, pt_PT, ro_RO, ru_RU, sl_SI, sr_SP, sv_SE, tr_TR, uk_UA, vi_VN, zh_CN, zh_TW, en_US]
+[23:33:07] [Server thread/DEBUG] [FML/]: Found translations in forgeSrc-1.7.10-10.13.4.1614-1.7.10.jar [en_US, af_ZA, ar_SA, br_FR, ca_ES, cs_CZ, da_DK, de_DE, el_GR, en_US, es_ES, fa_IR, fi_FI, fr_FR, he_IL, hu_HU, it_IT, ja_JP, ko_KR, lt_LT, nb_NO, nl_NL, nn_NO, no_NO, pl_PL, pt_BR, pt_PT, ro_RO, ru_RU, sl_SI, sr_SP, sv_SE, tr_TR, uk_UA, vi_VN, zh_CN, zh_TW, en_US]
+[23:33:07] [Server thread/DEBUG] [HandmadeGuns/]: Enabling mod HandmadeGuns
+[23:33:07] [Server thread/DEBUG] [FML/]: Found translations in HMG-EX10.5.jar [en_US, ja_JP, zh_CN, zh_TW]
+[23:33:07] [Server thread/DEBUG] [shincolle/]: Enabling mod shincolle
+[23:33:07] [Server thread/DEBUG] [FML/]: Found translations in Depend-1.0.jar [en_US, ja_JP, zh_CN, en_US, ja_JP, zh_CN, en_US, ja_JP, zh_CN, zh_TW, en_US, ja_JP, zh_CN]
+[23:33:07] [Server thread/DEBUG] [lmmx/]: Enabling mod lmmx
+[23:33:07] [Server thread/DEBUG] [FML/]: Found translations in Depend-1.0.jar [en_US, ja_JP, zh_CN, en_US, ja_JP, zh_CN, en_US, ja_JP, zh_CN, zh_TW, en_US, ja_JP, zh_CN]
+[23:33:07] [Server thread/DEBUG] [MMMLibX/]: Enabling mod MMMLibX
+[23:33:07] [Server thread/DEBUG] [FML/]: Found translations in Depend-1.0.jar [en_US, ja_JP, zh_CN, en_US, ja_JP, zh_CN, en_US, ja_JP, zh_CN, zh_TW, en_US, ja_JP, zh_CN]
+[23:33:07] [Server thread/DEBUG] [Sokoniyatugairuzo/]: Enabling mod Sokoniyatugairuzo
+[23:33:07] [Server thread/DEBUG] [FML/]: Found translations in Depend-1.0.jar [en_US, ja_JP, zh_CN, en_US, ja_JP, zh_CN, en_US, ja_JP, zh_CN, zh_TW, en_US, ja_JP, zh_CN]
+[23:33:07] [Server thread/DEBUG] [zabuton/]: Enabling mod zabuton
+[23:33:07] [Server thread/DEBUG] [FML/]: Found translations in Depend-1.0.jar [en_US, ja_JP, zh_CN, en_US, ja_JP, zh_CN, en_US, ja_JP, zh_CN, zh_TW, en_US, ja_JP, zh_CN]
+[23:33:07] [Server thread/DEBUG] [GVCMob/]: Enabling mod GVCMob
+[23:33:07] [Server thread/DEBUG] [FML/]: Found translations in GVC-HD10.5.jar [en_US, ja_JP, zh_CN, zh_TW, en_US, ja_JP, zh_CN, zh_TW]
+[23:33:07] [Server thread/DEBUG] [GVCGuns/]: Enabling mod GVCGuns
+[23:33:07] [Server thread/DEBUG] [FML/]: Found translations in GVC-HD10.5.jar [en_US, ja_JP, zh_CN, zh_TW, en_US, ja_JP, zh_CN, zh_TW]
+[23:33:07] [Server thread/TRACE] [FML/]: Verifying mod requirements are satisfied
+[23:33:07] [Server thread/TRACE] [FML/]: All mod requirements are satisfied
+[23:33:07] [Server thread/TRACE] [FML/]: Sorting mods into an ordered list
+[23:33:07] [Server thread/TRACE] [FML/]: Mod sorting completed successfully
+[23:33:07] [Server thread/DEBUG] [FML/]: Mod sorting data
+[23:33:07] [Server thread/DEBUG] [FML/]: 	HandmadeGuns(HandMadeGunsModEX:1.7.x-srg-1): HMG-EX10.5.jar ()
+[23:33:07] [Server thread/DEBUG] [FML/]: 	shincolle(Shinkeiseikan Collection:1.7.10.rv26.2): Depend-1.0.jar (required-after:Forge@[10.13.4.1614,))
+[23:33:07] [Server thread/DEBUG] [FML/]: 	lmmx(lmmx:1.0): Depend-1.0.jar ()
+[23:33:07] [Server thread/DEBUG] [FML/]: 	MMMLibX(MMMLibX:1.7.x-srg-1): Depend-1.0.jar ()
+[23:33:07] [Server thread/DEBUG] [FML/]: 	Sokoniyatugairuzo(Sokoniyatugairuzo:1.7.x): Depend-1.0.jar ()
+[23:33:07] [Server thread/DEBUG] [FML/]: 	zabuton(zabuton:1.0): Depend-1.0.jar (required-after:Forge@[10.12.2.1121,))
+[23:33:07] [Server thread/DEBUG] [FML/]: 	GVCGuns(GVCGuns:1.7.x-srg-1): GVC-HD10.5.jar (required-after:HandmadeGuns)
+[23:33:07] [Server thread/DEBUG] [FML/]: 	GVCMob(Guerrilla vs Command mod : High Difficulity version:1.7.x-srg-1): GVC-HD10.5.jar (required-after:GVCGuns)
+[23:33:07] [Server thread/TRACE] [mcp/mcp]: Sending event FMLConstructionEvent to mod mcp
+[23:33:07] [Server thread/TRACE] [mcp/mcp]: Sent event FMLConstructionEvent to mod mcp
+[23:33:07] [Server thread/DEBUG] [FML/]: Bar Step: Construction - Minecraft Coder Pack took 0.004s
+[23:33:07] [Server thread/TRACE] [FML/FML]: Sending event FMLConstructionEvent to mod FML
+[23:33:07] [Server thread/TRACE] [FML/FML]: Mod FML is using network checker : Invoking method checkModLists
+[23:33:07] [Server thread/TRACE] [FML/FML]: Testing mod FML to verify it accepts its own version in a remote connection
+[23:33:07] [Server thread/TRACE] [FML/FML]: The mod FML accepts its own version (7.10.99.99)
+[23:33:07] [Server thread/INFO] [FML/FML]: Attempting connection with missing mods [mcp, FML, Forge, HandmadeGuns, shincolle, lmmx, MMMLibX, Sokoniyatugairuzo, zabuton, GVCMob, GVCGuns] at CLIENT
+[23:33:07] [Server thread/INFO] [FML/FML]: Attempting connection with missing mods [mcp, FML, Forge, HandmadeGuns, shincolle, lmmx, MMMLibX, Sokoniyatugairuzo, zabuton, GVCMob, GVCGuns] at SERVER
+[23:33:08] [Server thread/TRACE] [FML/FML]: Sent event FMLConstructionEvent to mod FML
+[23:33:08] [Server thread/DEBUG] [FML/]: Bar Step: Construction - Forge Mod Loader took 1.167s
+[23:33:08] [Server thread/TRACE] [Forge/Forge]: Sending event FMLConstructionEvent to mod Forge
+[23:33:08] [Server thread/TRACE] [FML/Forge]: Mod Forge is using network checker : No network checking performed
+[23:33:08] [Server thread/TRACE] [FML/Forge]: Testing mod Forge to verify it accepts its own version in a remote connection
+[23:33:08] [Server thread/TRACE] [FML/Forge]: The mod Forge accepts its own version (10.13.4.1614)
+[23:33:08] [Server thread/TRACE] [Forge/Forge]: Sent event FMLConstructionEvent to mod Forge
+[23:33:08] [Server thread/DEBUG] [FML/]: Bar Step: Construction - Minecraft Forge took 0.015s
+[23:33:08] [Server thread/TRACE] [HandmadeGuns/HandmadeGuns]: Sending event FMLConstructionEvent to mod HandmadeGuns
+[23:33:08] [Server thread/TRACE] [FML/HandmadeGuns]: Mod HandmadeGuns is using network checker : Accepting version 1.7.x-srg-1
+[23:33:08] [Server thread/TRACE] [FML/HandmadeGuns]: Testing mod HandmadeGuns to verify it accepts its own version in a remote connection
+[23:33:08] [Server thread/TRACE] [FML/HandmadeGuns]: The mod HandmadeGuns accepts its own version (1.7.x-srg-1)
+[23:33:08] [Server thread/DEBUG] [FML/HandmadeGuns]: Attempting to inject @SidedProxy classes into HandmadeGuns
+[23:33:08] [Server thread/TRACE] [HandmadeGuns/HandmadeGuns]: Sent event FMLConstructionEvent to mod HandmadeGuns
+[23:33:08] [Server thread/DEBUG] [FML/]: Bar Step: Construction - HandMadeGunsModEX took 0.197s
+[23:33:08] [Server thread/TRACE] [shincolle/shincolle]: Sending event FMLConstructionEvent to mod shincolle
+[23:33:08] [Server thread/TRACE] [FML/shincolle]: Mod shincolle is using network checker : Accepting version 1.7.10.rv26.2
+[23:33:08] [Server thread/TRACE] [FML/shincolle]: Testing mod shincolle to verify it accepts its own version in a remote connection
+[23:33:08] [Server thread/TRACE] [FML/shincolle]: The mod shincolle accepts its own version (1.7.10.rv26.2)
+[23:33:08] [Server thread/DEBUG] [FML/shincolle]: Attempting to inject @SidedProxy classes into shincolle
+[23:33:08] [Server thread/TRACE] [shincolle/shincolle]: Sent event FMLConstructionEvent to mod shincolle
+[23:33:08] [Server thread/DEBUG] [FML/]: Bar Step: Construction - Shinkeiseikan Collection took 0.124s
+[23:33:08] [Server thread/TRACE] [lmmx/lmmx]: Sending event FMLConstructionEvent to mod lmmx
+[23:33:08] [Server thread/TRACE] [FML/lmmx]: Mod lmmx is using network checker : Accepting version 1.0
+[23:33:08] [Server thread/TRACE] [FML/lmmx]: Testing mod lmmx to verify it accepts its own version in a remote connection
+[23:33:08] [Server thread/TRACE] [FML/lmmx]: The mod lmmx accepts its own version (1.0)
+[23:33:08] [Server thread/DEBUG] [FML/lmmx]: Attempting to inject @SidedProxy classes into lmmx
+[23:33:08] [Server thread/TRACE] [lmmx/lmmx]: Sent event FMLConstructionEvent to mod lmmx
+[23:33:08] [Server thread/DEBUG] [FML/]: Bar Step: Construction - lmmx took 0.030s
+[23:33:08] [Server thread/TRACE] [MMMLibX/MMMLibX]: Sending event FMLConstructionEvent to mod MMMLibX
+[23:33:08] [Server thread/TRACE] [FML/MMMLibX]: Mod MMMLibX is using network checker : Accepting version 1.7.x-srg-1
+[23:33:08] [Server thread/TRACE] [FML/MMMLibX]: Testing mod MMMLibX to verify it accepts its own version in a remote connection
+[23:33:08] [Server thread/TRACE] [FML/MMMLibX]: The mod MMMLibX accepts its own version (1.7.x-srg-1)
+[23:33:08] [Server thread/DEBUG] [FML/MMMLibX]: Attempting to inject @SidedProxy classes into MMMLibX
+[23:33:08] [Server thread/TRACE] [MMMLibX/MMMLibX]: Sent event FMLConstructionEvent to mod MMMLibX
+[23:33:08] [Server thread/DEBUG] [FML/]: Bar Step: Construction - MMMLibX took 0.014s
+[23:33:08] [Server thread/TRACE] [Sokoniyatugairuzo/Sokoniyatugairuzo]: Sending event FMLConstructionEvent to mod Sokoniyatugairuzo
+[23:33:08] [Server thread/TRACE] [FML/Sokoniyatugairuzo]: Mod Sokoniyatugairuzo is using network checker : Accepting version 1.7.x
+[23:33:08] [Server thread/TRACE] [FML/Sokoniyatugairuzo]: Testing mod Sokoniyatugairuzo to verify it accepts its own version in a remote connection
+[23:33:08] [Server thread/TRACE] [FML/Sokoniyatugairuzo]: The mod Sokoniyatugairuzo accepts its own version (1.7.x)
+[23:33:08] [Server thread/DEBUG] [FML/Sokoniyatugairuzo]: Attempting to inject @SidedProxy classes into Sokoniyatugairuzo
+[23:33:08] [Server thread/TRACE] [Sokoniyatugairuzo/Sokoniyatugairuzo]: Sent event FMLConstructionEvent to mod Sokoniyatugairuzo
+[23:33:08] [Server thread/DEBUG] [FML/]: Bar Step: Construction - Sokoniyatugairuzo took 0.004s
+[23:33:08] [Server thread/TRACE] [zabuton/zabuton]: Sending event FMLConstructionEvent to mod zabuton
+[23:33:08] [Server thread/TRACE] [FML/zabuton]: Mod zabuton is using network checker : Accepting version 1.0
+[23:33:08] [Server thread/TRACE] [FML/zabuton]: Testing mod zabuton to verify it accepts its own version in a remote connection
+[23:33:08] [Server thread/TRACE] [FML/zabuton]: The mod zabuton accepts its own version (1.0)
+[23:33:08] [Server thread/DEBUG] [FML/zabuton]: Attempting to inject @SidedProxy classes into zabuton
+[23:33:08] [Server thread/TRACE] [zabuton/zabuton]: Sent event FMLConstructionEvent to mod zabuton
+[23:33:08] [Server thread/DEBUG] [FML/]: Bar Step: Construction - zabuton took 0.005s
+[23:33:08] [Server thread/TRACE] [GVCGuns/GVCGuns]: Sending event FMLConstructionEvent to mod GVCGuns
+[23:33:08] [Server thread/TRACE] [FML/GVCGuns]: Mod GVCGuns is using network checker : Accepting version 1.7.x-srg-1
+[23:33:08] [Server thread/TRACE] [FML/GVCGuns]: Testing mod GVCGuns to verify it accepts its own version in a remote connection
+[23:33:08] [Server thread/TRACE] [FML/GVCGuns]: The mod GVCGuns accepts its own version (1.7.x-srg-1)
+[23:33:08] [Server thread/DEBUG] [FML/GVCGuns]: Attempting to inject @SidedProxy classes into GVCGuns
+[23:33:08] [Server thread/TRACE] [GVCGuns/GVCGuns]: Sent event FMLConstructionEvent to mod GVCGuns
+[23:33:08] [Server thread/DEBUG] [FML/]: Bar Step: Construction - GVCGuns took 0.043s
+[23:33:08] [Server thread/TRACE] [GVCMob/GVCMob]: Sending event FMLConstructionEvent to mod GVCMob
+[23:33:08] [Server thread/TRACE] [FML/GVCMob]: Mod GVCMob is using network checker : Accepting version 1.7.x-srg-1
+[23:33:08] [Server thread/TRACE] [FML/GVCMob]: Testing mod GVCMob to verify it accepts its own version in a remote connection
+[23:33:08] [Server thread/TRACE] [FML/GVCMob]: The mod GVCMob accepts its own version (1.7.x-srg-1)
+[23:33:08] [Server thread/DEBUG] [FML/GVCMob]: Attempting to inject @SidedProxy classes into GVCMob
+[23:33:08] [Server thread/TRACE] [GVCMob/GVCMob]: Sent event FMLConstructionEvent to mod GVCMob
+[23:33:08] [Server thread/DEBUG] [FML/]: Bar Step: Construction - Guerrilla vs Command mod : High Difficulity version took 0.011s
+[23:33:08] [Server thread/DEBUG] [FML/]: Bar Finished: Construction took 1.615s
+[23:33:08] [Server thread/DEBUG] [FML/]: Mod signature data
+[23:33:08] [Server thread/DEBUG] [FML/]:  	Valid Signatures:
+[23:33:08] [Server thread/DEBUG] [FML/]:  	Missing Signatures:
+[23:33:08] [Server thread/DEBUG] [FML/]: 		mcp	(Minecraft Coder Pack	9.05)	minecraft.jar
+[23:33:08] [Server thread/DEBUG] [FML/]: 		FML	(Forge Mod Loader	7.10.99.99)	forgeSrc-1.7.10-10.13.4.1614-1.7.10.jar
+[23:33:08] [Server thread/DEBUG] [FML/]: 		Forge	(Minecraft Forge	10.13.4.1614)	forgeSrc-1.7.10-10.13.4.1614-1.7.10.jar
+[23:33:08] [Server thread/DEBUG] [FML/]: 		HandmadeGuns	(HandMadeGunsModEX	1.7.x-srg-1)	HMG-EX10.5.jar
+[23:33:08] [Server thread/DEBUG] [FML/]: 		shincolle	(Shinkeiseikan Collection	1.7.10.rv26.2)	Depend-1.0.jar
+[23:33:08] [Server thread/DEBUG] [FML/]: 		lmmx	(lmmx	1.0)	Depend-1.0.jar
+[23:33:08] [Server thread/DEBUG] [FML/]: 		MMMLibX	(MMMLibX	1.7.x-srg-1)	Depend-1.0.jar
+[23:33:08] [Server thread/DEBUG] [FML/]: 		Sokoniyatugairuzo	(Sokoniyatugairuzo	1.7.x)	Depend-1.0.jar
+[23:33:08] [Server thread/DEBUG] [FML/]: 		zabuton	(zabuton	1.0)	Depend-1.0.jar
+[23:33:08] [Server thread/DEBUG] [FML/]: 		GVCGuns	(GVCGuns	1.7.x-srg-1)	GVC-HD10.5.jar
+[23:33:08] [Server thread/DEBUG] [FML/]: 		GVCMob	(Guerrilla vs Command mod : High Difficulity version	1.7.x-srg-1)	GVC-HD10.5.jar
+[23:33:09] [Server thread/INFO] [FML/]: Processing ObjectHolder annotations
+[23:33:09] [Server thread/INFO] [FML/]: Found 386 ObjectHolder annotations
+[23:33:09] [Server thread/INFO] [FML/]: Identifying ItemStackHolder annotations
+[23:33:09] [Server thread/INFO] [FML/]: Found 0 ItemStackHolder annotations
+[23:33:09] [Server thread/TRACE] [mcp/mcp]: Sending event FMLPreInitializationEvent to mod mcp
+[23:33:09] [Server thread/TRACE] [mcp/mcp]: Sent event FMLPreInitializationEvent to mod mcp
+[23:33:09] [Server thread/DEBUG] [FML/]: Bar Step: PreInitialization - Minecraft Coder Pack took 0.003s
+[23:33:09] [Server thread/TRACE] [FML/FML]: Sending event FMLPreInitializationEvent to mod FML
+[23:33:09] [Server thread/TRACE] [FML/FML]: Sent event FMLPreInitializationEvent to mod FML
+[23:33:09] [Server thread/DEBUG] [FML/]: Bar Step: PreInitialization - Forge Mod Loader took 0.005s
+[23:33:09] [Server thread/TRACE] [Forge/Forge]: Sending event FMLPreInitializationEvent to mod Forge
+[23:33:09] [Server thread/INFO] [FML/Forge]: Configured a dormant chunk cache size of 0
+[23:33:09] [Server thread/TRACE] [Forge/Forge]: Sent event FMLPreInitializationEvent to mod Forge
+[23:33:09] [Server thread/DEBUG] [FML/]: Bar Step: PreInitialization - Minecraft Forge took 0.076s
+[23:33:09] [Server thread/TRACE] [HandmadeGuns/HandmadeGuns]: Sending event FMLPreInitializationEvent to mod HandmadeGuns
+[23:33:13] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HandmadeGunsCore:preInit:316]: Loaded content pack resource : Addfixing
+[23:33:13] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HandmadeGunsCore:preInit:316]: Loaded content pack resource : ak102
+[23:33:13] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HandmadeGunsCore:preInit:316]: Loaded content pack resource : GVCguns
+[23:33:13] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HandmadeGunsCore:preInit:316]: Loaded content pack resource : HMGs
+[23:33:13] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddAttachment:load:306]: grip
+[23:33:13] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddAttachment:load:229]: Suppressor
+[23:33:13] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddAttachment:load:337]: 14.5mm Ammo
+[23:33:13] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddAttachment:load:337]: 14.5mm APFSDS
+[23:33:13] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddAttachment:load:337]: bullet_gl
+[23:33:13] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddAttachment:load:337]: bullet_hg_hmg
+[23:33:13] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddAttachment:load:337]: bullet_hmg
+[23:33:13] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddAttachment:load:337]: 12.7mm Magazine
+[23:33:13] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddAttachment:load:337]: 12.7mmx108mmBox
+[23:33:13] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddAttachment:load:337]: 12.7mmx99mmBox
+[23:33:13] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddAttachment:load:337]: 5.45mm magazine
+[23:33:13] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddAttachment:load:337]: 5.56mm magazine
+[23:33:13] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddAttachment:load:337]: 6.5mm clip
+[23:33:13] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddAttachment:load:337]: 7.62mm magazine
+[23:33:13] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddAttachment:load:337]: 7.62mm clip
+[23:33:13] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddAttachment:load:337]: bullet_lmg_hmg
+[23:33:13] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddAttachment:load:337]: bullet_lmg_hmg_CMag
+[23:33:13] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddAttachment:load:337]: bullet_lmg_hmg_mini
+[23:33:13] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddAttachment:load:337]: missile
+[23:33:13] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddAttachment:load:337]: bullet_rr_hmg
+[23:33:13] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddAttachment:load:337]: bullet_shell_hmg
+[23:33:13] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddAttachment:load:241]: laser
+[23:33:13] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddAttachment:load:337]: 5.45mm long magazine
+[23:33:13] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddAttachment:load:324]: Bipod_new
+[23:33:13] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddAttachment:load:289]: FlashLight_new
+[23:33:13] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddAttachment:load:324]: grip_new
+[23:33:13] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddAttachment:load:253]: LaserSight_new
+[23:33:13] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddAttachment:load:187]: reddot_new
+[23:33:13] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddAttachment:load:187]: scope_new
+[23:33:13] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddAttachment:load:202]: reddot
+[23:33:13] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddAttachment:load:277]: right
+[23:33:13] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddAttachment:load:217]: scope
+[23:33:13] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddBullets:load:144]: debug 14_5mmBullet
+[23:33:13] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddBullets:load:144]: debug 14_5mmCart
+[23:33:13] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddBullets:load:144]: debug byfrou01_Bomb
+[23:33:13] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddBullets:load:144]: debug byfrou01_Flame
+[23:33:13] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddBullets:load:144]: debug byfrou01_GreenTracer
+[23:33:13] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddBullets:load:144]: debug byfrou01_PinkTracer
+[23:33:13] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddBullets:load:144]: debug byfrou01_RailBullet
+[23:33:13] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddBullets:load:144]: debug byfrou01_RailBullet_14.5mm
+[23:33:13] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddBullets:load:144]: debug byfrou01_Rocket
+[23:33:13] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddBullets:load:144]: debug longbullet
+[23:33:13] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddBullets:load:144]: debug longcart
+[23:33:13] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddBullets:load:144]: debug M26grenade
+[23:33:13] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddGunsNew:load:1607]: debug loading item.AMR_sample
+[23:33:13] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddGunsNew:load:1607]: debug loading item.ARG_sample
+[23:33:13] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddGunsNew:load:1607]: debug loading item.AR_sample
+[23:33:13] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddGunsNew:load:1607]: debug loading item.BOW_sample
+[23:33:13] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddGunsNew:load:1897]: debugitem.byfrou01_Bayonet
+[23:33:13] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddGunsNew:load:1607]: debug loading item.GL_sample
+[23:33:13] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddGunsNew:load:1607]: debug loading item.M26
+[23:33:13] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddGunsNew:load:1607]: debug loading item.HGR_sample
+[23:33:13] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddGunsNew:load:1607]: debug loading item.HG_sample
+[23:33:13] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddGunsNew:load:1607]: debug loading item.LMG_sample
+[23:33:13] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddGunsNew:load:1607]: debug loading item.RR_sample
+[23:33:13] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddGunsNew:load:1607]: debug loading item.SGF_sample
+[23:33:14] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddGunsNew:load:1607]: debug loading item.SG_sample
+[23:33:14] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddGunsNew:load:1607]: debug loading item.SMG_sample
+[23:33:14] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddGunsNew:load:1607]: debug loading item.SR_sample
+[23:33:14] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddGunsNew:load:1897]: debugitem.SWORD_Sample
+[23:33:14] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddGunsNew:load:1607]: debug loading item.AK102
+[23:33:14] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddAttachment:load:337]: Prastic
+[23:33:14] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddAttachment:load:337]: RailAPFSDS
+[23:33:14] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddGunsNew:load:923]: useundergunsmodeltrue
+[23:33:14] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddGunsNew:load:1607]: debug loading item.AK47
+[23:33:14] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddGunsNew:load:923]: useundergunsmodeltrue
+[23:33:14] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddGunsNew:load:1607]: debug loading item.AK74
+[23:33:14] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddGunsNew:load:1607]: debug loading item.AKS74U
+[23:33:14] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddGunsNew:load:1607]: debug loading item.CopiedAK
+[23:33:14] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddGunsNew:load:1607]: debug loading item.G17
+[23:33:14] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddGunsNew:load:1607]: debug loading item.G18
+[23:33:14] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddGunsNew:load:1607]: debug loading item.G36
+[23:33:14] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddGunsNew:load:1607]: debug loading item.G36K
+[23:33:14] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddGunsNew:load:1607]: debug loading item.M10
+[23:33:14] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddGunsNew:load:1607]: debug loading item.M110
+[23:33:14] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddGunsNew:load:1607]: debug loading item.M134
+[23:33:14] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddGunsNew:load:1607]: debug loading item.M16A4
+[23:33:14] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddGunsNew:load:1607]: debug loading item.M1911
+[23:33:14] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddGunsNew:load:1607]: debug loading item.M240B
+[23:33:14] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddGunsNew:load:1607]: debug loading item.M249
+[23:33:14] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddGunsNew:load:1607]: debug loading item.M2F
+[23:33:14] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddGunsNew:load:1607]: debug loading item.M320
+[23:33:14] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddGunsNew:load:1607]: debug loading item.M4A1
+[23:33:14] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddGunsNew:load:1607]: debug loading item.M82A3
+[23:33:14] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddGunsNew:load:1607]: debug loading item.M870
+[23:33:14] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddGunsNew:load:1607]: debug loading item.M9
+[23:33:14] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddGunsNew:load:1607]: debug loading item.MG36
+[23:33:14] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddGunsNew:load:1607]: debug loading item.PKM
+[23:33:14] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddGunsNew:load:1607]: debug loading item.PTRD1941
+[23:33:14] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddGunsNew:load:1607]: debug loading item.PTRK2041
+[23:33:14] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddGunsNew:load:1607]: debug loading item.Pistolet_Makarova
+[23:33:14] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddGunsNew:load:1607]: debug loading item.R700
+[23:33:14] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddGunsNew:load:1607]: debug loading item.RPG7
+[23:33:14] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddGunsNew:load:1607]: debug loading item.RPK74
+[23:33:14] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddGunsNew:load:1607]: debug loading item.2A115
+[23:33:14] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddGunsNew:load:1607]: debug loading item.P226
+[23:33:14] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddGunsNew:load:1607]: debug loading item.SMAW
+[23:33:14] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddGunsNew:load:1607]: debug loading item.SVD
+[23:33:14] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddGunsNew:load:923]: useundergunsmodeltrue
+[23:33:14] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddGunsNew:load:1607]: debug loading item.Type38
+[23:33:14] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddBullets:load:144]: debug 12_7mmBullet
+[23:33:14] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddBullets:load:144]: debug 12_7mmCart
+[23:33:14] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddBullets:load:144]: debug DSHKBulletBox
+[23:33:14] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddGunsNew:load:1607]: debug loading item.Dshk38
+[23:33:14] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddGunsNew:load:1607]: debug loading item.byfrou01_M2HB_fromNGP
+[23:33:14] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HMGAddGunsNew:load:1607]: debug loading item.byNicoemon_ZID_KORD
+[23:33:14] [Server thread/INFO] [STDOUT/HandmadeGuns]: [handmadeguns.HandmadeGunsCore:preInit:435]: debug.\handmadeguns_Packs\Addfixing\addscripts\testrendergun.js
+[23:33:16] [Server thread/INFO] [STDERR/HandmadeGuns]: [java.lang.Throwable$WrappedPrintStream:println:748]: java.lang.NoSuchMethodException: No such function preInit
+[23:33:16] [Server thread/INFO] [STDERR/HandmadeGuns]: [java.lang.Throwable$WrappedPrintStream:println:748]: 	at jdk.nashorn.api.scripting.ScriptObjectMirror.callMember(ScriptObjectMirror.java:204)
+[23:33:16] [Server thread/INFO] [STDERR/HandmadeGuns]: [java.lang.Throwable$WrappedPrintStream:println:748]: 	at jdk.nashorn.api.scripting.NashornScriptEngine.invokeImpl(NashornScriptEngine.java:383)
+[23:33:16] [Server thread/INFO] [STDERR/HandmadeGuns]: [java.lang.Throwable$WrappedPrintStream:println:748]: 	at jdk.nashorn.api.scripting.NashornScriptEngine.invokeFunction(NashornScriptEngine.java:190)
+[23:33:16] [Server thread/INFO] [STDERR/HandmadeGuns]: [java.lang.Throwable$WrappedPrintStream:println:748]: 	at handmadeguns.HandmadeGunsCore.preInit(HandmadeGunsCore.java:444)
+[23:33:16] [Server thread/INFO] [STDERR/HandmadeGuns]: [java.lang.Throwable$WrappedPrintStream:println:748]: 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+[23:33:16] [Server thread/INFO] [STDERR/HandmadeGuns]: [java.lang.Throwable$WrappedPrintStream:println:748]: 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+[23:33:16] [Server thread/INFO] [STDERR/HandmadeGuns]: [java.lang.Throwable$WrappedPrintStream:println:748]: 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+[23:33:16] [Server thread/INFO] [STDERR/HandmadeGuns]: [java.lang.Throwable$WrappedPrintStream:println:748]: 	at java.lang.reflect.Method.invoke(Method.java:498)
+[23:33:16] [Server thread/INFO] [STDERR/HandmadeGuns]: [java.lang.Throwable$WrappedPrintStream:println:748]: 	at cpw.mods.fml.common.FMLModContainer.handleModStateEvent(FMLModContainer.java:532)
+[23:33:16] [Server thread/INFO] [STDERR/HandmadeGuns]: [java.lang.Throwable$WrappedPrintStream:println:748]: 	at sun.reflect.GeneratedMethodAccessor5.invoke(Unknown Source)
+[23:33:16] [Server thread/INFO] [STDERR/HandmadeGuns]: [java.lang.Throwable$WrappedPrintStream:println:748]: 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+[23:33:16] [Server thread/INFO] [STDERR/HandmadeGuns]: [java.lang.Throwable$WrappedPrintStream:println:748]: 	at java.lang.reflect.Method.invoke(Method.java:498)
+[23:33:16] [Server thread/INFO] [STDERR/HandmadeGuns]: [java.lang.Throwable$WrappedPrintStream:println:748]: 	at com.google.common.eventbus.EventSubscriber.handleEvent(EventSubscriber.java:74)
+[23:33:16] [Server thread/INFO] [STDERR/HandmadeGuns]: [java.lang.Throwable$WrappedPrintStream:println:748]: 	at com.google.common.eventbus.SynchronizedEventSubscriber.handleEvent(SynchronizedEventSubscriber.java:47)
+[23:33:16] [Server thread/INFO] [STDERR/HandmadeGuns]: [java.lang.Throwable$WrappedPrintStream:println:748]: 	at com.google.common.eventbus.EventBus.dispatch(EventBus.java:322)
+[23:33:16] [Server thread/INFO] [STDERR/HandmadeGuns]: [java.lang.Throwable$WrappedPrintStream:println:748]: 	at com.google.common.eventbus.EventBus.dispatchQueuedEvents(EventBus.java:304)
+[23:33:16] [Server thread/INFO] [STDERR/HandmadeGuns]: [java.lang.Throwable$WrappedPrintStream:println:748]: 	at com.google.common.eventbus.EventBus.post(EventBus.java:275)
+[23:33:16] [Server thread/INFO] [STDERR/HandmadeGuns]: [java.lang.Throwable$WrappedPrintStream:println:748]: 	at cpw.mods.fml.common.LoadController.sendEventToModContainer(LoadController.java:212)
+[23:33:16] [Server thread/INFO] [STDERR/HandmadeGuns]: [java.lang.Throwable$WrappedPrintStream:println:748]: 	at cpw.mods.fml.common.LoadController.propogateStateMessage(LoadController.java:190)
+[23:33:16] [Server thread/INFO] [STDERR/HandmadeGuns]: [java.lang.Throwable$WrappedPrintStream:println:748]: 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+[23:33:16] [Server thread/INFO] [STDERR/HandmadeGuns]: [java.lang.Throwable$WrappedPrintStream:println:748]: 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+[23:33:16] [Server thread/INFO] [STDERR/HandmadeGuns]: [java.lang.Throwable$WrappedPrintStream:println:748]: 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+[23:33:16] [Server thread/INFO] [STDERR/HandmadeGuns]: [java.lang.Throwable$WrappedPrintStream:println:748]: 	at java.lang.reflect.Method.invoke(Method.java:498)
+[23:33:16] [Server thread/INFO] [STDERR/HandmadeGuns]: [java.lang.Throwable$WrappedPrintStream:println:748]: 	at com.google.common.eventbus.EventSubscriber.handleEvent(EventSubscriber.java:74)
+[23:33:16] [Server thread/INFO] [STDERR/HandmadeGuns]: [java.lang.Throwable$WrappedPrintStream:println:748]: 	at com.google.common.eventbus.SynchronizedEventSubscriber.handleEvent(SynchronizedEventSubscriber.java:47)
+[23:33:16] [Server thread/INFO] [STDERR/HandmadeGuns]: [java.lang.Throwable$WrappedPrintStream:println:748]: 	at com.google.common.eventbus.EventBus.dispatch(EventBus.java:322)
+[23:33:16] [Server thread/INFO] [STDERR/HandmadeGuns]: [java.lang.Throwable$WrappedPrintStream:println:748]: 	at com.google.common.eventbus.EventBus.dispatchQueuedEvents(EventBus.java:304)
+[23:33:16] [Server thread/INFO] [STDERR/HandmadeGuns]: [java.lang.Throwable$WrappedPrintStream:println:748]: 	at com.google.common.eventbus.EventBus.post(EventBus.java:275)
+[23:33:16] [Server thread/INFO] [STDERR/HandmadeGuns]: [java.lang.Throwable$WrappedPrintStream:println:748]: 	at cpw.mods.fml.common.LoadController.distributeStateMessage(LoadController.java:119)
+[23:33:16] [Server thread/INFO] [STDERR/HandmadeGuns]: [java.lang.Throwable$WrappedPrintStream:println:748]: 	at cpw.mods.fml.common.Loader.preinitializeMods(Loader.java:556)
+[23:33:16] [Server thread/INFO] [STDERR/HandmadeGuns]: [java.lang.Throwable$WrappedPrintStream:println:748]: 	at cpw.mods.fml.server.FMLServerHandler.beginServerLoading(FMLServerHandler.java:88)
+[23:33:16] [Server thread/INFO] [STDERR/HandmadeGuns]: [java.lang.Throwable$WrappedPrintStream:println:748]: 	at cpw.mods.fml.common.FMLCommonHandler.onServerStart(FMLCommonHandler.java:314)
+[23:33:16] [Server thread/INFO] [STDERR/HandmadeGuns]: [java.lang.Throwable$WrappedPrintStream:println:748]: 	at net.minecraft.server.dedicated.DedicatedServer.startServer(DedicatedServer.java:120)
+[23:33:16] [Server thread/INFO] [STDERR/HandmadeGuns]: [java.lang.Throwable$WrappedPrintStream:println:748]: 	at net.minecraft.server.MinecraftServer.run(MinecraftServer.java:445)
+[23:33:16] [Server thread/INFO] [STDERR/HandmadeGuns]: [java.lang.Throwable$WrappedPrintStream:println:748]: 	at net.minecraft.server.MinecraftServer$2.run(MinecraftServer.java:752)
+[23:33:16] [Server thread/TRACE] [HandmadeGuns/HandmadeGuns]: Sent event FMLPreInitializationEvent to mod HandmadeGuns
+[23:33:16] [Server thread/DEBUG] [FML/]: Bar Step: PreInitialization - HandMadeGunsModEX took 7.297s
+[23:33:16] [Server thread/TRACE] [shincolle/shincolle]: Sending event FMLPreInitializationEvent to mod shincolle
+[23:33:16] [Server thread/WARN] [FML/shincolle]: A mod has attempted to assign Block com.lulan.shincolle.block.BasicBlockFluid@28c49e1 to the Fluid 'water' but this Fluid has already been linked to the Block net.minecraft.block.BlockStaticLiquid@cad498c. You may have duplicate Fluid Blocks as a result. It *may* be possible to configure your mods to avoid this.
+[23:33:16] [Server thread/TRACE] [FML/shincolle]: Automatically registered mod shincolle entity EntityAirfieldHime as shincolle.EntityAirfieldHime
+[23:33:16] [Server thread/TRACE] [FML/shincolle]: Automatically registered mod shincolle entity EntityBattleshipHime as shincolle.EntityBattleshipHime
+[23:33:16] [Server thread/TRACE] [FML/shincolle]: Automatically registered mod shincolle entity EntityBattleshipNGT as shincolle.EntityBattleshipNGT
+[23:33:17] [Server thread/TRACE] [FML/shincolle]: Automatically registered mod shincolle entity EntityBattleshipNGTBoss as shincolle.EntityBattleshipNGTBoss
+[23:33:17] [Server thread/TRACE] [FML/shincolle]: Automatically registered mod shincolle entity EntityBattleshipYMT as shincolle.EntityBattleshipYMT
+[23:33:17] [Server thread/TRACE] [FML/shincolle]: Automatically registered mod shincolle entity EntityBattleshipYMTBoss as shincolle.EntityBattleshipYMTBoss
+[23:33:17] [Server thread/TRACE] [FML/shincolle]: Automatically registered mod shincolle entity EntityBattleshipRe as shincolle.EntityBattleshipRe
+[23:33:17] [Server thread/TRACE] [FML/shincolle]: Automatically registered mod shincolle entity EntityBattleshipTa as shincolle.EntityBattleshipTa
+[23:33:17] [Server thread/TRACE] [FML/shincolle]: Automatically registered mod shincolle entity EntityCarrierAkagi as shincolle.EntityCarrierAkagi
+[23:33:17] [Server thread/TRACE] [FML/shincolle]: Automatically registered mod shincolle entity EntityCarrierAkagiBoss as shincolle.EntityCarrierAkagiBoss
+[23:33:17] [Server thread/TRACE] [FML/shincolle]: Automatically registered mod shincolle entity EntityCarrierKaga as shincolle.EntityCarrierKaga
+[23:33:17] [Server thread/TRACE] [FML/shincolle]: Automatically registered mod shincolle entity EntityCarrierKagaBoss as shincolle.EntityCarrierKagaBoss
+[23:33:17] [Server thread/TRACE] [FML/shincolle]: Automatically registered mod shincolle entity EntityCarrierHime as shincolle.EntityCarrierHime
+[23:33:17] [Server thread/TRACE] [FML/shincolle]: Automatically registered mod shincolle entity EntityCarrierWD as shincolle.EntityCarrierWD
+[23:33:17] [Server thread/TRACE] [FML/shincolle]: Automatically registered mod shincolle entity EntityCarrierWo as shincolle.EntityCarrierWo
+[23:33:17] [Server thread/TRACE] [FML/shincolle]: Automatically registered mod shincolle entity EntityDestroyerI as shincolle.EntityDestroyerI
+[23:33:17] [Server thread/TRACE] [FML/shincolle]: Automatically registered mod shincolle entity EntityDestroyerRo as shincolle.EntityDestroyerRo
+[23:33:17] [Server thread/TRACE] [FML/shincolle]: Automatically registered mod shincolle entity EntityDestroyerHa as shincolle.EntityDestroyerHa
+[23:33:17] [Server thread/TRACE] [FML/shincolle]: Automatically registered mod shincolle entity EntityDestroyerNi as shincolle.EntityDestroyerNi
+[23:33:17] [Server thread/TRACE] [FML/shincolle]: Automatically registered mod shincolle entity EntityDestroyerAkatsuki as shincolle.EntityDestroyerAkatsuki
+[23:33:17] [Server thread/TRACE] [FML/shincolle]: Automatically registered mod shincolle entity EntityDestroyerAkatsukiMob as shincolle.EntityDestroyerAkatsukiMob
+[23:33:17] [Server thread/TRACE] [FML/shincolle]: Automatically registered mod shincolle entity EntityDestroyerHibiki as shincolle.EntityDestroyerHibiki
+[23:33:17] [Server thread/TRACE] [FML/shincolle]: Automatically registered mod shincolle entity EntityDestroyerHibikiMob as shincolle.EntityDestroyerHibikiMob
+[23:33:17] [Server thread/TRACE] [FML/shincolle]: Automatically registered mod shincolle entity EntityDestroyerIkazuchi as shincolle.EntityDestroyerIkazuchi
+[23:33:17] [Server thread/TRACE] [FML/shincolle]: Automatically registered mod shincolle entity EntityDestroyerIkazuchiMob as shincolle.EntityDestroyerIkazuchiMob
+[23:33:17] [Server thread/TRACE] [FML/shincolle]: Automatically registered mod shincolle entity EntityDestroyerInazuma as shincolle.EntityDestroyerInazuma
+[23:33:17] [Server thread/TRACE] [FML/shincolle]: Automatically registered mod shincolle entity EntityDestroyerInazumaMob as shincolle.EntityDestroyerInazumaMob
+[23:33:17] [Server thread/TRACE] [FML/shincolle]: Automatically registered mod shincolle entity EntityDestroyerShimakaze as shincolle.EntityDestroyerShimakaze
+[23:33:17] [Server thread/TRACE] [FML/shincolle]: Automatically registered mod shincolle entity EntityDestroyerShimakazeBoss as shincolle.EntityDestroyerShimakazeBoss
+[23:33:17] [Server thread/TRACE] [FML/shincolle]: Automatically registered mod shincolle entity EntityHarbourHime as shincolle.EntityHarbourHime
+[23:33:17] [Server thread/TRACE] [FML/shincolle]: Automatically registered mod shincolle entity EntityHeavyCruiserRi as shincolle.EntityHeavyCruiserRi
+[23:33:17] [Server thread/TRACE] [FML/shincolle]: Automatically registered mod shincolle entity EntityHeavyCruiserNe as shincolle.EntityHeavyCruiserNe
+[23:33:17] [Server thread/TRACE] [FML/shincolle]: Automatically registered mod shincolle entity EntityNorthernHime as shincolle.EntityNorthernHime
+[23:33:17] [Server thread/TRACE] [FML/shincolle]: Automatically registered mod shincolle entity EntityRensouhou as shincolle.EntityRensouhou
+[23:33:17] [Server thread/TRACE] [FML/shincolle]: Automatically registered mod shincolle entity EntityRensouhouBoss as shincolle.EntityRensouhouBoss
+[23:33:17] [Server thread/TRACE] [FML/shincolle]: Automatically registered mod shincolle entity EntityRensouhouS as shincolle.EntityRensouhouS
+[23:33:17] [Server thread/TRACE] [FML/shincolle]: Automatically registered mod shincolle entity EntitySubmKa as shincolle.EntitySubmKa
+[23:33:17] [Server thread/TRACE] [FML/shincolle]: Automatically registered mod shincolle entity EntitySubmYo as shincolle.EntitySubmYo
+[23:33:17] [Server thread/TRACE] [FML/shincolle]: Automatically registered mod shincolle entity EntitySubmSo as shincolle.EntitySubmSo
+[23:33:17] [Server thread/TRACE] [FML/shincolle]: Automatically registered mod shincolle entity EntitySubmRo500 as shincolle.EntitySubmRo500
+[23:33:17] [Server thread/TRACE] [FML/shincolle]: Automatically registered mod shincolle entity EntitySubmRo500Mob as shincolle.EntitySubmRo500Mob
+[23:33:17] [Server thread/TRACE] [FML/shincolle]: Automatically registered mod shincolle entity EntitySubmU511 as shincolle.EntitySubmU511
+[23:33:17] [Server thread/TRACE] [FML/shincolle]: Automatically registered mod shincolle entity EntitySubmU511Mob as shincolle.EntitySubmU511Mob
+[23:33:17] [Server thread/TRACE] [FML/shincolle]: Automatically registered mod shincolle entity EntityTransportWa as shincolle.EntityTransportWa
+[23:33:17] [Server thread/TRACE] [FML/shincolle]: Automatically registered mod shincolle entity EntityMountAfH as shincolle.EntityMountAfH
+[23:33:17] [Server thread/TRACE] [FML/shincolle]: Automatically registered mod shincolle entity EntityMountBaH as shincolle.EntityMountBaH
+[23:33:17] [Server thread/TRACE] [FML/shincolle]: Automatically registered mod shincolle entity EntityMountCaH as shincolle.EntityMountCaH
+[23:33:17] [Server thread/TRACE] [FML/shincolle]: Automatically registered mod shincolle entity EntityMountCaWD as shincolle.EntityMountCaWD
+[23:33:17] [Server thread/TRACE] [FML/shincolle]: Automatically registered mod shincolle entity EntityMountHbH as shincolle.EntityMountHbH
+[23:33:17] [Server thread/TRACE] [FML/shincolle]: Automatically registered mod shincolle entity EntityMountSeat2 as shincolle.EntityMountSeat2
+[23:33:17] [Server thread/TRACE] [FML/shincolle]: Automatically registered mod shincolle entity EntityAbyssMissile as shincolle.EntityAbyssMissile
+[23:33:17] [Server thread/TRACE] [FML/shincolle]: Automatically registered mod shincolle entity EntityAirplane as shincolle.EntityAirplane
+[23:33:17] [Server thread/TRACE] [FML/shincolle]: Automatically registered mod shincolle entity EntityAirplaneTakoyaki as shincolle.EntityAirplaneTakoyaki
+[23:33:17] [Server thread/TRACE] [FML/shincolle]: Automatically registered mod shincolle entity EntityAirplaneT as shincolle.EntityAirplaneT
+[23:33:17] [Server thread/TRACE] [FML/shincolle]: Automatically registered mod shincolle entity EntityAirplaneZero as shincolle.EntityAirplaneZero
+[23:33:17] [Server thread/TRACE] [FML/shincolle]: Automatically registered mod shincolle entity EntityAirplaneTMob as shincolle.EntityAirplaneTMob
+[23:33:17] [Server thread/TRACE] [FML/shincolle]: Automatically registered mod shincolle entity EntityAirplaneZeroMob as shincolle.EntityAirplaneZeroMob
+[23:33:17] [Server thread/TRACE] [FML/shincolle]: Automatically registered mod shincolle entity EntityFloatingFort as shincolle.EntityFloatingFort
+[23:33:17] [Server thread/TRACE] [FML/shincolle]: Automatically registered mod shincolle entity EntityProjectileBeam as shincolle.EntityProjectileBeam
+[23:33:17] [Server thread/TRACE] [FML/shincolle]: Automatically registered mod shincolle entity EntityRenderLargeShipyard as shincolle.EntityRenderLargeShipyard
+[23:33:17] [Server thread/TRACE] [FML/shincolle]: Automatically registered mod shincolle entity EntityRenderVortex as shincolle.EntityRenderVortex
+[23:33:17] [Server thread/TRACE] [FML/shincolle]: Automatically registered mod shincolle entity EntityRenderFlare as shincolle.EntityRenderFlare
+[23:33:17] [Server thread/TRACE] [FML/shincolle]: Automatically registered mod shincolle entity BasicEntityItem as shincolle.BasicEntityItem
+[23:33:17] [Server thread/TRACE] [shincolle/shincolle]: Sent event FMLPreInitializationEvent to mod shincolle
+[23:33:17] [Server thread/DEBUG] [FML/]: Bar Step: PreInitialization - Shinkeiseikan Collection took 0.919s
+[23:33:17] [Server thread/TRACE] [lmmx/lmmx]: Sending event FMLPreInitializationEvent to mod lmmx
+[23:33:17] [Server thread/INFO] [STDOUT/lmmx]: [mmmlibx.lib.MMMLib:Debug:41]: MMMLib-init FileManager.
+[23:33:17] [Server thread/INFO] [STDOUT/lmmx]: [mmmlibx.lib.MMMLib:Debug:41]: MMMLib-mods path =C:\ModdingSpace2\GVCC\GVC\eclipse\.\mods
+[23:33:17] [Server thread/INFO] [STDOUT/lmmx]: [mmmlibx.lib.MMMLib:Debug:41]: MMMLib-getModFile:[mmmlibx]:C:\ModdingSpace2\GVCC\GVC\eclipse\.\mods
+[23:33:17] [Server thread/INFO] [STDOUT/lmmx]: [mmmlibx.lib.MMMLib:Debug:41]: MMMLib-getModFile-get:2.
+[23:33:17] [Server thread/INFO] [STDOUT/lmmx]: [mmmlibx.lib.MMMLib:Debug:41]: MMMLib-getModFile-file:littleMaidMobX
+[23:33:17] [Server thread/INFO] [STDOUT/lmmx]: [mmmlibx.lib.MMMLib:Debug:41]: MMMLib-getModFile-files:1
+[23:33:17] [Server thread/INFO] [STDOUT/lmmx]: [mmmlibx.lib.MMMLib:Debug:41]: MMMLib-getModFile:[mmmlibx]:C:\ModdingSpace2\GVCC\GVC\eclipse\.\mods
+[23:33:17] [Server thread/INFO] [STDOUT/lmmx]: [mmmlibx.lib.MMMLib:Debug:41]: MMMLib-getModFile-get:2.
+[23:33:17] [Server thread/INFO] [STDOUT/lmmx]: [mmmlibx.lib.MMMLib:Debug:41]: MMMLib-getModFile-files:1
+[23:33:17] [Server thread/INFO] [STDOUT/lmmx]: [mmmlibx.lib.MMMLib:Debug:41]: MMMLib-getModFile:[mmmlibx]:C:\ModdingSpace2\GVCC\GVC\eclipse\.\mods
+[23:33:17] [Server thread/INFO] [STDOUT/lmmx]: [mmmlibx.lib.MMMLib:Debug:41]: MMMLib-getModFile-get:2.
+[23:33:17] [Server thread/INFO] [STDOUT/lmmx]: [mmmlibx.lib.MMMLib:Debug:41]: MMMLib-getModFile-files:1
+[23:33:17] [Server thread/TRACE] [FML/lmmx]: Automatically registered mod lmmx entity LittleMaidX as lmmx.LittleMaidX
+[23:33:17] [Server thread/INFO] [STDOUT/lmmx]: [mmmlibx.lib.MMMLib:Debug:41]: MMMLib-getModFile:[EntityMode]:C:\ModdingSpace2\GVCC\GVC\eclipse\.\mods
+[23:33:17] [Server thread/INFO] [STDOUT/lmmx]: [mmmlibx.lib.MMMLib:Debug:41]: MMMLib-getModFile-get:2.
+[23:33:17] [Server thread/INFO] [STDOUT/lmmx]: [mmmlibx.lib.MMMLib:Debug:41]: MMMLib-getModFile-files:0
+[23:33:17] [Server thread/TRACE] [lmmx/lmmx]: Sent event FMLPreInitializationEvent to mod lmmx
+[23:33:17] [Server thread/DEBUG] [FML/]: Bar Step: PreInitialization - lmmx took 0.146s
+[23:33:17] [Server thread/TRACE] [MMMLibX/MMMLibX]: Sending event FMLPreInitializationEvent to mod MMMLibX
+[23:33:17] [Server thread/TRACE] [MMMLibX/MMMLibX]: Sent event FMLPreInitializationEvent to mod MMMLibX
+[23:33:17] [Server thread/DEBUG] [FML/]: Bar Step: PreInitialization - MMMLibX took 0.022s
+[23:33:17] [Server thread/TRACE] [Sokoniyatugairuzo/Sokoniyatugairuzo]: Sending event FMLPreInitializationEvent to mod Sokoniyatugairuzo
+[23:33:17] [Server thread/TRACE] [Sokoniyatugairuzo/Sokoniyatugairuzo]: Sent event FMLPreInitializationEvent to mod Sokoniyatugairuzo
+[23:33:17] [Server thread/DEBUG] [FML/]: Bar Step: PreInitialization - Sokoniyatugairuzo took 0.001s
+[23:33:17] [Server thread/TRACE] [zabuton/zabuton]: Sending event FMLPreInitializationEvent to mod zabuton
+[23:33:17] [Server thread/TRACE] [FML/zabuton]: Automatically registered mod zabuton entity zabuton as zabuton.zabuton
+[23:33:17] [Server thread/TRACE] [zabuton/zabuton]: Sent event FMLPreInitializationEvent to mod zabuton
+[23:33:17] [Server thread/DEBUG] [FML/]: Bar Step: PreInitialization - zabuton took 0.013s
+[23:33:17] [Server thread/TRACE] [GVCGuns/GVCGuns]: Sending event FMLPreInitializationEvent to mod GVCGuns
+[23:33:18] [Server thread/TRACE] [GVCGuns/GVCGuns]: Sent event FMLPreInitializationEvent to mod GVCGuns
+[23:33:18] [Server thread/DEBUG] [FML/]: Bar Step: PreInitialization - GVCGuns took 0.303s
+[23:33:18] [Server thread/TRACE] [GVCMob/GVCMob]: Sending event FMLPreInitializationEvent to mod GVCMob
+[23:33:18] [Server thread/TRACE] [GVCMob/GVCMob]: Sent event FMLPreInitializationEvent to mod GVCMob
+[23:33:18] [Server thread/DEBUG] [FML/]: Bar Step: PreInitialization - Guerrilla vs Command mod : High Difficulity version took 0.538s
+[23:33:18] [Server thread/DEBUG] [FML/]: Bar Finished: PreInitialization took 9.322s
+[23:33:18] [Server thread/INFO] [FML/]: Applying holder lookups
+[23:33:18] [Server thread/INFO] [FML/]: Holder lookups applied
+[23:33:18] [Server thread/INFO] [FML/]: Injecting itemstacks
+[23:33:18] [Server thread/INFO] [FML/]: Itemstack injection complete
+[23:33:18] [Server thread/WARN] [FML/]: Can't revert to frozen GameData state without freezing first.
+[23:33:18] [Server thread/TRACE] [mcp/mcp]: Sending event FMLModIdMappingEvent to mod mcp
+[23:33:18] [Server thread/TRACE] [mcp/mcp]: Sent event FMLModIdMappingEvent to mod mcp
+[23:33:18] [Server thread/DEBUG] [FML/]: Bar Step: ModIdMapping - Minecraft Coder Pack took 0.001s
+[23:33:18] [Server thread/TRACE] [FML/FML]: Sending event FMLModIdMappingEvent to mod FML
+[23:33:18] [Server thread/TRACE] [FML/FML]: Sent event FMLModIdMappingEvent to mod FML
+[23:33:18] [Server thread/DEBUG] [FML/]: Bar Step: ModIdMapping - Forge Mod Loader took 0.001s
+[23:33:18] [Server thread/TRACE] [Forge/Forge]: Sending event FMLModIdMappingEvent to mod Forge
+[23:33:18] [Server thread/TRACE] [Forge/Forge]: Sent event FMLModIdMappingEvent to mod Forge
+[23:33:18] [Server thread/DEBUG] [FML/]: Bar Step: ModIdMapping - Minecraft Forge took 0.001s
+[23:33:18] [Server thread/TRACE] [HandmadeGuns/HandmadeGuns]: Sending event FMLModIdMappingEvent to mod HandmadeGuns
+[23:33:18] [Server thread/TRACE] [HandmadeGuns/HandmadeGuns]: Sent event FMLModIdMappingEvent to mod HandmadeGuns
+[23:33:18] [Server thread/DEBUG] [FML/]: Bar Step: ModIdMapping - HandMadeGunsModEX took 0.001s
+[23:33:18] [Server thread/TRACE] [shincolle/shincolle]: Sending event FMLModIdMappingEvent to mod shincolle
+[23:33:18] [Server thread/TRACE] [shincolle/shincolle]: Sent event FMLModIdMappingEvent to mod shincolle
+[23:33:18] [Server thread/DEBUG] [FML/]: Bar Step: ModIdMapping - Shinkeiseikan Collection took 0.001s
+[23:33:18] [Server thread/TRACE] [lmmx/lmmx]: Sending event FMLModIdMappingEvent to mod lmmx
+[23:33:18] [Server thread/TRACE] [lmmx/lmmx]: Sent event FMLModIdMappingEvent to mod lmmx
+[23:33:18] [Server thread/DEBUG] [FML/]: Bar Step: ModIdMapping - lmmx took 0.000s
+[23:33:18] [Server thread/TRACE] [MMMLibX/MMMLibX]: Sending event FMLModIdMappingEvent to mod MMMLibX
+[23:33:18] [Server thread/TRACE] [MMMLibX/MMMLibX]: Sent event FMLModIdMappingEvent to mod MMMLibX
+[23:33:18] [Server thread/DEBUG] [FML/]: Bar Step: ModIdMapping - MMMLibX took 0.000s
+[23:33:18] [Server thread/TRACE] [Sokoniyatugairuzo/Sokoniyatugairuzo]: Sending event FMLModIdMappingEvent to mod Sokoniyatugairuzo
+[23:33:18] [Server thread/TRACE] [Sokoniyatugairuzo/Sokoniyatugairuzo]: Sent event FMLModIdMappingEvent to mod Sokoniyatugairuzo
+[23:33:18] [Server thread/DEBUG] [FML/]: Bar Step: ModIdMapping - Sokoniyatugairuzo took 0.000s
+[23:33:18] [Server thread/TRACE] [zabuton/zabuton]: Sending event FMLModIdMappingEvent to mod zabuton
+[23:33:18] [Server thread/TRACE] [zabuton/zabuton]: Sent event FMLModIdMappingEvent to mod zabuton
+[23:33:18] [Server thread/DEBUG] [FML/]: Bar Step: ModIdMapping - zabuton took 0.000s
+[23:33:18] [Server thread/TRACE] [GVCGuns/GVCGuns]: Sending event FMLModIdMappingEvent to mod GVCGuns
+[23:33:18] [Server thread/TRACE] [GVCGuns/GVCGuns]: Sent event FMLModIdMappingEvent to mod GVCGuns
+[23:33:18] [Server thread/DEBUG] [FML/]: Bar Step: ModIdMapping - GVCGuns took 0.000s
+[23:33:18] [Server thread/TRACE] [GVCMob/GVCMob]: Sending event FMLModIdMappingEvent to mod GVCMob
+[23:33:18] [Server thread/TRACE] [GVCMob/GVCMob]: Sent event FMLModIdMappingEvent to mod GVCMob
+[23:33:18] [Server thread/DEBUG] [FML/]: Bar Step: ModIdMapping - Guerrilla vs Command mod : High Difficulity version took 0.002s
+[23:33:18] [Server thread/DEBUG] [FML/]: Bar Finished: ModIdMapping took 0.008s
+[23:33:18] [Server thread/INFO] [FML/]: Applying holder lookups
+[23:33:18] [Server thread/INFO] [FML/]: Holder lookups applied
+[23:33:18] [Server thread/TRACE] [mcp/mcp]: Sending event FMLServerStoppedEvent to mod mcp
+[23:33:18] [Server thread/TRACE] [mcp/mcp]: Sent event FMLServerStoppedEvent to mod mcp
+[23:33:18] [Server thread/DEBUG] [FML/]: Bar Step: ServerStopped - Minecraft Coder Pack took 0.001s
+[23:33:18] [Server thread/TRACE] [FML/FML]: Sending event FMLServerStoppedEvent to mod FML
+[23:33:18] [Server thread/TRACE] [FML/FML]: Sent event FMLServerStoppedEvent to mod FML
+[23:33:18] [Server thread/DEBUG] [FML/]: Bar Step: ServerStopped - Forge Mod Loader took 0.001s
+[23:33:18] [Server thread/TRACE] [Forge/Forge]: Sending event FMLServerStoppedEvent to mod Forge
+[23:33:18] [Server thread/TRACE] [Forge/Forge]: Sent event FMLServerStoppedEvent to mod Forge
+[23:33:18] [Server thread/DEBUG] [FML/]: Bar Step: ServerStopped - Minecraft Forge took 0.002s
+[23:33:18] [Server thread/TRACE] [HandmadeGuns/HandmadeGuns]: Sending event FMLServerStoppedEvent to mod HandmadeGuns
+[23:33:18] [Server thread/TRACE] [HandmadeGuns/HandmadeGuns]: Sent event FMLServerStoppedEvent to mod HandmadeGuns
+[23:33:18] [Server thread/DEBUG] [FML/]: Bar Step: ServerStopped - HandMadeGunsModEX took 0.001s
+[23:33:18] [Server thread/TRACE] [shincolle/shincolle]: Sending event FMLServerStoppedEvent to mod shincolle
+[23:33:18] [Server thread/TRACE] [shincolle/shincolle]: Sent event FMLServerStoppedEvent to mod shincolle
+[23:33:18] [Server thread/DEBUG] [FML/]: Bar Step: ServerStopped - Shinkeiseikan Collection took 0.000s
+[23:33:18] [Server thread/TRACE] [lmmx/lmmx]: Sending event FMLServerStoppedEvent to mod lmmx
+[23:33:18] [Server thread/TRACE] [lmmx/lmmx]: Sent event FMLServerStoppedEvent to mod lmmx
+[23:33:18] [Server thread/DEBUG] [FML/]: Bar Step: ServerStopped - lmmx took 0.000s
+[23:33:18] [Server thread/TRACE] [MMMLibX/MMMLibX]: Sending event FMLServerStoppedEvent to mod MMMLibX
+[23:33:18] [Server thread/TRACE] [MMMLibX/MMMLibX]: Sent event FMLServerStoppedEvent to mod MMMLibX
+[23:33:18] [Server thread/DEBUG] [FML/]: Bar Step: ServerStopped - MMMLibX took 0.007s
+[23:33:18] [Server thread/TRACE] [Sokoniyatugairuzo/Sokoniyatugairuzo]: Sending event FMLServerStoppedEvent to mod Sokoniyatugairuzo
+[23:33:18] [Server thread/TRACE] [Sokoniyatugairuzo/Sokoniyatugairuzo]: Sent event FMLServerStoppedEvent to mod Sokoniyatugairuzo
+[23:33:18] [Server thread/DEBUG] [FML/]: Bar Step: ServerStopped - Sokoniyatugairuzo took 0.001s
+[23:33:18] [Server thread/TRACE] [zabuton/zabuton]: Sending event FMLServerStoppedEvent to mod zabuton
+[23:33:18] [Server thread/TRACE] [zabuton/zabuton]: Sent event FMLServerStoppedEvent to mod zabuton
+[23:33:18] [Server thread/DEBUG] [FML/]: Bar Step: ServerStopped - zabuton took 0.001s
+[23:33:18] [Server thread/TRACE] [GVCGuns/GVCGuns]: Sending event FMLServerStoppedEvent to mod GVCGuns
+[23:33:18] [Server thread/TRACE] [GVCGuns/GVCGuns]: Sent event FMLServerStoppedEvent to mod GVCGuns
+[23:33:18] [Server thread/DEBUG] [FML/]: Bar Step: ServerStopped - GVCGuns took 0.001s
+[23:33:18] [Server thread/TRACE] [GVCMob/GVCMob]: Sending event FMLServerStoppedEvent to mod GVCMob
+[23:33:18] [Server thread/TRACE] [GVCMob/GVCMob]: Sent event FMLServerStoppedEvent to mod GVCMob
+[23:33:18] [Server thread/DEBUG] [FML/]: Bar Step: ServerStopped - Guerrilla vs Command mod : High Difficulity version took 0.000s
+[23:33:18] [Server thread/DEBUG] [FML/]: Bar Finished: ServerStopped took 0.015s
+[23:33:18] [Server thread/INFO] [FML/]: The state engine was in incorrect state POSTINITIALIZATION and forced into state SERVER_STOPPED. Errors may have been discarded.

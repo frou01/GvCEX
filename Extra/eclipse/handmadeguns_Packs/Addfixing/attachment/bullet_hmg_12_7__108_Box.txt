@@ -1,0 +1,12 @@
+Texture,127x108bullet
+Stack,64
+Name,12.7mm x 108mm Box
+Magazine,12.7mmx108mmBox
+
+Recipe1,aa 
+Recipe2,bbc
+Recipe3,ccc
+ItemA,minecraft,iron_block
+ItemB,minecraft,gunpowder
+ItemC,minecraft,emerald
+addNewRecipe,HandmadeGuns,12.7mmx108mmBox,3

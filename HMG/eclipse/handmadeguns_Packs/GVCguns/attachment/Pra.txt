@@ -1,0 +1,11 @@
+Texture,pra
+Stack,64
+Name,Prastic
+Magazine,Prastic
+Recipe1,aba
+Recipe2,   
+Recipe3,   
+ItemA,minecraft,glass
+ItemB,minecraft,iron_ingot
+addNewRecipe,HandmadeGuns,Prastic,6
+

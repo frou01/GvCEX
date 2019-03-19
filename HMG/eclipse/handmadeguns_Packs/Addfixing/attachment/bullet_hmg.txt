@@ -1,0 +1,5 @@
+Texture,bullet
+Stack,64
+Name,ライフルマガジン
+Magazine,bullet_hmg
+addRecipe,bullet_hmg,2,ab0,de0,000,265,265,289,265,289,289,289,289,289

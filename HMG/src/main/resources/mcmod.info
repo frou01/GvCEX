@@ -1,0 +1,16 @@
+[
+{
+  "modid": "HandmadeGuns",
+  "name": "HandMadeGunsModEX",
+  "description": "The Addable Gun Mod",
+  "version": "10.37",
+  "mcversion": "1.7.10",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["frou01"],
+  "credits": "original:SCOPE_MG36 , AK-47:nicoemon2 , pistolet makarova:YouwoSugokusuki , RPG-7:_ryoma489_",
+  "logoFile": "logo.png",
+  "screenshots": [],
+  "dependencies": []
+}
+]

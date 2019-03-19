@@ -1,0 +1,2 @@
+gradlew setupDecompWorkspace setupDevWorkspace ideaModule
+pause

@@ -1,0 +1,6 @@
+FlyingSoundName,bombdrops
+FlyingSoundLV,4
+FlyingSoundSP,1
+FlyingSoundmaxdist,1024
+FlyingSound_BulletMinSpeed,0.5
+Name,byfrou01_Bomb

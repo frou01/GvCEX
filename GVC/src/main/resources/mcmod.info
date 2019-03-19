@@ -1,0 +1,16 @@
+[
+{
+  "modid": "GVCMob",
+  "name": "Guerrilla vs Command mod : High Difficulity version",
+  "description": "Guerrilla warfare mod",
+  "version": "EX10.36",
+  "mcversion": "1.7.10",
+  "url": "",
+  "updateUrl": "",
+  "authors": ["frou01"],
+  "credits": "original:SCOPE_MG36 BMP-1&APC:",
+  "logoFile": "logo.png",
+  "screenshots": [],
+  "dependencies": []
+}
+]

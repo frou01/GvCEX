@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <bytecodeTargetLevel>
+      <module name="Dcre_api" target="1.8" />
+      <module name="Dcre_main" target="1.8" />
+      <module name="Dcre_test" target="1.8" />
+      <module name="DCreator_api" target="1.8" />
+      <module name="DCreator_main" target="1.8" />
+      <module name="DCreator_test" target="1.8" />
+      <module name="Depend_api" target="1.8" />
+      <module name="Depend_main" target="1.8" />
+      <module name="Depend_test" target="1.8" />
+      <module name="Extra_api" target="1.8" />
+      <module name="Extra_main" target="1.8" />
+      <module name="Extra_test" target="1.8" />
+      <module name="GVC_api" target="1.8" />
+      <module name="GVC_main" target="1.8" />
+      <module name="GVC_test" target="1.8" />
+      <module name="GVCC_api" target="1.8" />
+      <module name="GVCC_main" target="1.8" />
+      <module name="GVCC_test" target="1.8" />
+      <module name="HMG_api" target="1.8" />
+      <module name="HMG_main" target="1.8" />
+      <module name="HMG_test" target="1.8" />
+      <module name="HMV_api" target="1.8" />
+      <module name="HMV_main" target="1.8" />
+      <module name="HMV_test" target="1.8" />
+      <module name="Linker_api" target="1.8" />
+      <module name="Linker_main" target="1.8" />
+      <module name="Linker_test" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

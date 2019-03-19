@@ -1,0 +1,5 @@
+Texture,BP_sample
+BPItemStack,4
+BPItems,AR_sample,HG_sample,SMG_sample,SR_sample
+
+BP,BP_sample

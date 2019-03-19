@@ -1,0 +1,48 @@
+BulletPower,8
+BulletSpeed,8.0f
+BlletSpread,4.0f
+BulletGravity,0.49f
+Recoil,1.5d
+ReloadTime,70
+RemainingBullet,30
+Attacking,2.0f
+Zoom,1.0f,2.0f,4.0f
+ZoomRender,true
+ZoomRenderType,true,true,false
+ZoomRenderTypeTxture,false,false,true
+Cycle,2
+Texture,AK102
+GunSound,handmadeguns.fire,handmadeguns.supu
+GunSoundReload,handmadeguns.reload
+CanObj,true
+ObjModel,AK102.obj
+ObjTexture,AK102.png
+ModelScala,0.5f
+ModelHigh,0.99f,0.7f,0.86f
+ScopeTexture,ironsight.png,reddot.png,scope.png
+RenderCross,false
+UnderBarrelWeapon,0
+RightType,0
+Magazine,0,HandmadeGuns,bullet_hmg
+MagazineSG,0,HandmadeGuns,bullet_shell_hmg
+MagazineGL,0,HandmadeGuns,bullet_rr_hmg
+ModelArm,true
+ModelArmRotationR,-1.57f,0f,-1.57f
+ModelArmOffsetR,0.4f,0.5f,0.5f
+ModelArmRotationL,-0.0f,-2.3f,2.0f
+ModelArmOffsetL,0.1f,0.5f,-1.2f
+
+ReloadMotion
+{
+0,     0f , 0f , 0f,-0.3f,0.3f , 0f  ,0f,0f   , 0f   , 0.0f,1f  ,0f      , 0f  ,0f,0f , 0f,0f,0f , 0f,0f,0f   , 0f , 2f,-2f,0f , 0f,0f,0f , 0f,0f,40f
+1,     10f, 0f , 0f,-0.3f,0.3f , 0f  ,0f,0f   , 0f   , 0.0f,0.8f,0f      , 0f  ,0f,0f , 0f,0f,0f , 0f,0f,0f   , 0f , 0f,-1f,0f , 0f,0f,0f , 0f,0f,40f
+2,     20f, 0f , 0f,-0.3f,0.3f , -20f,0f,0f   , 0f   , 0.0f,0.8f,0f      , 0f  ,0f,0f , 0f,0f,0f , 0f,0f,0f   , 0f , 0f,-1f,0f , 0f,0f,0f , 0f,0f,40f
+3,     40f, 0f , 0f,-0.3f,0.3f , -20f,0f,0f   , 0f   , 0.0f,0.3f,0f      , 0.7f,0f,0f , 0f,0f,0f , 0f,0f,0f   , 0f , 0f, 0f,0f , 0f,0f,0f , 0f,0f,0f
+4,     50f, 0f , 0f,-0.3f,0.3f , 0f  ,0f,-40f , 1f   , 0.7f,-0.8f,0.3f   ,-0.7f,0f,0f , 0.2f,0f,0f , 0f,0f,0.785f,0f , 0f, 0f,0f , 0f,0f,0f , 0f,0f,0f
+5,     65f, 0f , 0f,-0.3f,0.3f , 0f  ,0f,-40f , 1f   , 0.7f,-0.8f,1.7f   ,-0.7f,0f,0f , 0.2f,0f,0f , 0f,0f,0.785f,0f , 0f, 0f,0f , 0f,0f,0f , 0f,0f,0f
+6,     70f, 0f , 0f,-0.3f,0.3f , 0f  ,0f,0f   , 1f   , 0f  ,0f  ,0f      , 0f  ,0f,0f , 0f,0f,0f , 0f,0f,0f   , 0f , 0f, 0f,0f , 0f,0f,0f , 0f,0f,0f
+}
+
+AR,AK102
+
+addRecipe,AK102,1,abc,0ef,000,265,265,263,0,265,263,0,0,0

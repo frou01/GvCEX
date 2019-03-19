@@ -1,0 +1,249 @@
+guerrila_cant_use_this
+BulletPower,500
+BulletSpeed,500
+BulletGravity,0.485
+guntype,7
+
+BlletSpread,4.0f
+ADS_Spread_coefficient,0.01
+Motion,0.35
+
+Recoil,50
+Recoil_sneaking,40
+
+ReloadTime,100
+
+RemainingBullet,1
+
+Attacking,1.0f
+Zoom,1.0F,1.0F,4.0f
+
+ZoomRender,true
+ZoomRenderType,true,true,false
+ZoomRenderTypeTxture,false,false,true
+
+Texture,PTRK2041
+GunSound,handmadeguns.rail,handmadeguns.rail
+GunSoundReload,handmadeguns.railcharge
+CanObj,true
+ObjModel,PTRK2041.mqo
+ObjTexture,PTRK2041.png
+ModelScala,0.5f
+CustomFlash,RailMuzzleFlash,4,3
+Bursts,1
+Rates,1
+attachRestriction,true
+allowattach,Bullet_Frag
+allowattach,Bullet_AP
+allowattach,scope
+
+ModelEquipped,-0.7f,0.7f,0.0f
+ModelHigh,1.2,1.2,1.2
+ModelWidthX,0.3895,0.6945f,0.6945f
+ModelWidthZ,0.5f,0.5f,0.5f
+ModelRotationX,180f,180f,180f
+ModelRotationY,45f,45f,45
+ModelRotationZ,180f,180f,180f
+
+ModelArm,true
+ModelArmRotationR,-1.57f,0f,-1.57f
+ModelArmOffsetR,0.4f,0.3f,0.5f
+ModelArmRotationL,-0.0f,-2.3f,2.0f
+ModelArmOffsetL,0.1f,0.7f,-1.2f
+
+SprintingPoint,0.5f,0.0f,0.5f
+SprintingRotation,20f,60f,0f
+
+SoundSpeed,1
+
+ScopeTexture,scope_svd.png,scope_svd.png,scope_svd.png
+RenderCross,false
+Cartridge,false
+DropMagazine,false
+
+Magazine,0,HandmadeGuns,14.5mm APFSDS
+MagazineSG,0,HandmadeGuns,bullet_shell_hmg
+MagazineGL,0,HandmadeGuns,bullet_rr_hmg
+
+AddParts,Body1
+    AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+    AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+    RenderOnNormal
+    AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+    AddRecoilMotionKey,0,0,0,0,0,0,0,            5,0,0,-0.4,0,0,0
+    AddRecoilMotionKey,5,0,0,-0.40,0,0,0,        8,0,0,-0.4,0,0,0
+    AddRecoilMotionKey,8,0,0,-0.40,0,0,0,       11,0,0,0,0,0,0
+
+    AddReloadMotionKey,0 ,0,0,0,0,0,0,            10,0,0,0,0,0,0
+    AddReloadMotionKey,10,0,0,0,0,0,0,            30,0,0,0,0,0,0
+    AddReloadMotionKey,30,0,0,0,0,0,0,            80,0,0,0,0,0,0
+    AddReloadMotionKey,80,0,0,0,0,0,0,           100,0,0,0,0,0,0
+
+    AddChildParts,MuzzleBrake
+        AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+        RenderOnNormal
+        AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+    BackParts
+
+    AddChildParts,Bipod
+        AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+        RenderOnNormal
+        AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+    BackParts
+
+    AddChildParts,Radiator
+        AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+        RenderOnNormal
+        AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+    BackParts
+
+    AddChildParts,Locker
+        AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+        RenderOnNormal
+        AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+    BackParts
+
+    AddChildParts,Battery
+        AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+        RenderOnNormal
+        AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+    BackParts
+
+    AddChildParts,Accelerator
+        AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+        RenderOnNormal
+        AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+    BackParts
+
+    AddChildParts,Stock
+        AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+        RenderOnNormal
+        AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+        AddRecoilMotionKey,0,0,0,0,0,0,0,           5,0,0,0.4,0,0,0
+        AddRecoilMotionKey,5,0,0,0.40,0,0,0,       8,0,0,0,0,0,0
+        AddRecoilMotionKey,8,0,0,0.40,0,0,0,       11,0,0,0,0,0,0
+    BackParts
+
+    AddChildParts,Larm
+    	AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+    	AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+    	RenderOnNormal
+    	AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+    	AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+    	AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+    	AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+
+        AddReloadMotionKey,0 ,0,0   ,0     ,0  ,0,0,          10,1,-1.2,-2.5  ,0  ,0,0
+        AddReloadMotionKey,10,1,-1.2,-2.5  ,0  ,0,0,          20,1,1.8 ,-2.5  ,0  ,0,0
+        AddReloadMotionKey,20,1,1.8 ,-2.5  ,0  ,0,0,          30,0,1.8 ,-2.5  ,0  ,0,0
+        AddReloadMotionKey,30,0,1.8 ,-2.5  ,0  ,0,0,          40,0,1.8 ,-2.5  ,0  ,0,0
+        AddReloadMotionKey,40,0,1.8 ,-2.5  ,0  ,0,0,          50,0,1.1 ,-1.75 ,0  ,0,0
+        AddReloadMotionKey,50,0,1.1 ,-1.75 ,0  ,0,0,          60,0,1.1 ,-1.75 ,0  ,0,0
+        AddReloadMotionKey,60,0,1.1 ,-1.75 ,0  ,0,0,          65,0,1.1 ,-4.4  ,0  ,0,0
+        AddReloadMotionKey,65,0,1.1 ,-4.4  ,0  ,0,0,          80,0,1.1 ,-3.4  ,0  ,0,0
+        AddReloadMotionKey,80,0,1.1 ,-3.4  ,0  ,0,0,          90,0,0.7 ,-3.4  ,0  ,0,0
+        AddReloadMotionKey,90,0,0.7 ,-3.4  ,0  ,0,0,          95,1,0.7 ,-3.4  ,0  ,0,0
+        AddReloadMotionKey,95,1,0.7 ,-3.4  ,0  ,0,0,          97,1,0   ,0     ,0  ,0,0
+        AddReloadMotionKey,97,1,0   ,0     ,0  ,0,0,         100,0,0   ,0     ,0  ,0,0
+    BackParts
+    AddChildParts,Rarm
+    	AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+    	AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+    	RenderOnNormal
+    	AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+    	AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+    	AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+    	AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+    BackParts
+
+
+    AddChildParts,IronSight
+        AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+        RenderOnNormal
+        AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+        attachpart
+        sight
+    BackParts
+
+    AddChildParts,Scope
+        AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+        RenderOnNormal
+        AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+        attachpart
+        scope
+        dot
+    BackParts
+
+
+
+
+    AddChildParts,APFS
+        AddPartsRotationCenterAndRotationAmount,0,0.7680,2.0805,0,0,0
+        RenderOnNormal
+        AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+
+        AddReloadMotionKey,0,false,          5
+        AddReloadMotionKey,5,false,          10
+        AddReloadMotionKey,10,1,-2  ,-2.5  ,0  ,0,0,          20,1,1   ,-2.5  ,0  ,0,0
+        AddReloadMotionKey,20,1,1   ,-2.5  ,0  ,0,0,          30,0,1   ,-2.5  ,0  ,0,0
+        AddReloadMotionKey,30,0,1   ,-2.5  ,0  ,0,0,          40,0,1   ,-2.5  ,30 ,0,0
+        AddReloadMotionKey,40,0,1   ,-2.5  ,30 ,0,0,          50,0,0.3 ,-1.75 ,15 ,0,0
+        AddReloadMotionKey,50,0,0.3 ,-1.75 ,15 ,0,0,          55,0,0.1 ,-0.875,7.5,0,0
+        AddReloadMotionKey,55,0,0.1 ,-0.875,7.5,0,0,          60,0,0   ,0     ,0  ,0,0
+        AddReloadMotionKey,60,0,0   ,0     ,0  ,0,0,         100,0,0   ,0     ,0  ,0,0
+    BackParts
+
+    AddChildParts,Chember
+        AddPartsRotationCenterAndRotationAmount,0,0.7680,0,0,0,0
+        RenderOnNormal
+        AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+        AddRecoilMotionKey,0,0,0,0,0,0,0,             5 ,0,0,-1,0,0,-50
+        AddRecoilMotionKey,5,0,0,-1,0,0,-50,          8 ,0,0,-1,0,0,-50
+        AddRecoilMotionKey,8,0,0,-1,0,0,-50,          11,0,0,-1,0,0,-50
+
+        AddReloadMotionKey,0 ,0,0,-1,0,0,-50,      65,0,0,-1  ,0,0,-50
+        AddReloadMotionKey,65,0,0,-1,0,0,-50,      80,0,0,-0.1,0,0,-50
+        AddReloadMotionKey,80,0,0,-0.1,0,0,-50,    90,0,0,0   ,0,0,0
+        AddReloadMotionKey,90,0,0,0   ,0,0,0,     100,0,0,0   ,0,0,0
+    BackParts
+
+Name,„P„S„Q„K2041
+BulletNameALL,byfrou01_RailBullet_14.5mm
+Tabname,HMG_GVCGuns
+SR,PTRK2041

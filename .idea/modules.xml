@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/DCreator/DCreator.iml" filepath="$PROJECT_DIR$/.idea/modules/DCreator/DCreator.iml" group="DCreator" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/DCreator/DCreator_api.iml" filepath="$PROJECT_DIR$/.idea/modules/DCreator/DCreator_api.iml" group="DCreator" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/DCreator/DCreator_main.iml" filepath="$PROJECT_DIR$/.idea/modules/DCreator/DCreator_main.iml" group="DCreator" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/DCreator/DCreator_test.iml" filepath="$PROJECT_DIR$/.idea/modules/DCreator/DCreator_test.iml" group="DCreator" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Depend/Depend.iml" filepath="$PROJECT_DIR$/.idea/modules/Depend/Depend.iml" group="Depend" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Depend/Depend_api.iml" filepath="$PROJECT_DIR$/.idea/modules/Depend/Depend_api.iml" group="Depend" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Depend/Depend_main.iml" filepath="$PROJECT_DIR$/.idea/modules/Depend/Depend_main.iml" group="Depend" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Depend/Depend_test.iml" filepath="$PROJECT_DIR$/.idea/modules/Depend/Depend_test.iml" group="Depend" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Extra/Extra.iml" filepath="$PROJECT_DIR$/.idea/modules/Extra/Extra.iml" group="Extra" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Extra/Extra_api.iml" filepath="$PROJECT_DIR$/.idea/modules/Extra/Extra_api.iml" group="Extra" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Extra/Extra_main.iml" filepath="$PROJECT_DIR$/.idea/modules/Extra/Extra_main.iml" group="Extra" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Extra/Extra_test.iml" filepath="$PROJECT_DIR$/.idea/modules/Extra/Extra_test.iml" group="Extra" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/GVC/GVC.iml" filepath="$PROJECT_DIR$/.idea/modules/GVC/GVC.iml" group="GVC" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/GVCC.iml" filepath="$PROJECT_DIR$/.idea/GVCC.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/GVCC_api.iml" filepath="$PROJECT_DIR$/.idea/modules/GVCC_api.iml" group="GVCC" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/GVCC_main.iml" filepath="$PROJECT_DIR$/.idea/modules/GVCC_main.iml" group="GVCC" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/GVCC_test.iml" filepath="$PROJECT_DIR$/.idea/modules/GVCC_test.iml" group="GVCC" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/GVC/GVC_api.iml" filepath="$PROJECT_DIR$/.idea/modules/GVC/GVC_api.iml" group="GVC" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/GVC/GVC_main.iml" filepath="$PROJECT_DIR$/.idea/modules/GVC/GVC_main.iml" group="GVC" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/GVC/GVC_test.iml" filepath="$PROJECT_DIR$/.idea/modules/GVC/GVC_test.iml" group="GVC" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/HMG/HMG.iml" filepath="$PROJECT_DIR$/.idea/modules/HMG/HMG.iml" group="HMG" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/HMG/HMG_api.iml" filepath="$PROJECT_DIR$/.idea/modules/HMG/HMG_api.iml" group="HMG" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/HMG/HMG_main.iml" filepath="$PROJECT_DIR$/.idea/modules/HMG/HMG_main.iml" group="HMG" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/HMG/HMG_test.iml" filepath="$PROJECT_DIR$/.idea/modules/HMG/HMG_test.iml" group="HMG" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Linker/Linker.iml" filepath="$PROJECT_DIR$/.idea/modules/Linker/Linker.iml" group="Linker" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Linker/Linker_api.iml" filepath="$PROJECT_DIR$/.idea/modules/Linker/Linker_api.iml" group="Linker" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Linker/Linker_main.iml" filepath="$PROJECT_DIR$/.idea/modules/Linker/Linker_main.iml" group="Linker" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Linker/Linker_test.iml" filepath="$PROJECT_DIR$/.idea/modules/Linker/Linker_test.iml" group="Linker" />
+      <module fileurl="file://$PROJECT_DIR$/HMV/src/main/main.iml" filepath="$PROJECT_DIR$/HMV/src/main/main.iml" />
+    </modules>
+  </component>
+</project>
