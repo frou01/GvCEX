@@ -43,21 +43,24 @@ public class BulletSoundHMG extends MovingSound
 		}
 		else
 		{
-//			double prevdisttoPlayer = disttoPlayer;
-//			disttoPlayer = attachedEntity.getDistanceSqToEntity(proxy.getEntityPlayerInstance());
-//			if(attachedEntity.motionX * attachedEntity.motionX + attachedEntity.motionY * attachedEntity.motionY + attachedEntity.motionZ * attachedEntity.motionZ < minspeed)volume = 0;
-//			else {
-//				if (disttoPlayer > 0 && disttoPlayer < maxdist * maxdist) {
-//					if (prevdisttoPlayer != -1) {
-//						float doppler = (float) (sqrt(prevdisttoPlayer) - sqrt(disttoPlayer));
-//						float tempsp = (318.8f / (318.8f - doppler * 20f));
-////						field_147663_c = savedfield_147663_c * tempsp;
-//					}
-//				}
-//			}
 			this.xPosF = (float) this.attachedEntity.posX;
 			this.yPosF = (float) this.attachedEntity.posY;
 			this.zPosF = (float) this.attachedEntity.posZ;
+			double prevdisttoPlayer = disttoPlayer;
+			disttoPlayer = attachedEntity.getDistanceSqToEntity(proxy.getEntityPlayerInstance());
+			if(attachedEntity.motionX * attachedEntity.motionX + attachedEntity.motionY * attachedEntity.motionY + attachedEntity.motionZ * attachedEntity.motionZ < minspeed)volume = 0;
+			else {
+				if (disttoPlayer < maxdist) {
+					if(disttoPlayer > volume*16 * volume*16)volume = (float) (sqrt(disttoPlayer)/16);
+					if (prevdisttoPlayer != -1) {
+						float doppler = (float) (sqrt(prevdisttoPlayer) - sqrt(disttoPlayer));
+						float tempsp = (318.8f / (318.8f - doppler * 20f));
+						field_147663_c = savedfield_147663_c * tempsp;
+					}
+				}else {
+					volume = 0;
+				}
+			}
 		}
 	}
 }
