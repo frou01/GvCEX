@@ -2,12 +2,8 @@ package hmgww2.blocks.tile;
  
 import java.util.List;
 
-import gvclib.entity.EntityBases;
-import hmgww2.entity.EntityUSSRBase;
+import hmgww2.entity.*;
 import hmgww2.mod_GVCWW2;
-import hmgww2.entity.EntityGERBase;
-import hmgww2.entity.EntityJPNBase;
-import hmgww2.entity.EntityUSABase;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;

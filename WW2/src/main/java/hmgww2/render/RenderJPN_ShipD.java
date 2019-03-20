@@ -80,17 +80,17 @@ public class RenderJPN_ShipD extends Render {
 			{
 				GL11.glPushMatrix();//glstart
 				GL11.glTranslatef(3.5F, 5F, -0F);
-				if(entity.combattask_5)
-				{
-				GL11.glRotatef(180.0F - entity.rotation_5 - (180.0F - entityYaw), 0.0F, 1.0F, 0.0F);
-				}
-				else{
-					GL11.glRotatef(0.0F, 0.0F, 1.0F, 0.0F);
-				}
+//				if(entity.combattask_5)
+//				{
+//				GL11.glRotatef(180.0F - entity.rotation_5 - (180.0F - entityYaw), 0.0F, 1.0F, 0.0F);
+//				}
+//				else{
+//					GL11.glRotatef(0.0F, 0.0F, 1.0F, 0.0F);
+//				}
 				GL11.glTranslatef(-3.5F, -5F, 0F);
 					tankk.renderPart("mat10");
 					GL11.glTranslatef(3.5F, 5F, -0F);
-					GL11.glRotatef(entity.rotationp_5, 1.0F, 0.0F, 0.0F);
+//					GL11.glRotatef(entity.rotationp_5, 1.0F, 0.0F, 0.0F);
 					GL11.glTranslatef(-3.5F, -5F, 0F);
 					tankk.renderPart("mat11");
 				GL11.glPopMatrix();//glend
@@ -98,17 +98,17 @@ public class RenderJPN_ShipD extends Render {
 			{
 				GL11.glPushMatrix();//glstart
 				GL11.glTranslatef(-3.5F, 5F, -0F);
-				if(entity.combattask_6)
-				{
-				GL11.glRotatef(180.0F - entity.rotation_6 - (180.0F - entityYaw), 0.0F, 1.0F, 0.0F);
-				}
-				else{
-					GL11.glRotatef(0.0F, 0.0F, 1.0F, 0.0F);
-				}
+//				if(entity.combattask_6)
+//				{
+//				GL11.glRotatef(180.0F - entity.rotation_6 - (180.0F - entityYaw), 0.0F, 1.0F, 0.0F);
+//				}
+//				else{
+//					GL11.glRotatef(0.0F, 0.0F, 1.0F, 0.0F);
+//				}
 				GL11.glTranslatef(3.5F, -5F, 0F);
 					tankk.renderPart("mat12");
 					GL11.glTranslatef(-3.5F, 5F, -0F);
-					GL11.glRotatef(entity.rotationp_5, 1.0F, 0.0F, 0.0F);
+//					GL11.glRotatef(entity.rotationp_5, 1.0F, 0.0F, 0.0F);
 					GL11.glTranslatef(3.5F, -5F, 0F);
 					tankk.renderPart("mat13");
 				GL11.glPopMatrix();//glend
@@ -118,11 +118,11 @@ public class RenderJPN_ShipD extends Render {
 		{
 			GL11.glPushMatrix();//glstart
 			GL11.glTranslatef(0F, 5.5F, 5F);
-			GL11.glRotatef(180.0F -entity.rotation - (180.0F - entityYaw), 0.0F, 1.0F, 0.0F);
+//			GL11.glRotatef(180.0F -entity.rotation - (180.0F - entityYaw), 0.0F, 1.0F, 0.0F);
 			GL11.glTranslatef(0F, -5.5F, -5F);
 			tankk.renderPart("mat5");
 			GL11.glTranslatef(0F, 5.5F, 5.5F);
-			GL11.glRotatef(entity.rotationp, 1.0F, 0.0F, 0.0F);
+//			GL11.glRotatef(entity.rotationp, 1.0F, 0.0F, 0.0F);
 			GL11.glTranslatef(0F, -5.5F, -5.5F);
 			tankk.renderPart("mat6");
 			GL11.glPopMatrix();//glend
@@ -130,11 +130,11 @@ public class RenderJPN_ShipD extends Render {
 		{
 			GL11.glPushMatrix();//glstart
 			GL11.glTranslatef(0F, 5.5F, -6.5F);
-			GL11.glRotatef(180.0F -entity.rotation_2 - (180.0F - entityYaw), 0.0F, 1.0F, 0.0F);
+//			GL11.glRotatef(180.0F -entity.rotation_2 - (180.0F - entityYaw), 0.0F, 1.0F, 0.0F);
 			GL11.glTranslatef(0F, -5.5F, 6.5F);
 			tankk.renderPart("mat7");
 			GL11.glTranslatef(0F, 5.5F, -6.5F);
-			GL11.glRotatef(entity.rotationp_2, 1.0F, 0.0F, 0.0F);
+//			GL11.glRotatef(entity.rotationp_2, 1.0F, 0.0F, 0.0F);
 			GL11.glTranslatef(0F, -5.5F, 6.5F);
 			tankk.renderPart("mat8");
 			GL11.glPopMatrix();//glend
@@ -148,7 +148,7 @@ public class RenderJPN_ShipD extends Render {
 
 	private void renderAngle(EntityJPN_ShipD p_76986_1_, int i){
 		{
-			GL11.glRotatef(-(p_76986_1_.angletime), 1.0F, 0.0F, 0.0F);
+//			GL11.glRotatef(-(p_76986_1_.angletime), 1.0F, 0.0F, 0.0F);
 		}
 	}
 	

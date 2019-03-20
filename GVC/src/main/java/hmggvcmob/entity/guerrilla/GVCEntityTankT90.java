@@ -32,7 +32,6 @@ import static java.lang.Math.abs;
 
 public class GVCEntityTankT90 extends EntityGBase implements IFF,IGVCmob,ITank
 {
-    public TileEntityFlag spawnedtile = null;
     int count_for_reset;
     public double angletime;
     public int fireCycle1;
@@ -822,12 +821,6 @@ public class GVCEntityTankT90 extends EntityGBase implements IFF,IGVCmob,ITank
     @Override
     public float getviewWide() {
         return viewWide;
-    }
-
-
-    @Override
-    public void setspawnedtile(TileEntity flag) {
-        spawnedtile = flag;
     }
 
 

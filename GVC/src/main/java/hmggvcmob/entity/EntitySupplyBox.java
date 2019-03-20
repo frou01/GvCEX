@@ -33,7 +33,7 @@ import static hmggvcmob.GVCMobPlus.gvcmx_reqsupport_arty;
 
 public class EntitySupplyBox extends GVCEntityBox implements IGVCmob{
     public boolean hasItems;
-    public TileEntityFlag spawnedtile = null;
+    public TileEntity spawnedtile = null;
     public boolean interact(EntityPlayer p_70085_1_) {
         return false;
     }
@@ -239,7 +239,7 @@ public class EntitySupplyBox extends GVCEntityBox implements IGVCmob{
     }
     public void setDead(){
         super.setDead();
-        if(spawnedtile != null)spawnedtile.spawnedEntities.remove(this);
+        if(spawnedtile != null && spawnedtile instanceof TileEntityFlag)((TileEntityFlag) spawnedtile).spawnedEntities.remove(this);
     }
 
     @Override

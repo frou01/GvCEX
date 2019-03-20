@@ -2,7 +2,7 @@ package hmgww2.render;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import gvclib.entity.EntityBases;
+import hmgww2.entity.EntityBases;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.MathHelper;
@@ -49,7 +49,7 @@ public class ModelSoldier extends ModelBiped
         this.bipedLeftArm.rotateAngleX -= MathHelper.sin(par3 * 0.067F) * 0.05F;
         if (par7Entity instanceof EntityBases && par7Entity != null) {
         	EntityBases en = (EntityBases) par7Entity;
-        	if (this.isSneak || en.sneak)
+        	if (this.isSneak || en.isSneaking())
             {
                 this.bipedBody.rotateAngleX = 0.5F;
                 this.bipedRightLeg.rotationPointZ = 4.0F;

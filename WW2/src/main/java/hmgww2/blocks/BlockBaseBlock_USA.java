@@ -118,11 +118,11 @@ public class BlockBaseBlock_USA extends Block
 	    		Chest.setInventorySlotContents(9, new ItemStack(mod_GVCWW2.gun_m1g,1,0));
 	    		Chest.setInventorySlotContents(10, new ItemStack(mod_GVCWW2.gun_m1g,1,0));
 	    		Chest.setInventorySlotContents(11, new ItemStack(mod_GVCWW2.gun_m1g,1,0));
-	    		Chest.setInventorySlotContents(12, new ItemStack(mod_GVCWW2.gun_m1t,1,0));
-	    		Chest.setInventorySlotContents(13, new ItemStack(mod_GVCWW2.gun_m1t,1,0));
-	    		Chest.setInventorySlotContents(14, new ItemStack(mod_GVCWW2.gun_m1917,1,0));
-	    		Chest.setInventorySlotContents(15, new ItemStack(mod_GVCWW2.gun_m1917,1,0));
-	    		Chest.setInventorySlotContents(16, new ItemStack(mod_GVCWW2.gun_bar,1,0));
+	    		Chest.setInventorySlotContents(12, new ItemStack(mod_GVCWW2.gun_m1g,1,0));
+	    		Chest.setInventorySlotContents(13, new ItemStack(mod_GVCWW2.gun_m1917,1,0));
+	    		Chest.setInventorySlotContents(14, new ItemStack(mod_GVCWW2.gun_bar,1,0));
+	    		Chest.setInventorySlotContents(15, new ItemStack(mod_GVCWW2.gun_boys,1,0));
+	    		Chest.setInventorySlotContents(16, new ItemStack(mod_GVCWW2.gun_m1b,1,0));
 	    		Chest.setInventorySlotContents(17, new ItemStack(mod_GVCWW2.gun_m1b,1,0));
 	    		for (int i = 18; i < 27; ++i){
 		            Chest.setInventorySlotContents(i, new ItemStack(mod_GVCWW2.gun_m1911,1,0));

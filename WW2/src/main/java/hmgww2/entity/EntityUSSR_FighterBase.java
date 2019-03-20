@@ -44,10 +44,6 @@ public class EntityUSSR_FighterBase extends EntityUSSRBase implements ImultiRide
 		baseLogic.dragfactor = 0.0003f;
 	}
 	
-	@Override
-	protected void entityInit() {
-	}
-	
 	public double getMountedYOffset() {
 		return 0.6D;
 	}

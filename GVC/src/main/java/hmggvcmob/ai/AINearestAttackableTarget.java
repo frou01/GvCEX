@@ -1,5 +1,6 @@
 package hmggvcmob.ai;
 
+import handmadeguns.entity.IFF;
 import hmggvcmob.entity.IRideableTank;
 import hmggvcutil.entity.GVCEntityBox;
 import hmggvcmob.entity.IGVCmob;
@@ -94,6 +95,9 @@ public class AINearestAttackableTarget extends EntityAITarget {
                         if(taskOwner instanceof EntitySoBases){
                             flag &= !ignoreSoTargetEntity.containsKey(EntityList.getEntityString(targetEntity));
                         }
+                        if(taskOwner instanceof IFF){
+                            flag &= !((IFF) taskOwner).is_this_entity_friend(targetEntity);
+                        }
                         if(flag) {
                             if ((taskOwner.getEntitySenses().canSee(targetEntity) || ((IGVCmob) taskOwner).canhearsound(targetEntity)) && (targetEntity.riddenByEntity == null || !(targetEntity.riddenByEntity instanceof GVCEntityBox && targetEntity.distanceWalkedModified - targetEntity.prevDistanceWalkedModified < dist / 10)))
                                 return true;
@@ -112,9 +116,13 @@ public class AINearestAttackableTarget extends EntityAITarget {
         if(taskOwner instanceof IGVCmob){
             double dist = taskOwner.getDistanceToEntity(targetEntity);
             boolean flag;
-            flag = ((IGVCmob) taskOwner).canSeeTarget(targetEntity) || ((IGVCmob) taskOwner).canhearsound(targetEntity);
+    
+            flag = ((IGVCmob) taskOwner).canSeeTarget(targetEntity);
             if(taskOwner instanceof EntitySoBases){
                 flag &= !ignoreSoTargetEntity.containsKey(EntityList.getEntityString(targetEntity));
+            }
+            if(taskOwner instanceof IFF){
+                flag &= !((IFF) taskOwner).is_this_entity_friend(targetEntity);
             }
             if(flag) {
                 if (targetEntity != null && (targetEntity.riddenByEntity == null || !(targetEntity.riddenByEntity instanceof GVCEntityBox && targetEntity.distanceWalkedModified - targetEntity.prevDistanceWalkedModified < dist / 10))) {

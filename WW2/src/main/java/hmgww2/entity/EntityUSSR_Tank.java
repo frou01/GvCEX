@@ -27,4 +27,9 @@ public class EntityUSSR_Tank extends EntityUSSR_TankBase
       //  this.tasks.addTask(2, new AIEntityAIWander(this, 1.0D));
         
     }
+    protected void applyEntityAttributes()
+    {
+        maxHealth = 150;
+        super.applyEntityAttributes();
+    }
 }

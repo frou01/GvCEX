@@ -24,6 +24,5 @@ public class EntityGER_Tank extends EntityGER_TankBase
     {
         super(par1World);
         this.setSize(4F, 2.5F);
-        
     }
 }

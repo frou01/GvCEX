@@ -12,13 +12,13 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
 
-public class RenderRUS_Fighter extends Render {
+public class RenderUSSR_Fighter extends Render {
 
 	private static final ResourceLocation skeletonTexturesz = new ResourceLocation("hmgww2:textures/mob/rus/Yak9.png");
 	private static final IModelCustom tankk = AdvancedModelLoader.loadModel(new ResourceLocation("hmgww2:textures/mob/rus/Yak9.obj"));
 	private float scale;
 
-	public RenderRUS_Fighter() {
+	public RenderUSSR_Fighter() {
 		this.scale = 2;
 	}
 

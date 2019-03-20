@@ -14,16 +14,16 @@ public class EntityGER_S extends EntityGERBase
     public EntityGER_S(World par1World)
     {
         super(par1World);
-        this.setSize(0.4F, 1.8F);
-        this.tasks.addTask(1, new EntityAISwimming(this));
-        //this.tasks.addTask(1, new AIEntityInvasionFlag(this, 1.0D));
-        //this.tasks.addTask(2, new EntityAIWander(this, 1.0D));
-        //this.tasks.addTask(9, new EntityAILookIdle(this));
+        this.setSize(0.5F, 1.8F);
+        aiAttackGun.burstcool = 10;
+        aiAttackGun.minshootrange = 30;
+        aiAttackGun.bursttime = 30;
+        spread = 2;
     }
     protected void applyEntityAttributes()
     {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0D);
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(movespeed = 0.33000000417232513D);
         this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(20.0D);
         this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(50.0D);
         //this.getEntityAttribute(SharedMonsterAttributes.knockbackResistance).setBaseValue(30.0D);
@@ -45,15 +45,21 @@ public class EntityGER_S extends EntityGERBase
         if(iii == 0){
         	this.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_mp40));
         }else if(iii == 1){
-        	this.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_mp40));
+            this.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_gew98));
         }else if(iii == 2){
-        	this.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_mp40));
+            this.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_gew98));
         }else if(iii == 3){
         	this.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_mg34));
+            canuseAlreadyPlacedGun = true;
+            canPlacedGun = true;
+            aiAttackGun.minshootrange = 60;
         }else if(iii == 4){
         	this.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_gew43));
+            canuseAlreadyPlacedGun = true;
+            canPlacedGun = true;
         }else if(iii == 5){
         	this.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_rpzb54));
+            aiAttackGun.minshootrange = 0;
         }else
         {
         	this.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_gew98));

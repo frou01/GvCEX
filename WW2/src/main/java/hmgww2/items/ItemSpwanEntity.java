@@ -15,48 +15,32 @@ import net.minecraft.world.World;
 
 public class ItemSpwanEntity extends Item
 {
-	public int mob ;
-	
-	public ItemSpwanEntity(int i)
+    public int mob ;
+    
+    public ItemSpwanEntity(int i)
     {
         super();
         this.mob = i;
         this.maxStackSize = 64;
     }
-
-	public void SpawnEntity(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, World par3World, int par4, int par5, int par6)
-	{
-		if(this.mob == 0){
+    
+    public void SpawnEntity(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, World par3World, int par4, int par5, int par6)
+    {
+        if(this.mob == 0){
             ++par5;
             int var12 = MathHelper.floor_double((double)(par2EntityPlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
             EntityJPN_S entityskeleton = new EntityJPN_S(par3World);
             entityskeleton.setLocationAndAngles(par4+0.5, par5, par6+0.5, var12, 0.0F);
             par3World.spawnEntityInWorld(entityskeleton);
         }else if(this.mob == 1){
-                ++par5;
-                int var12 = MathHelper.floor_double((double)(par2EntityPlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-                EntityJPN_S entityskeleton = new EntityJPN_S(par3World);
-                entityskeleton.setLocationAndAngles(par4+0.5, par5, par6+0.5, var12, 0.0F);
-                int iii = par3World.rand.nextInt(10);
-                if(iii == 0){
-                	entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_type4Auto));
-                }else if(iii == 1){
-                	entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_type4Auto));
-                }else if(iii == 2){
-                	entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_type99lmg));
-                }else if(iii == 3){
-                	entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_type99lmg));
-                }else if(iii == 4){
-                	entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_rota_cannon));
-                }else if(iii == 5){
-                	entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_rota_cannon));
-                }else
-                {
-                	entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_type38));
-                }
-                entityskeleton.setCurrentItemOrArmor(4, new ItemStack(mod_GVCWW2.armor_jpn));
-                par3World.spawnEntityInWorld(entityskeleton);
-                //entityskeleton.mountEntity(entityskeleton1);
+            ++par5;
+            int var12 = MathHelper.floor_double((double)(par2EntityPlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+            EntityJPN_S entityskeleton = new EntityJPN_S(par3World);
+            entityskeleton.setLocationAndAngles(par4+0.5, par5, par6+0.5, var12, 0.0F);
+            entityskeleton.addRandomArmor();
+            entityskeleton.setCurrentItemOrArmor(4, new ItemStack(mod_GVCWW2.armor_jpn));
+            par3World.spawnEntityInWorld(entityskeleton);
+            //entityskeleton.mountEntity(entityskeleton1);
         }else if(this.mob == 2){
             ++par5;
             int var12 = MathHelper.floor_double((double)(par2EntityPlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
@@ -106,7 +90,7 @@ public class ItemSpwanEntity extends Item
             par3World.spawnEntityInWorld(entityskeleton);
             //entityskeleton.mountEntity(entityskeleton1);
         }else if(this.mob == 8){
-        	++par5;
+            ++par5;
             int var12 = MathHelper.floor_double((double)(par2EntityPlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
             EntityJPN_ShipD entityskeleton = new EntityJPN_ShipD(par3World);
             entityskeleton.setLocationAndAngles(par4+0.5, par5, par6+0.5, var12, 0.0F);
@@ -118,33 +102,18 @@ public class ItemSpwanEntity extends Item
             int var12 = MathHelper.floor_double((double)(par2EntityPlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
             EntityUSA_S entityskeleton = new EntityUSA_S(par3World);
             entityskeleton.setLocationAndAngles(par4+0.5, par5, par6+0.5, var12, 0.0F);
-            int iii = par3World.rand.nextInt(10);
-            if(iii == 0){
-            	entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_m1917));
-            }else if(iii == 1){
-            	entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_m1917));
-            }else if(iii == 2){
-            	entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_bar));
-            }else if(iii == 3){
-            	entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_m1b));
-            }else if(iii == 4){
-            	entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_m1t));
-            }else if(iii == 5){
-            	entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_m1t));
-            }else{
-            	entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_m1g));
-            }
+            entityskeleton.addRandomArmor();
             entityskeleton.setCurrentItemOrArmor(4, new ItemStack(mod_GVCWW2.armor_usa));
             par3World.spawnEntityInWorld(entityskeleton);
             //entityskeleton.mountEntity(entityskeleton1);
         }else if(this.mob == 22){
-        ++par5;
-        int var12 = MathHelper.floor_double((double)(par2EntityPlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-        EntityUSA_Tank entityskeleton = new EntityUSA_Tank(par3World);
-        entityskeleton.setLocationAndAngles(par4+0.5, par5, par6+0.5, var12, 0.0F);
-        entityskeleton.setMobMode(1);
-        par3World.spawnEntityInWorld(entityskeleton);
-        //entityskeleton.mountEntity(entityskeleton1);
+            ++par5;
+            int var12 = MathHelper.floor_double((double)(par2EntityPlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+            EntityUSA_Tank entityskeleton = new EntityUSA_Tank(par3World);
+            entityskeleton.setLocationAndAngles(par4+0.5, par5, par6+0.5, var12, 0.0F);
+            entityskeleton.setMobMode(1);
+            par3World.spawnEntityInWorld(entityskeleton);
+            //entityskeleton.mountEntity(entityskeleton1);
         }else if(this.mob == 23){
             ++par5;
             int var12 = MathHelper.floor_double((double)(par2EntityPlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
@@ -198,34 +167,18 @@ public class ItemSpwanEntity extends Item
             int var12 = MathHelper.floor_double((double)(par2EntityPlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
             EntityGER_S entityskeleton = new EntityGER_S(par3World);
             entityskeleton.setLocationAndAngles(par4+0.5, par5, par6+0.5, var12, 0.0F);
-            int iii = par3World.rand.nextInt(10);
-            	 if(iii == 0){
-            		 entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_mp40));
-                 }else if(iii == 1){
-                	 entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_mp40));
-                 }else if(iii == 2){
-                	 entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_mp40));
-                 }else if(iii == 3){
-                	 entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_mg34));
-                 }else if(iii == 4){
-                	 entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_gew43));
-                 }else if(iii == 5){
-                	 entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_rpzb54));
-                 }else
-                 {
-                	 entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_gew98));
-                 }
+            entityskeleton.addRandomArmor();
             entityskeleton.setCurrentItemOrArmor(4, new ItemStack(mod_GVCWW2.armor_ger));
             par3World.spawnEntityInWorld(entityskeleton);
             //entityskeleton.mountEntity(entityskeleton1);
         }else if(this.mob == 42){
-        ++par5;
-        int var12 = MathHelper.floor_double((double)(par2EntityPlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-        EntityGER_Tank entityskeleton = new EntityGER_Tank(par3World);
-        entityskeleton.setLocationAndAngles(par4+0.5, par5, par6+0.5, var12, 0.0F);
-        entityskeleton.setMobMode(1);
-        par3World.spawnEntityInWorld(entityskeleton);
-        //entityskeleton.mountEntity(entityskeleton1);
+            ++par5;
+            int var12 = MathHelper.floor_double((double)(par2EntityPlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+            EntityGER_Tank entityskeleton = new EntityGER_Tank(par3World);
+            entityskeleton.setLocationAndAngles(par4+0.5, par5, par6+0.5, var12, 0.0F);
+            entityskeleton.setMobMode(1);
+            par3World.spawnEntityInWorld(entityskeleton);
+            //entityskeleton.mountEntity(entityskeleton1);
         }else if(this.mob == 43){
             ++par5;
             int var12 = MathHelper.floor_double((double)(par2EntityPlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
@@ -259,46 +212,30 @@ public class ItemSpwanEntity extends Item
             par3World.spawnEntityInWorld(entityskeleton);
             //entityskeleton.mountEntity(entityskeleton1);
         }else if(this.mob == 47){
-                ++par5;
-                int var12 = MathHelper.floor_double((double)(par2EntityPlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-                EntityGER_TankH entityskeleton = new EntityGER_TankH(par3World);
-                entityskeleton.setLocationAndAngles(par4+0.5, par5, par6+0.5, var12, 0.0F);
-                entityskeleton.setMobMode(1);
-                par3World.spawnEntityInWorld(entityskeleton);
-                //entityskeleton.mountEntity(entityskeleton1);
+            ++par5;
+            int var12 = MathHelper.floor_double((double)(par2EntityPlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+            EntityGER_TankH entityskeleton = new EntityGER_TankH(par3World);
+            entityskeleton.setLocationAndAngles(par4+0.5, par5, par6+0.5, var12, 0.0F);
+            entityskeleton.setMobMode(1);
+            par3World.spawnEntityInWorld(entityskeleton);
+            //entityskeleton.mountEntity(entityskeleton1);
         }else if(this.mob == 61){
             ++par5;
             int var12 = MathHelper.floor_double((double)(par2EntityPlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
             EntityUSSR_S entityskeleton = new EntityUSSR_S(par3World);
             entityskeleton.setLocationAndAngles(par4+0.5, par5, par6+0.5, var12, 0.0F);
-            int iii = par3World.rand.nextInt(10);
-            	 if(iii == 0){
-            		 entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_ppsh41));
-                 }else if(iii == 1){
-                	 entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_ppsh41));
-                 }else if(iii == 2){
-                	 entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_dp28));
-                 }else if(iii == 3){
-                	 entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_m1891sr));
-                 }else if(iii == 4){
-                	 entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_grenadet));
-                 }else if(iii == 5){
-                	 entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_grenadet));
-                 }else
-                 {
-                	 entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_m1891));
-                 }
+            entityskeleton.addRandomArmor();
             entityskeleton.setCurrentItemOrArmor(4, new ItemStack(mod_GVCWW2.armor_rus));
             par3World.spawnEntityInWorld(entityskeleton);
             //entityskeleton.mountEntity(entityskeleton1);
         }else if(this.mob == 62){
-        ++par5;
-        int var12 = MathHelper.floor_double((double)(par2EntityPlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-        EntityUSSR_Tank entityskeleton = new EntityUSSR_Tank(par3World);
-        entityskeleton.setLocationAndAngles(par4+0.5, par5, par6+0.5, var12, 0.0F);
-        entityskeleton.setMobMode(1);
-        par3World.spawnEntityInWorld(entityskeleton);
-        //entityskeleton.mountEntity(entityskeleton1);
+            ++par5;
+            int var12 = MathHelper.floor_double((double)(par2EntityPlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+            EntityUSSR_Tank entityskeleton = new EntityUSSR_Tank(par3World);
+            entityskeleton.setLocationAndAngles(par4+0.5, par5, par6+0.5, var12, 0.0F);
+            entityskeleton.setMobMode(1);
+            par3World.spawnEntityInWorld(entityskeleton);
+            //entityskeleton.mountEntity(entityskeleton1);
         }else if(this.mob == 63){
             ++par5;
             int var12 = MathHelper.floor_double((double)(par2EntityPlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
@@ -341,9 +278,9 @@ public class ItemSpwanEntity extends Item
             par3World.spawnEntityInWorld(entityskeleton);
             //entityskeleton.mountEntity(entityskeleton1);
         }
-	}
-	
-	public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, World par3World, int par4, int par5, int par6, int par7, float par8, float par9, float par10)
+    }
+    
+    public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, World par3World, int par4, int par5, int par6, int par7, float par8, float par9, float par10)
     {
         if (par3World.isRemote)
         {
@@ -356,25 +293,25 @@ public class ItemSpwanEntity extends Item
             par5 += Facing.offsetsYForSide[par7];
             par6 += Facing.offsetsZForSide[par7];
             double d0 = 0.0D;
-
+            
             if (par7 == 1 && block.getRenderType() == 11)
             {
                 d0 = 0.5D;
             }
             {
-            	this.SpawnEntity(par1ItemStack, par2EntityPlayer, par3World, par4, par5, par6);
-
+                this.SpawnEntity(par1ItemStack, par2EntityPlayer, par3World, par4, par5, par6);
+                
                 if (!par2EntityPlayer.capabilities.isCreativeMode)
                 {
                     --par1ItemStack.stackSize;
                 }
             }
-
+            
             return true;
         }
     }
-	
-	public ItemStack onItemRightClick(ItemStack p_77659_1_, World p_77659_2_, EntityPlayer p_77659_3_)
+    
+    public ItemStack onItemRightClick(ItemStack p_77659_1_, World p_77659_2_, EntityPlayer p_77659_3_)
     {
         if (p_77659_2_.isRemote)
         {
@@ -383,7 +320,7 @@ public class ItemSpwanEntity extends Item
         else
         {
             MovingObjectPosition movingobjectposition = this.getMovingObjectPositionFromPlayer(p_77659_2_, p_77659_3_, true);
-
+            
             if (movingobjectposition == null)
             {
                 return p_77659_1_;
@@ -395,22 +332,22 @@ public class ItemSpwanEntity extends Item
                     int i = movingobjectposition.blockX;
                     int j = movingobjectposition.blockY;
                     int k = movingobjectposition.blockZ;
-
+                    
                     if (!p_77659_2_.canMineBlock(p_77659_3_, i, j, k))
                     {
                         return p_77659_1_;
                     }
-
+                    
                     if (!p_77659_3_.canPlayerEdit(i, j, k, movingobjectposition.sideHit, p_77659_1_))
                     {
                         return p_77659_1_;
                     }
-
+                    
                     if (p_77659_2_.getBlock(i, j, k) instanceof BlockLiquid)
                     {
-                    	{
-                        	this.SpawnEntity(p_77659_1_, p_77659_3_, p_77659_2_, i, j, k);
-
+                        {
+                            this.SpawnEntity(p_77659_1_, p_77659_3_, p_77659_2_, i, j, k);
+                            
                             if (!p_77659_3_.capabilities.isCreativeMode)
                             {
                                 --p_77659_1_.stackSize;
@@ -418,7 +355,7 @@ public class ItemSpwanEntity extends Item
                         }
                     }
                 }
-
+                
                 return p_77659_1_;
             }
         }

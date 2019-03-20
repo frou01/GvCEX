@@ -16,16 +16,16 @@ public class EntityUSA_S extends EntityUSABase
 	public EntityUSA_S(World par1World)
 	{
 		super(par1World);
-		this.setSize(0.4F, 1.8F);
-		this.tasks.addTask(1, new EntityAISwimming(this));
-		//this.tasks.addTask(1, new AIEntityInvasionFlag(this, 1.0D));
-		//this.tasks.addTask(2, new EntityAIWander(this, 1.0D));
-		//this.tasks.addTask(9, new EntityAILookIdle(this));
+		this.setSize(0.5F, 1.8F);
+		aiAttackGun.burstcool = 8;
+		aiAttackGun.minshootrange = 40;
+		aiAttackGun.bursttime = 10;
+		spread = 3;
 	}
 	protected void applyEntityAttributes()
 	{
 		super.applyEntityAttributes();
-		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0D);
+		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(movespeed = 0.33000000417232513D);
 		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(20.0D);
 		this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(50.0D);
 		//this.getEntityAttribute(SharedMonsterAttributes.knockbackResistance).setBaseValue(30.0D);
@@ -46,14 +46,18 @@ public class EntityUSA_S extends EntityUSABase
 		int iii = this.worldObj.rand.nextInt(10);
 		if(iii == 0){
 			this.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_m1917));
+			canuseAlreadyPlacedGun = true;
+			canPlacedGun = true;
 		}else if(iii == 1){
 			this.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_m1917));
 		}else if(iii == 2){
 			this.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_bar));
+			canuseAlreadyPlacedGun = true;
+			canPlacedGun = true;
 		}else if(iii == 3){
 			this.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_m1t));
 		}else if(iii == 4){
-			this.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_m1b));
+			this.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_boys));
 		}else if(iii == 5){
 			this.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_m1b));
 		}else

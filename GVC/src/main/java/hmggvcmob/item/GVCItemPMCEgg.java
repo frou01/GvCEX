@@ -121,7 +121,6 @@ public class GVCItemPMCEgg extends Item
                 ++par5;
                 GVCEntityPlane entityskeleton = new GVCEntityPlane(par3World);
                 entityskeleton.setLocationAndAngles(par4+0.5, par5, par6+0.5, par2EntityPlayer.rotationYaw, 0.0F);
-                entityskeleton.bodyrotationYaw = par2EntityPlayer.rotationYaw;
                 par3World.spawnEntityInWorld(entityskeleton);
                 --par1ItemStack.stackSize;
                 return true;

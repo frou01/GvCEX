@@ -48,13 +48,13 @@ public class RenderGER_TankH extends Render {
 		GL11.glRotatef(-(180.0F - entityYaw), 0.0F, 1.0F, 0.0F);
 		
 		{
-			GL11.glRotatef(180.0F - entity.rotation, 0.0F, 1.0F, 0.0F);
+//			GL11.glRotatef(180.0F - entity.rotation, 0.0F, 1.0F, 0.0F);
 			tankk.renderPart("mat4");
 			if(entity.getMobMode() == 0){
 				tankk.renderPart("mat30");
 			}
 			GL11.glTranslatef(0F, 2.35F, 1.1F);
-			GL11.glRotatef(entity.rotationp, 1.0F, 0.0F, 0.0F);
+//			GL11.glRotatef(entity.rotationp, 1.0F, 0.0F, 0.0F);
 			GL11.glTranslatef(0F, -2.35F, -1.1F);
 			tankk.renderPart("mat5");
 		}
@@ -67,7 +67,7 @@ public class RenderGER_TankH extends Render {
 
 	private void renderAngle(EntityGER_TankH p_76986_1_, int i){
 		{
-			GL11.glRotatef(-(p_76986_1_.angletime), 1.0F, 0.0F, 0.0F);
+//			GL11.glRotatef(-(p_76986_1_.angletime), 1.0F, 0.0F, 0.0F);
 		}
 	}
 	

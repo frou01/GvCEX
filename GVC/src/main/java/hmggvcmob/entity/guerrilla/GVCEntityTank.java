@@ -25,7 +25,6 @@ import static java.lang.Math.abs;
 
 public class GVCEntityTank extends EntityGBase implements ITank
 {
-	public TileEntityFlag spawnedtile = null;
 	int count_for_reset;
 	public double angletime;
 	public int fireCycle1;
@@ -787,10 +786,6 @@ public class GVCEntityTank extends EntityGBase implements ITank
 	}
 
 
-	@Override
-	public void setspawnedtile(TileEntity flag) {
-		spawnedtile = flag;
-	}
 
 
 	@Override

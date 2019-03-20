@@ -44,10 +44,6 @@ public class EntityUSA_FighterBase extends EntityUSABase implements ImultiRideab
 		baseLogic.dragfactor = 0.0003f;
 	}
 	
-	@Override
-	protected void entityInit() {
-	}
-	
 	public double getMountedYOffset() {
 		return 0.6D;
 	}

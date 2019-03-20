@@ -31,7 +31,7 @@ import static hmggvcmob.util.Calculater.transformVecforMinecraft;
 public class GVCEntityPMCBMP extends EntityPMCBase implements IRideableTank,IControlable,ImultiRideableVehicle
 {
 	// public int type;
-	public TileEntityFlag spawnedtile = null;
+	public TileEntity spawnedtile = null;
 	int count_for_reset;
 	public double angletime;
 	public int fireCycle1;

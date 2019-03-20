@@ -3,8 +3,8 @@ package hmgww2.entity;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import handmadeguns.entity.IFF;
+import handmadeguns.entity.PlacedGunEntity;
 import handmadeguns.items.guns.HMGItem_Unified_Guns;
-import hmggvcmob.IflagBattler;
 import hmggvcmob.SlowPathFinder.WorldForPathfind;
 import hmggvcmob.ai.AIAttackGun;
 import hmggvcmob.ai.AIHurtByTarget;
@@ -14,20 +14,16 @@ import hmggvcmob.entity.IGVCmob;
 import hmggvcmob.entity.IRideableTank;
 import hmggvcmob.entity.IdriveableVehicle;
 import hmggvcmob.entity.friend.EntitySoBases;
-import hmggvcmob.entity.guerrilla.EntityGBase;
 import hmggvcmob.entity.guerrilla.EntityGBases;
-import hmggvcmob.tile.TileEntityFlag;
 import hmgww2.Nation;
 import hmgww2.items.ItemIFFArmor;
 import littleMaidMobX.LMM_EntityLittleMaid;
 import net.minecraft.block.Block;
-import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.*;
-import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.IMob;
-import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
@@ -38,12 +34,15 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
-import static handmadeguns.HandmadeGunsCore.islmmloaded;
-import static hmggvcmob.GVCMobPlus.fn_PMCflag;
-import static hmggvcmob.GVCMobPlus.fn_Supplyflag;
-import static java.lang.Math.abs;
+import java.util.List;
 
-public abstract class EntityBases extends EntityCreature implements IFF,INpc, IflagBattler,IGVCmob {
+import static handmadeguns.HandmadeGunsCore.islmmloaded;
+import static hmgww2.mod_GVCWW2.cfg_candespawn;
+import static hmgww2.mod_GVCWW2.cfg_canusePlacedGun;
+import static java.lang.Math.abs;
+import static net.minecraft.util.MathHelper.wrapAngleTo180_float;
+
+public abstract class EntityBases extends EntityCreature implements IFF,INpc,IGVCmob {
 	public int deathTicks;
 	public EntityLivingBase fri;
 	
@@ -54,6 +53,7 @@ public abstract class EntityBases extends EntityCreature implements IFF,INpc, If
 	public boolean server1 = false;
 	public boolean server2 = false;
 	public boolean serverx = false;
+	public boolean serverspace = false;
 	
 	
 	
@@ -90,6 +90,20 @@ public abstract class EntityBases extends EntityCreature implements IFF,INpc, If
 	public int moveoffsetz;
 	public Entity master;
 	WorldForPathfind worldForPathfind;
+	
+	public Block flagbase;
+	public Block flag;
+	public Block flag2;
+	public Block flag3;
+	public Block flag4;
+	
+	int placing;
+	boolean canuseAlreadyPlacedGun = false;
+	boolean canPlacedGun = false;
+	
+	
+	
+	
 	public boolean interact(EntityPlayer p_70085_1_) {
 		if (super.interact(p_70085_1_)) {
 			return false;
@@ -126,6 +140,7 @@ public abstract class EntityBases extends EntityCreature implements IFF,INpc, If
 		aiSwimming = new EntityAISwimming(this);
 		AIOpenDoor           =new EntityAIOpenDoor(this, true);
 		this.tasks.addTask(0, aiSwimming);
+		this.tasks.addTask(1,aiAttackGun = new AIAttackGun(this,80,20,10,15,20,true));
 		this.tasks.addTask(3, new AIattackOnCollide(this, EntityLiving.class, 1.0D, true));
 		this.tasks.addTask(3, new AIattackOnCollide(this, EntityGBases.class, 1.0D, true));
 		this.tasks.addTask(4, new EntityAIRestrictOpenDoor(this));
@@ -137,17 +152,8 @@ public abstract class EntityBases extends EntityCreature implements IFF,INpc, If
 		this.tasks.addTask(8, new EntityAILookIdle(this));
 		//ターゲティング
 		this.targetTasks.addTask(1, new AIHurtByTarget(this, true));
-		this.targetTasks.addTask(2, new AINearestAttackableTarget(this, EntityGBase.class, 0, true));
+		this.targetTasks.addTask(2, new AINearestAttackableTarget(this, EntityBases.class, 0, true));
 		this.targetTasks.addTask(3, new AINearestAttackableTarget(this, EntityLiving.class, 0, true, false, IMob.mobSelector));
-	}
-	
-	public boolean CanAttack(Entity entity) {
-		boolean cri = true;
-		if ((entity instanceof EntityMob) && !entity.isDead  && ((EntityLivingBase) entity).getHealth() > 0.0F && getEntitySenses().canSee(entity)) {
-			return true;
-		}else {
-			return false;
-		}
 	}
 	
 	
@@ -159,31 +165,104 @@ public abstract class EntityBases extends EntityCreature implements IFF,INpc, If
 	public void onUpdate()
 	{
 		super.onUpdate();
-		if(this.getAttackTarget() != null && (this.getAttackTarget() instanceof EntitySoBases || this.getAttackTarget() instanceof EntityPlayer || (islmmloaded && this.getAttackTarget() instanceof LMM_EntityLittleMaid)))this.setAttackTarget(null);
-		if(this.getHeldItem() != null) {
-			if(this.getHeldItem().hasTagCompound()){
-				if(this.getHeldItem().getItem() instanceof HMGItem_Unified_Guns)((HMGItem_Unified_Guns)this.getHeldItem().getItem()).checkTags(this.getHeldItem());
-			}
-			if(!worldObj.isRemote)
-				if (this.getEntityData().getBoolean("HMGisUsingItem")) {
-					this.setSneaking(true);
-				} else {
-					this.setSneaking(false);
+		if(this.getAttackTarget() != null && this.is_this_entity_friend(this.getAttackTarget()))this.setAttackTarget(null);
+		if(cfg_canusePlacedGun && canuseAlreadyPlacedGun && !worldObj.isRemote && ridingEntity == null && this.getAttackTarget() != null) {
+			List PlaceGunDetector = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox.expand(2, 3.0D, 2));
+			
+			if (PlaceGunDetector != null && !PlaceGunDetector.isEmpty()) {
+				for (int i = 0; i < PlaceGunDetector.size(); ++i) {
+					Entity colliedentity = (Entity) PlaceGunDetector.get(i);
+					if (colliedentity.riddenByEntity == null && colliedentity instanceof PlacedGunEntity) {
+						this.mountEntity((PlacedGunEntity) colliedentity);
+						this.setCurrentItemOrArmor(0, null);
+					}
 				}
-			int bullets = this.getHeldItem().getItemDamage();
-			float backRP = rotationPitch;
-			float backRY = rotationYaw;
-			if (this.rand.nextInt(5) == 0) {
-				rndyaw = this.rand.nextGaussian() * (double) (this.rand.nextBoolean() ? -1 : 1) * spread;
-				rndpitch = this.rand.nextGaussian() * (double) (this.rand.nextBoolean() ? -1 : 1) * spread;
 			}
-			this.rotationPitch += rndyaw;
-			this.rotationYaw += rndpitch;
-			this.getHeldItem().getItem().onUpdate(this.getHeldItem(), worldObj, this, 0, true);
-			rotationPitch = backRP;
-			rotationYaw = backRY;
-			if (bullets != this.getHeldItem().getItemDamage()) {
-				this.aiAttackGun.burstingtime++;
+		}
+		if(this.getHeldItem() != null && this.aiAttackGun != null){
+			this.rotationPitch+=rndpitch;
+			this.rotationYaw+=rndyaw;
+			float backpitch = this.rotationPitch;
+			this.getHeldItem().getItem().onUpdate(this.getHeldItem(),worldObj,this,0,true);
+			float recoiled = this.rotationPitch - backpitch;
+			this.rotationPitch-=rndpitch;
+			this.rotationYaw-=rndyaw;
+			rndpitch += recoiled;
+			if(!worldObj.isRemote && cfg_canusePlacedGun && canPlacedGun && ridingEntity == null && onGround &&this.getAttackTarget() != null && this.getHeldItem().getItem()instanceof HMGItem_Unified_Guns && ((HMGItem_Unified_Guns) this.getHeldItem().getItem()).fixAsEntity){
+				placing ++;
+				if(placing>30) {
+					placing = 0;
+					//視線方向のブロックを調べる
+					int headdirction_four = getdirection_in4(
+							wrapAngleTo180_float(rotationYawHead));
+//					System.out.println("debug" + headdirction_four);
+					Block willGunSetBlock = null;
+					int[] offset = new int[2];
+					switch (headdirction_four) {
+						case 0:
+							//south
+							willGunSetBlock = worldObj.getBlock((int) posX-1, (int) posY, (int) posZ);
+							offset[0] = -1;
+							offset[1] = 0;
+							break;
+						case -1:
+							//east
+							willGunSetBlock = worldObj.getBlock((int) posX, (int) posY, (int) posZ-1);
+							offset[0] = 0;
+							offset[1] = -1;
+							break;
+						case 1:
+							//west
+							willGunSetBlock = worldObj.getBlock((int) posX-2, (int) posY, (int) posZ-1);
+							offset[0] = -2;
+							offset[1] = -1;
+							break;
+						case 2:
+							//north
+							willGunSetBlock = worldObj.getBlock((int) posX-1, (int) posY, (int) posZ - 2);
+							offset[0] = -1;
+							offset[1] = -2;
+							break;
+					}
+					if (willGunSetBlock != null && willGunSetBlock != Blocks.air) {
+						PlacedGunEntity gunEntity = new PlacedGunEntity(worldObj, getHeldItem());
+						gunEntity.setLocationAndAngles((int) this.posX + 0.5f + offset[0], this.posY + 1.8, (int) this.posZ + 0.5f + offset[1], this.rotationYaw, this.rotationPitch);
+						gunEntity.issummonbyMob = true;
+						worldObj.spawnEntityInWorld(gunEntity);
+						this.mountEntity(gunEntity);
+						this.setCurrentItemOrArmor(0, null);
+					}
+				}
+			}
+
+//			if(bullets != this.getHeldItem().getItemDamage()){
+//				this.aiAttackGun.burstingtime++;
+//			}
+			
+			
+			if(this.getEntityData().getBoolean("HMGisUsingItem")){
+				this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(movespeed/4);
+			}else{
+				this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(movespeed);
+			}
+		}
+		
+		
+		if(!worldObj.isRemote &&
+				   this.ridingEntity instanceof PlacedGunEntity &&
+				   ((PlacedGunEntity) ridingEntity).issummonbyMob &&
+				   ridingEntity.ridingEntity == null &&
+				   (this.getAttackTarget() == null || this.getAttackTarget().isDead)){
+			this.setCurrentItemOrArmor(0,((PlacedGunEntity) ridingEntity).gunStack);
+			((PlacedGunEntity) ridingEntity).gunStack = null;
+			ridingEntity.setDead();
+			ridingEntity = null;
+		}
+		if(ridingEntity instanceof PlacedGunEntity){
+			if(this.getEntityData().getBoolean("HMGisUsingItem")){
+				((PlacedGunEntity) ridingEntity).firing = true;
+			}else {
+				((PlacedGunEntity) ridingEntity).firing = false;
 			}
 		}
 		if(this instanceof IRideableTank){
@@ -255,11 +334,15 @@ public abstract class EntityBases extends EntityCreature implements IFF,INpc, If
 	
 	protected boolean canDespawn()
 	{
-		return false;
+		return cfg_candespawn;
 	}
 	
 	protected void applyEntityAttributes() {
 		super.applyEntityAttributes();
+		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0);
+		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(1);
+		this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(80);
+		this.getEntityAttribute(SharedMonsterAttributes.knockbackResistance).setBaseValue(0);
 	}
 	
 	public void addRandomArmor() {
@@ -283,6 +366,11 @@ public abstract class EntityBases extends EntityCreature implements IFF,INpc, If
 		mode = integer;
 		this.dataWatcher.updateObject(22, Integer.valueOf(integer));
 	}
+	
+	public void setFlagMode(int integer){
+	
+	}
+	
 	public int getMobMode() {
 		if(worldObj.isRemote){
 			mode = this.dataWatcher.getWatchableObjectInt(22);
@@ -353,30 +441,9 @@ public abstract class EntityBases extends EntityCreature implements IFF,INpc, If
 		return 8;
 	}
 	
-	
-	@Override
-	public Block getFlag() {
-		return fn_PMCflag;
-	}
 	public boolean isCreatureType(EnumCreatureType type, boolean forSpawnCount)
 	{
 		return type.getCreatureClass() == EntitySoBases.class;
-	}
-	@Override
-	public boolean istargetingflag() {
-		return worldObj.getTileEntity(flagx,flagy,flagz) instanceof TileEntityFlag && worldObj.getBlock(flagx,flagy,flagz) != getFlag();
-	}
-	
-	@Override
-	public Vec3 getflagposition() {
-		return Vec3.createVectorHelper(flagx,flagy,flagz);
-	}
-	
-	@Override
-	public void setflagposition(int x,int y,int z) {
-		flagx = x;
-		flagy = y;
-		flagz = z;
 	}
 	@Override
 	public boolean canEntityBeSeen(Entity p_70685_1_)
@@ -495,10 +562,6 @@ public abstract class EntityBases extends EntityCreature implements IFF,INpc, If
 		p_70014_1_.setInteger("homeposZ",homeposZ);
 		p_70014_1_.setInteger("mode",mode);
 	}
-	@Override
-	public boolean isthisFlagIsEnemys(Block block) {
-		return block != fn_PMCflag && block != fn_Supplyflag;
-	}
 	
 	public boolean shouldDismountInWater(Entity entity){
 		return false;
@@ -507,8 +570,10 @@ public abstract class EntityBases extends EntityCreature implements IFF,INpc, If
 	public boolean is_this_entity_friend(Entity entity){
 		if(entity instanceof EntityBases){
 			return ((EntityBases) entity).getnation() == this.getnation();
-		}else if(entity instanceof EntityPlayer){
+		}else if(entity instanceof EntityPlayer && ((EntityPlayer) entity).getEquipmentInSlot(4)!=null  && ((EntityPlayer) entity).getEquipmentInSlot(4).getItem() != null){
 			return this.getnation() == ((ItemIFFArmor) ((EntityPlayer) entity).getEquipmentInSlot(4).getItem()).nation;
+		}else if(islmmloaded && entity instanceof LMM_EntityLittleMaid && ((LMM_EntityLittleMaid) entity).getMaidMasterEntity() != null){
+			if((((LMM_EntityLittleMaid) entity).getMaidMasterEntity()).getEquipmentInSlot(4).getItem() != null) return this.getnation() == ((ItemIFFArmor) (((LMM_EntityLittleMaid) entity).getMaidMasterEntity()).getEquipmentInSlot(4).getItem()).nation;
 		}
 		return false;
 	}
@@ -542,6 +607,22 @@ public abstract class EntityBases extends EntityCreature implements IFF,INpc, If
 	
 	@Override
 	public void setspawnedtile(TileEntity flag) {
-		flag = flag;
+	
+	}
+	
+	public int getdirection_in4(float globalDir){
+		if(globalDir <= 45 && globalDir > -45){
+			return 0;
+		}
+		if(globalDir <= 135 && globalDir > 45){
+			return 1;
+		}
+		if(globalDir <= -45 && globalDir > -135){
+			return -1;
+		}
+		if(globalDir <= -135 || globalDir > 135){
+			return 2;
+		}
+		return 0;
 	}
 }

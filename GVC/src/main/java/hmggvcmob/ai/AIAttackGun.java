@@ -25,10 +25,9 @@ import static java.lang.Math.abs;
 public class AIAttackGun extends EntityAIBase {
     private EntityLiving shooter;//ゲリラさん
     private EntityLivingBase target;//ターゲット
-    private float maxshootrange;//射程
-    private float minshootrange;//射程
-    private int shootspread;//ばらまく度合
-    private int bursttime;//一連射の時間
+    public float maxshootrange;//射程
+    public float minshootrange;//射程
+    public int bursttime;//一連射の時間
     public int burstingtime;//撃ってる時間
     public int burstcool = 20;//連射の間隔
     public int burstcoolcnt;
@@ -60,7 +59,6 @@ public class AIAttackGun extends EntityAIBase {
         this.shooter = guerrilla;
         maxshootrange = range;
         minshootrange = minrange;
-        shootspread = spread;
         this.bursttime = bursttime;
         this.burstcool = bursttime*5;
         rnd = new Random();

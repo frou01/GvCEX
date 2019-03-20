@@ -205,6 +205,7 @@ public class mod_GVCWW2 {
 	public static Item gun_bar;
 	public static Item gun_m1917;
 	public static Item gun_m1b;
+	public static Item gun_boys;
 	public static Item gun_m1911;
 	
 	public static Item gun_grenade;
@@ -219,7 +220,9 @@ public class mod_GVCWW2 {
 	public static Item gun_m1891;
 	public static Item gun_ppsh41;
 	public static Item gun_dp28;
-	public static Item gun_m1891sr;
+	public static Item gun_svt40;
+	public static Item gun_ptrd;
+	public static Item gun_ptrs;
 	public static Item gun_tt33;
 	
 	public static boolean cfg_canspawn;
@@ -231,6 +234,7 @@ public class mod_GVCWW2 {
 	public static int cfg_spawnlightlevel;
 	
 	public static boolean cfg_canbuild;
+	public static boolean cfg_canusePlacedGun;
 	public static int cfg_basegenerated;
 	public static int cfg_basegenerated2;
 	public static int cfg_basegenerated3;
@@ -264,7 +268,7 @@ public class mod_GVCWW2 {
 		configFile = pEvent.getSuggestedConfigurationFile();
 		Configuration lconf = new Configuration(configFile);
 		lconf.load();
-		cfg_canspawn	= lconf.get("Entity", "cfg_canspawn", true).getBoolean(true);
+		cfg_canspawn	= lconf.get("Entity", "cfg_canspawn", false).getBoolean(false);
 		cfg_candespawn	= lconf.get("Entity", "cfg_candespawn", true).getBoolean(true);
 		cfg_spawn_jpn	= lconf.get("Entity", "cfg_spawn_jpn", true).getBoolean(true);
 		cfg_spawn_usa	= lconf.get("Entity", "cfg_spawn_usa", true).getBoolean(true);
@@ -285,6 +289,7 @@ public class mod_GVCWW2 {
 		
 		
 		cfg_canbuild	= lconf.get("World", "cfg_cancreatbase", true).getBoolean(true);
+		cfg_canusePlacedGun	= lconf.get("World", "cfg_canusePlacedGun", true).getBoolean(true);
 		cfg_basegenerated	= lconf.get("World", "cfg_basegenerated", 300).getInt(300);
 		cfg_basegenerated2	= lconf.get("World", "cfg_basegenerated2", 360).getInt(360);
 		cfg_basegenerated3	= lconf.get("World", "cfg_basegenerated3", 160).getInt(160);
@@ -472,13 +477,15 @@ public class mod_GVCWW2 {
 		
 		gun_type38 = GameRegistry.findItem("HandmadeGuns","Type38");
 		
-		gun_type99lmg = GameRegistry.findItem("HandmadeGuns","九九式軽機関銃");
+		gun_type99lmg = GameRegistry.findItem("HandmadeGuns","Type99LMG");
 		
-		gun_type4Auto = GameRegistry.findItem("HandmadeGuns","四式自動小銃");
+		gun_type4Auto = GameRegistry.findItem("HandmadeGuns","Type4Auto");
 		
-		gun_rota_cannon = GameRegistry.findItem("HandmadeGuns","試製四式七糎噴進砲");
+		gun_type100 = GameRegistry.findItem("HandmadeGuns","Type100MP");
 		
-		gun_type14 = GameRegistry.findItem("HandmadeGuns","十四年式拳銃");
+		gun_rota_cannon = GameRegistry.findItem("HandmadeGuns","ROTA_Cannon");
+		
+		gun_type14 = GameRegistry.findItem("HandmadeGuns","Type14");
 		
 		
 		
@@ -490,7 +497,9 @@ public class mod_GVCWW2 {
 		
 		gun_m1917 = GameRegistry.findItem("HandmadeGuns","M1917");
 		
-		gun_m1917 = GameRegistry.findItem("HandmadeGuns","Bazooka");
+		gun_m1b = GameRegistry.findItem("HandmadeGuns","Bazooka");
+		
+		gun_boys = GameRegistry.findItem("HandmadeGuns","BoysMk1");
 		
 		gun_m1911 = GameRegistry.findItem("HandmadeGuns","WW2_M1911");
 		
@@ -519,7 +528,11 @@ public class mod_GVCWW2 {
 		
 		gun_dp28 = GameRegistry.findItem("HandmadeGuns","DP28LMG");
 		
-		gun_dp28 = GameRegistry.findItem("HandmadeGuns","DP28LMG");
+		gun_svt40 = GameRegistry.findItem("HandmadeGuns","SVT-40");
+		
+		gun_ptrd = GameRegistry.findItem("HandmadeGuns","PTRD1941");
+		
+		gun_ptrs = GameRegistry.findItem("HandmadeGuns","PTRS1941");
 		
 		gun_tt33 = GameRegistry.findItem("HandmadeGuns","TT-33");
 		

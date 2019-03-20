@@ -75,6 +75,46 @@ public class EntityUSSR_TankBase extends EntityUSSRBase implements IRideableTank
 		this.tasks.removeTask(aiSwimming);
 		viewWide = 2.09f;
 		yOffset = 0;
+		mainTurret = new TurretObj(worldObj);
+		{
+			mainTurret.onmotherPos = turretpos;
+			mainTurret.cannonpos = cannonpos;
+			mainTurret.currentEntity = this;
+			mainTurret.powor = 120;
+			mainTurret.ex = 5.0F;
+			mainTurret.canex = false;
+			mainTurret.guntype = 2;
+		}
+		subTurret = new TurretObj(worldObj);
+		{
+			subTurret.currentEntity = this;
+			subTurret.turretanglelimtPitchmin = -70;
+			subTurret.turretanglelimtPitchMax = 20;
+			subTurret.turretspeedY = 8;
+			subTurret.turretspeedP = 10;
+			subTurret.traverseSound = null;
+			
+			subTurret.turretYawCenterpos = subturretpos;
+			subTurret.cannonpos = subturretpos;
+			subTurret.cycle_setting = 1;
+			subTurret.spread = 5;
+			subTurret.speed = 8;
+			subTurret.firesound = "handmadeguns:handmadeguns.HeavyMachineGun";
+			subTurret.flushscale  = 2;
+			
+			
+			subTurret.powor = 20;
+			subTurret.ex = 0;
+			subTurret.canex = false;
+			subTurret.guntype = 0;
+			
+			subTurret.magazineMax = 250;
+			subTurret.reloadSetting = 300;
+			subTurret.flushoffset = 0.5f;
+		}
+		mainTurret.addchild(subTurret);
+		
+		turrets = new TurretObj[]{mainTurret,subTurret};
 	}
 	
 	protected void applyEntityAttributes()

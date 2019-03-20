@@ -89,7 +89,7 @@ public class RenderJPN_TankSPG extends Render {
 				GL11.glTranslatef(0F, -2.1F, -0.8F);
 			}else{
 			GL11.glTranslatef(0F, 2.1F, 0.8F);
-			GL11.glRotatef(entity.rotationp, 1.0F, 0.0F, 0.0F);
+//			GL11.glRotatef(entity.rotationp, 1.0F, 0.0F, 0.0F);
 			GL11.glTranslatef(0F, -2.1F, -0.8F);
 			}
 			tankk.renderPart("mat5");
@@ -103,7 +103,7 @@ public class RenderJPN_TankSPG extends Render {
 
 	private void renderAngle(EntityJPN_TankSPG p_76986_1_, int i){
 		{
-			GL11.glRotatef(-(p_76986_1_.angletime), 1.0F, 0.0F, 0.0F);
+//			GL11.glRotatef(-(p_76986_1_.angletime), 1.0F, 0.0F, 0.0F);
 		}
 	}
 	

@@ -1,35 +1,20 @@
 package hmgww2.blocks;
  
-import java.util.List;
-import java.util.Random;
- 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.monster.EntityGolem;
-import net.minecraft.entity.monster.EntitySilverfish;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.projectile.EntitySnowball;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenBase;
 import cpw.mods.fml.relauncher.SideOnly;
 import hmgww2.mod_GVCWW2;
-import hmgww2.blocks.tile.TileEntityFlag_JPN;
 import cpw.mods.fml.relauncher.Side;
-import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
-import net.minecraft.tileentity.TileEntityMobSpawner;
 import net.minecraft.util.IIcon;
 //import net.minecraft.world.gen.structure.StructureStrongholdPieces;;
-import net.minecraft.util.MathHelper;
- 
+
+
 public class BlockBaseBlock_RUS extends Block
 {
     @SideOnly(Side.CLIENT)
@@ -135,10 +120,10 @@ public class BlockBaseBlock_RUS extends Block
 	    		Chest.setInventorySlotContents(11, new ItemStack(mod_GVCWW2.gun_m1891,1,0));
 	    		Chest.setInventorySlotContents(12, new ItemStack(mod_GVCWW2.gun_ppsh41,1,0));
 	    		Chest.setInventorySlotContents(13, new ItemStack(mod_GVCWW2.gun_ppsh41,1,0));
-	    		Chest.setInventorySlotContents(14, new ItemStack(mod_GVCWW2.gun_m1891sr,1,0));
-	    		Chest.setInventorySlotContents(15, new ItemStack(mod_GVCWW2.gun_m1891sr,1,0));
+	    		Chest.setInventorySlotContents(14, new ItemStack(mod_GVCWW2.gun_svt40,1,0));
+	    		Chest.setInventorySlotContents(15, new ItemStack(mod_GVCWW2.gun_svt40,1,0));
 	    		Chest.setInventorySlotContents(16, new ItemStack(mod_GVCWW2.gun_dp28,1,0));
-	    		Chest.setInventorySlotContents(17, new ItemStack(mod_GVCWW2.gun_grenadet,4,0));
+	    		Chest.setInventorySlotContents(17, new ItemStack(mod_GVCWW2.gun_ptrd,1,0));
 	    		for (int i = 18; i < 27; ++i){
 		            Chest.setInventorySlotContents(i, new ItemStack(mod_GVCWW2.gun_tt33,1,0));
 		        }

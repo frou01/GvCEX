@@ -44,10 +44,6 @@ public class EntityGER_FighterBase extends EntityGERBase implements ImultiRideab
 		baseLogic.dragfactor = 0.0003f;
 	}
 	
-	@Override
-	protected void entityInit() {
-	}
-	
 	public double getMountedYOffset() {
 		return 0.6D;
 	}

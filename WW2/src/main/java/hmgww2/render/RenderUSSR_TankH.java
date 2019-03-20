@@ -1,7 +1,7 @@
 
 package hmgww2.render;
 
-import hmgww2.entity.EntityUSSR_Tank;
+import hmgww2.entity.EntityUSSR_TankH;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
@@ -12,19 +12,19 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
 
-public class RenderRUS_Tank extends Render {
+public class RenderUSSR_TankH extends Render {
 
-	private static final ResourceLocation skeletonTexturesz = new ResourceLocation("hmgww2:textures/mob/rus/T34_76.png");
-	private static final IModelCustom tankk = AdvancedModelLoader.loadModel(new ResourceLocation("hmgww2:textures/mob/rus/T34_76.obj"));
+	private static final ResourceLocation skeletonTexturesz = new ResourceLocation("hmgww2:textures/mob/rus/KV2.png");
+	private static final IModelCustom tankk = AdvancedModelLoader.loadModel(new ResourceLocation("hmgww2:textures/mob/rus/KV2.obj"));
 	private float scale;
 
-	public RenderRUS_Tank() {
+	public RenderUSSR_TankH() {
 		this.scale = 2;
 	}
 
 	public void doRender(Entity p_76986_1_, double p_76986_2_, double p_76986_4_, double p_76986_6_, float p_76986_8_,
 			float p_76986_9_) {
-		this.doRender((EntityUSSR_Tank) p_76986_1_, p_76986_2_, p_76986_4_, p_76986_6_, p_76986_8_, p_76986_9_);
+		this.doRender((EntityUSSR_TankH) p_76986_1_, p_76986_2_, p_76986_4_, p_76986_6_, p_76986_8_, p_76986_9_);
 	}
 
 	/*private double func_110828_a(double p_110828_1_, double p_110828_3_, double p_110828_5_)
@@ -34,7 +34,7 @@ public class RenderRUS_Tank extends Render {
 	*/
 	
 	float xsxs;
-	public void doRender(EntityUSSR_Tank entity, double p_76986_2_, double p_76986_4_, double p_76986_6_,
+	public void doRender(EntityUSSR_TankH entity, double p_76986_2_, double p_76986_4_, double p_76986_6_,
 	                     float entityYaw, float partialTicks) {
 		this.bindEntityTexture(entity);
 		GL11.glPushMatrix();
@@ -54,14 +54,14 @@ public class RenderRUS_Tank extends Render {
 		GL11.glRotatef(-(180.0F - entityYaw), 0.0F, 1.0F, 0.0F);
 		
 		{
-			GL11.glRotatef(180.0F - entity.rotation, 0.0F, 1.0F, 0.0F);
+//			GL11.glRotatef(180.0F - entity.rotation, 0.0F, 1.0F, 0.0F);
 			tankk.renderPart("mat4");
 			if(entity.getMobMode() == 0){
 				tankk.renderPart("mat30");
 			}
-			GL11.glTranslatef(0F, 2.08F, 1.05F);
-			GL11.glRotatef(entity.rotationp, 1.0F, 0.0F, 0.0F);
-			GL11.glTranslatef(0F, -2.08F, -1.05F);
+			GL11.glTranslatef(0F, 2.6F, 1.2F);
+//			GL11.glRotatef(entity.rotationp, 1.0F, 0.0F, 0.0F);
+			GL11.glTranslatef(0F, -2.6F, -1.2F);
 			tankk.renderPart("mat5");
 		}
 		
@@ -71,15 +71,15 @@ public class RenderRUS_Tank extends Render {
 		
 	}
 
-	private void renderAngle(EntityUSSR_Tank p_76986_1_, int i){
+	private void renderAngle(EntityUSSR_TankH p_76986_1_, int i){
 		{
-			GL11.glRotatef(-(p_76986_1_.angletime), 1.0F, 0.0F, 0.0F);
+//			GL11.glRotatef(-(p_76986_1_.angletime), 1.0F, 0.0F, 0.0F);
 		}
 	}
 	
 	public void doRender(EntityLiving p_76986_1_, double p_76986_2_, double p_76986_4_, double p_76986_6_,
 			float p_76986_8_, float p_76986_9_) {
-		this.doRender((EntityUSSR_Tank) p_76986_1_, p_76986_2_, p_76986_4_, p_76986_6_, p_76986_8_, p_76986_9_);
+		this.doRender((EntityUSSR_TankH) p_76986_1_, p_76986_2_, p_76986_4_, p_76986_6_, p_76986_8_, p_76986_9_);
 	}
 
 	@Override

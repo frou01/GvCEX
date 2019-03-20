@@ -46,7 +46,7 @@ public class EntityGBase extends EntityGBases implements IFF,IGVCmob,IMGGunner {
 	public double movespeed = 0.3d;
 	public double rndyaw;
 	public double rndpitch;
-	TileEntityFlag spawnedtile = null;
+	TileEntity spawnedtile = null;
 	int placing;
 	boolean canuseAlreadyPlacedGun = true;
 	boolean canusePlacedGun = true;
@@ -146,19 +146,6 @@ public class EntityGBase extends EntityGBases implements IFF,IGVCmob,IMGGunner {
 		staningtime--;
 		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(movespeed);
 
-		if(cfg_guerrillacanusePlacedGun && canuseAlreadyPlacedGun && !worldObj.isRemote && ridingEntity == null && this.getAttackTarget() != null) {
-			List PlaceGunDetector = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox.expand(6, 3.0D, 6));
-
-			if (PlaceGunDetector != null && !PlaceGunDetector.isEmpty()) {
-				for (int i = 0; i < PlaceGunDetector.size(); ++i) {
-					Entity colliedentity = (Entity) PlaceGunDetector.get(i);
-					if (colliedentity.riddenByEntity == null && colliedentity instanceof PlacedGunEntity) {
-						this.mountEntity((PlacedGunEntity) colliedentity);
-						this.setCurrentItemOrArmor(0, null);
-					}
-				}
-			}
-		}
 		if(this.rand.nextInt(10) == 0){
 			rndyaw = this.rand.nextGaussian() * (double)(this.rand.nextBoolean() ? -1 : 1)*spread;
 			rndpitch = this.rand.nextGaussian() * (double)(this.rand.nextBoolean() ? -1 : 1)*spread;
@@ -166,7 +153,20 @@ public class EntityGBase extends EntityGBases implements IFF,IGVCmob,IMGGunner {
 			rndyaw += this.rand.nextGaussian() * (double)(this.rand.nextBoolean() ? -1 : 1)*spread/10;
 			rndpitch += this.rand.nextGaussian() * (double)(this.rand.nextBoolean() ? -1 : 1)*spread/10;
 		}
-
+	
+	    if(cfg_guerrillacanusePlacedGun && canuseAlreadyPlacedGun && !worldObj.isRemote && ridingEntity == null && this.getAttackTarget() != null) {
+		    List PlaceGunDetector = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox.expand(2, 3.0D, 2));
+		
+		    if (PlaceGunDetector != null && !PlaceGunDetector.isEmpty()) {
+			    for (int i = 0; i < PlaceGunDetector.size(); ++i) {
+				    Entity colliedentity = (Entity) PlaceGunDetector.get(i);
+				    if (colliedentity.riddenByEntity == null && colliedentity instanceof PlacedGunEntity) {
+					    this.mountEntity((PlacedGunEntity) colliedentity);
+					    this.setCurrentItemOrArmor(0, null);
+				    }
+			    }
+		    }
+	    }
 		if(this.getHeldItem() != null && this.aiAttackGun != null){
 			this.rotationPitch+=rndpitch;
 			this.rotationYaw+=rndyaw;
@@ -176,7 +176,7 @@ public class EntityGBase extends EntityGBases implements IFF,IGVCmob,IMGGunner {
 			this.rotationPitch-=rndpitch;
 			this.rotationYaw-=rndyaw;
 			rndpitch += recoiled;
-			if(!worldObj.isRemote && canusePlacedGun && ridingEntity == null && onGround &&this.getAttackTarget() != null && this.getHeldItem().getItem()instanceof HMGItem_Unified_Guns && ((HMGItem_Unified_Guns) this.getHeldItem().getItem()).fixAsEntity){
+			if(!worldObj.isRemote && cfg_guerrillacanusePlacedGun && canusePlacedGun && ridingEntity == null && onGround &&this.getAttackTarget() != null && this.getHeldItem().getItem()instanceof HMGItem_Unified_Guns && ((HMGItem_Unified_Guns) this.getHeldItem().getItem()).fixAsEntity){
 				placing ++;
 				if(placing>30) {
 					placing = 0;
@@ -295,7 +295,7 @@ public class EntityGBase extends EntityGBases implements IFF,IGVCmob,IMGGunner {
 
 	public void setDead(){
 		super.setDead();
-		if(spawnedtile != null)spawnedtile.spawnedEntities.remove(this);
+		if(spawnedtile != null && spawnedtile instanceof TileEntityFlag)((TileEntityFlag) spawnedtile).spawnedEntities.remove(this);
 	}
 
 	public static float getMobScale() {

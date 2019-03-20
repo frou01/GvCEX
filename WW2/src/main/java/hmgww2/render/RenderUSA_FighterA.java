@@ -92,24 +92,24 @@ public class RenderUSA_FighterA extends Render {
 			if(entity.getMobMode() == 0){
 				tankk.renderPart("mat30");
 			}
-			if(entity.getWeaponMode() == 1){
-				tankk.renderPart("mat10");
-			}else{
-				tankk.renderPart("mat11");
-			}
+//			if(entity.getWeaponMode() == 1){
+//				tankk.renderPart("mat10");
+//			}else{
+//				tankk.renderPart("mat11");
+//			}
 			
 			GL11.glPushMatrix();//glstart
 			GL11.glTranslatef(0F, 1.6F, -1.6F);
-			if(entity.combattask_2)
-			{
-			GL11.glRotatef(180.0F - entity.rotation_2 - (180.0F - entityYaw), 0.0F, 1.0F, 0.0F);
-			}
-			else{
-				GL11.glRotatef(180.0F, 0.0F, 1.0F, 0.0F);
-			}
+//			if(entity.combattask_2)
+//			{
+//			GL11.glRotatef(180.0F - entity.rotation_2 - (180.0F - entityYaw), 0.0F, 1.0F, 0.0F);
+//			}
+//			else{
+//				GL11.glRotatef(180.0F, 0.0F, 1.0F, 0.0F);
+//			}
 			GL11.glTranslatef(-0F, -1.6F, 1.6F);
 				GL11.glTranslatef(0F, 1.6F, -1.6F);
-				GL11.glRotatef(entity.rotationp_2, 1.0F, 0.0F, 0.0F);
+//				GL11.glRotatef(entity.rotationp_2, 1.0F, 0.0F, 0.0F);
 				GL11.glTranslatef(-0F, -1.6F, 1.6F);
 				tankk.renderPart("mat5");
 			GL11.glPopMatrix();//glend

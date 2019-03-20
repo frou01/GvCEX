@@ -25,7 +25,6 @@ import static hmggvcmob.util.Calculater.*;
 
 public class GVCEntityPMCTank extends EntityPMCBase implements IRideableTank,IControlable
 {
-    public TileEntityFlag spawnedtile = null;
     int count_for_reset;
     public double angletime;
     public int fireCycle1;
@@ -629,12 +628,7 @@ public class GVCEntityPMCTank extends EntityPMCBase implements IRideableTank,ICo
     public float getviewWide() {
         return viewWide;
     }
-
-
-    @Override
-    public void setspawnedtile(TileEntity flag) {
-        spawnedtile = flag;
-    }
+    
 
 
     @Override

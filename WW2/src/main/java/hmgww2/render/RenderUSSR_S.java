@@ -9,13 +9,13 @@ import net.minecraft.util.ResourceLocation;
 
  
 
-public class RenderRUS_S extends RenderBiped 
+public class RenderUSSR_S extends RenderBiped
 { 
 	
 	private ResourceLocation skeletonTextures = new ResourceLocation("hmgww2:textures/mob/rus/RUS_S.png"); 
 
  
- 	public RenderRUS_S() 
+ 	public RenderUSSR_S()
 	{ 
  		 
  		super(new ModelSoldier(), 0.5F); 

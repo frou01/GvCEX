@@ -20,8 +20,6 @@ import static hmggvcmob.event.GVCMXEntityEvent.soundedentity;
 import static hmggvcmob.util.Calculater.transformVecforMinecraft;
 
 public class GVCEntityAPC extends EntityGBase implements ITank {
-	// public int type;
-	public TileEntityFlag spawnedtile = null;
 	int count_for_reset;
 	public double angletime;
 	public int fireCycle1;
@@ -565,12 +563,6 @@ public class GVCEntityAPC extends EntityGBase implements ITank {
 	@Override
 	public float getviewWide() {
 		return viewWide;
-	}
-
-
-	@Override
-	public void setspawnedtile(TileEntity flag) {
-		spawnedtile = flag;
 	}
 
 

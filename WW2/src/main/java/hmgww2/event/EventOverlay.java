@@ -24,11 +24,11 @@ import net.minecraftforge.client.event.FOVUpdateEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
 public class EventOverlay {
-
+	
 	@SideOnly(Side.CLIENT)
-    @SubscribeEvent
-	  public void renderfov(FOVUpdateEvent event)
-	  {
+	@SubscribeEvent
+	public void renderfov(FOVUpdateEvent event)
+	{
 		Minecraft minecraft = FMLClientHandler.instance().getClient();
 		World world = FMLClientHandler.instance().getWorldClient();
 		EntityPlayer entityplayer = minecraft.thePlayer;
@@ -40,11 +40,11 @@ public class EventOverlay {
 				event.newfov = event.fov / 2;
 			}
 		}//1
-	  }
+	}
 	@SideOnly(Side.CLIENT)
-    @SubscribeEvent
-	  public void renderoffset(EntityViewRenderEvent.RenderFogEvent event)
-	  {
+	@SubscribeEvent
+	public void renderoffset(EntityViewRenderEvent.RenderFogEvent event)
+	{
 		Minecraft minecraft = FMLClientHandler.instance().getClient();
 		World world = FMLClientHandler.instance().getWorldClient();
 		EntityLivingBase entityLiving = event.entity;
@@ -68,7 +68,7 @@ public class EventOverlay {
 				//ix3 += (float) (MathHelper.sin(f12) * r.overlaywidth_3*x);
 				//iz3 -= (float) (MathHelper.cos(f12) * r.overlaywidth_3*x);
 				{
-				GL11.glTranslatef(-ix2,(-r.overlayhight_3 - y), -iz2);
+					GL11.glTranslatef(-ix2,(-r.overlayhight_3 - y), -iz2);
 				}
 			}else if(minecraft.gameSettings.thirdPersonView == 0){
 				GL11.glTranslatef(0, -r.overlayhight, 0);
@@ -76,7 +76,7 @@ public class EventOverlay {
 			boolean rightc = mod_GVCWW2.proxy.rightclick();
 			if(rightc){}
 		}//1
-	  }
+	}
 	/**/
 	
 	@SideOnly(Side.CLIENT)
@@ -87,29 +87,29 @@ public class EventOverlay {
 		if (entityplayer.ridingEntity instanceof EntityBases && entityplayer.ridingEntity != null) {//1
 			{
 				EntityBases heli = (EntityBases) entityplayer.ridingEntity;
-			//	entityplayer.rotationYaw = heli.rotationYawHead;
-			//	entityplayer.prevRotationYaw = heli.rotationYawHead;
-			//	entityplayer.rotationPitch = heli.rotationPitch;
-			//	entityplayer.prevRotationPitch = heli.rotationPitch;
-			//	ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer, 
-			//			heli.rotationYawHead + (heli.rotationYawHead - heli.rotationYawHead) * event.partialTicks, "camRoll", "R", "field_78495_O");
-			//	ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer, 
-			//			15, "thirdPersonDistance", "E", "field_78490_B");
-			//	ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer, 
-			//			-30, "cameraZoom","field_78503_V ");
-			//	ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, Minecraft.getMinecraft().entityRenderer, 50, 48);
-			//	minecraft.renderViewEntity = heli;
-			//	entityplayer.cameraPitch = 60;
+				//	entityplayer.rotationYaw = heli.rotationYawHead;
+				//	entityplayer.prevRotationYaw = heli.rotationYawHead;
+				//	entityplayer.rotationPitch = heli.rotationPitch;
+				//	entityplayer.prevRotationPitch = heli.rotationPitch;
+				//	ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer,
+				//			heli.rotationYawHead + (heli.rotationYawHead - heli.rotationYawHead) * event.partialTicks, "camRoll", "R", "field_78495_O");
+				//	ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer,
+				//			15, "thirdPersonDistance", "E", "field_78490_B");
+				//	ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer,
+				//			-30, "cameraZoom","field_78503_V ");
+				//	ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, Minecraft.getMinecraft().entityRenderer, 50, 48);
+				//	minecraft.renderViewEntity = heli;
+				//	entityplayer.cameraPitch = 60;
 			}
 		}
 		
 		ScaledResolution scaledresolution = new ScaledResolution(minecraft, minecraft.displayWidth,
-				minecraft.displayHeight);
+				                                                        minecraft.displayHeight);
 		int i = scaledresolution.getScaledWidth();
 		int j = scaledresolution.getScaledHeight();
 		
 		RenderHUDEvent.RenderHUD(minecraft, entityplayer, scaledresolution);
-		
+
 //		if (entityplayer.ridingEntity instanceof EntityBases && entityplayer.ridingEntity != null) {//1
 //
 //			EntityBases balaam = (EntityBases) entityplayer.ridingEntity;

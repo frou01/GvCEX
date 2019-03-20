@@ -33,7 +33,6 @@ import static hmggvcmob.util.Calculater.transformVecforMinecraft;
 public class GVCEntityPMCT90Tank extends EntityPMCBase implements IRideableTank,IControlable
 {
 	// public int type;
-	public TileEntityFlag spawnedtile = null;
 	int count_for_reset;
 	public double angletime;
 	public int fireCycle1;
@@ -868,12 +867,6 @@ public class GVCEntityPMCT90Tank extends EntityPMCBase implements IRideableTank,
 	@Override
 	public float getviewWide() {
 		return viewWide;
-	}
-
-
-	@Override
-	public void setspawnedtile(TileEntity flag) {
-		spawnedtile = flag;
 	}
 
 

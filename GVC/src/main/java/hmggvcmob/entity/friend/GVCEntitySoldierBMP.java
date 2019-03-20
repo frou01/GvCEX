@@ -27,7 +27,6 @@ import static hmggvcmob.util.Calculater.transformVecforMinecraft;
 public class GVCEntitySoldierBMP extends EntitySoBase implements IRideableTank,IControlable,ImultiRideableVehicle
 {
 	// public int type;
-	public TileEntityFlag spawnedtile = null;
 	int count_for_reset;
 	public double angletime;
 	public int fireCycle1;
@@ -843,12 +842,7 @@ public class GVCEntitySoldierBMP extends EntitySoBase implements IRideableTank,I
 	public float getviewWide() {
 		return viewWide;
 	}
-
-
-	@Override
-	public void setspawnedtile(TileEntity flag) {
-		spawnedtile = flag;
-	}
+	
 
 
 	@Override

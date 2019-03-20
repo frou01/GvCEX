@@ -87,17 +87,17 @@ public class RenderUSA_TankSPG extends Render {
 			{
 				GL11.glPushMatrix();//glstart
 				GL11.glTranslatef(-1.1F, 2.55F, 0.75F);
-				if(entity.combattask_2)
-				{
-				GL11.glRotatef(180.0F - entity.rotation_2 - (180.0F - entityYaw), 0.0F, 1.0F, 0.0F);
-				}
-				else{
-					GL11.glRotatef(0.0F, 0.0F, 1.0F, 0.0F);
-				}
+//				if(entity.combattask_2)
+//				{
+//				GL11.glRotatef(180.0F - entity.rotation_2 - (180.0F - entityYaw), 0.0F, 1.0F, 0.0F);
+//				}
+//				else{
+//					GL11.glRotatef(0.0F, 0.0F, 1.0F, 0.0F);
+//				}
 				GL11.glTranslatef(1.1F, -2.55F, -0.75F);
 				tankk.renderPart("mat41");
 				GL11.glTranslatef(-1.1F, 2.8F, 1.3F);
-					GL11.glRotatef(entity.rotationp_2, 1.0F, 0.0F, 0.0F);
+//					GL11.glRotatef(entity.rotationp_2, 1.0F, 0.0F, 0.0F);
 				GL11.glTranslatef(1.1F, -2.8F, -1.3F);
 					tankk.renderPart("mat51");
 				GL11.glPopMatrix();//glend
@@ -109,7 +109,7 @@ public class RenderUSA_TankSPG extends Render {
 				GL11.glTranslatef(0F, -2.1F, -0.8F);
 			}else{
 			GL11.glTranslatef(-0.25F, 1.55F, 1.0F);
-			GL11.glRotatef(entity.rotationp, 1.0F, 0.0F, 0.0F);
+//			GL11.glRotatef(entity.rotationp, 1.0F, 0.0F, 0.0F);
 			GL11.glTranslatef(0.25F, -1.55F, -1.0F);
 			}
 			tankk.renderPart("mat5");
@@ -123,7 +123,7 @@ public class RenderUSA_TankSPG extends Render {
 
 	private void renderAngle(EntityUSA_TankSPG p_76986_1_, int i){
 		{
-			GL11.glRotatef(-(p_76986_1_.angletime), 1.0F, 0.0F, 0.0F);
+//			GL11.glRotatef(-(p_76986_1_.angletime), 1.0F, 0.0F, 0.0F);
 		}
 	}
 	

@@ -38,7 +38,7 @@ public class EntitySoBase extends EntitySoBases implements IFF,IGVCmob {
 	public EntityAISwimming aiSwimming;
 	AIAttackGun aiAttackGun;
 	public static int spawnedcount;
-	public TileEntityFlag spawnedtile = null;
+	public TileEntity spawnedtile = null;
 
 	public EntitySoBase(World par1World) {
 		super(par1World);
@@ -70,7 +70,7 @@ public class EntitySoBase extends EntitySoBases implements IFF,IGVCmob {
 	public void setDead(){
 		super.setDead();
 		spawnedcount--;
-		if(spawnedtile != null)spawnedtile.spawnedEntities.remove(this);
+		if(spawnedtile != null && spawnedtile instanceof TileEntityFlag)((TileEntityFlag) spawnedtile).spawnedEntities.remove(this);
 	}
 
 	public boolean CanAttack(Entity entity) {

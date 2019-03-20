@@ -11,6 +11,7 @@ import hmggvcmob.entity.friend.EntitySoBases;
 import hmggvcmob.entity.guerrilla.EntityGBase;
 import hmggvcmob.entity.guerrilla.EntityGBases;
 import hmgww2.Nation;
+import hmgww2.mod_GVCWW2;
 import littleMaidMobX.LMM_EntityLittleMaid;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.*;
@@ -34,6 +35,10 @@ public class EntityJPNBase extends EntityBases implements IFF,IGVCmob {
 	
 	public EntityJPNBase(World par1World) {
 		super(par1World);
+		this.flag = mod_GVCWW2.b_flag_jpn;
+		this.flag2 = mod_GVCWW2.b_flag2_jpn;
+		this.flag3 = mod_GVCWW2.b_flag3_jpn;
+		this.flag4 = mod_GVCWW2.b_flag2_jpn;
 	}
 	
 	@Override
