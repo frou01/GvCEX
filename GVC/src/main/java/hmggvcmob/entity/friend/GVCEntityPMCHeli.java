@@ -210,6 +210,7 @@ public class GVCEntityPMCHeli extends Entity implements ImultiRideableVehicle
 	}
 	public void onUpdate()
 	{
+		prevbodyRot.set(bodyRot);
 		if(!isreceivedMotionUpdate){
 			prevmotionVec.set(motionX,motionY,motionZ);
 		}
@@ -252,10 +253,6 @@ public class GVCEntityPMCHeli extends Entity implements ImultiRideableVehicle
 						this.posY + bodyvector.y + tailwingvector.y + mainwingvector.y,
 						this.posZ + bodyvector.z + tailwingvector.z + mainwingvector.z,
 						bodyrotationYaw,bodyrotationPitch);
-				prevbodyRot.x = bodyRot.x;
-				prevbodyRot.y = bodyRot.y;
-				prevbodyRot.z = bodyRot.z;
-				prevbodyRot.w = bodyRot.w;
 				control();
 			}else{
 				tailwingvector = Calculater.transformVecByQuat(new Vector3d(unitY), bodyRot);

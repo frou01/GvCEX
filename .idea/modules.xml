@@ -30,7 +30,6 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Linker/Linker_api.iml" filepath="$PROJECT_DIR$/.idea/modules/Linker/Linker_api.iml" group="Linker" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Linker/Linker_main.iml" filepath="$PROJECT_DIR$/.idea/modules/Linker/Linker_main.iml" group="Linker" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Linker/Linker_test.iml" filepath="$PROJECT_DIR$/.idea/modules/Linker/Linker_test.iml" group="Linker" />
-      <module fileurl="file://$PROJECT_DIR$/HMV/src/main/main.iml" filepath="$PROJECT_DIR$/HMV/src/main/main.iml" />
     </modules>
   </component>
 </project>

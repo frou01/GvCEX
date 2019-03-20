@@ -20,5 +20,6 @@
   "handmadeguns.spg": {"category": "neutral","sounds": ["spg"]},
   "handmadeguns.supu": {"category": "neutral","sounds": ["supu"]},
   "handmadeguns.nulls": {"category": "neutral","sounds": ["nulls"]},
-  "handmadeguns.railCannon": {"category": "neutral","sounds": ["railCannon"]}
+  "handmadeguns.railCannon": {"category": "neutral","sounds": ["railCannon"]},
+  "handmadeguns.Reload_Test": {"category": "neutral","sounds": ["Reload_Test"]}
 }
