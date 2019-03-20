@@ -3,10 +3,10 @@ package hmgww2.blocks.tile;
 import java.util.List;
 
 import gvclib.entity.EntityBases;
+import hmgww2.entity.EntityUSSRBase;
 import hmgww2.mod_GVCWW2;
 import hmgww2.entity.EntityGERBase;
 import hmgww2.entity.EntityJPNBase;
-import hmgww2.entity.EntityRUSBase;
 import hmgww2.entity.EntityUSABase;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
@@ -173,7 +173,7 @@ public abstract class TileEntityBase extends TileEntity
 		                    	this.en = (EntityBases) entity1;
 		                    }
 	            		}else if(fre == 4 && entity1 != null){
-	            			if(entity1 instanceof EntityRUSBase){
+	            			if(entity1 instanceof EntityUSSRBase){
 	            				++soldierkazu;
 		            			EntityBases en = (EntityBases) entity1;
 		            			if(en.vehicle){

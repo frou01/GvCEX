@@ -12,7 +12,6 @@ import hmggvcmob.entity.IRideableTank;
 import hmggvcmob.entity.IdriveableVehicle;
 import hmggvcmob.entity.guerrilla.EntityGBase;
 import hmggvcmob.entity.guerrilla.EntityGBases;
-import hmggvcmob.tile.TileEntityFlag;
 import littleMaidMobX.LMM_EntityLittleMaid;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.*;
@@ -22,6 +21,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
@@ -347,7 +347,7 @@ public class EntityPMCBase extends EntitySoBases implements IFF,IGVCmob {
 	}
 
 	@Override
-	public void setspawnedtile(TileEntityFlag flag) {
+	public void setspawnedtile(TileEntity flag) {
 
 	}
 }

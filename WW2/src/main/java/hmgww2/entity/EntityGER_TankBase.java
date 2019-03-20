@@ -4,21 +4,17 @@ import hmggvcmob.GVCMobPlus;
 import hmggvcmob.ai.AITankAttack;
 import hmggvcmob.entity.*;
 import hmggvcmob.tile.TileEntityFlag;
-import hmgww2.mod_GVCWW2;
-import hmgww2.network.WW2MessageKeyPressed;
-import hmgww2.network.WW2PacketHandler;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
-import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
 import javax.vecmath.Quat4d;
@@ -434,10 +430,6 @@ public class EntityGER_TankBase extends EntityGERBase implements IRideableTank,I
 	}
 	
 	
-	@Override
-	public void setspawnedtile(TileEntityFlag flag) {
-		spawnedtile = flag;
-	}
 	
 	
 	@Override

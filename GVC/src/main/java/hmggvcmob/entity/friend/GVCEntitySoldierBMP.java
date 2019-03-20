@@ -10,6 +10,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
@@ -845,7 +846,7 @@ public class GVCEntitySoldierBMP extends EntitySoBase implements IRideableTank,I
 
 
 	@Override
-	public void setspawnedtile(TileEntityFlag flag) {
+	public void setspawnedtile(TileEntity flag) {
 		spawnedtile = flag;
 	}
 

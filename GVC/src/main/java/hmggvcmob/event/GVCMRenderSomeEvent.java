@@ -260,8 +260,10 @@ public class GVCMRenderSomeEvent {
 										aseat.master = heli;
 									}
 								}
-							}else if(((GVCEntityChild) entityplayer.ridingEntity).master instanceof GVCEntityPlane){
-								GVCEntityPlane plane = (GVCEntityPlane) ((GVCEntityChild) entityplayer.ridingEntity).master;
+							}else if(((GVCEntityChild) entityplayer.ridingEntity).master instanceof Iplane){
+								Entity panebody = ((GVCEntityChild) entityplayer.ridingEntity).master;
+								Iplane iplanebody = (Iplane) ((GVCEntityChild) entityplayer.ridingEntity).master;
+								PlaneBaseLogic plane = iplanebody.getBaseLogic();
 								Vector3d bodyvector = Calculater.transformVecByQuat(new Vector3d(0, 0, 1), plane.bodyRot);
 								Vector3d tailwingvector = Calculater.transformVecByQuat(new Vector3d(0, 1, 0), plane.bodyRot);
 								Vector3d mainwingvector = Calculater.transformVecByQuat(new Vector3d(1, 0, 0), plane.bodyRot);
@@ -303,9 +305,9 @@ public class GVCMRenderSomeEvent {
 									bodyvector.scale(-3.1);
 									if (plane.camera != null) {
 										plane.camera.setLocationAndAngles(
-												plane.prevPosX + (plane.posX - plane.prevPosX) * event.renderTickTime + bodyvector.x + tailwingvector.x + mainwingvector.x,
-												plane.prevPosY + (plane.posY - plane.prevPosY) * event.renderTickTime + bodyvector.y + tailwingvector.y + mainwingvector.y + 2.5 - entityplayer.yOffset,
-												plane.prevPosZ + (plane.posZ - plane.prevPosZ) * event.renderTickTime + bodyvector.z + tailwingvector.z + mainwingvector.z,
+												panebody.prevPosX + (panebody.posX - panebody.prevPosX) * event.renderTickTime + bodyvector.x + tailwingvector.x + mainwingvector.x,
+												panebody.prevPosY + (panebody.posY - panebody.prevPosY) * event.renderTickTime + bodyvector.y + tailwingvector.y + mainwingvector.y + 2.5 - entityplayer.yOffset,
+												panebody.prevPosZ + (panebody.posZ - panebody.prevPosZ) * event.renderTickTime + bodyvector.z + tailwingvector.z + mainwingvector.z,
 												(float) xyz[1], (float) xyz[0]);
 										minecraft.renderViewEntity = plane.camera;
 										plane.camera.rotationYaw = (float) xyz[1];
@@ -317,12 +319,12 @@ public class GVCMRenderSomeEvent {
 									}
 									plane.bodyrotationYaw = (float) xyz[1];
 									plane.prevbodyrotationYaw = (float) xyz[1];
-									plane.rotationYaw = (float) xyz[1];
-									plane.prevRotationYaw = (float) xyz[1];
+									panebody.rotationYaw = (float) xyz[1];
+									panebody.prevRotationYaw = (float) xyz[1];
 									plane.bodyrotationPitch = (float) xyz[0];
 									plane.prevbodyrotationPitch = (float) xyz[0];
-									plane.rotationPitch = (float) xyz[0];
-									plane.prevRotationPitch = (float) xyz[0];
+									panebody.rotationPitch = (float) xyz[0];
+									panebody.prevRotationPitch = (float) xyz[0];
 									plane.bodyrotationRoll = (float) xyz[2];
 									plane.prevbodyrotationRoll = (float) xyz[2];
 									ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer, (float) xyz[2], "camRoll", "R", "field_78495_O");
@@ -415,11 +417,13 @@ public class GVCMRenderSomeEvent {
 				}
 				fontrenderer.drawStringWithShadow("Armor : " + gear.health, i - 300, j - 40 - 10, color);
 			}else
-			if(((GVCEntityChild) entityplayer.ridingEntity).master instanceof GVCEntityPlane){
+			if(((GVCEntityChild) entityplayer.ridingEntity).master instanceof Iplane){
 				FontRenderer fontrenderer = minecraft.fontRenderer;
-				GVCEntityPlane plane = (GVCEntityPlane) ((GVCEntityChild) entityplayer.ridingEntity).master;
+				Entity planebody = ((GVCEntityChild) entityplayer.ridingEntity).master;
+				Iplane iplane = (Iplane) ((GVCEntityChild) entityplayer.ridingEntity).master;
+				PlaneBaseLogic plane = iplane.getBaseLogic();
 
-				displayFlyersHUD(plane.prevbodyRot,plane.bodyRot,plane,plane.prevmotionVec,event);
+				displayFlyersHUD(plane.prevbodyRot,plane.bodyRot,planebody,plane.prevmotionVec,event);
 //				Quat4d tempquat = new Quat4d(
 //						plane.prevbodyRot.x * (1-event.partialTicks) + plane.bodyRot.x * event.partialTicks ,
 //						plane.prevbodyRot.y * (1-event.partialTicks) + plane.bodyRot.y * event.partialTicks ,
@@ -499,7 +503,7 @@ public class GVCMRenderSomeEvent {
 
 				int color = 0xFFFFFF;
 				color = 0xFFFFFF;
-				fontrenderer.drawStringWithShadow("Speed : " + (int)(sqrt(plane.motionX * plane.motionX + plane.motionY * plane.motionY + plane.motionZ * plane.motionZ)*72), i - 300, j - 80 - 10, color);
+				fontrenderer.drawStringWithShadow("Speed : " + (int)(sqrt(planebody.motionX * planebody.motionX + planebody.motionY * planebody.motionY + planebody.motionZ * planebody.motionZ)*72), i - 300, j - 80 - 10, color);
 				color = 0xFFFFFF;
 				fontrenderer.drawStringWithShadow("Throttle : " + (int)(plane.throttle*10) + (plane.throttle<2.5?"Gear Down":"") + "   Flap position : " + plane.flaplevel, i - 300, j - 60, color);
 				color = 0x00FF00;
@@ -508,7 +512,7 @@ public class GVCMRenderSomeEvent {
 				}
 				fontrenderer.drawStringWithShadow("Armor : " + plane.health, i - 300, j - 40 - 10, color);
 				color = 0x74AAFF;
-				fontrenderer.drawStringWithShadow("Missile : " + plane.rocket + " : " + (plane.missile != null ? "Continue radar irradiation" : plane.illuminated != null?"LOCK":""), i - 300, j - 20 - 10, color);
+//				fontrenderer.drawStringWithShadow("Missile : " + plane.rocket + " : " + (plane.missile != null ? "Continue radar irradiation" : plane.illuminated != null?"LOCK":""), i - 300, j - 20 - 10, color);
 				GL11.glDisable(GL11.GL_BLEND);
 			}else
 			if(((GVCEntityChild) entityplayer.ridingEntity).master instanceof GVCEntityPMCHeli){

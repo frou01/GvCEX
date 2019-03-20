@@ -1,45 +1,16 @@
 
 package hmgww2.render;
 
-import java.util.Random;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import hmgww2.entity.EntityUSSR_TankAA;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
-import hmgww2.entity.EntityRUS_TankAA;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.model.ModelBox;
-import net.minecraft.client.model.ModelRenderer;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.Render;
-import net.minecraft.client.renderer.entity.RenderBiped;
-import net.minecraft.client.renderer.entity.RenderLiving;
-import net.minecraft.client.renderer.entity.RendererLivingEntity;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityHanging;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.monster.EntityBlaze;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.projectile.EntityArrow;
-import net.minecraft.init.Blocks;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
-import net.minecraftforge.common.MinecraftForge;
 
 public class RenderRUS_TankAA extends Render {
 
@@ -53,7 +24,7 @@ public class RenderRUS_TankAA extends Render {
 
 	public void doRender(Entity p_76986_1_, double p_76986_2_, double p_76986_4_, double p_76986_6_, float p_76986_8_,
 			float p_76986_9_) {
-		this.doRender((EntityRUS_TankAA) p_76986_1_, p_76986_2_, p_76986_4_, p_76986_6_, p_76986_8_, p_76986_9_);
+		this.doRender((EntityUSSR_TankAA) p_76986_1_, p_76986_2_, p_76986_4_, p_76986_6_, p_76986_8_, p_76986_9_);
 	}
 
 	/*private double func_110828_a(double p_110828_1_, double p_110828_3_, double p_110828_5_)
@@ -63,8 +34,8 @@ public class RenderRUS_TankAA extends Render {
 	*/
 	
 	float xsxs;
-	public void doRender(EntityRUS_TankAA entity, double p_76986_2_, double p_76986_4_, double p_76986_6_,
-			float entityYaw, float partialTicks) {
+	public void doRender(EntityUSSR_TankAA entity, double p_76986_2_, double p_76986_4_, double p_76986_6_,
+	                     float entityYaw, float partialTicks) {
 		this.bindEntityTexture(entity);
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) p_76986_2_, (float) p_76986_4_, (float) p_76986_6_);
@@ -102,7 +73,7 @@ public class RenderRUS_TankAA extends Render {
 		
 	}
 
-	private void renderAngle(EntityRUS_TankAA p_76986_1_, int i){
+	private void renderAngle(EntityUSSR_TankAA p_76986_1_, int i){
 		{
 			GL11.glRotatef(-(p_76986_1_.angletime), 1.0F, 0.0F, 0.0F);
 		}
@@ -110,7 +81,7 @@ public class RenderRUS_TankAA extends Render {
 	
 	public void doRender(EntityLiving p_76986_1_, double p_76986_2_, double p_76986_4_, double p_76986_6_,
 			float p_76986_8_, float p_76986_9_) {
-		this.doRender((EntityRUS_TankAA) p_76986_1_, p_76986_2_, p_76986_4_, p_76986_6_, p_76986_8_, p_76986_9_);
+		this.doRender((EntityUSSR_TankAA) p_76986_1_, p_76986_2_, p_76986_4_, p_76986_6_, p_76986_8_, p_76986_9_);
 	}
 
 	@Override

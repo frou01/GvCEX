@@ -9,6 +9,7 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
@@ -787,7 +788,7 @@ public class GVCEntityTank extends EntityGBase implements ITank
 
 
 	@Override
-	public void setspawnedtile(TileEntityFlag flag) {
+	public void setspawnedtile(TileEntity flag) {
 		spawnedtile = flag;
 	}
 

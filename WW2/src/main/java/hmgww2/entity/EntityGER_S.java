@@ -49,14 +49,14 @@ public class EntityGER_S extends EntityGERBase
         }else if(iii == 2){
         	this.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_mp40));
         }else if(iii == 3){
-        	this.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_fg42));
+        	this.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_mg34));
         }else if(iii == 4){
-        	this.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_kar98sr));
+        	this.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_gew43));
         }else if(iii == 5){
         	this.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_rpzb54));
         }else
         {
-        	this.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_kar98));
+        	this.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_gew98));
         }
         this.setCurrentItemOrArmor(4, new ItemStack(mod_GVCWW2.armor_ger));
     }

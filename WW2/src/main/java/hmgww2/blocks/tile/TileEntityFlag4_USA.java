@@ -48,9 +48,9 @@ public class TileEntityFlag4_USA extends TileEntityBase
 	            entityskeleton.setFlagMode(1);
 	            int iii = par1World.rand.nextInt(10);
 	            if(iii == 0){
-	            	entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_m1904));
+	            	entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_m1917));
 	            }else if(iii == 1){
-	            	entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_m1904));
+	            	entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_m1917));
 	            }else if(iii == 2){
 	            	entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_bar));
 	            }else if(iii == 3){

@@ -14,6 +14,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
 
@@ -825,7 +826,7 @@ public class GVCEntityTankT90 extends EntityGBase implements IFF,IGVCmob,ITank
 
 
     @Override
-    public void setspawnedtile(TileEntityFlag flag) {
+    public void setspawnedtile(TileEntity flag) {
         spawnedtile = flag;
     }
 

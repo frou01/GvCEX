@@ -81,7 +81,7 @@ public class RecipeRegistrys {
 				'w', new ItemStack(Blocks.planks, 1, D),
 				's', new ItemStack(Items.dye, 1, 15)
 		);
-		GameRegistry.addRecipe(new ItemStack(mod_GVCWW2.gun_type99, 1),
+		GameRegistry.addRecipe(new ItemStack(mod_GVCWW2.gun_type4Auto, 1),
 				" gg",
 				"iii",
 				" sw", 
@@ -90,7 +90,7 @@ public class RecipeRegistrys {
 				'w', new ItemStack(Blocks.planks, 1, D),
 				's', new ItemStack(Items.dye, 1, 15)
 		);
-		GameRegistry.addRecipe(new ItemStack(mod_GVCWW2.gun_type89, 1),
+		GameRegistry.addRecipe(new ItemStack(mod_GVCWW2.gun_rota_cannon, 1),
 				"ii ",
 				"isi",
 				" iw", 
@@ -126,7 +126,7 @@ public class RecipeRegistrys {
 				'w', new ItemStack(Blocks.planks, 1, D),
 				's', new ItemStack(Items.dye, 1, 2)
 		);
-		GameRegistry.addRecipe(new ItemStack(mod_GVCWW2.gun_m1904, 1),
+		GameRegistry.addRecipe(new ItemStack(mod_GVCWW2.gun_m1917, 1),
 				" gg",
 				"iii",
 				" sw", 
@@ -151,14 +151,14 @@ public class RecipeRegistrys {
 		);
 		
 		//ger
-		GameRegistry.addRecipe(new ItemStack(mod_GVCWW2.gun_kar98, 1),
+		GameRegistry.addRecipe(new ItemStack(mod_GVCWW2.gun_gew98, 1),
 				"iii",
 				" sw", 
 				'i', Items.iron_ingot,
 				'w', new ItemStack(Blocks.planks, 1, D),
 				's', new ItemStack(Items.dye, 1, 7)
 		);
-		GameRegistry.addRecipe(new ItemStack(mod_GVCWW2.gun_fg42, 1),
+		GameRegistry.addRecipe(new ItemStack(mod_GVCWW2.gun_mg34, 1),
 				"iii",
 				" si", 
 				'i', Items.iron_ingot,
@@ -171,7 +171,7 @@ public class RecipeRegistrys {
 				'w', new ItemStack(Blocks.planks, 1, D),
 				's', new ItemStack(Items.dye, 1, 7)
 		);
-		GameRegistry.addRecipe(new ItemStack(mod_GVCWW2.gun_kar98sr, 1),
+		GameRegistry.addRecipe(new ItemStack(mod_GVCWW2.gun_gew43, 1),
 				" gg",
 				"iii",
 				" sw", 

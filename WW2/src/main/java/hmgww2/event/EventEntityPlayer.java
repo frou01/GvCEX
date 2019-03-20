@@ -1,18 +1,12 @@
 package hmgww2.event;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import gvclib.entity.EntityBBase;
-import gvclib.entity.EntityBases;
+import hmgww2.entity.*;
 import hmgww2.mod_GVCWW2;
-import hmgww2.entity.EntityGERBase;
-import hmgww2.entity.EntityJPNBase;
-import hmgww2.entity.EntityRUSBase;
-import hmgww2.entity.EntityUSABase;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
-import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 
 public class EventEntityPlayer {
@@ -63,11 +57,11 @@ public class EventEntityPlayer {
 				event.ammount = 0;
 			}
 		}
-		if (target instanceof EntityRUSBase && target != null) 
+		if (target instanceof EntityUSSRBase && target != null)
 		{
-			EntityRUSBase en = (EntityRUSBase) target.ridingEntity;
-			if (target != null && source.getEntity() instanceof EntityRUSBase) {
-				EntityRUSBase attacker = (EntityRUSBase) source.getEntity();
+			EntityUSSRBase en = (EntityUSSRBase) target.ridingEntity;
+			if (target != null && source.getEntity() instanceof EntityUSSRBase) {
+				EntityUSSRBase attacker = (EntityUSSRBase) source.getEntity();
 				if (attacker != null) {
 					event.ammount = 0;
 				}
@@ -145,8 +139,8 @@ public class EventEntityPlayer {
 			}
 			if (entityplayer.getEquipmentInSlot(4) != null
 					&& (entityplayer.getEquipmentInSlot(4).getItem() == mod_GVCWW2.armor_rus)) {
-				if (target != null && source.getEntity() instanceof EntityRUSBase) {
-					EntityRUSBase attacker = (EntityRUSBase) source.getEntity();
+				if (target != null && source.getEntity() instanceof EntityUSSRBase) {
+					EntityUSSRBase attacker = (EntityUSSRBase) source.getEntity();
 					if (attacker != null) {
 						event.ammount = 0;
 					}
@@ -157,7 +151,7 @@ public class EventEntityPlayer {
 			}
 		}
 		
-		if (target.ridingEntity instanceof EntityBases && target.ridingEntity != null) 
+		if (target.ridingEntity instanceof EntityBases && target.ridingEntity != null)
 		{
 			EntityBases en = (EntityBases) target.ridingEntity;
 			if (target != null && source.getEntity() instanceof EntityLivingBase) {

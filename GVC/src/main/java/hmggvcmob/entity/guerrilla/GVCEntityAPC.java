@@ -7,6 +7,7 @@ import hmggvcmob.tile.TileEntityFlag;
 import net.minecraft.entity.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
@@ -568,7 +569,7 @@ public class GVCEntityAPC extends EntityGBase implements ITank {
 
 
 	@Override
-	public void setspawnedtile(TileEntityFlag flag) {
+	public void setspawnedtile(TileEntity flag) {
 		spawnedtile = flag;
 	}
 

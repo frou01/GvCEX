@@ -55,14 +55,14 @@ public class TileEntityFlag2_GER extends TileEntityBase
 		            }else if(iii == 2){
 		            	entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_mp40));
 		            }else if(iii == 3){
-		            	entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_fg42));
+		            	entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_mg34));
 		            }else if(iii == 4){
-		            	entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_kar98sr));
+		            	entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_gew43));
 		            }else if(iii == 5){
 		            	entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_rpzb54));
 		            }else
 		            {
-		            	entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_kar98));
+		            	entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_gew98));
 		            }
 		            entityskeleton.setCurrentItemOrArmor(4, new ItemStack(mod_GVCWW2.armor_ger));
 		        if(!this.worldObj.isRemote){

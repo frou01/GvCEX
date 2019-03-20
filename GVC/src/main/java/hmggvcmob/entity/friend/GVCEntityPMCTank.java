@@ -12,6 +12,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
 
@@ -631,7 +632,7 @@ public class GVCEntityPMCTank extends EntityPMCBase implements IRideableTank,ICo
 
 
     @Override
-    public void setspawnedtile(TileEntityFlag flag) {
+    public void setspawnedtile(TileEntity flag) {
         spawnedtile = flag;
     }
 

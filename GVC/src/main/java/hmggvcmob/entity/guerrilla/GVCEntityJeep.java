@@ -7,13 +7,13 @@ import hmggvcmob.entity.ITank;
 import hmggvcmob.entity.ModifiedBoundingBox;
 import hmggvcmob.entity.TankBaseLogic;
 import hmggvcmob.entity.TurretObj;
-import hmggvcmob.tile.TileEntityFlag;
 import net.minecraft.block.Block;
 import net.minecraft.entity.*;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
@@ -262,7 +262,7 @@ public class GVCEntityJeep extends EntityGBase implements ITank
 
 
     @Override
-    public void setspawnedtile(TileEntityFlag flag) {
+    public void setspawnedtile(TileEntity flag) {
         spawnedtile = flag;
     }
 

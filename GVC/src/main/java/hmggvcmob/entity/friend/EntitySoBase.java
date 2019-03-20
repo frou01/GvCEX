@@ -246,7 +246,7 @@ public class EntitySoBase extends EntitySoBases implements IFF,IGVCmob {
 		return flag;
 	}
 	@Override
-	public void setspawnedtile(TileEntityFlag flag) {
+	public void setspawnedtile(TileEntity flag) {
 		spawnedtile = flag;
 	}
 }

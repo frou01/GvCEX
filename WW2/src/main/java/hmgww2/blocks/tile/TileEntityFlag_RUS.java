@@ -1,8 +1,8 @@
 package hmgww2.blocks.tile;
  
+import hmgww2.entity.EntityUSSRBase;
+import hmgww2.entity.EntityUSSR_S;
 import hmgww2.mod_GVCWW2;
-import hmgww2.entity.EntityRUSBase;
-import hmgww2.entity.EntityRUS_S;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
  
@@ -21,7 +21,7 @@ public class TileEntityFlag_RUS extends TileEntityBase
     {
         this.maxs = mod_GVCWW2.cfg_spawnblock_limit_s;
         this.maxv =  mod_GVCWW2.cfg_spawnblock_limit_tank;
-        this.friend = new EntityRUSBase(this.worldObj);
+        this.friend = new EntityUSSRBase(this.worldObj);
         this.fre = 4;
         this.sorv = true;
         
@@ -44,7 +44,7 @@ public class TileEntityFlag_RUS extends TileEntityBase
 					int ix = par1World.rand.nextInt(10);
 					int iz = par1World.rand.nextInt(10);
 					
-					EntityRUS_S entityskeleton = new EntityRUS_S(par1World);
+					EntityUSSR_S entityskeleton = new EntityUSSR_S(par1World);
 			            entityskeleton.setLocationAndAngles(par1+0.5 + ix - 5, par2+2, par3+0.5 + iz - 5, entityskeleton.renderYawOffset, 0.0F);
 			            entityskeleton.setFlagMode(1);
 			            int iii = par1World.rand.nextInt(10);

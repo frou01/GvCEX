@@ -14,15 +14,6 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
-import gvclib.item.ItemGrenadeBase;
-import gvclib.item.ItemGrenade_N;
-import gvclib.item.ItemGrenade_T;
-import gvclib.item.ItemGunBase;
-import gvclib.item.ItemGun_AR;
-import gvclib.item.ItemGun_RL;
-import gvclib.item.ItemGun_SR;
-import gvclib.render.RenderItem_Grenade;
-import gvclib.render.RenderItem_Gun;
 import hmgww2.blocks.BlockBaseBlock2_GER;
 import hmgww2.blocks.BlockBaseBlock2_JPN;
 import hmgww2.blocks.BlockBaseBlock2_RUS;
@@ -51,36 +42,8 @@ import hmgww2.blocks.BlockFlag_GER;
 import hmgww2.blocks.BlockFlag_JPN;
 import hmgww2.blocks.BlockFlag_RUS;
 import hmgww2.blocks.BlockFlag_USA;
-import hmgww2.entity.EntityGER_Fighter;
-import hmgww2.entity.EntityGER_FighterA;
-import hmgww2.entity.EntityGER_S;
-import hmgww2.entity.EntityGER_Tank;
-import hmgww2.entity.EntityGER_TankAA;
-import hmgww2.entity.EntityGER_TankH;
-import hmgww2.entity.EntityGER_TankSPG;
-import hmgww2.entity.EntityJPN_Fighter;
-import hmgww2.entity.EntityJPN_FighterA;
-import hmgww2.entity.EntityJPN_S;
-import hmgww2.entity.EntityJPN_ShipB;
-import hmgww2.entity.EntityJPN_ShipD;
-import hmgww2.entity.EntityJPN_Tank;
-import hmgww2.entity.EntityJPN_TankAA;
-import hmgww2.entity.EntityJPN_TankSPG;
-import hmgww2.entity.EntityRUS_Fighter;
-import hmgww2.entity.EntityRUS_FighterA;
-import hmgww2.entity.EntityRUS_S;
-import hmgww2.entity.EntityRUS_Tank;
-import hmgww2.entity.EntityRUS_TankAA;
-import hmgww2.entity.EntityRUS_TankH;
-import hmgww2.entity.EntityRUS_TankSPG;
-import hmgww2.entity.EntityUSA_Fighter;
-import hmgww2.entity.EntityUSA_FighterA;
-import hmgww2.entity.EntityUSA_S;
-import hmgww2.entity.EntityUSA_ShipB;
-import hmgww2.entity.EntityUSA_ShipD;
-import hmgww2.entity.EntityUSA_Tank;
-import hmgww2.entity.EntityUSA_TankAA;
-import hmgww2.entity.EntityUSA_TankSPG;
+import hmgww2.entity.*;
+import hmgww2.entity.EntityUSSR_TankSPG;
 import hmgww2.event.EventEntityBases;
 import hmgww2.event.EventEntityPlayer;
 import hmgww2.event.EventOverlay;
@@ -100,10 +63,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraftforge.client.MinecraftForgeClient;
-import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.util.EnumHelper;
@@ -235,25 +195,24 @@ public class mod_GVCWW2 {
 	
 	public static Item gun_type38;
 	public static Item gun_type99lmg;
-	public static Item gun_type99;
+	public static Item gun_type4Auto;
 	public static Item gun_type100;
-	public static Item gun_type89;
+	public static Item gun_rota_cannon;
 	public static Item gun_type14;
 	
 	public static Item gun_m1g;
 	public static Item gun_m1t;
 	public static Item gun_bar;
-	public static Item gun_m1904;
+	public static Item gun_m1917;
 	public static Item gun_m1b;
 	public static Item gun_m1911;
 	
 	public static Item gun_grenade;
-	public static Item gun_grenadet;
 	
-	public static Item gun_kar98;
+	public static Item gun_gew98;
+	public static Item gun_gew43;
 	public static Item gun_mp40;
-	public static Item gun_fg42;
-	public static Item gun_kar98sr;
+	public static Item gun_mg34;
 	public static Item gun_rpzb54;
 	public static Item gun_p38;
 	
@@ -339,19 +298,19 @@ public class mod_GVCWW2 {
 		
 		
 		armor = EnumHelper.addArmorMaterial("IFFArmor", 430, new int[] {4, 8, 6, 2}, 10);
-		armor_jpn	= new ItemIFFArmor(armor, 0, "hmgww2:textures/armor/armor_jpn.png").setUnlocalizedName("armor_jpn")
+		armor_jpn	= new ItemIFFArmor(armor, 0, "hmgww2:textures/armor/armor_jpn.png",Nation.JPN).setUnlocalizedName("armor_jpn")
 				.setTextureName("hmgww2:jpn/armor_jpn")
 				.setCreativeTab(tabgvc);
 	    GameRegistry.registerItem(armor_jpn, "armor_jpn");
-	    armor_usa	= new ItemIFFArmor(armor, 0, "hmgww2:textures/armor/armor_usa.png").setUnlocalizedName("armor_usa")
+	    armor_usa	= new ItemIFFArmor(armor, 0, "hmgww2:textures/armor/armor_usa.png",Nation.USA).setUnlocalizedName("armor_usa")
 				.setTextureName("hmgww2:usa/armor_usa")
 				.setCreativeTab(tabgvc);
 	    GameRegistry.registerItem(armor_usa, "armor_usa");
-	    armor_ger	= new ItemIFFArmor(armor, 0, "hmgww2:textures/armor/armor_ger.png").setUnlocalizedName("armor_ger")
+	    armor_ger	= new ItemIFFArmor(armor, 0, "hmgww2:textures/armor/armor_ger.png",Nation.GER).setUnlocalizedName("armor_ger")
 				.setTextureName("hmgww2:ger/armor_ger")
 				.setCreativeTab(tabgvc);
 	    GameRegistry.registerItem(armor_ger, "armor_ger");
-	    armor_rus	= new ItemIFFArmor(armor, 0, "hmgww2:textures/armor/armor_rus.png").setUnlocalizedName("armor_rus")
+	    armor_rus	= new ItemIFFArmor(armor, 0, "hmgww2:textures/armor/armor_rus.png",Nation.USSR).setUnlocalizedName("armor_rus")
 				.setTextureName("hmgww2:rus/armor_rus")
 				.setCreativeTab(tabgvc);
 	    GameRegistry.registerItem(armor_rus, "armor_rus");
@@ -511,787 +470,58 @@ public class mod_GVCWW2 {
 				.setCreativeTab(tabgvc);
 		GameRegistry.registerItem(b_magazinerpg, "b_magazinerpg");
 		
-		gun_type38 = new ItemGun_SR().setUnlocalizedName("gun_type38").setTextureName("hmgww2:jpn/gun_type38")
-				.setCreativeTab(tabgvc);
-		{
-			ItemGunBase gun = (ItemGunBase)gun_type38;
-			gun.setMaxDamage(7);
-			gun.powor = 12;
-			gun.speed = 4;
-			gun.bure = 1.0F;
-			gun.recoil = 1.0D;
-			gun.reloadtime = 50;
-			gun.cycle = 2;
-			gun.attackDamage = 7;
-			gun.bayonet = true;
-			gun.sound = "hmgww2:hmgww2.fire_rifle";
-			gun.soundre = "hmgww2:hmgww2.reload_mag";
-			gun.soundspeed = 1.0F;
-			gun.cocktime = 15;
-			gun.soundcock = "hmgww2:hmgww2.reload_cocking";
-			gun.magazine = this.b_magazine;
-			gun.scopezoom = 1.5F;
-			gun.texture = new ResourceLocation("hmgww2:textures/model/jpn/type38.png");
-			gun.modelhigh = 1.25F;
-			gun.armoffsetzl = -1.0F;
-			if(pEvent.getSide().isClient())
-			{
-				MinecraftForgeClient.registerItemRenderer(gun_type38, 
-						new RenderItem_Gun(AdvancedModelLoader.loadModel(new ResourceLocation("hmgww2:textures/model/jpn/type38.obj"))));
-			}
-		}
-		GameRegistry.registerItem(gun_type38, "gun_type38");
-		gun_type99lmg = new ItemGun_AR().setUnlocalizedName("gun_type99lmg").setTextureName("hmgww2:jpn/gun_type99lmg")
-				.setCreativeTab(tabgvc);
-		{
-			ItemGunBase gun = (ItemGunBase)gun_type99lmg;
-			gun.setMaxDamage(30);
-			gun.powor = 7;
-			gun.speed = 4;
-			gun.bure = 2.0F;
-			gun.recoil = 2.0D;
-			gun.reloadtime = 70;
-			gun.cycle = 4;
-			gun.sound = "hmgww2:hmgww2.fire_rifle";
-			gun.soundre = "hmgww2:hmgww2.reload_mag";
-			gun.soundspeed = 1.0F;
-			gun.magazine = this.b_magazinemg;
-			gun.scopezoom = 1.5F;
-			gun.texture = new ResourceLocation("hmgww2:textures/model/jpn/type99lmg.png");
-			gun.modelwidthx = 0.502F;
-			gun.modelhigh = 0.75F;
-			
-			gun.armoffsetxr = 0.4F;
-			gun.armoffsetyr = 0.3F;
-			gun.armoffsetzr = 0.5F;
-			gun.armoffsetxl = 0.1F;
-			gun.armoffsetyl = 0.2F;
-			gun.armoffsetzl = -1.5F;
-			if(pEvent.getSide().isClient())
-			{
-				MinecraftForgeClient.registerItemRenderer(gun_type99lmg, 
-						new RenderItem_Gun(AdvancedModelLoader.loadModel(new ResourceLocation("hmgww2:textures/model/jpn/type99lmg.obj"))));
-			}
-		}
-		GameRegistry.registerItem(gun_type99lmg, "gun_type99lmg");
-		gun_type99 = new ItemGun_SR().setUnlocalizedName("gun_type99").setTextureName("hmgww2:jpn/gun_type99")
-				.setCreativeTab(tabgvc);
-		{
-			ItemGunBase gun = (ItemGunBase)gun_type99;
-			gun.setMaxDamage(5);
-			gun.powor = 14;
-			gun.speed = 4;
-			gun.bure = 1.0F;
-			gun.recoil = 1.0D;
-			gun.reloadtime = 60;
-			gun.cycle = 2;
-			gun.attackDamage = 7;
-			gun.bayonet = true;
-			gun.sound = "hmgww2:hmgww2.fire_rifle";
-			gun.soundre = "hmgww2:hmgww2.reload_mag";
-			gun.soundspeed = 1.0F;
-			gun.cocktime = 20;
-			gun.soundcock = "hmgww2:hmgww2.reload_cocking";
-			gun.magazine = this.b_magazine;
-			gun.scopezoom = 4F;
-			gun.zoomre = false;
-			gun.texture = new ResourceLocation("hmgww2:textures/model/jpn/type99.png");
-			gun.modelhigh = 1.25F;
-			gun.armoffsetzl = -1.0F;
-			if(pEvent.getSide().isClient())
-			{
-				MinecraftForgeClient.registerItemRenderer(gun_type99, 
-						new RenderItem_Gun(AdvancedModelLoader.loadModel(new ResourceLocation("hmgww2:textures/model/jpn/type99.obj"))));
-			}
-		}
-		GameRegistry.registerItem(gun_type99, "gun_type99");
-		gun_type100 = new ItemGun_AR().setUnlocalizedName("gun_type100").setTextureName("hmgww2:jpn/gun_type100")
-				.setCreativeTab(tabgvc);
-		{
-			ItemGunBase gun = (ItemGunBase)gun_type100;
-			gun.setMaxDamage(32);
-			gun.powor = 4;
-			gun.speed = 4;
-			gun.bure = 6.0F;
-			gun.recoil = 1.5D;
-			gun.reloadtime = 50;
-			gun.cycle = 2;
-			gun.attackDamage = 7;
-			gun.bayonet = true;
-			gun.sound = "hmgww2:hmgww2.fire_hg";
-			gun.soundre = "hmgww2:hmgww2.reload_mag";
-			gun.soundspeed = 1.0F;
-			gun.magazine = this.b_magazinehg;
-			gun.scopezoom = 1.5F;
-			gun.texture = new ResourceLocation("hmgww2:textures/model/jpn/type100.png");
-			gun.modelwidthz = 0.5F;
-			gun.modelhigh = 1.25F;
-			
-			gun.armoffsetxr = 0.375F;
-			gun.armoffsetyr = 0.4F;
-			gun.armoffsetzr = 0.5F;
-			if(pEvent.getSide().isClient())
-			{
-				MinecraftForgeClient.registerItemRenderer(gun_type100, 
-						new RenderItem_Gun(AdvancedModelLoader.loadModel(new ResourceLocation("hmgww2:textures/model/jpn/type100.obj"))));
-			}
-		}
-		GameRegistry.registerItem(gun_type100, "gun_type100");
-		gun_type89 = new ItemGun_RL().setUnlocalizedName("gun_type89").setTextureName("hmgww2:jpn/gun_type89")
-				.setCreativeTab(tabgvc);
-		{
-			ItemGunBase gun = (ItemGunBase)gun_type89;
-			gun.setMaxDamage(1);
-			gun.powor = 25;//50
-			gun.speed = 1.2F;
-			gun.bure = 1.0F;
-			gun.recoil = 1.0D;
-			gun.reloadtime = 40;
-			gun.cycle = 2;
-			gun.ex = 2F;
-			gun.canex = mod_GVCWW2.cfg_blockdestory;
-			gun.sound = "hmgww2:hmgww2.fire_grenade";
-			gun.soundre = "hmgww2:hmgww2.reload_mag";
-			gun.soundspeed = 1.0F;
-			gun.cocktime = 40;
-			gun.soundcock = "hmgww2:hmgww2.cocking";
-			gun.magazine = this.b_magazinerpg;
-			gun.scopezoom = 1.5F;
-			gun.gra = 0F;
-			gun.vecy = -30F;
-			gun.texture = new ResourceLocation("hmgww2:textures/model/jpn/type89.png");
-			gun.modelwidthx = 0.3F;
-			gun.modelhigh = 0.5F;
-			gun.armoffsetzl = -0.5F;
-			if(pEvent.getSide().isClient())
-			{
-				MinecraftForgeClient.registerItemRenderer(gun_type89, 
-						new RenderItem_Gun(AdvancedModelLoader.loadModel(new ResourceLocation("hmgww2:textures/model/jpn/type89.obj"))));
-			}
-		}
-		GameRegistry.registerItem(gun_type89, "gun_type89");
-		gun_type14 = new ItemGun_SR().setUnlocalizedName("gun_type14").setTextureName("hmgww2:jpn/gun_type14")
-				.setCreativeTab(tabgvc);
-		{
-			ItemGunBase gun = (ItemGunBase)gun_type14;
-			gun.setMaxDamage(7);
-			gun.powor = 4;
-			gun.speed = 2;
-			gun.bure = 1.0F;
-			gun.recoil = 1.0D;
-			gun.reloadtime = 20;
-			gun.cycle = 2;
-			gun.sound = "hmgww2:hmgww2.fire_hg";
-			gun.soundre = "hmgww2:hmgww2.reload_mag";
-			gun.soundspeed = 1.0F;
-			gun.cocktime = 4;
-			gun.soundcock = "hmgww2:hmgww2.null";
-			gun.magazine = this.b_magazinehg;
-			gun.scopezoom = 1.25F;
-			gun.texture = new ResourceLocation("hmgww2:textures/model/jpn/type14.png");
-			gun.modelhigh = 1.27F;
-			gun.modelwidthz = 1.0F;
-			
-			gun.armoffsetxr = 0.38F;
-			gun.armoffsetyr = 0.3F;
-			gun.armoffsetzr = 0.5F;
-			gun.armoffsetzl = 10.2F;
-			
-			gun.jump = -10F;
-			if(pEvent.getSide().isClient())
-			{
-				MinecraftForgeClient.registerItemRenderer(gun_type14, 
-						new RenderItem_Gun(AdvancedModelLoader.loadModel(new ResourceLocation("hmgww2:textures/model/jpn/type14.obj"))));
-			}
-		}
-		GameRegistry.registerItem(gun_type14, "gun_type14");
+		gun_type38 = GameRegistry.findItem("HandmadeGuns","Type38");
+		
+		gun_type99lmg = GameRegistry.findItem("HandmadeGuns","九九式軽機関銃");
+		
+		gun_type4Auto = GameRegistry.findItem("HandmadeGuns","四式自動小銃");
+		
+		gun_rota_cannon = GameRegistry.findItem("HandmadeGuns","試製四式七糎噴進砲");
+		
+		gun_type14 = GameRegistry.findItem("HandmadeGuns","十四年式拳銃");
 		
 		
 		
-		gun_m1g = new ItemGun_SR().setUnlocalizedName("gun_m1g").setTextureName("hmgww2:usa/gun_m1g")
-				.setCreativeTab(tabgvc);
-		{
-			ItemGunBase gun = (ItemGunBase)gun_m1g;
-			gun.setMaxDamage(7);
-			gun.powor = 14;
-			gun.speed = 3;
-			gun.bure = 2.0F;
-			gun.recoil = 2.0D;
-			gun.reloadtime = 50;
-			gun.cycle = 2;
-			gun.sound = "hmgww2:hmgww2.fire_rifle";
-			gun.soundre = "hmgww2:hmgww2.reload_mag";
-			gun.soundspeed = 1.0F;
-			gun.cocktime = 4;
-			gun.soundcock = "hmgww2:hmgww2.null";
-			gun.magazine = this.b_magazine;
-			gun.scopezoom = 1.5F;
-			gun.texture = new ResourceLocation("hmgww2:textures/model/usa/M1G.png");
-			gun.modelhigh = 1.20F;
-			gun.armoffsetzl = -1.0F;
-			if(pEvent.getSide().isClient())
-			{
-				MinecraftForgeClient.registerItemRenderer(gun_m1g, 
-						new RenderItem_Gun(AdvancedModelLoader.loadModel(new ResourceLocation("hmgww2:textures/model/usa/M1G.obj"))));
-			}
-		}
-		GameRegistry.registerItem(gun_m1g, "gun_m1g");
+		gun_m1g = GameRegistry.findItem("HandmadeGuns","M1Garand");
 		
-		gun_m1t = new ItemGun_AR().setUnlocalizedName("gun_m1t").setTextureName("hmgww2:usa/gun_m1t")
-				.setCreativeTab(tabgvc);
-		{
-			ItemGunBase gun = (ItemGunBase)gun_m1t;
-			gun.setMaxDamage(20);
-			gun.powor = 5;
-			gun.speed = 4;
-			gun.bure = 7.0F;
-			gun.recoil = 2.0D;
-			gun.reloadtime = 50;
-			gun.cycle = 2;
-			gun.sound = "hmgww2:hmgww2.fire_hg";
-			gun.soundre = "hmgww2:hmgww2.reload_mag";
-			gun.soundspeed = 1.0F;
-			gun.magazine = this.b_magazinehg;
-			gun.scopezoom = 1.5F;
-			gun.texture = new ResourceLocation("hmgww2:textures/model/usa/M1T.png");
-			gun.modelwidthz = 1.0F;
-			gun.modelhigh = 0.95F;
-			
-			gun.armoffsetxr = 0.4F;
-			gun.armoffsetyr = 0.3F;
-			gun.armoffsetzr = 0.5F;
-			gun.armoffsetxl = 0.1F;
-			gun.armoffsetyl = 0.10F;
-			gun.armoffsetzl = -1.0F;
-			if(pEvent.getSide().isClient())
-			{
-				MinecraftForgeClient.registerItemRenderer(gun_m1t, 
-						new RenderItem_Gun(AdvancedModelLoader.loadModel(new ResourceLocation("hmgww2:textures/model/usa/M1T.obj"))));
-			}
-		}
-		GameRegistry.registerItem(gun_m1t, "gun_m1t");
-		gun_bar = new ItemGun_AR().setUnlocalizedName("gun_bar").setTextureName("hmgww2:usa/gun_bar")
-				.setCreativeTab(tabgvc);
-		{
-			ItemGunBase gun = (ItemGunBase)gun_bar;
-			gun.setMaxDamage(20);
-			gun.powor = 7;
-			gun.speed = 4;
-			gun.bure = 3.0F;
-			gun.recoil = 2.0D;
-			gun.reloadtime = 60;
-			gun.cycle = 2;
-			gun.sound = "hmgww2:hmgww2.fire_rifle";
-			gun.soundre = "hmgww2:hmgww2.reload_mag";
-			gun.soundspeed = 1.0F;
-			gun.magazine = this.b_magazinemg;
-			gun.scopezoom = 1.5F;
-			gun.texture = new ResourceLocation("hmgww2:textures/model/usa/BAR.png");
-			//gun.modelwidthz = 1.0F;
-			gun.modelhigh = 1.05F;
-			
-			gun.armoffsetxr = 0.5F;
-			gun.armoffsetyr = 0.5F;
-			gun.armoffsetzr = 0.5F;
-			gun.armoffsetxl = 0.1F;
-			gun.armoffsetyl = 0.3F;
-			gun.armoffsetzl = -1.7F;
-			if(pEvent.getSide().isClient())
-			{
-				MinecraftForgeClient.registerItemRenderer(gun_bar, 
-						new RenderItem_Gun(AdvancedModelLoader.loadModel(new ResourceLocation("hmgww2:textures/model/usa/BAR.obj"))));
-			}
-		}
-		GameRegistry.registerItem(gun_bar, "gun_bar");
-		gun_m1904 = new ItemGun_SR().setUnlocalizedName("gun_m1904").setTextureName("hmgww2:usa/gun_m1904")
-				.setCreativeTab(tabgvc);
-		{
-			ItemGunBase gun = (ItemGunBase)gun_m1904;
-			gun.setMaxDamage(5);
-			gun.powor = 14;
-			gun.speed = 4;
-			gun.bure = 1.0F;
-			gun.recoil = 1.0D;
-			gun.reloadtime = 60;
-			gun.cycle = 2;
-			gun.sound = "hmgww2:hmgww2.fire_rifle";
-			gun.soundre = "hmgww2:hmgww2.reload_mag";
-			gun.soundspeed = 1.0F;
-			gun.cocktime = 20;
-			gun.soundcock = "hmgww2:hmgww2.reload_cocking";
-			gun.magazine = this.b_magazine;
-			gun.scopezoom = 4F;
-			gun.zoomre = false;
-			gun.texture = new ResourceLocation("hmgww2:textures/model/usa/M1904.png");
-			gun.modelhigh = 1.25F;
-			gun.armoffsetzl = -1.0F;
-			if(pEvent.getSide().isClient())
-			{
-				MinecraftForgeClient.registerItemRenderer(gun_m1904, 
-						new RenderItem_Gun(AdvancedModelLoader.loadModel(new ResourceLocation("hmgww2:textures/model/usa/M1904.obj"))));
-			}
-		}
-		GameRegistry.registerItem(gun_m1904, "gun_m1904");
-		gun_m1b = new ItemGun_RL().setUnlocalizedName("gun_m1b").setTextureName("hmgww2:usa/gun_m1b")
-				.setCreativeTab(tabgvc);
-		{
-			ItemGunBase gun = (ItemGunBase)gun_m1b;
-			gun.setMaxDamage(1);
-			gun.powor = 40;//50
-			gun.speed = 1.5F;
-			gun.bure = 1.0F;
-			gun.recoil = 1.0D;
-			gun.reloadtime = 80;
-			gun.cycle = 2;
-			gun.ex = 3F;
-			gun.canex = mod_GVCWW2.cfg_blockdestory;
-			gun.sound = "hmgww2:hmgww2.fire_roket";
-			gun.soundre = "hmgww2:hmgww2.reload_mag";
-			gun.soundspeed = 1.0F;
-			gun.cocktime = 80;
-			gun.soundcock = "hmgww2:hmgww2.reload_cocking";
-			gun.magazine = this.b_magazinerpg;
-			gun.scopezoom = 1.5F;
-			gun.gra = 0.025F;
-			gun.texture = new ResourceLocation("hmgww2:textures/model/usa/M1B.png");
-			gun.modelwidthx = 0.42F;
-			gun.modelhigh = 1.2F;
-			gun.armoffsetyl = 0.5F;
-			gun.armoffsetzl = -0.8F;
-			if(pEvent.getSide().isClient())
-			{
-				MinecraftForgeClient.registerItemRenderer(gun_m1b, 
-						new RenderItem_Gun(AdvancedModelLoader.loadModel(new ResourceLocation("hmgww2:textures/model/usa/M1B.obj"))));
-			}
-		}
-		GameRegistry.registerItem(gun_m1b, "gun_m1b");
-		gun_m1911 = new ItemGun_SR().setUnlocalizedName("gun_m1911").setTextureName("hmgww2:usa/gun_m1911")
-				.setCreativeTab(tabgvc);
-		{
-			ItemGunBase gun = (ItemGunBase)gun_m1911;
-			gun.setMaxDamage(7);
-			gun.powor = 5;
-			gun.speed = 2;
-			gun.bure = 1.0F;
-			gun.recoil = 2.0D;
-			gun.reloadtime = 20;
-			gun.cycle = 2;
-			gun.sound = "hmgww2:hmgww2.fire_hg";
-			gun.soundre = "hmgww2:hmgww2.reload_mag";
-			gun.soundspeed = 0.9F;
-			gun.cocktime = 4;
-			gun.soundcock = "hmgww2:hmgww2.null";
-			gun.magazine = this.b_magazinehg;
-			gun.scopezoom = 1.25F;
-			gun.texture = new ResourceLocation("hmgww2:textures/model/usa/M1911.png");
-			gun.modelhigh = 1.27F;
-			gun.modelwidthz = 1.0F;
-			
-			gun.armoffsetxr = 0.38F;
-			gun.armoffsetyr = 0.3F;
-			gun.armoffsetzr = 0.5F;
-			gun.armoffsetzl = 10.2F;
-			
-			gun.jump = -20F;
-			if(pEvent.getSide().isClient())
-			{
-				MinecraftForgeClient.registerItemRenderer(gun_m1911, 
-						new RenderItem_Gun(AdvancedModelLoader.loadModel(new ResourceLocation("hmgww2:textures/model/usa/M1911.obj"))));
-			}
-		}
-		GameRegistry.registerItem(gun_m1911, "gun_m1911");
+		gun_m1t = GameRegistry.findItem("HandmadeGuns","M1A1");
+		
+		gun_bar = GameRegistry.findItem("HandmadeGuns","Browning_Automatic_Rifle_M1918");
+		
+		gun_m1917 = GameRegistry.findItem("HandmadeGuns","M1917");
+		
+		gun_m1917 = GameRegistry.findItem("HandmadeGuns","Bazooka");
+		
+		gun_m1911 = GameRegistry.findItem("HandmadeGuns","WW2_M1911");
 		
 		
 		
-		gun_grenade = new ItemGrenade_N().setUnlocalizedName("gun_grenade").setTextureName("hmgww2:gun_grenade")
-				.setCreativeTab(tabgvc);
-		{
-			ItemGrenadeBase gun = (ItemGrenadeBase)gun_grenade;
-			gun.damege = 20;
-			gun.extime = 60;
-			gun.exlevel = 3F;
-			gun.speed = 0.8F;
-			gun.sound = "hmgww2:hmgww2.throw_grenade";
-			gun.texture = new ResourceLocation("hmgww2:textures/model/set/grenade.png");
-			if(pEvent.getSide().isClient())
-			{
-				MinecraftForgeClient.registerItemRenderer(gun_grenade, 
-						new RenderItem_Grenade(AdvancedModelLoader.loadModel(new ResourceLocation("hmgww2:textures/model/set/grenade.obj"))));
-			}
-		}
-		GameRegistry.registerItem(gun_grenade, "gun_grenade");
-		gun_grenadet = new ItemGrenade_T().setUnlocalizedName("gun_grenadet").setTextureName("hmgww2:gun_grenadet")
-				.setCreativeTab(tabgvc);
-		{
-			ItemGrenadeBase gun = (ItemGrenadeBase)gun_grenadet;
-			gun.damege = 50;
-			gun.extime = 80;
-			gun.exlevel = 4F;
-			gun.speed = 1.2F;
-			gun.extrue = mod_GVCWW2.cfg_blockdestory;
-			gun.exinground = true;
-			gun.sound = "hmgww2:hmgww2.throw_grenade";
-			gun.texture = new ResourceLocation("hmgww2:textures/model/set/grenadet.png");
-			if(pEvent.getSide().isClient())
-			{
-				MinecraftForgeClient.registerItemRenderer(gun_grenadet, 
-						new RenderItem_Grenade(AdvancedModelLoader.loadModel(new ResourceLocation("hmgww2:textures/model/set/grenadet.obj"))));
-			}
-		}
-		GameRegistry.registerItem(gun_grenadet, "gun_grenadet");
 		
 		
-		gun_kar98 = new ItemGun_SR().setUnlocalizedName("gun_kar98").setTextureName("hmgww2:ger/gun_kar98")
-				.setCreativeTab(tabgvc);
-		{
-			ItemGunBase gun = (ItemGunBase)gun_kar98;
-			gun.setMaxDamage(5);
-			gun.powor = 16;
-			gun.speed = 4;
-			gun.bure = 1.0F;
-			gun.recoil = 1.0D;
-			gun.reloadtime = 50;
-			gun.cycle = 2;
-			gun.sound = "hmgww2:hmgww2.fire_rifle";
-			gun.soundre = "hmgww2:hmgww2.reload_mag";
-			gun.soundspeed = 1.0F;
-			gun.cocktime = 10;
-			gun.soundcock = "hmgww2:hmgww2.reload_cocking";
-			gun.magazine = this.b_magazine;
-			gun.scopezoom = 1.5F;
-			gun.texture = new ResourceLocation("hmgww2:textures/model/ger/Kar98.png");
-			gun.modelhigh = 1.25F;
-			gun.armoffsetzl = -1.0F;
-			if(pEvent.getSide().isClient())
-			{
-				MinecraftForgeClient.registerItemRenderer(gun_kar98, 
-						new RenderItem_Gun(AdvancedModelLoader.loadModel(new ResourceLocation("hmgww2:textures/model/ger/Kar98.obj"))));
-			}
-		}
-		GameRegistry.registerItem(gun_kar98, "gun_kar98");
-		gun_mp40 = new ItemGun_AR().setUnlocalizedName("gun_mp40").setTextureName("hmgww2:ger/gun_mp40")
-				.setCreativeTab(tabgvc);
-		{
-			ItemGunBase gun = (ItemGunBase)gun_mp40;
-			gun.setMaxDamage(32);
-			gun.powor = 4;
-			gun.speed = 4;
-			gun.bure = 10.0F;
-			gun.recoil = 2.0D;
-			gun.reloadtime = 50;
-			gun.cycle = 2;
-			gun.sound = "hmgww2:hmgww2.fire_hg";
-			gun.soundre = "hmgww2:hmgww2.reload_mag";
-			gun.soundspeed = 1.0F;
-			gun.magazine = this.b_magazinehg;
-			gun.scopezoom = 1.5F;
-			gun.texture = new ResourceLocation("hmgww2:textures/model/ger/MP40.png");
-			gun.modelwidthz = 1.0F;
-			gun.modelhigh = 0.95F;
-			
-			gun.armoffsetxr = 0.4F;
-			gun.armoffsetyr = 0.3F;
-			gun.armoffsetzr = 0.5F;
-			gun.armoffsetxl = 0.1F;
-			gun.armoffsetyl = 0.30F;
-			gun.armoffsetzl = -0.7F;
-			if(pEvent.getSide().isClient())
-			{
-				MinecraftForgeClient.registerItemRenderer(gun_mp40, 
-						new RenderItem_Gun(AdvancedModelLoader.loadModel(new ResourceLocation("hmgww2:textures/model/ger/MP40.obj"))));
-			}
-		}
-		GameRegistry.registerItem(gun_mp40, "gun_mp40");
-		gun_fg42 = new ItemGun_AR().setUnlocalizedName("gun_fg42").setTextureName("hmgww2:ger/gun_fg42")
-				.setCreativeTab(tabgvc);
-		{
-			ItemGunBase gun = (ItemGunBase)gun_fg42;
-			gun.setMaxDamage(20);
-			gun.powor = 7;
-			gun.speed = 4;
-			gun.bure = 3.0F;
-			gun.recoil = 2.0D;
-			gun.reloadtime = 60;
-			gun.cycle = 4;
-			gun.sound = "hmgww2:hmgww2.fire_rifle";
-			gun.soundre = "hmgww2:hmgww2.reload_mag";
-			gun.soundspeed = 1.0F;
-			gun.magazine = this.b_magazinemg;
-			gun.scopezoom = 1.5F;
-			gun.texture = new ResourceLocation("hmgww2:textures/model/ger/FG42.png");
-			//gun.modelwidthz = 1.0F;
-			gun.modelhigh = 0.8F;
-			
-			gun.armoffsetxr = 0.5F;
-			gun.armoffsetyr = 0.5F;
-			gun.armoffsetzr = 0.5F;
-			gun.armoffsetxl = 0.1F;
-			gun.armoffsetyl = 0.0F;
-			gun.armoffsetzl = -1.0F;
-			if(pEvent.getSide().isClient())
-			{
-				MinecraftForgeClient.registerItemRenderer(gun_fg42, 
-						new RenderItem_Gun(AdvancedModelLoader.loadModel(new ResourceLocation("hmgww2:textures/model/ger/FG42.obj"))));
-			}
-		}
-		GameRegistry.registerItem(gun_fg42, "gun_fg42");
-		gun_kar98sr = new ItemGun_SR().setUnlocalizedName("gun_kar98sr").setTextureName("hmgww2:ger/gun_kar98sr")
-				.setCreativeTab(tabgvc);
-		{
-			ItemGunBase gun = (ItemGunBase)gun_kar98sr;
-			gun.setMaxDamage(5);
-			gun.powor = 16;
-			gun.speed = 4;
-			gun.bure = 1.0F;
-			gun.recoil = 1.0D;
-			gun.reloadtime = 60;
-			gun.cycle = 2;
-			gun.sound = "hmgww2:hmgww2.fire_rifle";
-			gun.soundre = "hmgww2:hmgww2.reload_mag";
-			gun.soundspeed = 1.0F;
-			gun.cocktime = 20;
-			gun.soundcock = "hmgww2:hmgww2.reload_cocking";
-			gun.magazine = this.b_magazine;
-			gun.scopezoom = 4F;
-			gun.zoomre = false;
-			gun.texture = new ResourceLocation("hmgww2:textures/model/ger/Kar98SR.png");
-			gun.modelhigh = 1.25F;
-			gun.armoffsetzl = -1.0F;
-			if(pEvent.getSide().isClient())
-			{
-				MinecraftForgeClient.registerItemRenderer(gun_kar98sr, 
-						new RenderItem_Gun(AdvancedModelLoader.loadModel(new ResourceLocation("hmgww2:textures/model/ger/Kar98SR.obj"))));
-			}
-		}
-		GameRegistry.registerItem(gun_kar98sr, "gun_kar98sr");
-		gun_rpzb54 = new ItemGun_RL().setUnlocalizedName("gun_rpzb54").setTextureName("hmgww2:ger/gun_rpzb54")
-				.setCreativeTab(tabgvc);
-		{
-			ItemGunBase gun = (ItemGunBase)gun_rpzb54;
-			gun.setMaxDamage(1);
-			gun.powor = 60;//50
-			gun.speed = 1.5F;
-			gun.bure = 1.0F;
-			gun.recoil = 1.0D;
-			gun.reloadtime = 100;
-			gun.cycle = 2;
-			gun.ex = 3F;
-			gun.canex = mod_GVCWW2.cfg_blockdestory;
-			gun.sound = "hmgww2:hmgww2.fire_roket";
-			gun.soundre = "hmgww2:hmgww2.reload_mag";
-			gun.soundspeed = 1.0F;
-			gun.cocktime = 80;
-			gun.soundcock = "hmgww2:hmgww2.reload_cocking";
-			gun.magazine = this.b_magazinerpg;
-			gun.scopezoom = 1.5F;
-			gun.gra = 0.01F;
-			gun.texture = new ResourceLocation("hmgww2:textures/model/ger/RPzB54.png");
-			gun.modelwidthx = 0.42F;
-			gun.modelhigh = 0.9F;
-			gun.armoffsetyl = 0.5F;
-			gun.armoffsetzl = -0.8F;
-			if(pEvent.getSide().isClient())
-			{
-				MinecraftForgeClient.registerItemRenderer(gun_rpzb54, 
-						new RenderItem_Gun(AdvancedModelLoader.loadModel(new ResourceLocation("hmgww2:textures/model/ger/RPzB54.obj"))));
-			}
-		}
-		GameRegistry.registerItem(gun_rpzb54, "gun_rpzb54");
-		gun_p38 = new ItemGun_SR().setUnlocalizedName("gun_p38").setTextureName("hmgww2:ger/gun_p38")
-				.setCreativeTab(tabgvc);
-		{
-			ItemGunBase gun = (ItemGunBase)gun_p38;
-			gun.setMaxDamage(7);
-			gun.powor = 4;
-			gun.speed = 2;
-			gun.bure = 1.0F;
-			gun.recoil = 2.0D;
-			gun.reloadtime = 20;
-			gun.cycle = 2;
-			gun.sound = "hmgww2:hmgww2.fire_hg";
-			gun.soundre = "hmgww2:hmgww2.reload_mag";
-			gun.soundspeed = 1.0F;
-			gun.cocktime = 4;
-			gun.soundcock = "hmgww2:hmgww2.null";
-			gun.magazine = this.b_magazinehg;
-			gun.scopezoom = 1.25F;
-			gun.texture = new ResourceLocation("hmgww2:textures/model/ger/P38.png");
-			gun.modelhigh = 1.27F;
-			gun.modelwidthz = 1.0F;
-			
-			gun.armoffsetxr = 0.38F;
-			gun.armoffsetyr = 0.3F;
-			gun.armoffsetzr = 0.5F;
-			gun.armoffsetzl = 10.2F;
-			
-			gun.jump = -10F;
-			if(pEvent.getSide().isClient())
-			{
-				MinecraftForgeClient.registerItemRenderer(gun_p38, 
-						new RenderItem_Gun(AdvancedModelLoader.loadModel(new ResourceLocation("hmgww2:textures/model/ger/P38.obj"))));
-			}
-		}
-		GameRegistry.registerItem(gun_p38, "gun_p38");
+		gun_grenade = GameRegistry.findItem("HandmadeGuns","M26");
 		
 		
-		gun_m1891 = new ItemGun_SR().setUnlocalizedName("gun_m1891").setTextureName("hmgww2:rus/gun_m1891")
-				.setCreativeTab(tabgvc);
-		{
-			ItemGunBase gun = (ItemGunBase)gun_m1891;
-			gun.setMaxDamage(5);
-			gun.powor = 16;
-			gun.speed = 4;
-			gun.bure = 1.0F;
-			gun.recoil = 1.0D;
-			gun.reloadtime = 50;
-			gun.cycle = 2;
-			gun.sound = "hmgww2:hmgww2.fire_rifle";
-			gun.soundre = "hmgww2:hmgww2.reload_mag";
-			gun.soundspeed = 1.0F;
-			gun.cocktime = 10;
-			gun.soundcock = "hmgww2:hmgww2.reload_cocking";
-			gun.magazine = this.b_magazine;
-			gun.scopezoom = 1.5F;
-			gun.texture = new ResourceLocation("hmgww2:textures/model/rus/M1891.png");
-			gun.modelhigh = 1.25F;
-			gun.armoffsetzl = -1.0F;
-			if(pEvent.getSide().isClient())
-			{
-				MinecraftForgeClient.registerItemRenderer(gun_m1891, 
-						new RenderItem_Gun(AdvancedModelLoader.loadModel(new ResourceLocation("hmgww2:textures/model/rus/M1891.obj"))));
-			}
-		}
-		GameRegistry.registerItem(gun_m1891, "gun_m1891");
-		gun_ppsh41 = new ItemGun_AR().setUnlocalizedName("gun_ppsh41").setTextureName("hmgww2:rus/gun_ppsh41")
-				.setCreativeTab(tabgvc);
-		{
-			ItemGunBase gun = (ItemGunBase)gun_ppsh41;
-			gun.setMaxDamage(71);
-			gun.powor = 4;
-			gun.speed = 4;
-			gun.bure = 6.0F;
-			gun.recoil = 3.5D;
-			gun.reloadtime = 60;
-			gun.cycle = 2;
-			gun.sound = "hmgww2:hmgww2.fire_hg";
-			gun.soundre = "hmgww2:hmgww2.reload_mag";
-			gun.soundspeed = 1.0F;
-			gun.magazine = this.b_magazinehg;
-			gun.scopezoom = 1.5F;
-			gun.texture = new ResourceLocation("hmgww2:textures/model/rus/PPSh41.png");
-			//gun.modelwidthz = 0.5F;
-			gun.modelhigh = 1.25F;
-			
-			gun.armoffsetxr = 0.375F;
-			gun.armoffsetyr = 0.4F;
-			gun.armoffsetzr = 0.5F;
-			gun.armoffsetxl = 0.1F;
-			gun.armoffsetyl = 1.0F;
-			gun.armoffsetzl = -1.0F;
-			if(pEvent.getSide().isClient())
-			{
-				MinecraftForgeClient.registerItemRenderer(gun_ppsh41, 
-						new RenderItem_Gun(AdvancedModelLoader.loadModel(new ResourceLocation("hmgww2:textures/model/rus/PPSh41.obj"))));
-			}
-		}
-		GameRegistry.registerItem(gun_ppsh41, "gun_ppsh41");
-		gun_dp28 = new ItemGun_AR().setUnlocalizedName("gun_dp28").setTextureName("hmgww2:rus/gun_dp28")
-				.setCreativeTab(tabgvc);
-		{
-			ItemGunBase gun = (ItemGunBase)gun_dp28;
-			gun.setMaxDamage(47);
-			gun.powor = 6;
-			gun.speed = 4;
-			gun.bure = 3.0F;
-			gun.recoil = 2.0D;
-			gun.reloadtime = 60;
-			gun.cycle = 4;
-			gun.sound = "hmgww2:hmgww2.fire_rifle";
-			gun.soundre = "hmgww2:hmgww2.reload_mag";
-			gun.soundspeed = 1.0F;
-			gun.magazine = this.b_magazinemg;
-			gun.scopezoom = 1.5F;
-			gun.texture = new ResourceLocation("hmgww2:textures/model/rus/DP28.png");
-			//gun.modelwidthz = 1.0F;
-			gun.modelhigh = 1.1F;
-			
-			gun.armoffsetxr = 0.375F;
-			gun.armoffsetyr = 0.4F;
-			gun.armoffsetzr = 0.5F;
-			gun.armoffsetxl = 0.1F;
-			gun.armoffsetyl = 0.5F;
-			gun.armoffsetzl = -1.5F;
-			if(pEvent.getSide().isClient())
-			{
-				MinecraftForgeClient.registerItemRenderer(gun_dp28, 
-						new RenderItem_Gun(AdvancedModelLoader.loadModel(new ResourceLocation("hmgww2:textures/model/rus/DP28.obj"))));
-			}
-		}
-		GameRegistry.registerItem(gun_dp28, "gun_dp28");
-		gun_m1891sr = new ItemGun_SR().setUnlocalizedName("gun_m1891sr").setTextureName("hmgww2:rus/gun_m1891sr")
-				.setCreativeTab(tabgvc);
-		{
-			ItemGunBase gun = (ItemGunBase)gun_m1891sr;
-			gun.setMaxDamage(5);
-			gun.powor = 16;
-			gun.speed = 4;
-			gun.bure = 1.0F;
-			gun.recoil = 1.0D;
-			gun.reloadtime = 60;
-			gun.cycle = 2;
-			gun.sound = "hmgww2:hmgww2.fire_rifle";
-			gun.soundre = "hmgww2:hmgww2.reload_mag";
-			gun.soundspeed = 1.0F;
-			gun.cocktime = 20;
-			gun.soundcock = "hmgww2:hmgww2.reload_cocking";
-			gun.magazine = this.b_magazine;
-			gun.scopezoom = 4F;
-			gun.zoomre = false;
-			gun.texture = new ResourceLocation("hmgww2:textures/model/rus/M1891SR.png");
-			gun.modelhigh = 1.25F;
-			gun.armoffsetzl = -1.0F;
-			if(pEvent.getSide().isClient())
-			{
-				MinecraftForgeClient.registerItemRenderer(gun_m1891sr, 
-						new RenderItem_Gun(AdvancedModelLoader.loadModel(new ResourceLocation("hmgww2:textures/model/rus/M1891SR.obj"))));
-			}
-		}
-		GameRegistry.registerItem(gun_m1891sr, "gun_m1891sr");
-		gun_tt33 = new ItemGun_SR().setUnlocalizedName("gun_tt33").setTextureName("hmgww2:rus/gun_tt33")
-				.setCreativeTab(tabgvc);
-		{
-			ItemGunBase gun = (ItemGunBase)gun_tt33;
-			gun.setMaxDamage(7);
-			gun.powor = 4;
-			gun.speed = 2;
-			gun.bure = 1.0F;
-			gun.recoil = 2.0D;
-			gun.reloadtime = 20;
-			gun.cycle = 2;
-			gun.sound = "hmgww2:hmgww2.fire_hg";
-			gun.soundre = "hmgww2:hmgww2.reload_mag";
-			gun.soundspeed = 1.0F;
-			gun.cocktime = 4;
-			gun.soundcock = "hmgww2:hmgww2.null";
-			gun.magazine = this.b_magazinehg;
-			gun.scopezoom = 1.25F;
-			gun.texture = new ResourceLocation("hmgww2:textures/model/rus/TT33.png");
-			gun.modelhigh = 1.27F;
-			gun.modelwidthz = 1.0F;
-			
-			gun.armoffsetxr = 0.38F;
-			gun.armoffsetyr = 0.3F;
-			gun.armoffsetzr = 0.5F;
-			gun.armoffsetzl = 10.2F;
-			
-			gun.jump = -10F;
-			if(pEvent.getSide().isClient())
-			{
-				MinecraftForgeClient.registerItemRenderer(gun_tt33, 
-						new RenderItem_Gun(AdvancedModelLoader.loadModel(new ResourceLocation("hmgww2:textures/model/rus/TT33.obj"))));
-			}
-		}
-		GameRegistry.registerItem(gun_tt33, "gun_tt33");
+		gun_gew98 = GameRegistry.findItem("HandmadeGuns","Gew98");
+		
+		gun_gew43 = GameRegistry.findItem("HandmadeGuns","Gewehr43");
+		
+		gun_mp40 = GameRegistry.findItem("HandmadeGuns","MP38");
+		
+		gun_mg34 = GameRegistry.findItem("HandmadeGuns","MG34");
+		
+		gun_rpzb54 = GameRegistry.findItem("HandmadeGuns","Panzerschreck");
+		
+		gun_p38 = GameRegistry.findItem("HandmadeGuns","WaltherP-38");
+		
+		gun_m1891 = GameRegistry.findItem("HandmadeGuns","Mosin");
+		
+		gun_ppsh41 = GameRegistry.findItem("HandmadeGuns","ppsh41");
+		
+		gun_dp28 = GameRegistry.findItem("HandmadeGuns","DP28LMG");
+		
+		gun_dp28 = GameRegistry.findItem("HandmadeGuns","DP28LMG");
+		
+		gun_tt33 = GameRegistry.findItem("HandmadeGuns","TT-33");
 		
 		
 		
@@ -1435,13 +665,13 @@ public class mod_GVCWW2 {
 		//EntityRegistry.registerModEntity(EntityUSA_ShipB.class, "EntityUSA_ShipB", 27, this, 128, 5, true);
 		//EntityRegistry.registerModEntity(EntityUSA_ShipD.class, "EntityUSA_ShipD", 28, this, 128, 5, true);
 		
-		EntityRegistry.registerModEntity(EntityRUS_S.class, "EntityRUS_S", 61, this, 128, 5, true);
-		EntityRegistry.registerModEntity(EntityRUS_Tank.class, "EntityRUS_Tank", 62, this, 128, 5, true);
-		EntityRegistry.registerModEntity(EntityRUS_Fighter.class, "EntityRUS_Fighter", 63, this, 128, 5, true);
-		EntityRegistry.registerModEntity(EntityRUS_TankAA.class, "EntityRUS_TankAA", 64, this, 128, 5, true);
-		EntityRegistry.registerModEntity(EntityRUS_TankSPG.class, "EntityRUS_TankSPG", 65, this, 128, 5, true);
-		EntityRegistry.registerModEntity(EntityRUS_FighterA.class, "EntityRUS_FighterA", 66, this, 128, 5, true);
-		EntityRegistry.registerModEntity(EntityRUS_TankH.class, "EntityRUS_TankH", 67, this, 128, 5, true);
+		EntityRegistry.registerModEntity(EntityUSSR_S.class, "EntityUSSR_S", 61, this, 128, 5, true);
+		EntityRegistry.registerModEntity(EntityUSSR_Tank.class, "EntityUSSR_Tank", 62, this, 128, 5, true);
+		EntityRegistry.registerModEntity(EntityUSSR_Fighter.class, "EntityUSSR_Fighter", 63, this, 128, 5, true);
+		EntityRegistry.registerModEntity(EntityUSSR_TankAA.class, "EntityUSSR_TankAA", 64, this, 128, 5, true);
+		EntityRegistry.registerModEntity(EntityUSSR_TankSPG.class, "EntityUSSR_TankSPG", 65, this, 128, 5, true);
+		EntityRegistry.registerModEntity(EntityUSSR_FighterA.class, "EntityUSSR_FighterA", 66, this, 128, 5, true);
+		EntityRegistry.registerModEntity(EntityUSSR_TankH.class, "EntityUSSR_TankH", 67, this, 128, 5, true);
 		
 		
 		if(pEvent.getSide().isClient())
@@ -1485,7 +715,7 @@ public class mod_GVCWW2 {
 						EntityRegistry.addSpawn(EntityGER_S.class, 20, 10, 20, EnumCreatureType.monster,new BiomeGenBase[] { biome });
 					}
 					if(this.cfg_spawn_rus){
-						EntityRegistry.addSpawn(EntityRUS_S.class, 20, 10, 20, EnumCreatureType.monster,new BiomeGenBase[] { biome });
+						EntityRegistry.addSpawn(EntityUSSR_S.class, 20, 10, 20, EnumCreatureType.monster,new BiomeGenBase[] { biome });
 					}
 					if (this.cfg_canspawntank) {
 						if(this.cfg_spawn_jpn){
@@ -1502,9 +732,9 @@ public class mod_GVCWW2 {
 							EntityRegistry.addSpawn(EntityGER_TankH.class, 1, 1, 1, EnumCreatureType.monster, new BiomeGenBase[]{biome});
 						}
 						if(this.cfg_spawn_rus){
-							EntityRegistry.addSpawn(EntityRUS_Tank.class, 3, 2, 3, EnumCreatureType.monster, new BiomeGenBase[]{biome});
-							EntityRegistry.addSpawn(EntityRUS_TankAA.class, 1, 1, 1, EnumCreatureType.monster, new BiomeGenBase[]{biome});
-							EntityRegistry.addSpawn(EntityRUS_TankH.class, 1, 1, 1, EnumCreatureType.monster, new BiomeGenBase[]{biome});
+							EntityRegistry.addSpawn(EntityUSSR_Tank.class, 3, 2, 3, EnumCreatureType.monster, new BiomeGenBase[]{biome});
+							EntityRegistry.addSpawn(EntityUSSR_TankAA.class, 1, 1, 1, EnumCreatureType.monster, new BiomeGenBase[]{biome});
+							EntityRegistry.addSpawn(EntityUSSR_TankH.class, 1, 1, 1, EnumCreatureType.monster, new BiomeGenBase[]{biome});
 						}
 					}
 					if (this.cfg_canspawnfighter) {
@@ -1521,8 +751,8 @@ public class mod_GVCWW2 {
 							EntityRegistry.addSpawn(EntityGER_FighterA.class, 1, 1, 1, EnumCreatureType.monster, new BiomeGenBase[]{biome});
 						}
 						if(this.cfg_spawn_rus){
-							EntityRegistry.addSpawn(EntityRUS_Fighter.class, 2, 1, 2, EnumCreatureType.monster, new BiomeGenBase[]{biome});
-							EntityRegistry.addSpawn(EntityRUS_FighterA.class, 1, 1, 1, EnumCreatureType.monster, new BiomeGenBase[]{biome});
+							EntityRegistry.addSpawn(EntityUSSR_Fighter.class, 2, 1, 2, EnumCreatureType.monster, new BiomeGenBase[]{biome});
+							EntityRegistry.addSpawn(EntityUSSR_FighterA.class, 1, 1, 1, EnumCreatureType.monster, new BiomeGenBase[]{biome});
 						}
 					}
 				}

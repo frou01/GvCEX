@@ -5,19 +5,9 @@ import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import gvclib.entity.EntityBases;
+import hmgww2.entity.*;
 import hmgww2.mod_GVCWW2;
-import hmgww2.entity.EntityGERBase;
-import hmgww2.entity.EntityGER_Fighter;
-import hmgww2.entity.EntityGER_FighterA;
-import hmgww2.entity.EntityJPNBase;
-import hmgww2.entity.EntityJPN_Fighter;
-import hmgww2.entity.EntityJPN_FighterA;
-import hmgww2.entity.EntityRUSBase;
-import hmgww2.entity.EntityRUS_Fighter;
-import hmgww2.entity.EntityRUS_FighterA;
-import hmgww2.entity.EntityUSABase;
-import hmgww2.entity.EntityUSA_Fighter;
-import hmgww2.entity.EntityUSA_FighterA;
+import hmgww2.entity.EntityUSSRBase;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -399,9 +389,9 @@ public class WW2MessageKeyPressedHandler implements IMessageHandler<WW2MessageKe
 			for (int lj = 0; lj < llist1.size(); lj++) {
 				Entity entity1 = (Entity) llist1.get(lj);
 				if (entity1.canBeCollidedWith()) {
-					if (entity1 instanceof EntityRUSBase  && entity1 != null)
+					if (entity1 instanceof EntityUSSRBase && entity1 != null)
                     {
-						EntityRUSBase mob = (EntityRUSBase) entity1;
+						EntityUSSRBase mob = (EntityUSSRBase) entity1;
 						{
 							if(i != 8){
 							    mob.setFlagMode(i);
@@ -420,9 +410,9 @@ public class WW2MessageKeyPressedHandler implements IMessageHandler<WW2MessageKe
 			for (int lj = 0; lj < llist2.size(); lj++) {
 				Entity entity1 = (Entity) llist2.get(lj);
 				if (entity1.canBeCollidedWith()) {
-					if (entity1 instanceof EntityRUS_Fighter  && entity1 != null)
+					if (entity1 instanceof EntityUSSR_Fighter && entity1 != null)
                     {
-						EntityRUS_Fighter mob = (EntityRUS_Fighter) entity1;
+						EntityUSSR_Fighter mob = (EntityUSSR_Fighter) entity1;
 						{
 							if(i != 8){
 							    mob.setFlagMode(i);
@@ -432,9 +422,9 @@ public class WW2MessageKeyPressedHandler implements IMessageHandler<WW2MessageKe
 							}
 						}
 					}
-					if (entity1 instanceof EntityRUS_FighterA  && entity1 != null)
+					if (entity1 instanceof EntityUSSR_FighterA && entity1 != null)
                     {
-						EntityRUS_FighterA mob = (EntityRUS_FighterA) entity1;
+						EntityUSSR_FighterA mob = (EntityUSSR_FighterA) entity1;
 						{
 							if(i != 8){
 							    mob.setFlagMode(i);

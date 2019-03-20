@@ -385,7 +385,7 @@ public class EntityGBase extends EntityGBases implements IFF,IGVCmob,IMGGunner {
 	}
 
 	@Override
-	public void setspawnedtile(TileEntityFlag flag) {
+	public void setspawnedtile(TileEntity flag) {
 		spawnedtile = flag;
 	}
 	public int getdirection_in4(float globalDir){

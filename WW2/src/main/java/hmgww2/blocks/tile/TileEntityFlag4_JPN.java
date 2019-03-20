@@ -50,17 +50,17 @@ public class TileEntityFlag4_JPN extends TileEntityBase
 					entityskeleton.setFlagMode(1);
 					int iii = par1World.rand.nextInt(10);
 					if (iii == 0) {
-						entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_type99));
+						entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_type4Auto));
 					} else if (iii == 1) {
-						entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_type99));
+						entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_type4Auto));
 					} else if (iii == 2) {
 						entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_type99lmg));
 					} else if (iii == 3) {
 						entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_type99lmg));
 					} else if (iii == 4) {
-						entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_type89));
+						entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_rota_cannon));
 					} else if (iii == 5) {
-						entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_type89));
+						entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_rota_cannon));
 					} else {
 						entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_type38));
 					}

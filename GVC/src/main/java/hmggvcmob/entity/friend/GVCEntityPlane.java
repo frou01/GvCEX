@@ -51,7 +51,7 @@ public class GVCEntityPlane extends Entity implements ImultiRideableVehicle,Ipla
 	public int magazine;
 	public float throttle;
 	public int mode = 0;//0:attack 1:leave 2:follow player 3:go to home
-	public int soundtick = 0;
+//	public int soundtick = 0;
 	public Entity illuminated = null;
 	public HMGEntityBulletBase missile;
 	public float[][] trackedEntityPos;
@@ -73,10 +73,6 @@ public class GVCEntityPlane extends Entity implements ImultiRideableVehicle,Ipla
 
 	@Override
 	protected void entityInit() {
-		this.dataWatcher.addObject(24, new Integer((int)0));
-		this.dataWatcher.addObject(25, new Integer((int)0));
-		this.dataWatcher.addObject(26, new Integer((int)0));
-		this.dataWatcher.addObject(27, new Integer((int)0));
 	}
 
 
@@ -128,13 +124,13 @@ public class GVCEntityPlane extends Entity implements ImultiRideableVehicle,Ipla
 	@Override
 	public boolean interactFirst(EntityPlayer player)
 	{
-		if(!worldObj.isRemote && player.getCurrentEquippedItem()!= null && player.getCurrentEquippedItem().getItem() == GVCUtils.fn_missile && rocket<2){
-			player.inventory.consumeInventoryItem(GVCUtils.fn_rpg);
-			rocket+=1;
-			if(rocket>2){
-				rocket = 2;
-			}
-		}
+//		if(!worldObj.isRemote && player.getCurrentEquippedItem()!= null && player.getCurrentEquippedItem().getItem() == GVCUtils.fn_missile && rocket<2){
+//			player.inventory.consumeInventoryItem(GVCUtils.fn_rpg);
+//			rocket+=1;
+//			if(rocket>2){
+//				rocket = 2;
+//			}
+//		}
 		return false;
 	}
 	public void onUpdate()

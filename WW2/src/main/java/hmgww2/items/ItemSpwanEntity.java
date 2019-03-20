@@ -1,36 +1,8 @@
 package hmgww2.items;
 
+import hmgww2.entity.*;
 import hmgww2.mod_GVCWW2;
-import hmgww2.entity.EntityGER_Fighter;
-import hmgww2.entity.EntityGER_FighterA;
-import hmgww2.entity.EntityGER_S;
-import hmgww2.entity.EntityGER_Tank;
-import hmgww2.entity.EntityGER_TankAA;
-import hmgww2.entity.EntityGER_TankH;
-import hmgww2.entity.EntityGER_TankSPG;
-import hmgww2.entity.EntityJPN_Fighter;
-import hmgww2.entity.EntityJPN_FighterA;
-import hmgww2.entity.EntityJPN_S;
-import hmgww2.entity.EntityJPN_ShipB;
-import hmgww2.entity.EntityJPN_ShipD;
-import hmgww2.entity.EntityJPN_Tank;
-import hmgww2.entity.EntityJPN_TankAA;
-import hmgww2.entity.EntityJPN_TankSPG;
-import hmgww2.entity.EntityRUS_Fighter;
-import hmgww2.entity.EntityRUS_FighterA;
-import hmgww2.entity.EntityRUS_S;
-import hmgww2.entity.EntityRUS_Tank;
-import hmgww2.entity.EntityRUS_TankAA;
-import hmgww2.entity.EntityRUS_TankH;
-import hmgww2.entity.EntityRUS_TankSPG;
-import hmgww2.entity.EntityUSA_Fighter;
-import hmgww2.entity.EntityUSA_FighterA;
-import hmgww2.entity.EntityUSA_S;
-import hmgww2.entity.EntityUSA_ShipB;
-import hmgww2.entity.EntityUSA_ShipD;
-import hmgww2.entity.EntityUSA_Tank;
-import hmgww2.entity.EntityUSA_TankAA;
-import hmgww2.entity.EntityUSA_TankSPG;
+import hmgww2.entity.EntityUSSR_TankSPG;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.entity.player.EntityPlayer;
@@ -67,17 +39,17 @@ public class ItemSpwanEntity extends Item
                 entityskeleton.setLocationAndAngles(par4+0.5, par5, par6+0.5, var12, 0.0F);
                 int iii = par3World.rand.nextInt(10);
                 if(iii == 0){
-                	entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_type99));
+                	entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_type4Auto));
                 }else if(iii == 1){
-                	entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_type99));
+                	entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_type4Auto));
                 }else if(iii == 2){
                 	entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_type99lmg));
                 }else if(iii == 3){
                 	entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_type99lmg));
                 }else if(iii == 4){
-                	entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_type89));
+                	entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_rota_cannon));
                 }else if(iii == 5){
-                	entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_type89));
+                	entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_rota_cannon));
                 }else
                 {
                 	entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_type38));
@@ -148,9 +120,9 @@ public class ItemSpwanEntity extends Item
             entityskeleton.setLocationAndAngles(par4+0.5, par5, par6+0.5, var12, 0.0F);
             int iii = par3World.rand.nextInt(10);
             if(iii == 0){
-            	entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_m1904));
+            	entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_m1917));
             }else if(iii == 1){
-            	entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_m1904));
+            	entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_m1917));
             }else if(iii == 2){
             	entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_bar));
             }else if(iii == 3){
@@ -234,14 +206,14 @@ public class ItemSpwanEntity extends Item
                  }else if(iii == 2){
                 	 entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_mp40));
                  }else if(iii == 3){
-                	 entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_fg42));
+                	 entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_mg34));
                  }else if(iii == 4){
-                	 entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_kar98sr));
+                	 entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_gew43));
                  }else if(iii == 5){
                 	 entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_rpzb54));
                  }else
                  {
-                	 entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_kar98));
+                	 entityskeleton.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_gew98));
                  }
             entityskeleton.setCurrentItemOrArmor(4, new ItemStack(mod_GVCWW2.armor_ger));
             par3World.spawnEntityInWorld(entityskeleton);
@@ -297,7 +269,7 @@ public class ItemSpwanEntity extends Item
         }else if(this.mob == 61){
             ++par5;
             int var12 = MathHelper.floor_double((double)(par2EntityPlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-            EntityRUS_S entityskeleton = new EntityRUS_S(par3World);
+            EntityUSSR_S entityskeleton = new EntityUSSR_S(par3World);
             entityskeleton.setLocationAndAngles(par4+0.5, par5, par6+0.5, var12, 0.0F);
             int iii = par3World.rand.nextInt(10);
             	 if(iii == 0){
@@ -322,7 +294,7 @@ public class ItemSpwanEntity extends Item
         }else if(this.mob == 62){
         ++par5;
         int var12 = MathHelper.floor_double((double)(par2EntityPlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-        EntityRUS_Tank entityskeleton = new EntityRUS_Tank(par3World);
+        EntityUSSR_Tank entityskeleton = new EntityUSSR_Tank(par3World);
         entityskeleton.setLocationAndAngles(par4+0.5, par5, par6+0.5, var12, 0.0F);
         entityskeleton.setMobMode(1);
         par3World.spawnEntityInWorld(entityskeleton);
@@ -330,7 +302,7 @@ public class ItemSpwanEntity extends Item
         }else if(this.mob == 63){
             ++par5;
             int var12 = MathHelper.floor_double((double)(par2EntityPlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-            EntityRUS_Fighter entityskeleton = new EntityRUS_Fighter(par3World);
+            EntityUSSR_Fighter entityskeleton = new EntityUSSR_Fighter(par3World);
             entityskeleton.setLocationAndAngles(par4+0.5, par5, par6+0.5, var12, 0.0F);
             entityskeleton.setMobMode(1);
             par3World.spawnEntityInWorld(entityskeleton);
@@ -338,7 +310,7 @@ public class ItemSpwanEntity extends Item
         }else if(this.mob == 64){
             ++par5;
             int var12 = MathHelper.floor_double((double)(par2EntityPlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-            EntityRUS_TankAA entityskeleton = new EntityRUS_TankAA(par3World);
+            EntityUSSR_TankAA entityskeleton = new EntityUSSR_TankAA(par3World);
             entityskeleton.setLocationAndAngles(par4+0.5, par5, par6+0.5, var12, 0.0F);
             entityskeleton.setMobMode(1);
             par3World.spawnEntityInWorld(entityskeleton);
@@ -346,7 +318,7 @@ public class ItemSpwanEntity extends Item
         }else if(this.mob == 65){
             ++par5;
             int var12 = MathHelper.floor_double((double)(par2EntityPlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-            EntityRUS_TankSPG entityskeleton = new EntityRUS_TankSPG(par3World);
+            EntityUSSR_TankSPG entityskeleton = new EntityUSSR_TankSPG(par3World);
             entityskeleton.setLocationAndAngles(par4+0.5, par5, par6+0.5, var12, 0.0F);
             entityskeleton.setMobMode(1);
             par3World.spawnEntityInWorld(entityskeleton);
@@ -354,7 +326,7 @@ public class ItemSpwanEntity extends Item
         }else if(this.mob == 66){
             ++par5;
             int var12 = MathHelper.floor_double((double)(par2EntityPlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-            EntityRUS_FighterA entityskeleton = new EntityRUS_FighterA(par3World);
+            EntityUSSR_FighterA entityskeleton = new EntityUSSR_FighterA(par3World);
             entityskeleton.setLocationAndAngles(par4+0.5, par5, par6+0.5, var12, 0.0F);
             entityskeleton.setMobMode(1);
             par3World.spawnEntityInWorld(entityskeleton);
@@ -363,7 +335,7 @@ public class ItemSpwanEntity extends Item
         else if(this.mob == 67){
             ++par5;
             int var12 = MathHelper.floor_double((double)(par2EntityPlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-            EntityRUS_TankH entityskeleton = new EntityRUS_TankH(par3World);
+            EntityUSSR_TankH entityskeleton = new EntityUSSR_TankH(par3World);
             entityskeleton.setLocationAndAngles(par4+0.5, par5, par6+0.5, var12, 0.0F);
             entityskeleton.setMobMode(1);
             par3World.spawnEntityInWorld(entityskeleton);

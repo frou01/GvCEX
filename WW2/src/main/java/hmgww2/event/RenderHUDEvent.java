@@ -2,37 +2,11 @@ package hmgww2.event;
 
 import java.util.List;
 
+import hmgww2.entity.*;
 import org.lwjgl.opengl.GL11;
 
 import hmgww2.mod_GVCWW2;
-import hmgww2.entity.EntityGERBase;
-import hmgww2.entity.EntityGER_Fighter;
-import hmgww2.entity.EntityGER_FighterA;
-import hmgww2.entity.EntityGER_S;
-import hmgww2.entity.EntityGER_Tank;
-import hmgww2.entity.EntityGER_TankAA;
-import hmgww2.entity.EntityGER_TankSPG;
-import hmgww2.entity.EntityJPNBase;
-import hmgww2.entity.EntityJPN_Fighter;
-import hmgww2.entity.EntityJPN_FighterA;
-import hmgww2.entity.EntityJPN_S;
-import hmgww2.entity.EntityJPN_Tank;
-import hmgww2.entity.EntityJPN_TankAA;
-import hmgww2.entity.EntityJPN_TankSPG;
-import hmgww2.entity.EntityRUSBase;
-import hmgww2.entity.EntityRUS_Fighter;
-import hmgww2.entity.EntityRUS_FighterA;
-import hmgww2.entity.EntityRUS_S;
-import hmgww2.entity.EntityRUS_Tank;
-import hmgww2.entity.EntityRUS_TankAA;
-import hmgww2.entity.EntityRUS_TankSPG;
-import hmgww2.entity.EntityUSABase;
-import hmgww2.entity.EntityUSA_Fighter;
-import hmgww2.entity.EntityUSA_FighterA;
-import hmgww2.entity.EntityUSA_S;
-import hmgww2.entity.EntityUSA_Tank;
-import hmgww2.entity.EntityUSA_TankAA;
-import hmgww2.entity.EntityUSA_TankSPG;
+import hmgww2.entity.EntityUSSRBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiIngame;
@@ -219,29 +193,29 @@ public class RenderHUDEvent {
 				for (int lj = 0; lj < llist1.size(); lj++) {
 					Entity entity1 = (Entity) llist1.get(lj);
 					if (entity1.canBeCollidedWith()) {
-						if (entity1 instanceof EntityRUSBase  && entity1 != null)
+						if (entity1 instanceof EntityUSSRBase && entity1 != null)
 	                    {
-							if (entity1 instanceof EntityRUS_S)
+							if (entity1 instanceof EntityUSSR_S)
 		                    {
 								++s;
 							}
-							if (entity1 instanceof EntityRUS_Tank)
+							if (entity1 instanceof EntityUSSR_Tank)
 		                    {
 								++tank;
 							}
-							if (entity1 instanceof EntityRUS_TankAA)
+							if (entity1 instanceof EntityUSSR_TankAA)
 		                    {
 								++tankaa;
 							}
-							if (entity1 instanceof EntityRUS_TankSPG)
+							if (entity1 instanceof EntityUSSR_TankSPG)
 		                    {
 								++tankspg;
 							}
-							if (entity1 instanceof EntityRUS_Fighter)
+							if (entity1 instanceof EntityUSSR_Fighter)
 		                    {
 								++f;
 							}
-							if (entity1 instanceof EntityRUS_FighterA)
+							if (entity1 instanceof EntityUSSR_FighterA)
 		                    {
 								++a;
 							}

@@ -1,6 +1,7 @@
 package hmgww2;
 
 
+import hmgww2.entity.*;
 import org.lwjgl.input.Keyboard;
 
 import cpw.mods.fml.client.FMLClientHandler;
@@ -20,36 +21,7 @@ import hmgww2.blocks.tile.TileEntityFlag_GER;
 import hmgww2.blocks.tile.TileEntityFlag_JPN;
 import hmgww2.blocks.tile.TileEntityFlag_RUS;
 import hmgww2.blocks.tile.TileEntityFlag_USA;
-import hmgww2.entity.EntityGER_Fighter;
-import hmgww2.entity.EntityGER_FighterA;
-import hmgww2.entity.EntityGER_S;
-import hmgww2.entity.EntityGER_Tank;
-import hmgww2.entity.EntityGER_TankAA;
-import hmgww2.entity.EntityGER_TankH;
-import hmgww2.entity.EntityGER_TankSPG;
-import hmgww2.entity.EntityJPN_Fighter;
-import hmgww2.entity.EntityJPN_FighterA;
-import hmgww2.entity.EntityJPN_S;
-import hmgww2.entity.EntityJPN_ShipB;
-import hmgww2.entity.EntityJPN_ShipD;
-import hmgww2.entity.EntityJPN_Tank;
-import hmgww2.entity.EntityJPN_TankAA;
-import hmgww2.entity.EntityJPN_TankSPG;
-import hmgww2.entity.EntityRUS_Fighter;
-import hmgww2.entity.EntityRUS_FighterA;
-import hmgww2.entity.EntityRUS_S;
-import hmgww2.entity.EntityRUS_Tank;
-import hmgww2.entity.EntityRUS_TankAA;
-import hmgww2.entity.EntityRUS_TankH;
-import hmgww2.entity.EntityRUS_TankSPG;
-import hmgww2.entity.EntityUSA_Fighter;
-import hmgww2.entity.EntityUSA_FighterA;
-import hmgww2.entity.EntityUSA_S;
-import hmgww2.entity.EntityUSA_ShipB;
-import hmgww2.entity.EntityUSA_ShipD;
-import hmgww2.entity.EntityUSA_Tank;
-import hmgww2.entity.EntityUSA_TankAA;
-import hmgww2.entity.EntityUSA_TankSPG;
+import hmgww2.entity.EntityUSSR_TankSPG;
 import hmgww2.render.RenderGER_Fighter;
 import hmgww2.render.RenderGER_FighterA;
 import hmgww2.render.RenderGER_S;
@@ -150,13 +122,13 @@ public class ClientProxyGVCWW2 extends CommonSideProxyGVCWW2 {
     	RenderingRegistry.registerEntityRenderingHandler(EntityGER_FighterA.class, new RenderGER_FighterA());
     	RenderingRegistry.registerEntityRenderingHandler(EntityGER_TankH.class, new RenderGER_TankH());
     	
-    	RenderingRegistry.registerEntityRenderingHandler(EntityRUS_S.class, new RenderRUS_S());
-    	RenderingRegistry.registerEntityRenderingHandler(EntityRUS_Tank.class, new RenderRUS_Tank());
-    	RenderingRegistry.registerEntityRenderingHandler(EntityRUS_Fighter.class, new RenderRUS_Fighter());
-    	RenderingRegistry.registerEntityRenderingHandler(EntityRUS_TankAA.class, new RenderRUS_TankAA());
-    	RenderingRegistry.registerEntityRenderingHandler(EntityRUS_TankSPG.class, new RenderRUS_TankSPG());
-    	RenderingRegistry.registerEntityRenderingHandler(EntityRUS_FighterA.class, new RenderRUS_FighterA());
-    	RenderingRegistry.registerEntityRenderingHandler(EntityRUS_TankH.class, new RenderRUS_TankH());
+    	RenderingRegistry.registerEntityRenderingHandler(EntityUSSR_S.class, new RenderRUS_S());
+    	RenderingRegistry.registerEntityRenderingHandler(EntityUSSR_Tank.class, new RenderRUS_Tank());
+    	RenderingRegistry.registerEntityRenderingHandler(EntityUSSR_Fighter.class, new RenderRUS_Fighter());
+    	RenderingRegistry.registerEntityRenderingHandler(EntityUSSR_TankAA.class, new RenderRUS_TankAA());
+    	RenderingRegistry.registerEntityRenderingHandler(EntityUSSR_TankSPG.class, new RenderRUS_TankSPG());
+    	RenderingRegistry.registerEntityRenderingHandler(EntityUSSR_FighterA.class, new RenderRUS_FighterA());
+    	RenderingRegistry.registerEntityRenderingHandler(EntityUSSR_TankH.class, new RenderRUS_TankH());
     	
     	
     	ClientRegistry.registerTileEntity(TileEntityFlag_JPN.class, "Flag_JPN", 

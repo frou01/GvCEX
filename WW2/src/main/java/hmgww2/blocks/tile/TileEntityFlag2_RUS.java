@@ -1,12 +1,8 @@
 package hmgww2.blocks.tile;
  
+import hmgww2.entity.*;
 import hmgww2.mod_GVCWW2;
-import hmgww2.entity.EntityRUSBase;
-import hmgww2.entity.EntityRUS_S;
-import hmgww2.entity.EntityRUS_Tank;
-import hmgww2.entity.EntityRUS_TankAA;
-import hmgww2.entity.EntityRUS_TankH;
-import hmgww2.entity.EntityRUS_TankSPG;
+import hmgww2.entity.EntityUSSR_TankSPG;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
  
@@ -24,7 +20,7 @@ public class TileEntityFlag2_RUS extends TileEntityBase
 	public void updateEntity() {
 		this.maxs = mod_GVCWW2.cfg_spawnblock_limit_s;
 		this.maxv = mod_GVCWW2.cfg_spawnblock_limit_tank;
-		this.friend = new EntityRUSBase(this.worldObj);
+		this.friend = new EntityUSSRBase(this.worldObj);
 		this.fre = 4;
 		this.sorv = false;
 
@@ -44,7 +40,7 @@ public class TileEntityFlag2_RUS extends TileEntityBase
 				int ix = par1World.rand.nextInt(10);
 				int iz = par1World.rand.nextInt(10);
 				
-				EntityRUS_S entityskeleton = new EntityRUS_S(par1World);
+				EntityUSSR_S entityskeleton = new EntityUSSR_S(par1World);
 		            entityskeleton.setLocationAndAngles(par1+0.5 + ix - 5, par2+2, par3+0.5 + iz - 5, entityskeleton.renderYawOffset, 0.0F);
 		            entityskeleton.setFlagMode(1);
 		            int iii = par1World.rand.nextInt(10);
@@ -82,7 +78,7 @@ public class TileEntityFlag2_RUS extends TileEntityBase
 				{
 					int ix = par1World.rand.nextInt(10);
 					int iz = par1World.rand.nextInt(10);
-					EntityRUS_TankAA entityskeleton = new EntityRUS_TankAA(par1World);
+					EntityUSSR_TankAA entityskeleton = new EntityUSSR_TankAA(par1World);
 			            entityskeleton.setLocationAndAngles(par1+0.5 + ix - 5, par2+2, par3+0.5 + iz - 5, entityskeleton.renderYawOffset, 0.0F);
 			            entityskeleton.setFlagMode(1);
 			        if(!this.worldObj.isRemote){
@@ -91,7 +87,7 @@ public class TileEntityFlag2_RUS extends TileEntityBase
 				}else if(i == 1){
 					int ix = par1World.rand.nextInt(10);
 					int iz = par1World.rand.nextInt(10);
-					EntityRUS_TankSPG entityskeleton = new EntityRUS_TankSPG(par1World);
+					EntityUSSR_TankSPG entityskeleton = new EntityUSSR_TankSPG(par1World);
 			            entityskeleton.setLocationAndAngles(par1+0.5 + ix - 5, par2+2, par3+0.5 + iz - 5, entityskeleton.renderYawOffset, 0.0F);
 			            entityskeleton.setFlagMode(1);
 			        if(!this.worldObj.isRemote){
@@ -100,7 +96,7 @@ public class TileEntityFlag2_RUS extends TileEntityBase
 				}else if(i == 2){
 					int ix = par1World.rand.nextInt(10);
 					int iz = par1World.rand.nextInt(10);
-					EntityRUS_TankH entityskeleton = new EntityRUS_TankH(par1World);
+					EntityUSSR_TankH entityskeleton = new EntityUSSR_TankH(par1World);
 			            entityskeleton.setLocationAndAngles(par1+0.5 + ix - 5, par2+2, par3+0.5 + iz - 5, entityskeleton.renderYawOffset, 0.0F);
 			            entityskeleton.setFlagMode(1);
 			        if(!this.worldObj.isRemote){
@@ -109,7 +105,7 @@ public class TileEntityFlag2_RUS extends TileEntityBase
 				}else {
 					int ix = par1World.rand.nextInt(10);
 					int iz = par1World.rand.nextInt(10);
-					EntityRUS_Tank entityskeleton = new EntityRUS_Tank(par1World);
+					EntityUSSR_Tank entityskeleton = new EntityUSSR_Tank(par1World);
 			            entityskeleton.setLocationAndAngles(par1+0.5 + ix - 5, par2+2, par3+0.5 + iz - 5, entityskeleton.renderYawOffset, 0.0F);
 			            entityskeleton.setFlagMode(1);
 			        if(!this.worldObj.isRemote){
@@ -123,7 +119,7 @@ public class TileEntityFlag2_RUS extends TileEntityBase
 				{
 					int ix = par1World.rand.nextInt(10);
 					int iz = par1World.rand.nextInt(10);
-					EntityRUS_TankAA entityskeleton = new EntityRUS_TankAA(par1World);
+					EntityUSSR_TankAA entityskeleton = new EntityUSSR_TankAA(par1World);
 			            entityskeleton.setLocationAndAngles(par1+0.5 + ix - 5, par2+2, par3+0.5 + iz - 5, entityskeleton.renderYawOffset, 0.0F);
 			            entityskeleton.setMobMode(1);
 			        if(!this.worldObj.isRemote){
@@ -132,7 +128,7 @@ public class TileEntityFlag2_RUS extends TileEntityBase
 				}else if(i == 1){
 					int ix = par1World.rand.nextInt(10);
 					int iz = par1World.rand.nextInt(10);
-					EntityRUS_TankSPG entityskeleton = new EntityRUS_TankSPG(par1World);
+					EntityUSSR_TankSPG entityskeleton = new EntityUSSR_TankSPG(par1World);
 			            entityskeleton.setLocationAndAngles(par1+0.5 + ix - 5, par2+2, par3+0.5 + iz - 5, entityskeleton.renderYawOffset, 0.0F);
 			            entityskeleton.setMobMode(1);
 			        if(!this.worldObj.isRemote){
@@ -141,7 +137,7 @@ public class TileEntityFlag2_RUS extends TileEntityBase
 				}else if(i == 2){
 					int ix = par1World.rand.nextInt(10);
 					int iz = par1World.rand.nextInt(10);
-					EntityRUS_TankH entityskeleton = new EntityRUS_TankH(par1World);
+					EntityUSSR_TankH entityskeleton = new EntityUSSR_TankH(par1World);
 			            entityskeleton.setLocationAndAngles(par1+0.5 + ix - 5, par2+2, par3+0.5 + iz - 5, entityskeleton.renderYawOffset, 0.0F);
 			            entityskeleton.setMobMode(1);
 			        if(!this.worldObj.isRemote){
@@ -150,7 +146,7 @@ public class TileEntityFlag2_RUS extends TileEntityBase
 				}else {
 					int ix = par1World.rand.nextInt(10);
 					int iz = par1World.rand.nextInt(10);
-					EntityRUS_Tank entityskeleton = new EntityRUS_Tank(par1World);
+					EntityUSSR_Tank entityskeleton = new EntityUSSR_Tank(par1World);
 			            entityskeleton.setLocationAndAngles(par1+0.5 + ix - 5, par2+2, par3+0.5 + iz - 5, entityskeleton.renderYawOffset, 0.0F);
 			            entityskeleton.setMobMode(1);
 			        if(!this.worldObj.isRemote){

@@ -1,10 +1,9 @@
 package hmgww2.blocks.tile;
  
+import hmgww2.entity.*;
 import hmgww2.mod_GVCWW2;
-import hmgww2.entity.EntityRUSBase;
-import hmgww2.entity.EntityRUS_Fighter;
-import hmgww2.entity.EntityRUS_FighterA;
-import hmgww2.entity.EntityRUS_S;
+import hmgww2.entity.EntityUSSRBase;
+import hmgww2.entity.EntityUSSR_S;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
  
@@ -22,7 +21,7 @@ public class TileEntityFlag3_RUS extends TileEntityBase
 	public void updateEntity() {
 		this.maxs = mod_GVCWW2.cfg_spawnblock_limit_s;
 		this.maxv = mod_GVCWW2.cfg_spawnblock_limit_air;
-		this.friend = new EntityRUSBase(this.worldObj);
+		this.friend = new EntityUSSRBase(this.worldObj);
 		this.fre = 4;
 		this.sorv = false;
 
@@ -42,7 +41,7 @@ public class TileEntityFlag3_RUS extends TileEntityBase
 				int ix = par1World.rand.nextInt(10);
 				int iz = par1World.rand.nextInt(10);
 				
-				EntityRUS_S entityskeleton = new EntityRUS_S(par1World);
+				EntityUSSR_S entityskeleton = new EntityUSSR_S(par1World);
 		            entityskeleton.setLocationAndAngles(par1+0.5 + ix - 5, par2+2, par3+0.5 + iz - 5, entityskeleton.renderYawOffset, 0.0F);
 		            entityskeleton.setFlagMode(1);
 		            int iii = par1World.rand.nextInt(10);
@@ -80,7 +79,7 @@ public class TileEntityFlag3_RUS extends TileEntityBase
 				{
 					int ix = par1World.rand.nextInt(10);
 					int iz = par1World.rand.nextInt(10);
-					EntityRUS_FighterA entityskeleton = new EntityRUS_FighterA(par1World);
+					EntityUSSR_FighterA entityskeleton = new EntityUSSR_FighterA(par1World);
 			            entityskeleton.setLocationAndAngles(par1+0.5 + ix - 5, par2+12, par3+0.5 + iz - 5, 90F, 0.0F);
 			            entityskeleton.setFlagMode(1);
 			        if(!this.worldObj.isRemote){
@@ -89,7 +88,7 @@ public class TileEntityFlag3_RUS extends TileEntityBase
 				}else {
 					int ix = par1World.rand.nextInt(10);
 					int iz = par1World.rand.nextInt(10);
-					EntityRUS_Fighter entityskeleton = new EntityRUS_Fighter(par1World);
+					EntityUSSR_Fighter entityskeleton = new EntityUSSR_Fighter(par1World);
 			            entityskeleton.setLocationAndAngles(par1+0.5 + ix - 5, par2+12, par3+0.5 + iz - 5, 90F, 0.0F);
 			            entityskeleton.setFlagMode(1);
 			        if(!this.worldObj.isRemote){
@@ -103,7 +102,7 @@ public class TileEntityFlag3_RUS extends TileEntityBase
 				{
 					int ix = par1World.rand.nextInt(10);
 					int iz = par1World.rand.nextInt(10);
-					EntityRUS_FighterA entityskeleton = new EntityRUS_FighterA(par1World);
+					EntityUSSR_FighterA entityskeleton = new EntityUSSR_FighterA(par1World);
 			            entityskeleton.setLocationAndAngles(par1+0.5 + ix - 5, par2+2, par3+0.5 + iz - 5, 90F, 0.0F);
 			            entityskeleton.setMobMode(1);
 			        if(!this.worldObj.isRemote){
@@ -112,7 +111,7 @@ public class TileEntityFlag3_RUS extends TileEntityBase
 				}else {
 					int ix = par1World.rand.nextInt(10);
 					int iz = par1World.rand.nextInt(10);
-					EntityRUS_Fighter entityskeleton = new EntityRUS_Fighter(par1World);
+					EntityUSSR_Fighter entityskeleton = new EntityUSSR_Fighter(par1World);
 			            entityskeleton.setLocationAndAngles(par1+0.5 + ix - 5, par2+2, par3+0.5 + iz - 5, 90F, 0.0F);
 			            entityskeleton.setMobMode(1);
 			        if(!this.worldObj.isRemote){

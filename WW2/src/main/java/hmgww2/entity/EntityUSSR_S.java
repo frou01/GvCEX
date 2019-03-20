@@ -10,9 +10,9 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-public class EntityRUS_S extends EntityRUSBase
+public class EntityUSSR_S extends EntityUSSRBase
 {
-    public EntityRUS_S(World par1World)
+    public EntityUSSR_S(World par1World)
     {
         super(par1World);
         this.setSize(0.4F, 1.8F);
