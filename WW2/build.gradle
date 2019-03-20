@@ -1,0 +1,9 @@
+sourceSets.main {
+    java.srcDirs project.projectDir.name
+    resources.srcDirs project.projectDir.name
+}
+version = "EX11.2"
+version = "1.0"
+tasks.withType(Jar) {compileJava.options.encoding = 'UTF-8'}
+tasks.withType(Jar) {compileApiJava.options.encoding = 'UTF-8'}
+dependencies { compile project(':GVC')}

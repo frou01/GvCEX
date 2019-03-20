@@ -30,6 +30,10 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Linker/Linker_api.iml" filepath="$PROJECT_DIR$/.idea/modules/Linker/Linker_api.iml" group="Linker" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Linker/Linker_main.iml" filepath="$PROJECT_DIR$/.idea/modules/Linker/Linker_main.iml" group="Linker" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Linker/Linker_test.iml" filepath="$PROJECT_DIR$/.idea/modules/Linker/Linker_test.iml" group="Linker" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/WW2/WW2.iml" filepath="$PROJECT_DIR$/.idea/modules/WW2/WW2.iml" group="WW2" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/WW2/WW2_api.iml" filepath="$PROJECT_DIR$/.idea/modules/WW2/WW2_api.iml" group="WW2" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/WW2/WW2_main.iml" filepath="$PROJECT_DIR$/.idea/modules/WW2/WW2_main.iml" group="WW2" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/WW2/WW2_test.iml" filepath="$PROJECT_DIR$/.idea/modules/WW2/WW2_test.iml" group="WW2" />
     </modules>
   </component>
 </project>

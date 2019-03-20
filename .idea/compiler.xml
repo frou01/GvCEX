@@ -29,6 +29,9 @@
       <module name="Linker_api" target="1.8" />
       <module name="Linker_main" target="1.8" />
       <module name="Linker_test" target="1.8" />
+      <module name="WW2_api" target="1.8" />
+      <module name="WW2_main" target="1.8" />
+      <module name="WW2_test" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
