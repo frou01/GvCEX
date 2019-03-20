@@ -1,0 +1,14 @@
+#
+entity.GVCLib.EntityB_Shell.name=Shell
+entity.GVCLib.EntityB_Bullet.name=Bullet
+entity.GVCLib.EntityB_Missile.name=Missile
+entity.GVCLib.EntityB_GrenadeB.name=GrenadeBullet
+entity.GVCLib.EntityB_BulletAA.name=BulletAA
+entity.GVCLib.EntityT_TNT.name=TNTkai
+entity.GVCLib.EntityT_Flash.name=MuzzleFlash
+entity.GVCLib.EntityT_Smoke.name=Smoke
+entity.GVCLib.EntityT_Grenade.name=Grenade
+entity.GVCLib.EntityT_GrenadeT.name=AntiTankGrenade
+entity.GVCLib.EntityT_Morter.name=MorterBullet
+entity.GVCLib.EntityB_BulletFire.name=Flame
+

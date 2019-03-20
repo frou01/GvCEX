@@ -1,0 +1,13 @@
+#
+entity.GVCLib.EntityB_Shell.name=砲弾
+entity.GVCLib.EntityB_Bullet.name=銃弾
+entity.GVCLib.EntityB_Missile.name=ミサイル
+entity.GVCLib.EntityB_GrenadeB.name=グレネード弾
+entity.GVCLib.EntityB_BulletAA.name=機関砲弾
+entity.GVCLib.EntityT_TNT.name=TNT改
+entity.GVCLib.EntityT_Flash.name=マズルフラッシュ
+entity.GVCLib.EntityT_Smoke.name=煙
+entity.GVCLib.EntityT_Grenade.name=グレネート
+entity.GVCLib.EntityT_GrenadeT.name=対戦車グレネート
+entity.GVCLib.EntityT_Morter.name=迫撃砲弾
+entity.GVCLib.EntityB_BulletFire.name=火炎

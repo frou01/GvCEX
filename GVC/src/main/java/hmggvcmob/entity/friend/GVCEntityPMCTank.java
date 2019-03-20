@@ -24,7 +24,6 @@ import static hmggvcmob.util.Calculater.*;
 
 public class GVCEntityPMCTank extends EntityPMCBase implements IRideableTank,IControlable
 {
-    // public int type;
     public TileEntityFlag spawnedtile = null;
     int count_for_reset;
     public double angletime;
@@ -415,47 +414,6 @@ public class GVCEntityPMCTank extends EntityPMCBase implements IRideableTank,ICo
     public void mainFire(Entity target){
         mainTurret.currentEntity = this;
         mainTurret.fire();
-//        Vector3d Vec_transformedbybody = baseLogic.getTransformedVector_onturret(cannonpos,turretYawCenterpos);
-//
-//        Calculater.transformVecforMinecraft(Vec_transformedbybody);
-//        if(fireCycle1 <0){
-//            fireCycle1 = 100;
-//            if (!this.worldObj.isRemote) {
-//                Vector3d lookVec = baseLogic.getCannonDir();
-//                Calculater.transformVecforMinecraft(lookVec);
-//                HMGPacketHandler.INSTANCE.sendToAll(new PacketPlaysound(this, "gvcmob:gvcmob.120mmFire", 1, 5));
-//                if (this.getEntityData().getFloat("GunshotLevel") < 0.1)
-//                    soundedentity.add(this);
-//                this.getEntityData().setFloat("GunshotLevel", 5);
-//                HMGEntityBulletExprode var3 = new HMGEntityBulletExprode(this.worldObj, this, 600, 6.5f, 3, 5.0F, false);
-//                var3.gra = (float) (0.029f / cfg_defgravitycof);
-//                var3.setLocationAndAngles(
-//                        this.posX + Vec_transformedbybody.x,
-//                        this.posX + Vec_transformedbybody.y,
-//                        this.posX + Vec_transformedbybody.z,
-//                        baseLogic.turretrotationYaw, baseLogic.turretrotationPitch);
-//                var3.setThrowableHeading(lookVec.x,lookVec.y,lookVec.z,8,2);
-//                var3.canbounce = false;
-//                var3.fuse = 0;
-//                this.worldObj.spawnEntityInWorld(var3);
-//                {
-//                    PacketSpawnParticle flash = new PacketSpawnParticle(
-//                            this.posX + Vec_transformedbybody.x + lookVec.x * 6,
-//                            this.posY + Vec_transformedbybody.y + lookVec.y * 6,
-//                            this.posZ + Vec_transformedbybody.z + lookVec.z * 6,
-//                            toDegrees(-atan2(lookVec.x, lookVec.z)),
-//                            toDegrees(-asin(lookVec.y)), 100, "CannonMuzzleFlash", true);
-//                    flash.fuse = 3;
-//                    flash.scale = 5;
-//                    flash.id = 100;
-//                    HMGPacketHandler.INSTANCE.sendToAll(flash);
-//                }
-//            }
-////			if (!this.worldObj.isRemote) {
-////				this.worldObj.createExplosion(this, this.posX,
-////						this.posY + 2.2D,this.posZ, 0.0F, false);
-////			}
-//        }
     }
 
     @Override
@@ -476,57 +434,6 @@ public class GVCEntityPMCTank extends EntityPMCBase implements IRideableTank,ICo
     public void mainFire(){
         mainTurret.currentEntity = this.riddenByEntity;
         mainTurret.fire();
-//        if(fireCycle1 <0){
-//            fireCycle1 = 100;
-//
-//
-//            if (!this.worldObj.isRemote) {
-//
-//                Vector3d lookVec = baseLogic.getCannonDir();
-//                Calculater.transformVecforMinecraft(lookVec);
-//
-//
-//
-//                Vector3d Vec_transformedbybody = baseLogic.getTransformedVector_onturret(cannonpos,turretYawCenterpos);
-//
-//                Calculater.transformVecforMinecraft(Vec_transformedbybody);
-//
-//                HMGPacketHandler.INSTANCE.sendToAll(new PacketPlaysound(this,"gvcmob:gvcmob.120mmFire",1,10));
-//                this.getEntityData().setFloat("GunshotLevel",10);
-//                soundedentity.add(this);
-//                if(this.riddenByEntity != null){
-//
-//                    soundedentity.add(this.riddenByEntity);
-//                    HMGEntityBulletExprode var3 = new HMGEntityBulletExprode(this.worldObj, riddenByEntity, 600, 6.5f, 3, 5.0F, false);
-//                    var3.gra = (float) (0.029f / cfg_defgravitycof);
-//                    var3.setLocationAndAngles(this.posX + Vec_transformedbybody.x, this.posY + Vec_transformedbybody.y, this.posZ + Vec_transformedbybody.z,
-//                            baseLogic.turretrotationYaw, baseLogic.turretrotationPitch);
-//                    var3.setThrowableHeading(lookVec.x, lookVec.y, lookVec.z, 8, 0.5F);
-//                    var3.canbounce = false;
-//                    var3.fuse = 0;
-//                    this.worldObj.spawnEntityInWorld(var3);
-//                }
-//
-//
-//
-//                {
-//                    PacketSpawnParticle flash = new PacketSpawnParticle(
-//                            this.posX + Vec_transformedbybody.x + lookVec.x*6,
-//                            this.posY + Vec_transformedbybody.y + lookVec.y*6,
-//                            this.posZ + Vec_transformedbybody.z + lookVec.z*6,
-//                            toDegrees(-atan2(lookVec.x,lookVec.z)),
-//                            toDegrees(-asin(lookVec.y)),100,"CannonMuzzleFlash",true);
-//                    flash.fuse = 3;
-//                    flash.scale = 5;
-//                    flash.id = 100;
-//                    HMGPacketHandler.INSTANCE.sendToAll(flash);
-//                }
-//            }
-////			if (!this.worldObj.isRemote) {
-////				this.worldObj.createExplosion(this, this.posX,
-////						this.posY + 2.2D,this.posZ, 0.0F, false);
-////			}
-//        }
     }
     public void subFire(Entity target){
         subTurret.currentEntity = this;
@@ -540,62 +447,6 @@ public class GVCEntityPMCTank extends EntityPMCBase implements IRideableTank,ICo
 
         subTurret.currentEntity = riddenByEntity;
         subTurret.fire();
-//        Quat4d turretyawrot = new Quat4d(0,0,0,1);
-//
-//        Vector3d axisy = Calculater.transformVecByQuat(new Vector3d(0,1,0), turretyawrot);
-//        AxisAngle4d axisyangled = new AxisAngle4d(axisy, toRadians(baseLogic.turretrotationYaw)/2);
-//        turretyawrot = Calculater.quatRotateAxis(turretyawrot,axisyangled);
-//
-//
-//
-//
-//        {
-//            if (fireCycle2 < 0) {
-//
-//
-//                Vector3d lookVec = new Vector3d(0,0,1);
-//
-//
-//                Quat4d gun = new Quat4d(0, 0, 0, 1);
-//                Vector3d axisY = transformVecByQuat(baseLogic.unitY, gun);
-//                AxisAngle4d axisxangledY = new AxisAngle4d(axisY, toRadians(subturretrotationYaw) / 2);
-//                gun = quatRotateAxis(gun, axisxangledY);
-//
-//                Vector3d axisX = transformVecByQuat(baseLogic.unitX, gun);
-//                AxisAngle4d axisxangledX = new AxisAngle4d(axisX, toRadians(-subturretrotationPitch) / 2);
-//                gun = quatRotateAxis(gun, axisxangledX);
-//
-//                lookVec = transformVecByQuat(lookVec,gun);
-//                lookVec = transformVecByQuat(lookVec,turretyawrot);
-//                lookVec = transformVecByQuat(lookVec,baseLogic.bodyRot);
-//
-//                Calculater.transformVecforMinecraft(lookVec);
-//
-//
-//
-//
-//                Vector3d Vec_transformed = baseLogic.getTransformedVector_onturret(subturretpos,turretYawCenterpos);
-//
-//                Calculater.transformVecforMinecraft(Vec_transformed);
-//
-//
-//                fireCycle2 = 1;
-//                HMGEntityBullet var3 = new HMGEntityBullet(worldObj, this, 20, 8F, 3.0F);
-//                var3.gra = 0.05f;
-//                var3.setLocationAndAngles(this.posX + Vec_transformed.x, this.posY + Vec_transformed.y, this.posZ + Vec_transformed.z,
-//                        riddenByEntity.getRotationYawHead(), riddenByEntity.rotationPitch);
-//                var3.setHeadingFromThrower(riddenByEntity.rotationPitch, riddenByEntity.getRotationYawHead(), 0, 5.8f, 3.0F);
-//                var3.setThrowableHeading(lookVec.x,lookVec.y,lookVec.z,5.8f,3.0F);
-//                if (!this.worldObj.isRemote) {
-//                    this.worldObj.spawnEntityInWorld(var3);
-//                    HMGPacketHandler.INSTANCE.sendToAll(new PacketSpawnParticle(this.posX + Vec_transformed.x, this.posY + Vec_transformed.y, this.posZ + Vec_transformed.z, 100));
-//                    this.playSound("handmadeguns:handmadeguns.HeavyMachineGun", 5.0F, 1.0F);
-//                    if(this.getEntityData().getFloat("GunshotLevel")<0.1)
-//                        soundedentity.add(this);
-//                    this.getEntityData().setFloat("GunshotLevel",5);
-//                }
-//            }
-//        }
     }
 
     @Override
@@ -608,40 +459,6 @@ public class GVCEntityPMCTank extends EntityPMCBase implements IRideableTank,ICo
         subTurret.aimtoAngle(targetyaw,targetpitch);
         subturretrotationYaw = (float) subTurret.turretrotationYaw;
         subturretrotationPitch = (float) subTurret.turretrotationPitch;
-//        Quat4d turretyawrot = new Quat4d(0,0,0,1);
-//
-//        Vector3d axisy = Calculater.transformVecByQuat(new Vector3d(0,1,0), turretyawrot);
-//        AxisAngle4d axisyangled = new AxisAngle4d(axisy, toRadians(baseLogic.turretrotationYaw)/2);
-//        turretyawrot = Calculater.quatRotateAxis(turretyawrot,axisyangled);
-//        Quat4d gunnerRot = new Quat4d(0, 0, 0, 1);
-//
-//
-//        Vector3d axisY = transformVecByQuat(baseLogic.unitY, gunnerRot);
-//        AxisAngle4d axisxangledY = new AxisAngle4d(axisY, toRadians(targetyaw) / 2);
-//        gunnerRot = quatRotateAxis(gunnerRot, axisxangledY);
-//
-//        Vector3d axisX = transformVecByQuat(baseLogic.unitX, gunnerRot);
-//        AxisAngle4d axisxangledX = new AxisAngle4d(axisX, toRadians(-targetpitch) / 2);
-//        gunnerRot = quatRotateAxis(gunnerRot, axisxangledX);
-//
-//
-//        Vector3d lookVec = new Vector3d(0, 0, -1);
-//
-//        lookVec = transformVecByQuat(lookVec, gunnerRot);
-//
-//        Quat4d temp = new Quat4d();
-//
-//        temp.inverse(baseLogic.bodyRot);
-//        lookVec = transformVecByQuat(lookVec, temp);
-//
-//        temp.inverse(turretyawrot);
-//        lookVec = transformVecByQuat(lookVec, temp);
-//
-//        subturretrotationYaw = (float) toDegrees(atan2(lookVec.x,lookVec.z));
-//        subturretrotationPitch = (float) toDegrees(asin(lookVec.y));
-//        if(subturretrotationPitch<-20){
-//            subturretrotationPitch = -20;
-//        }
     }
 
     public boolean aimToTarget(Entity target){

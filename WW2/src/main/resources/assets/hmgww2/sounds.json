@@ -1,0 +1,28 @@
+{
+"hmgww2.fire_rifle": { "category": "neutral","sounds": ["hmgww2:fire_rifle"]},
+"hmgww2.fire_hg": { "category": "neutral","sounds": ["hmgww2:fire_hg"]},
+"hmgww2.fire_cannon": { "category": "neutral","sounds": ["hmgww2:fire_cannon"]},
+"hmgww2.fire_rail": { "category": "neutral","sounds": ["hmgww2:fire_rail"]},
+"hmgww2.fire_amr": { "category": "neutral","sounds": ["hmgww2:fire_amr"]},
+"hmgww2.fire_missile": { "category": "neutral","sounds": ["hmgww2:fire_missile"]},
+"hmgww2.fire_roket": { "category": "neutral","sounds": ["hmgww2:fire_roket"]},
+"hmgww2.fire_grenade": { "category": "neutral","sounds": ["hmgww2:fire_grenade"]},
+"hmgww2.fire_30mm": { "category": "neutral","sounds": ["hmgww2:fire_30mm"]},
+"hmgww2.fire_havrycannon": { "category": "neutral","sounds": ["hmgww2:fire_havrycannon"]},
+"hmgww2.throw_grenade": { "category": "neutral","sounds": ["hmgww2:throw_grenade"]},
+"hmgww2.reload_cannon": { "category": "neutral","sounds": ["hmgww2:reload_cannon"]},
+"hmgww2.reload_rail": { "category": "neutral","sounds": ["hmgww2:reload_rail"]},
+"hmgww2.reload_mg": { "category": "neutral","sounds": ["hmgww2:reload_mg"]},
+"hmgww2.reload_mag": { "category": "neutral","sounds": ["hmgww2:reload_mag"]},
+"hmgww2.reload_clip": { "category": "neutral","sounds": ["hmgww2:reload_clip"]},
+"hmgww2.reload_cocking": { "category": "neutral","sounds": ["hmgww2:reload_cocking"]},
+"hmgww2.reload_shell": { "category": "neutral","sounds": ["hmgww2:reload_shell"]},
+
+"hmgww2.fire_rog": { "category": "neutral","sounds": ["hmgww2:fire_rog"]},
+
+"hmgww2.sound_heli": { "category": "neutral","sounds": ["hmgww2:sound_heli"]},
+"hmgww2.sound_tank": { "category": "neutral","sounds": ["hmgww2:sound_tank"]},
+"hmgww2.sound_pera": { "category": "neutral","sounds": ["hmgww2:sound_pera"]},
+
+"hmgww2.reload": { "category": "neutral","sounds": ["hmgww2:reload"]}
+}

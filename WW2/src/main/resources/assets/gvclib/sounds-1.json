@@ -1,0 +1,13 @@
+{
+"gvclib.reload": { "category": "neutral","sounds": [{"name": "gvclib:reload","stream": true}]},
+"gvclib.shot2": { "category": "neutral","sounds": [{"name": "gvclib:shot2","stream": true}]},
+"gvclib.fire": {"category": "neutral","sounds": [{"name": "gvclib:sg","stream": true}]},
+"gvclib.firehg": {"category": "neutral","sounds": [{"name": "gvclib:hg","stream": true}]},
+"gvclib.jet1": {"category": "neutral","sounds": [{"name": "gvclib:jet1","stream": true}]},
+"gvclib.jet2": {"category": "neutral","sounds": [{"name": "gvclib:jet2","stream": true}]},
+"gvclib.lock": {"category": "neutral","sounds": [{"name": "gvclib:lock","stream": true}]},
+"gvclib.fireee": {"category": "neutral","sounds": [{"name": "gvclib:fireee","stream": true}]},
+"gvclib.grenadelancher": {"category": "neutral","sounds": [{"name": "gvclib:grenadelancher","stream": true}]},
+"gvclib.cannon": {"category": "neutral","sounds": [{"name": "gvclib:cannon","stream": true}]},
+"gvclib.rocket": {"category": "neutral","sounds": [{"name": "gvclib:rocket","stream": true}]}
+}
