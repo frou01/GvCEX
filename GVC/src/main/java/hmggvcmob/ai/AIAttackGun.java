@@ -49,7 +49,8 @@ public class AIAttackGun extends EntityAIBase {
     private int changesearchdircool = 0;
     private boolean searchdirY;
     private boolean searchdirP;
-    private boolean isEngineer;
+    public boolean assault;
+    public float assaultrange;//この距離まで詰める
 
     private int refindpath = 0;
 
@@ -72,10 +73,10 @@ public class AIAttackGun extends EntityAIBase {
         this(guerrilla,range,minrange,spread,bursttime,ismoveable);
         this.burstcool = burstcool;
     }
-    public AIAttackGun(EntityLiving guerrilla, float range,float minrange, int spread, int bursttime, int burstcool, boolean ismoveable,boolean isEngineer){
+    public AIAttackGun(EntityLiving guerrilla, float range,float minrange, int spread, int bursttime, int burstcool, boolean ismoveable,boolean assault){
         this(guerrilla,range,minrange,spread,bursttime,ismoveable);
         this.burstcool = burstcool;
-        this.isEngineer = isEngineer;
+        this.assault = assault;
     }
     public AIAttackGun(EntityLiving guerrilla, float range,float minrange, int spread, int bursttime, boolean ismoveable,boolean sac){
         this(guerrilla,range,minrange,spread,bursttime,ismoveable);
@@ -141,7 +142,7 @@ public class AIAttackGun extends EntityAIBase {
                     lastTargetY = target.posY + target.getEyeHeight();
                     lastTargetZ = target.posZ;
                     know_the_position_of_the_enemy = true;
-                    if(maxrange < totargetdist) {
+                    if(maxrange < totargetdist || (assault && assaultrange * assaultrange < totargetdist)) {
                         if(canNavigate())shooter.getNavigator().setPath(worldForPathfind.getEntityPathToXYZ(shooter, MathHelper.floor_double(target.posX), MathHelper.floor_double(target.posY), MathHelper.floor_double(target.posZ), 60f, true, false, false, true), 1.0d);
                     } else if(minrange > totargetdist){
                         if(canNavigate())shooter.getNavigator().setPath(worldForPathfind.getEntityPathToXYZ(shooter, MathHelper.floor_double(target.posX), MathHelper.floor_double(target.posY), MathHelper.floor_double(target.posZ), 60f, true, false, false, true), -1.0d);

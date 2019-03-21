@@ -1,5 +1,6 @@
 package hmgww2.blocks.tile;
 
+import hmgww2.Nation;
 import hmgww2.mod_GVCWW2;
 import hmgww2.entity.EntityUSABase;
 import hmgww2.entity.EntityUSA_S;
@@ -122,5 +123,10 @@ public class TileEntityFlag2_USA extends TileEntityBase
 				}
 			}
 		}
+	}
+	
+	@Override
+	public Nation getnation() {
+		return Nation.USA;
 	}
 }

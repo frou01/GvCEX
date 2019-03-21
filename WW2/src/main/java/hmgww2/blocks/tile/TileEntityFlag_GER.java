@@ -1,5 +1,6 @@
 package hmgww2.blocks.tile;
 
+import hmgww2.Nation;
 import hmgww2.mod_GVCWW2;
 import hmgww2.entity.EntityGERBase;
 import hmgww2.entity.EntityGER_S;
@@ -35,6 +36,12 @@ public class TileEntityFlag_GER extends TileEntityBase
 	protected void SpawnEntity2(World par1World, int par1, int par2, int par3, int par4, int par5, int par6) {
 	
 	}
+	
+	@Override
+	public Nation getnation() {
+		return Nation.GER;
+	}
+	
 	protected void SpawnEntity(World par1World, int par1, int par2, int par3, int par4, int par5, int par6) {
 		
 		if(!par1World.isRemote && this.spawn){

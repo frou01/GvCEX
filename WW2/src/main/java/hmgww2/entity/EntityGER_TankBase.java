@@ -55,9 +55,6 @@ public class EntityGER_TankBase extends EntityGERBase implements IRideableTank,I
 	public TurretObj mainTurret;
 	public TurretObj subTurret;
 	public TurretObj[] turrets;
-	
-	public float armor;
-	
 	public float maxHealth;
 	
 	
@@ -236,7 +233,12 @@ public class EntityGER_TankBase extends EntityGERBase implements IRideableTank,I
 					homeposX = (int) posX;
 					homeposY = (int) posY;
 					homeposZ = (int) posZ;
-				}else if(this.getMobMode() == 2){
+				}else if(this.getMobMode() == 2) {
+					mode = 3;
+					this.setMobMode(3);
+					
+					p_70085_1_.addChatComponentMessage(new ChatComponentTranslation("Free mode"));
+				}else if(this.getMobMode() == 3){
 					mode = 0;
 					this.setMobMode(0);
 				}
@@ -326,20 +328,6 @@ public class EntityGER_TankBase extends EntityGERBase implements IRideableTank,I
 				this.motionZ *= (double) f2;
 			}
 		}
-	}
-	
-	public boolean attackEntityFrom(DamageSource source, float par2) {
-		if (this.riddenByEntity == source.getEntity()) {
-			return false;
-		} else {
-			if (par2 <= armor) {
-				if (!source.getDamageType().equals("mob")) this.playSound("gvcmob:gvcmob.ArmorBounce", 0.5F, 1F);
-				return false;
-			}
-			this.playSound("gvcmob:gvcmob.armorhit", 0.5F, 1F);
-			return super.attackEntityFrom(source,par2);
-		}
-		
 	}
 	
 	

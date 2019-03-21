@@ -1,5 +1,6 @@
 package hmgww2.blocks.tile;
 
+import hmgww2.Nation;
 import hmgww2.mod_GVCWW2;
 import hmgww2.entity.EntityGERBase;
 import hmgww2.entity.EntityGER_Fighter;
@@ -104,5 +105,10 @@ public class TileEntityFlag3_GER extends TileEntityBase
 				}
 			}
 		}
+	}
+	
+	@Override
+	public Nation getnation() {
+		return Nation.GER;
 	}
 }

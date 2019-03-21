@@ -18,6 +18,9 @@ public class EntityGER_S extends EntityGERBase
         aiAttackGun.burstcool = 10;
         aiAttackGun.minshootrange = 30;
         aiAttackGun.bursttime = 30;
+        aiAttackGun.assault = true;
+        aiAttackGun.assaultrange = 60;
+        
         spread = 2;
     }
     protected void applyEntityAttributes()
@@ -25,7 +28,6 @@ public class EntityGER_S extends EntityGERBase
         super.applyEntityAttributes();
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(movespeed = 0.33000000417232513D);
         this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(20.0D);
-        this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(50.0D);
         //this.getEntityAttribute(SharedMonsterAttributes.knockbackResistance).setBaseValue(30.0D);
     }
 
@@ -44,25 +46,35 @@ public class EntityGER_S extends EntityGERBase
         int iii = this.worldObj.rand.nextInt(10);
         if(iii == 0){
         	this.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_mp40));
+            aiAttackGun.assaultrange = 30;
         }else if(iii == 1){
             this.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_gew98));
+            aiAttackGun.assaultrange = 30;
         }else if(iii == 2){
-            this.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_gew98));
+            this.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_mg34));
+            canuseAlreadyPlacedGun = true;
+            canPlacedGun = true;
+            aiAttackGun.assaultrange = 60;
+            aiAttackGun.minshootrange = 30;
         }else if(iii == 3){
         	this.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_mg34));
             canuseAlreadyPlacedGun = true;
             canPlacedGun = true;
-            aiAttackGun.minshootrange = 60;
+            aiAttackGun.assaultrange = 60;
+            aiAttackGun.minshootrange = 30;
         }else if(iii == 4){
         	this.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_gew43));
             canuseAlreadyPlacedGun = true;
             canPlacedGun = true;
+            aiAttackGun.assaultrange = 30;
         }else if(iii == 5){
         	this.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_rpzb54));
             aiAttackGun.minshootrange = 0;
+            aiAttackGun.assaultrange = 0;
         }else
         {
         	this.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_gew98));
+            aiAttackGun.assaultrange = 40;
         }
         this.setCurrentItemOrArmor(4, new ItemStack(mod_GVCWW2.armor_ger));
     }
@@ -70,7 +82,6 @@ public class EntityGER_S extends EntityGERBase
     public void onUpdate()
     {
     	super.onUpdate();
-    	
     }
     
 	public boolean isConverting() {

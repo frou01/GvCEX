@@ -475,7 +475,7 @@ public class mod_GVCWW2 {
 				.setCreativeTab(tabgvc);
 		GameRegistry.registerItem(b_magazinerpg, "b_magazinerpg");
 		
-		gun_type38 = GameRegistry.findItem("HandmadeGuns","Type38");
+		gun_type38 = GameRegistry.findItem("HandmadeGuns","AType38");
 		
 		gun_type99lmg = GameRegistry.findItem("HandmadeGuns","Type99LMG");
 		
@@ -675,12 +675,10 @@ public class mod_GVCWW2 {
 		EntityRegistry.registerModEntity(EntityGER_TankSPG.class, "EntityGER_TankSPG", 45, this, 128, 5, true);
 		EntityRegistry.registerModEntity(EntityGER_FighterA.class, "EntityGER_FighterA", 46, this, 128, 5, true);
 		EntityRegistry.registerModEntity(EntityGER_TankH.class, "EntityGER_TankH", 47, this, 128, 5, true);
-		//EntityRegistry.registerModEntity(EntityUSA_ShipB.class, "EntityUSA_ShipB", 27, this, 128, 5, true);
-		//EntityRegistry.registerModEntity(EntityUSA_ShipD.class, "EntityUSA_ShipD", 28, this, 128, 5, true);
 		
 		EntityRegistry.registerModEntity(EntityUSSR_S.class, "EntityUSSR_S", 61, this, 128, 5, true);
 		EntityRegistry.registerModEntity(EntityUSSR_Tank.class, "EntityUSSR_Tank", 62, this, 128, 5, true);
-		EntityRegistry.registerModEntity(EntityUSSR_Fighter.class, "EntityUSSR_Fighter", 63, this, 128, 5, true);
+		EntityRegistry.registerModEntity(EntityUSSR_Fighter.class, "EntityUSSR_Fighter", 63, this, 250, 3, true);
 		EntityRegistry.registerModEntity(EntityUSSR_TankAA.class, "EntityUSSR_TankAA", 64, this, 128, 5, true);
 		EntityRegistry.registerModEntity(EntityUSSR_TankSPG.class, "EntityUSSR_TankSPG", 65, this, 128, 5, true);
 		EntityRegistry.registerModEntity(EntityUSSR_FighterA.class, "EntityUSSR_FighterA", 66, this, 128, 5, true);
@@ -790,41 +788,28 @@ public class mod_GVCWW2 {
 		if(entity != null && entity instanceof EntityPlayer){
 			EntityPlayer entityplayer = (EntityPlayer)entity;
 			ItemStack itemstack = ((EntityPlayer)(entityplayer)).getCurrentEquippedItem();
+			int entityid = entity.getEntityId();
 			if (ClientProxyGVCWW2.Follow.getIsKeyPressed()) {
-	        	{
-	        		WW2PacketHandler.INSTANCE.sendToServer(new WW2MessageKeyPressed(3));
-	        	}
+				WW2PacketHandler.INSTANCE.sendToServer(new WW2MessageKeyPressed(0,entityid));
 	        }
 			if (ClientProxyGVCWW2.Wait.getIsKeyPressed()) {
-	        	{
-	        		WW2PacketHandler.INSTANCE.sendToServer(new WW2MessageKeyPressed(4));
-	        	}
+				WW2PacketHandler.INSTANCE.sendToServer(new WW2MessageKeyPressed(1,entityid));
 	        }
 			if (ClientProxyGVCWW2.Free.getIsKeyPressed()) {
-	        	{
-	        		WW2PacketHandler.INSTANCE.sendToServer(new WW2MessageKeyPressed(0));
-	        	}
+				WW2PacketHandler.INSTANCE.sendToServer(new WW2MessageKeyPressed(2,entityid));
 	        }
 			if (ClientProxyGVCWW2.Flag.getIsKeyPressed()) {
-	        	{
-	        		WW2PacketHandler.INSTANCE.sendToServer(new WW2MessageKeyPressed(1));
-	        	}
+				WW2PacketHandler.INSTANCE.sendToServer(new WW2MessageKeyPressed(3,entityid));
 	        }
 			
 			if (ClientProxyGVCWW2.ShipFree.getIsKeyPressed()) {
-	        	{
-	        		WW2PacketHandler.INSTANCE.sendToServer(new WW2MessageKeyPressed(5));
-	        	}
+				WW2PacketHandler.INSTANCE.sendToServer(new WW2MessageKeyPressed(4,entityid));
 	        }
 			if (ClientProxyGVCWW2.ShipWait.getIsKeyPressed()) {
-	        	{
-	        		WW2PacketHandler.INSTANCE.sendToServer(new WW2MessageKeyPressed(6));
-	        	}
+				WW2PacketHandler.INSTANCE.sendToServer(new WW2MessageKeyPressed(5,entityid));
 	        }
 			if (ClientProxyGVCWW2.RidingShip.getIsKeyPressed()) {
-	        	{
-	        		WW2PacketHandler.INSTANCE.sendToServer(new WW2MessageKeyPressed(7));
-	        	}
+				WW2PacketHandler.INSTANCE.sendToServer(new WW2MessageKeyPressed(7,entityid));
 	        }
 			
 		}

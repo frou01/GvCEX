@@ -42,8 +42,8 @@ public class ReloadSoundHMG extends MovingSound
 	{
 		if (this.attachedEntity.isDead ||(attachedEntity instanceof EntityPlayer && prevslot != ((EntityPlayer) attachedEntity).inventory.currentItem))
 		{
-			System.out.println("debug");
 			this.donePlaying = true;
+			this.repeat = false;
 		}
 		else
 		{

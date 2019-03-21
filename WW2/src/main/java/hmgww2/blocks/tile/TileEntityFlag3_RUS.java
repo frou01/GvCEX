@@ -1,5 +1,6 @@
 package hmgww2.blocks.tile;
 
+import hmgww2.Nation;
 import hmgww2.entity.*;
 import hmgww2.mod_GVCWW2;
 import hmgww2.entity.EntityUSSRBase;
@@ -102,5 +103,10 @@ public class TileEntityFlag3_RUS extends TileEntityBase
 				}
 			}
 		}
+	}
+	
+	@Override
+	public Nation getnation() {
+		return Nation.USSR;
 	}
 }

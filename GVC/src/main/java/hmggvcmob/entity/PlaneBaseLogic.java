@@ -47,12 +47,17 @@ public class PlaneBaseLogic {public int rocket = 2;
 	public float prevbodyrotationYaw;
 	public float prevbodyrotationPitch;
 	public float prevbodyrotationRoll;
+	public float stability = 500;
 	public float prevangletime;
 	public float angletime;
 	public int fireCycle1;
 	public int cooltime;
 	public int magazine;
 	public float throttle;
+	public float throttle_gearDown;
+	public float throttle_Max = 10;
+	public float throttle_min = -0.5f;
+	public float throttle_AF;
 	public float speedfactor = 0.03f;
 	public float speedfactor_af = 0.01f;
 	public float liftfactor = 0.04f;
@@ -62,6 +67,7 @@ public class PlaneBaseLogic {public int rocket = 2;
 	public float geardragfactor = 0.000005f;
 	public int mode = 0;//0:attack 1:leave 2:follow player 3:go to home
 	public int soundtick = 0;
+	public String  soundname = "gvcmob:gvcmob.plane";
 	public boolean trigger1 = false;
 	public boolean trigger2 = false;
 	public double[][] gunpos = new double[6][3];
@@ -208,7 +214,7 @@ public class PlaneBaseLogic {public int rocket = 2;
 			if(this.throttle >= 0.2){
 				if(planebody.getEntityData().getFloat("GunshotLevel")<4) soundedentity.add(planebody);
 				planebody.getEntityData().setFloat("GunshotLevel",4);
-				planebody.playSound("gvcmob:gvcmob.plane", 4F, 0.8f + throttle /25);
+				planebody.playSound(soundname, 4F, 0.8f + throttle /throttle_Max * 0.4f);
 			}
 		}
 		rotationmotion.normalize();
@@ -530,7 +536,6 @@ public class PlaneBaseLogic {public int rocket = 2;
 				}
 			}
 		}
-		motionvec = new Vector3d(planebody.motionX, planebody.motionY, planebody.motionZ);
 		{
 			motionvec = new Vector3d(planebody.motionX, planebody.motionY, planebody.motionZ);
 			bodyvector.normalize();
@@ -547,7 +552,7 @@ public class PlaneBaseLogic {public int rocket = 2;
 				quat4d.normalize();
 				axisstall = Calculater.transformVecByQuat(axisstall,quat4d);
 				if(! Double.isNaN(axisstall.x) && ! Double.isNaN(axisstall.y) && ! Double.isNaN(axisstall.z)) {
-					AxisAngle4d axisxangledstall = new AxisAngle4d(axisstall, abs(cos) * acos(-cos) / 500);
+					AxisAngle4d axisxangledstall = new AxisAngle4d(axisstall, abs(cos) * acos(-cos) / stability);
 					rotationmotion = Calculater.quatRotateAxis(rotationmotion, axisxangledstall);
 				}
 			}
@@ -603,11 +608,11 @@ public class PlaneBaseLogic {public int rocket = 2;
 		}
 		planebody.moveEntity(planebody.motionX,planebody.motionY,planebody.motionZ);
 		
-		if(throttle >10){
-			throttle = 10;
+		if(throttle >throttle_Max){
+			throttle = throttle_Max;
 		}
-		if(throttle <0){
-			throttle = 0;
+		if(throttle <throttle_min){
+			throttle = throttle_min;
 		}
 		planebody.fallDistance=0;
 		if(!worldObj.isRemote && health < 0){
@@ -655,7 +660,7 @@ public class PlaneBaseLogic {public int rocket = 2;
 			
 			gearprogress = 100;
 		}else {
-			if(throttle > 2.5){
+			if(throttle > throttle_gearDown){
 				gearprogress--;
 			}else {
 				gearprogress++;

@@ -103,6 +103,8 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
     public int     smoketime          = 10;
     public boolean trailglow = true;
     public boolean smokeglow = true;
+    
+    public boolean soundstoped = true;
 
 
     //int i = mod_IFN_GuerrillaVsCommandGuns.RPGExplosiontime;
@@ -283,15 +285,10 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
                     proxy.spawnParticles(packet);
                 }
             }
-//            if(motionX * motionX + motionY * motionY + motionZ * motionZ > flyingSoundminspeed * flyingSoundminspeed && flyingSound != null && getDistanceSqToEntity(proxy.getEntityPlayerInstance()) < flyingSoundmaxdist*flyingSoundmaxdist){
-//                prevdisttoPlayer = disttoPlayer;
-//                disttoPlayer = getDistanceSqToEntity(proxy.getEntityPlayerInstance());
-//                if(prevdisttoPlayer != -1) {
-//                    float doppler = (float) (sqrt(prevdisttoPlayer) - sqrt(disttoPlayer));
-//                    float tempsp = (float) (318.8 / (318.8 - doppler * 20));
-//                    proxy.playsoundat(flyingSound, flyingSoundLV, flyingSoundSP, tempsp, (float) this.posX, (float) this.posY, (float) this.posZ);
-//                }
-//            }
+            if(soundstoped && motionX * motionX + motionY * motionY + motionZ * motionZ > flyingSoundminspeed * flyingSoundminspeed && flyingSound != null && getDistanceSqToEntity(proxy.getEntityPlayerInstance()) < flyingSoundmaxdist*flyingSoundmaxdist){
+                proxy.playsoundatBullet(flyingSound,flyingSoundLV,flyingSoundSP,flyingSoundminspeed,flyingSoundmaxdist,this,true);
+                soundstoped = false;
+            }
         }
         if(Double.isNaN( this.motionX ) || Double.isNaN( this.motionY ) || Double.isNaN( this.motionZ )){
             this.motionX =this.motionY =this.motionZ =0;
@@ -751,7 +748,7 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
      */
     protected void onImpact(MovingObjectPosition var1)
     {
-        if(worldObj.isRemote && var1.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK){
+        if(worldObj.isRemote && var1.hitVec.distanceTo(Vec3.createVectorHelper(proxy.getEntityPlayerInstance().posX,proxy.getEntityPlayerInstance().posY,proxy.getEntityPlayerInstance().posZ))<5 && var1.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK){
             proxy.playsoundat("handmadeguns:handmadeguns.Ricochet",1,1,1,var1.hitVec.xCoord,var1.hitVec.yCoord,var1.hitVec.zCoord);
         }
     }
@@ -899,7 +896,6 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
                 if(HMGAddBullets.modellist.get(modelid) == null)modelid = -1;
 //                System.out.println("modelid " + modelid);
             }
-            proxy.playsoundatBullet(flyingSound,flyingSoundLV,flyingSoundSP,flyingSoundminspeed,flyingSoundmaxdist,this,true);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {

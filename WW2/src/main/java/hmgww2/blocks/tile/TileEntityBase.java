@@ -2,6 +2,7 @@ package hmgww2.blocks.tile;
  
 import java.util.List;
 
+import hmgww2.Nation;
 import hmgww2.entity.*;
 import hmgww2.mod_GVCWW2;
 import net.minecraft.block.Block;
@@ -28,7 +29,6 @@ import net.minecraft.world.World;
  */
 public abstract class TileEntityBase extends TileEntity
 {
-	
 	
 	private int invasionleve;
 	private int invasion;
@@ -315,5 +315,5 @@ public abstract class TileEntityBase extends TileEntity
 		this.invasionleve = i;
 	}
 	
-	
+	public abstract Nation getnation();
 }

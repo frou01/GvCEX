@@ -47,29 +47,6 @@ public class ModelSoldier extends ModelBiped
         this.bipedLeftArm.rotateAngleZ -= MathHelper.cos(par3 * 0.09F) * 0.05F + 0.05F;
         this.bipedRightArm.rotateAngleX += MathHelper.sin(par3 * 0.067F) * 0.05F;
         this.bipedLeftArm.rotateAngleX -= MathHelper.sin(par3 * 0.067F) * 0.05F;
-        if (par7Entity instanceof EntityBases && par7Entity != null) {
-        	EntityBases en = (EntityBases) par7Entity;
-        	if (this.isSneak || en.isSneaking())
-            {
-                this.bipedBody.rotateAngleX = 0.5F;
-                this.bipedRightLeg.rotationPointZ = 4.0F;
-                this.bipedLeftLeg.rotationPointZ = 4.0F;
-                this.bipedRightLeg.rotationPointY = 9.0F;
-                this.bipedLeftLeg.rotationPointY = 9.0F;
-                this.bipedHead.rotationPointY = 1.0F;
-                this.bipedHeadwear.rotationPointY = 1.0F;
-            }
-            else
-            {
-                this.bipedBody.rotateAngleX = 0.0F;
-                this.bipedRightLeg.rotationPointZ = 0.1F;
-                this.bipedLeftLeg.rotationPointZ = 0.1F;
-                this.bipedRightLeg.rotationPointY = 12.0F;
-                this.bipedLeftLeg.rotationPointY = 12.0F;
-                this.bipedHead.rotationPointY = 0.0F;
-                this.bipedHeadwear.rotationPointY = 0.0F;
-            }
-        }
         
     }
 }

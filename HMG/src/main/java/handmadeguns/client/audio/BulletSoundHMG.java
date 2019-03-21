@@ -2,6 +2,7 @@ package handmadeguns.client.audio;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import handmadeguns.entity.bullets.HMGEntityBulletBase;
 import net.minecraft.client.audio.MovingSound;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
@@ -40,6 +41,7 @@ public class BulletSoundHMG extends MovingSound
 		if (this.attachedEntity.isDead)
 		{
 			this.donePlaying = true;
+			this.repeat = false;
 		}
 		else
 		{
@@ -48,9 +50,10 @@ public class BulletSoundHMG extends MovingSound
 			this.zPosF = (float) this.attachedEntity.posZ;
 			double prevdisttoPlayer = disttoPlayer;
 			disttoPlayer = attachedEntity.getDistanceSqToEntity(proxy.getEntityPlayerInstance());
-			if(attachedEntity.motionX * attachedEntity.motionX + attachedEntity.motionY * attachedEntity.motionY + attachedEntity.motionZ * attachedEntity.motionZ < minspeed)volume = 0;
+			if(attachedEntity.motionX * attachedEntity.motionX + attachedEntity.motionY * attachedEntity.motionY + attachedEntity.motionZ * attachedEntity.motionZ < minspeed)
+				this.repeat = false;
 			else {
-				if (disttoPlayer < maxdist) {
+				if (disttoPlayer < maxdist * maxdist) {
 					if(disttoPlayer > volume*16 * volume*16)volume = (float) (sqrt(disttoPlayer)/16);
 					if (prevdisttoPlayer != -1) {
 						float doppler = (float) (sqrt(prevdisttoPlayer) - sqrt(disttoPlayer));
@@ -58,9 +61,10 @@ public class BulletSoundHMG extends MovingSound
 						field_147663_c = savedfield_147663_c * tempsp;
 					}
 				}else {
-					volume = 0;
+					this.repeat = false;
 				}
 			}
 		}
+		if(!this.repeat && attachedEntity instanceof HMGEntityBulletBase)((HMGEntityBulletBase) attachedEntity).soundstoped = true;
 	}
 }

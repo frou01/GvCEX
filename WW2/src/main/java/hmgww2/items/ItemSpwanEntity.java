@@ -242,6 +242,9 @@ public class ItemSpwanEntity extends Item
             EntityUSSR_Fighter entityskeleton = new EntityUSSR_Fighter(par3World);
             entityskeleton.setLocationAndAngles(par4+0.5, par5, par6+0.5, var12, 0.0F);
             entityskeleton.setMobMode(1);
+            entityskeleton.getBaseLogic().throttle = 0;
+            entityskeleton.onGround = false;
+            entityskeleton.motionX = entityskeleton.motionY = entityskeleton.motionZ = 0;
             par3World.spawnEntityInWorld(entityskeleton);
             //entityskeleton.mountEntity(entityskeleton1);
         }else if(this.mob == 64){

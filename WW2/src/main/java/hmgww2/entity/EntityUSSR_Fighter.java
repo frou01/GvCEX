@@ -33,10 +33,17 @@ public class EntityUSSR_Fighter extends EntityUSSR_FighterBase
 	    ignoreFrustumCheck = true;
 	    this.fireCycle1 = 1;
 	    baseLogic = new PlaneBaseLogic(worldObj,this);
-	    baseLogic.speedfactor = 0.02f;
-	    baseLogic.liftfactor = 0.06f;
-	    baseLogic.dragfactor = 0.0003f;
-        
+	    baseLogic.speedfactor = 0.06f;
+	    baseLogic.throttle_gearDown = 1.7f;
+	    baseLogic.throttle_Max = 4.0f;
+	    baseLogic.liftfactor = 0.3f;
+	    baseLogic.dragfactor = 0.04f;
+	    baseLogic.rollspeed = 0.2f;
+	    baseLogic.pitchspeed = 0.2f;
+	    baseLogic.yawspeed = 0.2f;
+	    baseLogic.stability = 350;
+	    baseLogic.soundname = "hmgww2:hmgww2.sound_pera";
+     
     }
     
 }

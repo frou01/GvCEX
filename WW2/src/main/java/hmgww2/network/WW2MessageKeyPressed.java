@@ -5,7 +5,7 @@ import io.netty.buffer.ByteBuf;
 public class WW2MessageKeyPressed implements IMessage {
  
     public int key;
-    public int fre;
+    public int fre = -1;
  
     public WW2MessageKeyPressed(){}
  

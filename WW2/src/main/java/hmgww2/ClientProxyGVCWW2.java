@@ -2,6 +2,7 @@ package hmgww2;
 
 
 import hmgww2.entity.*;
+import hmgww2.render.*;
 import org.lwjgl.input.Keyboard;
 
 import cpw.mods.fml.client.FMLClientHandler;
@@ -22,36 +23,6 @@ import hmgww2.blocks.tile.TileEntityFlag_JPN;
 import hmgww2.blocks.tile.TileEntityFlag_RUS;
 import hmgww2.blocks.tile.TileEntityFlag_USA;
 import hmgww2.entity.EntityUSSR_TankSPG;
-import hmgww2.render.RenderGER_Fighter;
-import hmgww2.render.RenderGER_FighterA;
-import hmgww2.render.RenderGER_S;
-import hmgww2.render.RenderGER_Tank;
-import hmgww2.render.RenderGER_TankAA;
-import hmgww2.render.RenderGER_TankH;
-import hmgww2.render.RenderGER_TankSPG;
-import hmgww2.render.RenderJPN_Fighter;
-import hmgww2.render.RenderJPN_FighterA;
-import hmgww2.render.RenderJPN_S;
-import hmgww2.render.RenderJPN_ShipB;
-import hmgww2.render.RenderJPN_ShipD;
-import hmgww2.render.RenderJPN_Tank;
-import hmgww2.render.RenderJPN_TankAA;
-import hmgww2.render.RenderJPN_TankSPG;
-import hmgww2.render.RenderUSSR_Fighter;
-import hmgww2.render.RenderUSSR_FighterA;
-import hmgww2.render.RenderUSSR_S;
-import hmgww2.render.RenderUSSR_Tank;
-import hmgww2.render.RenderUSSR_TankAA;
-import hmgww2.render.RenderUSSR_TankH;
-import hmgww2.render.RenderUSSR_TankSPG;
-import hmgww2.render.RenderUSA_Fighter;
-import hmgww2.render.RenderUSA_FighterA;
-import hmgww2.render.RenderUSA_S;
-import hmgww2.render.RenderUSA_ShipB;
-import hmgww2.render.RenderUSA_ShipD;
-import hmgww2.render.RenderUSA_Tank;
-import hmgww2.render.RenderUSA_TankAA;
-import hmgww2.render.RenderUSA_TankSPG;
 import hmgww2.render.tile.TileRenderFlag_JPN;
 import net.minecraft.client.Minecraft;
 //import net.java.games.input.Keyboard;
@@ -123,9 +94,11 @@ public class ClientProxyGVCWW2 extends CommonSideProxyGVCWW2 {
     	RenderingRegistry.registerEntityRenderingHandler(EntityGER_TankH.class, new RenderGER_TankH());
     	
     	RenderingRegistry.registerEntityRenderingHandler(EntityUSSR_S.class, new RenderUSSR_S());
-    	RenderingRegistry.registerEntityRenderingHandler(EntityUSSR_Tank.class, new RenderUSSR_Tank());
-    	RenderingRegistry.registerEntityRenderingHandler(EntityUSSR_Fighter.class, new RenderUSSR_Fighter());
-    	RenderingRegistry.registerEntityRenderingHandler(EntityUSSR_TankAA.class, new RenderUSSR_TankAA());
+    	RenderingRegistry.registerEntityRenderingHandler(EntityUSSR_Tank.class, new RenderTank("hmgww2:textures/mob/rus/T34_76.png","hmgww2:textures/mob/rus/T34_76.obj",
+			                                                                                          new float[]{0,0,0},new float[]{0F, 2.00F, 1.00F}));
+    	RenderingRegistry.registerEntityRenderingHandler(EntityUSSR_Fighter.class, new RenderPlane("hmgww2:textures/mob/rus/Yak9.png","hmgww2:textures/mob/rus/Yak9.obj"));
+    	RenderingRegistry.registerEntityRenderingHandler(EntityUSSR_TankAA.class, new RenderTank("hmgww2:textures/mob/rus/ZIS43.png","hmgww2:textures/mob/rus/ZIS43.obj",
+			                                                                                            new float[]{0,0,-1.7f},new float[]{0F, 2.65F, -0.8f}));
     	RenderingRegistry.registerEntityRenderingHandler(EntityUSSR_TankSPG.class, new RenderUSSR_TankSPG());
     	RenderingRegistry.registerEntityRenderingHandler(EntityUSSR_FighterA.class, new RenderUSSR_FighterA());
     	RenderingRegistry.registerEntityRenderingHandler(EntityUSSR_TankH.class, new RenderUSSR_TankH());

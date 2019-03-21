@@ -50,13 +50,9 @@ public class EntityJPN_TankBase extends EntityGERBase implements IRideableTank,I
 	Vector3d cannonpos = new Vector3d(0,1.692,-1.83906);
 	Vector3d turretpos = new Vector3d(0,0,-0.2448);
 	
-	AITankAttack aiTankAttack;
-	
 	public TurretObj mainTurret;
 	public TurretObj subTurret;
 	public TurretObj[] turrets;
-	
-	public float armor;
 	
 	public float maxHealth;
 	
@@ -326,20 +322,6 @@ public class EntityJPN_TankBase extends EntityGERBase implements IRideableTank,I
 				this.motionZ *= (double) f2;
 			}
 		}
-	}
-	
-	public boolean attackEntityFrom(DamageSource source, float par2) {
-		if (this.riddenByEntity == source.getEntity()) {
-			return false;
-		} else {
-			if (par2 <= armor) {
-				if (!source.getDamageType().equals("mob")) this.playSound("gvcmob:gvcmob.ArmorBounce", 0.5F, 1F);
-				return false;
-			}
-			this.playSound("gvcmob:gvcmob.armorhit", 0.5F, 1F);
-			return super.attackEntityFrom(source,par2);
-		}
-		
 	}
 	
 	

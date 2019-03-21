@@ -1,5 +1,6 @@
 package hmgww2.blocks.tile;
  
+import hmgww2.Nation;
 import hmgww2.mod_GVCWW2;
 import hmgww2.entity.EntityJPNBase;
 import hmgww2.entity.EntityJPN_Fighter;
@@ -106,4 +107,9 @@ public class TileEntityFlag3_JPN extends TileEntityBase
 				}
 			}
 		}
+	
+	@Override
+	public Nation getnation() {
+		return Nation.JPN;
+	}
 }

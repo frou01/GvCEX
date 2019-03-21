@@ -18,8 +18,10 @@ public class EntityUSA_S extends EntityUSABase
 		super(par1World);
 		this.setSize(0.5F, 1.8F);
 		aiAttackGun.burstcool = 8;
-		aiAttackGun.minshootrange = 40;
+		aiAttackGun.minshootrange = 20;
 		aiAttackGun.bursttime = 10;
+		aiAttackGun.assault = true;
+		aiAttackGun.assaultrange = 40;
 		spread = 3;
 	}
 	protected void applyEntityAttributes()
@@ -27,8 +29,6 @@ public class EntityUSA_S extends EntityUSABase
 		super.applyEntityAttributes();
 		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(movespeed = 0.33000000417232513D);
 		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(20.0D);
-		this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(50.0D);
-		//this.getEntityAttribute(SharedMonsterAttributes.knockbackResistance).setBaseValue(30.0D);
 	}
 	
 	protected void dropFewItems(boolean p_70628_1_, int p_70628_2_)
@@ -48,21 +48,34 @@ public class EntityUSA_S extends EntityUSABase
 			this.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_m1917));
 			canuseAlreadyPlacedGun = true;
 			canPlacedGun = true;
+			aiAttackGun.assaultrange = 40;
 		}else if(iii == 1){
-			this.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_m1917));
+			this.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_bar));
+			canuseAlreadyPlacedGun = true;
+			aiAttackGun.assaultrange = 40;
+			canPlacedGun = true;
 		}else if(iii == 2){
 			this.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_bar));
 			canuseAlreadyPlacedGun = true;
+			aiAttackGun.assaultrange = 40;
 			canPlacedGun = true;
 		}else if(iii == 3){
 			this.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_m1t));
+			aiAttackGun.minshootrange = 10;
+			aiAttackGun.assaultrange = 20;
 		}else if(iii == 4){
 			this.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_boys));
+			aiAttackGun.minshootrange = 30;
+			aiAttackGun.assaultrange = 40;
 		}else if(iii == 5){
 			this.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_m1b));
+			aiAttackGun.minshootrange = 15;
+			aiAttackGun.assaultrange = 30;
 		}else
 		{
 			this.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_m1g));
+			aiAttackGun.minshootrange = 20;
+			aiAttackGun.assaultrange = 30;
 		}
 		this.setCurrentItemOrArmor(4, new ItemStack(mod_GVCWW2.armor_jpn));
 	}

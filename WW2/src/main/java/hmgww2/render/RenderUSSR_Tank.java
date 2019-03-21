@@ -41,32 +41,59 @@ public class RenderUSSR_Tank extends Render {
 		GL11.glTranslatef((float) p_76986_2_, (float) p_76986_4_, (float) p_76986_6_);
 		GL11.glRotatef(180F, 0.0F, 1.0F, 0.0F);
 		GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-
+		
 		if(entity.deathTicks > 0){
 			GL11.glColor4f(0.1F, 0.1F, 0.1F, 1F);
 		}
 		
-		GL11.glRotatef(180.0F - entityYaw, 0.0F, 1.0F, 0.0F);
-		GL11.glTranslatef(0, 2.5F, 0);
-		this.renderAngle(entity, 1);
-		GL11.glTranslatef(0, -2.5F, 0);
-			tankk.renderPart("mat1");
-		GL11.glRotatef(-(180.0F - entityYaw), 0.0F, 1.0F, 0.0F);
+		GL11.glRotatef(180.0F - (entity.baseLogic.bodyrotationYaw + (entity.baseLogic.bodyrotationYaw - entity.baseLogic.prevbodyrotationYaw) * partialTicks), 0.0F, 1.0F, 0.0F);
+		GL11.glRotatef(entity.baseLogic.bodyrotationPitch, 1.0F, 0.0F, 0.0F);
+		GL11.glRotatef(entity.baseLogic.bodyrotationRoll, 0.0F, 0.0F, 1.0F);
+		tankk.renderPart("mat1");
+		//GL11.glRotatef(-(180.0F - entityYaw), 0.0F, 1.0F, 0.0F);
 		
 		{
-//			GL11.glRotatef(180.0F - entity.rotation, 0.0F, 1.0F, 0.0F);
+			GL11.glRotatef(-(entity.baseLogic.turretrotationYaw * partialTicks + entity.baseLogic.prevturretrotationYaw * (1-partialTicks)), 0.0F, 1.0F, 0.0F);
 			tankk.renderPart("mat4");
-			if(entity.getMobMode() == 0){
+			if(entity.getMobMode() != 3){
 				tankk.renderPart("mat30");
 			}
 			GL11.glTranslatef(0F, 2.08F, 1.05F);
-//			GL11.glRotatef(entity.rotationp, 1.0F, 0.0F, 0.0F);
+			GL11.glRotatef(entity.baseLogic.turretrotationPitch, 1.0F, 0.0F, 0.0F);
 			GL11.glTranslatef(0F, -2.08F, -1.05F);
 			tankk.renderPart("mat5");
 		}
-		
-		GL11.glDisable(GL12.GL_RESCALE_NORMAL);
 		GL11.glPopMatrix();
+//		GL11.glDisable(GL12.GL_RESCALE_NORMAL);
+//		GL11.glPopMatrix();
+//
+//		GL11.glPushMatrix();
+//		GL11.glTranslatef((float) p_76986_2_, (float) p_76986_4_, (float) p_76986_6_);
+//		GL11.glRotatef(180F, 0.0F, 1.0F, 0.0F);
+//		GL11.glEnable(GL12.GL_RESCALE_NORMAL);
+//
+//		if(entity.deathTicks > 0){
+//			GL11.glColor4f(0.1F, 0.1F, 0.1F, 1F);
+//		}
+//
+//		GL11.glRotatef(180.0F - entityYaw, 0.0F, 1.0F, 0.0F);
+//		GL11.glTranslatef(0, 2.5F, 0);
+//		this.renderAngle(entity, 1);
+//		GL11.glTranslatef(0, -2.5F, 0);
+//			tankk.renderPart("mat1");
+//		GL11.glRotatef(-(180.0F - entityYaw), 0.0F, 1.0F, 0.0F);
+//
+//		{
+////			GL11.glRotatef(180.0F - entity.rotation, 0.0F, 1.0F, 0.0F);
+//			tankk.renderPart("mat4");
+//			GL11.glTranslatef(0F, 2.08F, 1.05F);
+////			GL11.glRotatef(entity.rotationp, 1.0F, 0.0F, 0.0F);
+//			GL11.glTranslatef(0F, -2.08F, -1.05F);
+//			tankk.renderPart("mat5");
+//		}
+//
+//		GL11.glDisable(GL12.GL_RESCALE_NORMAL);
+//		GL11.glPopMatrix();
 		
 		
 	}

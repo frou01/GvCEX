@@ -4,14 +4,23 @@ import java.util.List;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import hmggvcmob.entity.IRideableTank;
+import hmggvcmob.entity.ITank;
+import hmgww2.Nation;
+import hmgww2.blocks.tile.TileEntityBase;
 import hmgww2.entity.*;
+import hmgww2.items.ItemIFFArmor;
 import hmgww2.mod_GVCWW2;
 import hmgww2.entity.EntityUSSRBase;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentTranslation;
- 
+import net.minecraft.world.World;
+
+import static handmadeguns.HandmadeGunsCore.proxy;
+
 public class WW2MessageKeyPressedHandler implements IMessageHandler<WW2MessageKeyPressed, IMessage> {
  
     @Override
@@ -436,6 +445,129 @@ public class WW2MessageKeyPressedHandler implements IMessageHandler<WW2MessageKe
 //				}
 //			}
 //		}
+	    World worldObj;
+	    if(ctx.side.isServer()) {
+		    worldObj = ctx.getServerHandler().playerEntity.worldObj;
+	    }else{
+		    worldObj = proxy.getCilentWorld();
+	    }
+	    if(message.fre != -1) {
+		    Entity targetEntity = worldObj.getEntityByID(message.fre);
+		    if(targetEntity instanceof EntityPlayer) {
+		    	EntityPlayer entityplayer = (EntityPlayer) targetEntity;
+			    if (entityplayer.getEquipmentInSlot(4) != null && entityplayer.getEquipmentInSlot(4).getItem() instanceof ItemIFFArmor) {
+				    Nation playernation = ((ItemIFFArmor) entityplayer.getEquipmentInSlot(4).getItem()).nation;
+				    int set_to_this_mode = message.key;
+				    String order = null;
+				    switch (set_to_this_mode){
+					    case 0:
+						    order = "follow";
+						    break;
+					    case 1:
+						    order = "wait";
+						    break;
+					    case 2:
+						    order = "free";
+						    break;
+					    case 3:
+						    order = "flag";
+						    break;
+					    case 4:
+						    order = "vfree";
+						    break;
+					    case 5:
+						    order = "vwait";
+						    break;
+				    }
+				    switch (playernation) {
+					    case JPN:
+						    entityplayer.addChatComponentMessage(new ChatComponentTranslation("hmgww2." + order + "jpn.name"));
+						    break;
+					    case USA:
+						    entityplayer.addChatComponentMessage(new ChatComponentTranslation("hmgww2." + order + "usa.name"));
+						    break;
+					    case GER:
+						    entityplayer.addChatComponentMessage(new ChatComponentTranslation("hmgww2." + order + "ger.name"));
+						    break;
+					    case USSR:
+						    entityplayer.addChatComponentMessage(new ChatComponentTranslation("hmgww2." + order + "rus.name"));
+						    break;
+				    }
+				    TileEntityBase targetflag = null;
+				    if(set_to_this_mode == 3){//search flag
+					    double disttoflag = -1;
+					    for (int i = 0;i < worldObj.loadedTileEntityList.size();i++) {
+						    Object aLoadedTileEntity = worldObj.loadedTileEntityList.get(i);
+						    if(aLoadedTileEntity instanceof TileEntityBase && playernation != ((TileEntityBase) aLoadedTileEntity).getnation()){
+						    	TileEntityBase temptile = (TileEntityBase) aLoadedTileEntity;
+							    double tempdisttoflag = entityplayer.getDistance(temptile.xCoord, temptile.yCoord, temptile.zCoord);
+							    if(disttoflag == -1 || tempdisttoflag< disttoflag){
+							    	System.out.println("debug" + temptile);
+							    	disttoflag = tempdisttoflag;
+								    targetflag = temptile;
+							    }
+						    }
+						    
+					    }
+				    }
+				    List llist = entityplayer.worldObj.getEntitiesWithinAABBExcludingEntity(null,
+						    entityplayer.boundingBox.addCoord(entityplayer.motionX, entityplayer.motionY, entityplayer.motionZ).expand(40D, 30D, 40D));
+				    if (llist != null) {
+					    for (int lj = 0; lj < llist.size(); lj++) {
+						    Entity entity1 = (Entity) llist.get(lj);
+						    if (entity1.canBeCollidedWith()) {
+							    if (entity1 instanceof EntityBases && playernation == ((EntityBases) entity1).getnation()) {
+								    switch (set_to_this_mode){
+									    case 0://follow me
+										    ((EntityBases) entity1).mode = 2;
+										    ((EntityBases) entity1).homeposX = (int) entityplayer.posX;
+										    ((EntityBases) entity1).homeposY = (int) entityplayer.posY;
+										    ((EntityBases) entity1).homeposZ = (int) entityplayer.posZ;
+										    ((EntityBases) entity1).master = entityplayer;
+									    	continue;
+									    case 1://wait here
+										    ((EntityBases) entity1).mode = 1;
+										    ((EntityBases) entity1).homeposX = (int) entityplayer.posX;
+										    ((EntityBases) entity1).homeposY = (int) entityplayer.posY;
+										    ((EntityBases) entity1).homeposZ = (int) entityplayer.posZ;
+										    continue;
+									    case 2://free
+										    ((EntityBases) entity1).mode = 0;
+										    continue;
+									    case 3://attack enemy flag
+										    if(targetflag != null) {
+											    ((EntityBases) entity1).mode = 1;
+											    ((EntityBases) entity1).homeposX = (int) targetflag.xCoord;
+											    ((EntityBases) entity1).homeposY = (int) targetflag.yCoord;
+											    ((EntityBases) entity1).homeposZ = (int) targetflag.zCoord;
+										    }else {
+											    ((EntityBases) entity1).mode = 1;
+											    ((EntityBases) entity1).homeposX = (int) entityplayer.posX;
+											    ((EntityBases) entity1).homeposY = (int) entityplayer.posY;
+											    ((EntityBases) entity1).homeposZ = (int) entityplayer.posZ;
+										    }
+										    continue;
+									    case 4:
+										    if(entity1 instanceof IRideableTank){
+											    ((EntityBases) entity1).mode = 0;
+										    }
+										    continue;
+									    case 5:
+										    if(entity1 instanceof IRideableTank){
+											    ((EntityBases) entity1).mode = 2;
+											    ((EntityBases) entity1).homeposX = (int) entityplayer.posX;
+											    ((EntityBases) entity1).homeposY = (int) entityplayer.posY;
+											    ((EntityBases) entity1).homeposZ = (int) entityplayer.posZ;
+										    }
+										    continue;
+								    }
+							    }
+						    }
+					    }
+				    }
+			    }
+		    }
+	    }
 	    return null;
     }
     

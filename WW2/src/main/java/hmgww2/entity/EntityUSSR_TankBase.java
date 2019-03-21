@@ -27,35 +27,30 @@ public class EntityUSSR_TankBase extends EntityUSSRBase implements IRideableTank
 {
 	// public int type;
 	
-	public TileEntityFlag spawnedtile = null;
 	int count_for_reset;
 	public double angletime;
 	public int fireCycle1;
 	public int fireCycle2;
-	public int cooltime;
-	public int magazine;
 	
 	public float subturretrotationYaw;
 	public float subturretrotationPitch;
 	
 	public int mgMagazine;
 	public int mgReloadProgress;
-	public TankBaseLogic baseLogic = new TankBaseLogic(this,0.3f,3.4f,true,"gvcmob:gvcmob.Leopard1Track");
+	public TankBaseLogic baseLogic = new TankBaseLogic(this,0.5f,2.0f,false,"gvcmob:gvcmob.T34Track");
 	ModifiedBoundingBox nboundingbox;
 	
-	Vector3d playerpos = new Vector3d(-0.514f,2.4f,-0.02124 + 0.2448);
-	Vector3d zoomingplayerpos = new Vector3d(-0.1638,2.58614,-0.44874 + 0.2448);
-	Vector3d subturretpos = new Vector3d(1.107,2.52,0.072);
-	Vector3d cannonpos = new Vector3d(0,1.692,-1.83906);
-	Vector3d turretpos = new Vector3d(0,0,-0.2448);
+	Vector3d playerpos = new Vector3d(-0.525,2.1D,0.0);
+	Vector3d zoomingplayerpos = new Vector3d(-0,2.2D,0.3);
+	Vector3d subturretpos = new Vector3d(0.4747,1.260,-2.235);
+	Vector3d cannonpos = new Vector3d(0,2.06F,-1.58F);
+	Vector3d turretpos = new Vector3d(0,0,-0.4488F);
 	
 	AITankAttack aiTankAttack;
 	
 	public TurretObj mainTurret;
 	public TurretObj subTurret;
 	public TurretObj[] turrets;
-	
-	public float armor;
 	
 	public float maxHealth;
 	
@@ -69,6 +64,8 @@ public class EntityUSSR_TankBase extends EntityUSSRBase implements IRideableTank
 				                                      0,1.5,0,3.4,3,6.5);
 		nboundingbox.rot.set(baseLogic.bodyRot);
 		GVCMobPlus.proxy.replaceBoundingbox(this,nboundingbox);
+		aiTankAttack = new AITankAttack(this,1600,100,10,10);
+		this.tasks.addTask(1,aiTankAttack);
 		nboundingbox.centerRotX = 0;
 		nboundingbox.centerRotY = 0;
 		nboundingbox.centerRotZ = 0;
@@ -79,40 +76,46 @@ public class EntityUSSR_TankBase extends EntityUSSRBase implements IRideableTank
 		{
 			mainTurret.onmotherPos = turretpos;
 			mainTurret.cannonpos = cannonpos;
+			mainTurret.turretspeedY = 1;
+			mainTurret.turretspeedP = 1;
 			mainTurret.currentEntity = this;
-			mainTurret.powor = 120;
+			mainTurret.powor = 80;
 			mainTurret.ex = 5.0F;
-			mainTurret.canex = false;
+			mainTurret.firesound = "gvcmob:gvcmob.TankFire";
+			mainTurret.spread = 1;
+			mainTurret.speed = 16;
+			mainTurret.canex = true;
 			mainTurret.guntype = 2;
 		}
 		subTurret = new TurretObj(worldObj);
 		{
 			subTurret.currentEntity = this;
-			subTurret.turretanglelimtPitchmin = -70;
+			subTurret.turretanglelimtPitchmin = -20;
 			subTurret.turretanglelimtPitchMax = 20;
+			subTurret.turretanglelimtYawmin = -20;
+			subTurret.turretanglelimtYawMax = 20;
 			subTurret.turretspeedY = 8;
 			subTurret.turretspeedP = 10;
 			subTurret.traverseSound = null;
 			
-			subTurret.turretYawCenterpos = subturretpos;
-			subTurret.cannonpos = subturretpos;
+			subTurret.onmotherPos = subturretpos;
 			subTurret.cycle_setting = 1;
 			subTurret.spread = 5;
 			subTurret.speed = 8;
-			subTurret.firesound = "handmadeguns:handmadeguns.HeavyMachineGun";
-			subTurret.flushscale  = 2;
+			subTurret.firesound = "handmadeguns:handmadeguns.fire";
+			subTurret.flushName  = "arrow";
+			subTurret.flushfuse  = 1;
+			subTurret.flushscale  = 1.5f;
 			
-			
-			subTurret.powor = 20;
+			subTurret.powor = 8;
 			subTurret.ex = 0;
 			subTurret.canex = false;
 			subTurret.guntype = 0;
 			
-			subTurret.magazineMax = 250;
-			subTurret.reloadSetting = 300;
+			subTurret.magazineMax = 47;
+			subTurret.reloadSetting = 100;
 			subTurret.flushoffset = 0.5f;
 		}
-		mainTurret.addchild(subTurret);
 		
 		turrets = new TurretObj[]{mainTurret,subTurret};
 	}
@@ -236,6 +239,10 @@ public class EntityUSSR_TankBase extends EntityUSSRBase implements IRideableTank
 					homeposY = (int) posY;
 					homeposZ = (int) posZ;
 				}else if(this.getMobMode() == 2){
+					p_70085_1_.addChatComponentMessage(new ChatComponentTranslation("wait "));
+					mode = 3;
+					this.setMobMode(3);
+				}else if(this.getMobMode() == 3){
 					mode = 0;
 					this.setMobMode(0);
 				}
@@ -260,7 +267,7 @@ public class EntityUSSR_TankBase extends EntityUSSRBase implements IRideableTank
 			Vector3d temp2 = mainTurret.getGlobalVector_fromLocalVector_onTurretPoint(tempplayerPos);
 			temp.add(temp2);
 			transformVecforMinecraft(temp);
-			temp.add(playeroffsetter);
+//			temp.add(playeroffsetter);
 //			System.out.println(temp);
 			this.riddenByEntity.setPosition(temp.x,
 					temp.y,
@@ -327,19 +334,6 @@ public class EntityUSSR_TankBase extends EntityUSSRBase implements IRideableTank
 		}
 	}
 	
-	public boolean attackEntityFrom(DamageSource source, float par2) {
-		if (this.riddenByEntity == source.getEntity()) {
-			return false;
-		} else {
-			if (par2 <= armor) {
-				if (!source.getDamageType().equals("mob")) this.playSound("gvcmob:gvcmob.ArmorBounce", 0.5F, 1F);
-				return false;
-			}
-			this.playSound("gvcmob:gvcmob.armorhit", 0.5F, 1F);
-			return super.attackEntityFrom(source,par2);
-		}
-		
-	}
 	
 	
 	
@@ -364,8 +358,6 @@ public class EntityUSSR_TankBase extends EntityUSSRBase implements IRideableTank
 				fireCycle1 = mainTurret.cycle_timer;
 				setremainMg(mgMagazine);
 				setCanonnreloadcycle(fireCycle1);
-				fireCycle1--;
-				fireCycle2--;
 			}
 			++this.soundtick;
 			if (this.soundtick > 10) {
@@ -402,6 +394,7 @@ public class EntityUSSR_TankBase extends EntityUSSRBase implements IRideableTank
 		}
 		baseLogic.updateCommon();
 		mainTurret.update(baseLogic.bodyRot,new Vector3d(this.posX,this.posY,-this.posZ));
+		if(subTurret != null)subTurret.update(baseLogic.bodyRot,new Vector3d(this.posX,this.posY,-this.posZ));
 		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.3D);
 	}
 	public void mainFire(Entity target){
@@ -429,24 +422,30 @@ public class EntityUSSR_TankBase extends EntityUSSRBase implements IRideableTank
 		mainTurret.fire();
 	}
 	public void subFire(Entity target){
-		subTurret.currentEntity = this;
-		if(subTurret.aimToEntity(target)){
-			subTurret.fire();
+		if(subTurret != null) {
+			subTurret.currentEntity = this;
+			if (subTurret.aimToEntity(target)) {
+				subTurret.fire();
+			}
+			subturretrotationYaw = (float) subTurret.turretrotationYaw;
+			subturretrotationPitch = (float) subTurret.turretrotationPitch;
 		}
-		subturretrotationYaw = (float) subTurret.turretrotationYaw;
-		subturretrotationPitch = (float) subTurret.turretrotationPitch;
 	}
 	public void subFire(){
+		if(subTurret != null) {
+			subTurret.currentEntity = riddenByEntity;
+			subTurret.fire();
+		}
 		
-		subTurret.currentEntity = riddenByEntity;
-		subTurret.fire();
 	}
 	
 	public void mgAim(float targetyaw,float targetpitch){
-		subTurret.currentEntity = this;
-		subTurret.aimtoAngle(targetyaw,targetpitch);
-		subturretrotationYaw = (float) subTurret.turretrotationYaw;
-		subturretrotationPitch = (float) subTurret.turretrotationPitch;
+		if(subTurret != null) {
+			subTurret.currentEntity = this;
+			subTurret.aimtoAngle(targetyaw, targetpitch);
+			subturretrotationYaw = (float) subTurret.turretrotationYaw;
+			subturretrotationPitch = (float) subTurret.turretrotationPitch;
+		}
 	}
 	
 	@Override

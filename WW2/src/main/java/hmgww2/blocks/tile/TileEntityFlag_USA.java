@@ -1,5 +1,6 @@
 package hmgww2.blocks.tile;
 
+import hmgww2.Nation;
 import hmgww2.mod_GVCWW2;
 import hmgww2.entity.EntityUSABase;
 import hmgww2.entity.EntityUSA_S;
@@ -34,6 +35,11 @@ public class TileEntityFlag_USA extends TileEntityBase
 	}
 	protected void SpawnEntity2(World par1World, int par1, int par2, int par3, int par4, int par5, int par6) {
 	
+	}
+	
+	@Override
+	public Nation getnation() {
+		return Nation.USA;
 	}
 	
 	protected void SpawnEntity(World par1World, int par1, int par2, int par3, int par4, int par5, int par6) {

@@ -20,13 +20,9 @@ public class EntityUSSR_FighterBase extends EntityUSSRBase implements ImultiRide
 	PlaneBaseLogic baseLogic;
 	
 	
-	public int rocket = 2;
 	public float maxhealth = 150;
 	public float angletime;
 	public int fireCycle1;
-	public int cooltime;
-	public int magazine;
-	public float throttle;
 	
 	public EntityUSSR_FighterBase(World par1World)
 	{
@@ -39,9 +35,9 @@ public class EntityUSSR_FighterBase extends EntityUSSRBase implements ImultiRide
 		ignoreFrustumCheck = true;
 		this.fireCycle1 = 1;
 		baseLogic = new PlaneBaseLogic(worldObj,this);
-		baseLogic.speedfactor = 0.02f;
-		baseLogic.liftfactor = 0.06f;
-		baseLogic.dragfactor = 0.0003f;
+		baseLogic.speedfactor = 0.05f;
+		baseLogic.liftfactor = 0.9f;
+		baseLogic.dragfactor = 0.2f;
 	}
 	
 	public double getMountedYOffset() {
@@ -80,12 +76,28 @@ public class EntityUSSR_FighterBase extends EntityUSSRBase implements ImultiRide
 	
 	public void onUpdate()
 	{
+		double[] pos = new double[]{this.posX,this.posY,this.posZ};
+		double[] motion = new double[]{this.motionX,this.motionY,this.motionZ};
+		boolean onground = this.onGround;
 		super.onUpdate();
+		this.onGround = onground;
+		this.posX = pos[0];
+		this.posY = pos[1];
+		this.posZ = pos[2];
+		this.motionX = motion[0];
+		this.motionY = motion[1];
+		this.motionZ = motion[2];
+		if(baseLogic.childEntities[0] != null && baseLogic.childEntities[0].riddenByEntity == null){
+			motionX = 0;
+			motionY = 0;
+			motionZ = 0;
+		}
 		baseLogic.onUpdate();
 	}
+	
 	public void setVelocity(double p_70016_1_, double p_70016_3_, double p_70016_5_)
 	{
-		baseLogic.setVelocity(p_70016_1_,p_70016_3_,p_70016_5_);
+//		baseLogic.setVelocity(p_70016_1_,p_70016_3_,p_70016_5_);
 	}
 	@Override
 	public int getfirecyclesettings1() {
@@ -213,6 +225,10 @@ public class EntityUSSR_FighterBase extends EntityUSSRBase implements ImultiRide
 	}
 	
 	public boolean isConverting() {
+		return false;
+	}
+	
+	public boolean canBePushed(){
 		return false;
 	}
 }

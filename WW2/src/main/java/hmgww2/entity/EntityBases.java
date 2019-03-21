@@ -28,10 +28,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -45,6 +42,9 @@ import static net.minecraft.util.MathHelper.wrapAngleTo180_float;
 public abstract class EntityBases extends EntityCreature implements IFF,INpc,IGVCmob {
 	public int deathTicks;
 	public EntityLivingBase fri;
+	
+	
+	public float armor = 0;
 	
 	public boolean vehicle = false;
 	public boolean opentop = true;
@@ -180,6 +180,15 @@ public abstract class EntityBases extends EntityCreature implements IFF,INpc,IGV
 			}
 		}
 		if(this.getHeldItem() != null && this.aiAttackGun != null){
+			
+			if(this.rand.nextInt(10) == 0){
+				rndyaw = this.rand.nextGaussian() * (double)(this.rand.nextBoolean() ? -1 : 1)*spread;
+				rndpitch = this.rand.nextGaussian() * (double)(this.rand.nextBoolean() ? -1 : 1)*spread;
+			}else {
+				rndyaw += this.rand.nextGaussian() * (double)(this.rand.nextBoolean() ? -1 : 1)*spread/10;
+				rndpitch += this.rand.nextGaussian() * (double)(this.rand.nextBoolean() ? -1 : 1)*spread/10;
+			}
+			
 			this.rotationPitch+=rndpitch;
 			this.rotationYaw+=rndyaw;
 			float backpitch = this.rotationPitch;
@@ -265,36 +274,7 @@ public abstract class EntityBases extends EntityCreature implements IFF,INpc,IGV
 				((PlacedGunEntity) ridingEntity).firing = false;
 			}
 		}
-		if(this instanceof IRideableTank){
-			if(mode == 2) {
-				if (this.getAttackTarget() == null && this.getDistanceSq(homeposX+1, homeposY+1, homeposZ+1)>256) {
-					if(this.getNavigator().getPath() != null && this.getNavigator().getPath().getFinalPathPoint().xCoord != homeposX+1 && this.getNavigator().getPath().getFinalPathPoint().xCoord != homeposY && this.getNavigator().getPath().getFinalPathPoint().xCoord != homeposZ+1)this.getNavigator().setPath(worldForPathfind.getEntityPathToXYZ(this, homeposX+1, homeposY, homeposZ+1, 80f, true, false, false, true), 1.0d);
-					this.getNavigator().setPath(worldForPathfind.getEntityPathToXYZ(this, homeposX+1, homeposY, homeposZ+1, 80f, true, false, false, true), 1.2);
-				}
-			}else if(mode == 1) {
-				if (master != null) {
-					homeposX = (int) master.posX;
-					homeposY = (int) master.posY;
-					homeposZ = (int) master.posZ;
-					if ((this.getAttackTarget() == null && this.getDistanceSq(homeposX, homeposY, homeposZ) > 64) || this.getDistanceSq(homeposX, homeposY + 1, homeposZ) > 256) {
-						if (resetFollowpathCnt > 10) {
-							homeposX = (int) master.posX + moveoffsetx;
-							homeposY = (int) master.posY;
-							homeposZ = (int) master.posZ + moveoffsetz;
-							resetFollowpathCnt = 0;
-							this.getNavigator().setPath(worldForPathfind.getEntityPathToXYZ(this, homeposX, homeposY, homeposZ, 60f, true, false, false, true), 1.2);
-						}
-					} else {
-						moveoffsetx = rand.nextInt(12) * (this.rand.nextBoolean() ? -1 : 1);
-						moveoffsetz = rand.nextInt(12) * (this.rand.nextBoolean() ? -1 : 1);
-						resetFollowpathCnt = 0;
-					}
-					resetFollowpathCnt++;
-				}else {
-					mode = 2;
-				}
-			}
-		}else {
+		{
 			if(mode == 1) {
 				if (this.getAttackTarget() == null && this.getDistanceSq(homeposX+1, homeposY+1, homeposZ+1)>256) {
 					if(this.getNavigator().getPath() != null && this.getNavigator().getPath().getFinalPathPoint().xCoord != homeposX+1 && this.getNavigator().getPath().getFinalPathPoint().xCoord != homeposY && this.getNavigator().getPath().getFinalPathPoint().xCoord != homeposZ+1)this.getNavigator().setPath(worldForPathfind.getEntityPathToXYZ(this, homeposX+1, homeposY, homeposZ+1, 80f, true, false, false, true), 1.0d);
@@ -323,6 +303,10 @@ public abstract class EntityBases extends EntityCreature implements IFF,INpc,IGV
 				} else {
 					mode = 0;
 				}
+			}else if(mode == 3){
+			
+			}else if(mode == 4){
+			
 			}
 		}
 		this.getEntityData().setBoolean("HMGisUsingItem",false);
@@ -383,7 +367,18 @@ public abstract class EntityBases extends EntityCreature implements IFF,INpc,IGV
 	
 	
 	
-	
+	public boolean attackEntityFrom(DamageSource source, float par2) {
+		if (this.riddenByEntity == source.getEntity()) {
+			return false;
+		} else {
+			if (par2 <= armor) {
+				if (!source.getDamageType().equals("mob")) this.playSound("gvcmob:gvcmob.ArmorBounce", 0.5F, 1F);
+				return false;
+			}
+			if(armor != 0)this.playSound("gvcmob:gvcmob.armorhit", 0.5F, 1F);
+			return super.attackEntityFrom(source,par2-armor);
+		}
+	}
 	
 	
 	
@@ -573,7 +568,7 @@ public abstract class EntityBases extends EntityCreature implements IFF,INpc,IGV
 		}else if(entity instanceof EntityPlayer && ((EntityPlayer) entity).getEquipmentInSlot(4)!=null  && ((EntityPlayer) entity).getEquipmentInSlot(4).getItem() != null){
 			return this.getnation() == ((ItemIFFArmor) ((EntityPlayer) entity).getEquipmentInSlot(4).getItem()).nation;
 		}else if(islmmloaded && entity instanceof LMM_EntityLittleMaid && ((LMM_EntityLittleMaid) entity).getMaidMasterEntity() != null){
-			if((((LMM_EntityLittleMaid) entity).getMaidMasterEntity()).getEquipmentInSlot(4).getItem() != null) return this.getnation() == ((ItemIFFArmor) (((LMM_EntityLittleMaid) entity).getMaidMasterEntity()).getEquipmentInSlot(4).getItem()).nation;
+			if((((LMM_EntityLittleMaid) entity).getMaidMasterEntity()).getEquipmentInSlot(4) != null && (((LMM_EntityLittleMaid) entity).getMaidMasterEntity()).getEquipmentInSlot(4).getItem() != null) return this.getnation() == ((ItemIFFArmor) (((LMM_EntityLittleMaid) entity).getMaidMasterEntity()).getEquipmentInSlot(4).getItem()).nation;
 		}
 		return false;
 	}

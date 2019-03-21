@@ -1,5 +1,6 @@
 package hmgww2.blocks.tile;
 
+import hmgww2.Nation;
 import hmgww2.mod_GVCWW2;
 import hmgww2.entity.EntityGERBase;
 import hmgww2.entity.EntityGER_S;
@@ -20,6 +21,7 @@ import net.minecraft.world.World;
  */
 public class TileEntityFlag2_GER extends TileEntityBase
 {
+	//統合したみはあるけどとりあえずそのままにしておく
 	
 	public void updateEntity() {
 		this.maxs = mod_GVCWW2.cfg_spawnblock_limit_s;
@@ -142,5 +144,10 @@ public class TileEntityFlag2_GER extends TileEntityBase
 				}
 			}
 		}
+	}
+	
+	@Override
+	public Nation getnation() {
+		return Nation.GER;
 	}
 }

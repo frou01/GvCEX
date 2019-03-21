@@ -53,7 +53,7 @@ public class GVCEntityTank extends EntityGBase implements ITank
 
 	Vector3d playerpos = new Vector3d(-0.525,2.1D,0.0);
 	Vector3d zoomingplayerpos = new Vector3d(-0,2.2D,0.3);
-	Vector3d subturretpos = new Vector3d(0.4747,1.260,-2.235);
+	Vector3d subturretpos = new Vector3d(-0.4747,1.260,-2.235);
 	Vector3d cannonpos = new Vector3d(0,2.06F,-1.58F);
 	Vector3d turretpos = new Vector3d(0,0,-0.4488F);
 

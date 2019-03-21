@@ -1,3 +1,4 @@
 {
-"handmadeguns.Ricochet": {"category": "neutral","sounds": ["Ricochet"]}
+"handmadeguns.Ricochet": {"category": "neutral","sounds": ["Ricochet"]},
+"handmadeguns.bulletflyby": {"category": "neutral","sounds": ["bulletflyby"]}
 }
