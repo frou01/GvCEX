@@ -56,7 +56,6 @@ public class CommonSideProxyGVCM {
 	}
 	public void replaceBoundingbox(Entity instance,AxisAlignedBB value){
 		if(boundingboxField == null){
-			//TODO �����[�X�O�Ƀ`�F�b�N!
 			try {
 				boundingboxField = Entity.class.getDeclaredField("field_70121_D");
 				modifiersField = Field.class.getDeclaredField("modifiers");

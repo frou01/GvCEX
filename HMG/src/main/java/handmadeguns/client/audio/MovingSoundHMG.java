@@ -42,7 +42,7 @@ public class MovingSoundHMG extends MovingSound
 		else
 		{
 			prevdisttoPlayer = disttoPlayer;
-			disttoPlayer = attachedEntity.getDistanceSqToEntity(proxy.getEntityPlayerInstance());
+			disttoPlayer = attachedEntity.getDistanceSqToEntity(proxy.getMCInstance().renderViewEntity);
 			if(prevdisttoPlayer != -1) {
 				float doppler = (float) (sqrt(prevdisttoPlayer) - sqrt(disttoPlayer));
 				float tempsp =  (318.8f / (318.8f - doppler * 20f));

@@ -1,9 +1,7 @@
 package hmggvcmob.entity;
 
-public interface IRideableTank extends ITank{
+public interface IRideableTank extends ITank,Hasmode{
 
     void mainFire();
     void subFire();
-
-    boolean standalone();
 }

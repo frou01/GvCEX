@@ -66,6 +66,9 @@ public class GVCEntityPlane extends Entity implements ImultiRideableVehicle,Ipla
 		ignoreFrustumCheck = true;
 		this.fireCycle1 = 1;
 		baseLogic = new PlaneBaseLogic(worldObj,this);
+		baseLogic.childInfo[0].pos[0] = 0;
+		baseLogic.childInfo[0].pos[1] = 1.1;
+		baseLogic.childInfo[0].pos[2] = 3;
 		baseLogic.speedfactor = 0.02f;
 		baseLogic.liftfactor = 0.06f;
 		baseLogic.dragfactor = 0.0003f;

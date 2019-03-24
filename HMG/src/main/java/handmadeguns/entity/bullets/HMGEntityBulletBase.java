@@ -651,7 +651,7 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
             }
             f2 = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionZ * this.motionZ + this.motionY * this.motionY);
             if(homingEntity != null) {
-                Vec3 course = Vec3.createVectorHelper(homingEntity.posX - this.posX, homingEntity.posY + homingEntity.getEyeHeight() - this.posY, homingEntity.posZ - this.posZ);
+                Vec3 course = Vec3.createVectorHelper(homingEntity.posX - this.posX, homingEntity.posY + homingEntity.height/2 - this.posY, homingEntity.posZ - this.posZ);
                 course = course.normalize();
                 backupmotion = Vec3.createVectorHelper(motionX,motionY,motionZ);
                 backupmotion = backupmotion.normalize();

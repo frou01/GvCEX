@@ -23,6 +23,7 @@
 "hmgww2.sound_heli": { "category": "neutral","sounds": ["hmgww2:sound_heli"]},
 "hmgww2.sound_tank": { "category": "neutral","sounds": ["hmgww2:sound_tank"]},
 "hmgww2.sound_pera": { "category": "neutral","sounds": ["hmgww2:sound_pera"]},
+"hmgww2.katyusha": { "category": "neutral","sounds": ["hmgww2:katyusha"]},
 
 "hmgww2.reload": { "category": "neutral","sounds": ["hmgww2:reload"]}
 }

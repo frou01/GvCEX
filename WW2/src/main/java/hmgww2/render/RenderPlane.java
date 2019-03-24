@@ -17,9 +17,12 @@ public class RenderPlane extends Render {
 	private ResourceLocation skeletonTexturesz = new ResourceLocation("hmgww2:textures/mob/rus/T34_76.png");
 	private IModelCustom tankk = AdvancedModelLoader.loadModel(new ResourceLocation("hmgww2:textures/mob/rus/T34_76.obj"));
 	
-	public RenderPlane(String texture, String model) {
+	double[] perapos = new double[]{0,1.2,0};
+	
+	public RenderPlane(String texture, String model,double[] perapos) {
 		skeletonTexturesz = new ResourceLocation(texture);
 		tankk = AdvancedModelLoader.loadModel(new ResourceLocation(model));
+		this.perapos = perapos;
 	}
 	
 	@Override
@@ -43,11 +46,19 @@ public class RenderPlane extends Render {
 			GL11.glRotatef(180F, 0.0F, 1.0F, 0.0F);
 			GL11.glEnable(GL12.GL_RESCALE_NORMAL);
 			PlaneBaseLogic baseLogic = ((Iplane) entity).getBaseLogic();
+			GL11.glTranslatef((float) baseLogic.rotcenter[0], (float) baseLogic.rotcenter[1], (float) baseLogic.rotcenter[2]);
 			GL11.glRotatef(180.0F - (baseLogic.bodyrotationYaw + (baseLogic.bodyrotationYaw - baseLogic.prevbodyrotationYaw) * partialTicks), 0.0F, 1.0F, 0.0F);
 			GL11.glRotatef(baseLogic.bodyrotationPitch, 1.0F, 0.0F, 0.0F);
 			GL11.glRotatef(baseLogic.bodyrotationRoll, 0.0F, 0.0F, 1.0F);
-			tankk.renderPart("mat1");
-			
+			GL11.glTranslatef((float) -baseLogic.rotcenter[0], (float) -baseLogic.rotcenter[1], (float) -baseLogic.rotcenter[2]);
+			tankk.renderPart("obj1");
+			if(entity.onGround){
+				tankk.renderPart("obj8");
+			}
+			GL11.glTranslatef((float) perapos[0], (float) perapos[1], (float) perapos[2]);
+			GL11.glRotatef((baseLogic.perapos + (baseLogic.perapos - baseLogic.prevperapos) * partialTicks), 0.0F, 0.0F, 1.0F);
+			GL11.glTranslatef((float) -perapos[0], (float) -perapos[1], (float) -perapos[2]);
+			tankk.renderPart("obj7");
 			GL11.glPopMatrix();
 		}
 		

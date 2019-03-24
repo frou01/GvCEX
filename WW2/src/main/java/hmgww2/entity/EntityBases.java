@@ -10,6 +10,7 @@ import hmggvcmob.ai.AIAttackGun;
 import hmggvcmob.ai.AIHurtByTarget;
 import hmggvcmob.ai.AINearestAttackableTarget;
 import hmggvcmob.ai.AIattackOnCollide;
+import hmggvcmob.entity.Hasmode;
 import hmggvcmob.entity.IGVCmob;
 import hmggvcmob.entity.IRideableTank;
 import hmggvcmob.entity.IdriveableVehicle;
@@ -39,7 +40,7 @@ import static hmgww2.mod_GVCWW2.cfg_canusePlacedGun;
 import static java.lang.Math.abs;
 import static net.minecraft.util.MathHelper.wrapAngleTo180_float;
 
-public abstract class EntityBases extends EntityCreature implements IFF,INpc,IGVCmob {
+public abstract class EntityBases extends EntityCreature implements IFF,INpc,IGVCmob,Hasmode {
 	public int deathTicks;
 	public EntityLivingBase fri;
 	
@@ -154,6 +155,8 @@ public abstract class EntityBases extends EntityCreature implements IFF,INpc,IGV
 		this.targetTasks.addTask(1, new AIHurtByTarget(this, true));
 		this.targetTasks.addTask(2, new AINearestAttackableTarget(this, EntityBases.class, 0, true));
 		this.targetTasks.addTask(3, new AINearestAttackableTarget(this, EntityLiving.class, 0, true, false, IMob.mobSelector));
+		
+		renderDistanceWeight = 16384;
 	}
 	
 	
@@ -318,7 +321,7 @@ public abstract class EntityBases extends EntityCreature implements IFF,INpc,IGV
 	
 	protected boolean canDespawn()
 	{
-		return cfg_candespawn;
+		return this.getAttackTarget() == null && cfg_candespawn;
 	}
 	
 	protected void applyEntityAttributes() {
@@ -372,7 +375,7 @@ public abstract class EntityBases extends EntityCreature implements IFF,INpc,IGV
 			return false;
 		} else {
 			if (par2 <= armor) {
-				if (!source.getDamageType().equals("mob")) this.playSound("gvcmob:gvcmob.ArmorBounce", 0.5F, 1F);
+				if(armor != 0)if (!source.getDamageType().equals("mob")) this.playSound("gvcmob:gvcmob.ArmorBounce", 0.5F, 1F);
 				return false;
 			}
 			if(armor != 0)this.playSound("gvcmob:gvcmob.armorhit", 0.5F, 1F);
@@ -619,5 +622,11 @@ public abstract class EntityBases extends EntityCreature implements IFF,INpc,IGV
 			return 2;
 		}
 		return 0;
+	}
+	public boolean standalone(){
+		return false;
+	}
+	public double[] getwaitingpos() {
+		return new double[]{homeposX,homeposY,homeposZ};
 	}
 }

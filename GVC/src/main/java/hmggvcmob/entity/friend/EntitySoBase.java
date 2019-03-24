@@ -249,4 +249,7 @@ public class EntitySoBase extends EntitySoBases implements IFF,IGVCmob {
 	public void setspawnedtile(TileEntity flag) {
 		spawnedtile = flag;
 	}
+	public double[] getwaitingpos() {
+		return new double[]{};
+	}
 }

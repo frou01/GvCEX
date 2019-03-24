@@ -532,7 +532,10 @@ public class WW2MessageKeyPressedHandler implements IMessageHandler<WW2MessageKe
 										    ((EntityBases) entity1).homeposZ = (int) entityplayer.posZ;
 										    continue;
 									    case 2://free
-										    ((EntityBases) entity1).mode = 0;
+										    ((EntityBases) entity1).mode = 1;
+										    ((EntityBases) entity1).homeposX = (int) entityplayer.posX;
+										    ((EntityBases) entity1).homeposY = (int) entityplayer.posY;
+										    ((EntityBases) entity1).homeposZ = (int) entityplayer.posZ;
 										    continue;
 									    case 3://attack enemy flag
 										    if(targetflag != null) {

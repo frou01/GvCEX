@@ -330,4 +330,6 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
 	public boolean shouldDismountInWater(Entity entity){
 		return false;
 	}
+	
+	
 }

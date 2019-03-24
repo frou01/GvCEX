@@ -721,7 +721,7 @@ public class GVCEntityPMCBMP extends EntityPMCBase implements IRideableTank,ICon
 //            }
 //        }
 	}
-
+	
 	@Override
 	public boolean standalone() {
 		return mode != 0;

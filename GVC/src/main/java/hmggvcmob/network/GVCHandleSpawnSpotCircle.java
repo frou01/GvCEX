@@ -21,7 +21,7 @@ public class GVCHandleSpawnSpotCircle implements IMessageHandler<GVCPacketSpawnS
 		}else{
 			world = proxy.getCilentWorld();
 		}
-		if(message.dimid == world.provider.dimensionId) {
+		if(message != null && world != null && world.provider != null && message.dimid == world.provider.dimensionId) {
 			ArrayList<SpotObj> spotObjArrayList = spots_needSpawn_Client.get(world.provider.dimensionId);
 			spotObjArrayList.addAll(message.recievedSpotobj);
 		}

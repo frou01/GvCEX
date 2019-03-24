@@ -648,41 +648,41 @@ public class mod_GVCWW2 {
 	@EventHandler
 	public void init(FMLInitializationEvent pEvent) {
 		int D = Short.MAX_VALUE;
+		int id = 0;
+		EntityRegistry.registerModEntity(EntityJPN_S.class, "EntityJPN_S", ++id, this,  250, 3, true);
+		EntityRegistry.registerModEntity(EntityJPN_Tank.class, "EntityJPN_Tank", ++id, this,  250, 3, true);
+		EntityRegistry.registerModEntity(EntityJPN_Fighter.class, "EntityJPN_Fighter", ++id, this,  500, 3, true);
+		EntityRegistry.registerModEntity(EntityJPN_TankAA.class, "EntityJPN_TankAA", ++id, this,  250, 3, true);
+		EntityRegistry.registerModEntity(EntityJPN_TankSPG.class, "EntityJPN_TankSPG", ++id, this,  250, 3, true);
+		EntityRegistry.registerModEntity(EntityJPN_FighterA.class, "EntityJPN_FighterA", ++id, this,  500, 3, true);
+		EntityRegistry.registerModEntity(EntityJPN_ShipB.class, "EntityJPN_ShipB", ++id, this,  250, 3, true);
+		EntityRegistry.registerModEntity(EntityJPN_ShipD.class, "EntityJPN_ShipD", ++id, this,  250, 3, true);
 		
-		EntityRegistry.registerModEntity(EntityJPN_S.class, "EntityJPN_S", 1, this, 128, 5, true);
-		EntityRegistry.registerModEntity(EntityJPN_Tank.class, "EntityJPN_Tank", 2, this, 128, 5, true);
-		EntityRegistry.registerModEntity(EntityJPN_Fighter.class, "EntityJPN_Fighter", 3, this, 128, 5, true);
-		EntityRegistry.registerModEntity(EntityJPN_TankAA.class, "EntityJPN_TankAA", 4, this, 128, 5, true);
-		EntityRegistry.registerModEntity(EntityJPN_TankSPG.class, "EntityJPN_TankSPG", 5, this, 128, 5, true);
-		EntityRegistry.registerModEntity(EntityJPN_FighterA.class, "EntityJPN_FighterA", 6, this, 128, 5, true);
-		EntityRegistry.registerModEntity(EntityJPN_ShipB.class, "EntityJPN_ShipB", 7, this, 128, 5, true);
-		EntityRegistry.registerModEntity(EntityJPN_ShipD.class, "EntityJPN_ShipD", 8, this, 128, 5, true);
 		
+		EntityRegistry.registerModEntity(EntityUSA_S.class, "EntityUSA_S", ++id, this,  250, 3, true);
+		EntityRegistry.registerModEntity(EntityUSA_Tank.class, "EntityUSA_Tank", ++id, this,  250, 3, true);
+		EntityRegistry.registerModEntity(EntityUSA_Fighter.class, "EntityUSA_Fighter", ++id, this,  500, 3, true);
+		EntityRegistry.registerModEntity(EntityUSA_TankAA.class, "EntityUSA_TankAA", ++id, this,  250, 3, true);
+		EntityRegistry.registerModEntity(EntityUSA_TankSPG.class, "EntityUSA_TankSPG", ++id, this,  250, 3, true);
+		EntityRegistry.registerModEntity(EntityUSA_FighterA.class, "EntityUSA_FighterA", ++id, this,  500, 3, true);
+		EntityRegistry.registerModEntity(EntityUSA_ShipB.class, "EntityUSA_ShipB", ++id, this,  250, 3, true);
+		EntityRegistry.registerModEntity(EntityUSA_ShipD.class, "EntityUSA_ShipD", ++id, this,  250, 3, true);
 		
-		EntityRegistry.registerModEntity(EntityUSA_S.class, "EntityUSA_S", 21, this, 128, 5, true);
-		EntityRegistry.registerModEntity(EntityUSA_Tank.class, "EntityUSA_Tank", 22, this, 128, 5, true);
-		EntityRegistry.registerModEntity(EntityUSA_Fighter.class, "EntityUSA_Fighter", 23, this, 128, 5, true);
-		EntityRegistry.registerModEntity(EntityUSA_TankAA.class, "EntityUSA_TankAA", 24, this, 128, 5, true);
-		EntityRegistry.registerModEntity(EntityUSA_TankSPG.class, "EntityUSA_TankSPG", 25, this, 128, 5, true);
-		EntityRegistry.registerModEntity(EntityUSA_FighterA.class, "EntityUSA_FighterA", 26, this, 128, 5, true);
-		EntityRegistry.registerModEntity(EntityUSA_ShipB.class, "EntityUSA_ShipB", 27, this, 128, 5, true);
-		EntityRegistry.registerModEntity(EntityUSA_ShipD.class, "EntityUSA_ShipD", 28, this, 128, 5, true);
+		EntityRegistry.registerModEntity(EntityGER_S.class, "EntityGER_S", ++id, this,  250, 3, true);
+		EntityRegistry.registerModEntity(EntityGER_Tank.class, "EntityGER_Tank", ++id, this,  250, 3, true);
+		EntityRegistry.registerModEntity(EntityGER_Fighter.class, "EntityGER_Fighter", ++id, this,  500, 3, true);
+		EntityRegistry.registerModEntity(EntityGER_TankAA.class, "EntityGER_TankAA", ++id, this,  250, 3, true);
+		EntityRegistry.registerModEntity(EntityGER_TankSPG.class, "EntityGER_TankSPG", ++id, this,  250, 3, true);
+		EntityRegistry.registerModEntity(EntityGER_FighterA.class, "EntityGER_FighterA", ++id, this,  500, 3, true);
+		EntityRegistry.registerModEntity(EntityGER_TankH.class, "EntityGER_TankH", ++id, this,  250, 3, true);
 		
-		EntityRegistry.registerModEntity(EntityGER_S.class, "EntityGER_S", 41, this, 128, 5, true);
-		EntityRegistry.registerModEntity(EntityGER_Tank.class, "EntityGER_Tank", 42, this, 128, 5, true);
-		EntityRegistry.registerModEntity(EntityGER_Fighter.class, "EntityGER_Fighter", 43, this, 128, 5, true);
-		EntityRegistry.registerModEntity(EntityGER_TankAA.class, "EntityGER_TankAA", 44, this, 128, 5, true);
-		EntityRegistry.registerModEntity(EntityGER_TankSPG.class, "EntityGER_TankSPG", 45, this, 128, 5, true);
-		EntityRegistry.registerModEntity(EntityGER_FighterA.class, "EntityGER_FighterA", 46, this, 128, 5, true);
-		EntityRegistry.registerModEntity(EntityGER_TankH.class, "EntityGER_TankH", 47, this, 128, 5, true);
-		
-		EntityRegistry.registerModEntity(EntityUSSR_S.class, "EntityUSSR_S", 61, this, 128, 5, true);
-		EntityRegistry.registerModEntity(EntityUSSR_Tank.class, "EntityUSSR_Tank", 62, this, 128, 5, true);
-		EntityRegistry.registerModEntity(EntityUSSR_Fighter.class, "EntityUSSR_Fighter", 63, this, 250, 3, true);
-		EntityRegistry.registerModEntity(EntityUSSR_TankAA.class, "EntityUSSR_TankAA", 64, this, 128, 5, true);
-		EntityRegistry.registerModEntity(EntityUSSR_TankSPG.class, "EntityUSSR_TankSPG", 65, this, 128, 5, true);
-		EntityRegistry.registerModEntity(EntityUSSR_FighterA.class, "EntityUSSR_FighterA", 66, this, 128, 5, true);
-		EntityRegistry.registerModEntity(EntityUSSR_TankH.class, "EntityUSSR_TankH", 67, this, 128, 5, true);
+		EntityRegistry.registerModEntity(EntityUSSR_S.class, "EntityUSSR_S", ++id, this,  250, 3, true);
+		EntityRegistry.registerModEntity(EntityUSSR_Tank.class, "EntityUSSR_Tank", ++id, this,  250, 3, true);
+		EntityRegistry.registerModEntity(EntityUSSR_Fighter.class, "EntityUSSR_Fighter", ++id, this, 500, 3, true);
+		EntityRegistry.registerModEntity(EntityUSSR_TankAA.class, "EntityUSSR_TankAA", ++id, this,  250, 3, true);
+		EntityRegistry.registerModEntity(EntityUSSR_TankSPG.class, "EntityUSSR_TankSPG", ++id, this,  250, 3, true);
+		EntityRegistry.registerModEntity(EntityUSSR_FighterA.class, "EntityUSSR_FighterA", ++id, this,  500, 3, true);
+		EntityRegistry.registerModEntity(EntityUSSR_TankH.class, "EntityUSSR_TankH", ++id, this,  250, 3, true);
 		
 		
 		if(pEvent.getSide().isClient())

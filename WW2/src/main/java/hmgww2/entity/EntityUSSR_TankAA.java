@@ -27,8 +27,8 @@ public class EntityUSSR_TankAA extends EntityUSSR_TankBase
     public EntityUSSR_TankAA(World par1World)
     {
         super(par1World);
+        maxHealth = 150;
         this.setSize(4F, 2.5F);
-        armor = 34;
         baseLogic = new TankBaseLogic(this,0.5f,2.0f,false,"gvcmob:gvcmob.T34Track");
         playerpos = new Vector3d(-0.8,3.2D,-0.3);
         zoomingplayerpos = new Vector3d(-0.8,3.2D,-0.3);
@@ -50,6 +50,9 @@ public class EntityUSSR_TankAA extends EntityUSSR_TankBase
             mainTurret.firesound = "hmgww2:hmgww2.fire_30mm";
             mainTurret.spread = 1;
             mainTurret.speed = 16;
+            mainTurret.magazinerem = 20;
+            mainTurret.magazineMax = 20;
+            mainTurret.reloadSetting = 20;
             mainTurret.canex = true;
             mainTurret.guntype = 2;
         }
@@ -60,7 +63,7 @@ public class EntityUSSR_TankAA extends EntityUSSR_TankBase
     }
     protected void applyEntityAttributes()
     {
-        maxHealth = 75;
+        maxHealth = 50;
         super.applyEntityAttributes();
     }
 }

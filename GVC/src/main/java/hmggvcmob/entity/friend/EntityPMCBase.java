@@ -350,4 +350,7 @@ public class EntityPMCBase extends EntitySoBases implements IFF,IGVCmob {
 	public void setspawnedtile(TileEntity flag) {
 
 	}
+	public double[] getwaitingpos() {
+		return new double[]{homeposX,homeposY,homeposZ};
+	}
 }

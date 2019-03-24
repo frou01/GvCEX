@@ -300,14 +300,14 @@ public class GVCMRenderSomeEvent {
 									Calculater.transformVecforMinecraft(tailwingvector);
 									Calculater.transformVecforMinecraft(bodyvector);
 									Calculater.transformVecforMinecraft(mainwingvector);
-									mainwingvector.scale(0);
-									tailwingvector.scale(-0.21);
-									bodyvector.scale(-3.1);
+									mainwingvector.scale(plane.camerapos[0]-plane.rotcenter[0]);
+									tailwingvector.scale(plane.camerapos[1]-plane.rotcenter[1]);
+									bodyvector.scale(plane.camerapos[2]-plane.rotcenter[2]);
 									if (plane.camera != null) {
 										plane.camera.setLocationAndAngles(
-												panebody.prevPosX + (panebody.posX - panebody.prevPosX) * event.renderTickTime + bodyvector.x + tailwingvector.x + mainwingvector.x,
-												panebody.prevPosY + (panebody.posY - panebody.prevPosY) * event.renderTickTime + bodyvector.y + tailwingvector.y + mainwingvector.y + 2.5 - entityplayer.yOffset,
-												panebody.prevPosZ + (panebody.posZ - panebody.prevPosZ) * event.renderTickTime + bodyvector.z + tailwingvector.z + mainwingvector.z,
+												panebody.prevPosX + (panebody.posX - panebody.prevPosX) * event.renderTickTime + bodyvector.x + tailwingvector.x + mainwingvector.x + plane.rotcenter[0],
+												panebody.prevPosY + (panebody.posY - panebody.prevPosY) * event.renderTickTime + bodyvector.y + tailwingvector.y + mainwingvector.y + plane.rotcenter[1] - entityplayer.yOffset,
+												panebody.prevPosZ + (panebody.posZ - panebody.prevPosZ) * event.renderTickTime + bodyvector.z + tailwingvector.z + mainwingvector.z + plane.rotcenter[2],
 												(float) xyz[1], (float) xyz[0]);
 										minecraft.renderViewEntity = plane.camera;
 										plane.camera.rotationYaw = (float) xyz[1];

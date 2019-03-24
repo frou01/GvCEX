@@ -27,7 +27,6 @@ public class EntityUSSR_Tank extends EntityUSSR_TankBase
     {
         super(par1World);
         this.setSize(4F, 2.5F);
-        armor = 34;
         baseLogic = new TankBaseLogic(this,0.5f,2.0f,false,"gvcmob:gvcmob.T34Track");
         playerpos = new Vector3d(-0.4,2.65D,0.0);
         zoomingplayerpos = new Vector3d(-0,2.75D,0.85);
@@ -80,6 +79,7 @@ public class EntityUSSR_Tank extends EntityUSSR_TankBase
         }
     
         turrets = new TurretObj[]{mainTurret,subTurret};
+        armor = 34;
     }
     protected void applyEntityAttributes()
     {

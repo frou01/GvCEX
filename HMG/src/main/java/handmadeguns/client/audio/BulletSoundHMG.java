@@ -49,7 +49,7 @@ public class BulletSoundHMG extends MovingSound
 			this.yPosF = (float) this.attachedEntity.posY;
 			this.zPosF = (float) this.attachedEntity.posZ;
 			double prevdisttoPlayer = disttoPlayer;
-			disttoPlayer = attachedEntity.getDistanceSqToEntity(proxy.getEntityPlayerInstance());
+			disttoPlayer = attachedEntity.getDistanceSqToEntity(proxy.getMCInstance().renderViewEntity);
 			if(attachedEntity.motionX * attachedEntity.motionX + attachedEntity.motionY * attachedEntity.motionY + attachedEntity.motionZ * attachedEntity.motionZ < minspeed)
 				this.repeat = false;
 			else {
