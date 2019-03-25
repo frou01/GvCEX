@@ -31,7 +31,8 @@ import static java.lang.Math.toRadians;
 import static net.minecraft.util.MathHelper.wrapAngleTo180_double;
 import static net.minecraft.util.MathHelper.wrapAngleTo180_float;
 
-public class PlaneBaseLogic {public int rocket = 2;
+public class PlaneBaseLogic {
+	public int rocket = 2;
 	public float health = 150;
 	public float maxhealth = 150;
 	public float mousex;
@@ -119,6 +120,9 @@ public class PlaneBaseLogic {public int rocket = 2;
 	public int changeWeaponCycleSetting = 100;
 	public int changeWeaponCycle = 100;
 	public boolean T_StartDive_F_FlyToStartDivePos = true;
+	
+	public int outSightCnt = 0;
+	public int outSightCntMax = 100;
 	
 	Random rand = new Random();
 	
@@ -219,7 +223,6 @@ public class PlaneBaseLogic {public int rocket = 2;
 			}
 //			turret(mainwingvector,tailwingvector,bodyvector);
 		}else{
-			GVCMPacketHandler.INSTANCE.sendToAll(new GVCPakcetVehicleState(planebody.getEntityId(),bodyRot, throttle,trigger1,trigger2));
 			for(int x = (int)planebody.boundingBox.minX+3;x<=planebody.boundingBox.maxX-3;x++){
 				for(int y = (int)planebody.boundingBox.minY+3;y<=planebody.boundingBox.maxY-3;y++){
 					for(int z = (int)planebody.boundingBox.minZ+3;z<=planebody.boundingBox.maxZ-3;z++){
@@ -234,7 +237,8 @@ public class PlaneBaseLogic {public int rocket = 2;
 			FCS(mainwingvector,tailwingvector,bodyvector);
 			if(planebody instanceof Hasmode && ((Hasmode) planebody).standalone()){
 				autocontrol(bodyvector);
-			}else {
+			}else if(planebody instanceof ImultiRideableVehicle && childEntities[((ImultiRideableVehicle) planebody).getpilotseatid()] != null && childEntities[((ImultiRideableVehicle) planebody).getpilotseatid()].riddenByEntity == null){
+				GVCMPacketHandler.INSTANCE.sendToAll(new GVCPakcetVehicleState(planebody.getEntityId(),bodyRot, throttle,trigger1,trigger2));
 				throttle *= 0.9;
 			}
 //			turret(mainwingvector,tailwingvector,bodyvector);
@@ -463,11 +467,7 @@ public class PlaneBaseLogic {public int rocket = 2;
 				EntityLivingBase target = ((EntityLiving) planebody).getAttackTarget();
 				Vector3d courseVec = new Vector3d(target.posX,target.posY,target.posZ);
 				courseVec.sub(new Vector3d(planebody.posX, planebody.posY, planebody.posZ));
-				double distToTarget = courseVec.length();
-				double angletocourse = toDegrees(bodyvector.angle(courseVec));
 				courseVec.normalize();
-				Vector3d crossProduct = new Vector3d();
-				crossProduct.cross(bodyvector,courseVec);
 				
 				float targetyaw = wrapAngleTo180_float(-(float) toDegrees(atan2(courseVec.x, courseVec.z)));
 				double AngulardifferenceYaw = targetyaw - this.bodyrotationYaw;
@@ -475,10 +475,10 @@ public class PlaneBaseLogic {public int rocket = 2;
 				double planespeed = planebody.motionX * planebody.motionX + planebody.motionY * planebody.motionY + planebody.motionZ * planebody.motionZ;
 				float targetpitch = wrapAngleTo180_float(-(float) CalculateGunElevationAngle(planebody, target, (float) (T_useMain_F_useSub ? mainTurret.gravity * cfg_defgravitycof : subTurret.gravity * cfg_defgravitycof), (T_useMain_F_useSub ? mainTurret.speed : subTurret.speed) + (float) sqrt(planespeed))[0]);
 				
+				throttle+= 0.05;
 				if(!rising_after_Attack && T_StartDive_F_FlyToStartDivePos){
-					if(yawHandle(AngulardifferenceYaw,alt) &&
-							   picthHandle(targetpitch)){
-						if(throttle > throttle_Max/2)throttle -= 0.05;
+					handle(AngulardifferenceYaw,targetpitch,alt);
+					if(courseVec.angle(bodyvector)<toRadians(20)){
 						if(useMain_withSub){
 							trigger1 = true;
 							trigger2 = true;
@@ -492,19 +492,34 @@ public class PlaneBaseLogic {public int rocket = 2;
 							changeWeaponCycle = 0;
 							T_useMain_F_useSub = !T_useMain_F_useSub;
 						}
+						outSightCnt--;
+					}else {
+						outSightCnt++;
+						if(outSightCnt>outSightCntMax){
+							rising_after_Attack = true;
+							//離脱
+						}
 					}
 					if(target.onGround && targetpitch>maxDive){
-						T_StartDive_F_FlyToStartDivePos = rising_after_Attack = true;
-					}else if(alt<10){
+						T_StartDive_F_FlyToStartDivePos = false;
+						rising_after_Attack = true;
+					}
+					if(alt<20){
 						rising_after_Attack = true;
 					}
 				}else {
-					if(target.onGround)T_StartDive_F_FlyToStartDivePos = true;
-					picthHandle(maxClimb);
-					throttle+= 0.05;
+					if(!target.onGround)T_StartDive_F_FlyToStartDivePos = true;
+					if(targetpitch<maxDive/2)T_StartDive_F_FlyToStartDivePos = true;
+					if(targetpitch<0)rising_after_Attack = false;
+					if(alt > 40)rising_after_Attack = false;
+					if(outSightCnt>0){
+						rising_after_Attack = true;
+						outSightCnt--;
+					}
+					pitchHandle(maxClimb);
 				}
 //				if (rising_after_Attack && alt < 50) {
-//					picthHandle(maxClimb);
+//					pitchHandle(maxClimb);
 //					throttle += 0.05;
 //				} else {
 //					if(rising_after_Attack)rising_after_Attack = false;
@@ -599,7 +614,8 @@ public class PlaneBaseLogic {public int rocket = 2;
 					case 1://wait
 					case 2://follow
 						if (alt > 60) {
-							if(throttle>throttle_Max/2)throttle -= 0.05;
+							if(throttle>(throttle_Max/4) *3)throttle -= 0.05;
+							else throttle += 0.05;
 						} else {
 							throttle += 0.05;
 						}
@@ -613,8 +629,9 @@ public class PlaneBaseLogic {public int rocket = 2;
 						float targetyaw = wrapAngleTo180_float(-(float) toDegrees(atan2(courseVec.x, courseVec.z)));
 						double AngulardifferenceYaw = targetyaw - this.bodyrotationYaw;
 						AngulardifferenceYaw = wrapAngleTo180_double(AngulardifferenceYaw);
-						yawHandle(AngulardifferenceYaw,alt);
-						picthHandle(alt<60?alt<30?maxClimb:0:maxDive);
+						if(alt > 10) handle(AngulardifferenceYaw,alt<60?(alt<30?maxClimb:0):-maxClimb,alt);
+						else pitchHandle(maxClimb);
+//						pitchHandle(alt<60?alt<30?maxClimb:0:maxDive);
 					
 						break;
 					
@@ -660,53 +677,76 @@ public class PlaneBaseLogic {public int rocket = 2;
 		
 		GVCMPacketHandler.INSTANCE.sendToAll(new GVCPakcetVehicleState(planebody.getEntityId(),bodyRot, throttle,trigger1,trigger2));
 	}
-	public boolean yawHandle(double AngulardifferenceYaw,double alt){
+	public boolean handle(double AngulardifferenceYaw, double targetPitch, double alt){
 		if(AngulardifferenceYaw < -10){
-			//turn left
+			//turn Right
 			if(alt > 30)rollHandle(-maxbank);
-			else if(alt > 0)rollHandle(-maxbank*(alt)/30);
-			if (abs(bodyrotationRoll) < 60) {
-				yawladder++;
-			}else if(abs(bodyrotationRoll) > 120){
-				//ひっくり返っている
-				yawladder--;
+			else if(alt > 10)rollHandle(-maxbank*(alt)/30);
+			else  {
+				rollHandle(0);
+				pitchHandle(maxClimb);
 			}
 			
-			if(abs(bodyrotationRoll) > 60 && abs(bodyrotationRoll) < 120) {
-				if (bodyrotationRoll < 0) {
-					//左に傾いている
-					//操縦桿引き込み
-					mousey+=4;
-				} else if (bodyrotationRoll > 0) {
+			if(abs(bodyrotationRoll)<20){
+				pitchHandle(targetPitch);
+			}
+			if(abs(bodyrotationRoll)>20) {
+				if (bodyrotationRoll < 0 && bodyrotationPitch > targetPitch-10) {//機首が低い
 					//右に傾いている
+					//操縦桿引き込み
+					mousey += 8;
+//					System.out.println("debug1");
+				} else if (bodyrotationRoll > 0 && bodyrotationPitch < targetPitch+10) {//機種が高い
+					//左に傾いている
 					//操縦桿押し込み
-					mousey-=4;
+					mousey -= 8;
+//					System.out.println("debug2");
 				}
 			}
-		}else if(AngulardifferenceYaw > 10){
-			//turn right
-			if(alt > 30)rollHandle(maxbank);
-			else if(alt > 0)rollHandle(maxbank*(alt)/30);
-			if (abs(bodyrotationRoll) < 60) {
-				yawladder--;
-			}else if(abs(bodyrotationRoll) > 120){
-				//ひっくり返っている
-				yawladder++;
+			if(bodyrotationPitch < targetPitch+10) {//機種が高い
+				if (abs(bodyrotationRoll) < 80) {
+					yawladder++;
+				} else if (abs(bodyrotationRoll) > 100) {
+					//ひっくり返っている
+					yawladder--;
+				}
 			}
-			if(abs(bodyrotationRoll) > 60 && abs(bodyrotationRoll) < 120) {
-				if (bodyrotationRoll < 0) {
-					//左に傾いている
-					//操縦桿押し込み
-					mousey-=4;
-				} else if (bodyrotationRoll > 0) {
+			
+		}else if(AngulardifferenceYaw > 10){
+			//turn Left
+			if(alt > 30)rollHandle(maxbank);
+			else if(alt > 10)rollHandle(maxbank*(alt)/30);
+			else {
+				rollHandle(0);
+			}
+			
+			if(abs(bodyrotationRoll)<20){
+				pitchHandle(targetPitch);
+			}
+			if(abs(bodyrotationRoll)>20 && bodyrotationPitch > targetPitch-10) {
+				if (bodyrotationRoll < 0 && bodyrotationPitch < targetPitch+10) {//機首が高い
 					//右に傾いている
+					//操縦桿押し込み
+					mousey -= 8;
+//					System.out.println("debug3");
+				} else if (bodyrotationRoll > 0 && bodyrotationPitch > targetPitch-10) {//機首が低い
+					//左に傾いている
 					//操縦桿引き込み
-					mousey+=4;
+					mousey += 8;
+//					System.out.println("debug4");
+				}
+			}
+			if(bodyrotationPitch < targetPitch+10) {//機首が高い
+				if (abs(bodyrotationRoll) < 80) {
+					yawladder--;
+				} else if (abs(bodyrotationRoll) > 100) {
+					//ひっくり返っている
+					yawladder++;
 				}
 			}
 		}else {
 			rollHandle(0);
-			return true;
+			return pitchHandle(targetPitch);
 		}
 		return false;
 	}
@@ -717,14 +757,14 @@ public class PlaneBaseLogic {public int rocket = 2;
 			mousex -= 8;
 		}
 	}
-	public boolean picthHandle(double targetPitch){
+	public boolean pitchHandle(double targetPitch){
 		double AngulardifferencePitch = bodyrotationPitch - targetPitch;
-		if (AngulardifferencePitch < -10){
+		if (AngulardifferencePitch < -2){
 			//機首下げ
 			if(abs(bodyrotationRoll)<80) {
-				mousey -= 4;
+				mousey -= 8;
 			}else if(abs(bodyrotationRoll)>100){
-				mousey += 4;
+				mousey += 8;
 			}
 			if(abs(bodyrotationRoll) > 60 && abs(bodyrotationRoll) < 120) {
 				if (bodyrotationRoll < 0) {
@@ -735,12 +775,12 @@ public class PlaneBaseLogic {public int rocket = 2;
 					yawladder--;
 				}
 			}
-		}else if (AngulardifferencePitch > +10){
+		}else if (AngulardifferencePitch > +2){
 			//機首上げ
 			if(abs(bodyrotationRoll)<80) {
-				mousey += 4;
+				mousey += 8;
 			}else if(abs(bodyrotationRoll)>100){
-				mousey -= 4;
+				mousey -= 8;
 			}
 			if(abs(bodyrotationRoll) > 60 && abs(bodyrotationRoll) < 120) {
 				if (bodyrotationRoll < 0) {
@@ -756,6 +796,7 @@ public class PlaneBaseLogic {public int rocket = 2;
 		}
 		return false;
 	}
+	
 	public void initseat(){
 		for (int i = 0; i< childEntities.length; i++) {
 			if(!worldObj.isRemote) {
@@ -892,7 +933,7 @@ public class PlaneBaseLogic {public int rocket = 2;
 			bodyvector.normalize();
 			motionvec.add(bodyvector);
 			double cos = angle_cos(bodyvector, motionvec);
-			if (!planebody.onGround && motionvec.lengthSquared() > 0.01) {
+			if (!planebody.onGround && motionvec.lengthSquared() > 0.000001) {
 				Vector3d axisstall = new Vector3d();
 				motionvec.normalize();
 				axisstall.cross(bodyvector, motionvec);
@@ -913,7 +954,7 @@ public class PlaneBaseLogic {public int rocket = 2;
 		if(motionvec.length()>0.01) {
 			double cos;
 			cos = angle_cos(bodyvector, motionvec);
-			if (motionvec.length() > 0.01 && abs(cos) > 0.01) {
+			if (motionvec.length() > 0.000001 && abs(cos) > 0.000001) {
 				Vector3d bodyvectorForscaling = new Vector3d(bodyvector);
 				bodyvectorForscaling.normalize();
 				bodyvectorForscaling.scale(-motionvec.length());
@@ -931,7 +972,7 @@ public class PlaneBaseLogic {public int rocket = 2;
 			motionvec.y += tailwingvectorForFloating.y;
 			motionvec.z += tailwingvectorForFloating.z/slipresist;
 			cos = angle_cos(bodyvector, motionvec);
-			if(motionvec.length()>0.01) {
+			if(motionvec.length()>0.000001) {
 				Vector3d airDrug = new Vector3d(motionvec);
 				double sin = sqrt(1-cos * cos);
 				airDrug.scale(motionvec.length() * motionvec.length() * (dragfactor + gearprogress * geardragfactor + flaplevel*flapdragfactor) + (sin * sin)/20);
@@ -944,9 +985,9 @@ public class PlaneBaseLogic {public int rocket = 2;
 			motionvec.y -=0.49;
 		}
 		if(! Double.isNaN(motionvec.x) && ! Double.isNaN(motionvec.y) && ! Double.isNaN(motionvec.z)) {
-			planebody.motionX = abs(motionvec.x) > 0.01 ? motionvec.x : 0;
-			planebody.motionY = abs(motionvec.y) > 0.01 ? motionvec.y : 0;
-			planebody.motionZ = abs(motionvec.z) > 0.01 ? motionvec.z : 0;
+			planebody.motionX = abs(motionvec.x) > 0.0000001 ? motionvec.x : 0;
+			planebody.motionY = abs(motionvec.y) > 0.0000001 ? motionvec.y : 0;
+			planebody.motionZ = abs(motionvec.z) > 0.0000001 ? motionvec.z : 0;
 		}
 		double backmotionX = planebody.motionX;
 		double backmotionY = planebody.motionY;

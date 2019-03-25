@@ -34,14 +34,14 @@ public class EntityGER_Fighter extends EntityGER_FighterBase
 //		proxy.replaceBoundingbox(this,nboundingbox);
 //		((ModifiedBoundingBox)this.boundingBox).updateOBB(this.posX,this.posY,this.posZ);
 		ignoreFrustumCheck = true;
-		baseLogic.speedfactor = 0.004f;
+		baseLogic.speedfactor = 0.003f;
 		baseLogic.throttle_gearDown = 1.7f;
 		baseLogic.throttle_Max = 5.0f;
-		baseLogic.rollspeed = 0.2f;
-		baseLogic.pitchspeed = 0.1f;
-		baseLogic.yawspeed = 0.1f;
+		baseLogic.rollspeed = 0.6f;
+		baseLogic.pitchspeed = 0.2f;
+		baseLogic.yawspeed = 0.3f;
 		baseLogic.maxDive = 60;
-		baseLogic.maxClimb = -22;
+		baseLogic.maxClimb = -32;
 		baseLogic.maxbank = 60;
 		baseLogic.soundname = "hmgww2:hmgww2.sound_pera";
 		
@@ -64,6 +64,7 @@ public class EntityGER_Fighter extends EntityGER_FighterBase
 			baseLogic.mainTurret.powor = 15;
 			baseLogic.mainTurret.ex = 0.5f;
 			baseLogic.mainTurret.cycle_setting = 1;
+			baseLogic.mainTurret.flushscale = 2;
 			baseLogic.mainTurret.firesound = "hmgww2:hmgww2.fire_30mm";
 			baseLogic.mainTurret.spread = 5;
 			baseLogic.mainTurret.speed = 4;
@@ -86,6 +87,7 @@ public class EntityGER_Fighter extends EntityGER_FighterBase
 			baseLogic.subTurret.currentEntity = this;
 			baseLogic.subTurret.powor = 8;
 			baseLogic.subTurret.cycle_setting = 0;
+			baseLogic.subTurret.flushscale = 1;
 			baseLogic.subTurret.firesound = "handmadeguns:handmadeguns.fire";
 			baseLogic.subTurret.spread = 10;
 			baseLogic.subTurret.speed = 4;
@@ -107,6 +109,7 @@ public class EntityGER_Fighter extends EntityGER_FighterBase
 				turretObj.currentEntity = this;
 				turretObj.powor = 8;
 				turretObj.cycle_setting = 0;
+				turretObj.flushscale = 1;
 				turretObj.firesound = "handmadeguns:handmadeguns.fire";
 				turretObj.spread = 10;
 				turretObj.speed = 4;

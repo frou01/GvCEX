@@ -34,15 +34,15 @@ public class EntityUSSR_Fighter extends EntityUSSR_FighterBase
 //		proxy.replaceBoundingbox(this,nboundingbox);
 //		((ModifiedBoundingBox)this.boundingBox).updateOBB(this.posX,this.posY,this.posZ);
 	    ignoreFrustumCheck = true;
-	    baseLogic.speedfactor = 0.004f;
+	    baseLogic.speedfactor = 0.0024f;
 	    baseLogic.throttle_gearDown = 1.7f;
 	    baseLogic.throttle_Max = 4.0f;
-	    baseLogic.rollspeed = 0.2f;
-	    baseLogic.pitchspeed = 0.15f;
-	    baseLogic.yawspeed = 0.15f;
+	    baseLogic.rollspeed = 0.6f;
+	    baseLogic.pitchspeed = 0.5f;
+	    baseLogic.yawspeed = 0.5f;
 	    baseLogic.maxDive = 60;
 	    baseLogic.maxClimb = -22;
-	    baseLogic.maxbank = 40;
+	    baseLogic.maxbank = 60;
 	    baseLogic.soundname = "hmgww2:hmgww2.sound_pera";
 	    
 	    baseLogic.camerapos = new double[]{0,1.9,0};

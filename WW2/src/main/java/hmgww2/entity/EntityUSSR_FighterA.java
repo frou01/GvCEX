@@ -20,12 +20,12 @@ public class EntityUSSR_FighterA extends EntityUSSR_FighterBase
 //		((ModifiedBoundingBox)this.boundingBox).updateOBB(this.posX,this.posY,this.posZ);
 	    ignoreFrustumCheck = true;
 	    this.fireCycle1 = 1;
-	    baseLogic.speedfactor = 0.0035f;
+	    baseLogic.speedfactor = 0.002f;
 	    baseLogic.throttle_gearDown = 1.7f;
 	    baseLogic.throttle_Max = 4.0f;
 	    baseLogic.rollspeed = 0.2f;
-	    baseLogic.pitchspeed = 0.15f;
-	    baseLogic.yawspeed = 0.15f;
+	    baseLogic.pitchspeed = 0.3f;
+	    baseLogic.yawspeed = 0.3f;
 	    baseLogic.maxDive = 60;
 	    baseLogic.maxClimb = -17;
 	    baseLogic.maxbank = 30;
@@ -50,6 +50,7 @@ public class EntityUSSR_FighterA extends EntityUSSR_FighterBase
 		    cannon1.powor = 37;
 		    cannon1.ex = 0.5f;
 		    cannon1.cycle_setting = 4;
+		    cannon1.flushscale = 2;
 		    cannon1.firesound = "hmgww2:hmgww2.fire_30mm";
 		    cannon1.magazineMax = 50;
 		    cannon1.magazinerem = 50;
@@ -73,6 +74,7 @@ public class EntityUSSR_FighterA extends EntityUSSR_FighterBase
 			    cannon2.powor = 37;
 			    cannon2.ex = 0.5F;
 			    cannon2.cycle_setting = 4;
+			    cannon2.flushscale = 2;
 			    cannon2.firesound = "hmgww2:hmgww2.fire_30mm";
 			    cannon2.magazineMax = 50;
 			    cannon2.magazinerem = 50;
@@ -96,6 +98,7 @@ public class EntityUSSR_FighterA extends EntityUSSR_FighterBase
 			    cannon3.powor = 8;
 			    cannon3.ex = 0.5f;
 			    cannon3.cycle_setting = 0;
+			    cannon3.flushscale = 1;
 			    cannon3.firesound = "handmadeguns:handmadeguns.fire";
 			    cannon3.spread = 5;
 			    cannon3.speed = 5;
@@ -120,6 +123,7 @@ public class EntityUSSR_FighterA extends EntityUSSR_FighterBase
 			    cannon4.powor = 8;
 			    cannon4.ex = 0.5f;
 			    cannon4.cycle_setting = 0;
+			    cannon4.flushscale = 1;
 			    cannon4.firesound = "handmadeguns:handmadeguns.fire";
 			    cannon4.spread = 5;
 			    cannon4.speed = 5;

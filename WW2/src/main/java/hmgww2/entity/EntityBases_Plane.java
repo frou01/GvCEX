@@ -59,15 +59,15 @@ public abstract class EntityBases_Plane extends EntityBases implements ImultiRid
 		ignoreFrustumCheck = true;
 		this.fireCycle1 = 1;
 		baseLogic = new PlaneBaseLogic(worldObj, this);
-		baseLogic.speedfactor = 0.05f;
-		baseLogic.liftfactor = 0.04f;
+		baseLogic.speedfactor = 0.004f;
+		baseLogic.liftfactor = 0.05f;
 		baseLogic.flapliftfactor = 0;
 		baseLogic.flapdragfactor = 0;
-		baseLogic.geardragfactor = 0.0000001f;
+		baseLogic.geardragfactor = 0.000001f;
 		baseLogic.dragfactor = 0.01f;
-		baseLogic.gravity = 0.03f;
+		baseLogic.gravity = 0.02f;
 		baseLogic.stability = 3000;
-		baseLogic.rotmotion_reduceSpeed = 0.1;
+		baseLogic.rotmotion_reduceSpeed = 0.2;
 //		baseLogic.slipresist = 4;
 		
 	}
@@ -98,9 +98,7 @@ public abstract class EntityBases_Plane extends EntityBases implements ImultiRid
 		this.motionY = motion[1];
 		this.motionZ = motion[2];
 		if (!this.standalone() && baseLogic.childEntities[0] != null && baseLogic.childEntities[0].riddenByEntity == null) {
-			motionX = 0;
-			motionY = 0;
-			motionZ = 0;
+			this.onGround = true;
 		}
 		baseLogic.onUpdate();
 	}

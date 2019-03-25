@@ -36,16 +36,16 @@ public class EntityGER_FighterA extends EntityGER_FighterBase
 //		((ModifiedBoundingBox)this.boundingBox).updateOBB(this.posX,this.posY,this.posZ);
 		ignoreFrustumCheck = true;
 		this.fireCycle1 = 1;
-		baseLogic.speedfactor = 0.02f;
+		baseLogic.speedfactor = 0.003f;
 		baseLogic.throttle_gearDown = 1.7f;
 		baseLogic.throttle_Max = 5.0f;
 		baseLogic.liftfactor = 0.1f;
-		baseLogic.dragfactor = 0.1f;
-		baseLogic.rollspeed = 0.07f;
-		baseLogic.pitchspeed = 0.07f;
-		baseLogic.yawspeed = 0.35f;
+		baseLogic.dragfactor = 0.11f;
+		baseLogic.rollspeed = 0.3f;
+		baseLogic.pitchspeed = 0.3f;
+		baseLogic.yawspeed = 0.2f;
 		baseLogic.stability = 1000;
-		baseLogic.maxDive = 45;
+		baseLogic.maxDive = 60;
 		baseLogic.maxClimb = -60;
 		baseLogic.maxbank = 20;
 		baseLogic.soundname = "hmgww2:hmgww2.sound_pera";
@@ -54,55 +54,9 @@ public class EntityGER_FighterA extends EntityGER_FighterBase
 		baseLogic.rotcenter = new double[]{0,1.5,0};
 		
 		baseLogic.onground_pitch = -10;
-		TurretObj cannon1 = new TurretObj(worldObj);
+		TurretObj cannon3 = new TurretObj(worldObj);
 		{
-			cannon1.onmotherPos = new Vector3d(1.35,1.2,-2);
-			cannon1.motherRotCenter = new Vector3d(0,1.5,0);
-			cannon1.cannonpos = new Vector3d(0,1.5,-2);
-			cannon1.flushoffset = 0;
-			cannon1.turretspeedY = 5;
-			cannon1.turretspeedP = 8;
-			cannon1.turretanglelimtPitchMax = 5;
-			cannon1.turretanglelimtPitchmin = -80;
-			cannon1.traverseSound = null;
-			cannon1.currentEntity = this;
-			cannon1.powor = 15;
-			cannon1.ex = 0.5f;
-			cannon1.cycle_setting = 2;
-			cannon1.firesound = "hmgww2:hmgww2.fire_30mm";
-			cannon1.magazineMax = 50;
-			cannon1.magazinerem = 50;
-			cannon1.spread = 1;
-			cannon1.speed = 16;
-			cannon1.canex = true;
-			cannon1.guntype = 2;
-			
 			{
-				TurretObj cannon2 = new TurretObj(worldObj);
-				cannon2.onmotherPos = new Vector3d(-2.7,0,0);
-				cannon2.motherRotCenter = new Vector3d(0,0,0);
-				cannon2.cannonpos = new Vector3d(0,1.5,-2);
-				cannon2.flushoffset = 0;
-				cannon2.turretspeedY = 5;
-				cannon2.turretspeedP = 8;
-				cannon2.turretanglelimtPitchMax = 5;
-				cannon2.turretanglelimtPitchmin = -80;
-				cannon2.traverseSound = null;
-				cannon2.currentEntity = this;
-				cannon2.powor = 15;
-				cannon2.ex = 0.5F;
-				cannon2.cycle_setting = 4;
-				cannon2.firesound = "hmgww2:hmgww2.fire_30mm";
-				cannon2.magazineMax = 50;
-				cannon2.magazinerem = 50;
-				cannon2.spread = 5;
-				cannon2.speed = 16;
-				cannon2.canex = true;
-				cannon2.guntype = 2;
-				cannon1.addchild(cannon2);
-			}
-			{
-				TurretObj cannon3 = new TurretObj(worldObj);
 				cannon3.onmotherPos = new Vector3d(-1.25,0.95,0);
 				cannon3.motherRotCenter = new Vector3d(0,0,0);
 				cannon3.cannonpos = new Vector3d(0,2.15,-2);
@@ -123,7 +77,6 @@ public class EntityGER_FighterA extends EntityGER_FighterBase
 				cannon3.reloadTimer = 70;
 				cannon3.canex = true;
 				cannon3.guntype = 0;
-				cannon1.addchild(cannon3);
 			}
 			{
 				TurretObj cannon4 = new TurretObj(worldObj);
@@ -147,10 +100,10 @@ public class EntityGER_FighterA extends EntityGER_FighterBase
 				cannon4.reloadTimer = 70;
 				cannon4.canex = true;
 				cannon4.guntype = 0;
-				cannon1.addchild(cannon4);
+				cannon3.addchild(cannon4);
 			}
 		}
-		baseLogic.mainTurret = cannon1;
+		baseLogic.mainTurret = cannon3;
 		baseLogic.subTurret = new TurretObj(worldObj);
 		{
 			baseLogic.subTurret.onmotherPos = new Vector3d(0,-0.1,-2);
@@ -162,8 +115,8 @@ public class EntityGER_FighterA extends EntityGER_FighterBase
 			baseLogic.subTurret.turretanglelimtPitchmin = -80;
 			baseLogic.subTurret.traverseSound = null;
 			baseLogic.subTurret.currentEntity = this;
-			baseLogic.subTurret.powor = 15;
-			baseLogic.subTurret.ex = 4.0F;
+			baseLogic.subTurret.powor = 100;
+			baseLogic.subTurret.ex = 8.0F;
 			baseLogic.subTurret.cycle_setting = 2;
 			baseLogic.subTurret.firesound = null;
 			baseLogic.subTurret.bulletmodel = "byfrou01_Bomb";
@@ -172,8 +125,8 @@ public class EntityGER_FighterA extends EntityGER_FighterBase
 			baseLogic.subTurret.speed = 0;
 			baseLogic.subTurret.canex = true;
 			baseLogic.subTurret.guntype = 2;
-			baseLogic.subTurret.magazineMax = 1;
-			baseLogic.subTurret.magazinerem = 1;
+			baseLogic.subTurret.magazineMax = 2;
+			baseLogic.subTurret.magazinerem = 2;
 			baseLogic.subTurret.reloadSetting = 500;
 		}
 	}
