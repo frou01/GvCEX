@@ -54,8 +54,8 @@ public class EntityUSSR_FighterA extends EntityUSSR_FighterBase
 		    cannon1.firesound = "hmgww2:hmgww2.fire_30mm";
 		    cannon1.magazineMax = 50;
 		    cannon1.magazinerem = 50;
-		    cannon1.spread = 1;
-		    cannon1.speed = 4;
+		    cannon1.spread = 5;
+		    cannon1.speed = 5;
 		    cannon1.canex = true;
 		    cannon1.guntype = 2;
 		
@@ -79,7 +79,7 @@ public class EntityUSSR_FighterA extends EntityUSSR_FighterBase
 			    cannon2.magazineMax = 50;
 			    cannon2.magazinerem = 50;
 			    cannon2.spread = 5;
-			    cannon2.speed = 4;
+			    cannon2.speed = 5;
 			    cannon2.canex = true;
 			    cannon2.guntype = 2;
 			    cannon1.addchild(cannon2);

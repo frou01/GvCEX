@@ -1,0 +1,5 @@
+Texture,bullet_sub_ap
+Stack,1
+Name,AP’e
+BulletAP,Bullet_AP
+addRecipe,Bullet_AP,2,ab0,de0,000,49,265,0,265,289,0,0,0,0

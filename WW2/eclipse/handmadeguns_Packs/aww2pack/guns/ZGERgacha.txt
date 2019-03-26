@@ -1,0 +1,19 @@
+Texture,gergacha
+BPItemStack,7
+BPItems,Gew98,MG34,MP38,Panzerschreck,Walther P-38,Gewehr43,Maschinengewehr 30
+
+Name,ドイツ単発ガチャ
+BP,German_Gatcha
+Recipe1,abc
+Recipe2,   
+Recipe3,ghi
+ItemA,HandmadeGuns,gunpyo
+ItemB,HandmadeGuns,gunpyo
+ItemC,HandmadeGuns,gunpyo
+ItemD,null
+ItemE,null
+ItemF,null
+ItemG,HandmadeGuns,gunpyo
+ItemH,HandmadeGuns,gunpyo
+ItemI,HandmadeGuns,gunpyo
+addNewRecipe,HandmadeGuns,German_Gatcha,1

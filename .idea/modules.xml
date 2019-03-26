@@ -22,7 +22,6 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/GVC/GVC_api.iml" filepath="$PROJECT_DIR$/.idea/modules/GVC/GVC_api.iml" group="GVC" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/GVC/GVC_main.iml" filepath="$PROJECT_DIR$/.idea/modules/GVC/GVC_main.iml" group="GVC" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/GVC/GVC_test.iml" filepath="$PROJECT_DIR$/.idea/modules/GVC/GVC_test.iml" group="GVC" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/HMG/HMG.iml" filepath="$PROJECT_DIR$/.idea/modules/HMG/HMG.iml" group="HMG" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/HMG/HMG_api.iml" filepath="$PROJECT_DIR$/.idea/modules/HMG/HMG_api.iml" group="HMG" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/HMG/HMG_main.iml" filepath="$PROJECT_DIR$/.idea/modules/HMG/HMG_main.iml" group="HMG" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/HMG/HMG_test.iml" filepath="$PROJECT_DIR$/.idea/modules/HMG/HMG_test.iml" group="HMG" />

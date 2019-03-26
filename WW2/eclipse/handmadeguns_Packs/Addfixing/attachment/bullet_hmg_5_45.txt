@@ -1,0 +1,11 @@
+Texture,545bullet
+Stack,64
+Name,5.45mmライフルマガジン
+Magazine,5.45mm magazine
+Recipe1,aa 
+Recipe2,bb 
+Recipe3,c  
+ItemA,minecraft,iron_ingot
+ItemB,minecraft,gunpowder
+ItemC,minecraft,emerald
+addNewRecipe,HandmadeGuns,5.45mm magazine,5

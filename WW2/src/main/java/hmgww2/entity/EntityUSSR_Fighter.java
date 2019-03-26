@@ -52,9 +52,9 @@ public class EntityUSSR_Fighter extends EntityUSSR_FighterBase
 	    baseLogic.useMain_withSub = true;
 	    baseLogic.mainTurret = new TurretObj(worldObj);
 	    {
-		    baseLogic.mainTurret.onmotherPos = new Vector3d(0,1.2,-2);
+		    baseLogic.mainTurret.onmotherPos = new Vector3d(0,0,0);
 		    baseLogic.mainTurret.motherRotCenter = new Vector3d(0,1.2,0);
-		    baseLogic.mainTurret.cannonpos = new Vector3d(0,1.5,-2);
+		    baseLogic.mainTurret.cannonpos = new Vector3d(0,1.2,-2);
 		    baseLogic.mainTurret.turretspeedY = 5;
 		    baseLogic.mainTurret.turretspeedP = 8;
 		    baseLogic.mainTurret.turretanglelimtPitchMax = 5;
@@ -64,7 +64,9 @@ public class EntityUSSR_Fighter extends EntityUSSR_FighterBase
 		    baseLogic.mainTurret.powor = 20;
 		    baseLogic.mainTurret.ex = 0.5f;
 		    baseLogic.mainTurret.cycle_setting = 1;
+		    baseLogic.mainTurret.flushscale = 2;
 		    baseLogic.mainTurret.firesound = "hmgww2:hmgww2.fire_30mm";
+		    baseLogic.mainTurret.flushoffset = 1;
 		    baseLogic.mainTurret.spread = 5;
 		    baseLogic.mainTurret.speed = 5;
 		    baseLogic.mainTurret.magazineMax = 50;
@@ -75,9 +77,9 @@ public class EntityUSSR_Fighter extends EntityUSSR_FighterBase
 	    }
 	    baseLogic.subTurret = new TurretObj(worldObj);
 	    {
-		    baseLogic.subTurret.onmotherPos = new Vector3d(0.3,1.2,-2);
+		    baseLogic.subTurret.onmotherPos = new Vector3d(0,0,0);
 		    baseLogic.subTurret.motherRotCenter = new Vector3d(0,1.2,0);
-		    baseLogic.subTurret.cannonpos = new Vector3d(0,1.5,-2);
+		    baseLogic.subTurret.cannonpos = new Vector3d(0.3,1.5,-2);
 		    baseLogic.subTurret.turretspeedY = 5;
 		    baseLogic.subTurret.turretspeedP = 8;
 		    baseLogic.subTurret.turretanglelimtPitchMax = 5;
@@ -86,7 +88,9 @@ public class EntityUSSR_Fighter extends EntityUSSR_FighterBase
 		    baseLogic.subTurret.currentEntity = this;
 		    baseLogic.subTurret.powor = 8;
 		    baseLogic.subTurret.cycle_setting = 0;
+		    baseLogic.subTurret.flushscale = 1;
 		    baseLogic.subTurret.firesound = "handmadeguns:handmadeguns.fire";
+		    baseLogic.subTurret.flushoffset = 1;
 		    baseLogic.subTurret.spread = 10;
 		    baseLogic.subTurret.speed = 5;
 		    baseLogic.subTurret.canex = true;

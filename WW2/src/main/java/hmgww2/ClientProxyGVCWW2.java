@@ -67,7 +67,7 @@ public class ClientProxyGVCWW2 extends CommonSideProxyGVCWW2 {
 		
     	RenderingRegistry.registerEntityRenderingHandler(EntityJPN_S.class, new RenderJPN_S());
     	RenderingRegistry.registerEntityRenderingHandler(EntityJPN_Tank.class, new RenderJPN_Tank());
-    	RenderingRegistry.registerEntityRenderingHandler(EntityJPN_Fighter.class, new RenderJPN_Fighter());
+    	RenderingRegistry.registerEntityRenderingHandler(EntityJPN_Fighter.class, new RenderPlane("hmgww2:textures/mob/jpn/type0.png","hmgww2:textures/mob/jpn/type0.mqo",new double[]{0,1.0,0}));
     	RenderingRegistry.registerEntityRenderingHandler(EntityJPN_TankAA.class, new RenderJPN_TankAA());
     	RenderingRegistry.registerEntityRenderingHandler(EntityJPN_TankSPG.class, new RenderJPN_TankSPG());
     	RenderingRegistry.registerEntityRenderingHandler(EntityJPN_FighterA.class, new RenderJPN_FighterA());
@@ -77,7 +77,7 @@ public class ClientProxyGVCWW2 extends CommonSideProxyGVCWW2 {
     	
     	RenderingRegistry.registerEntityRenderingHandler(EntityUSA_S.class, new RenderUSA_S());
     	RenderingRegistry.registerEntityRenderingHandler(EntityUSA_Tank.class, new RenderUSA_Tank());
-    	RenderingRegistry.registerEntityRenderingHandler(EntityUSA_Fighter.class, new RenderUSA_Fighter());
+    	RenderingRegistry.registerEntityRenderingHandler(EntityUSA_Fighter.class, new RenderPlane("hmgww2:textures/mob/usa/F4U.png","hmgww2:textures/mob/usa/F4U.mqo",new double[]{0,1.0,0}));
     	RenderingRegistry.registerEntityRenderingHandler(EntityUSA_TankAA.class, new RenderUSA_TankAA());
     	RenderingRegistry.registerEntityRenderingHandler(EntityUSA_TankSPG.class, new RenderUSA_TankSPG());
     	RenderingRegistry.registerEntityRenderingHandler(EntityUSA_FighterA.class, new RenderUSA_FighterA());

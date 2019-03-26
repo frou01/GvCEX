@@ -1,0 +1,5 @@
+AddRecipe
+Slot1,minecraft:iron_ingot:
+Slot2,minecraft:iron_ingot:
+Slot3,minecraft:planks:
+CraftItem,HandmadeGuns:byfrou01_Bayonet:0:1

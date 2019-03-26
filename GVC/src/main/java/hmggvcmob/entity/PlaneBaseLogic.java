@@ -124,6 +124,8 @@ public class PlaneBaseLogic {
 	public int outSightCnt = 0;
 	public int outSightCntMax = 100;
 	
+	public boolean autoflap = false;
+	
 	Random rand = new Random();
 	
 	public PlaneBaseLogic(World world,Entity entity) {
@@ -287,8 +289,11 @@ public class PlaneBaseLogic {
 	}
 	
 	void control(Vector3d bodyvector){
-		if (proxy.wclick()) {
+		if (health>0 && proxy.wclick()) {
 			throttle += 0.05;
+		}
+		if(health<=0){
+			throttle -= 0.05;
 		}
 		if (proxy.aclick()) {
 			yawladder--;
@@ -464,6 +469,7 @@ public class PlaneBaseLogic {
 		{
 		
 			if(planebody instanceof EntityLiving && ((EntityLiving) planebody).getAttackTarget() != null){
+				if(!T_useMain_F_useSub && subTurret == null)T_useMain_F_useSub = true;
 				EntityLivingBase target = ((EntityLiving) planebody).getAttackTarget();
 				Vector3d courseVec = new Vector3d(target.posX,target.posY,target.posZ);
 				courseVec.sub(new Vector3d(planebody.posX, planebody.posY, planebody.posZ));
@@ -516,6 +522,7 @@ public class PlaneBaseLogic {
 						rising_after_Attack = true;
 						outSightCnt--;
 					}
+					rollHandle(0);
 					pitchHandle(maxClimb);
 				}
 //				if (rising_after_Attack && alt < 50) {
@@ -678,7 +685,7 @@ public class PlaneBaseLogic {
 		GVCMPacketHandler.INSTANCE.sendToAll(new GVCPakcetVehicleState(planebody.getEntityId(),bodyRot, throttle,trigger1,trigger2));
 	}
 	public boolean handle(double AngulardifferenceYaw, double targetPitch, double alt){
-		if(AngulardifferenceYaw < -10){
+		if(AngulardifferenceYaw < 0){
 			//turn Right
 			if(alt > 30)rollHandle(-maxbank);
 			else if(alt > 10)rollHandle(-maxbank*(alt)/30);
@@ -694,25 +701,25 @@ public class PlaneBaseLogic {
 				if (bodyrotationRoll < 0 && bodyrotationPitch > targetPitch-10) {//機首が低い
 					//右に傾いている
 					//操縦桿引き込み
-					mousey += 8;
+					mousey += abs(AngulardifferenceYaw);
 //					System.out.println("debug1");
 				} else if (bodyrotationRoll > 0 && bodyrotationPitch < targetPitch+10) {//機種が高い
 					//左に傾いている
 					//操縦桿押し込み
-					mousey -= 8;
+					mousey -= abs(AngulardifferenceYaw);
 //					System.out.println("debug2");
 				}
 			}
 			if(bodyrotationPitch < targetPitch+10) {//機種が高い
 				if (abs(bodyrotationRoll) < 80) {
-					yawladder++;
+					yawladder+=min(abs(AngulardifferenceYaw),10)/10;
 				} else if (abs(bodyrotationRoll) > 100) {
 					//ひっくり返っている
-					yawladder--;
+					yawladder-=min(abs(AngulardifferenceYaw),10)/10;
 				}
 			}
 			
-		}else if(AngulardifferenceYaw > 10){
+		}else if(AngulardifferenceYaw > 0){
 			//turn Left
 			if(alt > 30)rollHandle(maxbank);
 			else if(alt > 10)rollHandle(maxbank*(alt)/30);
@@ -727,21 +734,21 @@ public class PlaneBaseLogic {
 				if (bodyrotationRoll < 0 && bodyrotationPitch < targetPitch+10) {//機首が高い
 					//右に傾いている
 					//操縦桿押し込み
-					mousey -= 8;
+					mousey -= abs(AngulardifferenceYaw);
 //					System.out.println("debug3");
 				} else if (bodyrotationRoll > 0 && bodyrotationPitch > targetPitch-10) {//機首が低い
 					//左に傾いている
 					//操縦桿引き込み
-					mousey += 8;
+					mousey += abs(AngulardifferenceYaw);
 //					System.out.println("debug4");
 				}
 			}
 			if(bodyrotationPitch < targetPitch+10) {//機首が高い
 				if (abs(bodyrotationRoll) < 80) {
-					yawladder--;
+					yawladder-=min(abs(AngulardifferenceYaw),10)/10;
 				} else if (abs(bodyrotationRoll) > 100) {
 					//ひっくり返っている
-					yawladder++;
+					yawladder+=min(abs(AngulardifferenceYaw),10)/10;
 				}
 			}
 		}else {
@@ -752,43 +759,43 @@ public class PlaneBaseLogic {
 	}
 	public void rollHandle(double targetRoll){
 		if (bodyrotationRoll > targetRoll) {
-			mousex += 8;
+			mousex += abs(bodyrotationRoll-targetRoll)/10;
 		} else if (bodyrotationRoll < targetRoll) {
-			mousex -= 8;
+			mousex -= abs(bodyrotationRoll-targetRoll)/10;
 		}
 	}
 	public boolean pitchHandle(double targetPitch){
 		double AngulardifferencePitch = bodyrotationPitch - targetPitch;
-		if (AngulardifferencePitch < -2){
+		if (AngulardifferencePitch < 0){
 			//機首下げ
 			if(abs(bodyrotationRoll)<80) {
-				mousey -= 8;
+				mousey -= abs(AngulardifferencePitch);
 			}else if(abs(bodyrotationRoll)>100){
-				mousey += 8;
+				mousey += abs(AngulardifferencePitch);
 			}
 			if(abs(bodyrotationRoll) > 60 && abs(bodyrotationRoll) < 120) {
 				if (bodyrotationRoll < 0) {
 					//左に傾いている
-					yawladder++;
+					yawladder+=min(abs(AngulardifferencePitch),10)/10;
 				} else if (bodyrotationRoll > 0) {
 					//右に傾いている
-					yawladder--;
+					yawladder-=min(abs(AngulardifferencePitch),10)/10;
 				}
 			}
-		}else if (AngulardifferencePitch > +2){
+		}else if (AngulardifferencePitch > 0){
 			//機首上げ
 			if(abs(bodyrotationRoll)<80) {
-				mousey += 8;
+				mousey += abs(AngulardifferencePitch);
 			}else if(abs(bodyrotationRoll)>100){
-				mousey -= 8;
+				mousey -= abs(AngulardifferencePitch);
 			}
 			if(abs(bodyrotationRoll) > 60 && abs(bodyrotationRoll) < 120) {
 				if (bodyrotationRoll < 0) {
 					//左に傾いている
-					yawladder--;
+					yawladder-=min(abs(AngulardifferencePitch),10)/10;
 				} else if (bodyrotationRoll > 0) {
 					//右に傾いている
-					yawladder++;
+					yawladder+=min(abs(AngulardifferencePitch),10)/10;
 				}
 			}
 		}else {
@@ -911,187 +918,181 @@ public class PlaneBaseLogic {
 //			motionY *= 0.95;
 //			motionZ *= 0.95;
 //		}
-		Vector3d motionvec = new Vector3d(planebody.motionX, planebody.motionY,planebody.motionZ);
-		if(planebody.onGround && throttle>0.01 && throttle<0.2 && motionvec.length()<1){
-			planebody.motionX -= bodyvector.x*0.2;
-			planebody.motionY -= bodyvector.y*0.2;
-			planebody.motionZ -= bodyvector.z*0.2;
-		}else {
-			if (!(Double.isNaN(bodyvector.x) || Double.isNaN(bodyvector.y) || Double.isNaN(bodyvector.z))) {
-				planebody.motionX -= bodyvector.x * throttle * speedfactor;
-				planebody.motionY -= bodyvector.y * throttle * speedfactor;
-				planebody.motionZ -= bodyvector.z * throttle * speedfactor;
-				if(throttle>9.5){
-					planebody.motionX -= bodyvector.x * throttle * speedfactor_af;
-					planebody.motionY -= bodyvector.y * throttle * speedfactor_af;
-					planebody.motionZ -= bodyvector.z * throttle * speedfactor_af;
-				}
-			}
-		}
 		{
+			Vector3d motionvec = new Vector3d(planebody.motionX, planebody.motionY, planebody.motionZ);
+			if (planebody.onGround && throttle > 0.01 && throttle < 0.2 && motionvec.length() < 1) {
+				planebody.motionX -= bodyvector.x * 0.2;
+				planebody.motionY -= bodyvector.y * 0.2;
+				planebody.motionZ -= bodyvector.z * 0.2;
+			} else {
+				if (!(Double.isNaN(bodyvector.x) || Double.isNaN(bodyvector.y) || Double.isNaN(bodyvector.z))) {
+					planebody.motionX -= bodyvector.x * throttle * speedfactor;
+					planebody.motionY -= bodyvector.y * throttle * speedfactor;
+					planebody.motionZ -= bodyvector.z * throttle * speedfactor;
+					if (throttle > 9.5) {
+						planebody.motionX -= bodyvector.x * throttle * speedfactor_af;
+						planebody.motionY -= bodyvector.y * throttle * speedfactor_af;
+						planebody.motionZ -= bodyvector.z * throttle * speedfactor_af;
+					}
+				}
+			}
+			{
+				motionvec = new Vector3d(planebody.motionX, planebody.motionY, planebody.motionZ);
+				bodyvector.normalize();
+				motionvec.add(bodyvector);
+				double cos = angle_cos(bodyvector, motionvec);
+				if (!planebody.onGround && motionvec.lengthSquared() > 0.000001) {
+					Vector3d axisstall = new Vector3d();
+					motionvec.normalize();
+					axisstall.cross(bodyvector, motionvec);
+					axisstall.normalize();
+					axisstall.z = -axisstall.z;
+					Quat4d quat4d = new Quat4d();
+					quat4d.inverse(bodyRot);
+					quat4d.normalize();
+					axisstall = Calculater.transformVecByQuat(axisstall, quat4d);
+					if (!Double.isNaN(axisstall.x) && !Double.isNaN(axisstall.y) && !Double.isNaN(axisstall.z)) {
+						AxisAngle4d axisxangledstall = new AxisAngle4d(axisstall, abs(cos) * acos(-cos) / stability);
+						rotationmotion = Calculater.quatRotateAxis(rotationmotion, axisxangledstall);
+					}
+				}
+			}
+			
 			motionvec = new Vector3d(planebody.motionX, planebody.motionY, planebody.motionZ);
-			bodyvector.normalize();
-			motionvec.add(bodyvector);
-			double cos = angle_cos(bodyvector, motionvec);
-			if (!planebody.onGround && motionvec.lengthSquared() > 0.000001) {
-				Vector3d axisstall = new Vector3d();
-				motionvec.normalize();
-				axisstall.cross(bodyvector, motionvec);
-				axisstall.normalize();
-				axisstall.z = -axisstall.z;
-				Quat4d quat4d = new Quat4d();
-				quat4d.inverse(bodyRot);
-				quat4d.normalize();
-				axisstall = Calculater.transformVecByQuat(axisstall,quat4d);
-				if(! Double.isNaN(axisstall.x) && ! Double.isNaN(axisstall.y) && ! Double.isNaN(axisstall.z)) {
-					AxisAngle4d axisxangledstall = new AxisAngle4d(axisstall, abs(cos) * acos(-cos) / stability);
-					rotationmotion = Calculater.quatRotateAxis(rotationmotion, axisxangledstall);
+			if (motionvec.length() > 0.01) {
+				double cos;
+				cos = angle_cos(bodyvector, motionvec);
+				if (motionvec.length() > 0.000001 && abs(cos) > 0.000001) {
+					Vector3d bodyvectorForscaling = new Vector3d(bodyvector);
+					bodyvectorForscaling.normalize();
+					bodyvectorForscaling.scale(-motionvec.length());
+					cos = angle_cos(motionvec, bodyvectorForscaling);
+					motionvec = vector_interior_division(bodyvectorForscaling, motionvec, cos);
+					motionvec.normalize();
+					motionvec.scale(bodyvectorForscaling.length());
+				}
+				cos = angle_cos(bodyvector, motionvec);
+				Vector3d tailwingvectorForFloating = new Vector3d(tailwingvector);
+				tailwingvectorForFloating.scale(motionvec.length() * -cos * (liftfactor + flaplevel * flapliftfactor));
+//			System.out.println("debug" + cos);
+				motionvec.y -= gravity;
+				motionvec.x += tailwingvectorForFloating.x / slipresist;
+				motionvec.y += tailwingvectorForFloating.y;
+				motionvec.z += tailwingvectorForFloating.z / slipresist;
+				cos = angle_cos(bodyvector, motionvec);
+				if (motionvec.length() > 0.000001) {
+					Vector3d airDrug = new Vector3d(motionvec);
+					double sin = sqrt(1 - cos * cos);
+					airDrug.scale(motionvec.length() * motionvec.length() * (dragfactor + gearprogress * geardragfactor + flaplevel * flapdragfactor) + (sin * sin) / 20);
+					motionvec.sub(airDrug);
+				} else {
+					motionvec.scale(0);
+				}
+			} else {
+				motionvec.scale(0);
+				motionvec.y -= 0.49;
+			}
+			if (!Double.isNaN(motionvec.x) && !Double.isNaN(motionvec.y) && !Double.isNaN(motionvec.z)) {
+				planebody.motionX = abs(motionvec.x) > 0.0000001 ? motionvec.x : 0;
+				planebody.motionY = abs(motionvec.y) > 0.0000001 ? motionvec.y : 0;
+				planebody.motionZ = abs(motionvec.z) > 0.0000001 ? motionvec.z : 0;
+			}
+			double backmotionX = planebody.motionX;
+			double backmotionY = planebody.motionY;
+			double backmotionZ = planebody.motionZ;
+			motionvec.normalize();
+			if ((motionvec.y < -bodyvector.y && autoflap) || planebody.onGround) {
+				Flapextension();
+			} else {
+				Flapstorage();
+			}
+			planebody.moveEntity(planebody.motionX, planebody.motionY, planebody.motionZ);
+			if (planebody.motionY > 0) {
+				planebody.isAirBorne = true;
+			}
+			
+			
+			if (throttle > throttle_Max) {
+				throttle = throttle_Max;
+			}
+			if (throttle < throttle_min) {
+				throttle = throttle_min;
+			}
+			planebody.fallDistance = 0;
+			if (planebody.isCollidedHorizontally) {
+				if (backmotionX * backmotionX + backmotionY * backmotionY + backmotionZ * backmotionZ > 1) {
+					planebody.attackEntityFrom(DamageSource.fall, (float) (backmotionX * backmotionX + backmotionY * backmotionY + backmotionZ * backmotionZ) * 30);
+				}
+			}
+			if (planebody.onGround) {
+				Vector3d axisx = new Vector3d(-cos(toRadians(bodyrotationYaw)), 0, sin(toRadians(bodyrotationYaw)));
+				if (abs(bodyrotationPitch - onground_pitch) > 15) {
+					planebody.attackEntityFrom(DamageSource.fall, (float) (30));
+				}
+				AxisAngle4d axisxangled = new AxisAngle4d(axisx, toRadians((onground_pitch - bodyrotationPitch) / 10));
+				bodyRot = Calculater.quatRotateAxis(bodyRot, axisxangled);
+				
+				axisx = Calculater.transformVecByQuat(new Vector3d(unitZ), bodyRot);
+				if (bodyrotationRoll < 45 && bodyrotationRoll > -45) {
+					axisxangled = new AxisAngle4d(axisx, toRadians(-bodyrotationRoll / 10));
+				}
+				if (bodyrotationRoll < -45 && bodyrotationRoll > -135) {
+					planebody.attackEntityFrom(DamageSource.fall, (float) (20));
+					axisxangled = new AxisAngle4d(axisx, toRadians((-90 - bodyrotationRoll) / 10));
+				}
+				if (bodyrotationRoll < 135 && bodyrotationRoll > 45) {
+					planebody.attackEntityFrom(DamageSource.fall, (float) (20));
+					axisxangled = new AxisAngle4d(axisx, toRadians((90 - bodyrotationRoll) / 10));
+				}
+				if (bodyrotationRoll > 135) {
+					planebody.attackEntityFrom(DamageSource.fall, (float) (30));
+					axisxangled = new AxisAngle4d(axisx, toRadians((180 - bodyrotationRoll) / 10));
+				}
+				if (bodyrotationRoll < -135) {
+					planebody.attackEntityFrom(DamageSource.fall, (float) (30));
+					axisxangled = new AxisAngle4d(axisx, toRadians((-180 - bodyrotationRoll) / 10));
+				}
+				bodyRot = Calculater.quatRotateAxis(bodyRot, axisxangled);
+				
+				gearprogress = 100;
+			} else {
+				if (throttle > throttle_gearDown) {
+					gearprogress--;
+				} else {
+					gearprogress++;
+					Flapextension();
+				}
+				
+				if (gearprogress < 0) {
+					gearprogress = 0;
+				}
+				if (gearprogress > 100) {
+					gearprogress = 100;
+				}
+				
+			}
+			if (flaplevel < 0) {
+				flaplevel = 0;
+			}
+			if (flaplevel > 75) {
+				flaplevel = 75;
+			}
+			nboundingbox.rot.set(this.bodyRot);
+			nboundingbox.updateOBB(planebody.posX, planebody.posY, planebody.posZ);
+			((ModifiedBoundingBox) planebody.boundingBox).rot.inverse(this.bodyRot);
+			((ModifiedBoundingBox) planebody.boundingBox).updateOBB(planebody.posX, planebody.posY, planebody.posZ);
+			
+			if (childEntities[0] != null) {
+				childEntities[0].motionX = planebody.motionX;
+				childEntities[0].motionY = planebody.motionY;
+				childEntities[0].motionZ = planebody.motionZ;
+				if (childEntities[0].riddenByEntity != null) {
+					childEntities[0].riddenByEntity.motionX = planebody.motionX;
+					childEntities[0].riddenByEntity.motionY = planebody.motionY;
+					childEntities[0].riddenByEntity.motionZ = planebody.motionZ;
 				}
 			}
 		}
-		
-		motionvec = new Vector3d(planebody.motionX, planebody.motionY, planebody.motionZ);
-		if(motionvec.length()>0.01) {
-			double cos;
-			cos = angle_cos(bodyvector, motionvec);
-			if (motionvec.length() > 0.000001 && abs(cos) > 0.000001) {
-				Vector3d bodyvectorForscaling = new Vector3d(bodyvector);
-				bodyvectorForscaling.normalize();
-				bodyvectorForscaling.scale(-motionvec.length());
-				cos = angle_cos(motionvec, bodyvectorForscaling);
-				motionvec = vector_interior_division(bodyvectorForscaling,motionvec,cos);
-				motionvec.normalize();
-				motionvec.scale(bodyvectorForscaling.length());
-			}
-			cos = angle_cos(bodyvector, motionvec);
-			Vector3d tailwingvectorForFloating = new Vector3d(tailwingvector);
-			tailwingvectorForFloating.scale(motionvec.length() * -cos * (liftfactor + flaplevel * flapliftfactor));
-//			System.out.println("debug" + cos);
-			motionvec.y -=gravity;
-			motionvec.x += tailwingvectorForFloating.x/slipresist;
-			motionvec.y += tailwingvectorForFloating.y;
-			motionvec.z += tailwingvectorForFloating.z/slipresist;
-			cos = angle_cos(bodyvector, motionvec);
-			if(motionvec.length()>0.000001) {
-				Vector3d airDrug = new Vector3d(motionvec);
-				double sin = sqrt(1-cos * cos);
-				airDrug.scale(motionvec.length() * motionvec.length() * (dragfactor + gearprogress * geardragfactor + flaplevel*flapdragfactor) + (sin * sin)/20);
-				motionvec.sub(airDrug);
-			}else {
-				motionvec.scale(0);
-			}
-		}else {
-			motionvec.scale(0);
-			motionvec.y -=0.49;
-		}
-		if(! Double.isNaN(motionvec.x) && ! Double.isNaN(motionvec.y) && ! Double.isNaN(motionvec.z)) {
-			planebody.motionX = abs(motionvec.x) > 0.0000001 ? motionvec.x : 0;
-			planebody.motionY = abs(motionvec.y) > 0.0000001 ? motionvec.y : 0;
-			planebody.motionZ = abs(motionvec.z) > 0.0000001 ? motionvec.z : 0;
-		}
-		double backmotionX = planebody.motionX;
-		double backmotionY = planebody.motionY;
-		double backmotionZ = planebody.motionZ;
-		motionvec.normalize();
-		if(motionvec.y < -bodyvector.y || planebody.onGround){
-			Flapextension();
-		}else {
-			Flapstorage();
-		}
-		planebody.moveEntity(planebody.motionX,planebody.motionY,planebody.motionZ);
-		if(planebody.motionY>0){
-			planebody.isAirBorne = true;
-		}
-		
-		
-		if(throttle >throttle_Max){
-			throttle = throttle_Max;
-		}
-		if(throttle <throttle_min){
-			throttle = throttle_min;
-		}
-		planebody.fallDistance=0;
-		if(!worldObj.isRemote && health < 0){
-			worldObj.createExplosion(planebody,planebody.posX  ,planebody.posY+2,planebody.posZ  ,4,true);
-			worldObj.createExplosion(planebody,planebody.posX+2,planebody.posY+2,planebody.posZ  ,3,true);
-			worldObj.createExplosion(planebody,planebody.posX-2,planebody.posY+2,planebody.posZ  ,3,true);
-			worldObj.createExplosion(planebody,planebody.posX  ,planebody.posY+2,planebody.posZ+2,3,true);
-			worldObj.createExplosion(planebody,planebody.posX  ,planebody.posY+2,planebody.posZ-2,3,true);
-			planebody.setDead();
-		}
-		if(planebody.isCollidedHorizontally){
-			if(backmotionX*backmotionX + backmotionY*backmotionY + backmotionZ*backmotionZ > 1){
-				planebody.attackEntityFrom(DamageSource.fall, (float) (backmotionX*backmotionX + backmotionY*backmotionY + backmotionZ*backmotionZ)*30);
-			}
-		}
-		if(planebody.onGround){
-			Vector3d axisx = new Vector3d(-cos(toRadians(bodyrotationYaw)),0,sin(toRadians(bodyrotationYaw)));
-			if(abs(bodyrotationPitch - onground_pitch)>15){
-				planebody.attackEntityFrom(DamageSource.fall, (float) (30));
-			}
-			AxisAngle4d axisxangled = new AxisAngle4d(axisx, toRadians((onground_pitch-bodyrotationPitch)/10));
-			bodyRot = Calculater.quatRotateAxis(bodyRot,axisxangled);
-			
-			axisx = Calculater.transformVecByQuat(new Vector3d(unitZ), bodyRot);
-			if(bodyrotationRoll<45 && bodyrotationRoll>-45){
-				axisxangled = new AxisAngle4d(axisx, toRadians(-bodyrotationRoll/10));
-			}
-			if(bodyrotationRoll<-45 && bodyrotationRoll>-135){
-				planebody.attackEntityFrom(DamageSource.fall, (float) (20));
-				axisxangled = new AxisAngle4d(axisx, toRadians((-90-bodyrotationRoll)/10));
-			}
-			if(bodyrotationRoll<135 && bodyrotationRoll>45){
-				planebody.attackEntityFrom(DamageSource.fall, (float) (20));
-				axisxangled = new AxisAngle4d(axisx, toRadians((90-bodyrotationRoll)/10));
-			}
-			if(bodyrotationRoll>135){
-				planebody.attackEntityFrom(DamageSource.fall, (float) (30));
-				axisxangled = new AxisAngle4d(axisx, toRadians((180-bodyrotationRoll)/10));
-			}
-			if(bodyrotationRoll<-135){
-				planebody.attackEntityFrom(DamageSource.fall, (float) (30));
-				axisxangled = new AxisAngle4d(axisx, toRadians((-180-bodyrotationRoll)/10));
-			}
-			bodyRot = Calculater.quatRotateAxis(bodyRot,axisxangled);
-			
-			gearprogress = 100;
-		}else {
-			if(throttle > throttle_gearDown){
-				gearprogress--;
-			}else {
-				gearprogress++;
-			}
-			
-			if(gearprogress<0){
-				gearprogress=0;
-			}
-			if(gearprogress>100){
-				gearprogress=100;
-			}
-			
-		}
-		if(flaplevel<0){
-			flaplevel=0;
-		}
-		if(flaplevel>75){
-			flaplevel=75;
-		}
-		nboundingbox.rot.set(this.bodyRot);
-		nboundingbox.updateOBB(planebody.posX,planebody.posY,planebody.posZ);
-		((ModifiedBoundingBox)planebody.boundingBox).rot.inverse(this.bodyRot);
-		((ModifiedBoundingBox)planebody.boundingBox).updateOBB(planebody.posX,planebody.posY,planebody.posZ);
-		
-		if(childEntities[0]!=null) {
-			childEntities[0].motionX = planebody.motionX;
-			childEntities[0].motionY = planebody.motionY;
-			childEntities[0].motionZ = planebody.motionZ;
-			if(childEntities[0].riddenByEntity != null){
-				childEntities[0].riddenByEntity.motionX = planebody.motionX;
-				childEntities[0].riddenByEntity.motionY = planebody.motionY;
-				childEntities[0].riddenByEntity.motionZ = planebody.motionZ;
-			}
-		}
-		
 		
 	}
 	

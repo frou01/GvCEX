@@ -52,7 +52,7 @@ public class EntityGER_Fighter extends EntityGER_FighterBase
 		baseLogic.useMain_withSub = true;
 		baseLogic.mainTurret = new TurretObj(worldObj);
 		{
-			baseLogic.mainTurret.onmotherPos = new Vector3d(0,1.2,-2);
+			baseLogic.mainTurret.onmotherPos = new Vector3d(0,0,0);
 			baseLogic.mainTurret.motherRotCenter = new Vector3d(baseLogic.rotcenter);
 			baseLogic.mainTurret.cannonpos = new Vector3d(0,1.5,-2);
 			baseLogic.mainTurret.turretspeedY = 5;
@@ -65,9 +65,10 @@ public class EntityGER_Fighter extends EntityGER_FighterBase
 			baseLogic.mainTurret.ex = 0.5f;
 			baseLogic.mainTurret.cycle_setting = 1;
 			baseLogic.mainTurret.flushscale = 2;
-			baseLogic.mainTurret.firesound = "hmgww2:hmgww2.fire_30mm";
+			baseLogic.mainTurret.firesound = "handmadeguns:handmadeguns.20mmfire";
+			baseLogic.mainTurret.flushoffset = 1;
 			baseLogic.mainTurret.spread = 5;
-			baseLogic.mainTurret.speed = 4;
+			baseLogic.mainTurret.speed = 2;
 			baseLogic.mainTurret.magazineMax = 50;
 			baseLogic.mainTurret.magazinerem = 50;
 			baseLogic.mainTurret.reloadTimer = 150;
@@ -78,7 +79,7 @@ public class EntityGER_Fighter extends EntityGER_FighterBase
 		{
 			baseLogic.subTurret.onmotherPos = new Vector3d(0,0,0);
 			baseLogic.subTurret.motherRotCenter = new Vector3d(baseLogic.rotcenter);
-			baseLogic.subTurret.cannonpos = new Vector3d(0,1.5,-2);
+			baseLogic.subTurret.cannonpos = new Vector3d(-0.2,1.64,-2);
 			baseLogic.subTurret.turretspeedY = 5;
 			baseLogic.subTurret.turretspeedP = 8;
 			baseLogic.subTurret.turretanglelimtPitchMax = 5;
@@ -89,8 +90,9 @@ public class EntityGER_Fighter extends EntityGER_FighterBase
 			baseLogic.subTurret.cycle_setting = 0;
 			baseLogic.subTurret.flushscale = 1;
 			baseLogic.subTurret.firesound = "handmadeguns:handmadeguns.fire";
-			baseLogic.subTurret.spread = 10;
-			baseLogic.subTurret.speed = 4;
+			baseLogic.subTurret.flushoffset = 1;
+			baseLogic.subTurret.spread = 5;
+			baseLogic.subTurret.speed = 5;
 			baseLogic.subTurret.canex = true;
 			baseLogic.subTurret.magazineMax = 100;
 			baseLogic.subTurret.magazinerem = 100;
@@ -100,7 +102,7 @@ public class EntityGER_Fighter extends EntityGER_FighterBase
 				TurretObj turretObj = new TurretObj(worldObj);
 				turretObj.onmotherPos = new Vector3d(0,0,0);
 				turretObj.motherRotCenter = new Vector3d(baseLogic.rotcenter);
-				baseLogic.subTurret.cannonpos = new Vector3d(0,1.5,-2);
+				baseLogic.subTurret.cannonpos = new Vector3d(0.2,1.64,-2);
 				turretObj.turretspeedY = 5;
 				turretObj.turretspeedP = 8;
 				turretObj.turretanglelimtPitchMax = 5;
@@ -111,8 +113,9 @@ public class EntityGER_Fighter extends EntityGER_FighterBase
 				turretObj.cycle_setting = 0;
 				turretObj.flushscale = 1;
 				turretObj.firesound = "handmadeguns:handmadeguns.fire";
-				turretObj.spread = 10;
-				turretObj.speed = 4;
+				turretObj.flushoffset = 1;
+				turretObj.spread = 5;
+				turretObj.speed = 5;
 				turretObj.canex = true;
 				turretObj.magazineMax = 100;
 				turretObj.magazinerem = 100;

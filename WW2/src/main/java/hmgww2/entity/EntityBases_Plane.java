@@ -60,10 +60,10 @@ public abstract class EntityBases_Plane extends EntityBases implements ImultiRid
 		this.fireCycle1 = 1;
 		baseLogic = new PlaneBaseLogic(worldObj, this);
 		baseLogic.speedfactor = 0.004f;
-		baseLogic.liftfactor = 0.05f;
-		baseLogic.flapliftfactor = 0;
-		baseLogic.flapdragfactor = 0;
-		baseLogic.geardragfactor = 0.000001f;
+		baseLogic.liftfactor = 0.03f;
+		baseLogic.flapliftfactor = 0.0001f;
+		baseLogic.flapdragfactor = 0.00001f;
+		baseLogic.geardragfactor = 0.00001f;
 		baseLogic.dragfactor = 0.01f;
 		baseLogic.gravity = 0.02f;
 		baseLogic.stability = 3000;
@@ -97,9 +97,9 @@ public abstract class EntityBases_Plane extends EntityBases implements ImultiRid
 		this.motionX = motion[0];
 		this.motionY = motion[1];
 		this.motionZ = motion[2];
-		if (!this.standalone() && baseLogic.childEntities[0] != null && baseLogic.childEntities[0].riddenByEntity == null) {
-			this.onGround = true;
-		}
+//		if (!this.standalone() && baseLogic.childEntities[0] != null && baseLogic.childEntities[0].riddenByEntity == null) {
+//			baseLogic.throttle--;
+//		}
 		baseLogic.onUpdate();
 	}
 	
@@ -271,20 +271,48 @@ public abstract class EntityBases_Plane extends EntityBases implements ImultiRid
 	
 	protected void onDeathUpdate() {
 		++this.deathTicks;
-		if (this.deathTicks == 1) {
-			this.worldObj.createExplosion(this, this.posX, this.posY, this.posZ, 0F, false);
+		if(this.deathTicks > 40) {
+			if (worldObj.isRemote) {
+				for (int i = 0; i < 5; i++) {
+					worldObj.spawnParticle("smoke",
+							this.posX + (float) (rand.nextInt(30) - 15) / 10,
+							this.posY + (float) (rand.nextInt(30) - 15) / 10 + 1.5f,
+							this.posZ + (float) (rand.nextInt(30) - 15) / 10,
+							0.0D, 0.2D, 0.0D);
+					worldObj.spawnParticle("cloud",
+							this.posX + (float) (rand.nextInt(30) - 15) / 10,
+							this.posY + (float) (rand.nextInt(30) - 15) / 10 + 1.5f,
+							this.posZ + (float) (rand.nextInt(30) - 15) / 10,
+							0.0D, 0.3D, 0.0D);
+				}
+			}
 		}
-		if (this.onGround && !this.worldObj.isRemote) {
-			this.worldObj.createExplosion(this, this.posX, this.posY, this.posZ, 3.5F, false);
-			this.setDead();
-			Item i = new ItemStack(Blocks.gold_block, 0).getItem();
-			this.dropItem(i, 2);
-		}
-		if (this.deathTicks == 200 && !this.worldObj.isRemote) {
-			this.worldObj.createExplosion(this, this.posX, this.posY, this.posZ, 3.5F, false);
-			this.setDead();
-			Item i = new ItemStack(Blocks.gold_block, 0).getItem();
-			this.dropItem(i, 2);
+		if (this.deathTicks >= 140) {
+			for (int i = 0; i < 15; i++) {
+				worldObj.spawnParticle("flame",
+						this.posX + (float) (rand.nextInt(20) - 10) / 10,
+						this.posY + (float) (rand.nextInt(20) - 10) / 10,
+						this.posZ + (float) (rand.nextInt(20) - 10) / 10,
+						(rand.nextInt(20) - 10) / 100,
+						(rand.nextInt(20) - 10) / 100,
+						(rand.nextInt(20) - 10) / 100 );
+				worldObj.spawnParticle("smoke",
+						this.posX + (float) (rand.nextInt(30) - 15) / 10,
+						this.posY + (float) (rand.nextInt(30) - 15) / 10,
+						this.posZ + (float) (rand.nextInt(30) - 15) / 10,
+						(rand.nextInt(20) - 10) / 100,
+						(rand.nextInt(20) - 10) / 100,
+						(rand.nextInt(20) - 10) / 100 );
+				worldObj.spawnParticle("cloud",
+						this.posX + (float) (rand.nextInt(30) - 15) / 10,
+						this.posY + (float) (rand.nextInt(30) - 15) / 10,
+						this.posZ + (float) (rand.nextInt(30) - 15) / 10,
+						(rand.nextInt(20) - 10) / 100,
+						(rand.nextInt(20) - 10) / 100,
+						(rand.nextInt(20) - 10) / 100 );
+			}
+			if(this.deathTicks == 150)
+				this.setDead();
 		}
 	}
 	
@@ -310,5 +338,21 @@ public abstract class EntityBases_Plane extends EntityBases implements ImultiRid
 	@Override
 	public boolean standalone() {
 		return mode != 0;
+	}
+	
+	public boolean attackEntityFrom(DamageSource source, float par2) {
+		if(isRidingEntity(source.getEntity())){
+			return false;
+		}else
+		if (this.riddenByEntity == source.getEntity()) {
+			return false;
+		} else {
+			if (par2 <= armor) {
+				if(armor != 0)if (!source.getDamageType().equals("mob")) this.playSound("gvcmob:gvcmob.ArmorBounce", 0.5F, 1F);
+				return false;
+			}
+			if(armor != 0)this.playSound("gvcmob:gvcmob.armorhit", 0.5F, 1F);
+			return super.attackEntityFrom(source,par2-armor);
+		}
 	}
 }
