@@ -906,6 +906,9 @@ public class HMGItem_Unified_Guns extends Item {
                     case 9:
                         bullet = FireBulletTE(world, entity);
                         break;
+                    case 10:
+                        bullet = FireBulletTorp(world, entity);
+                        break;
                 }
             }
 
@@ -1463,6 +1466,14 @@ public class HMGItem_Unified_Guns extends Item {
         for(int i = 0;i < shotgun_pellet ; i++){
             bulletinstances[i] = new HMGEntityBullet_Flame(par2World, par3Entity,
                     this.powor, speed, tempspread, bulletmodelN);
+        }
+        return bulletinstances;
+    }
+    public HMGEntityBulletBase[] FireBulletTorp( World par2World, Entity par3Entity){
+        HMGEntityBulletBase[] bulletinstances = new HMGEntityBulletBase[shotgun_pellet];
+        for(int i = 0;i < shotgun_pellet ; i++){
+            bulletinstances[i] = new HMGEntityBulletTorp(par2World, par3Entity,
+                                                                this.powor, speed, tempspread, ex, canex, bulletmodelRPG);
         }
         return bulletinstances;
     }

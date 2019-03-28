@@ -126,15 +126,19 @@ public class GVCMXEntityEvent {
 //            spotObjArrayList_Spawn.removeAll(tempremove);
 //        } else
         {
+	        try{
             ArrayList<SpotObj> spotObjArrayList_Spawn = spots_needSpawn.get(Integer.valueOf(dimid));
-            {
+            if(!spotObjArrayList_Spawn.isEmpty()){
                 //send circlePacket
-                GVCMPacketHandler.INSTANCE.sendToDimension(new GVCPacketSpawnSpotCircle(spotObjArrayList_Spawn,dimid),dimid);
+                	GVCMPacketHandler.INSTANCE.sendToDimension(new GVCPacketSpawnSpotCircle(spotObjArrayList_Spawn,dimid),dimid);
+                }
                 
                 
                 //reset
                 spotObjArrayList_Spawn.clear();
-            }
+            }catch (Exception e){
+		        e.printStackTrace();
+	        }
         }
         //アップデート処理必要かこれ？
 //        ArrayList<SpotObj> spotObjArrayList_Update = spots_toupdate.get(Integer.valueOf(dimid));

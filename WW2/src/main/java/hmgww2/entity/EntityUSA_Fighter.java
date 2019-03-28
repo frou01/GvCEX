@@ -62,7 +62,7 @@ public class EntityUSA_Fighter extends EntityUSA_FighterBase
 				cannon1.currentEntity = this;
 				cannon1.powor = 10;
 				cannon1.ex = 0.5f;
-				cannon1.cycle_setting = 2;
+				cannon1.cycle_setting = 1;
 				cannon1.flushscale = 1;
 				cannon1.firesound = "handmadeguns:handmadeguns.HeavyMachineGun";
 				cannon1.spread = 5;
@@ -86,7 +86,7 @@ public class EntityUSA_Fighter extends EntityUSA_FighterBase
 					cannon2.currentEntity = this;
 					cannon2.powor = 10;
 					cannon2.ex = 0.5f;
-					cannon2.cycle_setting = 2;
+					cannon2.cycle_setting = 1;
 					cannon2.flushscale = 1;
 					cannon2.firesound = "handmadeguns:handmadeguns.HeavyMachineGun";
 					cannon2.spread = 5;
@@ -111,7 +111,7 @@ public class EntityUSA_Fighter extends EntityUSA_FighterBase
 					cannon3.currentEntity = this;
 					cannon3.powor = 10;
 					cannon3.ex = 0.5f;
-					cannon3.cycle_setting = 2;
+					cannon3.cycle_setting = 1;
 					cannon3.flushscale = 1;
 					cannon3.firesound = "handmadeguns:handmadeguns.HeavyMachineGun";
 					cannon3.spread = 5;
@@ -136,7 +136,7 @@ public class EntityUSA_Fighter extends EntityUSA_FighterBase
 					cannon4.currentEntity = this;
 					cannon4.powor = 10;
 					cannon4.ex = 0.5f;
-					cannon4.cycle_setting = 2;
+					cannon4.cycle_setting = 1;
 					cannon4.flushscale = 1;
 					cannon4.firesound = "handmadeguns:handmadeguns.HeavyMachineGun";
 					cannon4.spread = 5;

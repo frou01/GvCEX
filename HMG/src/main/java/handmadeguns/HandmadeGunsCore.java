@@ -539,6 +539,7 @@ public class HandmadeGunsCore {
 		EntityRegistry.instance().registerModEntity(HMGEntityBullet.class, "Bullet_HMG", 260, this, 60, 5, false);
 		EntityRegistry.instance().registerModEntity(HMGEntityBulletRocket.class, "BulletRPG_HMG", 261, this, 60, 5, false);
 		EntityRegistry.instance().registerModEntity(HMGEntityBulletExprode.class, "BulletGrenade_HMG", 262, this, 60, 5, false);
+		EntityRegistry.instance().registerModEntity(HMGEntityBulletTorp.class, "BulletTorp_HMG", 262, this, 60, 5, false);
 		EntityRegistry.instance().registerModEntity(HMGEntityLight.class, "Right_HMG", 263, this, 128, 5, true);
 		EntityRegistry.instance().registerModEntity(HMGEntityLight2.class, "Right2_HMG", 264, this, 128, 5, false);
 		EntityRegistry.instance().registerModEntity(HMGEntityLaser.class, "Laser_HMG", 265, this, 128, 5, false);

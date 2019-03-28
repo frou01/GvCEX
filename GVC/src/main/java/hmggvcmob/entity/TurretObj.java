@@ -82,7 +82,7 @@ public class TurretObj {
     
     public int magazinerem;
     public int magazineMax = -1;
-    public int reloadTimer;
+    public int reloadTimer = -1;
     public int reloadSetting;
     
     public boolean canHoming = false;
@@ -107,18 +107,35 @@ public class TurretObj {
         local = new Vector3d(local);
         local.sub(turretYawCenterpos);
         local.sub(turretPitchCenterpos);
-        Vector3d transformedVecYawCenter = transformVecByQuat(new Vector3d(turretYawCenterpos),motherRot);
+        Vector3d transformedVecYawCenter;
+        Vector3d transformedVecPitchCenter;
+        {
+            Vector3d temp = new Vector3d(turretYawCenterpos);
+            temp.sub(motherRotCenter);
+            temp = transformVecByQuat(temp, motherRot);
+            temp.add(motherRotCenter);
+            transformedVecYawCenter = temp;
+        }
+        {
+            Vector3d temp = new Vector3d(turretPitchCenterpos);
+            temp.sub(motherRotCenter);
+            temp = transformVecByQuat(temp, motherRot);
+            temp.add(motherRotCenter);
+            temp.sub(turretYawCenterpos);
+            temp = transformVecByQuat(temp, turretyawrot);
+            temp.add(turretYawCenterpos);
+            transformedVecPitchCenter = temp;
+        }
         
-        Vector3d transformedVecPitchCenter = transformVecByQuat(new Vector3d(turretPitchCenterpos),motherRot);
-        transformedVecPitchCenter = transformVecByQuat(transformedVecPitchCenter,turretyawrot);
+        local.sub(motherRotCenter);
+        local = transformVecByQuat(local,motherRot);
+        local.add(motherRotCenter);
+        local = transformVecByQuat(local,turretpitchrot);
+        local = transformVecByQuat(local,turretyawrot);
+        local.add(transformedVecYawCenter);
+        local.add(transformedVecPitchCenter);
         
-        Vector3d transformedVecLocal = transformVecByQuat(local,turretyawrot);
-        transformedVecLocal = transformVecByQuat(transformedVecLocal,turretpitchrot);
-        transformedVecLocal = transformVecByQuat(transformedVecLocal,motherRot);
-        
-        transformedVecLocal.add(transformedVecYawCenter);
-        transformedVecLocal.add(transformedVecPitchCenter);
-        return transformedVecLocal;
+        return local;
     }
     public Vector3d getGlobalVector_fromLocalVector_onTurretPoint(Vector3d local){
         Quat4d turretyawrot = new Quat4d(0,0,0,1);
@@ -141,13 +158,9 @@ public class TurretObj {
     public Vector3d getGlobalVector_fromLocalVector_onMother(Vector3d local){
         
         local = new Vector3d(local);
-        local.sub(turretYawCenterpos);
-        Vector3d transformedVecYawCenter = transformVecByQuat(new Vector3d(turretYawCenterpos),motherRot);
-        
-        
+        local.sub(motherRotCenter);
         local = transformVecByQuat(new Vector3d(local),motherRot);
-        
-        local.add(transformedVecYawCenter);
+        local.add(motherRotCenter);
         return local;
     }
     public Vector3d getLocalVector_fromGlobalVector(Vector3d global){
@@ -339,9 +352,7 @@ public class TurretObj {
         this.motherPos = motherPos;
         turretRot = new Quat4d(0,0,0,1);
         
-        onmotherPos.sub(motherRotCenter);
         Vector3d temppos = getGlobalVector_fromLocalVector_onMother(onmotherPos);
-        onmotherPos.add(motherRotCenter);
         
         
         temppos.add(this.motherPos);
@@ -377,7 +388,9 @@ public class TurretObj {
             }
         }
     }
-    
+    public boolean isreloading(){
+        return  magazineMax != -1 && magazinerem <= 0;
+    }
     public void fire(){
         Vector3d Vec_transformedbybody = getGlobalVector_fromLocalVector(cannonpos);
         
@@ -422,6 +435,9 @@ public class TurretObj {
                         break;
                     case 10:
                         bullets = FireBulletHE(worldObj, currentEntity);
+                        break;
+                    case 11:
+                        bullets = FireBulletTorp(worldObj, currentEntity);
                         break;
                 }
                 if(bullets != null)for(HMGEntityBulletBase abullet:bullets) {
@@ -557,6 +573,14 @@ public class TurretObj {
         for(int i = 0;i < shotgun_pellet ; i++){
             bulletinstances[i] = new HMGEntityBullet_Flame(par2World, par3Entity,
                                                                   this.powor, speed, spread, bulletmodel);
+        }
+        return bulletinstances;
+    }
+    public HMGEntityBulletBase[] FireBulletTorp( World par2World, Entity par3Entity){
+        HMGEntityBulletBase[] bulletinstances = new HMGEntityBulletBase[shotgun_pellet];
+        for(int i = 0;i < shotgun_pellet ; i++){
+            bulletinstances[i] = new HMGEntityBulletTorp(par2World, par3Entity,
+                                                                this.powor, speed, spread, ex, canex, bulletmodel);
         }
         return bulletinstances;
     }

@@ -41,11 +41,13 @@ public class EntityGER_Fighter extends EntityGER_FighterBase
 		baseLogic.pitchspeed = 0.2f;
 		baseLogic.yawspeed = 0.3f;
 		baseLogic.maxDive = 60;
+		baseLogic.startDive = 40;
+		baseLogic.cruiseALT = 120;
 		baseLogic.maxClimb = -32;
 		baseLogic.maxbank = 60;
 		baseLogic.soundname = "hmgww2:hmgww2.sound_pera";
 		
-		baseLogic.camerapos = new double[]{0,2.5,0};
+		baseLogic.camerapos = new double[]{0,2.1,0};
 		baseLogic.rotcenter = new double[]{0,1.1,0};
 		
 		baseLogic.onground_pitch = -10;
@@ -67,8 +69,8 @@ public class EntityGER_Fighter extends EntityGER_FighterBase
 			baseLogic.mainTurret.flushscale = 2;
 			baseLogic.mainTurret.firesound = "handmadeguns:handmadeguns.20mmfire";
 			baseLogic.mainTurret.flushoffset = 1;
-			baseLogic.mainTurret.spread = 5;
-			baseLogic.mainTurret.speed = 2;
+			baseLogic.mainTurret.spread = 2.5f;
+			baseLogic.mainTurret.speed = 3.5f;
 			baseLogic.mainTurret.magazineMax = 50;
 			baseLogic.mainTurret.magazinerem = 50;
 			baseLogic.mainTurret.reloadTimer = 150;
@@ -79,7 +81,7 @@ public class EntityGER_Fighter extends EntityGER_FighterBase
 		{
 			baseLogic.subTurret.onmotherPos = new Vector3d(0,0,0);
 			baseLogic.subTurret.motherRotCenter = new Vector3d(baseLogic.rotcenter);
-			baseLogic.subTurret.cannonpos = new Vector3d(-0.2,1.64,-2);
+			baseLogic.subTurret.cannonpos = new Vector3d(-0.2,1.64,-2.2);
 			baseLogic.subTurret.turretspeedY = 5;
 			baseLogic.subTurret.turretspeedP = 8;
 			baseLogic.subTurret.turretanglelimtPitchMax = 5;
@@ -91,7 +93,7 @@ public class EntityGER_Fighter extends EntityGER_FighterBase
 			baseLogic.subTurret.flushscale = 1;
 			baseLogic.subTurret.firesound = "handmadeguns:handmadeguns.fire";
 			baseLogic.subTurret.flushoffset = 1;
-			baseLogic.subTurret.spread = 5;
+			baseLogic.subTurret.spread = 1.5f;
 			baseLogic.subTurret.speed = 5;
 			baseLogic.subTurret.canex = true;
 			baseLogic.subTurret.magazineMax = 100;
@@ -102,7 +104,7 @@ public class EntityGER_Fighter extends EntityGER_FighterBase
 				TurretObj turretObj = new TurretObj(worldObj);
 				turretObj.onmotherPos = new Vector3d(0,0,0);
 				turretObj.motherRotCenter = new Vector3d(baseLogic.rotcenter);
-				baseLogic.subTurret.cannonpos = new Vector3d(0.2,1.64,-2);
+				turretObj.cannonpos = new Vector3d(0.2,1.64,-2.2);
 				turretObj.turretspeedY = 5;
 				turretObj.turretspeedP = 8;
 				turretObj.turretanglelimtPitchMax = 5;
@@ -114,13 +116,14 @@ public class EntityGER_Fighter extends EntityGER_FighterBase
 				turretObj.flushscale = 1;
 				turretObj.firesound = "handmadeguns:handmadeguns.fire";
 				turretObj.flushoffset = 1;
-				turretObj.spread = 5;
+				turretObj.spread = 1.5f;
 				turretObj.speed = 5;
 				turretObj.canex = true;
 				turretObj.magazineMax = 100;
 				turretObj.magazinerem = 100;
 				turretObj.reloadTimer = 70;
 				turretObj.guntype = 0;
+				baseLogic.subTurret.addchild(turretObj);
 			}
 		}
 	}

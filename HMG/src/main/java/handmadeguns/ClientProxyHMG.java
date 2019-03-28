@@ -17,7 +17,6 @@ import handmadeguns.client.render.*;
 import handmadeguns.tile.TileMounter;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.AdvancedModelLoader;
@@ -125,8 +124,9 @@ public class ClientProxyHMG extends CommonSideProxyHMG {
 			RenderingRegistry.registerEntityRenderingHandler(HMGEntityItemMount2.class, new HMGRenderItemMount2());
 
 			RenderingRegistry.registerEntityRenderingHandler(HMGEntityBullet.class, new HMGRenderBullet());
-			RenderingRegistry.registerEntityRenderingHandler(HMGEntityBulletRocket.class, new HMGRenderBulletRPG());
-			RenderingRegistry.registerEntityRenderingHandler(HMGEntityBulletExprode.class, new HMGRenderBulletGrenade());
+			RenderingRegistry.registerEntityRenderingHandler(HMGEntityBulletRocket.class, new HMGRenderBulletExplode());
+			RenderingRegistry.registerEntityRenderingHandler(HMGEntityBulletExprode.class, new HMGRenderBulletExplode());
+			RenderingRegistry.registerEntityRenderingHandler(HMGEntityBulletTorp.class, new HMGRenderBulletExplode());
 
 			RenderingRegistry.registerEntityRenderingHandler(HMGEntityLight.class, new HMGRenderRight());
 			RenderingRegistry.registerEntityRenderingHandler(HMGEntityLight2.class, new HMGRenderRight2());
@@ -135,7 +135,7 @@ public class ClientProxyHMG extends CommonSideProxyHMG {
 			RenderingRegistry.registerEntityRenderingHandler(HMGEntityBullet_AP.class, new HMGRenderBullet());
 			RenderingRegistry.registerEntityRenderingHandler(HMGEntityBullet_Frag.class, new HMGRenderBullet());
 			RenderingRegistry.registerEntityRenderingHandler(HMGEntityBullet_HE.class, new HMGRenderBullet());
-			RenderingRegistry.registerEntityRenderingHandler(HMGEntityBullet_TE.class, new HMGRenderBulletRPG());
+			RenderingRegistry.registerEntityRenderingHandler(HMGEntityBullet_TE.class, new HMGRenderBulletExplode());
 			RenderingRegistry.registerEntityRenderingHandler(HMGEntityBullet_AT.class, new HMGRenderBullet());
 			RenderingRegistry.registerEntityRenderingHandler(HMGEntityBullet_Flame.class, new HMGRenderBullet());
 

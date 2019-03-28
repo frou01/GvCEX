@@ -3,7 +3,7 @@ mouseSensitivity:0.5
 fov:0.025
 gamma:1.0
 saturation:0.0
-renderDistance:8
+renderDistance:6
 guiScale:0
 particles:0
 bobView:true
@@ -12,8 +12,8 @@ advancedOpengl:false
 maxFps:60
 fboEnable:true
 difficulty:2
-fancyGraphics:true
-ao:2
+fancyGraphics:false
+ao:0
 clouds:true
 resourcePacks:[]
 lastServer:

@@ -41,6 +41,7 @@ public class EntityUSSR_Fighter extends EntityUSSR_FighterBase
 	    baseLogic.pitchspeed = 0.5f;
 	    baseLogic.yawspeed = 0.5f;
 	    baseLogic.maxDive = 60;
+	    baseLogic.startDive = 30;
 	    baseLogic.maxClimb = -22;
 	    baseLogic.maxbank = 60;
 	    baseLogic.soundname = "hmgww2:hmgww2.sound_pera";
@@ -65,7 +66,7 @@ public class EntityUSSR_Fighter extends EntityUSSR_FighterBase
 		    baseLogic.mainTurret.ex = 0.5f;
 		    baseLogic.mainTurret.cycle_setting = 1;
 		    baseLogic.mainTurret.flushscale = 2;
-		    baseLogic.mainTurret.firesound = "hmgww2:hmgww2.fire_30mm";
+		    baseLogic.mainTurret.firesound = "handmadeguns:handmadeguns.20mmfire";
 		    baseLogic.mainTurret.flushoffset = 1;
 		    baseLogic.mainTurret.spread = 5;
 		    baseLogic.mainTurret.speed = 5;

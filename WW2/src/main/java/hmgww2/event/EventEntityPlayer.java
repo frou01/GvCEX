@@ -18,55 +18,51 @@ public class EventEntityPlayer {
 		float damage = event.ammount;
 		ItemStack hold = null;
 		
-		if (target instanceof EntityJPNBase && target != null) 
+		if (target instanceof EntityJPNBase)
 		{
-			EntityJPNBase en = (EntityJPNBase) target.ridingEntity;
-			if (target != null && source.getEntity() instanceof EntityJPNBase) {
+			if (source.getEntity() instanceof EntityJPNBase) {
 				EntityJPNBase attacker = (EntityJPNBase) source.getEntity();
 				if (attacker != null) {
 					event.ammount = 0;
 				}
 			}
-			if (target != null && source.isExplosion()) {
+			if (source.isExplosion()) {
 				event.ammount = 0;
 			}
 		}
-		if (target instanceof EntityUSABase && target != null) 
+		if (target instanceof EntityUSABase)
 		{
-			EntityUSABase en = (EntityUSABase) target.ridingEntity;
-			if (target != null && source.getEntity() instanceof EntityUSABase) {
+			if (source.getEntity() instanceof EntityUSABase) {
 				EntityUSABase attacker = (EntityUSABase) source.getEntity();
 				if (attacker != null) {
 					event.ammount = 0;
 				}
 			}
-			if (target != null && source.isExplosion()) {
+			if (source.isExplosion()) {
 				event.ammount = 0;
 			}
 		}
-		if (target instanceof EntityGERBase && target != null) 
+		if (target instanceof EntityGERBase)
 		{
-			EntityGERBase en = (EntityGERBase) target.ridingEntity;
-			if (target != null && source.getEntity() instanceof EntityGERBase) {
+			if (source.getEntity() instanceof EntityGERBase) {
 				EntityGERBase attacker = (EntityGERBase) source.getEntity();
 				if (attacker != null) {
 					event.ammount = 0;
 				}
 			}
-			if (target != null && source.isExplosion()) {
+			if (source.isExplosion()) {
 				event.ammount = 0;
 			}
 		}
-		if (target instanceof EntityUSSRBase && target != null)
+		if (target.ridingEntity instanceof EntityUSSRBase)
 		{
-			EntityUSSRBase en = (EntityUSSRBase) target.ridingEntity;
-			if (target != null && source.getEntity() instanceof EntityUSSRBase) {
+			if (source.getEntity() instanceof EntityUSSRBase) {
 				EntityUSSRBase attacker = (EntityUSSRBase) source.getEntity();
 				if (attacker != null) {
 					event.ammount = 0;
 				}
 			}
-			if (target != null && source.isExplosion()) {
+			if (source.isExplosion()) {
 				event.ammount = 0;
 			}
 		}
@@ -98,54 +94,54 @@ public class EventEntityPlayer {
 		float damage = event.ammount;
 		ItemStack hold = null;
 
-		if (target instanceof EntityPlayer && target != null) 
+		if (target instanceof EntityPlayer)
 		{
 			EntityPlayer entityplayer = (EntityPlayer) target;
 			if (entityplayer.getEquipmentInSlot(4) != null
 					&& (entityplayer.getEquipmentInSlot(4).getItem() == mod_GVCWW2.armor_jpn)) {
-				if (target != null && source.getEntity() instanceof EntityJPNBase) {
+				if (source.getEntity() instanceof EntityJPNBase) {
 					EntityJPNBase attacker = (EntityJPNBase) source.getEntity();
 					if (attacker != null) {
 						event.ammount = 0;
 					}
 				}
-				if (target != null && source.isExplosion()) {
+				if (source.isExplosion()) {
 					event.ammount = 0;
 				}
 			}
 			if (entityplayer.getEquipmentInSlot(4) != null
 					&& (entityplayer.getEquipmentInSlot(4).getItem() == mod_GVCWW2.armor_usa)) {
-				if (target != null && source.getEntity() instanceof EntityUSABase) {
+				if (source.getEntity() instanceof EntityUSABase) {
 					EntityUSABase attacker = (EntityUSABase) source.getEntity();
 					if (attacker != null) {
 						event.ammount = 0;
 					}
 				}
-				if (target != null && source.isExplosion()) {
+				if (source.isExplosion()) {
 					event.ammount = 0;
 				}
 			}
 			if (entityplayer.getEquipmentInSlot(4) != null
 					&& (entityplayer.getEquipmentInSlot(4).getItem() == mod_GVCWW2.armor_ger)) {
-				if (target != null && source.getEntity() instanceof EntityGERBase) {
+				if (source.getEntity() instanceof EntityGERBase) {
 					EntityGERBase attacker = (EntityGERBase) source.getEntity();
 					if (attacker != null) {
 						event.ammount = 0;
 					}
 				}
-				if (target != null && source.isExplosion()) {
+				if (source.isExplosion()) {
 					event.ammount = 0;
 				}
 			}
 			if (entityplayer.getEquipmentInSlot(4) != null
 					&& (entityplayer.getEquipmentInSlot(4).getItem() == mod_GVCWW2.armor_rus)) {
-				if (target != null && source.getEntity() instanceof EntityUSSRBase) {
+				if (source.getEntity() instanceof EntityUSSRBase) {
 					EntityUSSRBase attacker = (EntityUSSRBase) source.getEntity();
 					if (attacker != null) {
 						event.ammount = 0;
 					}
 				}
-				if (target != null && source.isExplosion()) {
+				if (source.isExplosion()) {
 					event.ammount = 0;
 				}
 			}
@@ -154,13 +150,13 @@ public class EventEntityPlayer {
 		if (target.ridingEntity instanceof EntityBases && target.ridingEntity != null)
 		{
 			EntityBases en = (EntityBases) target.ridingEntity;
-			if (target != null && source.getEntity() instanceof EntityLivingBase) {
+			if (source.getEntity() instanceof EntityLivingBase) {
 				EntityLivingBase attacker = (EntityLivingBase) source.getEntity();
 				if (attacker != null && !en.opentop) {
 					event.ammount = 0;
 				}
 			}
-			if (target != null && source.isExplosion() && !en.opentop) {
+			if (source.isExplosion() && !en.opentop) {
 				event.ammount = 0;
 			}
 		}

@@ -2,19 +2,19 @@ BulletPower,5
 BulletSpeed,3.0f
 BlletSpread,19.0f
 Recoil,4.0d
-ReloadTime,20
+ReloadTime,50
 RemainingBullet,32
 Attacking,2.0f
 Zoom,1.1f,1.1f,4.0f
 ZoomRender,true
 ZoomRenderType,true,true,true
 ZoomRenderTypeTxture,false,false,false
-Cycle,3
+Cycle,4
 Texture,mp38
 GunSound,handmadeguns.firehg,handmadeguns.supu
 GunSoundReload,handmadeguns.reload
 CanObj,true
-ObjModel,mp38.obj
+ObjModel,mp38.mqo
 ObjTexture,a_pallete1.png
 ModelScala,0.5f
 
@@ -27,11 +27,138 @@ ModelRotationY,45f,45f,45
 ModelRotationZ,180f,180f,180f
 
 ModelArm,true
-ModelArmRotationR,-1.57f,0f,-1.57f
+ModelArmRotationR,-1.57f,-0.2f,-1.57f
 ModelArmOffsetR,0.3f,0.5f,0.5f
 ModelArmRotationL,-0.0f,-2.3f,2.0f
 ModelArmOffsetL,0.1f,0.4f,-1.2f
+AddParts,mat1
+    AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+    RenderOnNormal
+    AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
 
+    AddReloadMotionKey,0 ,0,0,0,0,0,0,            5 ,0,0,0,0,0,0
+    AddReloadMotionKey,5 ,0,0,0,0,0,0,            15,0,0,0,15,0,30
+    AddReloadMotionKey,15,0,0,0,15,0,30,          30,0,0,0,15,0,30
+    AddReloadMotionKey,30,0,0,0,15,0,30,          35,0,0,0,15,0,0
+    AddReloadMotionKey,35,0,0,0,15,0,0,           45,0,0,0,15,0,0
+    AddReloadMotionKey,45,0,0,0,15,0,0,           50,0,0,0,0,0,0
+
+    AddChildParts,Larm
+    	AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+    	AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+    	RenderOnNormal
+    	AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+    	AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+    	AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+    	AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+
+    	AddReloadMotionKey,0,0,0,0,0,0,0,            5,0,0,0,0,0,0
+    	AddReloadMotionKey,5,0,0,0,0,0,0,            10,0,-2,-1,0,0,0
+    	AddReloadMotionKey,10,0,-2,-1,0,0,0,         35,0,0,-1,0,0,0
+
+    	AddReloadMotionKey,35,0  ,0  ,-1,0,0,0,         38,0.5,0.5,-1,0,0,0
+    	AddReloadMotionKey,38,0.5,0.5,-1,0,0,0,         41,0.5,0.5,-2,0,0,0
+    	AddReloadMotionKey,41,0.5,0.5,-2,0,0,0,         45,0.5,0.5,-1,0,0,0
+    	AddReloadMotionKey,45,0.5,0.5,-1,0,0,0,         50,0,0  ,0 ,0,0,0
+    BackParts
+    AddChildParts,Rarm
+    	AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+    	AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+    	RenderOnNormal
+    	AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+    	AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+    	AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+    	AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+
+    	AddReloadMotionKey,0,0,0,0,0,0,0,            50,0,0,0,0,0,0
+    BackParts
+    AddChildParts,mat4
+    	AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+    	RenderOnNormal
+    	AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+    	AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+    	AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+    	AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+        attachpart
+        dot
+    BackParts
+    AddChildParts,mat4_re
+    	AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+    	AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+        attachpart
+        dot
+    BackParts
+    AddChildParts,mat5
+    	AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+    	RenderOnNormal
+    	AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+    	AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+    	AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+    	AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+        attachpart
+        scope
+    BackParts
+    AddChildParts,FoldStock
+    	AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+    	RenderOnNormal
+    	AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+    	AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+    	AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+    	AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+        attachpart
+        gripcover
+    BackParts
+    AddChildParts,ExtendStock
+    	AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+    	RenderOnNormal
+    	AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+    	AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+    	AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+    	AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+        attachpart
+        grip
+    BackParts
+    AddChildParts,SYS_BAYONETBASE
+        AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+        RenderOnNormal
+        AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+        attachpart
+        swordbase
+    BackParts
+    AddChildParts,mat3
+        AddPartsRotationCenterAndRotationAmount,0,0,0.0,0,0,0
+        RenderOnNormal
+        AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+
+        AddReloadMotionKey,0,0,0,0,0,0,0,           5,0,-5,-1,0,0,0
+        AddReloadMotionKey,5,false,          10
+        AddReloadMotionKey,10,0,-2,-0.5,0,0,0,      30,0,0,0,0,0,0
+        AddReloadMotionKey,30,0,0,0,0,0,0,          50,0,0,0,0,0,0
+    BackParts
+    AddChildParts,mat2
+        AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+        RenderOnNormal
+        AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+        AddRecoilMotionKey,0,0,0,0,0,0,0,           5,0,0,-1,0,0,0
+        AddRecoilMotionKey,5,0,0,-1,0,0,0,        10,0,0,0,0,0,0
+
+        AddReloadMotionKey,0,0,0,0,0,0,0,           38,0,0,0,0,0,0
+        AddReloadMotionKey,38,0,0,0,0,0,0,          41,0,0,-1,0,0,0
+        AddReloadMotionKey,41,0,0,-1,0,0,0,         45,0,0,0,0,0,0
+        AddReloadMotionKey,45,0,0,0,0,0,0,          50,0,0,0,0,0,0
+    BackParts
 ScopeTexture,ironsight2.png,reddot.png,scope.png
 RenderCross,false
 RightType,0

@@ -341,18 +341,18 @@ public abstract class EntityBases_Plane extends EntityBases implements ImultiRid
 	}
 	
 	public boolean attackEntityFrom(DamageSource source, float par2) {
-		if(isRidingEntity(source.getEntity())){
-			return false;
-		}else
-		if (this.riddenByEntity == source.getEntity()) {
-			return false;
-		} else {
-			if (par2 <= armor) {
-				if(armor != 0)if (!source.getDamageType().equals("mob")) this.playSound("gvcmob:gvcmob.ArmorBounce", 0.5F, 1F);
+		if(source.getEntity() != null) {
+			if (isRidingEntity(source.getEntity())) {
+				return false;
+			} else if (this.riddenByEntity == source.getEntity()) {
 				return false;
 			}
-			if(armor != 0)this.playSound("gvcmob:gvcmob.armorhit", 0.5F, 1F);
-			return super.attackEntityFrom(source,par2-armor);
 		}
+		if (par2 <= armor) {
+			if(armor != 0)if (!source.getDamageType().equals("mob")) this.playSound("gvcmob:gvcmob.ArmorBounce", 0.5F, 1F);
+			return false;
+		}
+		if(armor != 0)this.playSound("gvcmob:gvcmob.armorhit", 0.5F, 1F);
+		return super.attackEntityFrom(source,par2-armor);
 	}
 }

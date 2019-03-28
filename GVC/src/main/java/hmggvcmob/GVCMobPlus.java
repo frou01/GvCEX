@@ -541,9 +541,6 @@ public class GVCMobPlus
         }
         MinecraftForge.EVENT_BUS.register(new GVCMSpawnEvent());
 
-        GVCMXEntityEvent gvcmxEntityEvent = new GVCMXEntityEvent();
-        FMLCommonHandler.instance().bus().register(gvcmxEntityEvent);
-        MinecraftForge.EVENT_BUS.register(gvcmxEntityEvent);
         proxy.registerTileEntity();
         proxy.jumped();
         proxy.leftclick();
@@ -593,7 +590,11 @@ public class GVCMobPlus
     }
 
     @Mod.EventHandler
-    public void postInit(FMLPostInitializationEvent event) {}
+    public void postInit(FMLPostInitializationEvent event) {
+        GVCMXEntityEvent gvcmxEntityEvent = new GVCMXEntityEvent();
+        FMLCommonHandler.instance().bus().register(gvcmxEntityEvent);
+        MinecraftForge.EVENT_BUS.register(gvcmxEntityEvent);
+    }
 
     public void spawn(BiomeGenBase biome)
     {

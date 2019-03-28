@@ -5,6 +5,7 @@ import java.io.NotSerializableException;
 import java.io.OptionalDataException;
 import java.io.StreamCorruptedException;
 import java.util.List;
+import java.util.Random;
 
 //import littleMaidMobX.LMM_EntityLittleMaid;
 //import littleMaidMobX.LMM_EntityLittleMaidAvatar;
@@ -19,7 +20,6 @@ import handmadeguns.Util.SoundInfo;
 import handmadeguns.Util.TrailInfo;
 import handmadeguns.Util.sendEntitydata;
 import handmadeguns.entity.EntityHasMaster;
-import handmadeguns.entity.PlacedGunEntity;
 import handmadeguns.entity.SpHitCheckEntity;
 import handmadeguns.network.PacketFixClientbullet;
 import handmadeguns.network.PacketSpawnParticle;
@@ -45,8 +45,8 @@ import static java.lang.Math.*;
 public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpawnData
 {
     private static final boolean isDebugMessage = false;
-	public Entity thrower;
-	protected Block inBlock;
+    public Entity thrower;
+    protected Block inBlock;
     public boolean noex;
     public Entity hitedentity;
     protected int xTile = -1;
@@ -65,22 +65,22 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
     public float flyingSoundminspeed = 3f;
     public float flyingSoundmaxdist = 3f;
     //public int fuse;
-
+    
     /**
      * Is the entity that throws this 'thing' (snowball, ender pearl, eye of ender or potion)
      */
     protected int ticksInGround;
     private int ticksInAir;
     public int fuse=0;
-	
-	protected int Bdamege;
-	public float ex;
-	public boolean canex = cfg_blockdestroy;
-	public boolean canbounce = false;
+    
+    protected int Bdamege;
+    public float ex;
+    public boolean canex = cfg_blockdestroy;
+    public boolean canbounce = false;
     public float bouncerate = 0.2f;
     public float bouncelimit = 45;
-	public float gra = 0.029f;
-
+    public float gra = 0.029f;
+    
     public String bulletTypeName = "default";
     public int modelid = -1;
     Vec3 lockedpos;
@@ -89,11 +89,7 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
     public float induction_precision = 0.1f;
     public float seekerwidth = 15f;
     public int soundcool;
-    public double disttoPlayer = -1;
-    public double prevdisttoPlayer = -1;
-
-    public double[] prepos = new double[3];
-
+    
     public boolean trail = false;
     public int traillength;
     public float   trailWidth         = 0.2f;
@@ -105,14 +101,14 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
     public boolean smokeglow = true;
     
     public boolean soundstoped = true;
-
-
+    
+    
     //int i = mod_IFN_GuerrillaVsCommandGuns.RPGExplosiontime;
-	protected void entityInit() {
-
-	}
-
-	public HMGEntityBulletBase(World par1World)
+    protected void entityInit() {
+    
+    }
+    
+    public HMGEntityBulletBase(World par1World)
     {
         super(par1World);
         renderDistanceWeight = 4096;
@@ -122,7 +118,7 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
         this.setSize(0.25F, 0.25F);
         //this.fuse = 30;
     }
-
+    
     public HMGEntityBulletBase(World par1World, Entity par2Entity, int damege, float bspeed, float bure,String bulletTypeName)
     {
         super(par1World);
@@ -148,16 +144,16 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
         setHeadingFromThrower(thrower,thrower.rotationPitch,(thrower instanceof EntityLivingBase ? ((EntityLivingBase)thrower).rotationYawHead : thrower.rotationYaw),0,bspeed,bure);
         this.bulletTypeName = bulletTypeName;
     };
-	public void setdamage(int value){
+    public void setdamage(int value){
         Bdamege = value;
     }
     public void setcanex(boolean value){
         canex = value;
     }
-
+    
     public HMGEntityBulletBase(World par1World, double par2, double par4, double par6)
     {
-
+        
         super(par1World);
         this.ticksInGround = 0;
         this.setSize(0.25F, 0.25F);
@@ -165,7 +161,7 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
         this.yOffset = 0.0F;
         //this.fuse = 30;
     }
-
+    
     public void setThrowableHeading(double par1, double par3, double par5, float par7, float par8)
     {
         par8 /=2;
@@ -189,20 +185,20 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
     }
     
     @Override
-	public void setVelocity(double par1, double par3, double par5) {
-		this.motionX = par1;
-		this.motionY = par3;
-		this.motionZ = par5;
-		
-		{
-			float var7 = MathHelper.sqrt_double(par1 * par1 + par5 * par5);
-			this.prevRotationYaw = this.rotationYaw = (float)(atan2(par1, par5) * 180.0D / Math.PI);
-			this.prevRotationPitch = this.rotationPitch = (float)(atan2(par3, (double)var7) * 180.0D / Math.PI);
-			this.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch);
-			this.ticksInGround = 0;
-		}
-	}
-
+    public void setVelocity(double par1, double par3, double par5) {
+        this.motionX = par1;
+        this.motionY = par3;
+        this.motionZ = par5;
+        
+        {
+            float var7 = MathHelper.sqrt_double(par1 * par1 + par5 * par5);
+            this.prevRotationYaw = this.rotationYaw = (float)(atan2(par1, par5) * 180.0D / Math.PI);
+            this.prevRotationPitch = this.rotationPitch = (float)(atan2(par3, (double)var7) * 180.0D / Math.PI);
+            this.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch);
+            this.ticksInGround = 0;
+        }
+    }
+    
     public void setHeadingFromThrower(Entity entityThrower, float rotationPitchIn, float rotationYawIn, float pitchOffset, float velocity, float inaccuracy)
     {
         Vec3 look = getLook(1.0f,entityThrower);
@@ -215,7 +211,7 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
             this.prevRotationPitch = this.rotationPitch = entityThrower.rotationPitch;
         }
     }
-
+    
     public void setHeadingFromThrower(EntityLivingBase entityThrower, float velocity, float inaccuracy)
     {
         Vec3 look = getLook(1.0f,entityThrower);
@@ -231,7 +227,7 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
 //            this.motionY = (look.yCoord+this.rand.nextGaussian() * (double)(this.rand.nextBoolean() ? -1 : 1) * 0.00249999994 * (double)inaccuracy) * velocity;
 //            this.motionZ = (look.zCoord+this.rand.nextGaussian() * (double)(this.rand.nextBoolean() ? -1 : 1) * 0.00249999994 * (double)inaccuracy) * velocity;
         Vec3 look = getLook(1.0f,rotationYawIn,rotationPitchIn);
-         this.setThrowableHeading(look.xCoord, look.yCoord, look.zCoord, velocity, inaccuracy);
+        this.setThrowableHeading(look.xCoord, look.yCoord, look.zCoord, velocity, inaccuracy);
     }
     public void setHeadingFromThrower(float rotationPitchIn, float rotationYawIn, float velocity, float inaccuracy)
     {
@@ -239,7 +235,7 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
 //            this.motionY = (look.yCoord+this.rand.nextGaussian() * (double)(this.rand.nextBoolean() ? -1 : 1) * 0.00249999994 * (double)inaccuracy) * velocity;
 //            this.motionZ = (look.zCoord+this.rand.nextGaussian() * (double)(this.rand.nextBoolean() ? -1 : 1) * 0.00249999994 * (double)inaccuracy) * velocity;
         Vec3 look = getLook(1.0f,rotationYawIn,rotationPitchIn);
-         this.setThrowableHeading(look.xCoord, look.yCoord, look.zCoord, velocity, inaccuracy);
+        this.setThrowableHeading(look.xCoord, look.yCoord, look.zCoord, velocity, inaccuracy);
     }
     
     
@@ -258,42 +254,30 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
     {
         return 15.0F;
     }
-
+    
     @Override
     protected void readEntityFromNBT(NBTTagCompound p_70037_1_) {
-
+    
     }
-
+    
     @Override
     protected void writeEntityToNBT(NBTTagCompound p_70014_1_) {
     }
-
+    
     
     
     public void onUpdate() {
         super.onUpdate();
-
+        
         if(worldObj.isRemote){
-            if(smoketexture != null) {
-                int length = 5;
-                for(int i=0;i<length;i++) {
-                    PacketSpawnParticle packet = new PacketSpawnParticle(posX + motionX/length * i, posY + motionY/length * i, posZ + motionZ/length * i, 0, 0, 0, 1);
-                    packet.name = smoketexture;
-                    packet.scale = smokeWidth;
-                    packet.fuse = smoketime;
-                    if (smokeglow) packet.id += 100;
-                    proxy.spawnParticles(packet);
-                }
-            }
-            if(flyingSound != null && soundstoped && motionX * motionX + motionY * motionY + motionZ * motionZ > flyingSoundminspeed * flyingSoundminspeed && getDistanceSqToEntity(proxy.getEntityPlayerInstance()) < flyingSoundmaxdist*flyingSoundmaxdist){
-                proxy.playsoundatBullet(flyingSound,flyingSoundLV,flyingSoundSP,flyingSoundminspeed,flyingSoundmaxdist,this,true);
-                soundstoped = false;
-            }
+            preclientUpdate();
         }
-        if(Double.isNaN( this.motionX ) || Double.isNaN( this.motionY ) || Double.isNaN( this.motionZ )){
+        if(Double.isNaN( this.motionX ) || Double.isNaN( this.motionY ) || Double.isNaN( this.motionZ )){//エラー対応
             this.motionX =this.motionY =this.motionZ =0;
+            this.posX = this.posY = this.posZ = 0;
+            this.setDead();
         }
-        if(this.thrower  == null){
+        if(this.thrower  == null){//主の居ない弾は削除
             setDead();
         }
         this.lastTickPosX = this.posX;
@@ -309,20 +293,23 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
             float f = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionZ * this.motionZ);
             this.prevRotationYaw = this.rotationYaw = (float)(atan2(this.motionX, this.motionZ) * 180.0D / Math.PI);
             this.prevRotationPitch = this.rotationPitch = (float)(atan2(this.motionY, (double)f) * 180.0D / Math.PI);
+            //弾の向きを進行方向に合わせる。
+            //横弾は考えない。
         }
-        if(!worldObj.isRemote) {
+        if(!worldObj.isRemote && !this.inGround) {
             Block block = this.worldObj.getBlock(this.xTile, this.yTile, this.zTile);
             if (block.getMaterial() != Material.air) {
                 block.setBlockBoundsBasedOnState(this.worldObj, this.xTile, this.yTile, this.zTile);
                 AxisAlignedBB axisalignedbb = block.getCollisionBoundingBoxFromPool(this.worldObj, this.xTile, this.yTile, this.zTile);
-
+                
                 if (axisalignedbb != null && axisalignedbb.isVecInside(Vec3.createVectorHelper(this.posX, this.posY, this.posZ))) {
+                    this.inBlock = block;
                     this.inGround = true;
                 }
             }
         }
         fuse--;
-        if(fuse==0){
+        if(fuse==0){//時限信管が作動したらその場で衝突処理
             this.posX += this.motionX;
             this.posY += this.motionY;
             this.posZ += this.motionZ;
@@ -357,355 +344,7 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
                 this.ticksInAir = 0;
             }
         } else {
-            Vec3 backupmotion = Vec3.createVectorHelper(motionX,motionY,motionZ);
-            Vec3 backuppos = Vec3.createVectorHelper(this.posX, this.posY, this.posZ);
-            ++this.ticksInAir;
-
-            double remainingMovelength = backupmotion.lengthVector();
-            Vec3 hitedpos = null;
-            Vec3 remainingMoveVec = Vec3.createVectorHelper(motionX,motionY,motionZ);
-            Vec3 lastpos = Vec3.createVectorHelper(this.posX, this.posY, this.posZ);
-            boolean changemotionflag = false;
-            int breakcnt = 0;
-            while(remainingMovelength>0.1) {
-                Vec3 vec3 = Vec3.createVectorHelper(this.posX, this.posY, this.posZ);
-                Vec3 vec31 = Vec3.createVectorHelper(this.posX + remainingMoveVec.xCoord, this.posY + remainingMoveVec.yCoord, this.posZ + remainingMoveVec.zCoord);
-                MovingObjectPosition movingobjectposition = this.worldObj.func_147447_a(vec3, vec31, false, true, false);
-                Block hitblock;
-                while (movingobjectposition != null) {
-                    hitblock = this.worldObj.getBlock(movingobjectposition.blockX, movingobjectposition.blockY, movingobjectposition.blockZ);
-                    if ((hitblock.getMaterial() == Material.plants) || (hitblock.getMaterial() == Material.leaves) || ((
-                            hitblock.getMaterial() == Material.glass ||
-                                    hitblock instanceof BlockFence ||
-                                    hitblock instanceof BlockFenceGate ||
-                                    hitblock == Blocks.iron_bars) && rand.nextInt(5) < 2)) {
-                        if (breakcnt > 100) {
-                            break;
-                        }
-                        breakcnt++;
-                        Vec3 penerater = Vec3.createVectorHelper(remainingMoveVec.xCoord, remainingMoveVec.yCoord, remainingMoveVec.zCoord);
-                        penerater = penerater.normalize();
-                        boolean flag =
-                                ((this.posX + remainingMoveVec.xCoord - movingobjectposition.hitVec.xCoord)<0 && (this.posX + remainingMoveVec.xCoord - movingobjectposition.hitVec.xCoord-penerater.xCoord)>0) || ((this.posX + remainingMoveVec.xCoord - movingobjectposition.hitVec.xCoord)>0 && (this.posX + remainingMoveVec.xCoord - movingobjectposition.hitVec.xCoord-penerater.xCoord)<0) &&
-                                ((this.posY + remainingMoveVec.yCoord - movingobjectposition.hitVec.yCoord)<0 && (this.posY + remainingMoveVec.yCoord - movingobjectposition.hitVec.yCoord-penerater.yCoord)>0) || ((this.posY + remainingMoveVec.yCoord - movingobjectposition.hitVec.yCoord)>0 && (this.posY + remainingMoveVec.yCoord - movingobjectposition.hitVec.yCoord-penerater.yCoord)<0) &&
-                                ((this.posZ + remainingMoveVec.zCoord - movingobjectposition.hitVec.zCoord)<0 && (this.posZ + remainingMoveVec.zCoord - movingobjectposition.hitVec.zCoord-penerater.zCoord)>0) || ((this.posZ + remainingMoveVec.zCoord - movingobjectposition.hitVec.zCoord)>0 && (this.posZ + remainingMoveVec.zCoord - movingobjectposition.hitVec.zCoord-penerater.zCoord)<0);
-                        if(flag){
-                            movingobjectposition = null;
-                            break;
-                        }
-                        vec3 = Vec3.createVectorHelper(movingobjectposition.hitVec.xCoord + penerater.xCoord, movingobjectposition.hitVec.yCoord + penerater.yCoord, movingobjectposition.hitVec.zCoord + penerater.zCoord);
-                        vec31 = Vec3.createVectorHelper(this.posX + remainingMoveVec.xCoord, this.posY + remainingMoveVec.yCoord, this.posZ + remainingMoveVec.zCoord);
-                        movingobjectposition = this.worldObj.func_147447_a(vec3, vec31, false, true, false);
-                    } else {
-                        break;
-                    }
-                }
-                breakcnt++;
-                if (breakcnt > 50) {//50回も反射するって無いやろお前…
-                    inGround = true;
-                    System.out.println("debug1" + hitedpos);
-                    System.out.println("debug2" + lastpos);
-                    System.out.println("debug3" + remainingMoveVec);
-                    break;
-                }
-                vec3 = Vec3.createVectorHelper(this.posX, this.posY, this.posZ);
-                vec31 = Vec3.createVectorHelper(this.posX + remainingMoveVec.xCoord, this.posY + remainingMoveVec.yCoord, this.posZ + remainingMoveVec.zCoord);
-                if (movingobjectposition != null) {
-                    vec31 = Vec3.createVectorHelper(movingobjectposition.hitVec.xCoord, movingobjectposition.hitVec.yCoord, movingobjectposition.hitVec.zCoord);
-                }
-                float f2;
-                float f4;
-                double d0 = 0.0D;
-                Entity entity = null;
-                List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox.addCoord(remainingMoveVec.xCoord, remainingMoveVec.yCoord, remainingMoveVec.zCoord).expand(1.0D, 1.0D, 1.0D));
-                double d1 = 0;
-                for (int j = 0; j < list.size(); ++j) {
-                    Entity entity1 = (Entity) list.get(j);
-
-                    if (entity1.canBeCollidedWith() && (ticksInAir>8 ||
-                            (iscandamageentity(entity1))
-                    )) {
-                        float f = 0.3F;
-                        AxisAlignedBB axisalignedbb = entity1.boundingBox.expand((double) f, (double) f, (double) f);
-                        MovingObjectPosition movingobjectposition1 = axisalignedbb.calculateIntercept(vec3, vec31);
-
-                        if (movingobjectposition1 != null) {
-                            d1 = vec3.distanceTo(movingobjectposition1.hitVec);
-
-                            if (d1 < d0 || d0 == 0.0D) {
-                                entity = entity1;
-                                d0 = d1;
-                            }
-                        }
-                    }
-                }
-
-                if (entity != null) {
-                    d1 = vec3.distanceTo(vec31);
-                    vec3.xCoord = vec3.xCoord + (vec31.xCoord - vec3.xCoord) * d0 / d1;
-                    vec3.yCoord = vec3.yCoord + (vec31.yCoord - vec3.yCoord) * d0 / d1;
-                    vec3.zCoord = vec3.zCoord + (vec31.zCoord - vec3.zCoord) * d0 / d1;
-
-                    movingobjectposition = new MovingObjectPosition(entity);
-                    movingobjectposition.hitVec = vec3;
-                }
-                int hitside = -1;
-                Vec3 tohitposVec = Vec3.createVectorHelper(remainingMoveVec.xCoord,remainingMoveVec.yCoord,remainingMoveVec.zCoord);
-                if (movingobjectposition != null) {
-                    if (movingobjectposition.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY && movingobjectposition.entityHit != null) {
-                        tohitposVec.xCoord = (double) ((float) (movingobjectposition.hitVec.xCoord - this.posX));
-                        tohitposVec.yCoord = (double) ((float) (movingobjectposition.hitVec.yCoord - this.posY));
-                        tohitposVec.zCoord = (double) ((float) (movingobjectposition.hitVec.zCoord - this.posZ));
-                        Vec3 temp = tohitposVec.normalize();
-                        hitedpos = movingobjectposition.hitVec;
-                        hitedpos.xCoord += temp.xCoord*2;
-                        hitedpos.yCoord += temp.yCoord*2;
-                        hitedpos.zCoord += temp.zCoord*2;
-                        if(canbounce && !isDead){
-                            if(tohitposVec.lengthVector() >0.1) {
-                                this.onImpact(movingobjectposition);
-                                tohitposVec.xCoord += temp.xCoord;
-                                tohitposVec.yCoord += temp.yCoord;
-                                tohitposVec.zCoord += temp.zCoord;
-                                motionX *= 0.5;
-                                motionY *= 0.5;
-                                motionZ *= 0.5;
-                                changemotionflag = true;
-                            }else {
-                                this.posX = hitedpos.xCoord;
-                                this.posY = hitedpos.yCoord;
-                                this.posZ = hitedpos.zCoord;
-                            }
-                        }else {
-                            this.onImpact(movingobjectposition);
-                            if(this instanceof HMGEntityBullet_AP){
-                                tohitposVec.xCoord += temp.xCoord*1.4;
-                                tohitposVec.yCoord += temp.yCoord*1.4;
-                                tohitposVec.zCoord += temp.zCoord*1.4;
-                                remainingMoveVec.xCoord -= tohitposVec.xCoord;
-                                remainingMoveVec.yCoord -= tohitposVec.yCoord;
-                                remainingMoveVec.zCoord -= tohitposVec.zCoord;
-                            }else {
-                                remainingMoveVec.xCoord = 0;
-                                remainingMoveVec.yCoord = 0;
-                                remainingMoveVec.zCoord = 0;
-                            }
-                        }
-                    } else if (movingobjectposition.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
-                        this.onImpact(movingobjectposition);
-                        this.xTile = movingobjectposition.blockX;
-                        this.yTile = movingobjectposition.blockY;
-                        this.zTile = movingobjectposition.blockZ;
-                        this.inBlock = this.worldObj.getBlock(this.xTile, this.yTile, this.zTile);
-                        hitside = movingobjectposition.sideHit;
-                        tohitposVec.xCoord = (double) ((float) (movingobjectposition.hitVec.xCoord - this.posX));
-                        tohitposVec.yCoord = (double) ((float) (movingobjectposition.hitVec.yCoord - this.posY));
-                        tohitposVec.zCoord = (double) ((float) (movingobjectposition.hitVec.zCoord - this.posZ));
-
-                        f2 = MathHelper.sqrt_double(remainingMoveVec.xCoord * remainingMoveVec.xCoord + remainingMoveVec.zCoord * remainingMoveVec.zCoord + remainingMoveVec.yCoord * remainingMoveVec.yCoord);
-                        movingobjectposition.hitVec.xCoord = movingobjectposition.hitVec.xCoord - remainingMoveVec.xCoord / f2 * 0.25;
-                        movingobjectposition.hitVec.yCoord = movingobjectposition.hitVec.yCoord - remainingMoveVec.yCoord / f2 * 0.25;
-                        movingobjectposition.hitVec.zCoord = movingobjectposition.hitVec.zCoord - remainingMoveVec.zCoord / f2 * 0.25;
-                        this.inGround = true;
-                        hitedpos = movingobjectposition.hitVec;
-                        lockedpos = movingobjectposition.hitVec;
-                        if (canbounce) {
-                            switch (hitside) {
-                                case 0:
-                                case 1://Y面
-                                    if (atan2(sqrt(motionY * motionY), sqrt(motionX * motionX + motionZ * motionZ)) > toRadians(bouncelimit))
-                                        canbounce = false;
-                                    break;
-                                case 2:
-                                case 3://Z面
-                                    if (atan2(sqrt(motionZ * motionZ), sqrt(motionX * motionX + motionY * motionY)) > toRadians(bouncelimit))
-                                        canbounce = false;
-                                    break;
-                                case 4:
-                                case 5://X MAN
-                                    if (atan2(sqrt(motionX * motionX), sqrt(motionY * motionY + motionZ * motionZ)) > toRadians(bouncelimit))
-                                        canbounce = false;
-                                    break;
-                            }
-                        }
-                        if (this.inBlock.getMaterial() != Material.air) {
-                            this.inBlock.onEntityCollidedWithBlock(this.worldObj, this.xTile, this.yTile, this.zTile, this);
-                        }
-                    }
-                    remainingMoveVec.xCoord = remainingMoveVec.xCoord - tohitposVec.xCoord;
-                    remainingMoveVec.yCoord = remainingMoveVec.yCoord - tohitposVec.yCoord;
-                    remainingMoveVec.zCoord = remainingMoveVec.zCoord - tohitposVec.zCoord;
-                    if (canbounce) {
-                        switch (hitside) {
-                            case 0:
-                            case 1:
-                                remainingMoveVec.yCoord = -remainingMoveVec.yCoord * bouncerate;
-                                motionY = -motionY * bouncerate;
-                                changemotionflag = true;
-                                break;
-                            case 2:
-                            case 3:
-                                remainingMoveVec.zCoord = -remainingMoveVec.zCoord * bouncerate;
-                                motionZ = -motionZ * bouncerate;
-                                changemotionflag = true;
-                                break;
-                            case 4:
-                            case 5:
-                                remainingMoveVec.xCoord = -remainingMoveVec.xCoord * bouncerate;
-                                motionX = -motionX * bouncerate;
-                                changemotionflag = true;
-                                break;
-                        }
-                        inGround = false;
-                    }else {
-                        remainingMoveVec.xCoord =
-                                remainingMoveVec.yCoord =
-                                        remainingMoveVec.zCoord =0;
-                    }
-                    lastpos = Vec3.createVectorHelper(this.posX + tohitposVec.xCoord,
-                            this.posY + tohitposVec.yCoord,
-                            this.posZ + tohitposVec.zCoord);
-                }else {
-                    lastpos = Vec3.createVectorHelper(this.posX + tohitposVec.xCoord,
-                            this.posY + tohitposVec.yCoord,
-                            this.posZ + tohitposVec.zCoord);
-                    remainingMoveVec = Vec3.createVectorHelper(0,0,0);
-                }
-                remainingMovelength = remainingMoveVec.lengthVector();
-                if(hitedpos != null) {
-                    this.posX = hitedpos.xCoord;
-                    this.posY = hitedpos.yCoord;
-                    this.posZ = hitedpos.zCoord;
-                }
-            }
-            this.posX = lastpos.xCoord;
-            this.posY = lastpos.yCoord;
-            this.posZ = lastpos.zCoord;
-            if(changemotionflag) HMGPacketHandler.INSTANCE.sendToAll(new PacketFixClientbullet(this.getEntityId(), this));
-//            if(inGround && canbounce){
-//                this.motionX = backupmotion.xCoord;
-//                this.motionY = backupmotion.yCoord;
-//                this.motionZ = backupmotion.zCoord;
-//                switch (hitside) {
-//                    case 0:
-//                    case 1:
-//                        this.motionY = -backupmotion.yCoord * bouncerate;
-//                        break;
-//                    case 2:
-//                    case 3:
-//                        this.motionZ = -backupmotion.zCoord * bouncerate;
-//                        break;
-//                    case 4:
-//                    case 5:
-//                        this.motionX = -backupmotion.xCoord * bouncerate;
-//                        break;
-//                }
-//                if(!this.worldObj.isRemote) HMGPacketHandler.INSTANCE.sendToAll(new PacketFixClientbullet(this.getEntityId(),this));
-//                //方向転換したのでモーション値をクライアントに送信
-//                inGround = false;
-//                hitedpos = null;
-//            }
-            float f2 = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionZ * this.motionZ);
-            this.rotationYaw = (float) (atan2(this.motionX, this.motionZ) * 180.0D / Math.PI);
-
-            for (this.rotationPitch = (float) (atan2(this.motionY, (double) f2) * 180.0D / Math.PI); this.rotationPitch - this.prevRotationPitch < -180.0F; this.prevRotationPitch -= 360.0F) {
-                ;
-            }
-
-            while (this.rotationPitch - this.prevRotationPitch >= 180.0F) {
-                this.prevRotationPitch += 360.0F;
-            }
-
-            while (this.rotationYaw - this.prevRotationYaw < -180.0F) {
-                this.prevRotationYaw -= 360.0F;
-            }
-
-            while (this.rotationYaw - this.prevRotationYaw >= 180.0F) {
-                this.prevRotationYaw += 360.0F;
-            }
-
-            this.rotationPitch = this.prevRotationPitch + (this.rotationPitch - this.prevRotationPitch) * 0.2F;
-            this.rotationYaw = this.prevRotationYaw + (this.rotationYaw - this.prevRotationYaw) * 0.2F;
-            float f3 = resistance;
-
-            if (this.isInWater()) {
-                for (int l = 0; l < 4; ++l) {
-                    float f4 = 0.25F;
-                    this.worldObj.spawnParticle("bubble", this.posX - this.motionX * (double) f4, this.posY - this.motionY * (double) f4, this.posZ - this.motionZ * (double) f4, this.motionX, this.motionY, this.motionZ);
-                }
-                f3 *= 0.8F;
-            }
-
-            if (this.isWet()) {
-                this.extinguish();
-            }
-            this.motionX *= (double) f3;
-            this.motionY *= (double) f3;
-            this.motionZ *= (double) f3;
-            f2 = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionZ * this.motionZ + this.motionY * this.motionY);
-            if(f2 > 0) {
-                this.motionX += motionX / f2 * acceleration;
-                this.motionY += motionY / f2 * acceleration;
-                this.motionZ += motionZ / f2 * acceleration;
-//                worldObj.playSoundAtEntity(this, "handmadeguns:handmadeguns." + flyingSound,flyingSoundLV, flyingSoundSP);
-            }
-            f2 = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionZ * this.motionZ + this.motionY * this.motionY);
-            if(homingEntity != null) {
-                Vec3 course = Vec3.createVectorHelper(homingEntity.posX - this.posX, homingEntity.posY + homingEntity.height/2 - this.posY, homingEntity.posZ - this.posZ);
-                course = course.normalize();
-                backupmotion = Vec3.createVectorHelper(motionX,motionY,motionZ);
-                backupmotion = backupmotion.normalize();
-                Vec3 axis = backupmotion.crossProduct(course);
-                double deg = toDegrees(acos(backupmotion.dotProduct(course)));
-                if(abs(deg)<induction_precision) backupmotion = course;
-                else backupmotion = RotationVector_byAxisVector(axis,backupmotion, induction_precision);
-                this.motionX = backupmotion.xCoord * f2;
-                this.motionY = backupmotion.yCoord * f2;
-                this.motionZ = backupmotion.zCoord * f2;
-                if(worldObj.isRemote && homingEntity == FMLClientHandler.instance().getClient().thePlayer && soundcool<0) {
-                    proxy.playsoundat("handmadeguns:handmadeguns.warn",1,1,1,(float) homingEntity.posX,(float)homingEntity.posY,(float)homingEntity.posZ);
-                    worldObj.playSoundAtEntity(homingEntity,"handmadeguns:handmadeguns.warn", 1, 1);
-                    soundcool = 4;
-                }
-                soundcool--;
-                NBTTagCompound targetnbt = homingEntity.getEntityData();
-                if(targetnbt !=null){
-                    targetnbt.setBoolean("behome",true);
-                    if(targetnbt.getBoolean("flare")) homingEntity =null;
-                }
-                if(!worldObj.isRemote) HMGPacketHandler.INSTANCE.sendToAll(new PacketFixClientbullet(this.getEntityId(),this));
-
-                if(abs(deg)>seekerwidth)homingEntity = null;
-            }
-            if(lockedBlockPos != null){
-                Vec3 course = Vec3.createVectorHelper(lockedBlockPos.xCoord + 0.5 - this.posX,lockedBlockPos.yCoord + 0.5 - this.posY,lockedBlockPos.zCoord + 0.5 - this.posZ);
-                course = course.normalize();
-                backupmotion = Vec3.createVectorHelper(motionX,motionY,motionZ);
-                backupmotion = backupmotion.normalize();
-                Vec3 axis = backupmotion.crossProduct(course);
-                double deg = toDegrees(acos(backupmotion.dotProduct(course)));
-                if(abs(deg)<induction_precision) backupmotion = course;
-                else backupmotion = RotationVector_byAxisVector(axis,backupmotion, induction_precision);
-                this.motionX = backupmotion.xCoord * f2;
-                this.motionY = backupmotion.yCoord * f2;
-                this.motionZ = backupmotion.zCoord * f2;
-                HMGPacketHandler.INSTANCE.sendToAll(new PacketFixClientbullet(this.getEntityId(),this));
-
-                if(abs(deg)>seekerwidth)lockedBlockPos = null;
-            }
-            this.motionY -= (double) gra * cfg_defgravitycof;
-            if(inGround && hitedpos != null) {
-                this.posX = hitedpos.xCoord;
-                this.posY = hitedpos.yCoord;
-                this.posZ = hitedpos.zCoord;
-                if(inGround) {
-                    this.motionX =
-                            this.motionY =
-                                    this.motionZ = 0;
-                    if (!this.worldObj.isRemote)
-                        HMGPacketHandler.INSTANCE.sendToAll(new PacketFixClientbullet(this.getEntityId(), this));
-                }
-            }
+            airboneupdate();
         }
         this.func_145775_I();
         this.setPosition(this.posX, this.posY, this.posZ);
@@ -726,9 +365,9 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
         }else{
             if(trail) {
                 PacketSpawnParticle packetSpawnParticle = new PacketSpawnParticle(lastTickPosX, lastTickPosY, lastTickPosZ,
-                        posX - lastTickPosX,
-                        posY - lastTickPosY,
-                        posZ - lastTickPosZ, 3);
+                                                                                         posX - lastTickPosX,
+                                                                                         posY - lastTickPosY,
+                                                                                         posZ - lastTickPosZ, 3);
                 packetSpawnParticle.trailwidth = trailWidth;
                 packetSpawnParticle.name = trailtexture;
                 packetSpawnParticle.fuse = traillength;
@@ -737,12 +376,12 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
             }
         }
     }
-
+    
     public Entity getThrower() {
         return this.thrower;
     }
-
-
+    
+    
     /**
      * Called when this EntityThrowable hits a block or entity.
      */
@@ -755,72 +394,72 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
     
     
     @Override
-	public void setDead() {
-		super.setDead();
+    public void setDead() {
+        super.setDead();
     }
-
+    
     public void onBlockDestroyed(int blockX, int blockY, int blockZ) {
-		//int bid = worldObj.getBlock(blockX, blockY, blockZ);
-		int bmd = worldObj.getBlockMetadata(blockX, blockY, blockZ);
-		Block block = worldObj.getBlock(blockX, blockY, blockZ);
-		if(block == null) {
-			return;
-		}
-		worldObj.playAuxSFX(2001, blockX, blockY, blockZ, (bmd  << 12));
-		boolean flag = worldObj.setBlockToAir(blockX, blockY, blockZ);
-		if (block != null && flag) {
-			block.onBlockDestroyedByPlayer(worldObj, blockX, blockY, blockZ, bmd);
-			
-		}
-	}
+        //int bid = worldObj.getBlock(blockX, blockY, blockZ);
+        int bmd = worldObj.getBlockMetadata(blockX, blockY, blockZ);
+        Block block = worldObj.getBlock(blockX, blockY, blockZ);
+        if(block == null) {
+            return;
+        }
+        worldObj.playAuxSFX(2001, blockX, blockY, blockZ, (bmd  << 12));
+        boolean flag = worldObj.setBlockToAir(blockX, blockY, blockZ);
+        if (block != null && flag) {
+            block.onBlockDestroyedByPlayer(worldObj, blockX, blockY, blockZ, bmd);
+            
+        }
+    }
     
-
-	public boolean checkDestroyBlock(MovingObjectPosition var1, int pX, int pY, int pZ, Block pBlock, int pMetadata) {
-		if ((pBlock.getMaterial() == Material.glass)
-				|| (pBlock instanceof BlockFlowerPot)
-				|| (pBlock instanceof BlockTNT)
-				|| (pBlock instanceof BlockDoublePlant)
-				) {
-			return true;
-		}
-		return false;
-	}
     
-
-	public boolean onBreakBlock(MovingObjectPosition var1, int pX, int pY, int pZ, Block pBlock, int pMetadata) {
-		this.Debug("destroy: %d, %d, %d", pX, pY, pZ);
-		if (pBlock instanceof BlockTNT) {
-			removeBlock(pX, pY, pZ, pBlock, pMetadata);
-			pBlock.onBlockDestroyedByExplosion(worldObj, pX, pY, pZ, new Explosion(worldObj, getThrower(), pX, pY, pZ, 0.0F));
-			return true;
-		} else {
-			removeBlock(pX, pY, pZ, pBlock, pMetadata);
-			pBlock.onBlockDestroyedByPlayer(worldObj, pX, pY, pZ, pMetadata);
-			//this.entityDropItem(new ItemStack(pBlock), 1);
-			return false;
-		}
-	}
-	
-	public static void Debug(String pText, Object... pData) {
-		if (isDebugMessage) {
-			System.out.println(String.format("GunsBase-" + pText, pData));
-		}
-	}
-	
-
-	protected void removeBlock(int pX, int pY, int pZ, Block pBlock, int pMetadata) {
-		worldObj.playAuxSFX(2001, pX, pY, pZ, Block.getIdFromBlock(pBlock) + (pMetadata << 12));
-		worldObj.setBlockToAir(pX, pY, pZ);	
-	}
-
-
+    public boolean checkDestroyBlock(MovingObjectPosition var1, int pX, int pY, int pZ, Block pBlock, int pMetadata) {
+        if ((pBlock.getMaterial() == Material.glass)
+                    || (pBlock instanceof BlockFlowerPot)
+                    || (pBlock instanceof BlockTNT)
+                    || (pBlock instanceof BlockDoublePlant)
+                ) {
+            return true;
+        }
+        return false;
+    }
+    
+    
+    public boolean onBreakBlock(MovingObjectPosition var1, int pX, int pY, int pZ, Block pBlock, int pMetadata) {
+        this.Debug("destroy: %d, %d, %d", pX, pY, pZ);
+        if (pBlock instanceof BlockTNT) {
+            removeBlock(pX, pY, pZ, pBlock, pMetadata);
+            pBlock.onBlockDestroyedByExplosion(worldObj, pX, pY, pZ, new Explosion(worldObj, getThrower(), pX, pY, pZ, 0.0F));
+            return true;
+        } else {
+            removeBlock(pX, pY, pZ, pBlock, pMetadata);
+            pBlock.onBlockDestroyedByPlayer(worldObj, pX, pY, pZ, pMetadata);
+            //this.entityDropItem(new ItemStack(pBlock), 1);
+            return false;
+        }
+    }
+    
+    public static void Debug(String pText, Object... pData) {
+        if (isDebugMessage) {
+            System.out.println(String.format("GunsBase-" + pText, pData));
+        }
+    }
+    
+    
+    protected void removeBlock(int pX, int pY, int pZ, Block pBlock, int pMetadata) {
+        worldObj.playAuxSFX(2001, pX, pY, pZ, Block.getIdFromBlock(pBlock) + (pMetadata << 12));
+        worldObj.setBlockToAir(pX, pY, pZ);
+    }
+    
+    
     public void explode(double x,double y,double z,float level,boolean candestroy)
     {
         noex = true;
-    	if(!worldObj.isRemote){
+        if(!worldObj.isRemote){
             this.worldObj.createExplosion(thrower,x,y,z, level, candestroy);
         }
-
+        
         
     }
     public void writeSpawnData(ByteBuf buffer){
@@ -854,7 +493,7 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
         }else{
             lpbuf.writeInt(-1);
         }
-
+        
     }
     public void readSpawnData(ByteBuf additionalData){
         PacketBuffer lpbuf = new PacketBuffer(additionalData);
@@ -889,7 +528,7 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
                     smoketexture  = temptrailinfo.smoketexture;
                     smokeWidth = temptrailinfo.smokeWidth;
                     smoketime = temptrailinfo.smoketime;
-
+                    
                     trailglow = temptrailinfo.trailglow;
                     smokeglow = temptrailinfo.smokeglow;
                 }
@@ -928,8 +567,8 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
         float f2;
         float f3;
         float f4;
-
-
+        
+        
         if (p_70676_1_ == 1.0F)
         {
             f1 = MathHelper.cos(-(entity instanceof EntityLivingBase ? ((EntityLivingBase)entity).rotationYawHead : entity.rotationYaw) * 0.017453292F - (float)Math.PI);
@@ -947,7 +586,7 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
         float f2;
         float f3;
         float f4;
-
+        
         if (p_70676_1_ == 1.0F)
         {
             f1 = MathHelper.cos(-rotationYawin * 0.017453292F - (float)Math.PI);
@@ -979,7 +618,7 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
         double returnVectorX = (axisVectorX * axisVectorX * (1 - costheta) + costheta)               * toVectorX + (axisVectorX * axisVectorY * (1 - costheta) - axisVectorZ * sintheta) * toVectorY + (axisVectorZ * axisVectorX * (1 - costheta) + axisVectorY * sintheta) * toVectorZ;
         double returnVectorY = (axisVectorX * axisVectorY * (1 - costheta) + axisVectorZ * sintheta) * toVectorX + (axisVectorY * axisVectorY * (1 - costheta) + costheta)               * toVectorY + (axisVectorY * axisVectorZ * (1 - costheta) - axisVectorX * sintheta) * toVectorZ;
         double returnVectorZ = (axisVectorZ * axisVectorX * (1 - costheta) - axisVectorY * sintheta) * toVectorX + (axisVectorY * axisVectorZ * (1 - costheta) + axisVectorX * sintheta) * toVectorY + (axisVectorZ * axisVectorZ * (1 - costheta) + costheta)               * toVectorZ;
-
+        
         return Vec3.createVectorHelper(returnVectorX, returnVectorY, returnVectorZ);
     }
     private boolean iscandamageentity(Entity entity){
@@ -990,7 +629,7 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
             }
             if(entity instanceof EntityHasMaster && ((EntityHasMaster) entity).getmaster() instanceof SpHitCheckEntity && (((SpHitCheckEntity) ((EntityHasMaster) entity).getmaster()).isRidingEntity(entity) || ((SpHitCheckEntity) ((EntityHasMaster) entity).getmaster()).isRidingEntity(thrower)))return false;
             if(entity.riddenByEntity == thrower
-                    || entity.ridingEntity == thrower){
+                       || entity.ridingEntity == thrower){
                 return false;
             }
             if(entity.riddenByEntity != null && entity.riddenByEntity.riddenByEntity == thrower)return false;
@@ -999,11 +638,613 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
         }
         return true;
     }
-
+    
     @Override
     public boolean writeToNBTOptional(NBTTagCompound p_70039_1_)
     {
-
+        
         return false;
+    }
+    public void preclientUpdate(){
+        if(smoketexture != null) {
+            int length = 5;
+            for(int i=0;i<length;i++) {
+                PacketSpawnParticle packet = new PacketSpawnParticle(posX + motionX/length * i, posY + motionY/length * i, posZ + motionZ/length * i, 0, 0, 0, 1);
+                packet.name = smoketexture;
+                packet.scale = smokeWidth;
+                packet.fuse = smoketime;
+                if (smokeglow) packet.id += 100;
+                proxy.spawnParticles(packet);
+            }
+        }
+        if(ticksInAir>0 && flyingSound != null && soundstoped && motionX * motionX + motionY * motionY + motionZ * motionZ > flyingSoundminspeed * flyingSoundminspeed && getDistanceSqToEntity(proxy.getEntityPlayerInstance()) < flyingSoundmaxdist*flyingSoundmaxdist){
+            proxy.playsoundatBullet(flyingSound,flyingSoundLV,flyingSoundSP,flyingSoundminspeed,flyingSoundmaxdist,this,true);
+            soundstoped = false;
+        }
+    }
+    
+    
+    public void applyacceleration(){
+        double f2 = getspeed();
+        if(f2 > 0) {
+            this.motionX += motionX / f2 * acceleration;
+            this.motionY += motionY / f2 * acceleration;
+            this.motionZ += motionZ / f2 * acceleration;
+//                worldObj.playSoundAtEntity(this, "handmadeguns:handmadeguns." + flyingSound,flyingSoundLV, flyingSoundSP);
+        }
+    }
+    public double getspeed(){
+        return MathHelper.sqrt_double(this.motionX * this.motionX + this.motionZ * this.motionZ + this.motionY * this.motionY);
+    }
+    public void airboneupdate(){
+        onGround = false;
+        Vec3 backupmotion = Vec3.createVectorHelper(motionX,motionY,motionZ);
+        ++this.ticksInAir;
+        
+        double remainingMovelength = backupmotion.lengthVector();
+        Vec3 hitedpos = null;
+        Vec3 remainingMoveVec = Vec3.createVectorHelper(motionX,motionY,motionZ);
+        Vec3 lastpos = Vec3.createVectorHelper(this.posX, this.posY, this.posZ);
+        boolean changemotionflag = false;
+        int breakcnt = 0;
+        while(remainingMovelength>0.1) {
+            //反射・ヒット処理
+            Vec3 vec3 = Vec3.createVectorHelper(this.posX, this.posY, this.posZ);
+            Vec3 vec31 = Vec3.createVectorHelper(this.posX + remainingMoveVec.xCoord, this.posY + remainingMoveVec.yCoord, this.posZ + remainingMoveVec.zCoord);
+            MovingObjectPosition movingobjectposition = this.getmovingobjectPosition_forBlock(vec3, vec31, false, true, false);//衝突するブロックを調べる
+            //これをやるときに除外判定があればここまでやる必要はなかったのだ、故に作った。
+//            while (movingobjectposition != null) {
+//                hitblock = this.worldObj.getBlock(movingobjectposition.blockX, movingobjectposition.blockY, movingobjectposition.blockZ);
+//                if ((hitblock.getMaterial() == Material.plants) || (hitblock.getMaterial() == Material.leaves) || ((
+//                                                                                                                           hitblock.getMaterial() == Material.glass ||
+//                                                                                                                                   hitblock instanceof BlockFence ||
+//                                                                                                                                   hitblock instanceof BlockFenceGate ||
+//                                                                                                                                   hitblock == Blocks.iron_bars) && rand.nextInt(5) < 2)) {
+//                    if (breakcnt > 100) {
+//                        break;
+//                    }
+//                    breakcnt++;
+//                    Vec3 penerater = Vec3.createVectorHelper(remainingMoveVec.xCoord, remainingMoveVec.yCoord, remainingMoveVec.zCoord);
+//                    penerater = penerater.normalize();
+//                    boolean flag =
+//                            ((this.posX + remainingMoveVec.xCoord - movingobjectposition.hitVec.xCoord)<0 && (this.posX + remainingMoveVec.xCoord - movingobjectposition.hitVec.xCoord-penerater.xCoord)>0) || ((this.posX + remainingMoveVec.xCoord - movingobjectposition.hitVec.xCoord)>0 && (this.posX + remainingMoveVec.xCoord - movingobjectposition.hitVec.xCoord-penerater.xCoord)<0) &&
+//                                                                                                                                                                                                                       ((this.posY + remainingMoveVec.yCoord - movingobjectposition.hitVec.yCoord)<0 && (this.posY + remainingMoveVec.yCoord - movingobjectposition.hitVec.yCoord-penerater.yCoord)>0) || ((this.posY + remainingMoveVec.yCoord - movingobjectposition.hitVec.yCoord)>0 && (this.posY + remainingMoveVec.yCoord - movingobjectposition.hitVec.yCoord-penerater.yCoord)<0) &&
+//                                                                                                                                                                                                                                                                                                                                                                                                                  ((this.posZ + remainingMoveVec.zCoord - movingobjectposition.hitVec.zCoord)<0 && (this.posZ + remainingMoveVec.zCoord - movingobjectposition.hitVec.zCoord-penerater.zCoord)>0) || ((this.posZ + remainingMoveVec.zCoord - movingobjectposition.hitVec.zCoord)>0 && (this.posZ + remainingMoveVec.zCoord - movingobjectposition.hitVec.zCoord-penerater.zCoord)<0);//処理が本来動く範囲を超えた
+//                    if(flag){
+//                        movingobjectposition = null;
+//                        break;
+//                    }
+//                    vec3 = Vec3.createVectorHelper(movingobjectposition.hitVec.xCoord + penerater.xCoord, movingobjectposition.hitVec.yCoord + penerater.yCoord, movingobjectposition.hitVec.zCoord + penerater.zCoord);
+//                    vec31 = Vec3.createVectorHelper(this.posX + remainingMoveVec.xCoord, this.posY + remainingMoveVec.yCoord, this.posZ + remainingMoveVec.zCoord);
+//                    movingobjectposition = this.worldObj.func_147447_a(vec3, vec31, false, true, false);
+//                } else {
+//                    break;
+//                }
+//            }
+            breakcnt++;
+            if (breakcnt > 50) {//50回も反射するって無いやろお前…
+                inGround = true;
+                System.out.println("debug1" + hitedpos);
+                System.out.println("debug2" + lastpos);
+                System.out.println("debug3" + remainingMoveVec);
+                break;
+            }
+            vec3 = Vec3.createVectorHelper(this.posX, this.posY, this.posZ);
+            vec31 = Vec3.createVectorHelper(this.posX + remainingMoveVec.xCoord, this.posY + remainingMoveVec.yCoord, this.posZ + remainingMoveVec.zCoord);
+            if (movingobjectposition != null) {
+                vec31 = Vec3.createVectorHelper(movingobjectposition.hitVec.xCoord, movingobjectposition.hitVec.yCoord, movingobjectposition.hitVec.zCoord);
+            }
+            float f2;
+            double d0 = 0.0D;
+            Entity entity = null;
+            List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox.addCoord(remainingMoveVec.xCoord, remainingMoveVec.yCoord, remainingMoveVec.zCoord).expand(1.0D, 1.0D, 1.0D));
+            double d1;
+            for (int j = 0; j < list.size(); ++j) {
+                Entity entity1 = (Entity) list.get(j);
+                
+                if (entity1.canBeCollidedWith() && (ticksInAir>8 ||
+                                                            (iscandamageentity(entity1)))) {
+                    float f = 0.3F;
+                    AxisAlignedBB axisalignedbb = entity1.boundingBox.expand((double) f, (double) f, (double) f);
+                    MovingObjectPosition movingobjectposition1 = axisalignedbb.calculateIntercept(vec3, vec31);
+                    if (movingobjectposition1 != null) {
+                        d1 = vec3.distanceTo(movingobjectposition1.hitVec);
+                        
+                        if (d1 < d0 || d0 == 0.0D) {
+                            entity = entity1;
+                            d0 = d1;
+                        }
+                    }
+                }
+            }
+            
+            if (entity != null) {
+                d1 = vec3.distanceTo(vec31);
+                vec3.xCoord = vec3.xCoord + (vec31.xCoord - vec3.xCoord) * d0 / d1;
+                vec3.yCoord = vec3.yCoord + (vec31.yCoord - vec3.yCoord) * d0 / d1;
+                vec3.zCoord = vec3.zCoord + (vec31.zCoord - vec3.zCoord) * d0 / d1;
+                
+                movingobjectposition = new MovingObjectPosition(entity);
+                movingobjectposition.hitVec = vec3;
+            }
+            int hitside = -1;
+            Vec3 tohitposVec = Vec3.createVectorHelper(remainingMoveVec.xCoord,remainingMoveVec.yCoord,remainingMoveVec.zCoord);
+            if (movingobjectposition != null) {
+                if (movingobjectposition.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY && movingobjectposition.entityHit != null) {
+                    tohitposVec.xCoord = (double) ((float) (movingobjectposition.hitVec.xCoord - this.posX));
+                    tohitposVec.yCoord = (double) ((float) (movingobjectposition.hitVec.yCoord - this.posY));
+                    tohitposVec.zCoord = (double) ((float) (movingobjectposition.hitVec.zCoord - this.posZ));
+                    if(canbounce && !isDead){
+                        if(tohitposVec.lengthVector() >0.1) {
+                            this.onImpact(movingobjectposition);
+                            Vec3 temp = tohitposVec.normalize();
+                            hitedpos = movingobjectposition.hitVec;
+                            hitedpos.xCoord += temp.xCoord*1;
+                            hitedpos.yCoord += temp.yCoord*1;
+                            hitedpos.zCoord += temp.zCoord*1;
+                            tohitposVec.xCoord += temp.xCoord;
+                            tohitposVec.yCoord += temp.yCoord;
+                            tohitposVec.zCoord += temp.zCoord;
+                            motionX *= 0.5;
+                            motionY *= 0.5;
+                            motionZ *= 0.5;
+                            changemotionflag = true;
+                        }else {
+                            this.posX = hitedpos.xCoord;
+                            this.posY = hitedpos.yCoord;
+                            this.posZ = hitedpos.zCoord;
+                        }
+                    }else {
+                        this.onImpact(movingobjectposition);
+                        if(this instanceof HMGEntityBullet_AP){
+                            Vec3 temp = tohitposVec.normalize();
+                            hitedpos = movingobjectposition.hitVec;
+                            hitedpos.xCoord += temp.xCoord*1;
+                            hitedpos.yCoord += temp.yCoord*1;
+                            hitedpos.zCoord += temp.zCoord*1;
+                            remainingMoveVec.xCoord -= tohitposVec.xCoord;
+                            remainingMoveVec.yCoord -= tohitposVec.yCoord;
+                            remainingMoveVec.zCoord -= tohitposVec.zCoord;
+                        }else {
+                            remainingMoveVec.xCoord = 0;
+                            remainingMoveVec.yCoord = 0;
+                            remainingMoveVec.zCoord = 0;
+                        }
+                    }
+                } else if (movingobjectposition.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
+                    this.onImpact(movingobjectposition);
+                    this.xTile = movingobjectposition.blockX;
+                    this.yTile = movingobjectposition.blockY;
+                    this.zTile = movingobjectposition.blockZ;
+                    this.inBlock = this.worldObj.getBlock(this.xTile, this.yTile, this.zTile);
+                    hitside = movingobjectposition.sideHit;
+                    tohitposVec.xCoord = (double) ((float) (movingobjectposition.hitVec.xCoord - this.posX));
+                    tohitposVec.yCoord = (double) ((float) (movingobjectposition.hitVec.yCoord - this.posY));
+                    tohitposVec.zCoord = (double) ((float) (movingobjectposition.hitVec.zCoord - this.posZ));
+                    
+                    f2 = MathHelper.sqrt_double(remainingMoveVec.xCoord * remainingMoveVec.xCoord + remainingMoveVec.zCoord * remainingMoveVec.zCoord + remainingMoveVec.yCoord * remainingMoveVec.yCoord);
+                    movingobjectposition.hitVec.xCoord = movingobjectposition.hitVec.xCoord - remainingMoveVec.xCoord / f2 * 0.25;
+                    movingobjectposition.hitVec.yCoord = movingobjectposition.hitVec.yCoord - remainingMoveVec.yCoord / f2 * 0.25;
+                    movingobjectposition.hitVec.zCoord = movingobjectposition.hitVec.zCoord - remainingMoveVec.zCoord / f2 * 0.25;
+                    this.inGround = true;
+                    hitedpos = movingobjectposition.hitVec;
+                    lockedpos = movingobjectposition.hitVec;
+                    if (canbounce) {
+                        switch (hitside) {//ヒットさせる処理
+                            case 0:
+                            case 1://Y面
+                                if (atan2(sqrt(motionY * motionY), sqrt(motionX * motionX + motionZ * motionZ)) > toRadians(bouncelimit))
+                                    canbounce = false;
+                                break;
+                            case 2:
+                            case 3://Z面
+                                if (atan2(sqrt(motionZ * motionZ), sqrt(motionX * motionX + motionY * motionY)) > toRadians(bouncelimit))
+                                    canbounce = false;
+                                break;
+                            case 4:
+                            case 5://X MAN
+                                if (atan2(sqrt(motionX * motionX), sqrt(motionY * motionY + motionZ * motionZ)) > toRadians(bouncelimit))
+                                    canbounce = false;
+                                break;
+                        }
+                    }
+                    if (this.inBlock.getMaterial() != Material.air) {
+                        this.inBlock.onEntityCollidedWithBlock(this.worldObj, this.xTile, this.yTile, this.zTile, this);
+                    }
+                }
+                remainingMoveVec.xCoord = remainingMoveVec.xCoord - tohitposVec.xCoord;
+                remainingMoveVec.yCoord = remainingMoveVec.yCoord - tohitposVec.yCoord;
+                remainingMoveVec.zCoord = remainingMoveVec.zCoord - tohitposVec.zCoord;
+                if (canbounce) {
+                    switch (hitside) {
+                        case 0:
+                        case 1:
+                            remainingMoveVec.yCoord = -remainingMoveVec.yCoord * bouncerate;
+                            motionY = -motionY * bouncerate;
+                            changemotionflag = true;
+                            onGround = true;
+                            break;
+                        case 2:
+                        case 3:
+                            remainingMoveVec.zCoord = -remainingMoveVec.zCoord * bouncerate;
+                            motionZ = -motionZ * bouncerate;
+                            changemotionflag = true;
+                            break;
+                        case 4:
+                        case 5:
+                            remainingMoveVec.xCoord = -remainingMoveVec.xCoord * bouncerate;
+                            motionX = -motionX * bouncerate;
+                            changemotionflag = true;
+                            break;
+                    }
+                    inGround = false;
+                } else {
+                    remainingMoveVec.xCoord =
+                            remainingMoveVec.yCoord =
+                                    remainingMoveVec.zCoord =0;
+                }
+                lastpos = Vec3.createVectorHelper(this.posX + tohitposVec.xCoord,
+                        this.posY + tohitposVec.yCoord,
+                        this.posZ + tohitposVec.zCoord);
+            }else {
+                lastpos = Vec3.createVectorHelper(this.posX + tohitposVec.xCoord,
+                        this.posY + tohitposVec.yCoord,
+                        this.posZ + tohitposVec.zCoord);
+                remainingMoveVec = Vec3.createVectorHelper(0,0,0);
+            }
+            remainingMovelength = remainingMoveVec.lengthVector();
+            if(hitedpos != null) {
+                this.posX = hitedpos.xCoord;
+                this.posY = hitedpos.yCoord;
+                this.posZ = hitedpos.zCoord;
+            }
+        }
+        this.posX = lastpos.xCoord;
+        this.posY = lastpos.yCoord;
+        this.posZ = lastpos.zCoord;
+        if(changemotionflag) HMGPacketHandler.INSTANCE.sendToAll(new PacketFixClientbullet(this.getEntityId(), this));
+//            if(inGround && canbounce){
+//                this.motionX = backupmotion.xCoord;
+//                this.motionY = backupmotion.yCoord;
+//                this.motionZ = backupmotion.zCoord;
+//                switch (hitside) {
+//                    case 0:
+//                    case 1:
+//                        this.motionY = -backupmotion.yCoord * bouncerate;
+//                        break;
+//                    case 2:
+//                    case 3:
+//                        this.motionZ = -backupmotion.zCoord * bouncerate;
+//                        break;
+//                    case 4:
+//                    case 5:
+//                        this.motionX = -backupmotion.xCoord * bouncerate;
+//                        break;
+//                }
+//                if(!this.worldObj.isRemote) HMGPacketHandler.INSTANCE.sendToAll(new PacketFixClientbullet(this.getEntityId(),this));
+//                //方向転換したのでモーション値をクライアントに送信
+//                inGround = false;
+//                hitedpos = null;
+//            }
+        float f2 = (float) getspeed();
+        this.rotationYaw = (float) (atan2(this.motionX, this.motionZ) * 180.0D / Math.PI);
+        
+        for (this.rotationPitch = (float) (atan2(this.motionY, (double) f2) * 180.0D / Math.PI); this.rotationPitch - this.prevRotationPitch < -180.0F; this.prevRotationPitch -= 360.0F) {
+            ;
+        }
+        
+        while (this.rotationPitch - this.prevRotationPitch >= 180.0F) {
+            this.prevRotationPitch += 360.0F;
+        }
+        
+        while (this.rotationYaw - this.prevRotationYaw < -180.0F) {
+            this.prevRotationYaw -= 360.0F;
+        }
+        
+        while (this.rotationYaw - this.prevRotationYaw >= 180.0F) {
+            this.prevRotationYaw += 360.0F;
+        }
+        
+        this.rotationPitch = this.prevRotationPitch + (this.rotationPitch - this.prevRotationPitch) * 0.2F;
+        this.rotationYaw = this.prevRotationYaw + (this.rotationYaw - this.prevRotationYaw) * 0.2F;
+        
+        changeVector();
+        if(inGround && hitedpos != null) {
+            this.posX = hitedpos.xCoord;
+            this.posY = hitedpos.yCoord;
+            this.posZ = hitedpos.zCoord;
+            if(inGround) {
+                this.motionX =
+                        this.motionY =
+                                this.motionZ = 0;
+                if (!this.worldObj.isRemote)
+                    HMGPacketHandler.INSTANCE.sendToAll(new PacketFixClientbullet(this.getEntityId(), this));
+            }
+        }
+    }
+    public void changeVector(){
+        float f3 = resistance;
+        
+        if (this.isInWater()) {
+            for (int l = 0; l < 4; ++l) {
+                float f4 = 0.25F;
+                this.worldObj.spawnParticle("bubble", this.posX - this.motionX * (double) f4, this.posY - this.motionY * (double) f4, this.posZ - this.motionZ * (double) f4, this.motionX, this.motionY, this.motionZ);
+            }
+            f3 *= 0.8F;
+        }
+        
+        if (this.isWet()) {
+            this.extinguish();
+        }
+        this.motionX *= (double) f3;
+        this.motionY *= (double) f3;
+        this.motionZ *= (double) f3;
+        applyacceleration();
+        double f2 = (float) getspeed();
+        if(homingEntity != null) {
+            Vec3 course = Vec3.createVectorHelper(homingEntity.posX - this.posX, homingEntity.posY + homingEntity.height/2 - this.posY, homingEntity.posZ - this.posZ);
+            course = course.normalize();
+            Vec3 backupmotion = Vec3.createVectorHelper(motionX,motionY,motionZ);
+            backupmotion = backupmotion.normalize();
+            Vec3 axis = backupmotion.crossProduct(course);
+            double deg = toDegrees(acos(backupmotion.dotProduct(course)));
+            if(abs(deg)<induction_precision) backupmotion = course;
+            else backupmotion = RotationVector_byAxisVector(axis,backupmotion, induction_precision);
+            this.motionX = backupmotion.xCoord * f2;
+            this.motionY = backupmotion.yCoord * f2;
+            this.motionZ = backupmotion.zCoord * f2;
+            if(worldObj.isRemote && homingEntity == FMLClientHandler.instance().getClient().thePlayer && soundcool<0) {
+                proxy.playsoundat("handmadeguns:handmadeguns.warn",1,1,1,(float) homingEntity.posX,(float)homingEntity.posY,(float)homingEntity.posZ);
+                worldObj.playSoundAtEntity(homingEntity,"handmadeguns:handmadeguns.warn", 1, 1);
+                soundcool = 4;
+            }
+            soundcool--;
+            NBTTagCompound targetnbt = homingEntity.getEntityData();
+            if(targetnbt !=null){
+                targetnbt.setBoolean("behome",true);
+                if(targetnbt.getBoolean("flare")) homingEntity =null;
+            }
+            if(!worldObj.isRemote) HMGPacketHandler.INSTANCE.sendToAll(new PacketFixClientbullet(this.getEntityId(),this));
+            
+            if(abs(deg)>seekerwidth)homingEntity = null;
+        }
+        if(lockedBlockPos != null){
+            Vec3 course = Vec3.createVectorHelper(lockedBlockPos.xCoord + 0.5 - this.posX,lockedBlockPos.yCoord + 0.5 - this.posY,lockedBlockPos.zCoord + 0.5 - this.posZ);
+            course = course.normalize();
+            Vec3 backupmotion = Vec3.createVectorHelper(motionX,motionY,motionZ);
+            backupmotion = backupmotion.normalize();
+            Vec3 axis = backupmotion.crossProduct(course);
+            double deg = toDegrees(acos(backupmotion.dotProduct(course)));
+            if(abs(deg)<induction_precision) backupmotion = course;
+            else backupmotion = RotationVector_byAxisVector(axis,backupmotion, induction_precision);
+            this.motionX = backupmotion.xCoord * f2;
+            this.motionY = backupmotion.yCoord * f2;
+            this.motionZ = backupmotion.zCoord * f2;
+            HMGPacketHandler.INSTANCE.sendToAll(new PacketFixClientbullet(this.getEntityId(),this));
+            
+            if(abs(deg)>seekerwidth)lockedBlockPos = null;
+        }
+        this.motionY -= (double) gra * cfg_defgravitycof;
+        
+    }
+    private MovingObjectPosition getmovingobjectPosition_forBlock(Vec3 start, Vec3 end, boolean p_147447_3_, boolean p_147447_4_, boolean p_147447_5_){
+        if (!Double.isNaN(start.xCoord) && !Double.isNaN(start.yCoord) && !Double.isNaN(start.zCoord))
+        {
+            if (!Double.isNaN(end.xCoord) && !Double.isNaN(end.yCoord) && !Double.isNaN(end.zCoord))
+            {
+                int i = MathHelper.floor_double(end.xCoord);
+                int j = MathHelper.floor_double(end.yCoord);
+                int k = MathHelper.floor_double(end.zCoord);
+                int l = MathHelper.floor_double(start.xCoord);
+                int i1 = MathHelper.floor_double(start.yCoord);
+                int j1 = MathHelper.floor_double(start.zCoord);
+                Block block = worldObj.getBlock(l, i1, j1);
+                int k1 = worldObj.getBlockMetadata(l, i1, j1);
+                
+                if ((!p_147447_4_ || block.getCollisionBoundingBoxFromPool(worldObj, l, i1, j1) != null) && isCollidableBlock(block) && block.canCollideCheck(k1, p_147447_3_))
+                {
+                    MovingObjectPosition movingobjectposition = block.collisionRayTrace(worldObj, l, i1, j1, start, end);
+                    
+                    if (movingobjectposition != null)
+                    {
+                        return movingobjectposition;
+                    }
+                }
+                
+                MovingObjectPosition movingobjectposition2 = null;
+                k1 = 200;
+                
+                while (k1-- >= 0)
+                {
+                    if (Double.isNaN(start.xCoord) || Double.isNaN(start.yCoord) || Double.isNaN(start.zCoord))
+                    {
+                        return null;
+                    }
+                    
+                    if (l == i && i1 == j && j1 == k)
+                    {
+                        return p_147447_5_ ? movingobjectposition2 : null;
+                    }
+                    
+                    boolean flag6 = true;
+                    boolean flag3 = true;
+                    boolean flag4 = true;
+                    double d0 = 999.0D;
+                    double d1 = 999.0D;
+                    double d2 = 999.0D;
+                    
+                    if (i > l)
+                    {
+                        d0 = (double)l + 1.0D;
+                    }
+                    else if (i < l)
+                    {
+                        d0 = (double)l + 0.0D;
+                    }
+                    else
+                    {
+                        flag6 = false;
+                    }
+                    
+                    if (j > i1)
+                    {
+                        d1 = (double)i1 + 1.0D;
+                    }
+                    else if (j < i1)
+                    {
+                        d1 = (double)i1 + 0.0D;
+                    }
+                    else
+                    {
+                        flag3 = false;
+                    }
+                    
+                    if (k > j1)
+                    {
+                        d2 = (double)j1 + 1.0D;
+                    }
+                    else if (k < j1)
+                    {
+                        d2 = (double)j1 + 0.0D;
+                    }
+                    else
+                    {
+                        flag4 = false;
+                    }
+                    
+                    double d3 = 999.0D;
+                    double d4 = 999.0D;
+                    double d5 = 999.0D;
+                    double d6 = end.xCoord - start.xCoord;
+                    double d7 = end.yCoord - start.yCoord;
+                    double d8 = end.zCoord - start.zCoord;
+                    
+                    if (flag6)
+                    {
+                        d3 = (d0 - start.xCoord) / d6;
+                    }
+                    
+                    if (flag3)
+                    {
+                        d4 = (d1 - start.yCoord) / d7;
+                    }
+                    
+                    if (flag4)
+                    {
+                        d5 = (d2 - start.zCoord) / d8;
+                    }
+                    byte b0;
+                    
+                    if (d3 < d4 && d3 < d5)
+                    {
+                        if (i > l)
+                        {
+                            b0 = 4;
+                        }
+                        else
+                        {
+                            b0 = 5;
+                        }
+                        
+                        start.xCoord = d0;
+                        start.yCoord += d7 * d3;
+                        start.zCoord += d8 * d3;
+                    }
+                    else if (d4 < d5)
+                    {
+                        if (j > i1)
+                        {
+                            b0 = 0;
+                        }
+                        else
+                        {
+                            b0 = 1;
+                        }
+                        
+                        start.xCoord += d6 * d4;
+                        start.yCoord = d1;
+                        start.zCoord += d8 * d4;
+                    }
+                    else
+                    {
+                        if (k > j1)
+                        {
+                            b0 = 2;
+                        }
+                        else
+                        {
+                            b0 = 3;
+                        }
+                        
+                        start.xCoord += d6 * d5;
+                        start.yCoord += d7 * d5;
+                        start.zCoord = d2;
+                    }
+                    
+                    Vec3 vec32 = Vec3.createVectorHelper(start.xCoord, start.yCoord, start.zCoord);
+                    l = (int)(vec32.xCoord = (double)MathHelper.floor_double(start.xCoord));
+                    
+                    if (b0 == 5)
+                    {
+                        --l;
+                        ++vec32.xCoord;
+                    }
+                    
+                    i1 = (int)(vec32.yCoord = (double)MathHelper.floor_double(start.yCoord));
+                    
+                    if (b0 == 1)
+                    {
+                        --i1;
+                        ++vec32.yCoord;
+                    }
+                    
+                    j1 = (int)(vec32.zCoord = (double)MathHelper.floor_double(start.zCoord));
+                    
+                    if (b0 == 3)
+                    {
+                        --j1;
+                        ++vec32.zCoord;
+                    }
+                    
+                    Block block1 = worldObj.getBlock(l, i1, j1);
+                    int l1 = worldObj.getBlockMetadata(l, i1, j1);
+                    
+                    if (!p_147447_4_ || block1.getCollisionBoundingBoxFromPool(worldObj, l, i1, j1) != null)
+                    {
+                        if ( isCollidableBlock(block) && block1.canCollideCheck(l1, p_147447_3_))
+                        {
+                            MovingObjectPosition movingobjectposition1 = block1.collisionRayTrace(worldObj, l, i1, j1, start, end);
+                            
+                            if (movingobjectposition1 != null)
+                            {
+                                return movingobjectposition1;
+                            }
+                        }
+                        else
+                        {
+                            movingobjectposition2 = new MovingObjectPosition(l, i1, j1, b0, start, false);
+                        }
+                    }
+                }
+                
+                return p_147447_5_ ? movingobjectposition2 : null;
+            }
+            else
+            {
+                return null;
+            }
+        }
+        else
+        {
+            return null;
+        }
+    }
+    public static boolean isCollidableBlock(Block block){
+        Random rand = new Random();
+        return !((((block.getMaterial() == Material.plants) || (block.getMaterial() == Material.leaves) || ((
+                                                                                                                    block.getMaterial() == Material.glass ||
+                                                                                                                            block instanceof BlockFence ||
+                                                                                                                            block instanceof BlockFenceGate ||
+                                                                                                                            block == Blocks.iron_bars) && rand.nextInt(5) < 2))));
     }
 }

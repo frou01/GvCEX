@@ -15,10 +15,9 @@ import org.lwjgl.opengl.GL12;
 import static handmadeguns.HMGAddBullets.modellist;
 
 @SideOnly(Side.CLIENT)
-public class HMGRenderBulletRPG extends Render
+public class HMGRenderBulletExplode extends Render
 {
     private static final ResourceLocation arrowTextures = new ResourceLocation("handmadeguns:textures/entity/bulletrpg.png");
-    private static final ResourceLocation trailtexture = new ResourceLocation("handmadeguns:textures/entity/laser.png");
     private static final String __OBFID = "CL_00000978";
 
     /**
