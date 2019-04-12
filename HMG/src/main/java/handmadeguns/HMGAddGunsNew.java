@@ -1713,6 +1713,7 @@ public class HMGAddGunsNew {
 								newgun.setFull3D();
 								newgun.recoil_sneak = recoilwhensneak;
 								newgun.ex = ex;
+								newgun.canex = canex;
 								newgun.canbounce = canbounce;
 								newgun.bouncerate = bouncerate;
 								newgun.bouncelimit = bouncelimit;

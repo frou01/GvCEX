@@ -11,7 +11,7 @@ anaglyph3d:false
 advancedOpengl:false
 maxFps:60
 fboEnable:true
-difficulty:0
+difficulty:2
 fancyGraphics:false
 ao:0
 clouds:true
@@ -93,6 +93,8 @@ key_ADS_Key:47
 key_Mode_Key:41
 key_Fix Gun:35
 key_CannonCamera:44
+key_EXControl1:33
+key_EXControl2:45
 soundCategory_master:1.0
 soundCategory_music:0.0
 soundCategory_record:1.0

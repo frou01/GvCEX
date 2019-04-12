@@ -1,22 +1,7 @@
 package hmgww2.entity;
 
 
-import hmggvcmob.entity.PlaneBaseLogic;
 import hmggvcmob.entity.TurretObj;
-import hmgww2.mod_GVCWW2;
-import hmgww2.network.WW2MessageKeyPressed;
-import hmgww2.network.WW2PacketHandler;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAISwimming;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
 import javax.vecmath.Vector3d;
@@ -27,13 +12,12 @@ public class EntityUSA_FighterA extends EntityUSA_FighterBase
 	{
 		super(par1World);
 		this.setSize(5f, 3f);
-		this.maxhealth = 500;
+		this.maxHealth = 500;
 //		nboundingbox = new ModifiedBoundingBox(-20,-20,-20,20,20,20,0,0,-6.27,2.5,5,19);
 //		nboundingbox.rot.set(this.bodyRot);
 //		proxy.replaceBoundingbox(this,nboundingbox);
 //		((ModifiedBoundingBox)this.boundingBox).updateOBB(this.posX,this.posY,this.posZ);
 		ignoreFrustumCheck = true;
-		this.fireCycle1 = 1;
 		baseLogic.speedfactor = 0.0025f;
 		baseLogic.throttle_gearDown = 1.7f;
 		baseLogic.throttle_Max = 5.0f;
@@ -133,5 +117,10 @@ public class EntityUSA_FighterA extends EntityUSA_FighterBase
 			baseLogic.mainTurret.magazinerem = 1;
 			baseLogic.mainTurret.reloadSetting = 500;
 		}
+	}
+	protected void applyEntityAttributes()
+	{
+		maxHealth = 300;
+		super.applyEntityAttributes();
 	}
 }

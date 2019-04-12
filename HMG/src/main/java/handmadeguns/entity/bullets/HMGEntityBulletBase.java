@@ -58,6 +58,7 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
     public double knockbackXZ = 0.0001;
     public double knockbackY = 0;
     public float resistance = 0.9999f;
+    public float resistanceinwater = 0.9999f;
     public float acceleration = 0f;
     public String flyingSound = "handmadeguns:handmadeguns.bulletflyby";
     public float flyingSoundLV = 2f;
@@ -175,6 +176,34 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
         par1 *= (double)par7;
         par3 *= (double)par7;
         par5 *= (double)par7;
+        this.motionX = par1;
+        this.motionY = par3;
+        this.motionZ = par5;
+        float f3 = MathHelper.sqrt_double(par1 * par1 + par5 * par5);
+        this.prevRotationYaw = this.rotationYaw = (float)(atan2(par1, par5) * 180.0D / Math.PI);
+        this.prevRotationPitch = this.rotationPitch = (float)(atan2(par3, (double)f3) * 180.0D / Math.PI);
+        this.ticksInGround = 0;
+    }
+    
+    public void setThrowableHeading(double par1, double par3, double par5, float par7, float par8,Entity shooter)
+    {
+        par8 /=2;
+        float f2 = MathHelper.sqrt_double(par1 * par1 + par3 * par3 + par5 * par5);
+        par1 /= (double)f2;
+        par3 /= (double)f2;
+        par5 /= (double)f2;
+        par1 += this.rand.nextGaussian() * (double)(this.rand.nextBoolean() ? -1 : 1) * 0.01 * (double)par8;
+        par3 += this.rand.nextGaussian() * (double)(this.rand.nextBoolean() ? -1 : 1) * 0.01 * (double)par8;
+        par5 += this.rand.nextGaussian() * (double)(this.rand.nextBoolean() ? -1 : 1) * 0.01 * (double)par8;
+        par1 *= (double)par7;
+        par3 *= (double)par7;
+        par5 *= (double)par7;
+        double motionlength = sqrt(shooter.motionX * shooter.motionX + shooter.motionY * shooter.motionY +shooter.motionZ * shooter.motionZ);
+        if(motionlength>0.01) {
+            par1 += (shooter.motionX / motionlength + this.rand.nextGaussian() * (double) (this.rand.nextBoolean() ? -1 : 1) * 0.01 * (double) par8) * motionlength;
+            par3 += (shooter.motionY / motionlength + this.rand.nextGaussian() * (double) (this.rand.nextBoolean() ? -0.5 : 0.5) * 0.01 * (double) par8) * motionlength;
+            par5 += (shooter.motionZ / motionlength + this.rand.nextGaussian() * (double) (this.rand.nextBoolean() ? -1 : 1) * 0.01 * (double) par8) * motionlength;
+        }
         this.motionX = par1;
         this.motionY = par3;
         this.motionZ = par5;
@@ -664,7 +693,7 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
     }
     
     
-    public void applyacceleration(){
+    public boolean applyacceleration(){
         double f2 = getspeed();
         if(f2 > 0) {
             this.motionX += motionX / f2 * acceleration;
@@ -672,6 +701,7 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
             this.motionZ += motionZ / f2 * acceleration;
 //                worldObj.playSoundAtEntity(this, "handmadeguns:handmadeguns." + flyingSound,flyingSoundLV, flyingSoundSP);
         }
+        return false;
     }
     public double getspeed(){
         return MathHelper.sqrt_double(this.motionX * this.motionX + this.motionZ * this.motionZ + this.motionY * this.motionY);
@@ -737,7 +767,7 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
             float f2;
             double d0 = 0.0D;
             Entity entity = null;
-            List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox.addCoord(remainingMoveVec.xCoord, remainingMoveVec.yCoord, remainingMoveVec.zCoord).expand(1.0D, 1.0D, 1.0D));
+            List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox.addCoord(remainingMoveVec.xCoord, remainingMoveVec.yCoord, remainingMoveVec.zCoord).expand(1, 1, 1));
             double d1;
             for (int j = 0; j < list.size(); ++j) {
                 Entity entity1 = (Entity) list.get(j);
@@ -809,6 +839,11 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
                             remainingMoveVec.xCoord = 0;
                             remainingMoveVec.yCoord = 0;
                             remainingMoveVec.zCoord = 0;
+                            tohitposVec.xCoord = 0;
+                            tohitposVec.yCoord = 0;
+                            tohitposVec.zCoord = 0;
+                            hitedpos = movingobjectposition.hitVec;
+                            break;
                         }
                     }
                 } else if (movingobjectposition.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
@@ -891,6 +926,7 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
                         this.posY + tohitposVec.yCoord,
                         this.posZ + tohitposVec.zCoord);
                 remainingMoveVec = Vec3.createVectorHelper(0,0,0);
+                break;
             }
             remainingMovelength = remainingMoveVec.lengthVector();
             if(hitedpos != null) {
@@ -902,7 +938,6 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
         this.posX = lastpos.xCoord;
         this.posY = lastpos.yCoord;
         this.posZ = lastpos.zCoord;
-        if(changemotionflag) HMGPacketHandler.INSTANCE.sendToAll(new PacketFixClientbullet(this.getEntityId(), this));
 //            if(inGround && canbounce){
 //                this.motionX = backupmotion.xCoord;
 //                this.motionY = backupmotion.yCoord;
@@ -948,7 +983,7 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
         this.rotationPitch = this.prevRotationPitch + (this.rotationPitch - this.prevRotationPitch) * 0.2F;
         this.rotationYaw = this.prevRotationYaw + (this.rotationYaw - this.prevRotationYaw) * 0.2F;
         
-        changeVector();
+        changemotionflag |= changeVector();
         if(inGround && hitedpos != null) {
             this.posX = hitedpos.xCoord;
             this.posY = hitedpos.yCoord;
@@ -957,12 +992,13 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
                 this.motionX =
                         this.motionY =
                                 this.motionZ = 0;
-                if (!this.worldObj.isRemote)
-                    HMGPacketHandler.INSTANCE.sendToAll(new PacketFixClientbullet(this.getEntityId(), this));
+                changemotionflag |= true;
             }
         }
+        if(changemotionflag && !this.worldObj.isRemote) HMGPacketHandler.INSTANCE.sendToAll(new PacketFixClientbullet(this.getEntityId(), this));
     }
-    public void changeVector(){
+    public boolean changeVector(){
+        boolean ismotionupdate = false;
         float f3 = resistance;
         
         if (this.isInWater()) {
@@ -970,7 +1006,7 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
                 float f4 = 0.25F;
                 this.worldObj.spawnParticle("bubble", this.posX - this.motionX * (double) f4, this.posY - this.motionY * (double) f4, this.posZ - this.motionZ * (double) f4, this.motionX, this.motionY, this.motionZ);
             }
-            f3 *= 0.8F;
+            f3 *= resistanceinwater;
         }
         
         if (this.isWet()) {
@@ -979,7 +1015,7 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
         this.motionX *= (double) f3;
         this.motionY *= (double) f3;
         this.motionZ *= (double) f3;
-        applyacceleration();
+        ismotionupdate = applyacceleration();
         double f2 = (float) getspeed();
         if(homingEntity != null) {
             Vec3 course = Vec3.createVectorHelper(homingEntity.posX - this.posX, homingEntity.posY + homingEntity.height/2 - this.posY, homingEntity.posZ - this.posZ);
@@ -1004,9 +1040,9 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
                 targetnbt.setBoolean("behome",true);
                 if(targetnbt.getBoolean("flare")) homingEntity =null;
             }
-            if(!worldObj.isRemote) HMGPacketHandler.INSTANCE.sendToAll(new PacketFixClientbullet(this.getEntityId(),this));
             
             if(abs(deg)>seekerwidth)homingEntity = null;
+            ismotionupdate |= true;
         }
         if(lockedBlockPos != null){
             Vec3 course = Vec3.createVectorHelper(lockedBlockPos.xCoord + 0.5 - this.posX,lockedBlockPos.yCoord + 0.5 - this.posY,lockedBlockPos.zCoord + 0.5 - this.posZ);
@@ -1023,9 +1059,10 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
             HMGPacketHandler.INSTANCE.sendToAll(new PacketFixClientbullet(this.getEntityId(),this));
             
             if(abs(deg)>seekerwidth)lockedBlockPos = null;
+            ismotionupdate |= true;
         }
         this.motionY -= (double) gra * cfg_defgravitycof;
-        
+        return ismotionupdate;
     }
     private MovingObjectPosition getmovingobjectPosition_forBlock(Vec3 start, Vec3 end, boolean p_147447_3_, boolean p_147447_4_, boolean p_147447_5_){
         if (!Double.isNaN(start.xCoord) && !Double.isNaN(start.yCoord) && !Double.isNaN(start.zCoord))
@@ -1209,9 +1246,9 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
                     Block block1 = worldObj.getBlock(l, i1, j1);
                     int l1 = worldObj.getBlockMetadata(l, i1, j1);
                     
-                    if (!p_147447_4_ || block1.getCollisionBoundingBoxFromPool(worldObj, l, i1, j1) != null)
+                    if (!p_147447_4_ || isCollidableBlock(block1) && block1.getCollisionBoundingBoxFromPool(worldObj, l, i1, j1) != null)
                     {
-                        if ( isCollidableBlock(block) && block1.canCollideCheck(l1, p_147447_3_))
+                        if ( block1.canCollideCheck(l1, p_147447_3_))
                         {
                             MovingObjectPosition movingobjectposition1 = block1.collisionRayTrace(worldObj, l, i1, j1, start, end);
                             

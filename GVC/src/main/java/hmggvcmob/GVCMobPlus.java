@@ -4,8 +4,8 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import handmadeguns.HMGAddGunsNew;
@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 
 import hmggvcmob.util.SpotObj;
+import hmggvcutil.GVCUtils;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EnumCreatureType;
@@ -40,6 +41,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.stats.Achievement;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.MinecraftForge;
@@ -101,6 +103,7 @@ public class GVCMobPlus
     public static Item fn_drawnegg;
     public static Item fn_flameregg;
     public static Item fn_skeletonegg;
+    public static Item fn_endegg;
     public static Item arenaUnit;
     public static Item fn_mobspawner_egg;
     public static Item fn_mobspawner2_egg;
@@ -147,10 +150,39 @@ public class GVCMobPlus
     protected static File configFile;
 
     public static ArrayList<SpotObj> spotObjs = new ArrayList<SpotObj>();
+    
+    public static Achievement No_place_to_HIDE;
+    public static Achievement killedGuerrilla;
+    public static Achievement Union_Army;
+    public static Achievement Old_soldiers_never_fade;
+    public static Achievement power_of_number;
+    public static Achievement unmanned_Craft;
+    public static Achievement war_has_changed;
+    public static Achievement unending_war;
+    public static Achievement METAL_GEAR;
+    public static Achievement spear_the_gungnir;
+    public static Achievement Gun_of_the_Lost_Country;
+    public static Achievement beacon_defensive;
+    public static Achievement supply;
+    
+    public static String id_of_No_place_to_HIDE = "achievement.No_place_to_HIDE";
+    public static String id_of_killedGuerrilla = "achievement.killedGuerrilla";
+    public static String id_of_union = "achievement.union";
+    public static String id_of_Old_soldiers_never_fade = "achievement.Old_soldiers_never_fade";
+    public static String id_of_power_of_number = "achievement.power_of_number";
+    public static String id_of_unmanned_Craft = "achievement.unmanned_Craft";
+    public static String id_of_war_has_changed = "achievement.war_has_changed";
+    public static String id_of_unending_war = "achievement.unending_war";
+    public static String id_of_METAL_GEAR = "achievement.METAL_GEAR";
+    public static String id_of_spear_the_gungnir = "achievement.spear_the_gungnir";
+    public static String id_of_Gun_of_the_Lost_Country = "achievement.Gun_of_the_Lost_Country";
+    public static String id_of_beacon_defensive = "achievement.beacon_defensive";
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent pEvent)
     {
+    
+        
         configFile = pEvent.getSuggestedConfigurationFile();
         Configuration lconf = new Configuration(configFile);
         lconf.load();
@@ -266,6 +298,8 @@ public class GVCMobPlus
         GameRegistry.registerItem(fn_flameregg, "GuerrillaFlamerEgg");
         fn_skeletonegg = new GVCItemGuerrillaEgg(17).setUnlocalizedName("GuerrillaSkeletonEgg").setTextureName("gvcmob:gskeleton");
         GameRegistry.registerItem(fn_skeletonegg, "GuerrillaSkeletonEgg");
+        fn_endegg = new GVCItemGuerrillaEgg(19).setUnlocalizedName("GuerrillaEndEgg").setTextureName("gvcmob:gEnd");
+        GameRegistry.registerItem(fn_endegg, "GuerrillaEndEgg");
 
         fn_mobspawner_egg = new GVCItemMobSpawnerEgg(0).setUnlocalizedName("MobSpawnerEgg").setTextureName("gvcmob:mobspawneregg");
         GameRegistry.registerItem(fn_mobspawner_egg, "MobSpawnerEgg");
@@ -322,6 +356,32 @@ public class GVCMobPlus
         GameRegistry.registerItem(defsetter, "defsetter");
 
         GVCMPacketHandler.init();
+    
+        No_place_to_HIDE = new Achievement(id_of_No_place_to_HIDE, "No_place_to_HIDE", 2, 3, new ItemStack(fn_guerrillaegg, 1, 15), null)
+                                   .initIndependentStat().registerStat();
+        killedGuerrilla = new Achievement(id_of_killedGuerrilla, "killedGuerrilla", 2, 3, new ItemStack(GVCUtils.fn_ak74, 1, 15), No_place_to_HIDE)
+                                  .initIndependentStat().registerStat();
+        Union_Army = new Achievement(id_of_union, "Union_Army", 2, 3, new ItemStack(GVCUtils.fn_ak74, 1, 15), No_place_to_HIDE)
+                             .initIndependentStat().registerStat();
+        Old_soldiers_never_fade = new Achievement(id_of_Old_soldiers_never_fade, "Old_soldiers_never_fade", 2, 3, new ItemStack(fn_tankegg, 1, 15), No_place_to_HIDE)
+                                          .initIndependentStat().registerStat();
+        power_of_number = new Achievement(id_of_power_of_number, "power_of_number", 2, 3, new ItemStack(GVCUtils.fn_ak74, 1, 15), No_place_to_HIDE)
+                                  .initIndependentStat().registerStat();
+        unmanned_Craft = new Achievement(id_of_unmanned_Craft, "unmanned_Craft", 2, 3, new ItemStack(fn_drawnegg, 1, 15), No_place_to_HIDE)
+                                 .initIndependentStat().registerStat();
+        war_has_changed = new Achievement(id_of_war_has_changed, "war_has_changed", 2, 3, new ItemStack(fn_gkegg, 1, 15), No_place_to_HIDE)
+                                  .initIndependentStat().registerStat();
+        unending_war = new Achievement(id_of_unending_war, "unending_war", 2, 3, new ItemStack(fn_skeletonegg, 1, 15), No_place_to_HIDE)
+                               .initIndependentStat().registerStat();
+        METAL_GEAR = new Achievement(id_of_METAL_GEAR, "METAL_GEAR", 2, 3, new ItemStack(fn_MGM, 1, 15), null)
+                             .initIndependentStat().registerStat();
+        spear_the_gungnir = new Achievement(id_of_spear_the_gungnir, "spear_the_gungnir", 2, 3, new ItemStack(GVCUtils.fn_ptrk, 1, 15), null)
+                                    .initIndependentStat().registerStat();
+        Gun_of_the_Lost_Country = new Achievement(id_of_Gun_of_the_Lost_Country, "Gun_of_the_Lost_Country", 2, 3, new ItemStack(GVCUtils.type38, 1, 15), null)
+                                          .initIndependentStat().registerStat();
+        beacon_defensive = new Achievement(id_of_beacon_defensive, "beacon_defensive", 2, 3, new ItemStack(GVCUtils.type38, 1, 15), null)
+                                          .initIndependentStat().registerStat();
+        
     }
 
     public static void Debug(String pText, Object... pData)
@@ -343,6 +403,7 @@ public class GVCMobPlus
         EntityRegistry.registerModEntity(GVCEntityGuerrillaBM.class, "Bommer", ++id, this, 250, 3, true);
         EntityRegistry.registerModEntity(GVCEntityGuerrillaP.class, "GuerrillaP", ++id, this, 250, 3, true);
         EntityRegistry.registerModEntity(GVCEntityGuerrillaSkeleton.class, "GuerrillaSkeleton", ++id, this, 250, 3, true);
+        EntityRegistry.registerModEntity(GVCEntityGuerrilla_ender.class, "GuerrillaEnder", ++id, this, 250, 3, true);
         EntityRegistry.registerModEntity(GVCEntityGK.class, "IRVING", ++id, this, 250, 3, true);
         EntityRegistry.registerModEntity(GVCEntityTank.class, "Tank", ++id, this, 250, 3, true);
         EntityRegistry.registerModEntity(GVCEntityAPC.class, "APC", ++id, this, 250, 3, true);
@@ -404,7 +465,9 @@ public class GVCMobPlus
                     }else
                     if(biome.biomeName.equals("Sky")){
                         if(cfg_canspawnsky){
-                            this.spawn(biome);
+                            if (cfg_canspawnguerrilla) {
+                                EntityRegistry.addSpawn(GVCEntityGuerrilla_ender.class, cfg_guerrillaspawnnomal * 3, cfg_guerrillaspawnnomal * 3, cfg_guerrillaspawnnomal * 3, EnumCreatureType.monster, new BiomeGenBase[]{biome});
+                            }
                         }
                     }else this.spawn(biome);
                 }
@@ -588,9 +651,9 @@ public class GVCMobPlus
             }
         }
     }
-
+    
     @Mod.EventHandler
-    public void postInit(FMLPostInitializationEvent event) {
+    public void postInit(FMLServerStartingEvent event) {
         GVCMXEntityEvent gvcmxEntityEvent = new GVCMXEntityEvent();
         FMLCommonHandler.instance().bus().register(gvcmxEntityEvent);
         MinecraftForge.EVENT_BUS.register(gvcmxEntityEvent);

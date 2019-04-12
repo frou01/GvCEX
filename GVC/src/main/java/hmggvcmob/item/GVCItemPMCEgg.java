@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
+import static hmggvcmob.GVCMobPlus.power_of_number;
 import static hmggvcmob.GVCMobPlus.tabgvcm;
 
 public class GVCItemPMCEgg extends Item
@@ -35,6 +36,7 @@ public class GVCItemPMCEgg extends Item
         }
         else
         {
+            par2EntityPlayer.addStat(power_of_number,1);
             if(this.mob == 0){
                 ++par5;
                 int var12 = MathHelper.floor_double((double)(par2EntityPlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;

@@ -10,8 +10,7 @@ import static java.lang.Math.sqrt;
 
 public class TU95 extends Entity {
     public int fuse;
-    public double disttoPlayer = -1;
-    public double prevdisttoPlayer = -1;
+    public boolean soundstarted = false;
     /** Entity motion X */
     public TU95(World p_i1582_1_) {
         super(p_i1582_1_);
@@ -28,14 +27,9 @@ public class TU95 extends Entity {
         if(!worldObj.isRemote && fuse<0){
             setDead();
         }
-        if(worldObj.isRemote){
-            prevdisttoPlayer = disttoPlayer;
-            disttoPlayer = getDistanceSqToEntity(proxy.getEntityPlayerInstance());
-            if(prevdisttoPlayer != -1) {
-                float doppler = (float) (sqrt(prevdisttoPlayer) - sqrt(disttoPlayer));
-                float tempsp = (float) (318.8 / (318.8 - doppler * 20));
-                proxy.playsoundat("gvcmob:gvcmob.Tu-95prop",16,1, tempsp, (float) this.posX, (float) this.posY, (float) this.posZ);
-            }
+        if(worldObj.isRemote && !soundstarted){
+            proxy.playsoundatBullet("gvcmob:gvcmob.Tu-95prop",16,1,4096*4096,4096*4096,this,true);
+            soundstarted = true;
         }
         fuse--;
 

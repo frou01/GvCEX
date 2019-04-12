@@ -12,7 +12,7 @@ ZoomRenderType,true,true,true
 ZoomRenderTypeTxture,false,false,false
 Cycle,1
 Texture,MG34
-GunSound,handmadeguns.fire,handmadeguns.supu
+GunSound,handmadeguns.MG34,handmadeguns.supu
 GunSoundReload,handmadeguns.reload
 CanObj,true
 ObjModel,MG34.obj

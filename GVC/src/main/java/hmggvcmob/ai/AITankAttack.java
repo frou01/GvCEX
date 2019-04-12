@@ -7,6 +7,7 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 
+import javax.vecmath.Vector3d;
 import java.util.Random;
 
 public class AITankAttack extends EntityAIBase {
@@ -23,7 +24,8 @@ public class AITankAttack extends EntityAIBase {
     private float maxrenge;
     private float minrenge;
     private boolean dir;
-    private boolean movearound;
+    private boolean movearound = false;
+    private boolean always_movearound = false;
 
     public boolean noLineCheck_subfire;
 
@@ -79,19 +81,30 @@ public class AITankAttack extends EntityAIBase {
     public void updateTask() {
 
         Tank_body.getNavigator().clearPathEntity();
-        if (Tank_body.getDistanceSqToEntity(target) > maxrenge || Tank_body.getEntitySenses().canSee(target)) {
-            Tank_body.getNavigator().setPath(worldForPathfind.getEntityPathToXYZ(Tank_body, (int) target.posX, (int) target.posY, (int) target.posZ, 80f, true, false, false, true), 1.2);
-        } else if (Tank_body.getDistanceSqToEntity(target) < minrenge) {
-            Tank_body.getNavigator().setPath(worldForPathfind.getEntityPathToXYZ(Tank_body, (int) target.posX, (int) target.posY, (int) target.posZ, 80f, true, false, false, true), -0.75);
-        }else if(movearound){
-            if(dir)Tank_body.getNavigator().setPath(worldForPathfind.getEntityPathToXYZ(Tank_body, (int)(Tank_body.posX + target.posZ - Tank_body.posZ), (int) target.posY, (int)(Tank_body.posZ - target.posX + Tank_body.posX), 80f, true, false, false, true), 1.2);
-            else Tank_body.getNavigator().setPath(worldForPathfind.getEntityPathToXYZ(Tank_body, (int)(Tank_body.posX - target.posZ + Tank_body.posZ), (int) target.posY, (int)(Tank_body.posZ + target.posX - Tank_body.posX), 80f, true, false, false, true), 1.2);
-        }else if(Tank_body.getDistanceSqToEntity(target) < minrenge + 100){
-            Tank_body.getNavigator().setPath(worldForPathfind.getEntityPathToXYZ(Tank_body, (int) target.posX, (int) target.posY, (int) target.posZ, 80f, true, false, false, true), -0.75);
+        if(!movearound && !always_movearound) {
+            if (Tank_body.getDistanceSqToEntity(target) > maxrenge || !Tank_body.getEntitySenses().canSee(target)) {
+                Tank_body.getNavigator().setPath(worldForPathfind.getEntityPathToXYZ(Tank_body, (int) target.posX, (int) target.posY, (int) target.posZ, 80f, true, false, false, true), 1.2);
+            } else if (Tank_body.getDistanceSqToEntity(target) < minrenge) {
+                Tank_body.getNavigator().setPath(worldForPathfind.getEntityPathToXYZ(Tank_body, (int) target.posX, (int) target.posY, (int) target.posZ, 80f, true, false, false, true), -1);
+            }
+        }else {
+            System.out.println("debug");
+            if (Tank_body.getDistanceSqToEntity(target) < minrenge + 100) {
+                Tank_body.getNavigator().setPath(worldForPathfind.getEntityPathToXYZ(Tank_body, (int) target.posX, (int) target.posY, (int) target.posZ, 80f, true, false, false, true), -0.75);
+            }else {
+                Vector3d courseVec = new Vector3d(target.posX,target.posY,target.posZ);
+                courseVec.sub(new Vector3d(Tank_body.posX, Tank_body.posY, Tank_body.posZ));
+                courseVec.normalize();
+                courseVec.scale(30);
+                if (dir)
+                    Tank_body.getNavigator().setPath(worldForPathfind.getEntityPathToXYZ(Tank_body, (int) (Tank_body.posX + courseVec.z), (int) target.posY, (int) (Tank_body.posZ - courseVec.x), 80f, true, false, false, true), 1.2);
+                else
+                    Tank_body.getNavigator().setPath(worldForPathfind.getEntityPathToXYZ(Tank_body, (int) (Tank_body.posX - courseVec.z), (int) target.posY, (int) (Tank_body.posZ + courseVec.x), 80f, true, false, false, true), 1.2);
+            }
         }
-        if(rnd.nextInt(100) == 1){
+        if(rnd.nextInt(50) == 1){
             dir = rnd.nextBoolean();
-            movearound = rnd.nextBoolean();
+            movearound = !movearound;
         }
         if(Tank_body.getEntitySenses().canSee(target)){
             lastTargetX = target.posX;
@@ -131,5 +144,8 @@ public class AITankAttack extends EntityAIBase {
     }
     public void setEnable(boolean Value){
         fEnable = Value;
+    }
+    public void setAlways_movearound(boolean value){
+        always_movearound = value;
     }
 }

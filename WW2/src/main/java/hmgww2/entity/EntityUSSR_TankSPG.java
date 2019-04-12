@@ -1,6 +1,7 @@
 package hmgww2.entity;
 
 
+import hmggvcmob.ai.AITankAttack;
 import hmggvcmob.entity.TankBaseLogic;
 import hmggvcmob.entity.TurretObj;
 import hmgww2.mod_GVCWW2;
@@ -29,14 +30,17 @@ public class EntityUSSR_TankSPG extends EntityUSSR_TankBase
         super(par1World);
         this.setSize(4F, 2.5F);
         baseLogic = new TankBaseLogic(this,0.5f,2.0f,false,"gvcmob:gvcmob.T34Track");
-        playerpos = new Vector3d(-0.8,3.2D,-0.3);
-        zoomingplayerpos = new Vector3d(-0.8,3.2D,-0.3);
-        cannonpos = new Vector3d(0,2.65F,-0.8f);
+        aiTankAttack = new AITankAttack(this,6400,1600,10,10);
+        this.tasks.addTask(1,aiTankAttack);
+        playerpos = new Vector3d(0,3.2,2.5);
+        zoomingplayerpos = new Vector3d(0,3.2,2.5);
+        cannonpos = new Vector3d(0,2.65F,-1.0f);
         turretpos = new Vector3d(0,0,1.7f);
         mainTurret = new TurretObj(worldObj);
         {
             mainTurret.onmotherPos = turretpos;
             mainTurret.cannonpos = cannonpos;
+            mainTurret.turretPitchCenterpos = new Vector3d(0,1.6,0.4);
             mainTurret.turretspeedY = 5;
             mainTurret.turretspeedP = 8;
             mainTurret.turretanglelimtPitchMax = -10;
@@ -47,7 +51,8 @@ public class EntityUSSR_TankSPG extends EntityUSSR_TankBase
             mainTurret.ex = 1.0F;
             mainTurret.cycle_setting = 3;
             mainTurret.firesound = "hmgww2:hmgww2.katyusha";
-            mainTurret.spread = 1;
+            mainTurret.bulletmodel = "byfrou01_Rocket";
+            mainTurret.spread = 10;
             mainTurret.speed = 16;
             mainTurret.canex = true;
             mainTurret.magazinerem = 20;

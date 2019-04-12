@@ -26,7 +26,8 @@ import static hmggvcmob.event.GVCMRenderSomeEvent.zooming;
 
 public class ClientProxyGVCM extends CommonSideProxyGVCM {
 	public static final KeyBinding Zoom = new KeyBinding("CannonCamera", Keyboard.KEY_Z, "GVCMob");
-	public static final KeyBinding F = new KeyBinding("Flare", Keyboard.KEY_F, "GVCMob");
+	public static final KeyBinding F = new KeyBinding("EXControl1", Keyboard.KEY_F, "GVCMob");
+	public static final KeyBinding X = new KeyBinding("EXControl2", Keyboard.KEY_X, "GVCMob");
 	public static final KeyBinding Flapextension = new KeyBinding("Flap extension", Keyboard.KEY_F, "GVCMob");
 	public static final KeyBinding Flapstorage = new KeyBinding("Flap storage", Keyboard.KEY_F, "GVCMob");
 	static boolean zoomkey_stopper;
@@ -46,6 +47,8 @@ public class ClientProxyGVCM extends CommonSideProxyGVCM {
 	
 	public void reisterRenderers(){
 		ClientRegistry.registerKeyBinding(Zoom);
+		ClientRegistry.registerKeyBinding(F);
+		ClientRegistry.registerKeyBinding(X);
 		RenderingRegistry.registerEntityRenderingHandler(GVCEntityGuerrilla.class, new GVCRenderGuerrilla());
 		RenderingRegistry.registerEntityRenderingHandler(GVCEntityGuerrilla_Flamer.class, GVCRenderGuerrilla.onlyoneTexture("guerrilla_f"));
 		//RenderingRegistry.registerEntityRenderingHandler(GVCEntityGuerrilla.class, new GVCRenderGuerrillaobj());
@@ -57,6 +60,7 @@ public class ClientProxyGVCM extends CommonSideProxyGVCM {
 		RenderingRegistry.registerEntityRenderingHandler(GVCEntityGuerrillaBM.class, GVCRenderGuerrilla.onlyoneTexture("bommer"));
 		RenderingRegistry.registerEntityRenderingHandler(GVCEntityGuerrillaP.class, GVCRenderGuerrilla.onlyoneTexture("guerrillaP"));
 		RenderingRegistry.registerEntityRenderingHandler(GVCEntityGuerrillaSkeleton.class, GVCRenderGuerrilla.onlyoneTexture("skeleton_guerrilla"));
+		RenderingRegistry.registerEntityRenderingHandler(GVCEntityGuerrilla_ender.class, GVCRenderGuerrilla.onlyoneTexture("guerrillasp_sky"));
 		
 		RenderingRegistry.registerEntityRenderingHandler(GVCEntityGuerrillaM.class, new GVCRenderGuerrillaM());
 		
@@ -218,17 +222,12 @@ public class ClientProxyGVCM extends CommonSideProxyGVCM {
 	}
 	@Override
     public boolean fclick(){
-		boolean flag = F.getIsKeyPressed();
-		if(flag){
-			if(!fkey_stopper) {
-				fkey_stopper = true;
-			}else {
-				flag = false;
-			}
-		}else {
-			fkey_stopper = false;
-		}
-		return flag;
+		return  F.getIsKeyPressed();
+		//return false;
+	}
+	@Override
+    public boolean xclick(){
+		return X.getIsKeyPressed();
 		//return false;
 	}
     public boolean FalpEclick(){

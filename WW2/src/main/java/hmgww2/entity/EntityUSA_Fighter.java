@@ -1,22 +1,7 @@
 package hmgww2.entity;
 
 
-import hmggvcmob.entity.PlaneBaseLogic;
 import hmggvcmob.entity.TurretObj;
-import hmgww2.mod_GVCWW2;
-import hmgww2.network.WW2MessageKeyPressed;
-import hmgww2.network.WW2PacketHandler;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAISwimming;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
 import javax.vecmath.Vector3d;
@@ -27,7 +12,7 @@ public class EntityUSA_Fighter extends EntityUSA_FighterBase
 	{
 		super(par1World);
 		this.setSize(5f, 3f);
-		this.maxhealth = 500;
+		armor = 6;
 //		nboundingbox = new ModifiedBoundingBox(-20,-20,-20,20,20,20,0,0,-6.27,2.5,5,19);
 //		nboundingbox.rot.set(this.bodyRot);
 //		proxy.replaceBoundingbox(this,nboundingbox);
@@ -151,5 +136,10 @@ public class EntityUSA_Fighter extends EntityUSA_FighterBase
 			}
 			baseLogic.mainTurret = cannon1;
 		}
+	}
+	protected void applyEntityAttributes()
+	{
+		maxHealth = 150;
+		super.applyEntityAttributes();
 	}
 }

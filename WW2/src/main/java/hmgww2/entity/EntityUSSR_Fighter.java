@@ -34,6 +34,7 @@ public class EntityUSSR_Fighter extends EntityUSSR_FighterBase
 //		proxy.replaceBoundingbox(this,nboundingbox);
 //		((ModifiedBoundingBox)this.boundingBox).updateOBB(this.posX,this.posY,this.posZ);
 	    ignoreFrustumCheck = true;
+	    armor = 5;
 	    baseLogic.speedfactor = 0.0024f;
 	    baseLogic.throttle_gearDown = 1.7f;
 	    baseLogic.throttle_Max = 4.0f;
@@ -101,5 +102,9 @@ public class EntityUSSR_Fighter extends EntityUSSR_FighterBase
 		    baseLogic.subTurret.guntype = 0;
 	    }
     }
-    
+	protected void applyEntityAttributes()
+	{
+		maxHealth = 80;
+		super.applyEntityAttributes();
+	}
 }

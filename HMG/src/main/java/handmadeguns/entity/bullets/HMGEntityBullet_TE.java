@@ -17,10 +17,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.*;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 
@@ -72,7 +69,7 @@ public class HMGEntityBullet_TE extends HMGEntityBulletBase
 				double moXback = hitedentity.motionX;//�m�b�N�o�b�N�������p
 				double moYback = hitedentity.motionY;//���ˏオ�薳�����p
 				double moZback = hitedentity.motionZ;//�m�b�N�o�b�N�������p
-				if(hitedentity.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()), (float)i)){
+				if(hitedentity.attackEntityFrom((new EntityDamageSourceIndirect("arrow", this, this.getThrower())).setProjectile(), (float)i)){
 					hitedentity.motionX = moXback;
 					hitedentity.motionY = moYback;
 					hitedentity.motionZ = moZback;

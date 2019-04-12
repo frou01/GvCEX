@@ -2,23 +2,8 @@ package hmgww2.entity;
 
 
 import hmggvcmob.entity.*;
-import hmgww2.mod_GVCWW2;
-import hmgww2.network.WW2MessageKeyPressed;
-import hmgww2.network.WW2PacketHandler;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAISwimming;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
-import javax.vecmath.Quat4d;
 import javax.vecmath.Vector3d;
 
 public class EntityGER_FighterA extends EntityGER_FighterBase
@@ -29,28 +14,33 @@ public class EntityGER_FighterA extends EntityGER_FighterBase
 	{
 		super(par1World);
 		this.setSize(5f, 3f);
-		this.maxhealth = 500;
+		this.maxHealth = 500;
 //		nboundingbox = new ModifiedBoundingBox(-20,-20,-20,20,20,20,0,0,-6.27,2.5,5,19);
 //		nboundingbox.rot.set(this.bodyRot);
 //		proxy.replaceBoundingbox(this,nboundingbox);
 //		((ModifiedBoundingBox)this.boundingBox).updateOBB(this.posX,this.posY,this.posZ);
+		armor = 5;
 		ignoreFrustumCheck = true;
-		this.fireCycle1 = 1;
 		baseLogic.speedfactor = 0.0025f;
 		baseLogic.throttle_gearDown = 1.7f;
 		baseLogic.throttle_Max = 5.0f;
 		baseLogic.rollspeed = 0.4f;
 		baseLogic.pitchspeed = 0.3f;
 		baseLogic.yawspeed = 0.15f;
-		baseLogic.maxDive = 80;
 		baseLogic.throttledown_onDive = true;
 		baseLogic.Dive_bombing = true;
-		baseLogic.startDive = 30;
-		baseLogic.cruiseALT = 100;
-		baseLogic.minALT = 30;
+		baseLogic.sholdUseMain_ToG = true;
+		baseLogic.startDive = 45;
+		baseLogic.maxDive = 70;
+		baseLogic.cruiseALT = 60;
 		baseLogic.maxClimb = -25;
 		baseLogic.maxbank = 60;
+		baseLogic.minALT = 20;
 		baseLogic.soundname = "hmgww2:hmgww2.sound_pera";
+		baseLogic.pitchsighwidthmax = -1;
+		baseLogic.pitchsighwidthmin = -15;
+		baseLogic.yawsightwidthmax = 15;
+		baseLogic.yawsightwidthmin = -15;
 		
 		baseLogic.camerapos = new double[]{0,1.9,0};
 		baseLogic.rotcenter = new double[]{0,1.5,0};
@@ -112,28 +102,32 @@ public class EntityGER_FighterA extends EntityGER_FighterBase
 		baseLogic.subTurret = cannon3;
 		baseLogic.mainTurret = new TurretObj(worldObj);
 		{
-			baseLogic.mainTurret.onmotherPos = new Vector3d(0,0,0);
+			baseLogic.mainTurret.onmotherPos = new Vector3d(0,-1,-2);
 			baseLogic.mainTurret.motherRotCenter = new Vector3d(baseLogic.rotcenter);
-			baseLogic.mainTurret.cannonpos = new Vector3d(0,-0.2,-2);
 			baseLogic.mainTurret.turretspeedY = 5;
 			baseLogic.mainTurret.turretspeedP = 8;
 			baseLogic.mainTurret.turretanglelimtPitchMax = 5;
 			baseLogic.mainTurret.turretanglelimtPitchmin = -80;
 			baseLogic.mainTurret.traverseSound = null;
 			baseLogic.mainTurret.currentEntity = this;
-			baseLogic.mainTurret.powor = 100;
+			baseLogic.mainTurret.powor = 1000;
 			baseLogic.mainTurret.ex = 8.0F;
-			baseLogic.mainTurret.cycle_setting = 2;
+			baseLogic.mainTurret.cycle_setting = 0;
 			baseLogic.mainTurret.firesound = null;
 			baseLogic.mainTurret.bulletmodel = "byfrou01_Bomb";
 			baseLogic.mainTurret.flushName = null;
-			baseLogic.mainTurret.spread = 0.1f;
-			baseLogic.mainTurret.speed = 0.5f;
+			baseLogic.mainTurret.spread = 5f;
+			baseLogic.mainTurret.speed = 0.1f;
 			baseLogic.mainTurret.canex = true;
 			baseLogic.mainTurret.guntype = 2;
 			baseLogic.mainTurret.magazineMax = 1;
 			baseLogic.mainTurret.magazinerem = 1;
 			baseLogic.mainTurret.reloadSetting = 500;
 		}
+	}
+	protected void applyEntityAttributes()
+	{
+		maxHealth = 450;
+		super.applyEntityAttributes();
 	}
 }

@@ -1,5 +1,5 @@
 FlyingSoundName,rocketFlying
-FlyingSoundLV,2
+FlyingSoundLV,16
 FlyingSoundSP,1.4
 FlyingSoundmaxdist,128
 FlyingSound_BulletMinSpeed,0

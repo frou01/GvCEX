@@ -1,5 +1,6 @@
 package hmgww2.entity;
 
+import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import handmadeguns.entity.IFF;
@@ -10,10 +11,7 @@ import hmggvcmob.ai.AIAttackGun;
 import hmggvcmob.ai.AIHurtByTarget;
 import hmggvcmob.ai.AINearestAttackableTarget;
 import hmggvcmob.ai.AIattackOnCollide;
-import hmggvcmob.entity.Hasmode;
-import hmggvcmob.entity.IGVCmob;
-import hmggvcmob.entity.IRideableTank;
-import hmggvcmob.entity.IdriveableVehicle;
+import hmggvcmob.entity.*;
 import hmggvcmob.entity.friend.EntitySoBases;
 import hmggvcmob.entity.guerrilla.EntityGBases;
 import hmgww2.Nation;
@@ -31,13 +29,16 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 
+import javax.vecmath.Vector3d;
 import java.util.List;
 
 import static handmadeguns.HandmadeGunsCore.islmmloaded;
+import static hmggvcmob.util.Calculater.*;
 import static hmgww2.mod_GVCWW2.cfg_candespawn;
 import static hmgww2.mod_GVCWW2.cfg_canusePlacedGun;
-import static java.lang.Math.abs;
+import static java.lang.Math.*;
 import static net.minecraft.util.MathHelper.wrapAngleTo180_float;
 
 public abstract class EntityBases extends EntityCreature implements IFF,INpc,IGVCmob,Hasmode {
@@ -46,6 +47,11 @@ public abstract class EntityBases extends EntityCreature implements IFF,INpc,IGV
 	
 	
 	public float armor = 0;
+	public float armor_tilt = 0;
+	public float armor_Top_cof = 0.2f;
+	public float armor_Front_cof = 1f;
+	public float armor_Back_cof = 0.5f;
+	public float armor_Side_cof = 0.7f;
 	
 	public boolean vehicle = false;
 	public boolean opentop = true;
@@ -157,6 +163,10 @@ public abstract class EntityBases extends EntityCreature implements IFF,INpc,IGV
 		this.targetTasks.addTask(3, new AINearestAttackableTarget(this, EntityLiving.class, 0, true, false, IMob.mobSelector));
 		
 		renderDistanceWeight = 16384;
+		if(this.worldObj instanceof WorldServer) {
+			EntityTracker entitytracker = ((WorldServer) this.worldObj).getEntityTracker();
+			ObfuscationReflectionHelper.setPrivateValue(EntityTracker.class, entitytracker, 1024, "entityViewDistance", "E", "field_72792_d");
+		}
 	}
 	
 	
@@ -374,12 +384,74 @@ public abstract class EntityBases extends EntityCreature implements IFF,INpc,IGV
 		if (this.riddenByEntity == source.getEntity()) {
 			return false;
 		} else {
-			if (par2 <= armor) {
-				if(armor != 0)if (!source.getDamageType().equals("mob")) this.playSound("gvcmob:gvcmob.ArmorBounce", 0.5F, 1F);
+			float temparomor = armor;
+			if(source instanceof EntityDamageSourceIndirect && source.getEntity() != null && this instanceof IRideableTank){
+				TankBaseLogic temp = ((IRideableTank)this).getBaseLogic();
+				Vector3d frontArmorVec = new Vector3d(0,0,-1);
+				Vector3d leftsideArmorVec = new Vector3d(1,0,0);
+				Vector3d rightsideArmorVec = new Vector3d(-1,0,0);
+				Vector3d backArmorVec = new Vector3d(0,0,1);
+				Vector3d topArmorVec = new Vector3d(0,1,0);
+				RotateVectorAroundX(frontArmorVec,-armor_tilt);
+				RotateVectorAroundZ(leftsideArmorVec,armor_tilt);
+				RotateVectorAroundZ(rightsideArmorVec,-armor_tilt);
+				RotateVectorAroundX(backArmorVec,armor_tilt);
+				frontArmorVec = transformVecByQuat(frontArmorVec,temp.bodyRot);
+				leftsideArmorVec = transformVecByQuat(leftsideArmorVec,temp.bodyRot);
+				rightsideArmorVec = transformVecByQuat(rightsideArmorVec,temp.bodyRot);
+				backArmorVec = transformVecByQuat(backArmorVec,temp.bodyRot);
+				topArmorVec = transformVecByQuat(topArmorVec,temp.bodyRot);
+				frontArmorVec.z *= -1;
+				backArmorVec.z *= -1;
+				leftsideArmorVec.z *= -1;
+				rightsideArmorVec.z *= -1;
+				topArmorVec.z *= -1;
+				Vector3d shooterMotionVec = new Vector3d(source.getSourceOfDamage().motionX,source.getSourceOfDamage().motionY,source.getSourceOfDamage().motionZ);
+				Vector3d shooterPositionVec = new Vector3d(source.getSourceOfDamage().posX - this.posX
+						                                          ,source.getSourceOfDamage().posY - (this.posY + 1.5f)
+						                                          ,source.getSourceOfDamage().posZ - this.posZ
+				);
+				Vector3d TankFrontVec = new Vector3d(0,0,-1);
+				TankFrontVec = transformVecByQuat(TankFrontVec,temp.bodyRot);
+				TankFrontVec.z *= -1;
+				double angle_position = abs(toDegrees(TankFrontVec.angle(shooterPositionVec)));
+				Vector3d TankRighttVec = new Vector3d(-1,0,0);
+				TankRighttVec = transformVecByQuat(TankRighttVec,temp.bodyRot);
+				TankRighttVec.z *= -1;
+				
+				if((angle_position)<45){//正面装甲にヒット
+					shooterMotionVec.scale(-1);
+					double angle_motion = abs(frontArmorVec.angle(shooterMotionVec));
+					temparomor *= (sin(angle_motion)) + armor_Front_cof;
+				}else if((angle_position)>=45 && (angle_position)<=135){//側面or天板にヒット
+					shooterMotionVec.scale(-1);
+					if(abs(toDegrees(topArmorVec.angle(shooterPositionVec)))<45){//天板or底面にヒット
+						double angle_motion = abs(topArmorVec.angle(shooterMotionVec));
+						temparomor *= (sin(angle_motion)) + armor_Top_cof;
+					}else {
+						if(abs(toDegrees(TankRighttVec.angle(shooterPositionVec)))>90) {
+							double angle_motion = abs(leftsideArmorVec.angle(shooterMotionVec));
+							temparomor *= (sin(angle_motion)) + armor_Side_cof;
+						}else {
+							double angle_motion = abs(rightsideArmorVec.angle(shooterMotionVec));
+							temparomor *= (sin(angle_motion)) + armor_Side_cof;
+						}
+					}
+				}else if((angle_position)>135){//背面にヒット
+					shooterMotionVec.scale(-1);
+					double angle_motion = abs(backArmorVec.angle(shooterMotionVec));
+					temparomor *= (sin(angle_motion)) + armor_Back_cof;
+				}
+			}
+			if(par2 > temparomor/2f){
+				armor-=1;
+			}
+			if (par2 <= temparomor) {
+				if(armor != 0)if (!source.getDamageType().equals("mob")) this.playSound("gvcmob:gvcmob.ArmorBounce", 0.5F, 2-(par2/temparomor));
 				return false;
 			}
 			if(armor != 0)this.playSound("gvcmob:gvcmob.armorhit", 0.5F, 1F);
-			return super.attackEntityFrom(source,par2-armor);
+			return super.attackEntityFrom(source,par2-temparomor);
 		}
 	}
 	
@@ -628,5 +700,17 @@ public abstract class EntityBases extends EntityCreature implements IFF,INpc,IGV
 	}
 	public double[] getwaitingpos() {
 		return new double[]{homeposX,homeposY,homeposZ};
+	}
+	@SideOnly(Side.CLIENT)
+	@Override
+	public boolean isInRangeToRenderDist(double p_70112_1_)
+	{
+		return true;
+	}
+	@SideOnly(Side.CLIENT)
+	@Override
+	public boolean isInRangeToRender3d(double p_145770_1_, double p_145770_3_, double p_145770_5_)
+	{
+		return true;
 	}
 }

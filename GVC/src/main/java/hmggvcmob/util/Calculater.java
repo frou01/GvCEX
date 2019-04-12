@@ -49,9 +49,20 @@ public class Calculater {
         factor = toRadians(factor);
         double f1 = cos(factor);
         double f2 = sin(factor);
-        invec.x = invec.x;
-        invec.y = invec.y * (double)f1 + invec.z * (double)f2;
-        invec.z = invec.z * (double)f1 - invec.y * (double)f2;
+        double x = invec.x;
+        double y = invec.y * (double)f1 + invec.z * (double)f2;
+        double z = invec.z * (double)f1 - invec.y * (double)f2;
+        invec.set(x,y,z);
+    }
+    public static void RotateVectorAroundZ(Vector3d invec,double factor)
+    {
+        factor = toRadians(factor);
+        double f1 = cos(factor);
+        double f2 = sin(factor);
+        double x = invec.x * (double)f1 - invec.y * (double)f2;
+        double y = invec.y * (double)f1 + invec.x * (double)f2;
+        double z = invec.z;
+        invec.set(x,y,z);
     }
     public static double[] CalculateGunElevationAngle(EntityLivingBase shooter, Entity target, float m_gravity, float energy ,float yoffset){
         //http://www.sousakuba.com/Programming/algo_dandoukeisan.htmlにて配布されているプログラムより転用(え？作れって？ﾁｶﾚﾀ…)

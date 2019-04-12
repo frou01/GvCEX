@@ -25,5 +25,17 @@
 "hmgww2.sound_pera": { "category": "neutral","sounds": ["hmgww2:sound_pera"]},
 "hmgww2.katyusha": { "category": "neutral","sounds": ["hmgww2:katyusha"]},
 
-"hmgww2.reload": { "category": "neutral","sounds": ["hmgww2:reload"]}
+"hmgww2.reload": { "category": "neutral","sounds": ["hmgww2:reload"]},
+
+"hmgww2.75mmfire": { "category": "neutral","sounds": ["hmgww2:75mmfire"]},
+
+"hmgww2.152mmhowit": { "category": "neutral","sounds": ["hmgww2:152mmhowit"]},
+
+"hmgww2.ZIS3Fire": { "category": "neutral","sounds": ["hmgww2:ZIS3Fire"]},
+
+"hmgww2.88mmfire": { "category": "neutral","sounds": ["hmgww2:88mmfire"]},
+
+"hmgww2.12.7cmFire": { "category": "neutral","sounds": ["hmgww2:12.7cmFire"]},
+"hmgww2.VesselTurbine": { "category": "neutral","sounds": ["hmgww2:VesselTurbine"]},
+"hmgww2.Uboat": { "category": "neutral","sounds": ["hmgww2:Uboat"]}
 }

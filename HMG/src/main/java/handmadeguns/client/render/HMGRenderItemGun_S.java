@@ -19,7 +19,7 @@ import littleMaidMobX.LMM_EntityLittleMaid;
 
 public class HMGRenderItemGun_S implements IItemRenderer {
 	private IModelCustom modeling;
-	private static ResourceLocation texturesz;
+	private ResourceLocation texturesz;
 	// public ModelBiped modelBipedMain;
 	// public ModelBiped modelArmorChestplate;
 	// public ModelBiped modelArmor;

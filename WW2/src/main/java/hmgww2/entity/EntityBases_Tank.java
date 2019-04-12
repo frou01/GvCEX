@@ -1,48 +1,24 @@
 package hmgww2.entity;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import handmadeguns.entity.IFF;
-import handmadeguns.entity.PlacedGunEntity;
-import handmadeguns.items.guns.HMGItem_Unified_Guns;
 import hmggvcmob.GVCMobPlus;
-import hmggvcmob.SlowPathFinder.WorldForPathfind;
 import hmggvcmob.ai.*;
 import hmggvcmob.entity.*;
-import hmggvcmob.entity.friend.EntitySoBases;
-import hmggvcmob.entity.guerrilla.EntityGBases;
-import hmggvcmob.tile.TileEntityFlag;
-import hmgww2.Nation;
-import hmgww2.items.ItemIFFArmor;
-import littleMaidMobX.LMM_EntityLittleMaid;
-import net.minecraft.block.Block;
 import net.minecraft.entity.*;
-import net.minecraft.entity.ai.*;
-import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
 
 import javax.vecmath.Quat4d;
 import javax.vecmath.Vector3d;
-import java.util.List;
 
-import static handmadeguns.HandmadeGunsCore.islmmloaded;
 import static hmggvcmob.GVCMobPlus.proxy;
 import static hmggvcmob.event.GVCMXEntityEvent.soundedentity;
 import static hmggvcmob.util.Calculater.transformVecforMinecraft;
-import static hmgww2.mod_GVCWW2.cfg_candespawn;
-import static hmgww2.mod_GVCWW2.cfg_canusePlacedGun;
 import static java.lang.Math.abs;
-import static net.minecraft.util.MathHelper.wrapAngleTo180_float;
 
 public abstract class EntityBases_Tank extends EntityBases implements IRideableTank,IControlable
 {
@@ -53,6 +29,7 @@ public abstract class EntityBases_Tank extends EntityBases implements IRideableT
 	public int fireCycle1;
 	public int fireCycle2;
 	
+	public boolean subturret_is_mainTurret_child = false;
 	public float subturretrotationYaw;
 	public float subturretrotationPitch;
 	
@@ -74,6 +51,7 @@ public abstract class EntityBases_Tank extends EntityBases implements IRideableT
 	public TurretObj[] turrets;
 	
 	public float maxHealth;
+	public String sightTex = null;
 	
 	
 	public EntityBases_Tank(World par1World)
@@ -82,63 +60,16 @@ public abstract class EntityBases_Tank extends EntityBases implements IRideableT
 		this.setSize(4F, 2.5F);
 		
 		nboundingbox = new ModifiedBoundingBox(-20,-20,-20,20,20,20,
-				                                      0,1.5,0,3.4,3,6.5);
+				                                      0,1.5,0,
+				                                      3.4 , 3 , 6.5);
 		nboundingbox.rot.set(baseLogic.bodyRot);
 		GVCMobPlus.proxy.replaceBoundingbox(this,nboundingbox);
-		aiTankAttack = new AITankAttack(this,1600,100,10,10);
-		this.tasks.addTask(1,aiTankAttack);
 		nboundingbox.centerRotX = 0;
 		nboundingbox.centerRotY = 0;
 		nboundingbox.centerRotZ = 0;
 		this.tasks.removeTask(aiSwimming);
 		viewWide = 2.09f;
 		yOffset = 0;
-		mainTurret = new TurretObj(worldObj);
-		{
-			mainTurret.onmotherPos = turretpos;
-			mainTurret.cannonpos = cannonpos;
-			mainTurret.turretspeedY = 1;
-			mainTurret.turretspeedP = 1;
-			mainTurret.currentEntity = this;
-			mainTurret.powor = 80;
-			mainTurret.ex = 5.0F;
-			mainTurret.firesound = "gvcmob:gvcmob.TankFire";
-			mainTurret.spread = 1;
-			mainTurret.speed = 16;
-			mainTurret.canex = true;
-			mainTurret.guntype = 2;
-		}
-		subTurret = new TurretObj(worldObj);
-		{
-			subTurret.currentEntity = this;
-			subTurret.turretanglelimtPitchmin = -20;
-			subTurret.turretanglelimtPitchMax = 20;
-			subTurret.turretanglelimtYawmin = -20;
-			subTurret.turretanglelimtYawMax = 20;
-			subTurret.turretspeedY = 8;
-			subTurret.turretspeedP = 10;
-			subTurret.traverseSound = null;
-			
-			subTurret.onmotherPos = subturretpos;
-			subTurret.cycle_setting = 1;
-			subTurret.spread = 5;
-			subTurret.speed = 8;
-			subTurret.firesound = "handmadeguns:handmadeguns.fire";
-			subTurret.flushName  = "arrow";
-			subTurret.flushfuse  = 1;
-			subTurret.flushscale  = 1.5f;
-			
-			subTurret.powor = 8;
-			subTurret.ex = 0;
-			subTurret.canex = false;
-			subTurret.guntype = 0;
-			
-			subTurret.magazineMax = 47;
-			subTurret.reloadSetting = 100;
-			subTurret.flushoffset = 0.5f;
-		}
-		
-		turrets = new TurretObj[]{mainTurret,subTurret};
 	}
 	
 	protected void entityInit() {
@@ -299,14 +230,14 @@ public abstract class EntityBases_Tank extends EntityBases implements IRideableT
 		
 		if(!worldObj.isRemote) {
 			if (this.isInWater()) {
-				this.moveFlying(p_70612_1_, p_70612_2_, this.isAIEnabled() ? 0.04F : 0.02F);
+				this.moveFlying(p_70612_1_, p_70612_2_, (this.getAIMoveSpeed() < 0?-1:0) * (this.isAIEnabled() ? 0.04F : 0.02F));
 				this.motionY -= 0.02D;
 				this.moveEntity(this.motionX, this.motionY, this.motionZ);
 				this.motionX *= 0.800000011920929D;
 				this.motionY *= 0.800000011920929D;
 				this.motionZ *= 0.800000011920929D;
 			} else if (this.handleLavaMovement()) {
-				this.moveFlying(p_70612_1_, p_70612_2_, 0.02F);
+				this.moveFlying(p_70612_1_, p_70612_2_, (this.getAIMoveSpeed() < 0?-1:0) * (this.isAIEnabled() ? 0.04F : 0.02F));
 				this.motionY -= 0.02D;
 				this.moveEntity(this.motionX, this.motionY, this.motionZ);
 				this.motionX *= 0.5D;
@@ -327,7 +258,6 @@ public abstract class EntityBases_Tank extends EntityBases implements IRideableT
 				} else {
 					f4 = this.jumpMovementFactor;
 				}
-				
 				this.moveFlying(p_70612_1_, p_70612_2_, f4);
 				f2 = 0.91F;
 				
@@ -352,6 +282,10 @@ public abstract class EntityBases_Tank extends EntityBases implements IRideableT
 	public void onUpdate()
 	{
 		super.onUpdate();
+		tankUpdate();
+		worldObj.MAX_ENTITY_RADIUS = 32;
+	}
+	public void tankUpdate(){
 		this.stepHeight = 1.5f;
 		if(!this.worldObj.isRemote){
 			baseLogic.updateServer();
@@ -403,15 +337,12 @@ public abstract class EntityBases_Tank extends EntityBases implements IRideableT
 			}
 			mainTurret.turretrotationYaw = baseLogic.turretrotationYaw;
 			mainTurret.turretrotationPitch = baseLogic.turretrotationPitch;
+			mode= getMobMode();
 		}
 		baseLogic.updateCommon();
 		mainTurret.update(baseLogic.bodyRot,new Vector3d(this.posX,this.posY,-this.posZ));
-		if(subTurret != null)subTurret.update(baseLogic.bodyRot,new Vector3d(this.posX,this.posY,-this.posZ));
+		if(!subturret_is_mainTurret_child && subTurret != null)subTurret.update(baseLogic.bodyRot,new Vector3d(this.posX,this.posY,-this.posZ));
 		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.3D);
-	}
-	public void mainFire(Entity target){
-		mainTurret.currentEntity = this;
-		mainTurret.fire();
 	}
 	
 	@Override
@@ -429,6 +360,10 @@ public abstract class EntityBases_Tank extends EntityBases implements IRideableT
 		return baseLogic;
 	}
 	
+	public void mainFire(Entity target){
+		mainTurret.currentEntity = this;
+		mainTurret.fire();
+	}
 	public void mainFire(){
 		mainTurret.currentEntity = this.riddenByEntity;
 		mainTurret.fire();
@@ -648,11 +583,6 @@ public abstract class EntityBases_Tank extends EntityBases implements IRideableT
 		baseLogic.setLocationAndAngles(yaw,pitch);
 	}
 	
-	public boolean canBePushed()
-	{
-		return false;
-	}
-	
 	protected void onDeathUpdate() {
 		++this.deathTicks;
 		if(this.deathTicks == 3){
@@ -729,5 +659,10 @@ public abstract class EntityBases_Tank extends EntityBases implements IRideableT
 		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(maxHealth);
 		this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(80.0D);
 		this.getEntityAttribute(SharedMonsterAttributes.knockbackResistance).setBaseValue(30.0D);
+	}
+	
+	
+	public String getsightTex(){
+		return sightTex;
 	}
 }

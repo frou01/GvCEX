@@ -222,6 +222,15 @@ public class GVCItemGuerrillaEgg extends Item
                 par3World.spawnEntityInWorld(entityskeleton);
                 --par1ItemStack.stackSize;
                 return true;
+            }else if(this.mob == 19){
+                ++par5;
+                int var12 = MathHelper.floor_double((double)(par2EntityPlayer.rotationYaw));
+                GVCEntityGuerrilla_ender entityskeleton = new GVCEntityGuerrilla_ender(par3World);
+                entityskeleton.addRandomArmor();
+                entityskeleton.setLocationAndAngles(par4+0.5, par5, par6+0.5, var12, 0.0F);
+                par3World.spawnEntityInWorld(entityskeleton);
+                --par1ItemStack.stackSize;
+                return true;
             }else{
                 return false;
             }

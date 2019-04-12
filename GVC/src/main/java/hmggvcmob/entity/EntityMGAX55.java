@@ -29,6 +29,7 @@ import javax.vecmath.Vector3d;
 import java.util.List;
 import java.util.Random;
 
+import static hmggvcmob.GVCMobPlus.METAL_GEAR;
 import static hmggvcmob.GVCMobPlus.proxy;
 import static java.lang.Math.*;
 import static net.minecraft.util.MathHelper.wrapAngleTo180_float;
@@ -369,6 +370,9 @@ public class EntityMGAX55 extends Entity implements ImultiRideableVehicle{
             }
             health = this.dataWatcher.getWatchableObjectInt(10);
         }else{
+            if(pilot instanceof EntityPlayer){
+                ((EntityPlayer) pilot).addStat(METAL_GEAR,1);
+            }
             if(legSneak_CTRL || legSneak_State){
                 pilotseatoffsety = -2.6f;
                 legmodeForward = false;

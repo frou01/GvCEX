@@ -10,6 +10,7 @@ import handmadeguns.network.PacketSpawnParticle;
 import hmggvcmob.entity.GVCEntityChild;
 import hmggvcmob.entity.TU95;
 import hmggvcmob.entity.friend.EntitySoBases;
+import hmggvcmob.entity.guerrilla.*;
 import hmggvcmob.network.GVCMPacketHandler;
 import hmggvcmob.network.GVCPacketSpawnSpotCircle;
 import hmggvcmob.util.SpotObj;
@@ -19,14 +20,16 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.EntityEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
 
 import javax.vecmath.Vector3d;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import static hmggvcmob.GVCMobPlus.proxy;
+import static hmggvcmob.GVCMobPlus.*;
 import static net.minecraftforge.common.DimensionManager.getStaticDimensionIDs;
 
 public class GVCMXEntityEvent {
@@ -127,15 +130,17 @@ public class GVCMXEntityEvent {
 //        } else
         {
 	        try{
-            ArrayList<SpotObj> spotObjArrayList_Spawn = spots_needSpawn.get(Integer.valueOf(dimid));
-            if(!spotObjArrayList_Spawn.isEmpty()){
-                //send circlePacket
-                	GVCMPacketHandler.INSTANCE.sendToDimension(new GVCPacketSpawnSpotCircle(spotObjArrayList_Spawn,dimid),dimid);
-                }
-                
-                
-                //reset
-                spotObjArrayList_Spawn.clear();
+	        	if(spots_needSpawn != null){
+			        ArrayList<SpotObj> spotObjArrayList_Spawn = spots_needSpawn.get(Integer.valueOf(dimid));
+			        if(spotObjArrayList_Spawn != null && !spotObjArrayList_Spawn.isEmpty()){
+				        //send circlePacket
+				        GVCMPacketHandler.INSTANCE.sendToDimension(new GVCPacketSpawnSpotCircle(spotObjArrayList_Spawn,dimid),dimid);
+			        }
+			
+			
+			        //reset
+			        spotObjArrayList_Spawn.clear();
+		        }
             }catch (Exception e){
 		        e.printStackTrace();
 	        }
@@ -166,10 +171,13 @@ public class GVCMXEntityEvent {
 				        	if(aspotobj.target == null){
 				        		aspotobj.target = worldobj.getEntityByID(aspotobj.targetID);
 					        }
-					        if(aspotobj.target.isDead)aspotobj.remaintime = -1;
-					        aspotobj.pos[0] = (float) aspotobj.target.posX;
-					        aspotobj.pos[1] = (float) aspotobj.target.posY + aspotobj.target.height/2;
-					        aspotobj.pos[2] = (float) aspotobj.target.posZ;
+					        if(aspotobj.target == null)aspotobj.remaintime = -1;
+				        	else {
+						        if (aspotobj.target.isDead) aspotobj.remaintime = -1;
+						        aspotobj.pos[0] = (float) aspotobj.target.posX;
+						        aspotobj.pos[1] = (float) aspotobj.target.posY + aspotobj.target.height / 2;
+						        aspotobj.pos[2] = (float) aspotobj.target.posZ;
+					        }
 				        }
 				        if (FMLClientHandler.instance().getClientPlayerEntity().getDistanceSq(aspotobj.pos[0],
 						        aspotobj.pos[1],
@@ -205,4 +213,45 @@ public class GVCMXEntityEvent {
 	        prevWorld = proxy.getCilentWorld();
         }
     }
+	
+	@SubscribeEvent
+	public void targetevent(LivingSetAttackTargetEvent event){
+		EntityLivingBase targeted = event.target;
+		EntityLivingBase targeting = event.entityLiving;
+		if(targeted==null){
+			return;
+		}
+		if(targeted instanceof EntityPlayer) {
+			if (targeting instanceof GVCEntityDrawn) {
+				((EntityPlayer) targeted).addStat(unmanned_Craft,1);
+			}else
+			if (targeting instanceof GVCEntityGK) {
+				((EntityPlayer) targeted).addStat(war_has_changed,1);
+			}else
+			if (targeting instanceof GVCEntityGuerrillaSkeleton) {
+				((EntityPlayer) targeted).addStat(unending_war,1);
+			}else
+			if (targeting instanceof GVCEntityTank) {
+				((EntityPlayer) targeted).addStat(Old_soldiers_never_fade,1);
+			}
+			
+			if (targeting instanceof EntityGBase) {
+				((EntityPlayer) targeted).addStat(No_place_to_HIDE,1);
+			}
+		}
+	}
+	
+	@SubscribeEvent
+	public void deathEvent(LivingDeathEvent event){
+		Entity killing = event.source.getEntity();
+		EntityLivingBase dieing = event.entityLiving;
+		if(killing==null){
+			return;
+		}
+		if(dieing instanceof EntityPlayer) {
+			if (killing instanceof EntityGBase) {
+				((EntityPlayer) dieing).addStat(killedGuerrilla,1);
+			}
+		}
+	}
 }

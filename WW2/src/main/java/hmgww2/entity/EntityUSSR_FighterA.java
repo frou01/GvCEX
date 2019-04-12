@@ -19,18 +19,25 @@ public class EntityUSSR_FighterA extends EntityUSSR_FighterBase
 //		proxy.replaceBoundingbox(this,nboundingbox);
 //		((ModifiedBoundingBox)this.boundingBox).updateOBB(this.posX,this.posY,this.posZ);
 	    ignoreFrustumCheck = true;
-	    this.fireCycle1 = 1;
-	    baseLogic.speedfactor = 0.002f;
+	    armor = 10;
+	    baseLogic.speedfactor = 0.003f;
+	    baseLogic.liftfactor = 0.04f;
 	    baseLogic.throttle_gearDown = 1.7f;
 	    baseLogic.throttle_Max = 4.0f;
 	    baseLogic.rollspeed = 0.2f;
 	    baseLogic.pitchspeed = 0.3f;
 	    baseLogic.yawspeed = 0.3f;
-	    baseLogic.maxDive = 60;
-	    baseLogic.startDive = 20;
+	    baseLogic.maxDive = 70;
+	    baseLogic.startDive = 40;
 	    baseLogic.maxClimb = -17;
 	    baseLogic.maxbank = 30;
+	    baseLogic.cruiseALT = 40;
+	    baseLogic.minALT = 10;
 	    baseLogic.soundname = "hmgww2:hmgww2.sound_pera";
+	    baseLogic.pitchsighwidthmax = 5;
+	    baseLogic.pitchsighwidthmin = -5;
+	    baseLogic.yawsightwidthmax = 15;
+	    baseLogic.yawsightwidthmin = -15;
 	
 	    baseLogic.camerapos = new double[]{0,2.3,0};
 	    baseLogic.rotcenter = new double[]{0,1.5,0};
@@ -136,56 +143,62 @@ public class EntityUSSR_FighterA extends EntityUSSR_FighterBase
 			    cannon1.addchild(cannon4);
 		    }
 	    }
-	    baseLogic.mainTurret = cannon1;
-	    baseLogic.subTurret = new TurretObj(worldObj);
+	    baseLogic.subTurret = cannon1;
+	    baseLogic.mainTurret = new TurretObj(worldObj);
 	    {
-		    baseLogic.subTurret.onmotherPos = new Vector3d(0,-0.1,-2);
-		    baseLogic.subTurret.motherRotCenter = new Vector3d(0,1.2,0);
-		    baseLogic.subTurret.cannonpos = new Vector3d(0,-0.1,-2);
-		    baseLogic.subTurret.turretspeedY = 5;
-		    baseLogic.subTurret.turretspeedP = 8;
-		    baseLogic.subTurret.turretanglelimtPitchMax = 5;
-		    baseLogic.subTurret.turretanglelimtPitchmin = -80;
-		    baseLogic.subTurret.traverseSound = null;
-		    baseLogic.subTurret.currentEntity = this;
-		    baseLogic.subTurret.powor = 40;
-		    baseLogic.subTurret.ex = 1.0f;
-		    baseLogic.subTurret.cycle_setting = 0;
-		    baseLogic.subTurret.firesound = null;
-		    baseLogic.subTurret.bulletmodel = "byfrou01_Bomb";
-		    baseLogic.subTurret.flushName = null;
-		    baseLogic.subTurret.spread = 0;
-		    baseLogic.subTurret.speed = 0;
-		    baseLogic.subTurret.canex = true;
-		    baseLogic.subTurret.guntype = 2;
-		    baseLogic.subTurret.magazineMax = 29;
-		    baseLogic.subTurret.magazinerem = 29;
-		    baseLogic.subTurret.reloadSetting = 500;
+		    baseLogic.mainTurret.onmotherPos = new Vector3d(0,-2,-1);
+		    baseLogic.mainTurret.motherRotCenter = new Vector3d(0,1.2,0);
+		    baseLogic.mainTurret.turretspeedY = 5;
+		    baseLogic.mainTurret.turretspeedP = 8;
+		    baseLogic.mainTurret.turretanglelimtPitchMax = 5;
+		    baseLogic.mainTurret.turretanglelimtPitchmin = -80;
+		    baseLogic.mainTurret.traverseSound = null;
+		    baseLogic.mainTurret.currentEntity = this;
+		    baseLogic.mainTurret.powor = 80;
+		    baseLogic.mainTurret.ex = 0.5f;
+		    baseLogic.mainTurret.canex = false;
+		    baseLogic.mainTurret.shotgun_pellet = 24;
+		    baseLogic.mainTurret.cycle_setting = 2;
+		    baseLogic.mainTurret.firesound = null;
+		    baseLogic.mainTurret.bulletmodel = "byfrou01_Bomb";
+		    baseLogic.mainTurret.flushName = null;
+		    baseLogic.mainTurret.spread = 30;
+		    baseLogic.mainTurret.speed = 0.3f;
+		    baseLogic.mainTurret.canex = true;
+		    baseLogic.mainTurret.guntype = 2;
+		    baseLogic.mainTurret.magazineMax = 4;
+		    baseLogic.mainTurret.magazinerem = 4;
+		    baseLogic.mainTurret.reloadSetting = 500;
 		    TurretObj bomb2 = new TurretObj(worldObj);
-		    bomb2.onmotherPos = new Vector3d(0,-0.1,-2);
+		    bomb2.onmotherPos = new Vector3d(0,-2,1);
 		    bomb2.motherRotCenter = new Vector3d(0,1.2,0);
-		    bomb2.cannonpos = new Vector3d(0,-0.1,-2);
 		    bomb2.turretspeedY = 5;
 		    bomb2.turretspeedP = 8;
 		    bomb2.turretanglelimtPitchMax = 5;
 		    bomb2.turretanglelimtPitchmin = -80;
 		    bomb2.traverseSound = null;
 		    bomb2.currentEntity = this;
-		    bomb2.powor = 40;
-		    bomb2.ex = 1.0F;
+		    bomb2.powor = 80;
+		    bomb2.ex = 0.5f;
+		    bomb2.canex = false;
+		    bomb2.shotgun_pellet = 24;
 		    bomb2.cycle_setting = 0;
 		    bomb2.firesound = null;
 		    bomb2.bulletmodel = "byfrou01_Bomb";
 		    bomb2.flushName = null;
-		    bomb2.spread = 0;
-		    bomb2.speed = 0;
+		    bomb2.spread = 30;
+		    bomb2.speed = 0.3f;
 		    bomb2.canex = true;
 		    bomb2.guntype = 2;
-		    bomb2.magazineMax = 29;
-		    bomb2.magazinerem = 29;
+		    bomb2.magazineMax = 4;
+		    bomb2.magazinerem = 4;
 		    bomb2.reloadSetting = 500;
-		    baseLogic.subTurret.addchild(bomb2);
+		    baseLogic.mainTurret.addchild(bomb2);
 	    }
     }
-    
+	protected void applyEntityAttributes()
+	{
+		maxHealth = 300;
+		super.applyEntityAttributes();
+	}
 }

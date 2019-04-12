@@ -59,15 +59,6 @@ public class ModifiedBoundingBox extends AxisAlignedBB {
         realmaxY = rMY;
         realmaxZ = rMZ;
     }
-    public double centerX(){
-        return (this.minX + this.maxX)/2;
-    }
-    public double centerY(){
-        return (this.minY + this.maxY)/2;
-    }
-    public double centerZ(){
-        return (this.minZ + this.maxZ)/2;
-    }
     public AxisAlignedBB setBounds(double p_72324_1_, double p_72324_3_, double p_72324_5_, double p_72324_7_, double p_72324_9_, double p_72324_11_)
     {
         this.minX = p_72324_1_;
@@ -360,17 +351,17 @@ public class ModifiedBoundingBox extends AxisAlignedBB {
         for(int i =0;i<points.length;i++){
             Vector3d temp = points[i];
             temp.sub(rotcenterVec);
-            temp = Calculater.transformVecByQuat(temp,rot);
-            Calculater.transformVecforMinecraft(temp);
+            temp.set(Calculater.transformVecByQuat(temp,rot));
+            transformVecforMinecraft(temp);
             temp.add(rotcenterVec);
         }
 
-        double minX = this.minX + (Calculater.getmininsomeVectors(points,0));
-        double minY = this.minY + (Calculater.getmininsomeVectors(points,1));
-        double minZ = this.minZ + (Calculater.getmininsomeVectors(points,2));
-        double maxX = this.maxX + (Calculater.getMaxinsomeVectors(points,0));
-        double maxY = this.maxY + (Calculater.getMaxinsomeVectors(points,1));
-        double maxZ = this.maxZ + (Calculater.getMaxinsomeVectors(points,2));
+        double minX = this.posX + (Calculater.getmininsomeVectors(points,0))-1;
+        double minY = this.posY + (Calculater.getmininsomeVectors(points,1))-1;
+        double minZ = this.posZ + (Calculater.getmininsomeVectors(points,2))-1;
+        double maxX = this.posX + (Calculater.getMaxinsomeVectors(points,0))+1;
+        double maxY = this.posY + (Calculater.getMaxinsomeVectors(points,1))+1;
+        double maxZ = this.posZ + (Calculater.getMaxinsomeVectors(points,2))+1;
 //        System.out.println("debug hiting max x " + (hittingbox.maxZ));
 //        System.out.println("debug hiting min x " + (hittingbox.minZ));
 //        System.out.println("debug max x " + (maxZ));
@@ -412,17 +403,17 @@ public class ModifiedBoundingBox extends AxisAlignedBB {
         for(int i =0;i<points.length;i++){
             Vector3d temp = points[i];
             temp.sub(rotcenterVec);
-            temp = Calculater.transformVecByQuat(temp,rot);
-            Calculater.transformVecforMinecraft(temp);
+            temp.set(Calculater.transformVecByQuat(temp,rot));
+            transformVecforMinecraft(temp);
             temp.add(rotcenterVec);
         }
-
-        double minX = this.minX + (Calculater.getmininsomeVectors(points,0));
-        double minY = this.minY + (Calculater.getmininsomeVectors(points,1));
-        double minZ = this.minZ + (Calculater.getmininsomeVectors(points,2));
-        double maxX = this.maxX + (Calculater.getMaxinsomeVectors(points,0));
-        double maxY = this.maxY + (Calculater.getMaxinsomeVectors(points,1));
-        double maxZ = this.maxZ + (Calculater.getMaxinsomeVectors(points,2));
+        
+        double minX = this.posX + (Calculater.getmininsomeVectors(points,0))-1;
+        double minY = this.posY + (Calculater.getmininsomeVectors(points,1))-1;
+        double minZ = this.posZ + (Calculater.getmininsomeVectors(points,2))-1;
+        double maxX = this.posX + (Calculater.getMaxinsomeVectors(points,0))+1;
+        double maxY = this.posY + (Calculater.getMaxinsomeVectors(points,1))+1;
+        double maxZ = this.posZ + (Calculater.getMaxinsomeVectors(points,2))+1;
         return
                 p_72318_1_.xCoord > minX && p_72318_1_.xCoord < maxX &&
                 p_72318_1_.yCoord > minY && p_72318_1_.yCoord < maxY &&
@@ -486,12 +477,9 @@ public class ModifiedBoundingBox extends AxisAlignedBB {
         startVec = Calculater.transformVecByQuat(startVec,temp);
         endVec = Calculater.transformVecByQuat(endVec,temp);
 
-        transformVecforMinecraft(startVec);
-        transformVecforMinecraft(endVec);
-
         startVec.add(rotcenterVec);
         endVec.add(rotcenterVec);
-
+//
 //        System.out.println("1"+startVec);
 //        System.out.println("2"+endVec);
 
@@ -608,7 +596,6 @@ public class ModifiedBoundingBox extends AxisAlignedBB {
             }
 
             vec38.sub(rotcenterVec);
-            transformVecforMinecraft(vec38);
             vec38 = Calculater.transformVecByQuat(vec38,rot);
             transformVecforMinecraft(vec38);
             vec38.add(rotcenterVec);

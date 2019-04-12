@@ -43,6 +43,22 @@ public class PlaneBaseLogic {
 	public float pitchladder;
 	public float pitchspeed = 0.06f;
 	
+	public float pitchsighwidthmax = 5;
+	public float yawsightwidthmax = 10;
+	public float pitchsighwidthmin = -5;
+	public float yawsightwidthmin = -10;
+	
+	public float maxDive = 75;
+	public float startDive = 40;
+	public float maxClimb = -60;
+	public float minALT=20;
+	public float cruiseALT=40;
+	public boolean throttledown_onDive = false;
+	public boolean Dive_bombing = false;
+	public boolean Torpedo_bomber = false;
+	public boolean sholdUseMain_ToG = true;
+	public boolean sholdUseMain_ToA = false;
+	
 	public float slipresist = 1;
 	public float gravity = 0.49f;
 	
@@ -66,15 +82,6 @@ public class PlaneBaseLogic {
 	public float throttle_Max = 10;
 	public float throttle_min = 0f;
 	public float throttle_AF;
-	public float maxDive = 75;
-	public float startDive = 40;
-	public float maxClimb = -60;
-	public float minALT=20;
-	public float cruiseALT=40;
-	public boolean throttledown_onDive = false;
-	public boolean Dive_bombing = false;
-	public boolean sholdUseMain_ToG = true;
-	public boolean sholdUseMain_ToA = false;
 	public float speedfactor = 0.03f;
 	public float speedfactor_af = 0.01f;
 	public float liftfactor = 0.04f;
@@ -475,6 +482,9 @@ public class PlaneBaseLogic {
 			if(planebody instanceof EntityLiving && ((EntityLiving) planebody).getAttackTarget() != null){
 				if(!T_useMain_F_useSub && subTurret == null)T_useMain_F_useSub = true;
 				EntityLivingBase target = ((EntityLiving) planebody).getAttackTarget();
+//				if((target.onGround || (target.ridingEntity != null && target.ridingEntity.onGround)) && genY<target.posY){
+//					alt = (float) (planebody.posY - target.posY);
+//				}
 				Vector3d courseVec = new Vector3d(target.posX,target.posY,target.posZ);
 				courseVec.sub(new Vector3d(planebody.posX, planebody.posY, planebody.posZ));
 				courseVec.normalize();
@@ -483,19 +493,54 @@ public class PlaneBaseLogic {
 				double AngulardifferenceYaw = targetyaw - this.bodyrotationYaw;
 				AngulardifferenceYaw = wrapAngleTo180_double(AngulardifferenceYaw);
 				double planespeed = planebody.motionX * planebody.motionX + planebody.motionY * planebody.motionY + planebody.motionZ * planebody.motionZ;
-				float targetpitch = wrapAngleTo180_float(-(float) CalculateGunElevationAngle(planebody, target, (float) (T_useMain_F_useSub ? mainTurret.gravity * cfg_defgravitycof : subTurret.gravity * cfg_defgravitycof), (T_useMain_F_useSub ? mainTurret.speed : subTurret.speed) + (float) sqrt(planespeed))[0]);
+				TurretObj currentTurret = T_useMain_F_useSub ? mainTurret : subTurret;
+				Vector3d currentCannonpos = currentTurret.getCannonpos();
 				
+				float targetpitch = wrapAngleTo180_float(-(float) CalculateGunElevationAngle(currentCannonpos.x,currentCannonpos.y,currentCannonpos.z, target, (float) currentTurret.gravity, currentTurret.speed + (float) sqrt(planespeed))[0]);
+				
+				if(!useMain_withSub && (T_useMain_F_useSub ? mainTurret.isreloading() : subTurret.isreloading())){
+					T_StartDive_F_FlyToStartDivePos = false;
+				}
+				if(!useMain_withSub){
+					if(T_useMain_F_useSub){
+						if(mainTurret.isreloading()) {
+							rising_after_Attack = true;
+							T_useMain_F_useSub = !T_useMain_F_useSub;
+							changeWeaponCycle = 0;
+						}
+					}else{
+						if(subTurret.isreloading()){
+							rising_after_Attack = true;
+							T_useMain_F_useSub = !T_useMain_F_useSub;
+							changeWeaponCycle = 0;
+						}
+					}
+				}
+				double toTargetPitch = -toDegrees(asin(courseVec.y));
 				if(!rising_after_Attack && T_StartDive_F_FlyToStartDivePos){
 					boolean insight = true;
 					boolean istarget_onGround = (target.onGround || (target.ridingEntity != null && target.ridingEntity.onGround));
-					if(Dive_bombing && istarget_onGround){
-//						System.out.println("" + targetpitch);
-						if(targetpitch<startDive){
-							targetpitch = -10;
+					if(T_useMain_F_useSub && Dive_bombing && istarget_onGround){
+						if(toTargetPitch<startDive){
+							targetpitch = -5;
 							insight = false;
 						}else {
+							if(targetpitch < startDive){
+								targetpitch = (float) toTargetPitch;
+								insight = false;
+							}
 							if (throttle > (throttle_Max / 3) * 2) throttle -= 0.05;
 							else throttle += 0.05;
+						}
+					}else if(T_useMain_F_useSub && Torpedo_bomber){
+						throttle += 0.05;
+						if(alt <minALT+5){
+							targetpitch = -20;
+						}else if(alt >minALT){
+							targetpitch = 10;
+						}
+						else {
+							targetpitch = 0;
 						}
 					}else
 					if(throttledown_onDive && istarget_onGround){
@@ -505,7 +550,15 @@ public class PlaneBaseLogic {
 						throttle += 0.05;
 					}
 					handle(AngulardifferenceYaw,targetpitch,alt);
-					insight &= abs(AngulardifferenceYaw)<10 && abs(targetpitch - bodyrotationPitch)<5;
+					float AngulardifferencePitch = targetpitch - bodyrotationPitch;
+					insight &= AngulardifferenceYaw > yawsightwidthmin && AngulardifferenceYaw < yawsightwidthmax && AngulardifferencePitch > pitchsighwidthmin &&AngulardifferencePitch< pitchsighwidthmax;
+					if(T_useMain_F_useSub && Torpedo_bomber){
+						insight = planebody.getDistanceSqToEntity(target) < 1024;
+						if(insight){
+							rising_after_Attack = true;
+							T_StartDive_F_FlyToStartDivePos = false;
+						}
+					}
 					if(!useMain_withSub && mainTurret != null && subTurret != null){
 						if(sholdUseMain_ToG && istarget_onGround)
 							T_useMain_F_useSub = !mainTurret.isreloading();
@@ -546,17 +599,17 @@ public class PlaneBaseLogic {
 						changeWeaponCycle = 0;
 						T_useMain_F_useSub = !T_useMain_F_useSub;
 					}
-					if(target.onGround && targetpitch>maxDive){
+					if(target.onGround && toTargetPitch>maxDive){
 						T_StartDive_F_FlyToStartDivePos = false;
 						rising_after_Attack = true;
 					}
-					if(alt<minALT){
+					if(!Torpedo_bomber && alt<minALT){
 						rising_after_Attack = true;
 					}
-				}else {
+				} else {
 					throttle+= 0.05;
 					if(!target.onGround)T_StartDive_F_FlyToStartDivePos = true;
-					if(targetpitch< (Dive_bombing ? startDive/3:startDive))T_StartDive_F_FlyToStartDivePos = true;
+					if(toTargetPitch<(Dive_bombing ? startDive/2:startDive))T_StartDive_F_FlyToStartDivePos = true;
 					if(targetpitch<0)rising_after_Attack = false;
 					if(alt > cruiseALT)rising_after_Attack = false;
 					if(!target.onGround && outSightCnt>0){
@@ -565,7 +618,7 @@ public class PlaneBaseLogic {
 					}
 					rollHandle(0);
 					if(alt<cruiseALT)pitchHandle(maxClimb);
-					else pitchHandle(0);
+					else if(alt>cruiseALT + 5)pitchHandle(5);
 				}
 //				if (rising_after_Attack && alt < 50) {
 //					pitchHandle(maxClimb);

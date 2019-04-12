@@ -1,0 +1,5 @@
+ObjModel,depth_charge.mqo
+ObjTexture,torpedo.png
+Objscale,10
+SmokeGlow,true
+Name,byfrou01_depth_charge

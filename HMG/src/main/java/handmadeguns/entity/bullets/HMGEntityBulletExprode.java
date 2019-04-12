@@ -19,6 +19,7 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EntityDamageSourceIndirect;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
@@ -29,6 +30,7 @@ import static handmadeguns.HandmadeGunsCore.islmmloaded;
 public class HMGEntityBulletExprode extends HMGEntityBulletBase implements IEntityAdditionalSpawnData
 {
 	public float exlevel = 2.5F;
+	public MovingObjectPosition hitobjectposition;
 	public HMGEntityBulletExprode(World worldIn) {
 		super(worldIn);
 	}
@@ -83,7 +85,13 @@ public class HMGEntityBulletExprode extends HMGEntityBulletBase implements IEnti
 				double moXback = hitedentity.motionX;//ノックバック無効化用
 				double moYback = hitedentity.motionY;//跳ね上がり無効化用
 				double moZback = hitedentity.motionZ;//ノックバック無効化用
-				if(hitedentity.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()), (float)i)){
+				double posXback = this.posX;
+				double posYback = this.posY;
+				double posZback = this.posZ;
+				this.posX = hitobjectposition.hitVec.xCoord;
+				this.posY = hitobjectposition.hitVec.yCoord;
+				this.posZ = hitobjectposition.hitVec.zCoord;
+				if(hitedentity.attackEntityFrom((new EntityDamageSourceIndirect("arrow", this, this.getThrower())).setProjectile(), (float)i)){
 					hitedentity.motionX = moXback;
 					hitedentity.motionY = moYback;
 					hitedentity.motionZ = moZback;
@@ -98,6 +106,9 @@ public class HMGEntityBulletExprode extends HMGEntityBulletBase implements IEnti
 					}
 					this.setDead();
 				}
+				this.posX = posXback;
+				this.posY = posYback;
+				this.posZ = posZback;
 //				hitedentity.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()), (float)i);
 				this.worldObj.spawnParticle("smoke", this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D);
 			}
@@ -168,6 +179,7 @@ public class HMGEntityBulletExprode extends HMGEntityBulletBase implements IEnti
 			if(!noex && !canbounce){
 				this.explode(var1.hitVec.xCoord,var1.hitVec.yCoord+0.125,var1.hitVec.zCoord, this.exlevel, this.canex && cfg_blockdestroy);
 				hitedentity = var1.entityHit;
+				hitobjectposition = var1;
 				noex = true;
 			}else if(canbounce){
 			}

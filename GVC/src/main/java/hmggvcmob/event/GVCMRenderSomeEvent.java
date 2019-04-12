@@ -35,6 +35,7 @@ import javax.vecmath.Quat4d;
 import javax.vecmath.Vector3d;
 import java.util.ArrayList;
 
+import static handmadeguns.event.HMGEventZoom.renderPumpkinBlur;
 import static hmggvcmob.GVCMobPlus.proxy;
 import static java.lang.Math.*;
 
@@ -59,7 +60,7 @@ public class GVCMRenderSomeEvent {
 		Minecraft minecraft = FMLClientHandler.instance().getClient();
 		EntityPlayer entityplayer = minecraft.thePlayer;
 		if (entityplayer.ridingEntity != null) {
-			if(entityplayer.ridingEntity instanceof EntitySoBases){
+			if(entityplayer.ridingEntity instanceof IControlable){
 				boolean rc = proxy.zoomclick();
 				if(rc)zooming = !zooming;
 
@@ -156,6 +157,10 @@ public class GVCMRenderSomeEvent {
 			case START :
 				if(event.renderTickTime<1){
 					if (entityplayer != null) {
+						if(entityplayer.ridingEntity instanceof IdriveableVehicle){
+							ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer, ((IdriveableVehicle) entityplayer.ridingEntity).getthirdDist(), "thirdPersonDistance", "E", "field_78490_B");
+							needrest = true;
+						}
 						if (entityplayer.ridingEntity instanceof GVCEntityChild) {
 							ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer, ((GVCEntityChild) entityplayer.ridingEntity).thirddist, "thirdPersonDistance", "E", "field_78490_B");
 							if( ((GVCEntityChild) entityplayer.ridingEntity).master instanceof GVCEntityPMCHeli) {
@@ -531,7 +536,7 @@ public class GVCMRenderSomeEvent {
 			}
 		}
 		if (entityplayer.ridingEntity instanceof IdriveableVehicle && entityplayer.ridingEntity instanceof EntityLivingBase){//1
-			EntityLiving balaam = (EntityLiving) entityplayer.ridingEntity;
+			EntityLiving vehicleBody = (EntityLiving) entityplayer.ridingEntity;
 			IdriveableVehicle vehicle = (IdriveableVehicle) entityplayer.ridingEntity;
 			FontRenderer fontrenderer = minecraft.fontRenderer;
 			GL11.glPushMatrix();
@@ -540,21 +545,21 @@ public class GVCMRenderSomeEvent {
 			int am2 = vehicle.getfirecyclesettings2() - vehicle.getfirecycleprogress2();
 			String d1 = String.format("%1$3d", am1);
 			String d2 = String.format("%1$3d", am2);
-			String hp = String.format("%1$3d", (int)balaam.getHealth());
-			String mhp = String.format("%1$3d", (int)balaam.getMaxHealth());
+			String hp = String.format("%1$3d", (int)vehicleBody.getHealth());
+			String mhp = String.format("%1$3d", (int)vehicleBody.getMaxHealth());
 			String th = String.valueOf(vehicle.getthrottle());
 			String rotep = String.format("%1$3d", (int)vehicle.getturretrotationYaw());
 			String rote = String.format("%1$3d", (int)vehicle.getbodyrotationYaw());
 
-			if(balaam instanceof GVCEntityPMCT90Tank){
-				if(((GVCEntityPMCT90Tank) balaam).fireCycle1 > 0)
+			if(vehicleBody instanceof GVCEntityPMCT90Tank){
+				if(((GVCEntityPMCT90Tank) vehicleBody).fireCycle1 > 0)
 				{
-					fontrenderer.drawStringWithShadow("Weapon1 " + ((GVCEntityPMCT90Tank) balaam).fireCycle1, i - 180, j - 20 - 10, 0xFFFFFF);
+					fontrenderer.drawStringWithShadow("Weapon1 " + ((GVCEntityPMCT90Tank) vehicleBody).fireCycle1, i - 180, j - 20 - 10, 0xFFFFFF);
 				}else{
 					fontrenderer.drawStringWithShadow("Weapon1 " + "Ready", i - 180, j - 20 - 10, 0xFFFFFF);
 				}
-				if (((GVCEntityPMCT90Tank) balaam).mgMagazine > 0) {
-					fontrenderer.drawStringWithShadow("Kord " + ((GVCEntityPMCT90Tank) balaam).mgMagazine, i - 180, j - 20 - 20, 0xFFFFFF);
+				if (((GVCEntityPMCT90Tank) vehicleBody).mgMagazine > 0) {
+					fontrenderer.drawStringWithShadow("Kord " + ((GVCEntityPMCT90Tank) vehicleBody).mgMagazine, i - 180, j - 20 - 20, 0xFFFFFF);
 				} else {
 					fontrenderer.drawStringWithShadow("Kord " + "reloading", i - 200, j - 20 - 20, 0xFFFFFF);
 				}
@@ -607,6 +612,27 @@ public class GVCMRenderSomeEvent {
 				GL11.glScalef(0.25f, 0.25f, 1);
 				g.drawTexturedModalRect(0, (scaledresolution.getScaledHeight()-64)*4, 0,0, 256, 256);
 				GL11.glPopMatrix();//22
+			}
+			
+			if(vehicleBody instanceof IControlable && vehicle.getsightTex() != null){
+				boolean rc = proxy.zoomclick();
+				if(rc)zooming = !zooming;
+				
+				if(zooming) {
+					float screenposX = 0;
+					float screenposY = 0;
+					float screenWidth = scaledresolution.getScaledWidth();
+					float screenHeight = scaledresolution.getScaledHeight();
+					if (screenWidth / screenHeight < 2) {
+						screenWidth = screenHeight * 2;
+						screenposX = scaledresolution.getScaledWidth() - screenWidth;
+						screenposX /= 2;
+					} else {
+						screenHeight = screenWidth / 2;
+						screenposY = (scaledresolution.getScaledHeight() - screenHeight)/2;
+					}
+					renderPumpkinBlur(minecraft, screenposX, screenposY, screenWidth, screenHeight, new ResourceLocation(vehicle.getsightTex()));
+				}
 			}
 		}
 	}

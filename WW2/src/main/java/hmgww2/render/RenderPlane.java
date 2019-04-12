@@ -1,9 +1,6 @@
 package hmgww2.render;
 
-import hmggvcmob.entity.IRideableTank;
-import hmggvcmob.entity.Iplane;
-import hmggvcmob.entity.PlaneBaseLogic;
-import hmggvcmob.entity.TankBaseLogic;
+import hmggvcmob.entity.*;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
@@ -52,13 +49,20 @@ public class RenderPlane extends Render {
 			GL11.glRotatef(baseLogic.bodyrotationRoll, 0.0F, 0.0F, 1.0F);
 			GL11.glTranslatef((float) -baseLogic.rotcenter[0], (float) -baseLogic.rotcenter[1], (float) -baseLogic.rotcenter[2]);
 			tankk.renderPart("obj1");
+			tankk.renderPart("mat1");
+			if(((Hasmode) entity).standalone()){
+				tankk.renderPart("obj30");
+				tankk.renderPart("mat30");
+			}
 			if(entity.onGround){
 				tankk.renderPart("obj8");
+				tankk.renderPart("mat8");
 			}
 			GL11.glTranslatef((float) perapos[0], (float) perapos[1], (float) perapos[2]);
 			GL11.glRotatef((baseLogic.perapos + (baseLogic.perapos - baseLogic.prevperapos) * partialTicks), 0.0F, 0.0F, 1.0F);
 			GL11.glTranslatef((float) -perapos[0], (float) -perapos[1], (float) -perapos[2]);
 			tankk.renderPart("obj7");
+			tankk.renderPart("mat7");
 			GL11.glPopMatrix();
 		}
 		

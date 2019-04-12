@@ -8,4 +8,11 @@ public interface IdriveableVehicle {
     float getturretrotationYaw();
     float getbodyrotationYaw();
     float getthrottle();
+    
+    default String getsightTex(){
+        return null;
+    }
+    default float getthirdDist(){
+        return 4;
+    }
 }

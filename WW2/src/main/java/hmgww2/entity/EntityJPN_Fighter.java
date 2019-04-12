@@ -27,6 +27,7 @@ public class EntityJPN_Fighter extends EntityJPN_FighterBase
 	{
 		super(par1World);
 		this.setSize(5f, 3f);
+		armor = 4;
 		ignoreFrustumCheck = true;
 		baseLogic.speedfactor = 0.0022f;
 		baseLogic.dragfactor =  0.0097f;
@@ -58,7 +59,6 @@ public class EntityJPN_Fighter extends EntityJPN_FighterBase
 				cannon3.traverseSound = null;
 				cannon3.currentEntity = this;
 				cannon3.powor = 8;
-				cannon3.ex = 0.5f;
 				cannon3.cycle_setting = 1;
 				cannon3.firesound = "handmadeguns:handmadeguns.fire";
 				cannon3.spread = 1;
@@ -80,7 +80,6 @@ public class EntityJPN_Fighter extends EntityJPN_FighterBase
 				cannon4.traverseSound = null;
 				cannon4.currentEntity = this;
 				cannon4.powor = 8;
-				cannon4.ex = 0.5f;
 				cannon4.cycle_setting = 1;
 				cannon4.firesound = "handmadeguns:handmadeguns.fire";
 				cannon4.spread = 1;
@@ -143,5 +142,10 @@ public class EntityJPN_Fighter extends EntityJPN_FighterBase
 			}
 			baseLogic.subTurret = cannon1;
 		}
+	}
+	protected void applyEntityAttributes()
+	{
+		maxHealth = 70;
+		super.applyEntityAttributes();
 	}
 }

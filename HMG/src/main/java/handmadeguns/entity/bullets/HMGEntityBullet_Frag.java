@@ -18,10 +18,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
 
 import static handmadeguns.HandmadeGunsCore.islmmloaded;
@@ -70,7 +67,7 @@ public class HMGEntityBullet_Frag extends HMGEntityBulletBase implements IEntity
 				double moXback = hitedentity.motionX;//ノックバック無効化用
 				double moYback = hitedentity.motionY;//跳ね上がり無効化用
 				double moZback = hitedentity.motionZ;//ノックバック無効化用
-				if(hitedentity.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()), (float)i)){
+				if(hitedentity.attackEntityFrom((new EntityDamageSourceIndirect("arrow", this, this.getThrower())).setProjectile(), (float)i)){
 					hitedentity.motionX = moXback;
 					hitedentity.motionY = moYback;
 					hitedentity.motionZ = moZback;

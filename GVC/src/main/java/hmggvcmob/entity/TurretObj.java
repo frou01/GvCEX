@@ -45,6 +45,11 @@ public class TurretObj {
     public float turretanglelimtPitchMax = 15;
     public float turretanglelimtPitchmin = -15;
     
+    public FireRist[] fireRists;
+    
+    public double torpdraft = 0;
+    
+    
     public double turretspeedY = 5;
     public double turretspeedP = 5;
     
@@ -75,6 +80,7 @@ public class TurretObj {
     public int powor;
     public int guntype;
     public float ex = 2.5F;
+    public int fuse = 0;
     public float gravity = 0.04903325f;
     public boolean canex = true;
     public String bulletmodel = "default";
@@ -83,11 +89,13 @@ public class TurretObj {
     public int magazinerem;
     public int magazineMax = -1;
     public int reloadTimer = -1;
-    public int reloadSetting;
+    public int reloadSetting = 0;
     
     public boolean canHoming = false;
     public float induction_precision = 15;
     public Entity target;
+    
+    public boolean ready = false;
     
     public TurretObj(World worldObj){
         this.worldObj = worldObj;
@@ -203,7 +211,12 @@ public class TurretObj {
         return lookVec;
     }
     public Vector3d getCannonpos(){
-        return getGlobalVector_fromLocalVector(cannonpos);
+        Vector3d Vec_transformedbybody = getGlobalVector_fromLocalVector(cannonpos);
+    
+        transformVecforMinecraft(Vec_transformedbybody);
+        return new Vector3d(pos.x + Vec_transformedbybody.x,
+                                   pos.y + Vec_transformedbybody.y,
+                                   -pos.z + Vec_transformedbybody.z);
     }
     public boolean aimtoAngle(double targetyaw,double targetpitch){
         
@@ -275,22 +288,27 @@ public class TurretObj {
         turretrotationYaw = wrapAngleTo180_double(turretrotationYaw);
         turretrotationPitch = wrapAngleTo180_double(turretrotationPitch);
         boolean inrange = true;
-        if(targetyaw > turretanglelimtYawMax){
-            targetyaw = turretanglelimtYawMax;
-            inrange = false;
-        }else
-        if(targetyaw < turretanglelimtYawmin){
-            targetyaw = turretanglelimtYawmin;
-            inrange = false;
-        }
-        
-        if(targetpitch > turretanglelimtPitchMax){
-            targetpitch = turretanglelimtPitchMax;
-            inrange = false;
-        }else
-        if(targetpitch < turretanglelimtPitchmin){
+        if(turretanglelimtPitchMax != turretanglelimtPitchmin) {
+            if (targetpitch > turretanglelimtPitchMax) {
+                targetpitch = turretanglelimtPitchMax;
+                inrange = false;
+            } else if (targetpitch < turretanglelimtPitchmin) {
+                targetpitch = turretanglelimtPitchmin;
+                inrange = false;
+            }
+        }else {
             targetpitch = turretanglelimtPitchmin;
-            inrange = false;
+        }
+        if(turretanglelimtYawMax != turretanglelimtYawmin) {
+            if (targetyaw > turretanglelimtYawMax) {
+                targetyaw = turretanglelimtYawMax;
+                inrange = false;
+            } else if (targetyaw < turretanglelimtYawmin) {
+                targetyaw = turretanglelimtYawmin;
+                inrange = false;
+            }
+        }else {
+            targetyaw = turretanglelimtYawmin;
         }
         if(traverseSound != null && (abs(turretrotationYaw - targetyaw)>1 || abs(turretrotationPitch - targetpitch)>1))
             currentEntity.playSound(traverseSound, traversesoundLV, traversesoundPitch);
@@ -332,8 +350,29 @@ public class TurretObj {
         Vector3d axisX = transformVecByQuat(unitX, turretRot);
         AxisAngle4d axisxangledX = new AxisAngle4d(axisX, toRadians(-targetpitch)/2);
         turretRot = quatRotateAxis(turretRot,axisxangledX);
+    
+        boolean canfire = false;
+        if(fireRists != null){
+            for(FireRist afirRist : fireRists){
+                boolean temp = true;
+                if(targetyaw > afirRist.YawMax){
+                    temp = false;
+                }else
+                if(targetyaw < afirRist.YawMin){
+                    temp = false;
+                }
+    
+                if(targetpitch > afirRist.PitchMax){
+                    temp = false;
+                }else
+                if(targetpitch < afirRist.PitchMin){
+                    temp = false;
+                }
+                canfire|=temp;
+            }
+        }else canfire = true;
         
-        return result1 && result2 && inrange;
+        return ready = result1 && result2 && inrange && canfire;
     }
     public void setmotherpos(Vector3d motherPos,Quat4d motherRot){
         this.motherRot = motherRot;
@@ -380,7 +419,7 @@ public class TurretObj {
             achild.update(temp, this.pos);
         }
         cycle_timer--;
-        if(magazineMax != -1 && magazinerem <= 0){
+        if(magazineMax != -1 && magazinerem <= 0 && reloadSetting != -1){
             reloadTimer--;
             if(reloadTimer <0){
                 magazinerem = magazineMax;
@@ -447,17 +486,14 @@ public class TurretObj {
                             pos.y + Vec_transformedbybody.y,
                             -pos.z + Vec_transformedbybody.z,
                             (float) turretrotationYaw, (float) turretrotationPitch);
-                    abullet.setThrowableHeading(lookVec.x, lookVec.y, lookVec.z, speed, spread);
+                    abullet.setThrowableHeading(lookVec.x, lookVec.y, lookVec.z, speed, spread, currentEntity);
                     abullet.canbounce = false;
-                    abullet.fuse = 0;
+                    abullet.fuse = fuse;
                     abullet.acceleration = acceler;
                     if(canHoming){
                         abullet.induction_precision = induction_precision;
                         abullet.homingEntity = target;
                     }
-                    abullet.motionX += currentEntity.motionX;
-                    abullet.motionY += currentEntity.motionY;
-                    abullet.motionZ += currentEntity.motionZ;
                     this.worldObj.spawnEntityInWorld(abullet);
                 }
                 if(flushName != null){
@@ -488,6 +524,13 @@ public class TurretObj {
     }
     public void  addchildonBarrel(TurretObj child){
         childsOnBarrel.add(child);
+    }
+    
+    public ArrayList<TurretObj> getChilds(){
+        return childs;
+    }
+    public ArrayList<TurretObj> getChildsOnBarrel(){
+        return childsOnBarrel;
     }
     
     public HMGEntityBulletBase[] FireBullet( World par2World, Entity par3Entity){
@@ -581,6 +624,7 @@ public class TurretObj {
         for(int i = 0;i < shotgun_pellet ; i++){
             bulletinstances[i] = new HMGEntityBulletTorp(par2World, par3Entity,
                                                                 this.powor, speed, spread, ex, canex, bulletmodel);
+            ((HMGEntityBulletTorp)bulletinstances[i]).draft = torpdraft;
         }
         return bulletinstances;
     }

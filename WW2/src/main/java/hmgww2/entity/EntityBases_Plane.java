@@ -43,12 +43,7 @@ import static net.minecraft.util.MathHelper.wrapAngleTo180_float;
 
 public abstract class EntityBases_Plane extends EntityBases implements ImultiRideableVehicle,Iplane{
 	PlaneBaseLogic baseLogic;
-	
-	
-	public float maxhealth = 150;
-	public float angletime;
-	public int fireCycle1;
-	
+	float maxHealth = 150;
 	public EntityBases_Plane(World par1World) {
 		super(par1World);
 		this.setSize(5f, 5f);
@@ -57,7 +52,6 @@ public abstract class EntityBases_Plane extends EntityBases implements ImultiRid
 //		proxy.replaceBoundingbox(this,nboundingbox);
 //		((ModifiedBoundingBox)this.boundingBox).updateOBB(this.posX,this.posY,this.posZ);
 		ignoreFrustumCheck = true;
-		this.fireCycle1 = 1;
 		baseLogic = new PlaneBaseLogic(worldObj, this);
 		baseLogic.speedfactor = 0.004f;
 		baseLogic.liftfactor = 0.03f;
@@ -80,7 +74,7 @@ public abstract class EntityBases_Plane extends EntityBases implements ImultiRid
 	protected void applyEntityAttributes() {
 		super.applyEntityAttributes();
 		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0D);
-		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(120.0D);
+		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(maxHealth);
 		this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(80.0D);
 		this.getEntityAttribute(SharedMonsterAttributes.knockbackResistance).setBaseValue(30.0D);
 	}
@@ -101,6 +95,7 @@ public abstract class EntityBases_Plane extends EntityBases implements ImultiRid
 //			baseLogic.throttle--;
 //		}
 		baseLogic.onUpdate();
+		mode= getMobMode();
 	}
 	
 	public void setVelocity(double p_70016_1_, double p_70016_3_, double p_70016_5_) {
@@ -341,18 +336,6 @@ public abstract class EntityBases_Plane extends EntityBases implements ImultiRid
 	}
 	
 	public boolean attackEntityFrom(DamageSource source, float par2) {
-		if(source.getEntity() != null) {
-			if (isRidingEntity(source.getEntity())) {
-				return false;
-			} else if (this.riddenByEntity == source.getEntity()) {
-				return false;
-			}
-		}
-		if (par2 <= armor) {
-			if(armor != 0)if (!source.getDamageType().equals("mob")) this.playSound("gvcmob:gvcmob.ArmorBounce", 0.5F, 1F);
-			return false;
-		}
-		if(armor != 0)this.playSound("gvcmob:gvcmob.armorhit", 0.5F, 1F);
 		return super.attackEntityFrom(source,par2-armor);
 	}
 }

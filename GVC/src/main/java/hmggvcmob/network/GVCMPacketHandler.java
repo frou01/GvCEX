@@ -26,6 +26,7 @@ public class GVCMPacketHandler {
         INSTANCE.registerMessage(GVCMHandleHeliGunnerTriger.class, GVCPakcetHeliGunnerTrigger.class, ++id, Side.SERVER);
         INSTANCE.registerMessage(GVCHandleHudEntityTracking.class, GVCPacket_HudEntitytracking.class, ++id, Side.CLIENT);
         INSTANCE.registerMessage(GVCHandleSpawnSpotCircle.class, GVCPacketSpawnSpotCircle.class, ++id, Side.CLIENT);
+        INSTANCE.registerMessage(GVCMHandleVehicleTurretSync.class, GVCPakcetVehicleTurretSync.class, ++id, Side.CLIENT);
 
     	
     }

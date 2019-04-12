@@ -531,7 +531,7 @@ public class HMGEventZoom {
 	}
 
 	@SideOnly(Side.CLIENT)
-	protected void renderPumpkinBlur(Minecraft minecraft, float x, float y, float width, float height, ResourceLocation adsr)
+	public static void renderPumpkinBlur(Minecraft minecraft, float x, float y, float width, float height, ResourceLocation adsr)
 	{
 		GL11.glPushMatrix();
 		GL11.glDisable(2929);

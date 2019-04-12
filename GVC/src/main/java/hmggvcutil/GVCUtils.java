@@ -156,6 +156,8 @@ public class GVCUtils {
 	public static Item fn_m134;
 	public static Item fn_m2f;
 	public static Item fn_smaw;
+	public static Item fn_ptrk;
+	public static Item type38;
 
 
 	public static Block fn_camp;
@@ -631,6 +633,9 @@ public class GVCUtils {
 
 		GameRegistry.addShapelessRecipe(new ItemStack(GameRegistry.findItem("HandmadeGuns","SMAW")),new ItemStack(fn_smaw, 1));
 		fn_smaw = GameRegistry.findItem("HandmadeGuns","SMAW");
+		
+		fn_ptrk = GameRegistry.findItem("HandmadeGuns","PTRK2041");
+		type38 = GameRegistry.findItem("HandmadeGuns","Type38");
 
 		GameRegistry.addShapelessRecipe(new ItemStack(GameRegistry.findItem("HandmadeGuns","M134")),new ItemStack(fn_m134, 1));
 		fn_m134 = GameRegistry.findItem("HandmadeGuns","M134");

@@ -20,10 +20,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
 
 import static handmadeguns.HandmadeGunsCore.islmmloaded;
@@ -77,7 +74,7 @@ public class HMGEntityBullet_AT extends HMGEntityBulletBase implements IEntityAd
 			double moXback = var1.entityHit.motionX;//ノックバック無効化用
 			double moYback = var1.entityHit.motionY;//跳ね上がり無効化用
 			double moZback = var1.entityHit.motionZ;//ノックバック無効化用
-			if(var1.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()), (float)var2)){
+			if(var1.entityHit.attackEntityFrom((new EntityDamageSourceIndirect("arrow", this, this.getThrower())).setProjectile(), (float)var2)){
 				var1.entityHit.motionX = moXback;
 				var1.entityHit.motionY = moYback;
 				var1.entityHit.motionZ = moZback;

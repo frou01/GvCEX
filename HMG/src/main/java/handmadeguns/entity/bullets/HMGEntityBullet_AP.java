@@ -86,7 +86,7 @@ public class HMGEntityBullet_AP extends HMGEntityBulletBase implements IEntityAd
 					}
 				}
 			}
-			if(var1.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()), (float)var2)){
+			if(var1.entityHit.attackEntityFrom((new EntityDamageSourceIndirect("arrow", this, this.getThrower())).setProjectile(), (float)var2)){
 				var1.entityHit.motionX = moXback;
 				var1.entityHit.motionY = moYback;
 				var1.entityHit.motionZ = moZback;

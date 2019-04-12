@@ -34,6 +34,7 @@ public class EntityGER_Fighter extends EntityGER_FighterBase
 //		proxy.replaceBoundingbox(this,nboundingbox);
 //		((ModifiedBoundingBox)this.boundingBox).updateOBB(this.posX,this.posY,this.posZ);
 		ignoreFrustumCheck = true;
+		armor = 4;
 		baseLogic.speedfactor = 0.003f;
 		baseLogic.throttle_gearDown = 1.7f;
 		baseLogic.throttle_Max = 5.0f;
@@ -126,5 +127,10 @@ public class EntityGER_Fighter extends EntityGER_FighterBase
 				baseLogic.subTurret.addchild(turretObj);
 			}
 		}
+	}
+	protected void applyEntityAttributes()
+	{
+		maxHealth = 120;
+		super.applyEntityAttributes();
 	}
 }

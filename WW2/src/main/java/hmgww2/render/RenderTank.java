@@ -3,6 +3,7 @@ package hmgww2.render;
 import hmggvcmob.entity.IRideableTank;
 import hmggvcmob.entity.ITank;
 import hmggvcmob.entity.TankBaseLogic;
+import hmggvcmob.entity.TurretObj;
 import hmgww2.entity.EntityUSSR_Tank;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.Entity;
@@ -19,12 +20,23 @@ public class RenderTank extends Render {
 	
 	float[] turretpos = new float[3];
 	float[] turretpitchpos = new float[3];
+	boolean hassubturret = false;
+	boolean subturret_onMainTurret = false;
+	float[] subturretpos = new float[3];
+	float[] subturretpitchpos = new float[3];
 	
 	public RenderTank(String texture,String model,float[] turretpos,float[] turretpitchpos) {
 		skeletonTexturesz = new ResourceLocation(texture);
 		tankk = AdvancedModelLoader.loadModel(new ResourceLocation(model));
 		this.turretpos = turretpos;
 		this.turretpitchpos = turretpitchpos;
+	}
+	public RenderTank(String texture,String model,float[] turretpos,float[] turretpitchpos,boolean subturret_onMainTurret,float[] subturretpos,float[] subturretpitchpos) {
+		this(texture,model,turretpos,turretpitchpos);
+		this.hassubturret = true;
+		this.subturret_onMainTurret = subturret_onMainTurret;
+		this.subturretpos = subturretpos;
+		this.subturretpitchpos = subturretpitchpos;
 	}
 	
 	@Override
@@ -52,6 +64,22 @@ public class RenderTank extends Render {
 			GL11.glRotatef(baseLogic.bodyrotationPitch, 1.0F, 0.0F, 0.0F);
 			GL11.glRotatef(baseLogic.bodyrotationRoll, 0.0F, 0.0F, 1.0F);
 			tankk.renderPart("mat1");
+			tankk.renderPart("obj1");
+			if(hassubturret && !subturret_onMainTurret){
+				GL11.glPushMatrix();
+				TurretObj subturret = ((IRideableTank) entity).getTurrets()[1];
+				GL11.glTranslatef(subturretpos[0], subturretpos[1], subturretpos[2]);
+				GL11.glRotatef((float) -(subturret.turretrotationYaw), 0.0F, 1.0F, 0.0F);
+				GL11.glTranslatef(-subturretpos[0], -subturretpos[1], -subturretpos[2]);
+				tankk.renderPart("mat6");
+				tankk.renderPart("obj6");
+				GL11.glTranslatef(subturretpitchpos[0], subturretpitchpos[1], subturretpitchpos[2]);
+				GL11.glRotatef((float) subturret.turretrotationPitch, 1.0F, 0.0F, 0.0F);
+				GL11.glTranslatef(-subturretpitchpos[0], -subturretpitchpos[1], -subturretpitchpos[2]);
+				tankk.renderPart("mat7");
+				tankk.renderPart("obj7");
+				GL11.glPopMatrix();
+			}
 			//GL11.glRotatef(-(180.0F - entityYaw), 0.0F, 1.0F, 0.0F);
 			
 			{
@@ -59,13 +87,31 @@ public class RenderTank extends Render {
 				GL11.glRotatef(-(baseLogic.turretrotationYaw * partialTicks + baseLogic.prevturretrotationYaw * (1-partialTicks)), 0.0F, 1.0F, 0.0F);
 				GL11.glTranslatef(-turretpos[0], -turretpos[1], -turretpos[2]);
 				tankk.renderPart("mat4");
+				tankk.renderPart("obj4");
 				if(((IRideableTank) entity).standalone()){
 					tankk.renderPart("mat30");
+					tankk.renderPart("obj30");
+				}
+				if(hassubturret && subturret_onMainTurret){
+					GL11.glPushMatrix();
+					TurretObj subturret = ((IRideableTank) entity).getTurrets()[1];
+					GL11.glTranslatef(subturretpos[0], subturretpos[1], subturretpos[2]);
+					GL11.glRotatef((float) -(subturret.turretrotationYaw), 0.0F, 1.0F, 0.0F);
+					GL11.glTranslatef(-subturretpos[0], -subturretpos[1], -subturretpos[2]);
+					tankk.renderPart("mat6");
+					tankk.renderPart("obj6");
+					GL11.glTranslatef(subturretpitchpos[0], subturretpitchpos[1], subturretpitchpos[2]);
+					GL11.glRotatef((float) subturret.turretrotationPitch, 1.0F, 0.0F, 0.0F);
+					GL11.glTranslatef(-subturretpitchpos[0], -subturretpitchpos[1], -subturretpitchpos[2]);
+					tankk.renderPart("mat7");
+					tankk.renderPart("obj7");
+					GL11.glPopMatrix();
 				}
 				GL11.glTranslatef(turretpitchpos[0], turretpitchpos[1], turretpitchpos[2]);
 				GL11.glRotatef(baseLogic.turretrotationPitch, 1.0F, 0.0F, 0.0F);
 				GL11.glTranslatef(-turretpitchpos[0], -turretpitchpos[1], -turretpitchpos[2]);
 				tankk.renderPart("mat5");
+				tankk.renderPart("obj5");
 			}
 			GL11.glPopMatrix();
 		}
