@@ -28,7 +28,7 @@ public class EntityJPN_FighterA extends EntityJPN_FighterBase
 		baseLogic.sholdUseMain_ToG = true;
 		
 		baseLogic.startDive = 45;
-		baseLogic.maxDive = 70;
+		baseLogic.maxDive = 30;
 		baseLogic.cruiseALT = 40;
 		baseLogic.maxClimb = -12;
 		baseLogic.maxbank = 60;
@@ -99,7 +99,7 @@ public class EntityJPN_FighterA extends EntityJPN_FighterBase
 			baseLogic.mainTurret.turretanglelimtPitchmin = -80;
 			baseLogic.mainTurret.traverseSound = null;
 			baseLogic.mainTurret.currentEntity = this;
-			baseLogic.mainTurret.powor = 15;
+			baseLogic.mainTurret.powor = 500;
 			baseLogic.mainTurret.ex = 4.0F;
 			baseLogic.mainTurret.cycle_setting = 2;
 			baseLogic.mainTurret.firesound = null;
@@ -109,6 +109,8 @@ public class EntityJPN_FighterA extends EntityJPN_FighterBase
 			baseLogic.mainTurret.acceler = 0.1f;
 			baseLogic.mainTurret.canex = true;
 			baseLogic.mainTurret.guntype = 11;
+			baseLogic.mainTurret.magazineMax = 1;
+			baseLogic.mainTurret.magazinerem = 1;
 			baseLogic.mainTurret.reloadSetting = 500;
 			baseLogic.mainTurret.bulletmodel = "byfrou01_torpedo";
 		}

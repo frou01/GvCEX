@@ -82,8 +82,9 @@ public class EntityUSA_ShipD  extends EntityUSA_ShipBase
 		nboundingbox.centerRotY = 0;
 		nboundingbox.centerRotZ = 0;
 		
-		baseLogic = new VesselBaseLogic(this,0.01f,4.0f,false,"hmgww2:hmgww2.VesselTurbine");
+		baseLogic = new VesselBaseLogic(this,0.01f,1.2f,false,"hmgww2:hmgww2.VesselTurbine");
 		baseLogic.canControlonWater = true;
+		baseLogic.always_poit_to_target = false;
 		aiTankAttack = new AITankAttack(this,3600,900,10,10);
 		aiTankAttack.setAlways_movearound(true);
 		this.tasks.addTask(1,aiTankAttack);
@@ -99,7 +100,7 @@ public class EntityUSA_ShipD  extends EntityUSA_ShipBase
 			mainTurret1.turretPitchCenterpos = turretPitchCenterpos;
 			mainTurret1.turretspeedY = 5;
 			mainTurret1.turretspeedP = 8;
-			mainTurret1.turretanglelimtPitchMax = 5;
+			mainTurret1.turretanglelimtPitchMax = 1;
 			mainTurret1.turretanglelimtPitchmin = -80;
 			mainTurret1.traverseSound = null;
 			mainTurret1.currentEntity = this;
@@ -121,7 +122,7 @@ public class EntityUSA_ShipD  extends EntityUSA_ShipBase
 			mainTurret2.turretPitchCenterpos = turretPitchCenterpos;
 			mainTurret2.turretspeedY = 5;
 			mainTurret2.turretspeedP = 8;
-			mainTurret2.turretanglelimtPitchMax = 5;
+			mainTurret2.turretanglelimtPitchMax = 1;
 			mainTurret2.turretanglelimtPitchmin = -80;
 			mainTurret2.traverseSound = null;
 			mainTurret2.currentEntity = this;
@@ -143,7 +144,7 @@ public class EntityUSA_ShipD  extends EntityUSA_ShipBase
 			mainTurret3.turretPitchCenterpos = turretPitchCenterpos;
 			mainTurret3.turretspeedY = 5;
 			mainTurret3.turretspeedP = 8;
-			mainTurret3.turretanglelimtPitchMax = 5;
+			mainTurret3.turretanglelimtPitchMax = 1;
 			mainTurret3.turretanglelimtPitchmin = -80;
 			mainTurret3.traverseSound = null;
 			mainTurret3.currentEntity = this;
@@ -165,7 +166,7 @@ public class EntityUSA_ShipD  extends EntityUSA_ShipBase
 			mainTurret4.turretPitchCenterpos = turretPitchCenterpos;
 			mainTurret4.turretspeedY = 5;
 			mainTurret4.turretspeedP = 8;
-			mainTurret4.turretanglelimtPitchMax = 5;
+			mainTurret4.turretanglelimtPitchMax = 1;
 			mainTurret4.turretanglelimtPitchmin = -80;
 			mainTurret4.traverseSound = null;
 			mainTurret4.currentEntity = this;
@@ -187,7 +188,7 @@ public class EntityUSA_ShipD  extends EntityUSA_ShipBase
 			mainTurret5.turretPitchCenterpos = turretPitchCenterpos;
 			mainTurret5.turretspeedY = 5;
 			mainTurret5.turretspeedP = 8;
-			mainTurret5.turretanglelimtPitchMax = 5;
+			mainTurret5.turretanglelimtPitchMax = 1;
 			mainTurret5.turretanglelimtPitchmin = -80;
 			mainTurret5.traverseSound = null;
 			mainTurret5.currentEntity = this;
@@ -209,7 +210,7 @@ public class EntityUSA_ShipD  extends EntityUSA_ShipBase
 			mainTurret6.turretPitchCenterpos = turretPitchCenterpos;
 			mainTurret6.turretspeedY = 5;
 			mainTurret6.turretspeedP = 8;
-			mainTurret6.turretanglelimtPitchMax = 5;
+			mainTurret6.turretanglelimtPitchMax = 1;
 			mainTurret6.turretanglelimtPitchmin = -80;
 			mainTurret6.traverseSound = null;
 			mainTurret6.currentEntity = this;
@@ -309,7 +310,7 @@ public class EntityUSA_ShipD  extends EntityUSA_ShipBase
 			depth_charge1.reloadSetting = 1200;
 			depth_charge1.canex = true;
 			depth_charge1.guntype = 2;
-			depth_charge1.fuse = 20;
+			depth_charge1.fuse = 40;
 			depth_charge1.bulletmodel = "byfrou01_depth_charge";
 		}
 		turretpos = new Vector3d(0.9984,7.0179,45.6628);
@@ -338,7 +339,7 @@ public class EntityUSA_ShipD  extends EntityUSA_ShipBase
 			depth_charge2.reloadSetting = 1200;
 			depth_charge2.canex = true;
 			depth_charge2.guntype = 2;
-			depth_charge2.fuse = 20;
+			depth_charge2.fuse = 40;
 			depth_charge2.bulletmodel = "byfrou01_depth_charge";
 		}
 		
@@ -347,6 +348,18 @@ public class EntityUSA_ShipD  extends EntityUSA_ShipBase
 		subturrets = new TurretObj[]{torp1,torp2};
 		SPturrets = new TurretObj[]{depth_charge1,depth_charge2};
 		armor = 12;
+	}
+	public void setassault(){
+		aiTankAttack.setMinrenge(0);
+		aiTankAttack.setMaxrenge(0);
+		aiTankAttack.setMgmaxrange(1600);
+		aiTankAttack.setAlways_movearound(false);
+	}
+	public void resetassault(){
+		aiTankAttack.setMinrenge(900);
+		aiTankAttack.setMaxrenge(3600);
+		aiTankAttack.setMgmaxrange(-1);
+		aiTankAttack.setAlways_movearound(true);
 	}
 	protected void applyEntityAttributes()
 	{

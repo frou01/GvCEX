@@ -46,7 +46,10 @@ import java.util.UUID;
 
 import static handmadeguns.HandmadeGunsCore.islmmloaded;
 import static handmadeguns.HandmadeGunsCore.proxy;
+import static java.lang.Math.abs;
 import static java.lang.StrictMath.toRadians;
+import static net.minecraft.util.MathHelper.wrapAngleTo180_double;
+import static net.minecraft.util.MathHelper.wrapAngleTo180_float;
 
 public class HMGItem_Unified_Guns extends Item {
     public static final UUID field_110179_h = UUID.fromString("254F543F-8B6F-407F-931B-4B76FEB8BA0D");
@@ -56,6 +59,11 @@ public class HMGItem_Unified_Guns extends Item {
     public int powor;
     public float speed;
     private float tempspread;
+    private float tempspreadDiffusion;
+    public float spreadDiffusionMax = 10;
+    public float spreadDiffusionmin = 1;
+    public float spreadDiffusionRate = 2;
+    public float spreadDiffusionReduceRate = 0.5f;
     public float spread_setting;
     public float ads_spread_cof = 0.5f;
     public double recoil;
@@ -72,7 +80,6 @@ public class HMGItem_Unified_Guns extends Item {
     public boolean canobj;
     public boolean rendercross;
 
-    public boolean semi;
     public String soundco = "handmadeguns:handmadeguns.cooking";
 
     public  String adstexture = "handmadeguns:handmadeguns/textures/misc/ironsight";
@@ -96,10 +103,10 @@ public class HMGItem_Unified_Guns extends Item {
     
     
     public Item magazine;
-
-    public ArrayList<Item> magazines = new ArrayList<Item>();//�����}�K�W���p
-
-    private ItemStack magazineStack;//�ꎞ�p�����ǃ��\�b�h�܂����ŋ��L�������̂�
+    
+    
+    
+    
     public int magazineItemCount = 1;
     public  String adstexturer = "handmadeguns:handmadeguns.textures.misc.reddot";
     public  String adstextures = "handmadeguns:handmadeguns.textures.misc.scope";
@@ -115,43 +122,18 @@ public class HMGItem_Unified_Guns extends Item {
     public double motion = 1D;
     public boolean muzzleflash = true;
     private boolean muzzle = true;
-
-    public boolean mat22 = false;
-    public float mat22rotationx = 90F;
-    public float mat22rotationy = 0F;
-    public float mat22rotationz = 0F;
-    public float mat22offsetx = 0F;
-    public float mat22offsety = 1.5F;
-    public float mat22offsetz = 2F;
-
-    public float mat25rotationx = 0F;
-    public float mat25rotationy = 0F;
-    public float mat25rotationz = -90F;
-    public float mat25offsetx = 0F;
-    public float mat25offsety = 0.75F;
-    public float mat25offsetz = 1.1F;
+    
+    
+    
     public float soundrespeed = 1.0F;
     public int cocktime = 20;
     public boolean needcock = false;
-
-    public float Sprintrotationx = 20F;
-    public float Sprintrotationy = 60F;
-    public float Sprintrotationz = 0F;
-    public float Sprintoffsetx = 0.5F;
-    public float Sprintoffsety = 0.0F;
-    public float Sprintoffsetz = 0.5F;
 
     public int shotgun_pellet = 1;
 
     //01/27
     public float gra = 0.029F;
 
-    public float jump = 0;
-    //01/27
-    public boolean all_jump = false;
-    public boolean cock_left = false;
-    public boolean mat25 = false;
-    public boolean mat2 = false;
 
     //02/14
     public int cartType;
@@ -161,7 +143,6 @@ public class HMGItem_Unified_Guns extends Item {
     public boolean dropcart = true;
     public boolean cart_cocked = false;
     public boolean dropMagEntity = true;
-    public boolean remat31 = true;
 
 
     //0307
@@ -179,6 +160,8 @@ public class HMGItem_Unified_Guns extends Item {
     public float under_sg_bure = 20;
     public double under_sg_recoil = 5;
     public float under_sg_gra = 0.029F;
+    
+    
     public float attackDamage = 1;
     private float foruseattackDamage = 1;
     public boolean hasAttachRestriction = false;
@@ -201,9 +184,6 @@ public class HMGItem_Unified_Guns extends Item {
     public float modelscale = 1;
     public float inworldScale = 1;
 
-    public boolean reloadanim = false;
-    public ArrayList<Float[]> reloadanimation = new ArrayList<Float[]>();
-    public boolean nodrawmat35 = false;
 
 
     public boolean hascustombulletmodel = false;
@@ -216,10 +196,10 @@ public class HMGItem_Unified_Guns extends Item {
     public String bulletmodelFrag = "default";
     public String bulletmodelHE = "default";
     public String bulletmodelTE = "default";
-    public String bulletmodelCart = "default";
     public String bulletmodelGL = "default";
     public String bulletmodelRPG = "byfrou01_Rocket";
     public String bulletmodelMAG = "default";
+    public String bulletmodelCart = "default";
     public double knockback = 0.1;
     public double knockbackY =0.1;
     public ArrayList<Integer> burstcount = new ArrayList<Integer>();
@@ -315,7 +295,6 @@ public class HMGItem_Unified_Guns extends Item {
         this.adstexturer = aadsr;
         this.adstextures = aadss;
         this.magazine = ma;
-        magazines.add(ma);
         this.canobj = cano;
         setFull3D();
     }
@@ -328,7 +307,7 @@ public class HMGItem_Unified_Guns extends Item {
         String retime = String.valueOf(this.reloadtime);
         String nokori = String.valueOf(getMaxDamage() - par1ItemStack.getItemDamage());
 
-        par3List.add(EnumChatFormatting.RED + "RemainingBullet " + StatCollector.translateToLocal(nokori));
+        par3List.add(EnumChatFormatting.RED + "Magazine Round " + StatCollector.translateToLocal(nokori));
         par3List.add(EnumChatFormatting.WHITE + "FireDamege " + "+" + StatCollector.translateToLocal(powor));
         par3List.add(EnumChatFormatting.WHITE + "BulletSpeed " + "+" + StatCollector.translateToLocal(speed));
         par3List.add(EnumChatFormatting.WHITE + "BulletSpread " + "+" + StatCollector.translateToLocal(bure));
@@ -341,10 +320,10 @@ public class HMGItem_Unified_Guns extends Item {
             par3List.add(EnumChatFormatting.WHITE + "ScopeZoom " + "x" + StatCollector.translateToLocal(scopezoom));
         }
         if(this.needfix){
-            par3List.add(EnumChatFormatting.WHITE + "cannot handhold Shot");
+            par3List.add(EnumChatFormatting.WHITE + "cannot handhold Shot. Press " + proxy.getFixkey() + " while pointing block");
         }else
         if(this.canfix){
-            par3List.add(EnumChatFormatting.WHITE + "can Fix");
+            par3List.add(EnumChatFormatting.WHITE + "can Fix. Press " + proxy.getFixkey() + " while pointing block");
         }
     }
     public void onUpdate(ItemStack itemstack, World world, Entity entity, int i, boolean flag){
@@ -353,10 +332,17 @@ public class HMGItem_Unified_Guns extends Item {
             return;
         }
         if(entity!=null && flag){
+            checkTags(itemstack);
+            NBTTagCompound nbt = itemstack.getTagCompound();
             tempspread = spread_setting;
             if(HandmadeGunsCore.Key_ADS(entity)){
                 tempspread = tempspread * ads_spread_cof;
             }
+            tempspreadDiffusion =  nbt.getFloat("Diffusion");
+            if(tempspreadDiffusion > spreadDiffusionMax)tempspreadDiffusion = spreadDiffusionMax;
+            tempspreadDiffusion-=spreadDiffusionReduceRate;
+            if(tempspreadDiffusion < spreadDiffusionmin)tempspreadDiffusion = spreadDiffusionmin;
+            tempspread *= tempspreadDiffusion;
             if(HandmadeGunsCore.cfg_Flash){
                 int xTile = (int) entity.lastTickPosX-1;
                 int yTile = (int) entity.lastTickPosY-1;
@@ -369,9 +355,7 @@ public class HMGItem_Unified_Guns extends Item {
                 world.func_147451_t(xTile, yTile, zTile - 1);
                 world.func_147451_t(xTile, yTile, zTile + 1);
             }
-            checkTags(itemstack);
             {
-                NBTTagCompound nbt = itemstack.getTagCompound();
                 islockingentity = nbt.getBoolean("islockedentity");
                 TGT = world.getEntityByID(nbt.getInteger("TGT"));
                 islockingblock = nbt.getBoolean("islockedblock");
@@ -390,11 +374,25 @@ public class HMGItem_Unified_Guns extends Item {
                     e.printStackTrace();
                 }
                 if(!world.isRemote) {
-                    if (!canFixflag || (entity.distanceWalkedModified != nbt.getFloat("prevdistanceWalkedModified"))) {
-                        nbt.setBoolean("HMGfixed", false);
+                    float walkedDist = entity.distanceWalkedModified - nbt.getFloat("prevdistanceWalkedModified");
+                    float headShakeDist;
+                    if(entity instanceof EntityLivingBase){
+                        headShakeDist = abs(wrapAngleTo180_float(nbt.getFloat("prevRotationYawHead") - entity.getRotationYawHead()))
+                                                + abs(wrapAngleTo180_float(nbt.getFloat("prevRotationPitch") - entity.rotationPitch));
+//                        System.out.println("debug" + headShakeDist);
+                        nbt.setFloat("prevRotationYawHead",entity.getRotationYawHead());
+                        nbt.setFloat("prevRotationPitch",entity.rotationPitch);
+                    }else {
+                        headShakeDist = abs(wrapAngleTo180_float(nbt.getFloat("prevRotationYawHead") - entity.rotationYaw))
+                                                + abs(wrapAngleTo180_float(nbt.getFloat("prevRotationPitch") - entity.rotationPitch));
+                        nbt.setFloat("prevRotationYawHead",entity.rotationYaw);
+                        nbt.setFloat("prevRotationPitch",entity.rotationPitch);
                     }
-                    if(canfix) {
+                    tempspreadDiffusion += walkedDist*5f;
+                    tempspreadDiffusion += headShakeDist/2f;
+                    if (!canFixflag || (entity.distanceWalkedModified != nbt.getFloat("prevdistanceWalkedModified"))) {
                         nbt.setFloat("prevdistanceWalkedModified", entity.distanceWalkedModified);
+                        nbt.setBoolean("HMGfixed", false);
                     }
                 }
                 if(entity instanceof EntityPlayer){
@@ -702,6 +700,7 @@ public class HMGItem_Unified_Guns extends Item {
                 }
                 //�}�K�W���̃X�^�b�N��nbt�ɕۑ�����d�l�ɕύX�\��
             }
+            if(!world.isRemote)nbt.setFloat("Diffusion",tempspreadDiffusion);
         }else if(itemstack != null){
             checkTags(itemstack);
             NBTTagCompound tagCompound = itemstack.getTagCompound();
@@ -790,6 +789,7 @@ public class HMGItem_Unified_Guns extends Item {
     public void fireProcess(ItemStack itemstack, World world, Entity entity, NBTTagCompound nbt){
 
         if(!world.isRemote) {
+            tempspreadDiffusion+=spreadDiffusionRate;
             try {
                 if(invocable!= null)
                     invocable.invokeFunction("prefire",this,itemstack,nbt,entity);

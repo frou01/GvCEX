@@ -63,6 +63,7 @@ public class TankBaseLogic {
     boolean ismanual;
     boolean spinturn;
     public boolean canControlonWater;
+    public boolean always_poit_to_target = false;
     String tracksound;
     
     public boolean gear = true;
@@ -261,16 +262,12 @@ public class TankBaseLogic {
                 tankRight = tankRight.normalize();
                 Vec3 pitchVec = normal.crossProduct(tankRight).normalize();
                 Vec3 rollVec = normal.crossProduct(pitchVec).normalize();
-                bodyrotationPitch *= 0.99 * (idriveableVehicle.ishittingWater() ? 0.9:1);
-                bodyrotationRoll *= 0.99 * (idriveableVehicle.ishittingWater() ? 0.9:1);
+                bodyrotationPitch *= (idriveableVehicle.ishittingWater() ? 0.9:1);
+                bodyrotationRoll *= (idriveableVehicle.ishittingWater() ? 0.9:1);
                 if(tank.onGround || (canControlonWater && idriveableVehicle.ishittingWater())) {
                     bodyrotationPitch += ((float) -toDegrees(sin(pitchVec.yCoord)) - bodyrotationPitch) * 0.2;
 //                System.out.println("debug " + bodyrotationPitch);
                     bodyrotationRoll += ((float) -toDegrees(sin(rollVec.yCoord)) - bodyrotationRoll) * 0.2;
-                }
-                if(idriveableVehicle.ishittingWater()){
-                    bodyrotationPitch *=0.9;
-                    bodyrotationRoll *=0.9;
                 }
 
 //                if(tank.worldObj.isRemote){
@@ -297,7 +294,7 @@ public class TankBaseLogic {
         }
         needTracksound = control();
         
-        rotationmotion*=idriveableVehicle.ishittingWater()?0.95:tank.onGround ? 0.8f:0.999;
+        rotationmotion*=tank.onGround?0.8f:idriveableVehicle.ishittingWater() ? 0.95:0.999;
         if(tank.onGround || (canControlonWater && idriveableVehicle.ishittingWater()))bodyrotationYaw += rotationmotion;
         if(abs(rotationmotion)<0.01)rotationmotion = 0;
 
@@ -338,7 +335,7 @@ public class TankBaseLogic {
         }
     
         if(!ismanual) {
-            if(tank.getNavigator().noPath() && tank.getAttackTarget() != null){
+            if(always_poit_to_target && tank.getNavigator().noPath() && tank.getAttackTarget() != null){
                 Entity target = tank.getAttackTarget();
                 Vector3d courseVec = new Vector3d(target.posX,target.posY,target.posZ);
                 courseVec.sub(new Vector3d(tank.posX, tank.posY, tank.posZ));

@@ -14,6 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import org.lwjgl.Sys;
 
 import javax.vecmath.Quat4d;
 import javax.vecmath.Vector3d;
@@ -31,6 +32,7 @@ public abstract class EntityBases_Ship extends EntityBases_Tank implements IMult
 	TurretObj[] subturrets;
 	TurretObj[] SPturrets;
 	boolean usingSP = false;
+	boolean issubmarine;
 	
 	boolean fstopper = false;
 	public void moveEntityWithHeading(float p_70612_1_, float p_70612_2_)
@@ -185,6 +187,19 @@ public abstract class EntityBases_Ship extends EntityBases_Tank implements IMult
 			this.riddenByEntity.posZ = temp.z;
 		}
 	}
+	public void onUpdate() {
+		super.onUpdate();
+		if(this.standalone()){
+			if(this.getAttackTarget() != null && this.getAttackTarget() instanceof EntityBases_Ship && ((EntityBases_Ship) this.getAttackTarget()).issubmarine){
+				usingSP = true;
+//				System.out.println("debug");
+				setassault();
+			}else {
+				usingSP = false;
+				resetassault();
+			}
+		}
+	}
 	public void tankUpdate(){
 		this.stepHeight = 1.5f;
 		if(!this.worldObj.isRemote){
@@ -266,7 +281,13 @@ public abstract class EntityBases_Ship extends EntityBases_Tank implements IMult
 		super.applyEntityAttributes();
 		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.3D);
 		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(maxHealth);
-		this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(4096.0D);
+		this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(80);
 		this.getEntityAttribute(SharedMonsterAttributes.knockbackResistance).setBaseValue(30.0D);
+	}
+	public void setassault(){
+	
+	}
+	public void resetassault(){
+	
 	}
 }

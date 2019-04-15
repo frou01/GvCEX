@@ -28,7 +28,7 @@ public class EntityUSSR_TankH extends EntityUSSR_TankBase
     {
         super(par1World);
         this.setSize(4F, 2.5F);
-        baseLogic = new TankBaseLogic(this,0.1f,1.5f,false,"gvcmob:gvcmob.T34Track");
+        baseLogic = new TankBaseLogic(this,0.15f,1.3f,false,"gvcmob:gvcmob.T34Track");
         aiTankAttack = new AITankAttack(this,6400,400,10,10);
         this.tasks.addTask(1,aiTankAttack);
         playerpos = new Vector3d(0,3.4,0);

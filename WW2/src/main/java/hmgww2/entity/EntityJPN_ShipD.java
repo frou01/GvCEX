@@ -78,8 +78,9 @@ public class EntityJPN_ShipD extends EntityJPN_ShipBase
 		nboundingbox.centerRotY = 0;
 		nboundingbox.centerRotZ = 0;
 		
-		baseLogic = new VesselBaseLogic(this,0.03f,4.0f,false,"hmgww2:hmgww2.VesselTurbine");
+		baseLogic = new VesselBaseLogic(this,0.02f,2.0f,false,"hmgww2:hmgww2.VesselTurbine");
 		baseLogic.canControlonWater = true;
+		baseLogic.always_poit_to_target = false;
 		aiTankAttack = new AITankAttack(this,3600,900,10,10);
 		aiTankAttack.setAlways_movearound(true);
 		this.tasks.addTask(1,aiTankAttack);
@@ -225,6 +226,18 @@ public class EntityJPN_ShipD extends EntityJPN_ShipBase
 		subturrets = new TurretObj[]{torp1};
 		SPturrets = new TurretObj[]{depth_charge1,depth_charge2};
 		armor = 12;
+	}
+	public void setassault(){
+		aiTankAttack.setMinrenge(0);
+		aiTankAttack.setMaxrenge(0);
+		aiTankAttack.setMgmaxrange(400);
+		aiTankAttack.setAlways_movearound(false);
+	}
+	public void resetassault(){
+		aiTankAttack.setMinrenge(900);
+		aiTankAttack.setMaxrenge(3600);
+		aiTankAttack.setMgmaxrange(-1);
+		aiTankAttack.setAlways_movearound(true);
 	}
 	protected void applyEntityAttributes()
 	{

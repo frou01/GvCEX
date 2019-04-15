@@ -11,4 +11,5 @@ public class HMGItemBulletBase extends HMGItemAttachmentBase {
     public boolean blockdestroyex = false;
     public float explosionlevel = 1;
     public String bulletmodel = "default";
+    public  FireInfo fireInfo;
 }

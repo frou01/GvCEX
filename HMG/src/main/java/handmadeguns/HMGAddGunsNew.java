@@ -1636,7 +1636,31 @@ public class HMGAddGunsNew {
 										hmgRenderItemGun_u.lightattachoffset = lightattachoffset;
 										hmgRenderItemGun_u.lightattachrotation = lightattachrotation;
 										hmgRenderItemGun_u.gripattachoffset = gripattachoffset;
-										hmgRenderItemGun_u.gripattachrotation = gripattachrotation;
+										hmgRenderItemGun_u.gripattachrotation = gripattachrotation;mat22 = mat22;
+										hmgRenderItemGun_u.mat22offsetx = mat22posx;
+										hmgRenderItemGun_u.mat22offsety = mat22posy;
+										hmgRenderItemGun_u.mat22offsetz = mat22posz;
+										hmgRenderItemGun_u.mat22rotationx = mat22rotex;
+										hmgRenderItemGun_u.mat22rotationy = mat22rotey;
+										hmgRenderItemGun_u.mat22rotationz = mat22rotez;
+										hmgRenderItemGun_u.mat25offsetx = mat25posx;
+										hmgRenderItemGun_u.mat25offsety = mat25posy;
+										hmgRenderItemGun_u.mat25offsetz = mat25posz;
+										hmgRenderItemGun_u.mat25rotationx = mat25rotex;
+										hmgRenderItemGun_u.mat25rotationy = mat25rotey;
+										hmgRenderItemGun_u.mat25rotationz = mat25rotez;
+										hmgRenderItemGun_u.Sprintoffsetx = spposx;
+										hmgRenderItemGun_u.Sprintoffsety = spposy;
+										hmgRenderItemGun_u.Sprintoffsetz = spposz;
+										hmgRenderItemGun_u.Sprintrotationx = sprotex;
+										hmgRenderItemGun_u.Sprintrotationy = sprotey;
+										hmgRenderItemGun_u.Sprintrotationz = sprotez;
+										hmgRenderItemGun_u.jump = jump;
+										hmgRenderItemGun_u.cock_left = cockleft;
+										hmgRenderItemGun_u.all_jump = alljump;
+										hmgRenderItemGun_u.remat31 = remat31;
+										hmgRenderItemGun_u.reloadanim = reloadanim;
+										hmgRenderItemGun_u.reloadanimation = reloadanimation;
 										MinecraftForgeClient.registerItemRenderer(newgun, hmgRenderItemGun_u);
 									}else {
 
@@ -1655,6 +1679,7 @@ public class HMGAddGunsNew {
 										renderItemGun_u_new.setarmOffsetAndRotationL(armoffsetxl,armoffsetyl,armoffsetzl,armrotationxl,armrotationyl,armrotationzl);
 										renderItemGun_u_new.setarmOffsetAndRotationR(armoffsetxr,armoffsetyr,armoffsetzr,armrotationxr,armrotationyr,armrotationzr);
 										renderItemGun_u_new.setArmoffsetScale(armscale);
+										renderItemGun_u_new.setSprintOffsetAndRotation(spposx,spposy,spposz,sprotex,sprotey,sprotez);
 
 										renderItemGun_u_new.Partslist = Partslist;
 										renderItemGun_u_new.muzzleattachoffset = barrelattachoffset;
@@ -1665,6 +1690,7 @@ public class HMGAddGunsNew {
 										renderItemGun_u_new.overbarrelattachrotation = lightattachrotation;
 										renderItemGun_u_new.gripattachoffset = gripattachoffset;
 										renderItemGun_u_new.gripattachrotation = gripattachrotation;
+										renderItemGun_u_new.jump = jump;
 										MinecraftForgeClient.registerItemRenderer(newgun, renderItemGun_u_new);
 									}
 								}
@@ -1728,35 +1754,11 @@ public class HMGAddGunsNew {
 								newgun.dropcart = cartridge;
 								newgun.cart_cocked = cartridgedroponcocked;
 								newgun.motion = motionn;
-
-								newgun.mat22 = mat22;
-								newgun.mat22offsetx = mat22posx;
-								newgun.mat22offsety = mat22posy;
-								newgun.mat22offsetz = mat22posz;
-								newgun.mat22rotationx = mat22rotex;
-								newgun.mat22rotationy = mat22rotey;
-								newgun.mat22rotationz = mat22rotez;
-								newgun.mat25offsetx = mat25posx;
-								newgun.mat25offsety = mat25posy;
-								newgun.mat25offsetz = mat25posz;
-								newgun.mat25rotationx = mat25rotex;
-								newgun.mat25rotationy = mat25rotey;
-								newgun.mat25rotationz = mat25rotez;
+								
 								newgun.cocktime = cockti;
 								newgun.needcock = needcock;
-								newgun.Sprintoffsetx = spposx;
-								newgun.Sprintoffsety = spposy;
-								newgun.Sprintoffsetz = spposz;
-								newgun.Sprintrotationx = sprotex;
-								newgun.Sprintrotationy = sprotey;
-								newgun.Sprintrotationz = sprotez;
 
 								//01/27
-								newgun.jump = jump;
-								newgun.mat2 = mat2;
-								newgun.mat25 = mat25;
-								newgun.cock_left = cockleft;
-								newgun.all_jump = alljump;
 								newgun.gra = gra;
 
 								//0214
@@ -1766,9 +1768,6 @@ public class HMGAddGunsNew {
 								newgun.magentityCnt = magcnt;
 								newgun.cartentityCnt = cartcnt;
 								newgun.soundspeed = soundspeed;
-								newgun.remat31 = remat31;
-								newgun.reloadanim = reloadanim;
-								newgun.reloadanimation = reloadanimation;
 								newgun.hascustombulletmodel = hasbmodel;
 								newgun.hascustomcartridgemodel = hascmodel;
 								newgun.hascustommagemodel = hasmagmodel;

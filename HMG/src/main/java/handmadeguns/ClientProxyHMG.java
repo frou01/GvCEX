@@ -16,6 +16,8 @@ import handmadeguns.network.PacketSpawnParticle;
 import handmadeguns.client.render.*;
 import handmadeguns.tile.TileMounter;
 import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.gui.GuiKeyBindingList;
+import net.minecraft.client.settings.GameSettings;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -462,5 +464,9 @@ public class ClientProxyHMG extends CommonSideProxyHMG {
 	public boolean rightclick(){
 		return Minecraft.getMinecraft().gameSettings.keyBindUseItem.getIsKeyPressed();
 		//return false;
+	}
+	
+	public String getFixkey(){
+		return GameSettings.getKeyDisplayString(Fix.getKeyCode());
 	}
 }

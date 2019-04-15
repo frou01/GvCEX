@@ -53,16 +53,8 @@ public class HMGSlotInventoryItem extends Slot
                 return true;
             }
         }else if(slotNumber == 4 && itemStack != null){
-            if(gun.getItem() instanceof HMGItem_Unified_Guns && ((HMGItem_Unified_Guns) gun.getItem()).magazine instanceof HMGItemBullet_with_Internal_Bullet){
-                for(int i = 0; i<((HMGItem_Unified_Guns) gun.getItem()).magazines.size(); i++){
-                    if(itemStack.getItem() == ((HMGItem_Unified_Guns) gun.getItem()).magazines.get(i)){
-                        return true;
-                    }
-                }
-                return false;
-            }else {
-                return true;
-            }
+    
+            return true;
         }
         return true;
     }

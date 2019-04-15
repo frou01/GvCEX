@@ -30,9 +30,11 @@ public class EntityGER_ShipSUB extends EntityGER_ShipBase
 		nboundingbox.centerRotY = 0;
 		nboundingbox.centerRotZ = 0;
 		
-		baseLogic = new VesselBaseLogic(this,0.025f,2.5f,false,"hmgww2:hmgww2.Uboat");
+		baseLogic = new VesselBaseLogic(this,0.065f,0.4f,false,"hmgww2:hmgww2.Uboat");
 		baseLogic.canControlonWater = true;
+		baseLogic.always_poit_to_target = true;
 		aiTankAttack = new AITankAttack(this,100,4,10,10);
+		aiTankAttack.setAlways_poit_to_target(true);
 		this.tasks.addTask(1,aiTankAttack);
 		playerpos = new Vector3d(0,15.1069,-0.6658);
 		zoomingplayerpos = new Vector3d(-0.8,3.2D,-0.3);
@@ -69,6 +71,7 @@ public class EntityGER_ShipSUB extends EntityGER_ShipBase
 		turrets = new TurretObj[]{torp1};
 		mainturrets = new TurretObj[]{torp1};
 		armor = 12;
+		issubmarine = true;
 	}
 	protected void applyEntityAttributes()
 	{
@@ -84,5 +87,16 @@ public class EntityGER_ShipSUB extends EntityGER_ShipBase
 	@Override
 	public float getthirdDist() {
 		return 50;
+	}
+	
+	
+	public void onUpdate(){
+		super.onUpdate();
+		if(this.standalone()){
+			if(this.getAttackTarget() != null)
+				draft = 14;
+			else
+				draft = 4.1306f;
+		}
 	}
 }

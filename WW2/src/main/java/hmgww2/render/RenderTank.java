@@ -20,19 +20,21 @@ public class RenderTank extends Render {
 	
 	float[] turretpos = new float[3];
 	float[] turretpitchpos = new float[3];
+	boolean user_onMainTurret = false;
 	boolean hassubturret = false;
 	boolean subturret_onMainTurret = false;
 	float[] subturretpos = new float[3];
 	float[] subturretpitchpos = new float[3];
 	
-	public RenderTank(String texture,String model,float[] turretpos,float[] turretpitchpos) {
+	public RenderTank(String texture,String model,float[] turretpos,float[] turretpitchpos,boolean user_onMainTurret) {
 		skeletonTexturesz = new ResourceLocation(texture);
 		tankk = AdvancedModelLoader.loadModel(new ResourceLocation(model));
 		this.turretpos = turretpos;
 		this.turretpitchpos = turretpitchpos;
+		this.user_onMainTurret = user_onMainTurret;
 	}
-	public RenderTank(String texture,String model,float[] turretpos,float[] turretpitchpos,boolean subturret_onMainTurret,float[] subturretpos,float[] subturretpitchpos) {
-		this(texture,model,turretpos,turretpitchpos);
+	public RenderTank(String texture,String model,float[] turretpos,float[] turretpitchpos,boolean user_onMainTurret,boolean subturret_onMainTurret,float[] subturretpos,float[] subturretpitchpos) {
+		this(texture,model,turretpos,turretpitchpos,user_onMainTurret);
 		this.hassubturret = true;
 		this.subturret_onMainTurret = subturret_onMainTurret;
 		this.subturretpos = subturretpos;
@@ -65,6 +67,10 @@ public class RenderTank extends Render {
 			GL11.glRotatef(baseLogic.bodyrotationRoll, 0.0F, 0.0F, 1.0F);
 			tankk.renderPart("mat1");
 			tankk.renderPart("obj1");
+			if(!user_onMainTurret && ((IRideableTank) entity).standalone()){
+				tankk.renderPart("mat30");
+				tankk.renderPart("obj30");
+			}
 			if(hassubturret && !subturret_onMainTurret){
 				GL11.glPushMatrix();
 				TurretObj subturret = ((IRideableTank) entity).getTurrets()[1];
@@ -88,7 +94,7 @@ public class RenderTank extends Render {
 				GL11.glTranslatef(-turretpos[0], -turretpos[1], -turretpos[2]);
 				tankk.renderPart("mat4");
 				tankk.renderPart("obj4");
-				if(((IRideableTank) entity).standalone()){
+				if(user_onMainTurret && ((IRideableTank) entity).standalone()){
 					tankk.renderPart("mat30");
 					tankk.renderPart("obj30");
 				}

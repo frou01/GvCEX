@@ -519,7 +519,7 @@ public class PlaneBaseLogic {
 				double toTargetPitch = -toDegrees(asin(courseVec.y));
 				if(!rising_after_Attack && T_StartDive_F_FlyToStartDivePos){
 					boolean insight = true;
-					boolean istarget_onGround = (target.onGround || (target.ridingEntity != null && target.ridingEntity.onGround));
+					boolean istarget_onGround = ((target instanceof ITank && ((ITank) target).ishittingWater())||target.isInWater() || target.onGround || (target.ridingEntity != null && target.ridingEntity.onGround));
 					if(T_useMain_F_useSub && Dive_bombing && istarget_onGround){
 						if(toTargetPitch<startDive){
 							targetpitch = -5;
@@ -553,7 +553,7 @@ public class PlaneBaseLogic {
 					float AngulardifferencePitch = targetpitch - bodyrotationPitch;
 					insight &= AngulardifferenceYaw > yawsightwidthmin && AngulardifferenceYaw < yawsightwidthmax && AngulardifferencePitch > pitchsighwidthmin &&AngulardifferencePitch< pitchsighwidthmax;
 					if(T_useMain_F_useSub && Torpedo_bomber){
-						insight = planebody.getDistanceSqToEntity(target) < 1024;
+						insight = planebody.getDistanceSqToEntity(target) < 1600;
 						if(insight){
 							rising_after_Attack = true;
 							T_StartDive_F_FlyToStartDivePos = false;

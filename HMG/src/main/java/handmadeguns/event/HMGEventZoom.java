@@ -189,7 +189,7 @@ public class HMGEventZoom {
 					if (nbt.getBoolean("islockedentity")) {
 						targetEntityID = nbt.getInteger("TGT");
 					}
-					float bure = gunbase.spread_setting;
+					float bure = gunbase.spread_setting * nbt.getFloat("Diffusion");
 					((HMGItem_Unified_Guns) itemstack.getItem()).checkTags(itemstack);
 					ItemStack[] items = new ItemStack[6];
 					ItemStack itemstackSight = null;

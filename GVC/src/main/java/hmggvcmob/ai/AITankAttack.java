@@ -25,9 +25,10 @@ public class AITankAttack extends EntityAIBase {
     private float minrenge;
     private boolean dir;
     private boolean movearound = false;
+    private boolean always_poit_to_target = false;
     private boolean always_movearound = false;
 
-    public boolean noLineCheck_subfire;
+    public boolean noLineCheck_subfire = true;
 
     private int mgBurstRoundMax = 40;
     private int mgBurstRound;
@@ -35,6 +36,7 @@ public class AITankAttack extends EntityAIBase {
     private int mgBurstCoolMax = 40;
     private int mgBurstCool;
     private int mgBurstCoolCnt;
+    private float mgmaxrange;
 
     private double lastTargetX;
     private double lastTargetY;
@@ -81,25 +83,44 @@ public class AITankAttack extends EntityAIBase {
     public void updateTask() {
 
         Tank_body.getNavigator().clearPathEntity();
-        if(!movearound && !always_movearound) {
-            if (Tank_body.getDistanceSqToEntity(target) > maxrenge || !Tank_body.getEntitySenses().canSee(target)) {
+        double dist = Tank_body.getDistanceSqToEntity(target);
+        if(always_poit_to_target || !movearound && !always_movearound) {
+            if (dist > maxrenge || !Tank_body.getEntitySenses().canSee(target)) {
                 Tank_body.getNavigator().setPath(worldForPathfind.getEntityPathToXYZ(Tank_body, (int) target.posX, (int) target.posY, (int) target.posZ, 80f, true, false, false, true), 1.2);
-            } else if (Tank_body.getDistanceSqToEntity(target) < minrenge) {
+            } else if (dist < minrenge) {
                 Tank_body.getNavigator().setPath(worldForPathfind.getEntityPathToXYZ(Tank_body, (int) target.posX, (int) target.posY, (int) target.posZ, 80f, true, false, false, true), -1);
             }
         }else {
-            System.out.println("debug");
-            if (Tank_body.getDistanceSqToEntity(target) < minrenge + 100) {
-                Tank_body.getNavigator().setPath(worldForPathfind.getEntityPathToXYZ(Tank_body, (int) target.posX, (int) target.posY, (int) target.posZ, 80f, true, false, false, true), -0.75);
-            }else {
+            {
                 Vector3d courseVec = new Vector3d(target.posX,target.posY,target.posZ);
                 courseVec.sub(new Vector3d(Tank_body.posX, Tank_body.posY, Tank_body.posZ));
                 courseVec.normalize();
-                courseVec.scale(30);
-                if (dir)
-                    Tank_body.getNavigator().setPath(worldForPathfind.getEntityPathToXYZ(Tank_body, (int) (Tank_body.posX + courseVec.z), (int) target.posY, (int) (Tank_body.posZ - courseVec.x), 80f, true, false, false, true), 1.2);
-                else
-                    Tank_body.getNavigator().setPath(worldForPathfind.getEntityPathToXYZ(Tank_body, (int) (Tank_body.posX - courseVec.z), (int) target.posY, (int) (Tank_body.posZ + courseVec.x), 80f, true, false, false, true), 1.2);
+                courseVec.scale(10);
+                if(dist > maxrenge){
+                
+                }else if (dist < minrenge){
+                    Vector3d backup = new Vector3d(courseVec);
+                    if(dir){
+                        double tempx = courseVec.x;
+                        courseVec.x = courseVec.z;
+                        courseVec.z = -tempx;
+                    }else {
+                        double tempx = courseVec.x;
+                        courseVec.x = -courseVec.z;
+                        courseVec.z = tempx;
+                    }
+                    courseVec.add(backup);
+                }
+                else if(dir){
+                    double tempx = courseVec.x;
+                    courseVec.x = courseVec.z;
+                    courseVec.z = -tempx;
+                }else {
+                    double tempx = courseVec.x;
+                    courseVec.x = -courseVec.z;
+                    courseVec.z = tempx;
+                }
+                Tank_body.getNavigator().setPath(worldForPathfind.getEntityPathToXYZ(Tank_body, (int) (Tank_body.posX + courseVec.x), (int) target.posY, (int) (Tank_body.posZ + courseVec.z), 80f, true, false, false, true), 1.2);
             }
         }
         if(rnd.nextInt(50) == 1){
@@ -121,7 +142,7 @@ public class AITankAttack extends EntityAIBase {
 //        }
 //        System.out.println("debug");
         boolean aimed = Tank_body.getEntitySenses().canSee(target) ? Tank_SPdata.getBaseLogic().aimMainTurret_toTarget(target):Tank_SPdata.getBaseLogic().aimMainTurret_toPos(lastTargetX,lastTargetY,lastTargetZ);
-        if(mgBurstRoundCnt < mgBurstRound){
+        if(mgBurstRoundCnt < mgBurstRound && (mgmaxrange == -1 || dist < mgmaxrange)){
             if(Tank_body.getEntitySenses().canSee(target) || noLineCheck_subfire)Tank_SPdata.subFire(target);
             mgBurstRoundCnt++;
         }else {
@@ -142,10 +163,26 @@ public class AITankAttack extends EntityAIBase {
             aimcnt = 0;
         }
     }
+    
+    public void setMinrenge(float minrenge) {
+        this.minrenge = minrenge;
+    }
+    
+    public void setMaxrenge(float maxrenge) {
+        this.maxrenge = maxrenge;
+    }
+    
+    public void setMgmaxrange(float mgmaxrange) {
+        this.mgmaxrange = mgmaxrange;
+    }
+    
     public void setEnable(boolean Value){
         fEnable = Value;
     }
     public void setAlways_movearound(boolean value){
         always_movearound = value;
+    }
+    public void setAlways_poit_to_target(boolean value){
+        always_poit_to_target = value;
     }
 }
