@@ -60,7 +60,7 @@ public class GVCEntityPMCBMP extends EntityPMCBase implements IRideableTank,ICon
 
 	public int mgMagazine;
 	public int mgReloadProgress;
-	public TankBaseLogic baseLogic = new TankBaseLogic(this,0.3f,3.4f,false,"gvcmob:gvcmob.BMPTrack");
+	public TankBaseLogic baseLogic = new TankBaseLogic(this,0.2f,1.5f,false,"gvcmob:gvcmob.BMPTrack");
 	ModifiedBoundingBox nboundingbox;
 
 	Vector3d playerpos = new Vector3d(-0.464f,2.2f,0.2948f);

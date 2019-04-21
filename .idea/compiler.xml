@@ -20,6 +20,9 @@
       <module name="GVCC_api" target="1.8" />
       <module name="GVCC_main" target="1.8" />
       <module name="GVCC_test" target="1.8" />
+      <module name="GVCDangeons_api" target="1.8" />
+      <module name="GVCDangeons_main" target="1.8" />
+      <module name="GVCDangeons_test" target="1.8" />
       <module name="HMG_api" target="1.8" />
       <module name="HMG_main" target="1.8" />
       <module name="HMG_test" target="1.8" />

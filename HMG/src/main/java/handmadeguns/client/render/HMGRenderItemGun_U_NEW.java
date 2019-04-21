@@ -330,19 +330,19 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 							break;
 						}else
 						if (itemstackSight.getItem() instanceof HMGItemAttachment_reddot){
-							if (!gunitem.zoomrer) {
+							if (!gunitem.gunInfo.zoomrer) {
 								GL11.glPopMatrix();//glend1
 								break;
 							}
 						} else
 						if (itemstackSight.getItem() instanceof HMGItemAttachment_scope) {
-							if (!gunitem.zoomres) {
+							if (!gunitem.gunInfo.zoomres) {
 								GL11.glPopMatrix();//glend1
 								break;
 							}
 						}
 					}else {
-						if (!gunitem.zoomren) {
+						if (!gunitem.gunInfo.zoomren) {
 							GL11.glPopMatrix();//glend1
 							break;
 						}
@@ -439,7 +439,7 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 					}else if (!recoiled) {
 						this.glMatrixForRenderInEquippedADS(-1.4f);
 						GL11.glRotatef(jump * (1 - this.getSmoothing()), 1.0f, 0.0f, 0.0f);//�e�����ˏオ��B���̏�Ԃ��ƃ��f����0,0,0�𒆐S�ɉ�]�B
-						float recoileprogress = 10*((float)nbt.getByte("Bolt") + smoothing) / gunitem.cycle;
+						float recoileprogress = 10*((float)nbt.getByte("Bolt") + smoothing) / gunitem.gunInfo.cycle;
 						GL11.glScalef(scala,scala,scala);
 						for(HMGGunParts parts:Partslist)
 							GunPartSidentification(parts,GunState.Recoil,recoileprogress,remainbullets);
@@ -473,7 +473,7 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 							//�ˌ����1tick���̂݌Ă΂�܂�
 							this.glMatrixForRenderInEquipped(-0.2f);
 							GL11.glRotatef(jump * (1 - this.getSmoothing()), 1.0f, 0.0f, 0.0f);//�e�����ˏオ��B���̏�Ԃ��ƃ��f����0,0,0�𒆐S�ɉ�]�B
-							float recoileprogress = 10*(nbt.getByte("Bolt") + smoothing) / gunitem.cycle;
+							float recoileprogress = 10*(nbt.getByte("Bolt") + smoothing) / gunitem.gunInfo.cycle;
 							GL11.glScalef(scala,scala,scala);
 							for(HMGGunParts parts:Partslist)
 								GunPartSidentification(parts,GunState.Recoil,recoileprogress,remainbullets);
@@ -508,7 +508,7 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 					this.glMatrixForRenderInEntity(-0.2f);
 					GL11.glScalef(-scala * 0.6f, scala * 0.6f, scala * 0.6f);
 				}
-				GL11.glScalef(gunitem.inworldScale, gunitem.inworldScale, gunitem.inworldScale);
+				GL11.glScalef(gunitem.gunInfo.inworldScale, gunitem.gunInfo.inworldScale, gunitem.gunInfo.inworldScale);
 				if (isreloading) {
 					//���[�h���ɌĂ΂�镔��
 					int reloadprogress = this.getintfromnbt("RloadTime");
@@ -523,7 +523,7 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 							GunPartSidentification(parts, GunState.Cock, cockingprogress, remainbullets);
 					} else if (!recoiled) {
 						GL11.glRotatef(jump * (1 - this.getSmoothing()), 1.0f, 0.0f, 0.0f);//�e�����ˏオ��B���̏�Ԃ��ƃ��f����0,0,0�𒆐S�ɉ�]�B
-						float recoileprogress = 10 * (nbt.getByte("Bolt") + smoothing) / gunitem.cycle;
+						float recoileprogress = 10 * (nbt.getByte("Bolt") + smoothing) / gunitem.gunInfo.cycle;
 						for (HMGGunParts parts : Partslist)
 							GunPartSidentification(parts, GunState.Recoil, recoileprogress, remainbullets);
 					} else {
@@ -545,7 +545,7 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 						} else if (!recoiled) {
 							//�ˌ����1tick���̂݌Ă΂�܂�
 							GL11.glRotatef(jump * (1 - this.getSmoothing()), 1.0f, 0.0f, 0.0f);//�e�����ˏオ��B���̏�Ԃ��ƃ��f����0,0,0�𒆐S�ɉ�]�B
-							float recoileprogress = 10 * (nbt.getByte("Bolt") + smoothing) / gunitem.cycle;
+							float recoileprogress = 10 * (nbt.getByte("Bolt") + smoothing) / gunitem.gunInfo.cycle;
 							for (HMGGunParts parts : Partslist)
 								GunPartSidentification(parts, GunState.Recoil, recoileprogress, remainbullets);
 						} else {
@@ -567,7 +567,7 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 				smoothing = isPlacedGun ? RenderTickSmoothing.smooth : 0;
 				Minecraft.getMinecraft().renderEngine.bindTexture(guntexture);
 				GL11.glPushMatrix();
-				GL11.glScalef(0.4f * scala * gunitem.inworldScale * (isPlacedGun ? gunitem.onTurretScale:1),0.4f * scala * gunitem.inworldScale * (isPlacedGun ? gunitem.onTurretScale:1),0.4f * scala * gunitem.inworldScale * (isPlacedGun ? gunitem.onTurretScale:1));
+				GL11.glScalef(0.4f * scala * gunitem.gunInfo.inworldScale * (isPlacedGun ? gunitem.gunInfo.onTurretScale:1),0.4f * scala * gunitem.gunInfo.inworldScale * (isPlacedGun ? gunitem.gunInfo.onTurretScale:1),0.4f * scala * gunitem.gunInfo.inworldScale * (isPlacedGun ? gunitem.gunInfo.onTurretScale:1));
 				if (isreloading) {
 					//���[�h���ɌĂ΂�镔��
 					int reloadprogress = this.getintfromnbt("RloadTime");
@@ -583,7 +583,7 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 					} else if (!recoiled) {
 						//�ˌ����1tick���̂݌Ă΂�܂�
 						GL11.glRotatef(jump * (1 - this.getSmoothing()), 1.0f, 0.0f, 0.0f);//�e�����ˏオ��B���̏�Ԃ��ƃ��f����0,0,0�𒆐S�ɉ�]�B
-						float recoileprogress = 10 * (nbt.getByte("Bolt") + smoothing) / gunitem.cycle;
+						float recoileprogress = 10 * (nbt.getByte("Bolt") + smoothing) / gunitem.gunInfo.cycle;
 						for (HMGGunParts parts : Partslist)
 							GunPartSidentification(parts, GunState.Recoil, recoileprogress, remainbullets);
 					} else {
@@ -875,10 +875,10 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 						if (attachrender != null) {
 							GL11.glPushMatrix();
 							GunPart_Render(part, state, flame, remainbullets, OffsetAndRotation);
-							glTranslatef(gunitem.underoffsetpx, gunitem.underoffsetpy, gunitem.underoffsetpz);
-							GL11.glRotatef(gunitem.underrotationy, 0, 1, 0);
-							GL11.glRotatef(gunitem.underrotationx, 1, 0, 0);
-							GL11.glRotatef(gunitem.underrotationz, 0, 0, 1);
+							glTranslatef(gunitem.gunInfo.underoffsetpx, gunitem.gunInfo.underoffsetpy, gunitem.gunInfo.underoffsetpz);
+							GL11.glRotatef(gunitem.gunInfo.underrotationy, 0, 1, 0);
+							GL11.glRotatef(gunitem.gunInfo.underrotationx, 1, 0, 0);
+							GL11.glRotatef(gunitem.gunInfo.underrotationz, 0, 0, 1);
 							GL11.glScalef(1/modelscala,1/modelscala,1/modelscala);
 							GL11.glScalef(1/(0.4f),1/(0.4f),1/(0.4f));
 							attachrender.renderItem(ItemRenderType.ENTITY, items[3], datas);
@@ -903,10 +903,10 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 						if (attachrender != null) {
 							GL11.glPushMatrix();
 							GunPart_Render(part, state, flame, remainbullets, OffsetAndRotation);
-							glTranslatef(gunitem.underoffsetpx, gunitem.underoffsetpy, gunitem.underoffsetpz);
-							GL11.glRotatef(gunitem.underrotationy, 0, 1, 0);
-							GL11.glRotatef(gunitem.underrotationx, 1, 0, 0);
-							GL11.glRotatef(gunitem.underrotationz, 0, 0, 1);
+							glTranslatef(gunitem.gunInfo.underoffsetpx, gunitem.gunInfo.underoffsetpy, gunitem.gunInfo.underoffsetpz);
+							GL11.glRotatef(gunitem.gunInfo.underrotationy, 0, 1, 0);
+							GL11.glRotatef(gunitem.gunInfo.underrotationx, 1, 0, 0);
+							GL11.glRotatef(gunitem.gunInfo.underrotationz, 0, 0, 1);
 							GL11.glScalef(1/modelscala,1/modelscala,1/modelscala);
 							GL11.glScalef(1/(0.4f),1/(0.4f),1/(0.4f));
 							attachrender.renderItem(ItemRenderType.ENTITY, items[4], datas);
@@ -919,19 +919,19 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 							if (attachrender != null) {
 								GL11.glPushMatrix();
 								GunPart_Render(part, state, flame, remainbullets, OffsetAndRotation);
-								glTranslatef(gunitem.underoffsetpx, gunitem.underoffsetpy, gunitem.underoffsetpz);
-								GL11.glRotatef(gunitem.underrotationy, 0, 1, 0);
-								GL11.glRotatef(gunitem.underrotationx, 1, 0, 0);
-								GL11.glRotatef(gunitem.underrotationz, 0, 0, 1);
+								glTranslatef(gunitem.gunInfo.underoffsetpx, gunitem.gunInfo.underoffsetpy, gunitem.gunInfo.underoffsetpz);
+								GL11.glRotatef(gunitem.gunInfo.underrotationy, 0, 1, 0);
+								GL11.glRotatef(gunitem.gunInfo.underrotationx, 1, 0, 0);
+								GL11.glRotatef(gunitem.gunInfo.underrotationz, 0, 0, 1);
 								HMGItem_Unified_Guns undergun = (HMGItem_Unified_Guns) items[4].getItem();
-								glTranslatef(undergun.onunderoffsetpx, undergun.onunderoffsetpy, undergun.onunderoffsetpz);
-								GL11.glRotatef(undergun.onunderrotationy, 0, 1, 0);
-								GL11.glRotatef(undergun.onunderrotationx, 1, 0, 0);
-								GL11.glRotatef(undergun.onunderrotationz, 0, 0, 1);
+								glTranslatef(gunitem.gunInfo.onunderoffsetpx, gunitem.gunInfo.onunderoffsetpy, gunitem.gunInfo.onunderoffsetpz);
+								GL11.glRotatef(gunitem.gunInfo.onunderrotationy, 0, 1, 0);
+								GL11.glRotatef(gunitem.gunInfo.onunderrotationx, 1, 0, 0);
+								GL11.glRotatef(gunitem.gunInfo.onunderrotationz, 0, 0, 1);
 								if(attachrender instanceof HMGRenderItemGun_U_NEW){
 									((HMGRenderItemGun_U_NEW) attachrender).isUnder = true;
 								}
-								GL11.glScalef(1/(0.4f * modelscala * gunitem.inworldScale),1/(0.4f * modelscala * gunitem.inworldScale),1/(0.4f * modelscala * gunitem.inworldScale));
+								GL11.glScalef(1/(0.4f * modelscala * gunitem.gunInfo.inworldScale),1/(0.4f * modelscala * gunitem.gunInfo.inworldScale),1/(0.4f * modelscala * gunitem.gunInfo.inworldScale));
 
 								attachrender.renderItem(ItemRenderType.ENTITY, items[4], datas);
 								if(attachrender instanceof HMGRenderItemGun_U_NEW){
@@ -940,9 +940,9 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 								Minecraft.getMinecraft().renderEngine.bindTexture(guntexture);
 								GL11.glPopMatrix();
 							}
-						} else if (part.isunderGL && ((HMGItem_Unified_Guns) items[4].getItem()).guntype == 2) {
+						} else if (part.isunderGL && gunitem.gunInfo.guntype == 2) {
 							GunPart_Render(part, state, flame, remainbullets, OffsetAndRotation);
-						} else if (part.isunderSG && ((HMGItem_Unified_Guns) items[4].getItem()).guntype == 1) {
+						} else if (part.isunderSG && gunitem.gunInfo.guntype == 1) {
 							GunPart_Render(part, state, flame, remainbullets, OffsetAndRotation);
 						}
 					}

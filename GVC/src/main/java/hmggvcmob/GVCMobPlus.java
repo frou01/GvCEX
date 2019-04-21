@@ -165,18 +165,18 @@ public class GVCMobPlus
     public static Achievement beacon_defensive;
     public static Achievement supply;
     
-    public static String id_of_No_place_to_HIDE = "achievement.No_place_to_HIDE";
-    public static String id_of_killedGuerrilla = "achievement.killedGuerrilla";
-    public static String id_of_union = "achievement.union";
-    public static String id_of_Old_soldiers_never_fade = "achievement.Old_soldiers_never_fade";
-    public static String id_of_power_of_number = "achievement.power_of_number";
-    public static String id_of_unmanned_Craft = "achievement.unmanned_Craft";
-    public static String id_of_war_has_changed = "achievement.war_has_changed";
-    public static String id_of_unending_war = "achievement.unending_war";
-    public static String id_of_METAL_GEAR = "achievement.METAL_GEAR";
-    public static String id_of_spear_the_gungnir = "achievement.spear_the_gungnir";
-    public static String id_of_Gun_of_the_Lost_Country = "achievement.Gun_of_the_Lost_Country";
-    public static String id_of_beacon_defensive = "achievement.beacon_defensive";
+    public static String id_of_No_place_to_HIDE =           "achievement.No_place_to_HIDE";
+    public static String id_of_killedGuerrilla =            "achievement.killedGuerrilla";
+    public static String id_of_union =                      "achievement.union";
+    public static String id_of_Old_soldiers_never_fade =    "achievement.Old_soldiers_never_fade";
+    public static String id_of_power_of_number =            "achievement.power_of_number";
+    public static String id_of_unmanned_Craft =             "achievement.unmanned_Craft";
+    public static String id_of_war_has_changed =            "achievement.war_has_changed";
+    public static String id_of_unending_war =               "achievement.unending_war";
+    public static String id_of_METAL_GEAR =                 "achievement.METAL_GEAR";
+    public static String id_of_spear_the_gungnir =          "achievement.spear_the_gungnir";
+    public static String id_of_Gun_of_the_Lost_Country =    "achievement.Gun_of_the_Lost_Country";
+    public static String id_of_beacon_defensive =           "achievement.beacon_defensive";
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent pEvent)
@@ -618,8 +618,8 @@ public class GVCMobPlus
         {
             if ((((List)guns).get(i) instanceof HMGItem_Unified_Guns)) {
                 HMGItem_Unified_Guns unified_guns = (HMGItem_Unified_Guns)((List)guns).get(i);
-                if (unified_guns.guerrila_can_use) {
-                    switch (unified_guns.canuseclass)
+                if (unified_guns.gunInfo.guerrila_can_use) {
+                    switch (unified_guns.gunInfo.canuseclass)
                     {
                         case 0:
                             Guns_AR.add(unified_guns);
@@ -640,10 +640,10 @@ public class GVCMobPlus
                             Guns_FL.add(unified_guns);
                             break;
                     }
-                    if(unified_guns.guntype == 0 && unified_guns.needcock){
+                    if(unified_guns.gunInfo.guntype == 0 && unified_guns.gunInfo.needcock){
                         Guns_BoltR.add(unified_guns);
                     }
-                    if(unified_guns.canfix){
+                    if(unified_guns.gunInfo.canfix){
                         Guns_HVG.add(unified_guns);
                     }
                     Debug("Listing HMG guns." + unified_guns.getUnlocalizedName(), new Object[0]);

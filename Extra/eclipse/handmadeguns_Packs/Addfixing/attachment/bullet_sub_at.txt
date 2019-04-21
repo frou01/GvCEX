@@ -1,5 +1,0 @@
-Texture,bullet_sub_at
-Stack,1
-Name,Anesthesia bullets
-BulletAT,Bullet_AT
-addRecipe,Bullet_AT,2,ab0,de0,000,265,367,0,367,289,0,0,0,0

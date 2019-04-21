@@ -800,7 +800,7 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
             int hitside = -1;
             Vec3 tohitposVec = Vec3.createVectorHelper(remainingMoveVec.xCoord,remainingMoveVec.yCoord,remainingMoveVec.zCoord);
             if (movingobjectposition != null) {
-                if (movingobjectposition.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY && movingobjectposition.entityHit != null) {
+                if (movingobjectposition.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY && movingobjectposition.entityHit != null &&  movingobjectposition.hitVec != null) {
                     tohitposVec.xCoord = (double) ((float) (movingobjectposition.hitVec.xCoord - this.posX));
                     tohitposVec.yCoord = (double) ((float) (movingobjectposition.hitVec.yCoord - this.posY));
                     tohitposVec.zCoord = (double) ((float) (movingobjectposition.hitVec.zCoord - this.posZ));

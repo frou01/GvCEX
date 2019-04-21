@@ -210,7 +210,7 @@ public abstract class EntityBases extends EntityCreature implements IFF,INpc,IGV
 			this.rotationPitch-=rndpitch;
 			this.rotationYaw-=rndyaw;
 			rndpitch += recoiled;
-			if(!worldObj.isRemote && cfg_canusePlacedGun && canPlacedGun && ridingEntity == null && onGround &&this.getAttackTarget() != null && this.getHeldItem().getItem()instanceof HMGItem_Unified_Guns && ((HMGItem_Unified_Guns) this.getHeldItem().getItem()).fixAsEntity){
+			if(!worldObj.isRemote && cfg_canusePlacedGun && canPlacedGun && ridingEntity == null && onGround &&this.getAttackTarget() != null && this.getHeldItem().getItem()instanceof HMGItem_Unified_Guns && ((HMGItem_Unified_Guns) this.getHeldItem().getItem()).gunInfo.fixAsEntity){
 				placing ++;
 				if(placing>30) {
 					placing = 0;

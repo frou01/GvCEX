@@ -56,16 +56,16 @@ public class PlacedGun_Render extends Render {
                     if (((HMGItemSightBase) itemstackSight.getItem()).scopeonly) {
                         return;
                     } else if (itemstackSight.getItem() instanceof HMGItemAttachment_reddot) {
-                        if (!entity.gunItem.zoomrer) {
+                        if (!entity.gunItem.gunInfo.zoomrer) {
                             return;
                         }
                     } else if (itemstackSight.getItem() instanceof HMGItemAttachment_scope) {
-                        if (!entity.gunItem.zoomres) {
+                        if (!entity.gunItem.gunInfo.zoomres) {
                             return;
                         }
                     }
                 } else {
-                    if (!entity.gunItem.zoomren) {
+                    if (!entity.gunItem.gunInfo.zoomren) {
                         return;
                     }
                 }
@@ -73,6 +73,7 @@ public class PlacedGun_Render extends Render {
         }
         GL11.glPushMatrix();
         GL11.glTranslatef((float) p_180551_2_, (float) p_180551_4_ + entity.gunyoffset, (float) p_180551_6_);
+//        System.out.println("debug");
         if (entity.gunStack != null) {
             GL11.glEnable(GL12.GL_RESCALE_NORMAL);
             IItemRenderer gunrender = MinecraftForgeClient.getItemRenderer(entity.gunStack, IItemRenderer.ItemRenderType.EQUIPPED);

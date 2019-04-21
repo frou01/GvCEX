@@ -350,7 +350,7 @@ public class HMGRenderItemGun_U implements IItemRenderer {
 			GL11.glDisable(GL_BLEND);
 			return;
 		}
-		if(!gun.userenderscript) {
+		if(!gun.gunInfo.userenderscript) {
 			nbt = item.getTagCompound();
 			if (nbt == null) gun.checkTags(item);
 			nbt = item.getTagCompound();
@@ -396,7 +396,7 @@ public class HMGRenderItemGun_U implements IItemRenderer {
 					byte boltprogress = nbt.getByte("Bolt");
 //					System.out.println("" + boltprogress);
 					boltprogress -= smoothing;
-					int cycle = gun.cycle;
+					int cycle = gun.gunInfo.cycle;
 					float boltoffsetcof;
 					if (boltprogress <= cycle / 2)//�{���g��ޒ�
 						boltoffsetcof = cycle - boltprogress;
@@ -449,19 +449,19 @@ public class HMGRenderItemGun_U implements IItemRenderer {
 								break;
 							}else
 							if (itemstackSight.getItem() instanceof HMGItemAttachment_reddot){
-								if (!gun.zoomrer) {
+								if (!gun.gunInfo.zoomrer) {
 									GL11.glPopMatrix();//glend1
 									break;
 								}
 							} else
 							if (itemstackSight.getItem() instanceof HMGItemAttachment_scope) {
-								if (!gun.zoomres) {
+								if (!gun.gunInfo.zoomres) {
 									GL11.glPopMatrix();//glend1
 									break;
 								}
 							}
 						}else {
-							if (!gun.zoomren) {
+							if (!gun.gunInfo.zoomren) {
 								GL11.glPopMatrix();//glend1
 								break;
 							}
@@ -487,7 +487,7 @@ public class HMGRenderItemGun_U implements IItemRenderer {
 						}
 
 					} else {
-						if (isentitysprinting(entityplayer) || (gun.needfix && !nbt.getBoolean("HMGfixed"))) {
+						if (isentitysprinting(entityplayer) || (gun.gunInfo.needfix && !nbt.getBoolean("HMGfixed"))) {
 							glMatrixForRenderInEquipped(0);
 					/*if(item.getItem() instanceof HMGItemGun_HG){
 					GL11.glRotatef(-60F, 1.0F, 0.0F, 0.0F);
@@ -525,12 +525,12 @@ public class HMGRenderItemGun_U implements IItemRenderer {
 					if (all_jump) {
 						if (cockingtime > 0){
 
-							if (cockingtime > 0 && cockingtime < ((gun.cocktime + smoothing - 1) / 2)) {
+							if (cockingtime > 0 && cockingtime < ((gun.gunInfo.cocktime + smoothing - 1) / 2)) {
 								//GL11.glTranslatef(0F, 0F, -cockingtime*0.1F);
 								GL11.glRotatef(-cockingtime * 1F, 1.0F, 0.0F, 0.0F);
 							} else {
 								//GL11.glTranslatef(0F, 0F, (cockingtime-(gun.cocktime + smoothing -1))*0.1F);
-								GL11.glRotatef((cockingtime - (gun.cocktime + smoothing - 1)) * 1F, 1.0F, 0.0F, 0.0F);
+								GL11.glRotatef((cockingtime - (gun.gunInfo.cocktime + smoothing - 1)) * 1F, 1.0F, 0.0F, 0.0F);
 							}
 						}
 					}
@@ -675,14 +675,14 @@ public class HMGRenderItemGun_U implements IItemRenderer {
 								GL11.glRotatef(mat25rotationy, 0.0F, 1.0F, 0.0F);
 								GL11.glRotatef(mat25rotationz, 0.0F, 0.0F, 1.0F);
 								GL11.glTranslatef(-mat25offsetx, -mat25offsety, -mat25offsetz);
-								GL11.glTranslatef(0F, 0F, -(gun.cocktime / 2) * 0.1F);
+								GL11.glTranslatef(0F, 0F, -(gun.gunInfo.cocktime / 2) * 0.1F);
 								renderpartofmodel("mat25");
 								GL11.glTranslatef(mat25offsetx, mat25offsety, mat25offsetz);
 								GL11.glRotatef(-mat25rotationx, 1.0F, 0.0F, 0.0F);
 								GL11.glRotatef(-mat25rotationy, 0.0F, 1.0F, 0.0F);
 								GL11.glRotatef(-mat25rotationz, 0.0F, 0.0F, 1.0F);
 								GL11.glTranslatef(-mat25offsetx, -mat25offsety, -mat25offsetz);
-								GL11.glTranslatef(0F, 0F, (gun.cocktime / 2) * 0.1F);
+								GL11.glTranslatef(0F, 0F, (gun.gunInfo.cocktime / 2) * 0.1F);
 								GL11.glPopMatrix();//glend11
 							}
 							if (mat22) {
@@ -803,7 +803,7 @@ public class HMGRenderItemGun_U implements IItemRenderer {
 							}
 							GL11.glPopMatrix();
 							GL11.glPushMatrix();
-							if (isentitysprinting(entityplayer) || (gun.needfix && !nbt.getBoolean("HMGfixed"))) {
+							if (isentitysprinting(entityplayer) || (gun.gunInfo.needfix && !nbt.getBoolean("HMGfixed"))) {
 								glMatrixForRenderInEquipped(0);
 								GL11.glRotatef(Sprintrotationx, 1.0F, 0.0F, 0.0F);
 								GL11.glRotatef(Sprintrotationy, 0.0F, 1.0F, 0.0F);
@@ -860,7 +860,7 @@ public class HMGRenderItemGun_U implements IItemRenderer {
 								GL11.glRotatef(mat25rotationy, 0.0F, 1.0F, 0.0F);
 								GL11.glRotatef(mat25rotationz, 0.0F, 0.0F, 1.0F);
 								GL11.glTranslatef(-mat25offsetx, -mat25offsety, -mat25offsetz);
-								GL11.glTranslatef(0F, 0F, -(gun.cocktime / 2) * 0.1F);
+								GL11.glTranslatef(0F, 0F, -(gun.gunInfo.cocktime / 2) * 0.1F);
 								renderpartofmodel("mat25");
 								GL11.glPopMatrix();//glend11
 							}
@@ -915,16 +915,16 @@ public class HMGRenderItemGun_U implements IItemRenderer {
 							GL11.glRotatef(mat25rotationy, 0.0F, 1.0F, 0.0F);
 							GL11.glRotatef(mat25rotationz, 0.0F, 0.0F, 1.0F);
 							GL11.glTranslatef(-mat25offsetx, -mat25offsety, -mat25offsetz);
-							if (cockingtime > 0 && cockingtime < ((gun.cocktime + smoothing - 1) / 2)) {
+							if (cockingtime > 0 && cockingtime < ((gun.gunInfo.cocktime + smoothing - 1) / 2)) {
 								GL11.glTranslatef(0F, 0F, -cockingtime * 0.1F);
 							} else {
-								GL11.glTranslatef(0F, 0F, (cockingtime - (gun.cocktime + smoothing - 1)) * 0.1F);
+								GL11.glTranslatef(0F, 0F, (cockingtime - (gun.gunInfo.cocktime + smoothing - 1)) * 0.1F);
 							}
 							renderpartofmodel("mat25");
-							if (cockingtime > 0 && cockingtime < ((gun.cocktime + smoothing - 1) / 2)) {
+							if (cockingtime > 0 && cockingtime < ((gun.gunInfo.cocktime + smoothing - 1) / 2)) {
 								GL11.glTranslatef(0F, 0F, cockingtime * 0.1F);
 							} else {
-								GL11.glTranslatef(0F, 0F, -(cockingtime - (gun.cocktime + smoothing - 1)) * 0.1F);
+								GL11.glTranslatef(0F, 0F, -(cockingtime - (gun.gunInfo.cocktime + smoothing - 1)) * 0.1F);
 							}
 							GL11.glTranslatef(mat25offsetx, mat25offsety, mat25offsetz);
 							GL11.glRotatef(-mat25rotationx, 1.0F, 0.0F, 0.0F);
@@ -979,7 +979,7 @@ public class HMGRenderItemGun_U implements IItemRenderer {
 						}
 
 					} else {
-						if (isentitysprinting(entityplayer) || (gun.needfix && !nbt.getBoolean("HMGfixed"))) {
+						if (isentitysprinting(entityplayer) || (gun.gunInfo.needfix && !nbt.getBoolean("HMGfixed"))) {
 							glMatrixForRenderInEquipped(0);
 							GL11.glRotatef(Sprintrotationx, 1.0F, 0.0F, 0.0F);
 							GL11.glRotatef(Sprintrotationy, 0.0F, 1.0F, 0.0F);
@@ -1015,12 +1015,12 @@ public class HMGRenderItemGun_U implements IItemRenderer {
 					if (all_jump) {
 						if (cockingtime > 0){
 
-							if (cockingtime > 0 && cockingtime < ((gun.cocktime + smoothing - 1) / 2)) {
+							if (cockingtime > 0 && cockingtime < ((gun.gunInfo.cocktime + smoothing - 1) / 2)) {
 								//GL11.glTranslatef(0F, 0F, -cockingtime*0.1F);
 								GL11.glRotatef(-cockingtime * 1F, 1.0F, 0.0F, 0.0F);
 							} else {
 								//GL11.glTranslatef(0F, 0F, (cockingtime-(gun.cocktime + smoothing -1))*0.1F);
-								GL11.glRotatef((cockingtime - (gun.cocktime + smoothing - 1)) * 1F, 1.0F, 0.0F, 0.0F);
+								GL11.glRotatef((cockingtime - (gun.gunInfo.cocktime + smoothing - 1)) * 1F, 1.0F, 0.0F, 0.0F);
 							}
 						}
 					}
@@ -1048,12 +1048,12 @@ public class HMGRenderItemGun_U implements IItemRenderer {
 
 								if (cock_left) {
 									if (cockingtime > 0){
-										if (cockingtime > 0 && cockingtime < ((gun.cocktime + smoothing - 1) / 2)) {
+										if (cockingtime > 0 && cockingtime < ((gun.gunInfo.cocktime + smoothing - 1) / 2)) {
 											//GL11.glTranslatef(0F, 0F, -cockingtime*0.1F);
 											modelBipedMain.bipedLeftArm.offsetZ = this.armoffsetzl*armoffsetscale - (-cockingtime * 0.1F) * scala;
 										} else {
 											//GL11.glTranslatef(0F, 0F, (cockingtime-(gun.cocktime + smoothing -1))*0.1F);
-											modelBipedMain.bipedLeftArm.offsetZ = this.armoffsetzl*armoffsetscale - (cockingtime - (gun.cocktime + smoothing - 1)) * 0.1F * scala;
+											modelBipedMain.bipedLeftArm.offsetZ = this.armoffsetzl*armoffsetscale - (cockingtime - (gun.gunInfo.cocktime + smoothing - 1)) * 0.1F * scala;
 										}
 									}
 								}
@@ -1080,12 +1080,12 @@ public class HMGRenderItemGun_U implements IItemRenderer {
 
 							if (cock_left) {
 								if (cockingtime > 0){
-									if (cockingtime > 0 && cockingtime < ((gun.cocktime + smoothing - 1) / 2)) {
+									if (cockingtime > 0 && cockingtime < ((gun.gunInfo.cocktime + smoothing - 1) / 2)) {
 										//GL11.glTranslatef(0F, 0F, -cockingtime*0.1F);
 										modelBipedMain.bipedLeftArm.offsetZ = this.armoffsetzl*armoffsetscale - (-cockingtime * 0.1F) * scala;
 									} else {
 										//GL11.glTranslatef(0F, 0F, (cockingtime-(gun.cocktime + smoothing -1))*0.1F);
-										modelBipedMain.bipedLeftArm.offsetZ = this.armoffsetzl*armoffsetscale - (cockingtime - (gun.cocktime + smoothing - 1)) * 0.1F * scala;
+										modelBipedMain.bipedLeftArm.offsetZ = this.armoffsetzl*armoffsetscale - (cockingtime - (gun.gunInfo.cocktime + smoothing - 1)) * 0.1F * scala;
 									}
 								}
 							}
@@ -1100,7 +1100,7 @@ public class HMGRenderItemGun_U implements IItemRenderer {
 					int mode = nbt.getInteger("HMGMode");
 					byte boltprogress = nbt.getByte("Bolt");
 					boltprogress -= smoothing;
-					int cycle = gun.cycle;
+					int cycle = gun.gunInfo.cycle;
 					float boltoffsetcof;
 					if (boltprogress < cycle / 2)//�{���g��ޒ�
 						boltoffsetcof = cycle - boltprogress;
@@ -1117,7 +1117,7 @@ public class HMGRenderItemGun_U implements IItemRenderer {
 						glMatrixForRenderInEntity(0);
 						GL11.glScalef(-scala * 0.6f, scala * 0.6f, scala * 0.6f);
 					}
-					GL11.glScalef(gun.inworldScale, gun.inworldScale, gun.inworldScale);
+					GL11.glScalef(gun.gunInfo.inworldScale, gun.gunInfo.inworldScale, gun.gunInfo.inworldScale);
 					if (nbt.getBoolean("IsReloading")) {
 						// modeling.renderAll();
 						renderpartofmodel("mat1");
@@ -1136,9 +1136,9 @@ public class HMGRenderItemGun_U implements IItemRenderer {
 							GL11.glRotatef(mat25rotationy, 0.0F, 1.0F, 0.0F);
 							GL11.glRotatef(mat25rotationz, 0.0F, 0.0F, 1.0F);
 							GL11.glTranslatef(-mat25offsetx, -mat25offsety, -mat25offsetz);
-							GL11.glTranslatef(0F, 0F, -((gun.cocktime + smoothing - 1) / 2) * 0.1F);
+							GL11.glTranslatef(0F, 0F, -((gun.gunInfo.cocktime + smoothing - 1) / 2) * 0.1F);
 							renderpartofmodel("mat25");
-							GL11.glTranslatef(0F, 0F, ((gun.cocktime + smoothing - 1) / 2) * 0.1F);
+							GL11.glTranslatef(0F, 0F, ((gun.gunInfo.cocktime + smoothing - 1) / 2) * 0.1F);
 							GL11.glTranslatef(mat25offsetx, mat25offsety, mat25offsetz);
 							GL11.glRotatef(-mat25rotationx, 1.0F, 0.0F, 0.0F);
 							GL11.glRotatef(-mat25rotationy, 0.0F, 1.0F, 0.0F);
@@ -1191,16 +1191,16 @@ public class HMGRenderItemGun_U implements IItemRenderer {
 							GL11.glRotatef(mat25rotationy, 0.0F, 1.0F, 0.0F);
 							GL11.glRotatef(mat25rotationz, 0.0F, 0.0F, 1.0F);
 							GL11.glTranslatef(-mat25offsetx, -mat25offsety, -mat25offsetz);
-							if (cockingtime > 0 && cockingtime < ((gun.cocktime + smoothing - 1) / 2)) {
+							if (cockingtime > 0 && cockingtime < ((gun.gunInfo.cocktime + smoothing - 1) / 2)) {
 								GL11.glTranslatef(0F, 0F, -cockingtime * 0.1F);
 							} else {
-								GL11.glTranslatef(0F, 0F, (cockingtime - (gun.cocktime + smoothing - 1)) * 0.1F);
+								GL11.glTranslatef(0F, 0F, (cockingtime - (gun.gunInfo.cocktime + smoothing - 1)) * 0.1F);
 							}
 							renderpartofmodel("mat25");
-							if (cockingtime > 0 && cockingtime < ((gun.cocktime + smoothing - 1) / 2)) {
+							if (cockingtime > 0 && cockingtime < ((gun.gunInfo.cocktime + smoothing - 1) / 2)) {
 								GL11.glTranslatef(0F, 0F, cockingtime * 0.1F);
 							} else {
-								GL11.glTranslatef(0F, 0F, -(cockingtime - (gun.cocktime + smoothing - 1)) * 0.1F);
+								GL11.glTranslatef(0F, 0F, -(cockingtime - (gun.gunInfo.cocktime + smoothing - 1)) * 0.1F);
 							}
 							GL11.glTranslatef(mat25offsetx, mat25offsety, mat25offsetz);
 							GL11.glRotatef(-mat25rotationx, 1.0F, 0.0F, 0.0F);
@@ -1243,7 +1243,7 @@ public class HMGRenderItemGun_U implements IItemRenderer {
 					int mode = nbt.getInteger("HMGMode");
 					byte boltprogress = nbt.getByte("Bolt");
 					boltprogress -= smoothing;
-					int cycle = gun.cycle;
+					int cycle = gun.gunInfo.cycle;
 					float boltoffsetcof;
 					if (boltprogress < cycle / 2)//�{���g��ޒ�
 						boltoffsetcof = cycle - boltprogress;
@@ -1252,7 +1252,7 @@ public class HMGRenderItemGun_U implements IItemRenderer {
 					if (boltoffsetcof < 0) boltoffsetcof = 0;
 					GL11.glPushMatrix();//glstart1
 					Minecraft.getMinecraft().renderEngine.bindTexture(guntexture);
-					GL11.glScalef(0.4f * scala * gun.inworldScale,0.4f * scala * gun.inworldScale,0.4f * scala * gun.inworldScale);
+					GL11.glScalef(0.4f * scala * gun.gunInfo.inworldScale,0.4f * scala * gun.gunInfo.inworldScale,0.4f * scala * gun.gunInfo.inworldScale);
 					if (nbt.getBoolean("IsReloading")) {
 						// modeling.renderAll();
 						renderpartofmodel("mat1");
@@ -1275,9 +1275,9 @@ public class HMGRenderItemGun_U implements IItemRenderer {
 							GL11.glRotatef(mat25rotationy, 0.0F, 1.0F, 0.0F);
 							GL11.glRotatef(mat25rotationz, 0.0F, 0.0F, 1.0F);
 							GL11.glTranslatef(-mat25offsetx, -mat25offsety, -mat25offsetz);
-							GL11.glTranslatef(0F, 0F, -((gun.cocktime + smoothing - 1) / 2) * 0.1F);
+							GL11.glTranslatef(0F, 0F, -((gun.gunInfo.cocktime + smoothing - 1) / 2) * 0.1F);
 							renderpartofmodel("mat25");
-							GL11.glTranslatef(0F, 0F, ((gun.cocktime + smoothing - 1) / 2) * 0.1F);
+							GL11.glTranslatef(0F, 0F, ((gun.gunInfo.cocktime + smoothing - 1) / 2) * 0.1F);
 							GL11.glTranslatef(mat25offsetx, mat25offsety, mat25offsetz);
 							GL11.glRotatef(-mat25rotationx, 1.0F, 0.0F, 0.0F);
 							GL11.glRotatef(-mat25rotationy, 0.0F, 1.0F, 0.0F);
@@ -1330,16 +1330,16 @@ public class HMGRenderItemGun_U implements IItemRenderer {
 							GL11.glRotatef(mat25rotationy, 0.0F, 1.0F, 0.0F);
 							GL11.glRotatef(mat25rotationz, 0.0F, 0.0F, 1.0F);
 							GL11.glTranslatef(-mat25offsetx, -mat25offsety, -mat25offsetz);
-							if (cockingtime > 0 && cockingtime < ((gun.cocktime + smoothing - 1) / 2)) {
+							if (cockingtime > 0 && cockingtime < ((gun.gunInfo.cocktime + smoothing - 1) / 2)) {
 								GL11.glTranslatef(0F, 0F, -cockingtime * 0.1F);
 							} else {
-								GL11.glTranslatef(0F, 0F, (cockingtime - (gun.cocktime + smoothing - 1)) * 0.1F);
+								GL11.glTranslatef(0F, 0F, (cockingtime - (gun.gunInfo.cocktime + smoothing - 1)) * 0.1F);
 							}
 							renderpartofmodel("mat25");
-							if (cockingtime > 0 && cockingtime < ((gun.cocktime + smoothing - 1) / 2)) {
+							if (cockingtime > 0 && cockingtime < ((gun.gunInfo.cocktime + smoothing - 1) / 2)) {
 								GL11.glTranslatef(0F, 0F, cockingtime * 0.1F);
 							} else {
-								GL11.glTranslatef(0F, 0F, -(cockingtime - (gun.cocktime + smoothing - 1)) * 0.1F);
+								GL11.glTranslatef(0F, 0F, -(cockingtime - (gun.gunInfo.cocktime + smoothing - 1)) * 0.1F);
 							}
 							GL11.glTranslatef(mat25offsetx, mat25offsety, mat25offsetz);
 							GL11.glRotatef(-mat25rotationx, 1.0F, 0.0F, 0.0F);
@@ -1382,7 +1382,7 @@ public class HMGRenderItemGun_U implements IItemRenderer {
 			nbt = item.getTagCompound();
 			if (nbt == null) gun.checkTags(item);
 			nbt = item.getTagCompound();
-			Invocable invocable = (Invocable) gun.renderscript;
+			Invocable invocable = (Invocable) gun.gunInfo.renderscript;
 			
 			Minecraft.getMinecraft().renderEngine.bindTexture(guntexture);
 			switch (type) {
@@ -1454,9 +1454,9 @@ public class HMGRenderItemGun_U implements IItemRenderer {
 					GL11.glRotatef(mat25rotationy, 0.0F, 1.0F, 0.0F);
 					GL11.glRotatef(mat25rotationz, 0.0F, 0.0F, 1.0F);
 					GL11.glTranslatef(-mat25offsetx, -mat25offsety, -mat25offsetz);
-					GL11.glTranslatef(0F, 0F, -gun.cocktime*0.1f);
+					GL11.glTranslatef(0F, 0F, -gun.gunInfo.cocktime*0.1f);
 					renderpartofmodel("mat25");
-					GL11.glTranslatef(0F, 0F, gun.cocktime*0.1f);
+					GL11.glTranslatef(0F, 0F, gun.gunInfo.cocktime*0.1f);
 					GL11.glTranslatef(mat25offsetx, mat25offsety, mat25offsetz);
 					GL11.glRotatef(-mat25rotationx, 1.0F, 0.0F, 0.0F);
 					GL11.glRotatef(-mat25rotationy, 0.0F, 1.0F, 0.0F);
@@ -1512,16 +1512,16 @@ public class HMGRenderItemGun_U implements IItemRenderer {
 						GL11.glRotatef(mat25rotationy, 0.0F, 1.0F, 0.0F);
 						GL11.glRotatef(mat25rotationz, 0.0F, 0.0F, 1.0F);
 						GL11.glTranslatef(-mat25offsetx, -mat25offsety, -mat25offsetz);
-						if (cockingtime < ((gun.cocktime + smoothing -1) / 2)) {
+						if (cockingtime < ((gun.gunInfo.cocktime + smoothing -1) / 2)) {
 							GL11.glTranslatef(0F, 0F, -cockingtime * 0.1F);
 						} else {
-							GL11.glTranslatef(0F, 0F, (cockingtime - (gun.cocktime + smoothing -1)) * 0.1F);
+							GL11.glTranslatef(0F, 0F, (cockingtime - (gun.gunInfo.cocktime + smoothing -1)) * 0.1F);
 						}
 						renderpartofmodel("mat25");
-						if (cockingtime < ((gun.cocktime + smoothing -1) / 2)) {
+						if (cockingtime < ((gun.gunInfo.cocktime + smoothing -1) / 2)) {
 							GL11.glTranslatef(0F, 0F, cockingtime * 0.1F);
 						} else {
-							GL11.glTranslatef(0F, 0F, -(cockingtime - (gun.cocktime + smoothing -1)) * 0.1F);
+							GL11.glTranslatef(0F, 0F, -(cockingtime - (gun.gunInfo.cocktime + smoothing -1)) * 0.1F);
 						}
 						GL11.glTranslatef(mat25offsetx, mat25offsety, mat25offsetz);
 						GL11.glRotatef(-mat25rotationx, 1.0F, 0.0F, 0.0F);
@@ -1562,10 +1562,10 @@ public class HMGRenderItemGun_U implements IItemRenderer {
 						GL11.glRotatef(mat25rotationy, 0.0F, 1.0F, 0.0F);
 						GL11.glRotatef(mat25rotationz, 0.0F, 0.0F, 1.0F);
 						GL11.glTranslatef(-mat25offsetx, -mat25offsety, -mat25offsetz);
-						if (cockingtime < ((gun.cocktime + smoothing -1) / 2)) {
+						if (cockingtime < ((gun.gunInfo.cocktime + smoothing -1) / 2)) {
 							GL11.glTranslatef(0F, 0F, -cockingtime * 0.1F);
 						} else {
-							GL11.glTranslatef(0F, 0F, (cockingtime - (gun.cocktime + smoothing -1)) * 0.1F);
+							GL11.glTranslatef(0F, 0F, (cockingtime - (gun.gunInfo.cocktime + smoothing -1)) * 0.1F);
 						}
 						renderpartofmodel("mat25");
 						GL11.glTranslatef(mat25offsetx, mat25offsety, mat25offsetz);
@@ -1573,10 +1573,10 @@ public class HMGRenderItemGun_U implements IItemRenderer {
 						GL11.glRotatef(-mat25rotationy, 0.0F, 1.0F, 0.0F);
 						GL11.glRotatef(-mat25rotationz, 0.0F, 0.0F, 1.0F);
 						GL11.glTranslatef(-mat25offsetx, -mat25offsety, -mat25offsetz);
-						if (cockingtime < ((gun.cocktime + smoothing -1) / 2)) {
+						if (cockingtime < ((gun.gunInfo.cocktime + smoothing -1) / 2)) {
 							GL11.glTranslatef(0F, 0F, cockingtime * 0.1F);
 						} else {
-							GL11.glTranslatef(0F, 0F, -(cockingtime - (gun.cocktime + smoothing -1)) * 0.1F);
+							GL11.glTranslatef(0F, 0F, -(cockingtime - (gun.gunInfo.cocktime + smoothing -1)) * 0.1F);
 						}
 					}
 
@@ -1654,13 +1654,13 @@ public class HMGRenderItemGun_U implements IItemRenderer {
 			itemstacka = items[4];
 			if (itemstacka != null) {
 				IItemRenderer attachrender = MinecraftForgeClient.getItemRenderer(itemstacka, type);
-				if(gun.useundergunsmodel) {
+				if(gun.gunInfo.useundergunsmodel) {
 					if (itemstacka != item && itemstacka.getItem() instanceof HMGItem_Unified_Guns) {
 						renderpartofmodel("mat12");
-						GL11.glTranslatef(gun.underoffsetpx, gun.underoffsetpy, gun.underoffsetpz);
-						GL11.glRotatef(gun.underrotationx, 1.0F, 0.0F, 0.0F);
-						GL11.glRotatef(gun.underrotationy, 0.0F, 1.0F, 0.0F);
-						GL11.glRotatef(gun.underrotationz, 0.0F, 0.0F, 1.0F);
+						GL11.glTranslatef(gun.gunInfo.underoffsetpx, gun.gunInfo.underoffsetpy, gun.gunInfo.underoffsetpz);
+						GL11.glRotatef(gun.gunInfo.underrotationx, 1.0F, 0.0F, 0.0F);
+						GL11.glRotatef(gun.gunInfo.underrotationy, 0.0F, 1.0F, 0.0F);
+						GL11.glRotatef(gun.gunInfo.underrotationz, 0.0F, 0.0F, 1.0F);
 						boolean flag1 = false;
 						if (attachrender instanceof HMGRenderItemGun_U) {
 							
@@ -1668,26 +1668,26 @@ public class HMGRenderItemGun_U implements IItemRenderer {
 							attachrender.renderItem(ItemRenderType.ENTITY, items[4], data);
 							GL11.glScalef(modelscala, modelscala, modelscala);
 						}
-						GL11.glRotatef(-gun.underrotationx, 1.0F, 0.0F, 0.0F);
-						GL11.glRotatef(-gun.underrotationy, 0.0F, 1.0F, 0.0F);
-						GL11.glRotatef(-gun.underrotationz, 0.0F, 0.0F, 1.0F);
-						GL11.glTranslatef(-gun.underoffsetpx, -gun.underoffsetpy, -gun.underoffsetpz);
+						GL11.glRotatef(-gun.gunInfo.underrotationx, 1.0F, 0.0F, 0.0F);
+						GL11.glRotatef(-gun.gunInfo.underrotationy, 0.0F, 1.0F, 0.0F);
+						GL11.glRotatef(-gun.gunInfo.underrotationz, 0.0F, 0.0F, 1.0F);
+						GL11.glTranslatef(-gun.gunInfo.underoffsetpx, -gun.gunInfo.underoffsetpy, -gun.gunInfo.underoffsetpz);
 					} else if (itemstacka.getItem() instanceof HMGXItemGun_Sword) {
 						renderpartofmodel("mat13");
 						GL11.glPushMatrix();
-						GL11.glTranslatef(gun.underoffsetpx, gun.underoffsetpy, gun.underoffsetpz);
+						GL11.glTranslatef(gun.gunInfo.underoffsetpx, gun.gunInfo.underoffsetpy, gun.gunInfo.underoffsetpz);
 						GL11.glRotatef(90, 1.0F, 0.0F, 0.0F);
-						GL11.glRotatef(gun.underrotationx, 1.0F, 0.0F, 0.0F);
-						GL11.glRotatef(gun.underrotationy, 0.0F, 1.0F, 0.0F);
-						GL11.glRotatef(gun.underrotationz, 0.0F, 0.0F, 1.0F);
+						GL11.glRotatef(gun.gunInfo.underrotationx, 1.0F, 0.0F, 0.0F);
+						GL11.glRotatef(gun.gunInfo.underrotationy, 0.0F, 1.0F, 0.0F);
+						GL11.glRotatef(gun.gunInfo.underrotationz, 0.0F, 0.0F, 1.0F);
 						if (attachrender instanceof HMGRenderItemGun_S) {
 							GL11.glScalef(1/(0.4f * modelscala),1/(0.4f * modelscala),1/(0.4f * modelscala));
 							attachrender.renderItem(ItemRenderType.ENTITY, items[4], data);
 						}
-						GL11.glRotatef(-gun.underrotationx, 1.0F, 0.0F, 0.0F);
-						GL11.glRotatef(-gun.underrotationy, 0.0F, 1.0F, 0.0F);
-						GL11.glRotatef(-gun.underrotationz, 0.0F, 0.0F, 1.0F);
-						GL11.glTranslatef(-gun.underoffsetpx, -gun.underoffsetpy, -gun.underoffsetpz);
+						GL11.glRotatef(-gun.gunInfo.underrotationx, 1.0F, 0.0F, 0.0F);
+						GL11.glRotatef(-gun.gunInfo.underrotationy, 0.0F, 1.0F, 0.0F);
+						GL11.glRotatef(-gun.gunInfo.underrotationz, 0.0F, 0.0F, 1.0F);
+						GL11.glTranslatef(-gun.gunInfo.underoffsetpx, -gun.gunInfo.underoffsetpy, -gun.gunInfo.underoffsetpz);
 						GL11.glPopMatrix();
 					}
 				} else {
@@ -1714,9 +1714,9 @@ public class HMGRenderItemGun_U implements IItemRenderer {
 						renderpartofmodel("mat9");
 					} else if (itemstacka.getItem() instanceof HMGItem_Unified_Guns) {
 						HMGItem_Unified_Guns Ugun = (HMGItem_Unified_Guns) itemstacka.getItem();
-						if (Ugun.guntype == 1) {
+						if (gun.gunInfo.guntype == 1) {
 							renderpartofmodel("mat11");
-						} else if (Ugun.guntype == 2) {
+						} else if (gun.gunInfo.guntype == 2) {
 							renderpartofmodel("mat10");
 						}
 					} else if (itemstacka.getItem() instanceof HMGXItemGun_Sword) {
@@ -2033,11 +2033,11 @@ public class HMGRenderItemGun_U implements IItemRenderer {
 
 	public void underRend_useunderGunModel(HMGItem_Unified_Guns gun, ItemStack itemStack, ItemRenderType type, Object... data){
 		if(itemStack != null &&( itemStack.getItem() instanceof HMGItem_Unified_Guns ||itemStack.getItem() instanceof HMGXItemGun_Sword)) {
-			GL11.glTranslatef(gun.underoffsetpx, gun.underoffsetpy, gun.underoffsetpz);
+			GL11.glTranslatef(gun.gunInfo.underoffsetpx, gun.gunInfo.underoffsetpy, gun.gunInfo.underoffsetpz);
 			if(itemStack.getItem() instanceof HMGXItemGun_Sword)GL11.glRotatef(90, 1.0F, 0.0F, 0.0F);
-			GL11.glRotatef(gun.underrotationx, 1.0F, 0.0F, 0.0F);
-			GL11.glRotatef(gun.underrotationy, 0.0F, 1.0F, 0.0F);
-			GL11.glRotatef(gun.underrotationz, 0.0F, 0.0F, 1.0F);
+			GL11.glRotatef(gun.gunInfo.underrotationx, 1.0F, 0.0F, 0.0F);
+			GL11.glRotatef(gun.gunInfo.underrotationy, 0.0F, 1.0F, 0.0F);
+			GL11.glRotatef(gun.gunInfo.underrotationz, 0.0F, 0.0F, 1.0F);
 			IItemRenderer attachrender = MinecraftForgeClient.getItemRenderer(itemStack, type);
 			GL11.glScalef(1 / modelscala, 1 / modelscala, 1 / modelscala);
 			if (attachrender instanceof HMGRenderItemGun_S) {
@@ -2046,10 +2046,10 @@ public class HMGRenderItemGun_U implements IItemRenderer {
 				((HMGRenderItemGun_U) attachrender).renderatunder(type, itemStack, data);
 			}
 			GL11.glScalef(modelscala, modelscala, modelscala);
-			GL11.glRotatef(-gun.underrotationx, 1.0F, 0.0F, 0.0F);
-			GL11.glRotatef(-gun.underrotationy, 0.0F, 1.0F, 0.0F);
-			GL11.glRotatef(-gun.underrotationz, 0.0F, 0.0F, 1.0F);
-			GL11.glTranslatef(-gun.underoffsetpx, -gun.underoffsetpy, -gun.underoffsetpz);
+			GL11.glRotatef(-gun.gunInfo.underrotationx, 1.0F, 0.0F, 0.0F);
+			GL11.glRotatef(-gun.gunInfo.underrotationy, 0.0F, 1.0F, 0.0F);
+			GL11.glRotatef(-gun.gunInfo.underrotationz, 0.0F, 0.0F, 1.0F);
+			GL11.glTranslatef(-gun.gunInfo.underoffsetpx, -gun.gunInfo.underoffsetpy, -gun.gunInfo.underoffsetpz);
 		}
 	}
 

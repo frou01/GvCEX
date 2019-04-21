@@ -64,4 +64,18 @@ item.arenaUnit.name=Arena_Unit
 item.defsetter.name=Command device
 
 tile.BaseFlagBlock.name=Flag of Soldiers
-    tile.GuerrillaBaseFlagBlock.name=Flag of Guerrillas
+tile.GuerrillaBaseFlagBlock.name=Flag of Guerrillas
+tile.SupplyFlagBlock.name=Supply Beacon
+
+achievement.No_place_to_HIDE=No place to HIDE
+achievement.killedGuerrilla=providence
+achievement.union=union
+achievement.Old_soldiers_never_fade=Old soldiers never fade
+achievement.power_of_number=power of number
+achievement.unmanned_Craft=unmanned Craft
+achievement.war_has_changed=war has changed
+achievement.unending_war=unending war
+achievement.METAL_GEAR=METAL GEAR
+achievement.spear_the_gungnir=spear the gungnir
+achievement.Gun_of_the_Lost_Country=Gun of the Lost Country
+achievement.beacon_defensive=beacon defensive

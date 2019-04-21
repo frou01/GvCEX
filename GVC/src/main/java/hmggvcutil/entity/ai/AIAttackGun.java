@@ -83,7 +83,7 @@ public class AIAttackGun extends EntityAIBase {
                                     shooter.getHeldItem().getTagCompound().setBoolean("IsTriggered", true);
                                 shooter.getEntityData().setBoolean("HMGisUsingItem", true);
                                 if (!isSelectorChecked) {
-                                    List<Integer> burst = ((HMGItem_Unified_Guns) shooter.getHeldItem().getItem()).burstcount;
+                                    List<Integer> burst = ((HMGItem_Unified_Guns) shooter.getHeldItem().getItem()).gunInfo.burstcount;
                                     int temp = 0;
                                     int mode = 0;
                                     for (int i = 0; i < burst.size(); i++) {
@@ -102,7 +102,7 @@ public class AIAttackGun extends EntityAIBase {
                                     isSelectorChecked = true;
                                 }
                                 if (((HMGItem_Unified_Guns) shooter.getHeldItem().getItem()).getburstCount(shooter.getHeldItem().getTagCompound().getInteger("HMGMode")) != -1) {
-                                    retriggerCool = rnd.nextInt((int) (abs(((HMGItem_Unified_Guns) shooter.getHeldItem().getItem()).recoil) + 1) * 10);
+                                    retriggerCool = rnd.nextInt((int) (abs( ((HMGItem_Unified_Guns) shooter.getHeldItem().getItem()).gunInfo.recoil) + 1) * 10);
                                 }
                             }
                         }

@@ -1,61 +1,118 @@
 package handmadeguns.items;
 
 import handmadeguns.Util.PlaceGunShooterPosGetter;
+import handmadeguns.entity.PlacedGunEntity;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.MathHelper;
+import net.minecraft.util.Vec3;
 
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import java.util.ArrayList;
+import java.util.UUID;
+
+import static handmadeguns.HandmadeGunsCore.cfg_defaultknockback;
+import static handmadeguns.HandmadeGunsCore.cfg_defaultknockbacky;
 
 public class GunInfo {
 	
-	
-	public float spread_setting;
+	public final UUID field_110179_h = UUID.fromString("254F543F-8B6F-407F-931B-4B76FEB8BA0D");
+	public float turretanglelimtMxY = 0;
+	public int reloadtime = 15;
+	public int power;
+	public int bulletRound = 30;
+	public float speed;
+	public float spreadDiffusionMax = 10;
+	public float spreadDiffusionmin = 0;
+	public float spreadDiffusionRate = 1;
+	public float spreadDiffusionHeadRate = 0.05f;
+	public float spreadDiffusionWalkRate = 2;
+	public float spreadDiffusionReduceRate = 0.5f;
+	public float spread_setting = 1;
 	public float ads_spread_cof = 0.5f;
-	
-	
 	public double recoil;
 	public double recoil_sneak;
-	public float scopezoom;
-	public int cycle;
-	public boolean needcock = false;
-	public boolean chargeType;
-	
-	public ArrayList<Integer> burstcount = new ArrayList<Integer>();
-	public ArrayList<Integer> rates = new ArrayList<Integer>();
-	
-	
+	public float onTurretScale = 1.0f;
+	public boolean restrictTurretMoveSpeed;
+	public float turretMoveSpeedP;
+	public float turretMoveSpeedY;
+	public float turreboxW;
+	public float turreboxH;
+	public int turretMaxHP = -1;
+	public boolean restrictTurretAngle = false;
+	public int canuseclass = -1;
+	public int guntype = -1;
+	public int cycle = 2;
+	public float ex = 2.5F;
+	public boolean destroyBlock = false;
 	public String soundre= "handmadeguns:handmadeguns.reload";
 	public float soundrelevel = 1.0f;
-	public float soundrespeed = 1.0F;
-	public int cocktime = 20;
 	public boolean canobj;
-	
+	public boolean renderMCcross = true;
+	public boolean renderHMGcross = true;
 	public String soundco = "handmadeguns:handmadeguns.cooking";
-	
-	
+	public float scopezoombase = 1;
+	public float scopezoomred = 1;
+	public float scopezoomscope = 4;
 	public float soundspeed = 1.0F;
 	public String soundbase= "handmadeguns:handmadeguns.fire";
 	public float soundbaselevel = 4.0f;
 	public String soundsu= "handmadeguns:handmadeguns.supu";
 	public float soundsuplevel = 1.0f;
-	
 	public String lockSound_entity = "handmadeguns:handmadeguns.lockon";
 	public String lockSound_block = "handmadeguns:handmadeguns.lockon";
 	public float lockpitch_entity = 1;
 	public float lockpitch_block = 0.5f;
-	
-	
-	public Item[] magazines;
-	public int[] magazineItemCounts;
-	
-	public double WalkSpeed = 1D;
-	
+	public Item magazine;
+	public int magazineItemCount = 1;
+	public String adstexture = "handmadeguns:handmadeguns/textures/misc/ironsight";
+	public String adstexturer = "handmadeguns:handmadeguns.textures.misc.reddot";
+	public String adstextures = "handmadeguns:handmadeguns.textures.misc.scope";
+	public boolean zoomren = true;
+	public boolean zoomrer = true;
+	public boolean zoomres = true;
+	public boolean zoomrent = false;
+	public boolean zoomrert = false;
+	public boolean zoomrest = false;
+	public String texture;
+	public double motion = 1D;
 	public boolean muzzleflash = true;
-	
+	public float soundrespeed = 1.0F;
+	public int cocktime = 20;
+	public boolean needcock = false;
+	public int pellet = 1;
+	//01/27
+	public float gra = 0.029F;
+	//02/14
+	public int cartType = 1;
+	public int magType = 5;
+	public int magentityCnt = 1;
+	public int cartentityCnt = 1;
+	public boolean dropcart = true;
+	public boolean cart_cocked = false;
+	public boolean dropMagEntity = true;
+	//0307
+	public String soundunder_gl= "handmadeguns:handmadeguns.cooking";
+	public String soundunder_sg= "handmadeguns:handmadeguns.cooking";
+	public int under_gl_power = 20;
+	public boolean under_gl_canbounce = true;
+	public int under_gl_fuse = -1;
+	public float under_gl_speed = 2;
+	public float under_gl_bure = 5;
+	public double under_gl_recoil = 5;
+	public float under_gl_gra = 0.01F;
+	public int under_sg_power = 4;
+	public float under_sg_speed = 3;
+	public float under_sg_bure = 20;
+	public double under_sg_recoil = 5;
+	public float under_sg_gra = 0.029F;
+	public float attackDamage = 1;
+	public float foruseattackDamage = 1;
 	public boolean hasAttachRestriction = false;
 	public ArrayList<String> attachwhitelist = new ArrayList<String>();
-	
 	public boolean useundergunsmodel = false;
 	public float underoffsetpx;
 	public float underoffsetpy;
@@ -63,48 +120,85 @@ public class GunInfo {
 	public float underrotationx;
 	public float underrotationy;
 	public float underrotationz;
-	
 	public float onunderoffsetpx;
 	public float onunderoffsetpy;
 	public float onunderoffsetpz;
 	public float onunderrotationx;
 	public float onunderrotationy;
 	public float onunderrotationz;
-	
-	
+	public float modelscale = 1;
+	public float inworldScale = 1;
+	public boolean hascustombulletmodel = false;
+	public boolean hascustomcartridgemodel = false;
+	public boolean hascustommagemodel = false;
+	public String bulletmodelN = "default";
+	public String bulletmodelAR = "default";
+	public String bulletmodelAP = "default";
+	public String bulletmodelAT = "default";
+	public String bulletmodelFrag = "default";
+	public String bulletmodelHE = "default";
+	public String bulletmodelTE = "default";
+	public String bulletmodelGL = "default";
+	public String bulletmodelRPG = "byfrou01_Rocket";
+	public String bulletmodelMAG = "default";
+	public String bulletmodelCart = "default";
+	public double knockback = cfg_defaultknockback;
+	public double knockbackY =cfg_defaultknockbacky;
+	public ArrayList<Integer> burstcount = new ArrayList<Integer>();
+	public ArrayList<Integer> rates = new ArrayList<Integer>();
+	public boolean canbounce = false;
+	public int fuse = 0;
+	public float bouncerate = 0.3f;
+	public float bouncelimit = 90;
 	public boolean userenderscript = false;
 	public ScriptEngine renderscript;
 	public ScriptEngine script;
-	Invocable invocable;
-	
+	public float mat31rotex;
+	public float mat31rotey;
+	public float mat31rotez;
 	public boolean isOneuse = false;
 	public boolean guerrila_can_use = true;
 	public boolean isinRoot = true;
 	public boolean soldiercanstorage = true;
+	public boolean use_internal_secondary;
+	public float acceleration;
 	public boolean canlock = false;
 	public boolean canlockBlock = false;
 	public boolean canlockEntity = false;
+	public float induction_precision;
 	public String flashname = null;
 	public int flashfuse = 1;
 	public float flashScale = 1;
+	public float resistance = 0.99f;
 	public boolean canfix;
 	public boolean needfix;
 	public boolean fixAsEntity;
-	
-	public PlaceGunShooterPosGetter posGetter;
+	public float[] sightattachoffset = new float[3];
+	public PlaceGunShooterPosGetter posGetter = new PlaceGunShooterPosGetter();;
 	public float yoffset;
-	
-	
-	public float onTurretScale = 1.0f;
-	public boolean restrictTurretMoveSpeed;
-	public float turretMoveSpeedP;
-	public float turretMoveSpeedY;
-	public float turreboxW;
-	public float turreboxH;
-	public int turretMaxHP;
-	public boolean restrictTurretAngle = false;
+	public double[] sightPosN = new double[3];
+	public double[] sightPosR = new double[3];
+	public double[] sightPosS = new double[3];
+	public boolean canceler;
+	public boolean chargeType;
+	public boolean[] hasNightVision = new boolean[]{false,false,false};
 	public float turretanglelimtMxP = 0;
-	public float turretanglelimtMxY = 0;
 	public float turretanglelimtmnP = 0;
 	public float turretanglelimtmnY = 0;
+	
+	public static Vec3 getLook(float p_70676_1_, Entity entity)
+	{
+	    float f1;
+	    float f2;
+	    float f3;
+	    float f4;
+	
+	
+	
+	    f1 = MathHelper.cos(-(entity instanceof EntityLivingBase ? ((EntityLivingBase)entity).rotationYawHead : (entity instanceof PlacedGunEntity ?((PlacedGunEntity) entity).rotationYawGun:entity.rotationYaw)) * 0.017453292F - (float)Math.PI);
+	    f2 = MathHelper.sin(-(entity instanceof EntityLivingBase ? ((EntityLivingBase)entity).rotationYawHead : (entity instanceof PlacedGunEntity ?((PlacedGunEntity) entity).rotationYawGun:entity.rotationYaw)) * 0.017453292F - (float)Math.PI);
+	    f3 = -MathHelper.cos(-entity.rotationPitch * 0.017453292F);
+	    f4 = MathHelper.sin(-entity.rotationPitch * 0.017453292F);
+	    return Vec3.createVectorHelper((double)(f2 * f3), (double)f4, (double)(f1 * f3));
+	}
 }

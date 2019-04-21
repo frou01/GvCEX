@@ -32,7 +32,7 @@ public class EntityGER_TankAA extends EntityGER_TankBase
         baseLogic = new TankBaseLogic(this, 0.5f, 2.0f, false, "gvcmob:gvcmob.T34Track");
         aiTankAttack = new AITankAttack(this, 6400, 1600, 10, 10);
         this.tasks.addTask(1, aiTankAttack);
-        playerpos = new Vector3d(0, 2.6521, 3.394);
+        playerpos = new Vector3d(0, 2.6521, 3.394-2.3059f);
         zoomingplayerpos = new Vector3d(0, 2.6521, 3.394-2.3059f);
         cannonpos = new Vector3d(0,2.100,2.3059f + 0.3664);
         turretpos = new Vector3d(0, 0, 2.3059f);

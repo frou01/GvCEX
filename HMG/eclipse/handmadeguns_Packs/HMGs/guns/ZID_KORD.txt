@@ -1,0 +1,496 @@
+BulletPower,26
+BulletSpeed,8.6
+BulletGravity,0.485
+BlletSpread,10.0f
+ADS_Spread_coefficient,0.3f
+Recoil,20.0d
+Recoil_sneaking,2.5
+ReloadTime,60
+RemainingBullet,50
+Attacking,2.0f
+Zoom,1.0f,1.0f,1.0f
+ZoomRender,true
+ZoomRenderType,true,true,true
+ZoomRenderTypeTxture,false,false,false
+Cycle,2
+Texture,ZID_KORD
+GunSound,handmadeguns.dshk38Fire,handmadeguns.dshk38Fire
+SoundSpeed,0.8f
+GunSoundReload,handmadeguns.reload
+CanObj,true
+ObjModel,ZID_KORD.mqo
+ObjTexture,ZID_KORD.png
+ModelScala,0.5f
+ThirdModelEquipped,0,0.2,-0.4
+
+Canfix,true
+NeedFix,false
+FixAsEntity,true
+OnEntity_BarrelPoint,0,0.1191,1.29820
+OnEntity_RotationPitchPoint,0,-0.18037,0.66518
+OnEntity_RotationYawPoint,0,-0.18037,0.66518
+OnEntity_Yoffset,0.18135
+OnEntity_PlayerPosOffset,0,0,3
+
+AddParts,naught
+AddPartsRotationCenterAndRotationAmount,0,-1.8135,6.1323,0,0,0
+RenderOnNormal
+AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+
+AddYawInfoKey,-360,0,0,0,0,-360,0 , 360,0,0,0,0,360,0
+AddChildParts,naught2
+AddPartsRotationCenterAndRotationAmount,0,-1.8135,6.1323,0,0,0
+RenderOnNormal
+AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+
+AddPitchInfoKey,-360,0,0,0,-360,0,0 , 360,0,0,0,360,0,0
+
+AddChildParts,mat1
+AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+RenderOnNormal
+AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+
+AddReloadMotionKey,0,0,0,0,0,0,0 , 3,0,-1,0.5,0,0,0
+AddReloadMotionKey,3,0,-1,0.5,0,0,0 , 57,0,-1,0.5,0,0,0
+AddReloadMotionKey,57,0,-1,0.5,0,0,0 , 60,0,0,0,0,0,0
+
+AddChildParts,Larm
+    AddPartsRotationCenterAndRotationAmount,0,1.50f,2f,0,0,0
+    RenderOnNormal
+    AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+
+    AddReloadMotionKey,0,0,0,0,0,0,0 , 3,0,0,0,0,0,0
+    AddReloadMotionKey,3,0,0,0,0,0,0 , 6,0.4,1.4,-1.8,0,0,0
+    AddReloadMotionKey,6,0.4,1.4,-1.8,0,0,0 , 8,0.4,1.4,-1.8,0,0,0
+    AddReloadMotionKey,8,0.4,1.4,-1.8,0,0,0 , 14,0.4,2.9,-1,2,0,0
+    AddReloadMotionKey,14,0.4,2.9,-1,2,0,0 , 18,1,-1.5,-3,0,0,0
+    AddReloadMotionKey,18,1,-1.5,-3,0,0,0 , 22,1,-1.5,-3,0,0,0
+    AddReloadMotionKey,22,1,-1.5,-3,0,0,0 , 26,0.5,1,-1,0,0,0
+    AddReloadMotionKey,26,0.5,1,-1,0,0,0 , 36,0.5,1,-1,0,0,0
+    AddReloadMotionKey,36,0.5,1,-1,0,0,0 , 40,0.4,2.9,-1,2,0,0
+    AddReloadMotionKey,40,0.4,2.9,-1,2,0,0 , 44,0.4,1.4,-1.8,0,0,0
+    AddReloadMotionKey,44,0.4,1.4,-1.8,0,0,0 , 47,0.6,1.3,-0.4,0,0,0
+    AddReloadMotionKey,47,0.6,1.3,-0.4,0,0,0 , 53,0.6,1.3,-0.4,0,0,0
+    AddReloadMotionKey,53,0.6,1.3,-0.4,0,0,0 , 60,0,0,0,0,0,0
+
+BackParts
+AddChildParts,Rarm
+    AddPartsRotationCenterAndRotationAmount,0,1.50f,2f,0,0,0
+    RenderOnNormal
+    AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+
+    AddReloadMotionKey,0,0,0,0,0,0,0 , 3,0,0,0,0,0,0
+    AddReloadMotionKey,3,0,0,0,0,0,0 , 6,-0.4,2,1.26,0,0,0
+    AddReloadMotionKey,6,-0.4,2,1.26,0,0,0 , 8,-0.4,2.1,1.36,0,0,0
+    AddReloadMotionKey,8,-0.4,2.1,1.36,0,0,0 , 11,-0.4,2,1.26,0,0,0
+    AddReloadMotionKey,11,-0.4,2,1.26,0,0,0 , 14,-0.4,2,1.26,0,0,0
+    AddReloadMotionKey,14,-0.4,2,1.26,0,0,0 , 18,-3.6,-2.1,-1.8,0,0,0
+    AddReloadMotionKey,18,false,22
+    AddReloadMotionKey,22,-3.6,-2.1,-1.8,0,0,0 , 26,-1.6,-0.1,2.2,0,0,0
+    AddReloadMotionKey,26,-1.6,-0.1,2.2,0,0,0 , 28,-1,0,2.2,0,0,0
+    AddReloadMotionKey,28,-1,0,2.2,0,0,0 , 30,-0.8,0.6,2.2,0,0,0
+    AddReloadMotionKey,30,-0.8,0.6,2.2,0,0,0 , 33,-0.8,1.5,2.2,0,0,0
+    AddReloadMotionKey,33,-0.8,1.5,2.2,0,0,0 , 35,-0.4,1.8,2.2,0,0,0
+    AddReloadMotionKey,35,-0.4,1.8,2.2,0,0,0 , 36,0,1.7,2.2,0,0,0
+    AddReloadMotionKey,36,0,1.7,2.2,0,0,0 , 40,-0.7,0.7,1.2,0,0,0
+    AddReloadMotionKey,40,-0.7,0.7,1.2,0,0,0 , 47,-0.7,0.7,1.2,0,0,0
+    AddReloadMotionKey,47,-0.7,0.7,1.2,0,0,0 , 49,-0.7,0.9,1.1,0,0,0
+    AddReloadMotionKey,49,-0.7,0.9,1.1,0,0,0 , 53,-0.7,0.9,-0.4,0,0,0
+    AddReloadMotionKey,53,-0.7,0.9,-0.4,0,0,0 , 57,0,0,0,0,0,0
+    AddReloadMotionKey,57,0,0,0,0,0,0 , 60,0,0,0,0,0,0
+
+BackParts
+AddChildParts,mat9
+    AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+    RenderOnNormal
+    AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+    attachpart
+    grip
+BackParts
+AddChildParts,mat21
+    AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+    RenderOnNormal
+    AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+    attachpart
+    gripcover
+BackParts
+AddChildParts,mat22
+    AddPartsRotationCenterAndRotationAmount,0,1.6144,4.1253,0,0,0
+    RenderOnNormal
+    AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+
+    AddReloadMotionKey,0,0,0,0,0,0,0 , 8,0,0,0,0,0,0
+    AddReloadMotionKey,8,0,0,0,0,0,0 , 14,0,0,0,40,0,0
+    AddReloadMotionKey,14,0,0,0,40,0,0 , 40,0,0,0,40,0,0
+    AddReloadMotionKey,40,0,0,0,40,0,0 , 44,0,0,0,0,0,0
+    AddReloadMotionKey,44,0,0,0,0,0,0 , 60,0,0,0,0,0,0
+
+    AddChildParts,cover1
+        AddPartsRotationCenterAndRotationAmount,0.3466,1.6817,0,0,0,0
+        RenderOnNormal
+        AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+
+        AddRecoilMotionKey,0,0,0,0,0,0,0 , 5,0,0,0,0,0,55
+        AddRecoilMotionKey,5,0,0,0,0,0,55 , 10,0,0,0,0,0,0
+
+    BackParts
+    AddChildParts,cover2
+        AddPartsRotationCenterAndRotationAmount,-0.5093,1.6805,0,0,0,0
+        RenderOnNormal
+        AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+
+        AddRecoilMotionKey,0,0,0,0,0,0,0 , 5,0,0,0,0,0,-40
+        AddRecoilMotionKey,5,0,0,0,0,0,-40 , 10,0,0,0,0,0,0
+
+        AddReloadMotionKey,0,0,0,0,0,0,50.4 , 42,0,0,0,0,0,50.4
+        AddReloadMotionKey,42,0,0,0,0,0,50.4 , 43,0,0,0,0,0,0
+        AddReloadMotionKey,43,0,0,0,0,0,0 , 49,0,0,0,0,0,0
+        AddReloadMotionKey,49,0,0,0,0,0,0 , 51,0,0,0,0,0,-10
+        AddReloadMotionKey,51,0,0,0,0,0,-10 , 53,0,0,0,0,0,0
+        AddReloadMotionKey,53,0,0,0,0,0,0 , 60,0,0,0,0,0,0
+
+    BackParts
+BackParts
+AddChildParts,mat25
+    AddPartsRotationCenterAndRotationAmount,0,0.7488,1.391,0,0,0
+    RenderOnNormal
+    AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+
+    AddReloadMotionKey,0,0,0,0,0,0,0 , 47,0,0,0,0,0,0
+    AddReloadMotionKey,47,0,0,0,0,0,0 , 49,0.0247,0,0,60.4,0,0
+    AddReloadMotionKey,49,0.0247,0,0,60.4,0,0 , 53,0.0247,0,-1.5,60.4,0,0
+    AddReloadMotionKey,53,0.0247,0,-1.5,60.4,0,0 , 54,0.0247,0,0,60.4,0,0
+    AddReloadMotionKey,54,0.0247,0,0,60.4,0,0 , 65,0,0,0,0,0,0
+    AddReloadMotionKey,55,0,0,0,0,0,0 , 60,0,0,0,0,0,0
+
+BackParts
+AddChildParts,wire1
+    AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+    RenderOnNormal
+    AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+
+    AddReloadMotionKey,0,0,0,0,0,0,0 , 47,0,0,0,0,0,0
+    AddReloadMotionKey,47,false,55
+    AddReloadMotionKey,55,0,0,0,0,0,0 , 60,0,0,0,0,0,0
+
+BackParts
+AddChildParts,wire2
+    AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+    AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+
+    AddReloadMotionKey,0,false,49
+    AddReloadMotionKey,49,0,0,0,0,0,0 , 54,0,0,0,0,0,0
+    AddReloadMotionKey,54,false,60
+
+BackParts
+AddChildParts,lever
+    AddPartsRotationCenterAndRotationAmount,0,1.5951,1.5656,0,0,0
+    RenderOnNormal
+    AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+
+    AddReloadMotionKey,0,0,0,0,0,0,0 , 6,0,0,0,0,0,0
+    AddReloadMotionKey,6,0,0,0,0,0,0 , 8,0,0,0,20,0,0
+    AddReloadMotionKey,8,0,0,0,20,0,0 , 11,0,0,0,0,0,0
+    AddReloadMotionKey,11,0,0,0,0,0,0 , 60,0,0,0,0,0,0
+
+BackParts
+AddChildParts,naught
+    AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+    RenderOnNormal
+    AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+
+    AddReloadMotionKey,0,false,22
+    AddReloadMotionKey,22,-2,-2,-4,0,0,0 , 26,0,0,0,0,0,0
+    AddReloadMotionKey,26,0,0,0,0,0,0 , 60,0,0,0,0,0,0
+
+    AddChildParts,bullet
+        AddPartsRotationCenterAndRotationAmount,0,1.4156,0,0,0,0
+        RenderOnNormal
+        AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+        AddPartsRenderAsBulletInf,0,0,0,0,0,0
+        Isbullet,true,11
+
+        AddBulletPositions,0,0,-0.3,0,0,0,0 , 1,0,0,0,0,0,0
+        AddBulletPositions,1,0,0,0,0,0,0 , 2,-0.2975,0.0475,0,0,0,-17.35
+        AddBulletPositions,2,-0.2975,0.0475,0,0,0,-17.35 , 3,-0.5896,0.0448,0,0,0,16.97
+        AddBulletPositions,3,-0.5896,0.0448,0,0,0,16.97 , 4,-0.7301,-0.1577,0,0,0,90
+        AddBulletPositions,4,-0.7301,-0.1577,0,0,0,90 , 5,-0.7301,-0.4634,0,0,0,90
+        AddBulletPositions,5,-0.7301,-0.4634,0,0,0,90 , 6,-0.7301,-0.7692,0,0,0,90
+        AddBulletPositions,6,-0.7301,-0.7692,0,0,0,90 , 7,-0.7301,-1.0744,0,0,0,90
+        AddBulletPositions,7,-0.7301,-1.0744,0,0,0,90 , 8,-0.7884,-1.3689,0,0,0,68.63
+        AddBulletPositions,8,-0.7884,-1.3689,0,0,0,68.63 , 9,-0.9653,-1.6057,0,0,0,39.24
+        AddBulletPositions,9,-0.9653,-1.6057,0,0,0,39.24 , 10,-1.2316,-1.7406,0,0,0,15.56
+        AddBulletPositions,10,-1.2316,-1.7406,0,0,0,15.56 , 11,-1.5315,-1.7787,0,0,0,0
+
+    BackParts
+    //’e–ò1
+    AddChildParts,bullet
+        AddPartsRotationCenterAndRotationAmount,0,1.4156,0,0,0,0
+        AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+
+        AddReloadMotionKey,0,-1.5315,-1.7787,0,0,0,0 , 26,-1.5315,-1.7787,0,0,0,0
+        AddReloadMotionKey,26,-1.5315,-1.7787,0,0,0,0 , 27,-1.2316,-1.7406,0,0,0,15.56
+        AddReloadMotionKey,27,-1.2316,-1.7406,0,0,0,15.56 , 28,-0.9653,-1.6057,0,0,0,39.24
+        AddReloadMotionKey,28,-0.9653,-1.6057,0,0,0,39.24 , 29,-0.7884,-1.3689,0,0,0,68.63
+        AddReloadMotionKey,29,-0.7884,-1.3689,0,0,0,68.63 , 30,-0.7301,-1.0744,0,0,0,90
+        AddReloadMotionKey,30,-0.7301,-1.0744,0,0,0,90 , 31,-0.7301,-0.7692,0,0,0,90
+        AddReloadMotionKey,31,-0.7301,-0.7692,0,0,0,90 , 32,-0.7301,-0.4634,0,0,0,90
+        AddReloadMotionKey,32,-0.7301,-0.4634,0,0,0,90 , 33,-0.7301,-0.1577,0,0,0,90
+        AddReloadMotionKey,33,-0.7301,-0.1577,0,0,0,90 , 34,-0.5896,0.0448,0,0,0,16.97
+        AddReloadMotionKey,34,-0.5896,0.0448,0,0,0,16.97 , 35,-0.2975,0.0475,0,0,0,-17.35
+        AddReloadMotionKey,35,-0.2975,0.0475,0,0,0,-17.35 , 36,0,0,0,0,0,0
+        AddReloadMotionKey,36,0,0,0,0,0,0 , 49,0,0,0,0,0,0
+        AddReloadMotionKey,49,0,0,0,0,0,0 , 53,0,-0.3,0,0,0,0
+        AddReloadMotionKey,53,0,-0.3,0,0,0,0 , 60,0,-0.3,0,0,0,0
+
+    BackParts
+    //’e–ò2
+    AddChildParts,bullet
+        AddPartsRotationCenterAndRotationAmount,0,1.4156,0,0,0,0
+        AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+
+        AddReloadMotionKey,0,false,27
+        AddReloadMotionKey,27,-1.5315,-1.7787,0,0,0,0 , 28,-1.2316,-1.7406,0,0,0,15.56
+        AddReloadMotionKey,28,-1.2316,-1.7406,0,0,0,15.56 , 29,-0.9653,-1.6057,0,0,0,39.24
+        AddReloadMotionKey,29,-0.9653,-1.6057,0,0,0,39.24 , 30,-0.7884,-1.3689,0,0,0,68.63
+        AddReloadMotionKey,30,-0.7884,-1.3689,0,0,0,68.63 , 31,-0.7301,-1.0744,0,0,0,90
+        AddReloadMotionKey,31,-0.7301,-1.0744,0,0,0,90 , 32,-0.7301,-0.7692,0,0,0,90
+        AddReloadMotionKey,32,-0.7301,-0.7692,0,0,0,90 , 33,-0.7301,-0.4634,0,0,0,90
+        AddReloadMotionKey,33,-0.7301,-0.4634,0,0,0,90 , 34,-0.7301,-0.1577,0,0,0,90
+        AddReloadMotionKey,34,-0.7301,-0.1577,0,0,0,90 , 35,-0.5896,0.0448,0,0,0,16.97
+        AddReloadMotionKey,35,-0.5896,0.0448,0,0,0,16.97 , 36,-0.2975,0.0475,0,0,0,-17.35
+        AddReloadMotionKey,36,-0.2975,0.0475,0,0,0,-17.35 , 49,-0.2975,0.0475,0,0,0,-17.35
+        AddReloadMotionKey,49,-0.2975,0.0475,0,0,0,-17.35 , 53,0,0,0,0,0,0
+        AddReloadMotionKey,53,0,0,0,0,0,0 , 60,0,0,0,0,0,0
+
+    BackParts
+    //’e–ò3
+    AddChildParts,bullet
+        AddPartsRotationCenterAndRotationAmount,0,1.4156,0,0,0,0
+        AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+
+        AddReloadMotionKey,0,false,28
+        AddReloadMotionKey,28,-1.5315,-1.7787,0,0,0,0 , 29,-1.2316,-1.7406,0,0,0,15.56
+        AddReloadMotionKey,29,-1.2316,-1.7406,0,0,0,15.56 , 30,-0.9653,-1.6057,0,0,0,39.24
+        AddReloadMotionKey,30,-0.9653,-1.6057,0,0,0,39.24 , 31,-0.7884,-1.3689,0,0,0,68.63
+        AddReloadMotionKey,31,-0.7884,-1.3689,0,0,0,68.63 , 32,-0.7301,-1.0744,0,0,0,90
+        AddReloadMotionKey,32,-0.7301,-1.0744,0,0,0,90 , 33,-0.7301,-0.7692,0,0,0,90
+        AddReloadMotionKey,33,-0.7301,-0.7692,0,0,0,90 , 34,-0.7301,-0.4634,0,0,0,90
+        AddReloadMotionKey,34,-0.7301,-0.4634,0,0,0,90 , 35,-0.7301,-0.1577,0,0,0,90
+        AddReloadMotionKey,35,-0.7301,-0.1577,0,0,0,90 , 36,-0.5896,0.0448,0,0,0,16.97
+        AddReloadMotionKey,36,-0.5896,0.0448,0,0,0,16.97 , 49,-0.5896,0.0448,0,0,0,16.97
+        AddReloadMotionKey,49,-0.5896,0.0448,0,0,0,16.97 , 53,-0.2975,0.0475,0,0,0,-17.35
+        AddReloadMotionKey,53,-0.2975,0.0475,0,0,0,-17.35 , 60,-0.2975,0.0475,0,0,0,-17.35
+
+    BackParts
+    //’e–ò4
+    AddChildParts,bullet
+        AddPartsRotationCenterAndRotationAmount,0,1.4156,0,0,0,0
+        AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+
+        AddReloadMotionKey,0,false,29
+        AddReloadMotionKey,29,-1.5315,-1.7787,0,0,0,0 , 30,-1.2316,-1.7406,0,0,0,15.56
+        AddReloadMotionKey,30,-1.2316,-1.7406,0,0,0,15.56 , 31,-0.9653,-1.6057,0,0,0,39.24
+        AddReloadMotionKey,31,-0.9653,-1.6057,0,0,0,39.24 , 32,-0.7884,-1.3689,0,0,0,68.63
+        AddReloadMotionKey,32,-0.7884,-1.3689,0,0,0,68.63 , 33,-0.7301,-1.0744,0,0,0,90
+        AddReloadMotionKey,33,-0.7301,-1.0744,0,0,0,90 , 34,-0.7301,-0.7692,0,0,0,90
+        AddReloadMotionKey,34,-0.7301,-0.7692,0,0,0,90 , 35,-0.7301,-0.4634,0,0,0,90
+        AddReloadMotionKey,35,-0.7301,-0.4634,0,0,0,90 , 36,-0.7301,-0.1577,0,0,0,90
+        AddReloadMotionKey,36,-0.7301,-0.1577,0,0,0,90 , 49,-0.7301,-0.1577,0,0,0,90
+        AddReloadMotionKey,49,-0.7301,-0.1577,0,0,0,90 , 53,-0.5896,0.0448,0,0,0,16.97
+        AddReloadMotionKey,53,-0.5896,0.0448,0,0,0,16.97 , 60,-0.5896,0.0448,0,0,0,16.97
+
+    BackParts
+    //’e–ò5
+    AddChildParts,bullet
+        AddPartsRotationCenterAndRotationAmount,0,1.4156,0,0,0,0
+        AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+
+        AddReloadMotionKey,0,false,30
+        AddReloadMotionKey,30,-1.5315,-1.7787,0,0,0,0 , 31,-1.2316,-1.7406,0,0,0,15.56
+        AddReloadMotionKey,31,-1.2316,-1.7406,0,0,0,15.56 , 32,-0.9653,-1.6057,0,0,0,39.24
+        AddReloadMotionKey,32,-0.9653,-1.6057,0,0,0,39.24 , 33,-0.7884,-1.3689,0,0,0,68.63
+        AddReloadMotionKey,33,-0.7884,-1.3689,0,0,0,68.63 , 34,-0.7301,-1.0744,0,0,0,90
+        AddReloadMotionKey,34,-0.7301,-1.0744,0,0,0,90 , 35,-0.7301,-0.7692,0,0,0,90
+        AddReloadMotionKey,35,-0.7301,-0.7692,0,0,0,90 , 36,-0.7301,-0.4634,0,0,0,90
+        AddReloadMotionKey,36,-0.7301,-0.4634,0,0,0,90 , 49,-0.7301,-0.4634,0,0,0,90
+        AddReloadMotionKey,49,-0.7301,-0.4634,0,0,0,90 , 53,-0.7301,-0.1577,0,0,0,90
+        AddReloadMotionKey,53,-0.7301,-0.1577,0,0,0,90 , 60,-0.7301,-0.1577,0,0,0,90
+
+    BackParts
+    //’e–ò6
+    AddChildParts,bullet
+        AddPartsRotationCenterAndRotationAmount,0,1.4156,0,0,0,0
+        AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+
+        AddReloadMotionKey,0,false,31
+        AddReloadMotionKey,31,-1.5315,-1.7787,0,0,0,0 , 32,-1.2316,-1.7406,0,0,0,15.56
+        AddReloadMotionKey,32,-1.2316,-1.7406,0,0,0,15.56 , 33,-0.9653,-1.6057,0,0,0,39.24
+        AddReloadMotionKey,33,-0.9653,-1.6057,0,0,0,39.24 , 34,-0.7884,-1.3689,0,0,0,68.63
+        AddReloadMotionKey,34,-0.7884,-1.3689,0,0,0,68.63 , 35,-0.7301,-1.0744,0,0,0,90
+        AddReloadMotionKey,35,-0.7301,-1.0744,0,0,0,90 , 36,-0.7301,-0.7692,0,0,0,90
+        AddReloadMotionKey,36,-0.7301,-0.7692,0,0,0,90 , 49,-0.7301,-0.7692,0,0,0,90
+        AddReloadMotionKey,49,-0.7301,-0.7692,0,0,0,90 , 53,-0.7301,-0.4634,0,0,0,90
+        AddReloadMotionKey,53,-0.7301,-0.4634,0,0,0,90 , 60,-0.7301,-0.4634,0,0,0,90
+
+    BackParts
+    //’e–ò7
+    AddChildParts,bullet
+        AddPartsRotationCenterAndRotationAmount,0,1.4156,0,0,0,0
+        AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+
+        AddReloadMotionKey,0,false,32
+        AddReloadMotionKey,32,-1.5315,-1.7787,0,0,0,0 , 33,-1.2316,-1.7406,0,0,0,15.56
+        AddReloadMotionKey,33,-1.2316,-1.7406,0,0,0,15.56 , 34,-0.9653,-1.6057,0,0,0,39.24
+        AddReloadMotionKey,34,-0.9653,-1.6057,0,0,0,39.24 , 35,-0.7884,-1.3689,0,0,0,68.63
+        AddReloadMotionKey,35,-0.7884,-1.3689,0,0,0,68.63 , 36,-0.7301,-1.0744,0,0,0,90
+        AddReloadMotionKey,36,-0.7301,-1.0744,0,0,0,90 , 49,-0.7301,-1.0744,0,0,0,90
+        AddReloadMotionKey,49,-0.7301,-1.0744,0,0,0,90 , 53,-0.7301,-0.7692,0,0,0,90
+        AddReloadMotionKey,53,-0.7301,-0.7692,0,0,0,90 , 60,-0.7301,-0.7692,0,0,0,90
+
+    BackParts
+    //’e–ò8
+    AddChildParts,bullet
+        AddPartsRotationCenterAndRotationAmount,0,1.4156,0,0,0,0
+        AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+
+        AddReloadMotionKey,0,false,33
+        AddReloadMotionKey,33,-1.5315,-1.7787,0,0,0,0 , 34,-1.2316,-1.7406,0,0,0,15.56
+        AddReloadMotionKey,34,-1.2316,-1.7406,0,0,0,15.56 , 35,-0.9653,-1.6057,0,0,0,39.24
+        AddReloadMotionKey,35,-0.9653,-1.6057,0,0,0,39.24 , 36,-0.7884,-1.3689,0,0,0,68.63
+        AddReloadMotionKey,36,-0.7884,-1.3689,0,0,0,68.63 , 49,-0.7884,-1.3689,0,0,0,68.63
+        AddReloadMotionKey,49,-0.7884,-1.3689,0,0,0,68.63 , 53,-0.7301,-1.0744,0,0,0,90
+        AddReloadMotionKey,53,-0.7301,-1.0744,0,0,0,90 , 60,-0.7301,-1.0744,0,0,0,90
+
+    BackParts
+    //’e–ò9
+    AddChildParts,bullet
+        AddPartsRotationCenterAndRotationAmount,0,1.4156,0,0,0,0
+        AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+
+        AddReloadMotionKey,0,false,34
+        AddReloadMotionKey,34,-1.5315,-1.7787,0,0,0,0 , 35,-1.2316,-1.7406,0,0,0,15.56
+        AddReloadMotionKey,35,-1.2316,-1.7406,0,0,0,15.56 , 36,-0.9653,-1.6057,0,0,0,39.24
+        AddReloadMotionKey,36,-0.9653,-1.6057,0,0,0,39.24 , 49,-0.9653,-1.6057,0,0,0,39.24
+        AddReloadMotionKey,49,-0.9653,-1.6057,0,0,0,39.24 , 53,-0.7884,-1.3689,0,0,0,68.63
+        AddReloadMotionKey,53,-0.7884,-1.3689,0,0,0,68.63 , 60,-0.7884,-1.3689,0,0,0,68.63
+
+    BackParts
+    //’e–ò10
+    AddChildParts,bullet
+        AddPartsRotationCenterAndRotationAmount,0,1.4156,0,0,0,0
+        AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+
+        AddReloadMotionKey,0,false,35
+        AddReloadMotionKey,35,-1.5315,-1.7787,0,0,0,0 , 36,-1.2316,-1.7406,0,0,0,15.56
+        AddReloadMotionKey,36,-1.2316,-1.7406,0,0,0,15.56 , 49,-1.2316,-1.7406,0,0,0,15.56
+        AddReloadMotionKey,49,-1.2316,-1.7406,0,0,0,15.56 , 53,-0.9653,-1.6057,0,0,0,39.24
+        AddReloadMotionKey,53,-0.9653,-1.6057,0,0,0,39.24 , 60,-0.9653,-1.6057,0,0,0,39.24
+
+    BackParts
+    //’e–ò11
+    AddChildParts,bullet
+        AddPartsRotationCenterAndRotationAmount,0,1.4156,0,0,0,0
+        AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+
+        AddReloadMotionKey,0,false,36
+        AddReloadMotionKey,36,-1.5315,-1.7787,0,0,0,0 , 49,-1.5315,-1.7787,0,0,0,0
+        AddReloadMotionKey,49,-1.5315,-1.7787,0,0,0,0 , 53,-1.2316,-1.7406,0,0,0,15.56
+        AddReloadMotionKey,53,-1.2316,-1.7406,0,0,0,15.56 , 60,-1.2316,-1.7406,0,0,0,15.56
+
+    BackParts
+BackParts
+BackParts
+
+GunSoundLV,5.0f,5.0f
+GunSoundReloadLV,1.0f
+KnockBack,1.0,0.8
+SprintingPoint,0.0f,0.0f,0.5f
+SprintingRotation,20f,70f,0f
+
+ModelEquipped,-0.7f,0.65f,-0.3f
+ModelHigh,0.849f,0.849f,0.849f
+ModelWidthX,0.693f,0.693f,0.693f
+ModelWidthZ,-0.1f,-0.1f,-0.1f
+ModelRotationX,180f,180f,180f
+ModelRotationY,45f,45f,45
+ModelRotationZ,180f,180f,180f
+
+ModelArm,true
+ModelArmRotationR,-1.57f,-0.5f,-1.57f
+ModelArmOffsetR,0.0f,0.45f,0.5f
+ModelArmRotationL,-0.0f,-2.3f,2.0f
+ModelArmOffsetL,0.0f,0.43f,-1.5f
+
+Mat22,false
+Mat22Point,0.0f,1.6144f,4.1253f
+Mat22Rotation,40f,0f,0f
+
+DropMagazine,false
+
+CustomFlash,CannonMuzzleFlash,3
+
+Motion,0.15d
+ScopeTexture,ironsight.png,ironsight.png,ironsight.png
+RenderCross,false
+UnderBarrelWeapon,0
+RightType,0
+Magazine,0,HandmadeGuns,12.7mmx108mmBox
+
+BulletNameALL,12_7mmBullet
+BulletNameCart,12_7mmCart
+
+
+LMG,byNicoemon_ZID_KORD
+
+Recipe1, a 
+Recipe2,aba
+Recipe3,abc
+ItemA,minecraft,iron_ingot
+ItemB,minecraft,iron_block
+ItemC,minecraft,emerald_block
+addNewRecipe,HandmadeGuns,byNicoemon_ZID_KORD,1

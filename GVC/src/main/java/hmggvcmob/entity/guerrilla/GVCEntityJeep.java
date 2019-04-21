@@ -33,7 +33,7 @@ public class GVCEntityJeep extends EntityGBase implements ITank
 {
     public float bodyrotationYaw;
     float rotationmotion;
-    TankBaseLogic baseLogic = new TankBaseLogic(this,0.24f,1f,false,"gvcmob:gvcmob.JeepWheel");
+    TankBaseLogic baseLogic = new TankBaseLogic(this,0.24f,1.5f,false,"gvcmob:gvcmob.JeepWheel");
     public Quat4d bodyRot = new Quat4d(0,0,0,1);
     private float throttle;
     ModifiedBoundingBox nboundingbox;
@@ -245,7 +245,7 @@ public class GVCEntityJeep extends EntityGBase implements ITank
     }
     public double getMountedYOffset() {
         if(riddenByEntity instanceof PlacedGunEntity && ((PlacedGunEntity) riddenByEntity).gunItem != null){
-            return 2.0D - ((PlacedGunEntity) riddenByEntity).gunItem.yoffset;
+            return 2.0D - ((PlacedGunEntity) riddenByEntity).gunItem.gunInfo.yoffset;
         }
         return 1.0D;
     }

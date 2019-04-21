@@ -26,6 +26,7 @@ import handmadeguns.entity.bullets.*;
 import handmadeguns.event.HMGEventZoom;
 import handmadeguns.event.HMGLivingUpdateEvent;
 import handmadeguns.event.RenderTickSmoothing;
+import handmadeguns.items.GunInfo;
 import handmadeguns.items.HMGItemBullet;
 import handmadeguns.items.guns.HMGItem_Unified_Guns;
 import net.minecraft.block.Block;
@@ -676,7 +677,7 @@ public class HandmadeGunsCore {
 		if(entityplayer instanceof EntityPlayer){
 			if(((EntityPlayer) entityplayer).getHeldItem() != null
 					&& ((EntityPlayer) entityplayer).getHeldItem().getItem() instanceof HMGItem_Unified_Guns
-					&& ((HMGItem_Unified_Guns) ((EntityPlayer) entityplayer).getHeldItem().getItem()).needcock
+					&& ((HMGItem_Unified_Guns) ((EntityPlayer) entityplayer).getHeldItem().getItem()).gunInfo.needcock
 					&& ((EntityPlayer) entityplayer).getHeldItem().getTagCompound() != null
 					&& !((EntityPlayer) entityplayer).getHeldItem().getTagCompound().getBoolean("Cocking")){
 				return false;

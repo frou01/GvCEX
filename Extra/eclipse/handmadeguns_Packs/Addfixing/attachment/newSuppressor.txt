@@ -1,9 +1,0 @@
-﻿
-Texture,Suppressor
-Name,サプレッサー
-Model,true
-ObjModel,am_suppressor.mqo
-ObjTexture,am_suppressor.png
-CenterPoint,0F,0.0F,0F
-
-Model_Suppressor,Suppressor_new

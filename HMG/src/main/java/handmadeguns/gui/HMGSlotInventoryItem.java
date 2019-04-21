@@ -40,9 +40,9 @@ public class HMGSlotInventoryItem extends Slot
     public boolean isItemValid(ItemStack itemStack){
 //        System.out.println("" + slotNumber + itemStack.getItem().getUnlocalizedName());
         if(gun != null && itemStack != null){
-            if(gun.getItem() instanceof HMGItem_Unified_Guns && ((HMGItem_Unified_Guns)gun.getItem()).hasAttachRestriction) {
+            if(gun.getItem() instanceof HMGItem_Unified_Guns && ((HMGItem_Unified_Guns) gun.getItem()).gunInfo.hasAttachRestriction) {
 
-                for(String aa:((HMGItem_Unified_Guns)gun.getItem()).attachwhitelist) {
+                for(String aa: ((HMGItem_Unified_Guns) gun.getItem()).gunInfo.attachwhitelist) {
                     if("item.".concat(aa).equals(itemStack.getItem().getUnlocalizedName())){
                         return true;
                     }

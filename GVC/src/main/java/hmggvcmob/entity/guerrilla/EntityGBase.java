@@ -103,7 +103,7 @@ public class EntityGBase extends EntityGBases implements IFF,IGVCmob,IMGGunner {
 			if (this.getHeldItem() != null && (source.getEntity() != getAttackTarget()||par2>7) && (source.getDamageType().equals("mob") || source.getDamageType().equals("player"))) {
 				this.entityDropItem(this.getHeldItem(), 1);
 				if (this.getHeldItem().getItem() instanceof HMGItem_Unified_Guns) {
-					this.dropItem(((HMGItem_Unified_Guns) this.getHeldItem().getItem()).magazine, 1);
+					this.dropItem(((HMGItem_Unified_Guns) this.getHeldItem().getItem()).gunInfo.magazine, 1);
 				}
 				staningtime = 10;
 				this.setCurrentItemOrArmor(0, null);
@@ -176,7 +176,7 @@ public class EntityGBase extends EntityGBases implements IFF,IGVCmob,IMGGunner {
 			this.rotationPitch-=rndpitch;
 			this.rotationYaw-=rndyaw;
 			rndpitch += recoiled;
-			if(!worldObj.isRemote && cfg_guerrillacanusePlacedGun && canusePlacedGun && ridingEntity == null && onGround &&this.getAttackTarget() != null && this.getHeldItem().getItem()instanceof HMGItem_Unified_Guns && ((HMGItem_Unified_Guns) this.getHeldItem().getItem()).fixAsEntity){
+			if(!worldObj.isRemote && cfg_guerrillacanusePlacedGun && canusePlacedGun && ridingEntity == null && onGround &&this.getAttackTarget() != null && this.getHeldItem().getItem()instanceof HMGItem_Unified_Guns && ((HMGItem_Unified_Guns) this.getHeldItem().getItem()).gunInfo.fixAsEntity){
 				placing ++;
 				if(placing>30) {
 					placing = 0;

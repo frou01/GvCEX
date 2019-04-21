@@ -1,4 +1,0 @@
-ObjModel,14.5mm_bullet.mqo
-ObjTexture,14_5mmbullet&Cart.png
-Objscale,1
-Name,14_5mmBullet

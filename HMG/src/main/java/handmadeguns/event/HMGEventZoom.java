@@ -97,25 +97,25 @@ public class HMGEventZoom {
 					itemstackSight = items[1];
 					if(itemstackSight != null) {
 						if (itemstackSight.getItem() instanceof HMGItemAttachment_reddot) {
-							if (gunbase.canobj && gunbase.zoomrer) {
-								event.newfov = event.fov / gunbase.scopezoomred;
+							if (gunbase.gunInfo.canobj && gunbase.gunInfo.zoomrer) {
+								event.newfov = event.fov / gunbase.gunInfo.scopezoomred;
 							}
 						} else if (itemstackSight.getItem() instanceof HMGItemAttachment_scope) {
-							if (gunbase.canobj && gunbase.zoomres) {
-								event.newfov = event.fov / gunbase.scopezoomscope;
+							if (gunbase.gunInfo.canobj && gunbase.gunInfo.zoomres) {
+								event.newfov = event.fov / gunbase.gunInfo.scopezoomscope;
 							}
 						} else if (itemstackSight.getItem() instanceof HMGItemSightBase) {
-							if (gunbase.canobj && !((HMGItemSightBase) itemstackSight.getItem()).scopeonly) {
+							if (gunbase.gunInfo.canobj && !((HMGItemSightBase) itemstackSight.getItem()).scopeonly) {
 								event.newfov = event.fov / ((HMGItemSightBase) itemstackSight.getItem()).zoomlevel;
 							}
 						}else {
-							if (gunbase.canobj && gunbase.zoomren) {
-								event.newfov = event.fov / gunbase.scopezoombase;
+							if (gunbase.gunInfo.canobj && gunbase.gunInfo.zoomren) {
+								event.newfov = event.fov / gunbase.gunInfo.scopezoombase;
 							}
 						}
 					} else {
-						if (gunbase.canobj && gunbase.zoomren) {
-							event.newfov = event.fov / gunbase.scopezoombase;
+						if (gunbase.gunInfo.canobj && gunbase.gunInfo.zoomren) {
+							event.newfov = event.fov / gunbase.gunInfo.scopezoombase;
 						}
 					}
 				}
@@ -175,9 +175,9 @@ public class HMGEventZoom {
 				if (itemstack != null && itemstack.getItem() instanceof HMGItem_Unified_Guns) {
 					// this.modelArmor.aimedBow = true;
 					HMGItem_Unified_Guns gunbase = (HMGItem_Unified_Guns) itemstack.getItem();
-					String ads = gunbase.adstexture;
-					String adsr = gunbase.adstexturer;
-					String adss = gunbase.adstextures;
+					String ads = gunbase.gunInfo.adstexture;
+					String adsr = gunbase.gunInfo.adstexturer;
+					String adss = gunbase.gunInfo.adstextures;
 					((HMGItem_Unified_Guns) itemstack.getItem()).checkTags(itemstack);
 					NBTTagCompound nbt = itemstack.getTagCompound();
 					//String ads = nbt.getString("adstexture");
@@ -189,7 +189,10 @@ public class HMGEventZoom {
 					if (nbt.getBoolean("islockedentity")) {
 						targetEntityID = nbt.getInteger("TGT");
 					}
-					float bure = gunbase.spread_setting * nbt.getFloat("Diffusion");
+					float spreadDiffusion = nbt.getFloat("Diffusion");
+					float bure = gunbase.gunInfo.spread_setting;
+					bure *= HandmadeGunsCore.Key_ADS(entityplayer) ? gunbase.gunInfo.ads_spread_cof:1;
+					bure  += gunbase.gunInfo.spread_setting * spreadDiffusion;
 					((HMGItem_Unified_Guns) itemstack.getItem()).checkTags(itemstack);
 					ItemStack[] items = new ItemStack[6];
 					ItemStack itemstackSight = null;
@@ -212,25 +215,25 @@ public class HMGEventZoom {
 					if (HandmadeGunsCore.Key_ADS(entityplayer)) {
 						if (itemstackSight != null) {
 							if (itemstackSight.getItem() instanceof HMGItemAttachment_reddot) {
-								if (!gunbase.canobj || !gunbase.zoomrer) {
+								if (!gunbase.gunInfo.canobj || !gunbase.gunInfo.zoomrer) {
 									ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer,
-											gunbase.scopezoomred, "cameraZoom", "field_78503_V");
+											gunbase.gunInfo.scopezoomred, "cameraZoom", "field_78503_V");
 									needreset = true;
 								}
-								if (gunbase.zoomrert) {
+								if (gunbase.gunInfo.zoomrert) {
 									this.renderPumpkinBlur(minecraft, screenposX, screenposY, screenWidth, screenHeight, adsr);
 								}
 							} else if (itemstackSight.getItem() instanceof HMGItemAttachment_scope) {
-								if (!gunbase.canobj || !gunbase.zoomres) {
+								if (!gunbase.gunInfo.canobj || !gunbase.gunInfo.zoomres) {
 									ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer,
-											gunbase.scopezoomscope, "cameraZoom", "field_78503_V");
+											gunbase.gunInfo.scopezoomscope, "cameraZoom", "field_78503_V");
 									needreset = true;
 								}
-								if (gunbase.zoomrest) {
+								if (gunbase.gunInfo.zoomrest) {
 									this.renderPumpkinBlur(minecraft, screenposX, screenposY, screenWidth, screenHeight, adss);
 								}
 							} else if (itemstackSight.getItem() instanceof HMGItemSightBase) {
-								if (!gunbase.canobj || ((HMGItemSightBase) itemstackSight.getItem()).scopeonly) {
+								if (!gunbase.gunInfo.canobj || ((HMGItemSightBase) itemstackSight.getItem()).scopeonly) {
 									ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer,
 											((HMGItemSightBase) itemstackSight.getItem()).zoomlevel, "cameraZoom", "field_78503_V");
 									needreset = true;
@@ -240,50 +243,50 @@ public class HMGEventZoom {
 								}
 							}
 						} else {
-							if (!gunbase.canobj || !gunbase.zoomren) {
+							if (!gunbase.gunInfo.canobj || !gunbase.gunInfo.zoomren) {
 								ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer,
-										gunbase.scopezoombase, "cameraZoom", "field_78503_V");
+										gunbase.gunInfo.scopezoombase, "cameraZoom", "field_78503_V");
 								needreset = true;
 							}
-							if (gunbase.zoomrent) {
+							if (gunbase.gunInfo.zoomrent) {
 								this.renderPumpkinBlur(minecraft, screenposX, screenposY, screenWidth, screenHeight, ads);
 							}
 						}
-						if (gunbase.rendercross) {
+						if (gunbase.gunInfo.renderMCcross) {
 							GuiIngameForge.renderCrosshairs = true;
 						} else {
 							GuiIngameForge.renderCrosshairs = false;
 							GL11.glEnable(GL11.GL_BLEND);
 						}
-
+						if(gunbase.gunInfo.renderHMGcross && spreadDiffusion > gunbase.gunInfo.spreadDiffusionmin)this.renderCrossHair(minecraft, scaledresolution.getScaledWidth(), scaledresolution.getScaledHeight(), bure);
 					} else {
 						// GuiIngameForge.renderCrosshairs = true;
-						if (gunbase.rendercross) {
+						if (gunbase.gunInfo.renderMCcross) {
 							GuiIngameForge.renderCrosshairs = true;
 						} else {
 							GuiIngameForge.renderCrosshairs = false;
 							GL11.glEnable(GL11.GL_BLEND);
 						}
-						this.renderCrossHair(minecraft, scaledresolution.getScaledWidth(), scaledresolution.getScaledHeight(), bure);
+						if(gunbase.gunInfo.renderHMGcross)this.renderCrossHair(minecraft, scaledresolution.getScaledWidth(), scaledresolution.getScaledHeight(), bure);
 						if (itemstackSight != null) {
 							if (itemstackSight.getItem() instanceof HMGItemAttachment_reddot) {
-								if (!gunbase.canobj || !gunbase.zoomrer) {
+								if (!gunbase.gunInfo.canobj || !gunbase.gunInfo.zoomrer) {
 									ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer,
 											1.0d, "cameraZoom", "field_78503_V");
 								}
 							} else if (itemstackSight.getItem() instanceof HMGItemAttachment_scope) {
-								if (!gunbase.canobj || !gunbase.zoomres) {
+								if (!gunbase.gunInfo.canobj || !gunbase.gunInfo.zoomres) {
 									ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer,
 											1.0d, "cameraZoom", "field_78503_V");
 								}
 							} else if (itemstackSight.getItem() instanceof HMGItemSightBase) {
-								if (!gunbase.canobj || ((HMGItemSightBase) itemstackSight.getItem()).scopeonly) {
+								if (!gunbase.gunInfo.canobj || ((HMGItemSightBase) itemstackSight.getItem()).scopeonly) {
 									ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer,
 											1.0d, "cameraZoom", "field_78503_V");
 								}
 							}
 						} else {
-							if (!gunbase.canobj || !gunbase.zoomren) {
+							if (!gunbase.gunInfo.canobj || !gunbase.gunInfo.zoomren) {
 								ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer,
 										1.0d, "cameraZoom", "field_78503_V");
 							}
@@ -318,12 +321,12 @@ public class HMGEventZoom {
 					GuiIngame g = minecraft.ingameGUI;
 					minecraft.getTextureManager().bindTexture(TextureMap.locationItemsTexture);
 					//g.drawTexturedModelRectFromIcon(screenWidth-40, screenHeight-33, gunbase.magazine.getIconFromDamage(0), 16, 16);
-					if (gunbase.magazine != null) {
-						g.drawTexturedModelRectFromIcon((int)screenWidth - 70, (int)screenHeight - 53, gunbase.magazine.getIconFromDamage(0), 16, 16);
+					if (gunbase.gunInfo.magazine != null) {
+						g.drawTexturedModelRectFromIcon((int)screenWidth - 70, (int)screenHeight - 53, gunbase.gunInfo.magazine.getIconFromDamage(0), 16, 16);
 						for (int is = 0; is < 36; ++is) {
 							InventoryPlayer playerInv = entityplayer.inventory;
 							ItemStack itemi = playerInv.getStackInSlot(is);
-							if (itemi != null && itemi.getItem() == gunbase.magazine) {
+							if (itemi != null && itemi.getItem() == gunbase.gunInfo.magazine) {
 								iii = iii + itemi.stackSize;
 							}
 						}
@@ -332,7 +335,7 @@ public class HMGEventZoom {
 						iii = 0;
 					}
 					this.renderBullet(fontrenderer, (int)screenWidth, (int)screenHeight, itemstack);
-					if (gunbase.canlock) {
+					if (gunbase.gunInfo.canlock) {
 						if (nbt.getBoolean("SeekerOpened"))
 							fontrenderer.drawStringWithShadow("Seekeropen", (int)screenWidth - 60, (int)screenHeight - fontrenderer.FONT_HEIGHT * 2, 0xFFFFFF);
 					}
@@ -413,13 +416,13 @@ public class HMGEventZoom {
 					}
 				}
 			}
-			switch (gunbase.guntype) {
+			switch (gunbase.gunInfo.guntype) {
 				case 4:
 				case 0:
 					sss = "normal";
 					break;
 				case 1:
-					sss = "buckshot  " +gunbase.shotgun_pellet+ " pellet";
+					sss = "buckshot  " + gunbase.gunInfo.pellet + " pellet";
 					break;
 				case 2:
 					sss = "grenade";
@@ -431,13 +434,13 @@ public class HMGEventZoom {
 			ItemStack itemstacka = items[5];
 			if(itemstacka !=null){
 				if(itemstacka.getItem() instanceof HMGItemBullet_AP){
-					switch (gunbase.guntype) {
+					switch (gunbase.gunInfo.guntype) {
 						case 0:
 						case 4:
 							sss = "AP";
 							break;
 						case 1:
-							sss = "AP buckshot  " +gunbase.shotgun_pellet+ " pellet";
+							sss = "AP buckshot  " + gunbase.gunInfo.pellet + " pellet";
 							break;
 						case 2:
 							sss = "grenade";
@@ -447,7 +450,7 @@ public class HMGEventZoom {
 							break;
 					}
 				}else if(itemstacka.getItem() instanceof HMGItemBullet_AT){
-					switch (gunbase.guntype) {
+					switch (gunbase.gunInfo.guntype) {
 						case 0:
 						case 4:
 							sss = "Anesthesia";
@@ -463,7 +466,7 @@ public class HMGEventZoom {
 							break;
 					}
 				}else if(itemstacka.getItem() instanceof HMGItemBullet_Frag){
-					switch (gunbase.guntype) {
+					switch (gunbase.gunInfo.guntype) {
 						case 0:
 						case 4:
 							sss = "Frag";
@@ -479,13 +482,13 @@ public class HMGEventZoom {
 							break;
 					}
 				}else if(itemstacka.getItem() instanceof HMGItemBullet_TE){
-					switch (gunbase.guntype) {
+					switch (gunbase.gunInfo.guntype) {
 						case 0:
 						case 4:
 							sss = "normal";
 							break;
 						case 1:
-							sss = "buckshot  " +gunbase.shotgun_pellet+ " pellet";
+							sss = "buckshot  " + gunbase.gunInfo.pellet + " pellet";
 							break;
 						case 2:
 							sss = "incendiary";
@@ -503,7 +506,7 @@ public class HMGEventZoom {
 			}else if(bursts == 0) {
 				sss += " : safe ";
 			}else if(bursts == 1){
-				if(gunbase.needcock) {
+				if(gunbase.gunInfo.needcock) {
 					sss += " : one shot";
 				}else{
 					sss += " : semi";
@@ -511,11 +514,11 @@ public class HMGEventZoom {
 			}else {
 				sss += " : " + gunbase.getburstCount(mode) + "burst ";
 			}
-			if(!gunbase.rates.isEmpty() && gunbase.rates.size()>mode) {
-				if(gunbase.needcock) {
-					sss += " : cocking time " + gunbase.cocktime;
+			if(!gunbase.gunInfo.rates.isEmpty() && gunbase.gunInfo.rates.size()>mode) {
+				if(gunbase.gunInfo.needcock) {
+					sss += " : cocking time " + gunbase.gunInfo.cocktime;
 				}else{
-					sss += " : rate " + gunbase.rates.get(mode);
+					sss += " : rate " + gunbase.gunInfo.rates.get(mode);
 				}
 			}
 		}

@@ -2,6 +2,8 @@ package handmadeguns.entity;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import handmadeguns.HMGPacketHandler;
 import handmadeguns.items.guns.HMGItem_Unified_Guns;
 import handmadeguns.network.PacketPlacedGunShot;
@@ -48,11 +50,15 @@ public class PlacedGunEntity extends Entity implements IEntityAdditionalSpawnDat
     public PlacedGunEntity(World p_i1582_1_,ItemStack stack) {
         this(p_i1582_1_);
         gunStack = stack;
+        renderDistanceWeight = 4096;
+        ignoreFrustumCheck = true;
         if(gunStack != null) {
             gunItem = (HMGItem_Unified_Guns) gunStack.getItem();
-            hitpoint = gunItem.turretMaxHP;
-            maxhitpoint = gunItem.turretMaxHP;
-            setSize(gunItem.turreboxW,gunItem.turreboxH);
+            hitpoint = gunItem.gunInfo.turretMaxHP;
+            maxhitpoint = gunItem.gunInfo.turretMaxHP;
+            setSize(gunItem.gunInfo.turreboxW, gunItem.gunInfo.turreboxH);
+        }else {
+            setSize(1,1);
         }
     }
     @Override
@@ -114,29 +120,25 @@ public class PlacedGunEntity extends Entity implements IEntityAdditionalSpawnDat
                 gunItem = (HMGItem_Unified_Guns) gunStack.getItem();
             else gunItem = null;
         }else {
-            if(gunStack != null && gunStack.getItem() instanceof HMGItem_Unified_Guns)
-                gunItem = (HMGItem_Unified_Guns) gunStack.getItem();
-            else gunItem = null;
         }
 
         if(gunItem != null){
-            this.gunyoffset = gunItem.yoffset;
-            maxhitpoint = gunItem.turretMaxHP;
-            setSize(gunItem.turreboxW,gunItem.turreboxH);
+            this.gunyoffset = gunItem.gunInfo.yoffset;
+            maxhitpoint = gunItem.gunInfo.turretMaxHP;
         }
         rotationYawGun = wrapAngleTo180_float(rotationYawGun);
         rotationYaw = wrapAngleTo180_float(rotationYaw);
         if(riddenByEntity != null){
-            if(gunItem != null && gunItem.restrictTurretMoveSpeed){
+            if(gunItem != null && gunItem.gunInfo.restrictTurretMoveSpeed){
                 float angularDif = wrapAngleTo180_float(this.rotationYawGun - riddenByEntity.getRotationYawHead());
-                if (angularDif <-gunItem.turretMoveSpeedY) {
-                    this.rotationYawGun += gunItem.turretMoveSpeedY;
-                } else if (angularDif > gunItem.turretMoveSpeedY){
-                    this.rotationYawGun -= gunItem.turretMoveSpeedY;
+                if (angularDif <-gunItem.gunInfo.turretMoveSpeedY) {
+                    this.rotationYawGun += gunItem.gunInfo.turretMoveSpeedY;
+                } else if (angularDif > gunItem.gunInfo.turretMoveSpeedY){
+                    this.rotationYawGun -= gunItem.gunInfo.turretMoveSpeedY;
                 }else{
                     this.rotationYawGun = riddenByEntity.getRotationYawHead();
                 }
-                this.rotationPitch = abs(riddenByEntity.rotationPitch - this.rotationPitch) < gunItem.turretMoveSpeedP ? riddenByEntity.rotationPitch : this.rotationPitch + gunItem.turretMoveSpeedP * ((riddenByEntity.rotationPitch - this.rotationPitch) < 0? -1 : 1);
+                this.rotationPitch = abs(riddenByEntity.rotationPitch - this.rotationPitch) < gunItem.gunInfo.turretMoveSpeedP ? riddenByEntity.rotationPitch : this.rotationPitch + gunItem.gunInfo.turretMoveSpeedP * ((riddenByEntity.rotationPitch - this.rotationPitch) < 0? -1 : 1);
             }else {
                 this.rotationYawGun = riddenByEntity.getRotationYawHead();
                 this.rotationPitch = riddenByEntity.rotationPitch;
@@ -151,18 +153,18 @@ public class PlacedGunEntity extends Entity implements IEntityAdditionalSpawnDat
             firing = false;
         }
 
-        if(gunItem != null && gunItem.restrictTurretAngle) {
+        if(gunItem != null && gunItem.gunInfo.restrictTurretAngle) {
             float yawamount = wrapAngleTo180_float(this.rotationYawGun - this.rotationYaw);
-            if (yawamount > gunItem.turretanglelimtMxY){
-                this.rotationYawGun = this.rotationYaw + gunItem.turretanglelimtMxY;
-            }else if (yawamount < gunItem.turretanglelimtmnY){
-                this.rotationYawGun = this.rotationYaw + gunItem.turretanglelimtmnY;
+            if (yawamount > gunItem.gunInfo.turretanglelimtMxY){
+                this.rotationYawGun = this.rotationYaw + gunItem.gunInfo.turretanglelimtMxY;
+            }else if (yawamount < gunItem.gunInfo.turretanglelimtmnY){
+                this.rotationYawGun = this.rotationYaw + gunItem.gunInfo.turretanglelimtmnY;
             }
 
-            if (this.rotationPitch > gunItem.turretanglelimtMxP){
-                this.rotationPitch = gunItem.turretanglelimtMxP;
-            }else if (this.rotationPitch < gunItem.turretanglelimtmnP){
-                this.rotationPitch = gunItem.turretanglelimtmnP;
+            if (this.rotationPitch > gunItem.gunInfo.turretanglelimtMxP){
+                this.rotationPitch = gunItem.gunInfo.turretanglelimtMxP;
+            }else if (this.rotationPitch < gunItem.gunInfo.turretanglelimtmnP){
+                this.rotationPitch = gunItem.gunInfo.turretanglelimtmnP;
             }
         }
 
@@ -190,8 +192,15 @@ public class PlacedGunEntity extends Entity implements IEntityAdditionalSpawnDat
                 firing = false;
             }
             if(gunStack != null)gunStack = gunStack.copy();
-            if(gunItem != null)gunItem.onUpdate(gunStack,worldObj,this,0,true);
+            if(gunItem != null){
+                gunItem.onUpdate(gunStack,worldObj,this,0,true);
+            }
+            
+            
             gunStack = dataWatcher.getWatchableObjectItemStack(3);
+            if(gunStack != null && gunStack.getItem() instanceof HMGItem_Unified_Guns)
+                gunItem = (HMGItem_Unified_Guns) gunStack.getItem();
+            else gunItem = null;
         }
         rotationYaw = baserotationYaw;
         rotationPitch = backpitch;
@@ -261,11 +270,6 @@ public class PlacedGunEntity extends Entity implements IEntityAdditionalSpawnDat
     public double getMountedYOffset() {
         return 0.0D;
     }
-    public boolean canBePushed()
-    {
-
-        return maxhitpoint>0;
-    }
     public boolean canBeCollidedWith()
     {
         return true;
@@ -287,7 +291,7 @@ public class PlacedGunEntity extends Entity implements IEntityAdditionalSpawnDat
             gunStack = ItemStack.loadItemStackFromNBT((NBTTagCompound) nbttagcompound);
             if(gunStack != null && gunStack.getItem() instanceof HMGItem_Unified_Guns){
                 gunItem = (HMGItem_Unified_Guns) gunStack.getItem();
-                setSize(gunItem.turreboxW,gunItem.turreboxH);
+                setSize(gunItem.gunInfo.turreboxW, gunItem.gunInfo.turreboxH);
             }
         }
     }
@@ -313,6 +317,11 @@ public class PlacedGunEntity extends Entity implements IEntityAdditionalSpawnDat
             prevRiddenByEntityPosZ = riddenByEntity.posZ;
             torideclick = true;
         }
+        return true;
+    }
+    @SideOnly(Side.CLIENT)
+    public boolean isInRangeToRender3d(double p_145770_1_, double p_145770_3_, double p_145770_5_)
+    {
         return true;
     }
 
@@ -346,12 +355,12 @@ public class PlacedGunEntity extends Entity implements IEntityAdditionalSpawnDat
     public Vec3 seatVec(){
         double[] sightingpos = gunItem.getSeatpos(gunStack);
         Vec3 vec = Vec3.createVectorHelper(sightingpos[0],sightingpos[1],sightingpos[2]);
-        vec = vec.addVector( - gunItem.posGetter.turretRotationPitchPoint[0], - gunItem.posGetter.turretRotationPitchPoint[1], - gunItem.posGetter.turretRotationPitchPoint[2]);
+        vec = vec.addVector( - gunItem.gunInfo.posGetter.turretRotationPitchPoint[0], - gunItem.gunInfo.posGetter.turretRotationPitchPoint[1], - gunItem.gunInfo.posGetter.turretRotationPitchPoint[2]);
         vec.rotateAroundX(-(float) toRadians(rotationPitch));
-        vec = vec.addVector(   gunItem.posGetter.turretRotationPitchPoint[0],   gunItem.posGetter.turretRotationPitchPoint[1],   gunItem.posGetter.turretRotationPitchPoint[2]);
-        vec = vec.addVector( - gunItem.posGetter.turretRotationYawPoint[0], - gunItem.posGetter.turretRotationYawPoint[1], - gunItem.posGetter.turretRotationYawPoint[2]);
+        vec = vec.addVector(   gunItem.gunInfo.posGetter.turretRotationPitchPoint[0],   gunItem.gunInfo.posGetter.turretRotationPitchPoint[1],   gunItem.gunInfo.posGetter.turretRotationPitchPoint[2]);
+        vec = vec.addVector( - gunItem.gunInfo.posGetter.turretRotationYawPoint[0], - gunItem.gunInfo.posGetter.turretRotationYawPoint[1], - gunItem.gunInfo.posGetter.turretRotationYawPoint[2]);
         vec.rotateAroundY(-(float) toRadians(rotationYawGun - rotationYaw));
-        vec = vec.addVector(   gunItem.posGetter.turretRotationYawPoint[0],   gunItem.posGetter.turretRotationYawPoint[1],   gunItem.posGetter.turretRotationYawPoint[2]);
+        vec = vec.addVector(   gunItem.gunInfo.posGetter.turretRotationYawPoint[0],   gunItem.gunInfo.posGetter.turretRotationYawPoint[1],   gunItem.gunInfo.posGetter.turretRotationYawPoint[2]);
         vec.rotateAroundY(-(float) toRadians(rotationYaw));
         return vec;
     }

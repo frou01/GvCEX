@@ -32,10 +32,10 @@ public class MessageCatcher_returnMagazineItem implements IMessageHandler<Packet
                     ItemStack itemStack = ((EntityLivingBase) shooter).getHeldItem();
                     if(gunitem instanceof HMGItem_Unified_Guns){
                         {
-                            int returnmagazineCount = (int)((float)((HMGItem_Unified_Guns) gunitem).magazineItemCount * ((((gunitem).getMaxDamage() - itemStack.getItemDamage()) / (float)(gunitem).getMaxDamage())));
+                            int returnmagazineCount = (int)((float) ((HMGItem_Unified_Guns) gunitem).gunInfo.magazineItemCount * ((((gunitem).getMaxDamage() - itemStack.getItemDamage()) / (float)(gunitem).getMaxDamage())));
 //                            System.out.println("debug" + returnmagazineCount);
                             for(int i= 0;i<returnmagazineCount;i++) {
-                                ((EntityPlayer) shooter).inventory.addItemStackToInventory(new ItemStack(((HMGItem_Unified_Guns) gunitem).magazine));
+                                ((EntityPlayer) shooter).inventory.addItemStackToInventory(new ItemStack(((HMGItem_Unified_Guns) gunitem).gunInfo.magazine));
                             }
                         }
                         itemStack.setItemDamage(itemStack.getMaxDamage());

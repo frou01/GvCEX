@@ -48,7 +48,7 @@ public class GVCEntityTank extends EntityGBase implements ITank
 
 	public int mgMagazine;
 	public int mgReloadProgress;
-	public TankBaseLogic baseLogic = new TankBaseLogic(this,0.2f,2.0f,false,"gvcmob:gvcmob.TankTrack");
+	public TankBaseLogic baseLogic = new TankBaseLogic(this,0.2f,0.5f,false,"gvcmob:gvcmob.TankTrack");
 	ModifiedBoundingBox nboundingbox;
 
 	Vector3d playerpos = new Vector3d(-0.525,2.1D,0.0);

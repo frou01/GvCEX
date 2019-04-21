@@ -148,7 +148,7 @@ public class EntitySupplyBox extends GVCEntityBox implements IGVCmob{
             case 7:
             case 8:
                 Item gun = (Item) HMGAddGunsNew.Guns.get(new Random().nextInt(HMGAddGunsNew.Guns.size()));
-                while ((gun instanceof HMGItem_Unified_Guns && !((HMGItem_Unified_Guns) gun).isinRoot) || (gun instanceof HMGXItemGun_Sword && !((HMGXItemGun_Sword) gun).isinRoot)){
+                while ((gun instanceof HMGItem_Unified_Guns && !((HMGItem_Unified_Guns) gun).gunInfo.isinRoot) || (gun instanceof HMGXItemGun_Sword && !((HMGXItemGun_Sword) gun).isinRoot)){
                     gun = (Item) HMGAddGunsNew.Guns.get(new Random().nextInt(HMGAddGunsNew.Guns.size()));
                 }
                 itemStack = new ItemStack(gun,1);
@@ -173,7 +173,7 @@ public class EntitySupplyBox extends GVCEntityBox implements IGVCmob{
                 break;
             case 13:
                 gun = (Item) GVCMobPlus.Guns_RR.get(new Random().nextInt(GVCMobPlus.Guns_RR.size()));
-                while (!((HMGItem_Unified_Guns) gun).isinRoot){
+                while (!((HMGItem_Unified_Guns)gun).gunInfo.isinRoot){
                     gun = (Item) GVCMobPlus.Guns_RR.get(new Random().nextInt(GVCMobPlus.Guns_RR.size()));
                 }
                 itemStack = new ItemStack(gun,1);

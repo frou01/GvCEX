@@ -39,7 +39,7 @@ public class GVCEntityAPC extends EntityGBase implements ITank {
 //	public float subturretrotationPitch;
 
 	public byte hatchprogress;
-	public TankBaseLogic baseLogic = new TankBaseLogic(this,0.3f,3.4f,false,"gvcmob:gvcmob.APCTrack");
+	public TankBaseLogic baseLogic = new TankBaseLogic(this,0.3f,1.4f,false,"gvcmob:gvcmob.APCTrack");
 	ModifiedBoundingBox nboundingbox;
 
 	Vector3d playerpos = new Vector3d(-0.764f,2.4f,0.02124 - 0.59742);
