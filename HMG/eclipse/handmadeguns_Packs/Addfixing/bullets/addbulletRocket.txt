@@ -1,7 +1,7 @@
 FlyingSoundName,rocketFlying
-FlyingSoundLV,4
+FlyingSoundLV,16
 FlyingSoundSP,1.4
-FlyingSoundmaxdist,32
+FlyingSoundmaxdist,128
 FlyingSound_BulletMinSpeed,0
 SmokeGlow,true
 Name,byfrou01_Rocket

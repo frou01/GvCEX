@@ -6,7 +6,7 @@ Description: Ticking entity
 
 java.lang.NullPointerException: Ticking entity
 	at handmadeguns.network.PacketPlaysound.<init>(PacketPlaysound.java:17)
-	at hmggvcmob.entity.TurretObj.fire(TurretObj.java:310)
+	at hmvehicle.entity.parts.turrets.TurretObj.fire(TurretObj.java:310)
 	at subFire(GVCEntityPMCTank.java:521)
 	at hmggvcmob.ai.AITankAttack.updateTask(AITankAttack.java:87)
 	at net.minecraft.entity.ai.EntityAITasks.onUpdateTasks(EntityAITasks.java:125)
@@ -37,7 +37,7 @@ A detailed walkthrough of the error, its code path and all known details is as f
 -- Head --
 Stacktrace:
 	at handmadeguns.network.PacketPlaysound.<init>(PacketPlaysound.java:17)
-	at hmggvcmob.entity.TurretObj.fire(TurretObj.java:310)
+	at hmvehicle.entity.parts.turrets.TurretObj.fire(TurretObj.java:310)
 	at subFire(GVCEntityPMCTank.java:521)
 	at hmggvcmob.ai.AITankAttack.updateTask(AITankAttack.java:87)
 	at net.minecraft.entity.ai.EntityAITasks.onUpdateTasks(EntityAITasks.java:125)

@@ -297,6 +297,9 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
 		}
 	}
 	public void onUpdate() {
+		if(this.width<1){
+			width = 1;
+		}
 		super.onUpdate();
 	}
 	public void moveFlying(float p_70060_1_, float p_70060_2_, float p_70060_3_)

@@ -3,11 +3,14 @@ package hmggvcmob.entity.guerrilla;
 
 import hmggvcmob.ai.AITankAttack;
 import hmggvcmob.entity.*;
-import hmggvcmob.tile.TileEntityFlag;
+import hmvehicle.entity.parts.ITank;
+import hmvehicle.entity.parts.ModifiedBoundingBox;
+import hmvehicle.entity.parts.logics.IbaseLogic;
+import hmvehicle.entity.parts.logics.TankBaseLogic;
+import hmvehicle.entity.parts.turrets.TurretObj;
 import net.minecraft.entity.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
@@ -59,7 +62,7 @@ public class GVCEntityAPC extends EntityGBase implements ITank {
 		super(par1World);
 		this.tasks.removeTask(aiSwimming);
 		this.setSize(3F, 1.6F);
-		nboundingbox = new ModifiedBoundingBox(-20,-20,-20,20,20,20,
+		nboundingbox = new ModifiedBoundingBox(boundingBox.minX,boundingBox.minY,boundingBox.minZ,boundingBox.maxX,boundingBox.maxY,boundingBox.maxZ,
 				0,1.5,0,3.4,3,6.5);
 		nboundingbox.rot.set(baseLogic.bodyRot);
 		proxy.replaceBoundingbox(this,nboundingbox);
@@ -329,7 +332,7 @@ public class GVCEntityAPC extends EntityGBase implements ITank {
 		((ModifiedBoundingBox)this.boundingBox).rot.set(baseLogic.bodyRot);
 		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.3D);
 	}
-	public void mainFire(Entity target){
+	public void mainFireToTarget(Entity target){
 		mainTurret.currentEntity = this;
 		mainTurret.fire();
 //        Vector3d Vec_transformedbybody = baseLogic.getTransformedVector_onturret(cannonpos,turretYawCenterpos);
@@ -386,7 +389,7 @@ public class GVCEntityAPC extends EntityGBase implements ITank {
 	}
 
 	@Override
-	public TankBaseLogic getBaseLogic() {
+	public IbaseLogic getBaseLogic() {
 		return baseLogic;
 	}
 
@@ -445,7 +448,13 @@ public class GVCEntityAPC extends EntityGBase implements ITank {
 ////			}
 //        }
 	}
-	public void subFire(Entity target){
+	
+	@Override
+	public void subFire() {
+	
+	}
+	
+	public void subFireToTarget(Entity target){
 		if(hatchprogress > 8 && rand.nextInt(9) == 0) {
 			Vector3d temp = new Vector3d(mainTurret.pos);
 			Vector3d temphatchpos = new Vector3d(subturretpos);
@@ -595,29 +604,14 @@ public class GVCEntityAPC extends EntityGBase implements ITank {
 	public float getbodyrotationYaw() {
 		return baseLogic.bodyrotationYaw;
 	}
-
-	@Override
-	public void setbodyrotationYaw(float value) {
-		baseLogic.bodyrotationYaw = value;
-	}
-
-	@Override
-	public void setturretrotationYaw(float value) {
-		baseLogic.turretrotationYaw = value;
-	}
-
-	@Override
-	public float getrotationYawmotion() {
-		return baseLogic.rotationmotion;
-	}
-
+	
 	@Override
 	public void setrotationYawmotion(float value) {
 		baseLogic.rotationmotion = value;
 	}
 
 	@Override
-	public void setBodyrot(Quat4d rot) {
+	public void setBodyRot(Quat4d rot) {
 		baseLogic.bodyRot.set(rot);
 	}
 
@@ -630,9 +624,13 @@ public class GVCEntityAPC extends EntityGBase implements ITank {
 	public void setthrottle(float value) {
 		baseLogic.throttle = value;
 	}
-
+	
 	public void moveFlying(float p_70060_1_, float p_70060_2_, float p_70060_3_){
 		baseLogic.moveFlying(p_70060_1_,p_70060_2_,p_70060_3_);
+	}
+	public void setPosition(double x, double y, double z)
+	{
+		if(baseLogic != null)baseLogic.setPosition(x,y,z);
 	}
 
 	@Override
@@ -643,6 +641,21 @@ public class GVCEntityAPC extends EntityGBase implements ITank {
 
 	public boolean canBePushed()
 	{
+		return false;
+	}
+	
+	@Override
+	public int getMobMode() {
+		return 0;
+	}
+	
+	@Override
+	public double[] getwaitingpos() {
+		return new double[0];
+	}
+	
+	@Override
+	public boolean standalone() {
 		return false;
 	}
 }

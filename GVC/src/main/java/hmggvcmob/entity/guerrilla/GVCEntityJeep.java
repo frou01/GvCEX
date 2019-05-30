@@ -3,10 +3,11 @@ package hmggvcmob.entity.guerrilla;
 
 import handmadeguns.entity.PlacedGunEntity;
 import hmggvcmob.ai.AITankAttack;
-import hmggvcmob.entity.ITank;
-import hmggvcmob.entity.ModifiedBoundingBox;
-import hmggvcmob.entity.TankBaseLogic;
-import hmggvcmob.entity.TurretObj;
+import hmvehicle.entity.parts.ITank;
+import hmvehicle.entity.parts.ModifiedBoundingBox;
+import hmvehicle.entity.parts.logics.IbaseLogic;
+import hmvehicle.entity.parts.logics.TankBaseLogic;
+import hmvehicle.entity.parts.turrets.TurretObj;
 import net.minecraft.block.Block;
 import net.minecraft.entity.*;
 import net.minecraft.init.Blocks;
@@ -45,7 +46,9 @@ public class GVCEntityJeep extends EntityGBase implements ITank
     {
         super(par1World);
         this.setSize(3.0F, 2F);
-        nboundingbox = new ModifiedBoundingBox(-1.5,-4,-1.5,1.5,4,1.5,0,1.25,1.5,3,2.5,4);
+        nboundingbox = new ModifiedBoundingBox(boundingBox.minX,boundingBox.minY,boundingBox.minZ,boundingBox.maxX,boundingBox.maxY,boundingBox.maxZ,
+                                                      0,1.25,-1.5,
+                                                      3,2.5,4);
         nboundingbox.rot.set(this.bodyRot);
         proxy.replaceBoundingbox(this,nboundingbox);
         aiTankAttack = new AITankAttack(this,1600,400);
@@ -301,17 +304,7 @@ public class GVCEntityJeep extends EntityGBase implements ITank
     public float getbodyrotationYaw() {
         return bodyrotationYaw;
     }
-
-    @Override
-    public void setbodyrotationYaw(float value) {
-        bodyrotationYaw = value;
-    }
-
-    @Override
-    public void setturretrotationYaw(float value) {
-
-    }
-
+    
     protected void entityInit() {
         super.entityInit();
         this.dataWatcher.addObject(26, Float.valueOf(0));
@@ -354,19 +347,14 @@ public class GVCEntityJeep extends EntityGBase implements ITank
     public float getTurretrotationPitch() {
         return this.dataWatcher.getWatchableObjectFloat(30);
     }
-
-    @Override
-    public float getrotationYawmotion() {
-        return rotationmotion;
-    }
-
+    
     @Override
     public void setrotationYawmotion(float value) {
         rotationmotion = value;
     }
 
     @Override
-    public void setBodyrot(Quat4d rot) {
+    public void setBodyRot(Quat4d rot) {
         bodyRot.set(rot);
     }
 
@@ -382,15 +370,25 @@ public class GVCEntityJeep extends EntityGBase implements ITank
 
 
     @Override
-    public void subFire(Entity target) {
+    public void subFireToTarget(Entity target) {
 
     }
 
     @Override
-    public void mainFire(Entity target) {
+    public void mainFireToTarget(Entity target) {
 
     }
-
+    
+    @Override
+    public void mainFire() {
+    
+    }
+    
+    @Override
+    public void subFire() {
+    
+    }
+    
     @Override
     public TurretObj getMainTurret() {
         return null;
@@ -402,11 +400,31 @@ public class GVCEntityJeep extends EntityGBase implements ITank
     }
 
     @Override
-    public TankBaseLogic getBaseLogic() {
+    public IbaseLogic getBaseLogic() {
         return baseLogic;
     }
 
     public void moveFlying(float p_70060_1_, float p_70060_2_, float p_70060_3_){
         baseLogic.moveFlying(p_70060_1_,p_70060_2_,p_70060_3_);
+    }
+    
+    public void setPosition(double x, double y, double z)
+    {
+        if(baseLogic != null)baseLogic.setPosition(x,y,z);
+    }
+    
+    @Override
+    public int getMobMode() {
+        return 0;
+    }
+    
+    @Override
+    public double[] getwaitingpos() {
+        return new double[0];
+    }
+    
+    @Override
+    public boolean standalone() {
+        return false;
     }
 }

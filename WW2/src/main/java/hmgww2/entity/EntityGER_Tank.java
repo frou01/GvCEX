@@ -2,21 +2,8 @@ package hmgww2.entity;
 
 
 import hmggvcmob.ai.AITankAttack;
-import hmggvcmob.entity.GVCEx;
-import hmggvcmob.entity.TankBaseLogic;
-import hmggvcmob.entity.TurretObj;
-import hmgww2.mod_GVCWW2;
-import hmgww2.network.WW2MessageKeyPressed;
-import hmgww2.network.WW2PacketHandler;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Vec3;
+import hmvehicle.entity.parts.logics.TankBaseLogic;
+import hmvehicle.entity.parts.turrets.TurretObj;
 import net.minecraft.world.World;
 
 import javax.vecmath.Vector3d;
@@ -29,18 +16,20 @@ public class EntityGER_Tank extends EntityGER_TankBase
     {
         super(par1World);
         this.setSize(4F, 2.5F);
-        baseLogic = new TankBaseLogic(this,0.3f,1.4f,false,"gvcmob:gvcmob.T34Track");
+        baseLogic = new TankBaseLogic(this,0.17f,0.85f,false,"hmgww2:hmgww2.PzIVTrack");
         aiTankAttack = new AITankAttack(this,6400,1600,10,10);
         this.tasks.addTask(1,aiTankAttack);
+        aiTankAttack.setAlways_poit_to_target(true);
         playerpos = new Vector3d(0,3.4D,0.7);
         zoomingplayerpos = new Vector3d(0.55,2.35D,-0.80);
-        subturretpos = new Vector3d(0,2.9,0.7);
         cannonpos = new Vector3d(0,2.0,-1.00F);
         turretpos = new Vector3d(0,0,0);
+        
         mainTurret = new TurretObj(worldObj);
         {
             mainTurret.onmotherPos = turretpos;
             mainTurret.cannonpos = cannonpos;
+            mainTurret.turretPitchCenterpos = new Vector3d(0F, 2.00F, 1.00F);
             mainTurret.turretspeedY = 3;
             mainTurret.turretspeedP = 3;
             mainTurret.currentEntity = this;
@@ -62,10 +51,11 @@ public class EntityGER_Tank extends EntityGER_TankBase
             subTurret.turretspeedY = 8;
             subTurret.turretspeedP = 10;
             subTurret.traverseSound = null;
-        
+    
+            subturretpos = new Vector3d(0,2.9,0.7);
             subTurret.onmotherPos = subturretpos;
-            subTurret.turretPitchCenterpos = new Vector3d(0,0.25,-1.2);
-            subTurret.cannonpos = new Vector3d(0,0.285,-1.2);
+            subTurret.turretPitchCenterpos = new Vector3d(0,0.25, 0.5 + 0.7);
+            subTurret.cannonpos = new Vector3d(0,0.285,1.2);
             subTurret.cycle_setting = 0;
             subTurret.spread = 5;
             subTurret.speed = 8;

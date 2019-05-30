@@ -11,7 +11,7 @@ public class HMGAddTabs
 	public static List Attach = new ArrayList();
 	public static List Magazines = new ArrayList();
 
-	public static void load(File configfile, boolean isClient, File file)
+	public static void load( boolean isClient, File file)
 	{
 		String tabname = null;
 		String iconname = null;

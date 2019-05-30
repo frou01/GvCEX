@@ -1,7 +1,8 @@
-BulletPower,100
+BulletPower,200
 BulletSpeed,1.375
 BlletSpread,4.0f
 ADS_Spread_coefficient,0.5
+BlletSpreadDiffusion,3,0,0.3,0.2,2,0.1
 Acceleration,0.5f
 Recoil,2.0d
 ReloadTime,120
@@ -11,7 +12,7 @@ Zoom,4.0f,4.0f,4.0f
 ZoomRender,true
 ZoomRenderType,false,false,false
 ZoomRenderTypeTxture,true,true,true
-Explosion,3.5f
+Explosion,4.5f
 BlockDestory,true
 Texture,smaw
 GunSound,handmadeguns.fire,handmadeguns.supu

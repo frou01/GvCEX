@@ -17,7 +17,6 @@ import net.minecraft.world.World;
 
 
 public class CommonSideProxyHMG {
-	public static Field kanmusu_defence;
 	public File ProxyFile(){
 		return new File(".");
 	}
@@ -73,6 +72,9 @@ public class CommonSideProxyHMG {
 		return false;
 	}
 	public boolean Fclick(){
+		return false;
+	}
+	public boolean ChangeMagazineTypeclick(){
 		return false;
 	}
 	public boolean Fclick_no_stopper(){

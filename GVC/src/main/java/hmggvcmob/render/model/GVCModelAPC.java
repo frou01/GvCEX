@@ -11,8 +11,8 @@
 
 package hmggvcmob.render.model;
 
-import hmggvcmob.entity.ITank;
-import hmggvcmob.entity.TankBaseLogic;
+import hmvehicle.entity.parts.ITank;
+import hmvehicle.entity.parts.logics.TankBaseLogic;
 import hmggvcmob.entity.guerrilla.GVCEntityAPC;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
@@ -519,7 +519,7 @@ public class GVCModelAPC extends ModelBase
     {
 
         if(entity instanceof ITank && entity instanceof GVCEntityAPC) {
-            TankBaseLogic baseLogic = ((ITank) entity).getBaseLogic();
+            TankBaseLogic baseLogic = (TankBaseLogic) ((ITank) entity).getBaseLogic();
             setRotationAngles(f, f1, f2, f3, f4, f5, entity);
             GL11.glTranslatef(0.0F, -(-24.0F * f5 - 0.0078125F), 0.0F);
             GL11.glRotatef(baseLogic.bodyrotationPitch, 1.0F, 0.0F, 0.0F);

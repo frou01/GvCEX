@@ -34,6 +34,7 @@ import java.util.Map;
 
 import hmggvcmob.util.SpotObj;
 import hmggvcutil.GVCUtils;
+import hmvehicle.entity.EntityChild;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EnumCreatureType;
@@ -47,7 +48,7 @@ import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 
-@Mod(modid="GVCMob", name="GVCMob", version="HD11", dependencies="required-after:GVCGuns")
+@Mod(modid="GVCMob", name="GVCMob", version="HD11", dependencies="required-after:GVCGuns;required-after:HMVehicle")
 public class GVCMobPlus
 {
     @SidedProxy(clientSide="hmggvcmob.proxy.ClientProxyGVCM", serverSide="hmggvcmob.proxy.CommonSideProxyGVCM")
@@ -379,7 +380,7 @@ public class GVCMobPlus
                                     .initIndependentStat().registerStat();
         Gun_of_the_Lost_Country = new Achievement(id_of_Gun_of_the_Lost_Country, "Gun_of_the_Lost_Country", 2, 3, new ItemStack(GVCUtils.type38, 1, 15), null)
                                           .initIndependentStat().registerStat();
-        beacon_defensive = new Achievement(id_of_beacon_defensive, "beacon_defensive", 2, 3, new ItemStack(GVCUtils.type38, 1, 15), null)
+        beacon_defensive = new Achievement(id_of_beacon_defensive, "beacon_defensive", 2, 3, new ItemStack(GVCUtils.fn_boxegg, 1, 15), null)
                                           .initIndependentStat().registerStat();
         
     }
@@ -438,7 +439,7 @@ public class GVCMobPlus
         EntityRegistry.registerModEntity(GVCEntityPMCT90Tank.class, "T-90A(PMC)", ++id, this, 250, 3, true);
         EntityRegistry.registerModEntity(GVCEntitySoldierBMP.class, "BMP-1", ++id, this, 250, 3, true);
         EntityRegistry.registerModEntity(GVCEntityPMCBMP.class, "PMC_BMP-1", ++id, this, 250, 3, true);
-        EntityRegistry.registerModEntity(GVCEntityChild.class, "GVCSeat", ++id, this, 50, 3, false);
+        EntityRegistry.registerModEntity(EntityChild.class, "GVCSeat", ++id, this, 50, 3, false);
         EntityRegistry.registerModEntity(GVCdummyhitbox.class, "GVCDummybox", ++id, this, 50, 3, true);
         EntityRegistry.registerModEntity(EntitySupportTGT.class, "SysSummonsupportEntity", ++id, this, 128, 3, false);
         EntityRegistry.registerModEntity(GVCEntityAPCSpawn.class, "GVC_Spawner_Throw", ++id, this, 250, 3, false);

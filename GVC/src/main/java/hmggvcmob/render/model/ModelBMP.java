@@ -11,8 +11,8 @@
 
 package hmggvcmob.render.model;
 
-import hmggvcmob.entity.ITank;
-import hmggvcmob.entity.TankBaseLogic;
+import hmvehicle.entity.parts.ITank;
+import hmvehicle.entity.parts.logics.TankBaseLogic;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
@@ -1207,12 +1207,13 @@ public class ModelBMP extends ModelBase
         super.render(entity, f, f1, f2, f3, f4, f5);
 
         if(entity instanceof ITank) {
-            TankBaseLogic baseLogic = ((ITank) entity).getBaseLogic();
+            TankBaseLogic baseLogic = (TankBaseLogic) ((ITank) entity).getBaseLogic();
             setRotationAngles(f, f1, f2, f3, f4, f5, entity);
             GL11.glTranslatef(0.0F, -(-24.0F * f5 - 0.0078125F), 0.0F);
             GL11.glRotatef(baseLogic.bodyrotationPitch, 1.0F, 0.0F, 0.0F);
             GL11.glRotatef(-baseLogic.bodyrotationRoll, 0.0F, 0.0F, 1.0F);
             GL11.glTranslatef(0.0F, -24.0F * f5 - 0.0078125F, 0.0F);
+            GL11.glTranslatef(0.0F,-0.3f, 0.0F);
             f5 = 0.05f;
             cataL.render(f5);
             cataL1.render(f5);

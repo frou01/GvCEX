@@ -3,41 +3,27 @@ package hmggvcmob.entity.friend;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import handmadeguns.HandmadeGunsCore;
-import handmadeguns.entity.bullets.HMGEntityBullet;
 import handmadeguns.entity.bullets.HMGEntityBulletBase;
-import handmadeguns.entity.bullets.HMGEntityBulletRocket;
 import handmadeguns.network.PacketSpawnParticle;
-import hmggvcmob.GVCMobPlus;
-import hmggvcmob.entity.*;
-import hmggvcmob.network.*;
-import hmggvcmob.util.Calculater;
-import hmggvcutil.GVCUtils;
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
+import hmvehicle.entity.parts.IMultiTurretVehicle;
+import hmvehicle.entity.parts.Iplane;
+import hmvehicle.entity.parts.ModifiedBoundingBox;
+import hmvehicle.entity.parts.logics.IbaseLogic;
+import hmvehicle.entity.parts.logics.PlaneBaseLogic;
+import hmvehicle.entity.parts.turrets.TurretObj;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
-import org.lwjgl.input.Mouse;
 
-import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Quat4d;
 import javax.vecmath.Vector3d;
-
 import java.util.ArrayList;
 
 import static hmggvcmob.GVCMobPlus.proxy;
-import static hmggvcmob.event.GVCMXEntityEvent.soundedentity;
-import static hmggvcmob.event.GVCMXEntityEvent.flyingEntity;
-import static hmggvcmob.util.Calculater.angle_cos;
-import static hmggvcmob.util.Calculater.vector_interior_division;
-import static java.lang.Math.*;
-import static net.minecraft.util.MathHelper.wrapAngleTo180_double;
-import static net.minecraft.util.MathHelper.wrapAngleTo180_float;
 
-public class GVCEntityPlane extends Entity implements ImultiRideableVehicle,Iplane
+public class GVCEntityPlane extends Entity implements Iplane,IMultiTurretVehicle
 {
 	PlaneBaseLogic baseLogic;
 	
@@ -66,12 +52,135 @@ public class GVCEntityPlane extends Entity implements ImultiRideableVehicle,Ipla
 		ignoreFrustumCheck = true;
 		this.fireCycle1 = 1;
 		baseLogic = new PlaneBaseLogic(worldObj,this);
-		baseLogic.childInfo[0].pos[0] = 0;
-		baseLogic.childInfo[0].pos[1] = 1.1;
-		baseLogic.childInfo[0].pos[2] = 3;
-		baseLogic.speedfactor = 0.02f;
-		baseLogic.liftfactor = 0.06f;
-		baseLogic.dragfactor = 0.0003f;
+		
+		baseLogic.speedfactor =    0.0045f;
+		baseLogic.speedfactor_af = 0.001f;
+		baseLogic.liftfactor = 0.01f;
+		baseLogic.flapliftfactor = 0.00005f;
+		baseLogic.flapdragfactor = 0.0000000001f;
+		baseLogic.geardragfactor = 0.000000001f;
+		baseLogic.dragfactor = 0.01f;
+		baseLogic.gravity = 0.049f;
+		baseLogic.stability = 600;
+		baseLogic.stability2 = 0.5f;
+		baseLogic.rotmotion_reduceSpeed = 0.05;
+		
+		
+		baseLogic.rollspeed = 0.1f;
+		baseLogic.pitchspeed = 0.15f;
+		baseLogic.yawspeed = 0.05f;
+		baseLogic.maxDive = 60;
+		baseLogic.startDive = 30;
+		baseLogic.maxClimb = -22;
+		baseLogic.maxbank = 60;
+		baseLogic.slipresist = 0.01f;
+		{
+			TurretObj gun1 = new TurretObj(worldObj);
+			gun1.onmotherPos = new Vector3d(0.04, 0.8659, 0);
+			gun1.traverseSound = null;
+			gun1.currentEntity = this;
+			gun1.powor = 23;
+			gun1.ex = 0.5f;
+			gun1.cycle_setting = 0;
+			gun1.flushscale = 1;
+			gun1.firesound = "handmadeguns:handmadeguns.HeavyMachineGun";
+			gun1.spread = 2;
+			gun1.speed = 8;
+			gun1.magazineMax = 500;
+			gun1.magazinerem = 500;
+			gun1.reloadTimer = 1200;
+			gun1.canex = false;
+			gun1.fireAll = false;
+			gun1.guntype = 0;
+			TurretObj gun2 = new TurretObj(worldObj);
+			gun2.onmotherPos = new Vector3d(-0.04, 0.8659, 0);
+			gun2.onmotherPos.sub(gun1.onmotherPos);
+			gun2.traverseSound = null;
+			gun2.currentEntity = this;
+			gun2.powor = 23;
+			gun2.ex = 0.5f;
+			gun2.cycle_setting = 0;
+			gun2.flushscale = 1;
+			gun2.firesound = "handmadeguns:handmadeguns.HeavyMachineGun";
+			gun2.spread = 2;
+			gun2.speed = 8;
+			gun2.magazineMax = 500;
+			gun2.magazinerem = 500;
+			gun2.reloadTimer = 1200;
+			gun2.canex = false;
+			gun2.fireAll = false;
+			gun2.guntype = 0;
+			gun1.addchild(gun2);
+			
+			baseLogic.mainTurret = gun1;
+		}
+		{
+			TurretObj missile1 = new TurretObj(worldObj);
+			missile1.onmotherPos = new Vector3d(2.0399, 1.0591, -0.6568);
+			missile1.traverseSound = null;
+			missile1.currentEntity = this;
+			missile1.powor = 600;
+			missile1.acceler = 0.1f;
+			missile1.induction_precision = 10;
+			missile1.canHoming = true;
+			missile1.semiActive = true;
+			missile1.rock_to_Vehicle = true;
+			missile1.ex = 3;
+			missile1.cycle_setting = 1200;
+			missile1.cycle_timer = -1;
+			missile1.flushscale = 1;
+			missile1.firesound = "handmadeguns:handmadeguns.firecannon";
+			missile1.spread = 0;
+			missile1.speed = 1;
+			missile1.magazineMax = 4;
+			missile1.magazinerem = 4;
+			missile1.reloadTimer = 1000000;
+			missile1.canex = true;
+			missile1.fireAll = false;
+			missile1.guntype = 3;
+			missile1.seekerSize = 30;
+			
+			TurretObj missile2 = new TurretObj(worldObj);
+			missile2.onmotherPos = new Vector3d(-2.0399, 1.0591, -0.6568);
+			missile2.traverseSound = null;
+			missile2.currentEntity = this;
+			missile2.powor = 600;
+			missile2.acceler = 0.1f;
+			missile2.induction_precision = 10;
+			missile2.canHoming = true;
+			missile2.semiActive = true;
+			missile2.rock_to_Vehicle = true;
+			missile2.ex = 3;
+			missile2.cycle_setting = 1200;
+			missile2.cycle_timer = -1;
+			missile2.flushscale = 1;
+			missile2.firesound = "handmadeguns:handmadeguns.firecannon";
+			missile2.spread = 0;
+			missile2.speed = 1;
+			missile2.magazineMax = 4;
+			missile2.magazinerem = 4;
+			missile2.reloadTimer = 1000000;
+			missile2.canex = true;
+			missile2.fireAll = false;
+			missile2.guntype = 3;
+			missile2.seekerSize = 30;
+			
+			missile1.addchild(missile2);
+			baseLogic.subTurret = missile1;
+		}
+		
+		
+		baseLogic.mainTurret.motherRotCenter = new Vector3d(baseLogic.rotcenter);
+		baseLogic.subTurret.motherRotCenter = new Vector3d(baseLogic.rotcenter);
+		
+		baseLogic.riddenByEntitiesInfo[0].pos[0] = 0;
+		baseLogic.riddenByEntitiesInfo[0].pos[1] = 1.1;
+		baseLogic.riddenByEntitiesInfo[0].pos[2] = 3;
+		baseLogic.displayModernHud = true;
+		ModifiedBoundingBox nboundingbox = new ModifiedBoundingBox(-1.5,0,-1.5,1.5,5,1.5,0,0,-6.27,2.5,5,19);
+		nboundingbox.rot.set(baseLogic.bodyRot);
+		proxy.replaceBoundingbox(this,nboundingbox);
+		((ModifiedBoundingBox)this.boundingBox).updateOBB(this.posX,this.posY,this.posZ);
 	}
 
 	@Override
@@ -134,6 +243,7 @@ public class GVCEntityPlane extends Entity implements ImultiRideableVehicle,Ipla
 //				rocket = 2;
 //			}
 //		}
+		if(!isRidingEntity(player) && player.ridingEntity == null)pickupEntity(player,0);
 		return false;
 	}
 	public void onUpdate()
@@ -214,7 +324,7 @@ public class GVCEntityPlane extends Entity implements ImultiRideableVehicle,Ipla
 //			}
 ////			turret(mainwingvector,tailwingvector,bodyvector);
 //		}else{
-//			GVCMPacketHandler.INSTANCE.sendToAll(new GVCPakcetVehicleState(this.getEntityId(),bodyRot, throttle,trigger1,trigger2));
+//			GVCMPacketHandler.INSTANCE.sendToAll(new HMVPakcetVehicleState(this.getEntityId(),bodyRot, throttle,trigger1,trigger2));
 //			for(int x = (int)this.boundingBox.minX+3;x<=this.boundingBox.maxX-3;x++){
 //				for(int y = (int)this.boundingBox.minY+3;y<=this.boundingBox.maxY-3;y++){
 //					for(int z = (int)this.boundingBox.minZ+3;z<=this.boundingBox.maxZ-3;z++){
@@ -332,34 +442,34 @@ public class GVCEntityPlane extends Entity implements ImultiRideableVehicle,Ipla
 //		camera.prevRotationYawHead = prevbodyrotationYaw;
 //		camera.prevRotationYaw = prevbodyrotationYaw;
 //		camera.prevRotationPitch = prevbodyrotationPitch;
-//		GVCMPacketHandler.INSTANCE.sendToServer(new GVCPakcetVehicleState(this.getEntityId(),bodyRot, throttle,trigger1,trigger2));
+//		GVCMPacketHandler.INSTANCE.sendToServer(new HMVPakcetVehicleState(this.getEntityId(),bodyRot, throttle,trigger1,trigger2));
 ////				if(th<2.5){
 ////					th +=0.1;
 ////				}
 ////				if (proxy.wclick()) {
 ////					th += 0.1;
-////					GVCMPacketHandler.INSTANCE.sendToServer(new GVCMMessageKeyPressed(16, this.getEntityId()));
+////					GVCMPacketHandler.INSTANCE.sendToServer(new HMVMMessageKeyPressed(16, this.getEntityId()));
 ////				}
 ////				if (proxy.aclick()) {
-//////					GVCMPacketHandler.INSTANCE.sendToServer(new GVCMMessageKeyPressed(17, this.getEntityId()));
+//////					GVCMPacketHandler.INSTANCE.sendToServer(new HMVMMessageKeyPressed(17, this.getEntityId()));
 ////					servera = true;
 ////				}
 ////				if (proxy.sclick()) {
 ////					th -= 0.1;
-////					GVCMPacketHandler.INSTANCE.sendToServer(new GVCMMessageKeyPressed(18, this.getEntityId()));
+////					GVCMPacketHandler.INSTANCE.sendToServer(new HMVMMessageKeyPressed(18, this.getEntityId()));
 ////				}
 ////				if (proxy.dclick()) {
-//////					GVCMPacketHandler.INSTANCE.sendToServer(new GVCMMessageKeyPressed(19, this.getEntityId()));
+//////					GVCMPacketHandler.INSTANCE.sendToServer(new HMVMMessageKeyPressed(19, this.getEntityId()));
 ////					serverd = true;
 ////				}
 ////				if (proxy.leftclick()) {
-////					GVCMPacketHandler.INSTANCE.sendToServer(new GVCMMessageKeyPressed(11, this.getEntityId()));
+////					GVCMPacketHandler.INSTANCE.sendToServer(new HMVMMessageKeyPressed(11, this.getEntityId()));
 ////				}
 ////				if (proxy.jumped()) {
-////					GVCMPacketHandler.INSTANCE.sendToServer(new GVCMMessageKeyPressed(12, this.getEntityId()));
+////					GVCMPacketHandler.INSTANCE.sendToServer(new HMVMMessageKeyPressed(12, this.getEntityId()));
 ////				}
 ////				if (proxy.fclick()) {
-////					GVCMPacketHandler.INSTANCE.sendToServer(new GVCMMessageKeyPressed(20, this.getEntityId()));
+////					GVCMPacketHandler.INSTANCE.sendToServer(new HMVMMessageKeyPressed(20, this.getEntityId()));
 ////				}
 ////
 ////				th -=0.05;
@@ -369,7 +479,7 @@ public class GVCEntityPlane extends Entity implements ImultiRideableVehicle,Ipla
 ////				if(th<0){
 ////					th = 0;
 ////				}
-//////				GVCMPacketHandler.INSTANCE.sendToServer(new GVCMMessageMouseD(Mouse.getDX(),Mouse.getDY(),this.getEntityId()));
+//////				GVCMPacketHandler.INSTANCE.sendToServer(new HMVPacketMouseD(Mouse.getDX(),Mouse.getDY(),this.getEntityId()));
 ////				mousex += Mouse.getDX()*0.01;
 ////				mousey += Mouse.getDY()*0.01;
 ////				if (servera) {
@@ -433,9 +543,9 @@ public class GVCEntityPlane extends Entity implements ImultiRideableVehicle,Ipla
 
 //	public void initseat(){
 //		for (int i = 0; i< childEntities.length; i++) {
-//			childInfo[i] = new ChildInfo();
+//			SeatInfo[i] = new SeatInfo();
 //			if(!worldObj.isRemote) {
-//				childEntities[i] = new GVCEntityChild(worldObj,1,1,true);
+//				childEntities[i] = new EntityChild(worldObj,1,1,true);
 //				childEntities[i].setLocationAndAngles(this.posX,this.posY,this.posZ,0,0);
 //				childEntities[i].master = this;
 //				childEntities[i].idinmasterEntityt = i;
@@ -444,34 +554,34 @@ public class GVCEntityPlane extends Entity implements ImultiRideableVehicle,Ipla
 //			isinit = true;
 //			switch (i){
 //				case 0:
-//					childInfo[i].pos[0] = 0;
-//					childInfo[i].pos[1] = 1.1;
-//					childInfo[i].pos[2] = 3;
+//					SeatInfo[i].pos[0] = 0;
+//					SeatInfo[i].pos[1] = 1.1;
+//					SeatInfo[i].pos[2] = 3;
 //					break;
 ////				case 1:
-////					childInfo[i].pos[0] = -0.73;
-////					childInfo[i].pos[1] = 1.1;
-////					childInfo[i].pos[2] = 1.00;
+////					SeatInfo[i].pos[0] = -0.73;
+////					SeatInfo[i].pos[1] = 1.1;
+////					SeatInfo[i].pos[2] = 1.00;
 ////					break;
 ////				case 2:
-////					childInfo[i].pos[0] = 1.0;
-////					childInfo[i].pos[1] = 1.1;
-////					childInfo[i].pos[2] = 1.75;
+////					SeatInfo[i].pos[0] = 1.0;
+////					SeatInfo[i].pos[1] = 1.1;
+////					SeatInfo[i].pos[2] = 1.75;
 ////					break;
 ////				case 3:
-////					childInfo[i].pos[0] = 1.0;
-////					childInfo[i].pos[1] = 1.1;
-////					childInfo[i].pos[2] = 1.00;
+////					SeatInfo[i].pos[0] = 1.0;
+////					SeatInfo[i].pos[1] = 1.1;
+////					SeatInfo[i].pos[2] = 1.00;
 ////					break;
 ////				case 4:
-////					childInfo[i].pos[0] = 0.15;
-////					childInfo[i].pos[1] = 0.7;
-////					childInfo[i].pos[2] = 5.8;
+////					SeatInfo[i].pos[0] = 0.15;
+////					SeatInfo[i].pos[1] = 0.7;
+////					SeatInfo[i].pos[2] = 5.8;
 ////					break;
 ////				case 5:
-////					childInfo[i].pos[0] = 0.24;
-////					childInfo[i].pos[1] = 1.4;
-////					childInfo[i].pos[2] = 4;
+////					SeatInfo[i].pos[0] = 0.24;
+////					SeatInfo[i].pos[1] = 1.4;
+////					SeatInfo[i].pos[2] = 4;
 ////					break;
 //			}
 //		}
@@ -488,7 +598,7 @@ public class GVCEntityPlane extends Entity implements ImultiRideableVehicle,Ipla
 //				for (Object obj : worldObj.loadedEntityList) {
 //					Entity A_flyingEntiy = (Entity) obj;
 //					if (!A_flyingEntiy.isDead) {
-//						if(A_flyingEntiy.worldObj == this.worldObj && A_flyingEntiy != this && (A_flyingEntiy instanceof IdriveableVehicle) && childEntities[0]!= null && A_flyingEntiy != childEntities[0].riddenByEntity) {
+//						if(A_flyingEntiy.worldObj == this.worldObj && A_flyingEntiy != this && (A_flyingEntiy instanceof IVehicle) && childEntities[0]!= null && A_flyingEntiy != childEntities[0].riddenByEntity) {
 //							double distsq = getDistanceSqToEntity(A_flyingEntiy);
 //								if (distsq < 16777216) {
 //								trackingEntity.add(A_flyingEntiy);
@@ -515,7 +625,7 @@ public class GVCEntityPlane extends Entity implements ImultiRideableVehicle,Ipla
 //				e.printStackTrace();
 //			}
 //			flyingEntity.removeAll(remove);
-//			GVCMPacketHandler.INSTANCE.sendTo(new GVCPacket_HudEntitytracking(childEntities[0].riddenByEntity,trackingEntity), (EntityPlayerMP) childEntities[0].riddenByEntity);
+//			GVCMPacketHandler.INSTANCE.sendTo(new HMVPacket_HudEntitytracking(childEntities[0].riddenByEntity,trackingEntity), (EntityPlayerMP) childEntities[0].riddenByEntity);
 //		}else {
 //			throttle -=0.01;
 //		}
@@ -608,34 +718,34 @@ public class GVCEntityPlane extends Entity implements ImultiRideableVehicle,Ipla
 	}
 //	void seatUpdate(Vector3d mainwingvector,Vector3d tailwingvector,Vector3d bodyvector){
 //		for(int i = 0; i< childEntities.length; i++){
-//			GVCEntityChild achild = childEntities[i];
+//			EntityChild achild = childEntities[i];
 //			if(achild != null && !achild.isDead) {
 //				achild.setLocationAndAngles(
-//						this.posX + mainwingvector.x * this.childInfo[i].pos[0] + tailwingvector.x * (this.childInfo[i].pos[1] - 2.5) - bodyvector.x * this.childInfo[i].pos[2]
-//						, this.posY + mainwingvector.y * this.childInfo[i].pos[0] + 2 + tailwingvector.y * (this.childInfo[i].pos[1] - 2.5) - bodyvector.y * this.childInfo[i].pos[2]
-//						, this.posZ + mainwingvector.z * this.childInfo[i].pos[0] + tailwingvector.z * (this.childInfo[i].pos[1] - 2.5) - bodyvector.z * this.childInfo[i].pos[2]
+//						this.posX + mainwingvector.x * this.SeatInfo[i].pos[0] + tailwingvector.x * (this.SeatInfo[i].pos[1] - 2.5) - bodyvector.x * this.SeatInfo[i].pos[2]
+//						, this.posY + mainwingvector.y * this.SeatInfo[i].pos[0] + 2 + tailwingvector.y * (this.SeatInfo[i].pos[1] - 2.5) - bodyvector.y * this.SeatInfo[i].pos[2]
+//						, this.posZ + mainwingvector.z * this.SeatInfo[i].pos[0] + tailwingvector.z * (this.SeatInfo[i].pos[1] - 2.5) - bodyvector.z * this.SeatInfo[i].pos[2]
 //						, this.bodyrotationYaw, this.bodyrotationPitch);
-//				achild.prevPosX = this.prevPosX + mainwingvector.x * this.childInfo[i].pos[0] + tailwingvector.x * (this.childInfo[i].pos[1] - 2.5) - bodyvector.x * this.childInfo[i].pos[2];
-//				achild.prevPosY = this.prevPosY + mainwingvector.y * this.childInfo[i].pos[0] + 2 + tailwingvector.y * (this.childInfo[i].pos[1] - 2.5) - bodyvector.y * this.childInfo[i].pos[2];
-//				achild.prevPosZ = this.prevPosZ + mainwingvector.z * this.childInfo[i].pos[0] + tailwingvector.z * (this.childInfo[i].pos[1] - 2.5) - bodyvector.z * this.childInfo[i].pos[2];
+//				achild.prevPosX = this.prevPosX + mainwingvector.x * this.SeatInfo[i].pos[0] + tailwingvector.x * (this.SeatInfo[i].pos[1] - 2.5) - bodyvector.x * this.SeatInfo[i].pos[2];
+//				achild.prevPosY = this.prevPosY + mainwingvector.y * this.SeatInfo[i].pos[0] + 2 + tailwingvector.y * (this.SeatInfo[i].pos[1] - 2.5) - bodyvector.y * this.SeatInfo[i].pos[2];
+//				achild.prevPosZ = this.prevPosZ + mainwingvector.z * this.SeatInfo[i].pos[0] + tailwingvector.z * (this.SeatInfo[i].pos[1] - 2.5) - bodyvector.z * this.SeatInfo[i].pos[2];
 //				achild.master = this;
 //				if(achild.riddenByEntity != null) {
-//					achild.riddenByEntity.posX = this.prevPosX + (this.posX - this.prevPosX) + mainwingvector.x * this.childInfo[i].pos[0] + tailwingvector.x * (this.childInfo[i].pos[1] - 2.5) - bodyvector.x * this.childInfo[i].pos[2];
-//					achild.riddenByEntity.posY = this.prevPosY + (this.posY - this.prevPosY) + mainwingvector.y * this.childInfo[i].pos[0] + 2 + tailwingvector.y * (this.childInfo[i].pos[1] - 2.5) - bodyvector.y * this.childInfo[i].pos[2] + achild.riddenByEntity.yOffset;
-//					achild.riddenByEntity.posZ = this.prevPosZ + (this.posZ - this.prevPosZ) + mainwingvector.z * this.childInfo[i].pos[0] + tailwingvector.z * (this.childInfo[i].pos[1] - 2.5) - bodyvector.z * this.childInfo[i].pos[2];
+//					achild.riddenByEntity.posX = this.prevPosX + (this.posX - this.prevPosX) + mainwingvector.x * this.SeatInfo[i].pos[0] + tailwingvector.x * (this.SeatInfo[i].pos[1] - 2.5) - bodyvector.x * this.SeatInfo[i].pos[2];
+//					achild.riddenByEntity.posY = this.prevPosY + (this.posY - this.prevPosY) + mainwingvector.y * this.SeatInfo[i].pos[0] + 2 + tailwingvector.y * (this.SeatInfo[i].pos[1] - 2.5) - bodyvector.y * this.SeatInfo[i].pos[2] + achild.riddenByEntity.yOffset;
+//					achild.riddenByEntity.posZ = this.prevPosZ + (this.posZ - this.prevPosZ) + mainwingvector.z * this.SeatInfo[i].pos[0] + tailwingvector.z * (this.SeatInfo[i].pos[1] - 2.5) - bodyvector.z * this.SeatInfo[i].pos[2];
 //				}
 //				achild.motionX = motionX;
 //				achild.motionY = motionY;
 //				achild.motionZ = motionZ;
 //			}else {
 //				if(worldObj.isRemote){
-//					GVCMPacketHandler.INSTANCE.sendToServer(new GVCPacketSeatData(this.getEntityId()));
+//					GVCMPacketHandler.INSTANCE.sendToServer(new HMVPacketSeatData(this.getEntityId()));
 //				}else {
-//					achild = new GVCEntityChild(worldObj);
+//					achild = new EntityChild(worldObj);
 //					achild.setLocationAndAngles(
-//							this.posX + mainwingvector.x * childInfo[i].pos[0] + tailwingvector.x * (childInfo[i].pos[1] - 2.5) - bodyvector.x * childInfo[i].pos[2]
-//							, this.posY + mainwingvector.y * childInfo[i].pos[0] + 2 + tailwingvector.y * (childInfo[i].pos[1] - 2.5) - bodyvector.y * childInfo[i].pos[2]
-//							, this.posZ + mainwingvector.z * childInfo[i].pos[0] + tailwingvector.z * (childInfo[i].pos[1] - 2.5) - bodyvector.z * childInfo[i].pos[2]
+//							this.posX + mainwingvector.x * SeatInfo[i].pos[0] + tailwingvector.x * (SeatInfo[i].pos[1] - 2.5) - bodyvector.x * SeatInfo[i].pos[2]
+//							, this.posY + mainwingvector.y * SeatInfo[i].pos[0] + 2 + tailwingvector.y * (SeatInfo[i].pos[1] - 2.5) - bodyvector.y * SeatInfo[i].pos[2]
+//							, this.posZ + mainwingvector.z * SeatInfo[i].pos[0] + tailwingvector.z * (SeatInfo[i].pos[1] - 2.5) - bodyvector.z * SeatInfo[i].pos[2]
 //							, bodyrotationYaw, bodyrotationPitch);
 //					achild.master = this;
 //					worldObj.spawnEntityInWorld(achild);
@@ -888,49 +998,7 @@ public class GVCEntityPlane extends Entity implements ImultiRideableVehicle,Ipla
 	public void setthrottle(float th) {
 		baseLogic.throttle = th;
 	}
-
-	@Override
-	public void setTrigger(boolean trig1, boolean trig2) {
-		baseLogic.trigger1 = trig1;
-		baseLogic.trigger2 = trig2;
-	}
 	
-	@Override
-	public void initseat() {
-	
-	}
-	
-	@Override
-	public GVCEntityChild[] getChilds() {
-		return baseLogic.childEntities;
-	}
-
-	@Override
-	public void addChild(GVCEntityChild seat) {
-		if(seat.idinmasterEntityt != -1 && seat.idinmasterEntityt < baseLogic.childEntities.length){
-			baseLogic.childEntities[seat.idinmasterEntityt] = seat;
-			baseLogic.childEntities[seat.idinmasterEntityt].master = this;
-		}
-	}
-
-	@Override
-	public boolean isRidingEntity(Entity entity) {
-		for(int i = 0; i < baseLogic.childEntities.length; i++){
-			if(baseLogic.childEntities[i] != null){
-				if(baseLogic.childEntities[i].riddenByEntity == entity)return true;
-			}
-		}
-		return false;
-	}
-
-	@Override
-	public boolean isChild(Entity entity){
-		for(Entity achild:baseLogic.childEntities){
-			if(entity == achild)return true;
-		}
-		return entity == this;
-	}
-
 	@Override
 	public int getpilotseatid() {
 		return 0;
@@ -938,7 +1006,7 @@ public class GVCEntityPlane extends Entity implements ImultiRideableVehicle,Ipla
 
 	public void applyEntityCollision(Entity p_70108_1_)
 	{
-//		for(GVCEntityChild aseat: childEntities){
+//		for(EntityChild aseat: childEntities){
 //			if(aseat != null && aseat.riddenByEntity == p_70108_1_)return;
 //		}
 //		super.applyEntityCollision(p_70108_1_);
@@ -950,7 +1018,64 @@ public class GVCEntityPlane extends Entity implements ImultiRideableVehicle,Ipla
 	}
 	
 	@Override
-	public PlaneBaseLogic getBaseLogic() {
+	public IbaseLogic getBaseLogic() {
 		return baseLogic;
+	}
+	
+	public void setPosition(double x, double y, double z)
+	{
+		if(baseLogic != null)baseLogic.setPosition(x,y,z);
+	}
+	
+	@Override
+	public TurretObj[] getmainTurrets() {
+		if(baseLogic.mainTurrets == null) {
+			ArrayList<TurretObj> turrets = new ArrayList<TurretObj>();
+			addAllTurret(turrets, baseLogic.mainTurret);
+			baseLogic.mainTurrets = turrets.toArray(new TurretObj[turrets.size()]);
+		}
+		return baseLogic.mainTurrets;
+	}
+	
+	@Override
+	public TurretObj[] getsubTurrets() {
+		if(baseLogic.subTurrets == null) {
+			ArrayList<TurretObj> turrets = new ArrayList<TurretObj>();
+			addAllTurret(turrets, baseLogic.subTurret);
+			baseLogic.subTurrets = turrets.toArray(new TurretObj[turrets.size()]);
+		}
+		return baseLogic.subTurrets;
+	}
+	
+	@Override
+	public TurretObj[] getTurrets() {
+		if(baseLogic.turrets == null) {
+			ArrayList<TurretObj> turrets = new ArrayList<TurretObj>();
+			addAllTurret(turrets, baseLogic.mainTurret);
+			addAllTurret(turrets, baseLogic.subTurret);
+			baseLogic.turrets = turrets.toArray(new TurretObj[turrets.size()]);
+		}
+		return baseLogic.turrets;
+	}
+	public void addAllTurret(ArrayList<TurretObj> turrets , TurretObj current){
+		turrets.add(current);
+		for(TurretObj a_child :current.getChilds()){
+			addAllTurret(turrets,a_child);
+		}
+	}
+	
+	@Override
+	public int getMobMode() {
+		return 0;
+	}
+	
+	@Override
+	public double[] getwaitingpos() {
+		return new double[0];
+	}
+	
+	@Override
+	public boolean standalone() {
+		return false;
 	}
 }

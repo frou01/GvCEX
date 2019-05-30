@@ -1,61 +1,15 @@
 package hmgww2.entity;
 
 
-import java.util.Calendar;
-import java.util.List;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import hmggvcmob.GVCMobPlus;
 import hmggvcmob.ai.AITankAttack;
-import hmggvcmob.entity.*;
-import hmgww2.mod_GVCWW2;
-import hmgww2.blocks.BlockFlagBase;
-import hmgww2.blocks.BlockJPNFlagBase;
-import hmgww2.network.WW2MessageKeyPressed;
-import hmgww2.network.WW2PacketHandler;
-import net.minecraft.block.Block;
+import hmvehicle.entity.parts.SeatInfo;
+import hmvehicle.entity.parts.turrets.FireRist;
+import hmvehicle.entity.parts.ModifiedBoundingBox;
+import hmvehicle.entity.parts.turrets.TurretObj;
+import hmvehicle.entity.parts.logics.VesselBaseLogic;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityFlying;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.EnumCreatureAttribute;
-import net.minecraft.entity.IEntityLivingData;
-import net.minecraft.entity.IRangedAttackMob;
-import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAIArrowAttack;
-import net.minecraft.entity.ai.EntityAIAttackOnCollide;
-import net.minecraft.entity.ai.EntityAIFleeSun;
-import net.minecraft.entity.ai.EntityAIHurtByTarget;
-import net.minecraft.entity.ai.EntityAILookIdle;
-import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
-import net.minecraft.entity.ai.EntityAIRestrictSun;
-import net.minecraft.entity.ai.EntityAISwimming;
-import net.minecraft.entity.ai.EntityAITempt;
-import net.minecraft.entity.ai.EntityAIWander;
-import net.minecraft.entity.ai.EntityAIWatchClosest;
-import net.minecraft.entity.monster.EntityCreeper;
-import net.minecraft.entity.monster.EntityGhast;
-import net.minecraft.entity.monster.EntityGolem;
-import net.minecraft.entity.monster.EntityMob;
-import net.minecraft.entity.monster.IMob;
-import net.minecraft.entity.passive.EntityVillager;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.stats.AchievementList;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.Vec3;
-import net.minecraft.world.EnumDifficulty;
-import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldProviderHell;
-import net.minecraft.world.biome.BiomeGenBase;
 
 import javax.vecmath.Vector3d;
 
@@ -69,7 +23,7 @@ public class EntityJPN_ShipD extends EntityJPN_ShipBase
 		ignoreFrustumCheck = true;
 		renderDistanceWeight = Double.MAX_VALUE;
 		
-		nboundingbox = new ModifiedBoundingBox(-100,-100,-100,100,100,100,
+		nboundingbox = new ModifiedBoundingBox(boundingBox.minX,boundingBox.minY,boundingBox.minZ,boundingBox.maxX,boundingBox.maxY,boundingBox.maxZ,
 				                                      0,5,-10.53,
 				                                      10,13,82);
 		nboundingbox.rot.set(baseLogic.bodyRot);
@@ -88,6 +42,26 @@ public class EntityJPN_ShipD extends EntityJPN_ShipBase
 		zoomingplayerpos = new Vector3d(-0.8,3.2D,-0.3);
 		cannonpos = new Vector3d(0,0.7324,-1.872);
 		turretpos = new Vector3d(0,7.9753,-27.07);
+		
+		((VesselBaseLogic)baseLogic).riddenByEntities = new Entity[4];
+		((VesselBaseLogic)baseLogic).riddenByEntitiesInfo = new SeatInfo[4];
+		((VesselBaseLogic)baseLogic).riddenByEntitiesInfo_zoom = new SeatInfo[4];
+		
+		((VesselBaseLogic)baseLogic).riddenByEntitiesInfo[0] = new SeatInfo();
+		((VesselBaseLogic)baseLogic).riddenByEntitiesInfo_zoom[0] = new SeatInfo();
+		((VesselBaseLogic)baseLogic).riddenByEntitiesInfo[0].pos = new double[]{playerpos.x,playerpos.y,playerpos.z};
+		((VesselBaseLogic)baseLogic).riddenByEntitiesInfo_zoom[0].pos = new double[]{zoomingplayerpos.x,zoomingplayerpos.y,zoomingplayerpos.z};
+		
+		((VesselBaseLogic)baseLogic).riddenByEntitiesInfo[1] = ((VesselBaseLogic)baseLogic).riddenByEntitiesInfo_zoom[1] = new SeatInfo();
+		((VesselBaseLogic)baseLogic).riddenByEntitiesInfo[1].pos = ((VesselBaseLogic)baseLogic).riddenByEntitiesInfo_zoom[1].pos = new double[]{0,12.98,-15};
+		
+		((VesselBaseLogic)baseLogic).riddenByEntitiesInfo[2] = ((VesselBaseLogic)baseLogic).riddenByEntitiesInfo_zoom[2] = new SeatInfo();
+		((VesselBaseLogic)baseLogic).riddenByEntitiesInfo[2].pos = ((VesselBaseLogic)baseLogic).riddenByEntitiesInfo_zoom[2].pos = new double[]{0,8.6,-0.8};
+		
+		((VesselBaseLogic)baseLogic).riddenByEntitiesInfo[3] = ((VesselBaseLogic)baseLogic).riddenByEntitiesInfo_zoom[3] = new SeatInfo();
+		((VesselBaseLogic)baseLogic).riddenByEntitiesInfo[3].pos = ((VesselBaseLogic)baseLogic).riddenByEntitiesInfo_zoom[3].pos = new double[]{0,8.1,17.3};
+		
+		
 		TurretObj mainTurret1 = new TurretObj(worldObj);
 		{
 			mainTurret1.onmotherPos = turretpos;
@@ -99,12 +73,12 @@ public class EntityJPN_ShipD extends EntityJPN_ShipBase
 			mainTurret1.turretanglelimtPitchmin = -80;
 			mainTurret1.traverseSound = null;
 			mainTurret1.currentEntity = this;
-			mainTurret1.powor = 15;
+			mainTurret1.powor = 120;
 			mainTurret1.ex = 1.0F;
 			mainTurret1.cycle_setting = 120;
 			mainTurret1.firesound = "hmgww2:hmgww2.12.7cmFire";
-			mainTurret1.spread = 1;
-			mainTurret1.speed = 8;
+			mainTurret1.spread = 3;
+			mainTurret1.speed = 4;
 			mainTurret1.canex = true;
 			mainTurret1.guntype = 2;
 			mainTurret1.fireRists = new FireRist[]{new FireRist(160,-160,90,-90)};
@@ -121,12 +95,12 @@ public class EntityJPN_ShipD extends EntityJPN_ShipBase
 			mainTurret2.turretanglelimtPitchmin = -80;
 			mainTurret2.traverseSound = null;
 			mainTurret2.currentEntity = this;
-			mainTurret2.powor = 15;
+			mainTurret2.powor = 120;
 			mainTurret2.ex = 1.0F;
 			mainTurret2.cycle_setting = 120;
 			mainTurret2.firesound = "hmgww2:hmgww2.12.7cmFire";
-			mainTurret2.spread = 1;
-			mainTurret2.speed = 8;
+			mainTurret2.spread = 3;
+			mainTurret2.speed = 4;
 			mainTurret2.canex = true;
 			mainTurret2.guntype = 2;
 			mainTurret2.fireRists = new FireRist[]{new FireRist(150,15,90,-90),new FireRist(-15,-150,90,-90)};
@@ -178,7 +152,7 @@ public class EntityJPN_ShipD extends EntityJPN_ShipBase
 			depth_charge1.currentEntity = this;
 			depth_charge1.powor = 100;
 			depth_charge1.ex = 10.0F;
-			depth_charge1.cycle_setting = 5;
+			depth_charge1.cycle_setting = 7;
 			depth_charge1.firesound = null;
 			depth_charge1.flushName = null;
 			depth_charge1.spread = 4;
@@ -188,7 +162,7 @@ public class EntityJPN_ShipD extends EntityJPN_ShipBase
 			depth_charge1.reloadSetting = 1200;
 			depth_charge1.canex = true;
 			depth_charge1.guntype = 2;
-			depth_charge1.fuse = 20;
+			depth_charge1.fuse = 30;
 			depth_charge1.bulletmodel = "byfrou01_depth_charge";
 		}
 		turretpos = new Vector3d(2.7768,5.311,37.6780);
@@ -207,7 +181,7 @@ public class EntityJPN_ShipD extends EntityJPN_ShipBase
 			depth_charge2.currentEntity = this;
 			depth_charge2.powor = 100;
 			depth_charge2.ex = 10.0F;
-			depth_charge2.cycle_setting = 5;
+			depth_charge2.cycle_setting = 7;
 			depth_charge2.firesound = null;
 			depth_charge2.flushName = null;
 			depth_charge2.spread = 4;
@@ -217,7 +191,7 @@ public class EntityJPN_ShipD extends EntityJPN_ShipBase
 			depth_charge2.reloadSetting = 1200;
 			depth_charge2.canex = true;
 			depth_charge2.guntype = 2;
-			depth_charge2.fuse = 20;
+			depth_charge2.fuse = 30;
 			depth_charge2.bulletmodel = "byfrou01_depth_charge";
 		}
 		
@@ -226,6 +200,25 @@ public class EntityJPN_ShipD extends EntityJPN_ShipBase
 		subturrets = new TurretObj[]{torp1};
 		SPturrets = new TurretObj[]{depth_charge1,depth_charge2};
 		armor = 12;
+	}
+	public void onUpdate() {
+		if (this.standalone()) {
+			if (!worldObj.isRemote && rand.nextInt(100) == 1) {
+				boolean flag = false;
+				for (int id = 1; id < ((VesselBaseLogic)baseLogic).riddenByEntities.length; id++) {
+					if(((VesselBaseLogic)baseLogic).riddenByEntities[id] == null)flag = true;
+				}
+				if(flag) {
+					EntityJPN_S entityJPN_s = new EntityJPN_S(worldObj);
+					entityJPN_s.addGun(3);
+					entityJPN_s.setLocationAndAngles(this.posX, this.posY, this.posZ, 0, 0);
+					worldObj.spawnEntityInWorld(entityJPN_s);
+					if (!pickupEntity(entityJPN_s, 1)) entityJPN_s.setDead();
+				}
+				
+			}
+		}
+		super.onUpdate();
 	}
 	public void setassault(){
 		aiTankAttack.setMinrenge(0);

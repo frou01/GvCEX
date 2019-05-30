@@ -5,6 +5,8 @@ import handmadeguns.HMGAddBullets;
 import handmadeguns.HandmadeGunsCore;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.MathHelper;
@@ -19,9 +21,13 @@ public class HMGEntityBulletCartridge extends Entity implements IEntityAdditiona
 {
 	public int fuse;
     
-    public int ttype = 1;
+    public int cartType = 1;
     public String modelname = "default";
     public int modelid = -1;
+    
+    public ItemStack itemStack;
+    
+    public int coolDownTime = 40;
 
 
 	public HMGEntityBulletCartridge(World par1World)
@@ -29,7 +35,7 @@ public class HMGEntityBulletCartridge extends Entity implements IEntityAdditiona
         super(par1World);
         this.fuse = HandmadeGunsCore.cfg_Cartridgetime;
         NBTTagCompound nbt = this.getEntityData();
-        nbt.setInteger("cartridgehmg", ttype);
+        nbt.setInteger("cartridgehmg", cartType);
     }
 
     @Override
@@ -40,9 +46,9 @@ public class HMGEntityBulletCartridge extends Entity implements IEntityAdditiona
     public HMGEntityBulletCartridge(World p_i1777_1_, Entity p_i1777_2_, int tttype)
     {
         super(p_i1777_1_);
-        this.ttype = tttype;
+        this.cartType = tttype;
         NBTTagCompound nbt = this.getEntityData();
-        nbt.setInteger("cartridgehmg", ttype);
+        nbt.setInteger("cartridgehmg", cartType);
         this.fuse = HandmadeGunsCore.cfg_Cartridgetime;
         this.setSize(0.25F, 0.25F);
         this.setLocationAndAngles(p_i1777_2_.posX, p_i1777_2_.posY + (double)p_i1777_2_.getEyeHeight(), p_i1777_2_.posZ, p_i1777_2_.rotationYaw, p_i1777_2_.rotationPitch);
@@ -60,10 +66,10 @@ public class HMGEntityBulletCartridge extends Entity implements IEntityAdditiona
     public HMGEntityBulletCartridge(World p_i1777_1_, Entity p_i1777_2_, int tttype,String  modelid)
     {
         super(p_i1777_1_);
-        this.ttype = tttype;
+        this.cartType = tttype;
         this.modelname = modelid;
         NBTTagCompound nbt = this.getEntityData();
-        nbt.setInteger("cartridgehmg", ttype);
+        nbt.setInteger("cartridgehmg", cartType);
         this.fuse = HandmadeGunsCore.cfg_Cartridgetime;
         this.setSize(0.25F, 0.25F);
         this.setLocationAndAngles(p_i1777_2_.posX, p_i1777_2_.posY + (double)p_i1777_2_.getEyeHeight(), p_i1777_2_.posZ, p_i1777_2_.rotationYaw, p_i1777_2_.rotationPitch);
@@ -120,10 +126,13 @@ public class HMGEntityBulletCartridge extends Entity implements IEntityAdditiona
 
         if (this.onGround)
         {
+            this.motionX *= 0.9;
+            this.motionY *= 0.9;
+            this.motionZ *= 0.9;
             this.motionY *= -0.5D;
             this.rotationPitch = 0;
         }
-
+        this.coolDownTime--;
         
         
         if (this.fuse-- <= 0)
@@ -138,22 +147,27 @@ public class HMGEntityBulletCartridge extends Entity implements IEntityAdditiona
 
     @Override
     protected void readEntityFromNBT(NBTTagCompound p_70037_1_) {
-
+        NBTTagCompound tag = p_70037_1_.getCompoundTag("itemStack");
+        if(tag != null)itemStack = ItemStack.loadItemStackFromNBT(tag);
     }
 
     @Override
     protected void writeEntityToNBT(NBTTagCompound p_70014_1_) {
-
+        NBTTagCompound nbttagcompound = new NBTTagCompound();
+        if(itemStack != null) {
+            itemStack.writeToNBT(nbttagcompound);
+        }
+        p_70014_1_.setTag("itemStack", nbttagcompound);
     }
 
     @Override
     public void writeSpawnData(ByteBuf buffer) {
         PacketBuffer lpbuf = new PacketBuffer(buffer);
-        lpbuf.writeInt(ttype);
+        lpbuf.writeInt(cartType);
         try {
-            byte[] soundname = fromObject(modelname);
-            lpbuf.writeInt(soundname.length);
-            lpbuf.writeBytes(soundname);
+            byte[] name = fromObject(modelname);
+            lpbuf.writeInt(name.length);
+            lpbuf.writeBytes(name);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -162,7 +176,7 @@ public class HMGEntityBulletCartridge extends Entity implements IEntityAdditiona
     @Override
     public void readSpawnData(ByteBuf additionalData) {
         PacketBuffer lpbuf = new PacketBuffer(additionalData);
-        ttype = lpbuf.readInt();
+        cartType = lpbuf.readInt();
 //        if(ttype == -1){
 //            ttype = this.getEntityData().getInteger("cartridgehmg");
 //        }
@@ -176,8 +190,29 @@ public class HMGEntityBulletCartridge extends Entity implements IEntityAdditiona
             e.printStackTrace();
         }
         if(worldObj.isRemote){
-            if(ttype ==-1 && HMGAddBullets.indexlist != null&& !HMGAddBullets.indexlist.isEmpty() &&modelname!=null&& !modelname.isEmpty() && !modelname.equals("default")) {
+            if(cartType ==-1 && HMGAddBullets.indexlist != null&& !HMGAddBullets.indexlist.isEmpty() &&modelname!=null&& !modelname.isEmpty() && !modelname.equals("default") && HMGAddBullets.indexlist.containsKey(modelname)) {
                 modelid = HMGAddBullets.indexlist.get(modelname);
+            }
+        }
+    }
+    
+    @Override
+    public void onCollideWithPlayer(EntityPlayer p_70100_1_)
+    {
+        if (!this.worldObj.isRemote)
+        {
+            boolean flag = this.coolDownTime <=0;
+            
+            if (flag && !p_70100_1_.inventory.addItemStackToInventory(itemStack))
+            {
+                flag = false;
+            }
+            
+            if (flag)
+            {
+                this.playSound("random.pop", 0.2F, ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.7F + 1.0F) * 2.0F);
+                p_70100_1_.onItemPickup(this, 1);
+                this.setDead();
             }
         }
     }

@@ -1,5 +1,5 @@
 FlyingSoundName,bombdrops
-FlyingSoundLV,16
+FlyingSoundLV,4
 FlyingSoundSP,1
 FlyingSoundmaxdist,1024
 FlyingSound_BulletMinSpeed,0.5

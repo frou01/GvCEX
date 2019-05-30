@@ -14,6 +14,7 @@ public class GunTemp {
 	public float soundlevel = 4;
 	
 	public ItemStack[] items = new ItemStack[6];
+	public ItemStack magazineStack;
 	public boolean muzzle = true;
 	public Invocable invocable;
 	public Entity  TGT;
@@ -22,4 +23,7 @@ public class GunTemp {
 	public int LockedPosZ;
 	public boolean islockingentity;
 	public boolean islockingblock;
+	
+	public int selectingMagazine;
+	public int currentMgazine;
 }

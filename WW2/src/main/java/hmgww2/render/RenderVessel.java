@@ -1,9 +1,9 @@
 package hmgww2.render;
 
-import hmggvcmob.entity.IMultiTurretVehicle;
-import hmggvcmob.entity.IRideableTank;
-import hmggvcmob.entity.TankBaseLogic;
-import hmggvcmob.entity.TurretObj;
+import hmvehicle.entity.parts.IMultiTurretVehicle;
+import hmvehicle.entity.parts.ITank;
+import hmvehicle.entity.parts.logics.TankBaseLogic;
+import hmvehicle.entity.parts.turrets.TurretObj;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
@@ -38,33 +38,33 @@ public class RenderVessel extends Render {
 	float xsxs;
 	public void doRender(Entity entity, double p_76986_2_, double p_76986_4_, double p_76986_6_,
 	                     float entityYaw, float partialTicks) {
-		if(entity instanceof IMultiTurretVehicle){
+		if(entity instanceof IMultiTurretVehicle && entity instanceof ITank){
 			this.bindEntityTexture(entity);
 			GL11.glPushMatrix();
 			GL11.glTranslatef((float) p_76986_2_, (float) p_76986_4_, (float) p_76986_6_);
 			GL11.glRotatef(180F, 0.0F, 1.0F, 0.0F);
 			GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-			TankBaseLogic baseLogic = ((IMultiTurretVehicle) entity).getBaseLogic();
+			TankBaseLogic baseLogic = (TankBaseLogic) ((ITank) entity).getBaseLogic();
 			GL11.glRotatef(180.0F - (baseLogic.bodyrotationYaw + (baseLogic.bodyrotationYaw - baseLogic.prevbodyrotationYaw) * partialTicks), 0.0F, 1.0F, 0.0F);
 			GL11.glRotatef(baseLogic.bodyrotationPitch, 1.0F, 0.0F, 0.0F);
 			GL11.glRotatef(baseLogic.bodyrotationRoll, 0.0F, 0.0F, 1.0F);
 			tankk.renderPart("mat1");
 			tankk.renderPart("obj1");
 			
-			TurretObj[] turretObjs = ((IMultiTurretVehicle) entity).getmotherTurrets();
+			TurretObj[] turretObjs = ((ITank) entity).getmotherTurrets();
 			if(turretObjs != null)
 			for(int i = 0;i < turretObjs.length;i++){
 				TurretObj aturretobj = turretObjs[i];
 				GL11.glPushMatrix();
-				GL11.glTranslatef((float)-aturretobj.onmotherPos.x,(float)aturretobj.onmotherPos.y,(float)-aturretobj.onmotherPos.z);
+				GL11.glTranslatef((float)aturretobj.onmotherPos.x,(float)aturretobj.onmotherPos.y,(float)-aturretobj.onmotherPos.z);
 				GL11.glRotatef((float) -aturretobj.turretrotationYaw, 0.0F, 1.0F, 0.0F);
-				GL11.glTranslatef((float)aturretobj.onmotherPos.x,(float)-aturretobj.onmotherPos.y,(float)aturretobj.onmotherPos.z);
+				GL11.glTranslatef((float)-aturretobj.onmotherPos.x,(float)-aturretobj.onmotherPos.y,(float)aturretobj.onmotherPos.z);
 				tankk.renderPart("Turret" + i);
-				GL11.glTranslatef((float)-aturretobj.onmotherPos.x,(float)aturretobj.onmotherPos.y,(float)-aturretobj.onmotherPos.z);
+				GL11.glTranslatef((float)aturretobj.onmotherPos.x,(float)aturretobj.onmotherPos.y,(float)-aturretobj.onmotherPos.z);
 				GL11.glTranslatef((float)aturretobj.turretPitchCenterpos.x,(float)aturretobj.turretPitchCenterpos.y,(float)-aturretobj.turretPitchCenterpos.z);
 				GL11.glRotatef((float) aturretobj.turretrotationPitch, 1.0F, 0.0F, 0.0F);
 				GL11.glTranslatef((float)-aturretobj.turretPitchCenterpos.x,(float)-aturretobj.turretPitchCenterpos.y,(float)aturretobj.turretPitchCenterpos.z);
-				GL11.glTranslatef((float)aturretobj.onmotherPos.x,(float)-aturretobj.onmotherPos.y,(float)aturretobj.onmotherPos.z);
+				GL11.glTranslatef((float)-aturretobj.onmotherPos.x,(float)-aturretobj.onmotherPos.y,(float)aturretobj.onmotherPos.z);
 				tankk.renderPart("Turret" + i + "Cannon");
 				renderchild(aturretobj.getChilds(),"Turret" + i);
 				GL11.glPopMatrix();
@@ -112,15 +112,15 @@ public class RenderVessel extends Render {
 		for(int ic = 0;ic < childturretObjs.size();ic++){
 			TurretObj achild = childturretObjs.get(ic);
 			GL11.glPushMatrix();
-			GL11.glTranslatef((float)-achild.onmotherPos.x,(float)achild.onmotherPos.y,(float)-achild.onmotherPos.z);
+			GL11.glTranslatef((float)achild.onmotherPos.x,(float)achild.onmotherPos.y,(float)-achild.onmotherPos.z);
 			GL11.glRotatef((float) achild.turretrotationYaw, 1.0F, 0.0F, 0.0F);
-			GL11.glTranslatef((float)achild.onmotherPos.x,(float)-achild.onmotherPos.y,(float)achild.onmotherPos.z);
+			GL11.glTranslatef((float)-achild.onmotherPos.x,(float)-achild.onmotherPos.y,(float)achild.onmotherPos.z);
 			tankk.renderPart(motherID + "child" + ic);
-			GL11.glTranslatef((float)-achild.onmotherPos.x,(float)achild.onmotherPos.y,(float)-achild.onmotherPos.z);
+			GL11.glTranslatef((float)achild.onmotherPos.x,(float)achild.onmotherPos.y,(float)-achild.onmotherPos.z);
 			GL11.glTranslatef((float)achild.turretPitchCenterpos.x,(float)achild.turretPitchCenterpos.y,(float)-achild.turretPitchCenterpos.z);
 			GL11.glRotatef((float) achild.turretrotationYaw, 1.0F, 0.0F, 0.0F);
 			GL11.glTranslatef((float)-achild.turretPitchCenterpos.x,(float)-achild.turretPitchCenterpos.y,(float)achild.turretPitchCenterpos.z);
-			GL11.glTranslatef((float)achild.onmotherPos.x,(float)-achild.onmotherPos.y,(float)achild.onmotherPos.z);
+			GL11.glTranslatef((float)-achild.onmotherPos.x,(float)-achild.onmotherPos.y,(float)achild.onmotherPos.z);
 			tankk.renderPart(motherID + "child" + ic + "Cannon");
 			renderchild(achild.getChilds(),motherID + "child" + ic);
 			GL11.glPopMatrix();

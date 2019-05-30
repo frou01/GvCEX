@@ -1,8 +1,8 @@
 package hmggvcmob.ai;
 
 import hmggvcmob.SlowPathFinder.WorldForPathfind;
-import hmggvcmob.entity.IRideableTank;
-import hmggvcmob.entity.ITank;
+import hmvehicle.entity.parts.ITank;
+import hmvehicle.entity.parts.logics.TankBaseLogic;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
@@ -63,7 +63,7 @@ public class AITankAttack extends EntityAIBase {
     public boolean shouldExecute() {
         attackTime--;
         EntityLivingBase entityliving = Tank_body.getAttackTarget();
-        boolean ismanual = (Tank_body instanceof IRideableTank) && !((IRideableTank) Tank_body).standalone();
+        boolean ismanual = (Tank_body instanceof ITank) && !((ITank) Tank_body).standalone();
         if (ismanual || !fEnable || entityliving == null || entityliving.isDead||forget > 1200) {
             target = null;
             Tank_body.setAttackTarget(null);
@@ -84,12 +84,12 @@ public class AITankAttack extends EntityAIBase {
 
         Tank_body.getNavigator().clearPathEntity();
         double dist = Tank_body.getDistanceSqToEntity(target);
-        if(always_poit_to_target || !movearound && !always_movearound) {
+        if((always_poit_to_target || !movearound) && !always_movearound) {
             if (dist > maxrenge || !Tank_body.getEntitySenses().canSee(target)) {
                 Tank_body.getNavigator().setPath(worldForPathfind.getEntityPathToXYZ(Tank_body, (int) target.posX, (int) target.posY, (int) target.posZ, 80f, true, false, false, true), 1.2);
             } else if (dist < minrenge) {
                 Tank_body.getNavigator().setPath(worldForPathfind.getEntityPathToXYZ(Tank_body, (int) target.posX, (int) target.posY, (int) target.posZ, 80f, true, false, false, true), -1);
-            }
+            }else Tank_body.getNavigator().clearPathEntity();
         }else {
             {
                 Vector3d courseVec = new Vector3d(target.posX,target.posY,target.posZ);
@@ -123,7 +123,7 @@ public class AITankAttack extends EntityAIBase {
                 Tank_body.getNavigator().setPath(worldForPathfind.getEntityPathToXYZ(Tank_body, (int) (Tank_body.posX + courseVec.x), (int) target.posY, (int) (Tank_body.posZ + courseVec.z), 80f, true, false, false, true), 1.2);
             }
         }
-        if(rnd.nextInt(50) == 1){
+        if(rnd.nextInt(100) == 1){
             dir = rnd.nextBoolean();
             movearound = !movearound;
         }
@@ -141,9 +141,9 @@ public class AITankAttack extends EntityAIBase {
 //            }
 //        }
 //        System.out.println("debug");
-        boolean aimed = Tank_body.getEntitySenses().canSee(target) ? Tank_SPdata.getBaseLogic().aimMainTurret_toTarget(target):Tank_SPdata.getBaseLogic().aimMainTurret_toPos(lastTargetX,lastTargetY,lastTargetZ);
-        if(mgBurstRoundCnt < mgBurstRound && (mgmaxrange == -1 || dist < mgmaxrange)){
-            if(Tank_body.getEntitySenses().canSee(target) || noLineCheck_subfire)Tank_SPdata.subFire(target);
+        boolean aimed = Tank_body.getEntitySenses().canSee(target) ? ((TankBaseLogic)Tank_SPdata.getBaseLogic()).aimMainTurret_toTarget(target):((TankBaseLogic)Tank_SPdata.getBaseLogic()).aimMainTurret_toPos(lastTargetX,lastTargetY,lastTargetZ);
+        if(mgBurstRoundCnt < mgBurstRound){
+            if(Tank_body.getEntitySenses().canSee(target) || noLineCheck_subfire)Tank_SPdata.subFireToTarget(target);
             mgBurstRoundCnt++;
         }else {
             if(mgBurstCoolCnt > mgBurstCool){
@@ -157,7 +157,7 @@ public class AITankAttack extends EntityAIBase {
         if(aimed) {
             aimcnt++;
             if (aimcnt > 30) {
-                Tank_SPdata.mainFire(target);
+                Tank_SPdata.mainFireToTarget(target);
             }
         }else {
             aimcnt = 0;

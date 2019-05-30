@@ -3,7 +3,10 @@ package hmggvcmob.entity.friend;
 
 import hmggvcmob.ai.AITankAttack;
 import hmggvcmob.entity.*;
-import hmggvcmob.tile.TileEntityFlag;
+import hmvehicle.entity.parts.*;
+import hmvehicle.entity.parts.logics.IbaseLogic;
+import hmvehicle.entity.parts.logics.TankBaseLogic;
+import hmvehicle.entity.parts.turrets.TurretObj;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,7 +15,6 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
 
@@ -23,7 +25,7 @@ import static hmggvcmob.GVCMobPlus.proxy;
 import static hmggvcmob.event.GVCMXEntityEvent.soundedentity;
 import static hmggvcmob.util.Calculater.*;
 
-public class GVCEntityPMCTank extends EntityPMCBase implements IRideableTank,IControlable
+public class GVCEntityPMCTank extends EntityPMCBase implements ITank
 {
     int count_for_reset;
     public double angletime;
@@ -48,7 +50,7 @@ public class GVCEntityPMCTank extends EntityPMCBase implements IRideableTank,ICo
 
     public int mgMagazine;
     public int mgReloadProgress;
-    public TankBaseLogic baseLogic = new TankBaseLogic(this,0.4f,1.2f,true,"gvcmob:gvcmob.Leopard1Track");
+    public TankBaseLogic baseLogic = new TankBaseLogic(this,0.25f,1.2f,true,"gvcmob:gvcmob.Leopard1Track");
     ModifiedBoundingBox nboundingbox;
 
     Vector3d playerpos = new Vector3d(-0.514f,2.4f,-0.02124 + 0.2448);
@@ -68,7 +70,7 @@ public class GVCEntityPMCTank extends EntityPMCBase implements IRideableTank,ICo
         super(par1World);
         this.tasks.removeTask(aiSwimming);
         this.setSize(3F, 1.6F);
-        nboundingbox = new ModifiedBoundingBox(-20,-20,-20,20,20,20,
+        nboundingbox = new ModifiedBoundingBox(-20,0,-20,20,20,20,
                 0,1.5,0,3.4,3,6.5);
         nboundingbox.rot.set(baseLogic.bodyRot);
         proxy.replaceBoundingbox(this,nboundingbox);
@@ -411,7 +413,7 @@ public class GVCEntityPMCTank extends EntityPMCBase implements IRideableTank,ICo
         mainTurret.update(baseLogic.bodyRot,new Vector3d(this.posX,this.posY,-this.posZ));
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.3D);
     }
-    public void mainFire(Entity target){
+    public void mainFireToTarget(Entity target){
         mainTurret.currentEntity = this;
         mainTurret.fire();
     }
@@ -427,7 +429,7 @@ public class GVCEntityPMCTank extends EntityPMCBase implements IRideableTank,ICo
     }
 
     @Override
-    public TankBaseLogic getBaseLogic() {
+    public IbaseLogic getBaseLogic() {
         return baseLogic;
     }
 
@@ -435,7 +437,7 @@ public class GVCEntityPMCTank extends EntityPMCBase implements IRideableTank,ICo
         mainTurret.currentEntity = this.riddenByEntity;
         mainTurret.fire();
     }
-    public void subFire(Entity target){
+    public void subFireToTarget(Entity target){
         subTurret.currentEntity = this;
         if(subTurret.aimToEntity(target)){
             subTurret.fire();
@@ -660,29 +662,14 @@ public class GVCEntityPMCTank extends EntityPMCBase implements IRideableTank,ICo
     public float getbodyrotationYaw() {
         return baseLogic.bodyrotationYaw;
     }
-
-    @Override
-    public void setbodyrotationYaw(float value) {
-        baseLogic.bodyrotationYaw = value;
-    }
-
-    @Override
-    public void setturretrotationYaw(float value) {
-        baseLogic.turretrotationYaw = value;
-    }
-
-    @Override
-    public float getrotationYawmotion() {
-        return baseLogic.rotationmotion;
-    }
-
+    
     @Override
     public void setrotationYawmotion(float value) {
         baseLogic.rotationmotion = value;
     }
 
     @Override
-    public void setBodyrot(Quat4d rot) {
+    public void setBodyRot(Quat4d rot) {
         baseLogic.bodyRot.set(rot);
     }
 
@@ -695,99 +682,13 @@ public class GVCEntityPMCTank extends EntityPMCBase implements IRideableTank,ICo
     public void setthrottle(float value) {
         baseLogic.throttle = value;
     }
-
+    
     public void moveFlying(float p_70060_1_, float p_70060_2_, float p_70060_3_){
         baseLogic.moveFlying(p_70060_1_,p_70060_2_,p_70060_3_);
     }
-
-    @Override
-    public void setControl_RightClick(boolean value) {
-        server1 = value;
-    }
-
-    @Override
-    public void setControl_LeftClick(boolean value) {
-        server2 = value;
-    }
-
-    @Override
-    public void setControl_Space(boolean value) {
-        serverspace = value;
-    }
-
-    @Override
-    public void setControl_x(boolean value) {
-        serverx = value;
-    }
-
-    @Override
-    public void setControl_w(boolean value) {
-        serverw = value;
-    }
-
-    @Override
-    public void setControl_a(boolean value) {
-        servera = value;
-    }
-
-    @Override
-    public void setControl_s(boolean value) {
-        servers = value;
-    }
-
-    @Override
-    public void setControl_d(boolean value) {
-        serverd = value;
-    }
-
-    @Override
-    public void setControl_f(boolean value) {
-        serverf = value;
-    }
-
-    @Override
-    public boolean getControl_RightClick() {
-        return server1;
-    }
-
-    @Override
-    public boolean getControl_LeftClick() {
-        return server2;
-    }
-
-    @Override
-    public boolean getControl_Space() {
-        return serverspace;
-    }
-
-    @Override
-    public boolean getControl_x() {
-        return serverx;
-    }
-
-    @Override
-    public boolean getControl_w() {
-        return serverw;
-    }
-
-    @Override
-    public boolean getControl_a() {
-        return servera;
-    }
-
-    @Override
-    public boolean getControl_s() {
-        return servers;
-    }
-
-    @Override
-    public boolean getControl_d() {
-        return serverd;
-    }
-
-    @Override
-    public boolean getControl_f() {
-        return serverf;
+    public void setPosition(double x, double y, double z)
+    {
+        if(baseLogic != null)baseLogic.setPosition(x,y,z);
     }
 
 

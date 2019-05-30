@@ -820,9 +820,12 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
                             motionZ *= 0.5;
                             changemotionflag = true;
                         }else {
-                            this.posX = hitedpos.xCoord;
-                            this.posY = hitedpos.yCoord;
-                            this.posZ = hitedpos.zCoord;
+                            hitedpos = movingobjectposition.hitVec;
+                            if(hitedpos != null) {
+                                this.posX = hitedpos.xCoord;
+                                this.posY = hitedpos.yCoord;
+                                this.posZ = hitedpos.zCoord;
+                            }
                         }
                     }else {
                         this.onImpact(movingobjectposition);

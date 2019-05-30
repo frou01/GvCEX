@@ -1,7 +1,7 @@
 package hmgww2.entity;
 
 
-import hmggvcmob.entity.TurretObj;
+import hmvehicle.entity.parts.turrets.TurretObj;
 import net.minecraft.world.World;
 
 import javax.vecmath.Vector3d;
@@ -20,22 +20,21 @@ public class EntityUSSR_FighterA extends EntityUSSR_FighterBase
 //		((ModifiedBoundingBox)this.boundingBox).updateOBB(this.posX,this.posY,this.posZ);
 	    ignoreFrustumCheck = true;
 	    armor = 10;
-	    baseLogic.speedfactor = 0.003f;
-	    baseLogic.liftfactor = 0.04f;
 	    baseLogic.throttle_gearDown = 1.7f;
-	    baseLogic.throttle_Max = 4.0f;
+	    baseLogic.throttle_Max = 3.0f;
 	    baseLogic.rollspeed = 0.2f;
-	    baseLogic.pitchspeed = 0.3f;
-	    baseLogic.yawspeed = 0.3f;
+	    baseLogic.pitchspeed = 0.1f;
+	    baseLogic.yawspeed = 0.14f;
 	    baseLogic.maxDive = 70;
-	    baseLogic.startDive = 40;
+	    baseLogic.startDive = 20;
 	    baseLogic.maxClimb = -17;
 	    baseLogic.maxbank = 30;
-	    baseLogic.cruiseALT = 40;
+	    baseLogic.cruiseALT = 30;
 	    baseLogic.minALT = 10;
+	    baseLogic.sholdUseMain_ToG = true;
 	    baseLogic.soundname = "hmgww2:hmgww2.sound_pera";
-	    baseLogic.pitchsighwidthmax = 5;
-	    baseLogic.pitchsighwidthmin = -5;
+	    baseLogic.pitchsighwidthmax = 1;
+	    baseLogic.pitchsighwidthmin = -1;
 	    baseLogic.yawsightwidthmax = 15;
 	    baseLogic.yawsightwidthmin = -15;
 	
@@ -63,8 +62,8 @@ public class EntityUSSR_FighterA extends EntityUSSR_FighterBase
 		    cannon1.magazineMax = 50;
 		    cannon1.magazinerem = 50;
 		    cannon1.spread = 2.5f;
-		    cannon1.speed = 5;
-		    cannon1.canex = true;
+		    cannon1.speed = 8;
+		    cannon1.canex = false;
 		    cannon1.guntype = 2;
 		
 		    {
@@ -87,8 +86,8 @@ public class EntityUSSR_FighterA extends EntityUSSR_FighterBase
 			    cannon2.magazineMax = 50;
 			    cannon2.magazinerem = 50;
 			    cannon2.spread = 2.5f;
-			    cannon2.speed = 5;
-			    cannon2.canex = true;
+			    cannon2.speed = 8;
+			    cannon2.canex = false;
 			    cannon2.guntype = 2;
 			    cannon1.addchild(cannon2);
 		    }
@@ -104,16 +103,14 @@ public class EntityUSSR_FighterA extends EntityUSSR_FighterBase
 			    cannon3.traverseSound = null;
 			    cannon3.currentEntity = this;
 			    cannon3.powor = 8;
-			    cannon3.ex = 0.5f;
 			    cannon3.cycle_setting = 0;
 			    cannon3.flushscale = 1;
 			    cannon3.firesound = "handmadeguns:handmadeguns.fire";
 			    cannon3.spread = 2;
-			    cannon3.speed = 5;
+			    cannon3.speed = 10;
 			    cannon3.magazineMax = 100;
 			    cannon3.magazinerem = 100;
 			    cannon3.reloadTimer = 70;
-			    cannon3.canex = true;
 			    cannon3.guntype = 0;
 			    cannon1.addchild(cannon3);
 		    }
@@ -129,16 +126,14 @@ public class EntityUSSR_FighterA extends EntityUSSR_FighterBase
 			    cannon4.traverseSound = null;
 			    cannon4.currentEntity = this;
 			    cannon4.powor = 8;
-			    cannon4.ex = 0.5f;
 			    cannon4.cycle_setting = 0;
 			    cannon4.flushscale = 1;
 			    cannon4.firesound = "handmadeguns:handmadeguns.fire";
 			    cannon4.spread = 2;
-			    cannon4.speed = 5;
+			    cannon4.speed = 10;
 			    cannon4.magazineMax = 100;
 			    cannon4.magazinerem = 100;
 			    cannon4.reloadTimer = 70;
-			    cannon4.canex = true;
 			    cannon4.guntype = 0;
 			    cannon1.addchild(cannon4);
 		    }
@@ -164,7 +159,7 @@ public class EntityUSSR_FighterA extends EntityUSSR_FighterBase
 		    baseLogic.mainTurret.flushName = null;
 		    baseLogic.mainTurret.spread = 30;
 		    baseLogic.mainTurret.speed = 0.3f;
-		    baseLogic.mainTurret.canex = true;
+		    baseLogic.mainTurret.canex = false;
 		    baseLogic.mainTurret.guntype = 2;
 		    baseLogic.mainTurret.magazineMax = 4;
 		    baseLogic.mainTurret.magazinerem = 4;
@@ -188,7 +183,7 @@ public class EntityUSSR_FighterA extends EntityUSSR_FighterBase
 		    bomb2.flushName = null;
 		    bomb2.spread = 30;
 		    bomb2.speed = 0.3f;
-		    bomb2.canex = true;
+		    bomb2.canex = false;
 		    bomb2.guntype = 2;
 		    bomb2.magazineMax = 4;
 		    bomb2.magazinerem = 4;

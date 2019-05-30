@@ -73,7 +73,7 @@ public class GVCEntityGuerrillaP extends EntityGBase
             if(this.getHeldItem().getItem() instanceof HMGItem_Unified_Guns){
                 for (var4 = 0; var4 < var3; ++var4)
                 {
-                    this.dropItem(((HMGItem_Unified_Guns) this.getHeldItem().getItem()).gunInfo.magazine, 1);
+                    dropMagazine();
                 }
             }
         }

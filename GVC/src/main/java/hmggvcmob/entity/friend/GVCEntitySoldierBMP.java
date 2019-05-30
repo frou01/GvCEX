@@ -4,13 +4,15 @@ package hmggvcmob.entity.friend;
 import handmadeguns.HandmadeGunsCore;
 import hmggvcmob.ai.AITankAttack;
 import hmggvcmob.entity.*;
-import hmggvcmob.tile.TileEntityFlag;
+import hmvehicle.entity.parts.*;
+import hmvehicle.entity.parts.logics.IbaseLogic;
+import hmvehicle.entity.parts.logics.TankBaseLogic;
+import hmvehicle.entity.parts.turrets.TurretObj;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
@@ -24,7 +26,7 @@ import static hmggvcmob.util.Calculater.CalculateGunElevationAngle;
 import static hmggvcmob.util.Calculater.transformVecByQuat;
 import static hmggvcmob.util.Calculater.transformVecforMinecraft;
 
-public class GVCEntitySoldierBMP extends EntitySoBase implements IRideableTank,IControlable,ImultiRideableVehicle
+public class GVCEntitySoldierBMP extends EntitySoBase implements ITank
 {
 	// public int type;
 	int count_for_reset;
@@ -37,8 +39,6 @@ public class GVCEntitySoldierBMP extends EntitySoBase implements IRideableTank,I
 
 	public float subturretrotationYaw;
 	public float subturretrotationPitch;
-
-	public GVCEntityChild[] childEntities = new GVCEntityChild[4];
 
 	boolean childinit = false;
 
@@ -80,7 +80,7 @@ public class GVCEntitySoldierBMP extends EntitySoBase implements IRideableTank,I
 		this.tasks.removeTask(aiSwimming);
 		this.setSize(3F, 1.6F);
 		baseLogic.canControlonWater = true;
-		nboundingbox = new ModifiedBoundingBox(-20,-20,-20,20,20,20,
+		nboundingbox = new ModifiedBoundingBox(-20,0,-20,20,20,20,
 				0,1.5,0,3.4,3,6.5);
 		nboundingbox.rot.set(baseLogic.bodyRot);
 		proxy.replaceBoundingbox(this,nboundingbox);
@@ -412,7 +412,6 @@ public class GVCEntitySoldierBMP extends EntitySoBase implements IRideableTank,I
 		this.stepHeight = 1.5f;
 		if(!this.worldObj.isRemote){
 			baseLogic.updateServer();
-			if(!childinit)initseat();
 
 			if(riddenByEntity != null){
 				mgAim(riddenByEntity.getRotationYawHead(),riddenByEntity.rotationPitch);
@@ -473,12 +472,11 @@ public class GVCEntitySoldierBMP extends EntitySoBase implements IRideableTank,I
 				if(weaponMode >=2)weaponMode = 0;
 			}
 		}
-		updateSeat();
 		baseLogic.updateCommon();
 		mainTurret.update(baseLogic.bodyRot,new Vector3d(this.posX,this.posY,-this.posZ));
 		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.3D);
 	}
-	public void mainFire(Entity target){
+	public void mainFireToTarget(Entity target){
 		mainTurret.currentEntity = this;
 		mainTurret.fire();
 //        Vector3d Vec_transformedbybody = baseLogic.getTransformedVector_onturret(cannonpos,turretYawCenterpos);
@@ -535,7 +533,7 @@ public class GVCEntitySoldierBMP extends EntitySoBase implements IRideableTank,I
 	}
 
 	@Override
-	public TankBaseLogic getBaseLogic() {
+	public IbaseLogic getBaseLogic() {
 		return baseLogic;
 	}
 
@@ -602,7 +600,7 @@ public class GVCEntitySoldierBMP extends EntitySoBase implements IRideableTank,I
 ////			}
 //        }
 	}
-	public void subFire(Entity target){
+	public void subFireToTarget(Entity target){
 		subTurret.currentEntity = this;
 		if(subTurret.aimToEntity(target)){
 			subTurret.target = target;
@@ -876,29 +874,14 @@ public class GVCEntitySoldierBMP extends EntitySoBase implements IRideableTank,I
 	public float getbodyrotationYaw() {
 		return baseLogic.bodyrotationYaw;
 	}
-
-	@Override
-	public void setbodyrotationYaw(float value) {
-		baseLogic.bodyrotationYaw = value;
-	}
-
-	@Override
-	public void setturretrotationYaw(float value) {
-		baseLogic.turretrotationYaw = value;
-	}
-
-	@Override
-	public float getrotationYawmotion() {
-		return baseLogic.rotationmotion;
-	}
-
+	
 	@Override
 	public void setrotationYawmotion(float value) {
 		baseLogic.rotationmotion = value;
 	}
 
 	@Override
-	public void setBodyrot(Quat4d rot) {
+	public void setBodyRot(Quat4d rot) {
 		baseLogic.bodyRot.set(rot);
 	}
 
@@ -908,179 +891,16 @@ public class GVCEntitySoldierBMP extends EntitySoBase implements IRideableTank,I
 	}
 
 	@Override
-	public void setBodyRot(Quat4d quat4d) {
-
-	}
-
-	@Override
 	public void setthrottle(float value) {
 		baseLogic.throttle = value;
 	}
-
-	@Override
-	public void setTrigger(boolean trig1, boolean trig2) {
-
-	}
-
-	@Override
-	public void initseat() {
-		for(int i=0;i< childEntities.length;i++){
-			Vector3d tempplayerPos = new Vector3d(childposes[i]);
-			Vector3d temp2 = transformVecByQuat(tempplayerPos,this.baseLogic.bodyRot);
-			temp2.add(new Vector3d(posX,posY,posZ));
-//			System.out.println(temp);
-
-			childEntities[i] = new GVCEntityChild(worldObj,1,1,true);
-			childEntities[i].master = this;
-			childEntities[i].setPosition(
-					temp2.x,
-					temp2.y,
-					temp2.z);
-			childEntities[i].idinmasterEntityt = i;
-			worldObj.spawnEntityInWorld(childEntities[i]);
-			childinit = true;
-		}
-	}
-
-	public void updateSeat(){
-		for(int i=0;i< childEntities.length;i++){
-			if(childEntities[i] != null) {
-				Vector3d tempplayerPos = new Vector3d(childposes[i]);
-				Vector3d temp2 = transformVecByQuat(tempplayerPos, this.baseLogic.bodyRot);
-				transformVecforMinecraft(temp2);
-				temp2.add(new Vector3d(posX, posY, posZ));
-				childEntities[i].master = this;
-				childEntities[i].setPosition(
-						temp2.x,
-						temp2.y,
-						temp2.z);
-			}
-		}
-	}
-
-	@Override
-	public GVCEntityChild[] getChilds() {
-		return childEntities;
-	}
-
-	@Override
-	public void addChild(GVCEntityChild seat) {
-		childEntities[seat.idinmasterEntityt] = seat;
-	}
-
-	@Override
-	public boolean isRidingEntity(Entity entity) {
-		if(this == entity)return true;
-		if(this.riddenByEntity == entity)return true;
-		for(GVCEntityChild achild:childEntities){
-			if(achild == entity)return true;
-			if(achild != null && achild.riddenByEntity == entity)return true;
-		}
-		return false;
-	}
-
-	@Override
-	public boolean isChild(Entity entity) {
-		return false;
-	}
-
-	@Override
-	public int getpilotseatid() {
-		return 0;
-	}
-
+	
 	public void moveFlying(float p_70060_1_, float p_70060_2_, float p_70060_3_){
 		baseLogic.moveFlying(p_70060_1_,p_70060_2_,p_70060_3_);
 	}
-
-	@Override
-	public void setControl_RightClick(boolean value) {
-		server1 = value;
-	}
-
-	@Override
-	public void setControl_LeftClick(boolean value) {
-		server2 = value;
-	}
-
-	@Override
-	public void setControl_Space(boolean value) {
-		serverspace = value;
-	}
-
-	@Override
-	public void setControl_x(boolean value) {
-		serverx = value;
-	}
-
-	@Override
-	public void setControl_w(boolean value) {
-		serverw = value;
-	}
-
-	@Override
-	public void setControl_a(boolean value) {
-		servera = value;
-	}
-
-	@Override
-	public void setControl_s(boolean value) {
-		servers = value;
-	}
-
-	@Override
-	public void setControl_d(boolean value) {
-		serverd = value;
-	}
-
-	@Override
-	public void setControl_f(boolean value) {
-		serverf = value;
-	}
-
-	@Override
-	public boolean getControl_RightClick() {
-		return server1;
-	}
-
-	@Override
-	public boolean getControl_LeftClick() {
-		return server2;
-	}
-
-	@Override
-	public boolean getControl_Space() {
-		return serverspace;
-	}
-
-	@Override
-	public boolean getControl_x() {
-		return serverx;
-	}
-
-	@Override
-	public boolean getControl_w() {
-		return serverw;
-	}
-
-	@Override
-	public boolean getControl_a() {
-		return servera;
-	}
-
-	@Override
-	public boolean getControl_s() {
-		return servers;
-	}
-
-	@Override
-	public boolean getControl_d() {
-		return serverd;
-	}
-
-	@Override
-	public boolean getControl_f() {
-		return serverf;
+	public void setPosition(double x, double y, double z)
+	{
+		if(baseLogic != null)baseLogic.setPosition(x,y,z);
 	}
 
 

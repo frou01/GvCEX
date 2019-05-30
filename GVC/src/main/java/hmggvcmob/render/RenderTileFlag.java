@@ -19,10 +19,10 @@ public class RenderTileFlag extends TileEntitySpecialRenderer {
     private static final IModelCustom flagmodel = AdvancedModelLoader.loadModel(new ResourceLocation("gvcmob:textures/model/flagmodel.mqo"));
     public void renderTileEntityAt(TileEntityFlag tileEntity, double v, double v1, double v2, float v3) {
         this.bindEntityTexture(tileEntity);
+        GL11.glDepthMask(true);
         int i = tileEntity.getWorldObj().getLightBrightnessForSkyBlocks(tileEntity.xCoord, tileEntity.yCoord+1, tileEntity.zCoord, 0);
         int j = i % 65536;
         int k = i / 65536;
-        GL11.glDepthMask(true);
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)j / 1.0F, (float)k / 1.0F);
         GL11.glPushMatrix();
         GL11.glTranslatef((float)v+0.5f, (float)v1+1f, (float)v2+0.5f);

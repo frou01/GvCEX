@@ -1,10 +1,7 @@
 package handmadeguns.items;
 
-import net.minecraft.item.Item;
 
-
-
-	public class HMGItemBullet_AP extends HMGItemBulletBase {
+public class HMGItemBullet_AP extends HMGItemCustomMagazine {
 
 		public HMGItemBullet_AP() {
 			this.setMaxDamage(30);

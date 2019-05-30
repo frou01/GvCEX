@@ -1,6 +1,7 @@
 BulletPower,4
 BulletSpeed,3.0f
 BlletSpread,20.0f
+BlletSpreadDiffusion,0,0,1,0.5,4,0.5
 Class,1
 Recoil,12
 Recoil_sneaking,12

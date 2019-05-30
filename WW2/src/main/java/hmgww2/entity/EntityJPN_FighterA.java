@@ -1,7 +1,7 @@
 package hmgww2.entity;
 
 
-import hmggvcmob.entity.*;
+import hmvehicle.entity.parts.turrets.TurretObj;
 import net.minecraft.world.World;
 
 import javax.vecmath.Vector3d;
@@ -18,9 +18,8 @@ public class EntityJPN_FighterA extends EntityJPN_FighterBase
 //		proxy.replaceBoundingbox(this,nboundingbox);
 //		((ModifiedBoundingBox)this.boundingBox).updateOBB(this.posX,this.posY,this.posZ);
 		ignoreFrustumCheck = true;
-		baseLogic.speedfactor = 0.002f;
 		baseLogic.throttle_gearDown = 1.7f;
-		baseLogic.throttle_Max = 5.0f;
+		baseLogic.throttle_Max = 2.7f;
 		baseLogic.Torpedo_bomber = true;
 		baseLogic.rollspeed = 0.6f;
 		baseLogic.pitchspeed = 0.2f;
@@ -58,8 +57,8 @@ public class EntityJPN_FighterA extends EntityJPN_FighterBase
 				cannon1.magazineMax = 50;
 				cannon1.magazinerem = 50;
 				cannon1.spread = 3;
-				cannon1.speed = 2;
-				cannon1.canex = true;
+				cannon1.speed = 8;
+				cannon1.canex = false;
 				cannon1.guntype = 2;
 			}
 			
@@ -81,8 +80,8 @@ public class EntityJPN_FighterA extends EntityJPN_FighterBase
 				cannon2.magazineMax = 50;
 				cannon2.magazinerem = 50;
 				cannon2.spread = 3;
-				cannon2.speed = 2;
-				cannon2.canex = true;
+				cannon2.speed = 8;
+				cannon2.canex = false;
 				cannon2.guntype = 2;
 				cannon1.addchild(cannon2);
 			}

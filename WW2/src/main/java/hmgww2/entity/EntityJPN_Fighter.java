@@ -1,24 +1,9 @@
 package hmgww2.entity;
 
 
-import hmggvcmob.entity.*;
-import hmgww2.mod_GVCWW2;
-import hmgww2.network.WW2MessageKeyPressed;
-import hmgww2.network.WW2PacketHandler;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAISwimming;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.Vec3;
+import hmvehicle.entity.parts.turrets.TurretObj;
 import net.minecraft.world.World;
 
-import javax.vecmath.Quat4d;
 import javax.vecmath.Vector3d;
 
 public class EntityJPN_Fighter extends EntityJPN_FighterBase
@@ -29,13 +14,11 @@ public class EntityJPN_Fighter extends EntityJPN_FighterBase
 		this.setSize(5f, 3f);
 		armor = 4;
 		ignoreFrustumCheck = true;
-		baseLogic.speedfactor = 0.0022f;
-		baseLogic.dragfactor =  0.0097f;
-		baseLogic.throttle_gearDown = 1.7f;
-		baseLogic.throttle_Max = 4.0f;
-		baseLogic.rollspeed = 0.6f;
-		baseLogic.pitchspeed = 0.6f;
-		baseLogic.yawspeed = 0.6f;
+		baseLogic.throttle_Max = 3.0f;
+		baseLogic.rollspeed = 0.75f;
+		baseLogic.pitchspeed = 0.5f;
+		baseLogic.yawspeed = 0.2f;
+		baseLogic.dragfactor *= 0.99;
 		baseLogic.maxDive = 60;
 		baseLogic.startDive = 40;
 		baseLogic.maxClimb = -10;
@@ -62,11 +45,11 @@ public class EntityJPN_Fighter extends EntityJPN_FighterBase
 				cannon3.cycle_setting = 1;
 				cannon3.firesound = "handmadeguns:handmadeguns.fire";
 				cannon3.spread = 1;
-				cannon3.speed = 5;
+				cannon3.speed = 9;
 				cannon3.magazineMax = 100;
 				cannon3.magazinerem = 100;
 				cannon3.reloadTimer = 70;
-				cannon3.canex = true;
+				cannon3.canex = false;
 				cannon3.guntype = 0;
 			}
 			{
@@ -83,11 +66,11 @@ public class EntityJPN_Fighter extends EntityJPN_FighterBase
 				cannon4.cycle_setting = 1;
 				cannon4.firesound = "handmadeguns:handmadeguns.fire";
 				cannon4.spread = 1;
-				cannon4.speed = 5;
+				cannon3.speed = 9;
 				cannon4.magazineMax = 100;
 				cannon4.magazinerem = 100;
 				cannon4.reloadTimer = 70;
-				cannon4.canex = true;
+				cannon4.canex = false;
 				cannon4.guntype = 0;
 				cannon3.addchild(cannon4);
 			}
@@ -106,14 +89,14 @@ public class EntityJPN_Fighter extends EntityJPN_FighterBase
 				cannon1.traverseSound = null;
 				cannon1.currentEntity = this;
 				cannon1.powor = 15;
-				cannon1.ex = 0.5f;
+				cannon1.ex = 0.1f;
 				cannon1.cycle_setting = 3;
 				cannon1.firesound = "handmadeguns:handmadeguns.20mmfire";
 				cannon1.magazineMax = 50;
 				cannon1.magazinerem = 50;
 				cannon1.spread = 3;
-				cannon1.speed = 2;
-				cannon1.canex = true;
+				cannon1.speed = 7;
+				cannon1.canex = false;
 				cannon1.guntype = 2;
 			}
 			
@@ -129,14 +112,14 @@ public class EntityJPN_Fighter extends EntityJPN_FighterBase
 				cannon2.traverseSound = null;
 				cannon2.currentEntity = this;
 				cannon2.powor = 15;
-				cannon2.ex = 0.5F;
+				cannon2.ex = 0.1F;
 				cannon2.cycle_setting = 3;
 				cannon2.firesound = "handmadeguns:handmadeguns.20mmfire";
 				cannon2.magazineMax = 50;
 				cannon2.magazinerem = 50;
 				cannon2.spread = 3;
-				cannon2.speed = 2;
-				cannon2.canex = true;
+				cannon1.speed = 7;
+				cannon1.canex = false;
 				cannon2.guntype = 2;
 				cannon1.addchild(cannon2);
 			}

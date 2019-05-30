@@ -5,9 +5,9 @@ Time: 19/03/02 18:33
 Description: Ticking entity
 
 java.lang.NullPointerException: Ticking entity
-	at hmggvcmob.entity.TurretObj.fire(TurretObj.java:247)
+	at hmvehicle.entity.parts.turrets.TurretObj.fire(TurretObj.java:247)
 	at mainFire(GVCEntityPMCTank.java:419)
-	at hmggvcmob.entity.TankBaseLogic.updateServer(TankBaseLogic.java:290)
+	at hmvehicle.entity.parts.logics.TankBaseLogic.updateServer(TankBaseLogic.java:290)
 	at hmggvcmob.entity.friend.GVCEntityPMCTank.onUpdate(GVCEntityPMCTank.java:324)
 	at net.minecraft.world.World.updateEntityWithOptionalForce(World.java:2298)
 	at net.minecraft.world.WorldServer.updateEntityWithOptionalForce(WorldServer.java:684)
@@ -26,9 +26,9 @@ A detailed walkthrough of the error, its code path and all known details is as f
 
 -- Head --
 Stacktrace:
-	at hmggvcmob.entity.TurretObj.fire(TurretObj.java:247)
+	at hmvehicle.entity.parts.turrets.TurretObj.fire(TurretObj.java:247)
 	at mainFire(GVCEntityPMCTank.java:419)
-	at hmggvcmob.entity.TankBaseLogic.updateServer(TankBaseLogic.java:290)
+	at hmvehicle.entity.parts.logics.TankBaseLogic.updateServer(TankBaseLogic.java:290)
 	at hmggvcmob.entity.friend.GVCEntityPMCTank.onUpdate(GVCEntityPMCTank.java:324)
 	at net.minecraft.world.World.updateEntityWithOptionalForce(World.java:2298)
 	at net.minecraft.world.WorldServer.updateEntityWithOptionalForce(WorldServer.java:684)

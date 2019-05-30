@@ -4,18 +4,13 @@ import java.util.List;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import hmggvcmob.entity.IRideableTank;
-import hmggvcmob.entity.ITank;
+import hmvehicle.entity.parts.ITank;
 import hmgww2.Nation;
 import hmgww2.blocks.tile.TileEntityBase;
 import hmgww2.entity.*;
 import hmgww2.items.ItemIFFArmor;
-import hmgww2.mod_GVCWW2;
-import hmgww2.entity.EntityUSSRBase;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.world.World;
 
@@ -502,7 +497,7 @@ public class WW2MessageKeyPressedHandler implements IMessageHandler<WW2MessageKe
 						    	TileEntityBase temptile = (TileEntityBase) aLoadedTileEntity;
 							    double tempdisttoflag = entityplayer.getDistance(temptile.xCoord, temptile.yCoord, temptile.zCoord);
 							    if(disttoflag == -1 || tempdisttoflag< disttoflag){
-							    	System.out.println("debug" + temptile);
+//							    	System.out.println("debug" + temptile);
 							    	disttoflag = tempdisttoflag;
 								    targetflag = temptile;
 							    }
@@ -551,12 +546,12 @@ public class WW2MessageKeyPressedHandler implements IMessageHandler<WW2MessageKe
 										    }
 										    continue;
 									    case 4:
-										    if(entity1 instanceof IRideableTank){
+										    if(entity1 instanceof ITank){
 											    ((EntityBases) entity1).mode = 0;
 										    }
 										    continue;
 									    case 5:
-										    if(entity1 instanceof IRideableTank){
+										    if(entity1 instanceof ITank){
 											    ((EntityBases) entity1).mode = 2;
 											    ((EntityBases) entity1).homeposX = (int) entityplayer.posX;
 											    ((EntityBases) entity1).homeposY = (int) entityplayer.posY;

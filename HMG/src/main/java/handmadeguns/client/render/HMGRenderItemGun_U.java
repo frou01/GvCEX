@@ -2083,7 +2083,8 @@ public class HMGRenderItemGun_U implements IItemRenderer {
 	}
 
 	public int getremainingbullet(ItemStack itemStack){
-		return (itemStack.getItem().getMaxDamage() - itemStack.getItemDamage());
+		
+		return ((HMGItem_Unified_Guns)itemStack.getItem()).remain_Bullet(itemStack);
 	}
 	public void renderpartofmodel(String name){
 		modeling.renderPart(name);

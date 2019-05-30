@@ -29,6 +29,7 @@ public class GVCEntityGuerrilla_ender extends EntityGBase
     {
         super(par1World);
         this.setSize(0.6F, 1.8F);
+        width = 1;
         this.tasks.addTask(1,aiAttackGun = new AIAttackGun(this,60,0,5,15,30,true));
 //        this.tasks.removeTask(new EntityAIOpenDoor(this, true));
         spread = 1;
@@ -96,7 +97,7 @@ public class GVCEntityGuerrilla_ender extends EntityGBase
             if(this.getHeldItem().getItem() instanceof HMGItem_Unified_Guns){
                 for (var4 = 0; var4 < var3; ++var4)
                 {
-                    this.dropItem(((HMGItem_Unified_Guns) this.getHeldItem().getItem()).gunInfo.magazine, 1);
+                    dropMagazine();
                 }
             }
         }

@@ -1,6 +1,6 @@
 BulletPower,5
 BulletSpeed,3.0f
-BlletSpread,19.0f
+BlletSpread,5.0f
 Recoil,4.0d
 ReloadTime,50
 RemainingBullet,32

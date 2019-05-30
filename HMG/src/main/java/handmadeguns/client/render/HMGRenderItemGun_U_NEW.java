@@ -319,7 +319,7 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 				EntityLivingBase entity = (EntityLivingBase) data[1];
 				boolean recoiled = this.getbooleanfromnbt("Recoiled");//���R�C�������ǂ����i�e������u���˂�l�ɕ`�悷�邽�߂̃t���O�j
 				boolean isreloading = this.getbooleanfromnbt("IsReloading");//�����[�h�����ǂ���
-				int remainbullets = gunitem.getMaxDamage() - gunstack.getItemDamage();//�����[�h�����ǂ���
+				int remainbullets = gunitem.remain_Bullet(gunstack);//�����[�h�����ǂ���
 				Minecraft.getMinecraft().renderEngine.bindTexture(guntexture);
 				GL11.glPushMatrix();
 				ItemStack itemstackSight = items[1];
@@ -426,33 +426,35 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 					GL11.glScalef(scala,scala,scala);
 					int reloadprogress = this.getintfromnbt("RloadTime");
 					for(HMGGunParts parts:Partslist)
-						GunPartSidentification(parts,GunState.Reload,reloadprogress,remainbullets);
+						GunPartSidentification(parts,new GunState[]{GunState.Reload},reloadprogress,remainbullets);
 				}else if (HandmadeGunsCore.Key_ADS(entity)){
-					//ADS���ɌĂ΂�镔��
+					GunState[] state = new GunState[2];
+					state[1] = GunState.ADS;
 					int cockingtime = this.getintfromnbt("CockingTime");
 					if (cockingtime > 0){
 						float cockingprogress = cockingtime + this.getSmoothing() - 1;//�R�b�L���O�J�n����̎��ԁifloat�l�j
 						this.glMatrixForRenderInEquippedADS(-1.4f);
+						state[0] = GunState.Cock;
 						GL11.glScalef(scala,scala,scala);
 						for(HMGGunParts parts:Partslist)
-							GunPartSidentification(parts,GunState.Cock,cockingprogress,remainbullets);
+							GunPartSidentification(parts,state,cockingprogress,remainbullets);
 					}else if (!recoiled) {
 						this.glMatrixForRenderInEquippedADS(-1.4f);
 						GL11.glRotatef(jump * (1 - this.getSmoothing()), 1.0f, 0.0f, 0.0f);//�e�����ˏオ��B���̏�Ԃ��ƃ��f����0,0,0�𒆐S�ɉ�]�B
 						float recoileprogress = 10*((float)nbt.getByte("Bolt") + smoothing) / gunitem.gunInfo.cycle;
+						state[0] = GunState.Recoil;
 						GL11.glScalef(scala,scala,scala);
 						for(HMGGunParts parts:Partslist)
-							GunPartSidentification(parts,GunState.Recoil,recoileprogress,remainbullets);
+							GunPartSidentification(parts,state,recoileprogress,remainbullets);
 					} else {
+						state[0] = GunState.ADS;
 						this.glMatrixForRenderInEquippedADS(-1.4f);
 						GL11.glScalef(scala,scala,scala);
 						for(HMGGunParts parts:Partslist)
-							GunPartSidentification(parts,GunState.ADS,0,remainbullets);
+							GunPartSidentification(parts,state,0,remainbullets);
 					}
 				} else {
-					//�ʏ펞�ɌĂ΂�镔��
 					if (this.isentitysprinting(entity)) {
-						//�����Ă��違�ˌ����łȂ��Ƃ��ɌĂ΂��B
 						this.glMatrixForRenderInEquipped(0);
 						GL11.glRotatef(Sprintrotationx, 1.0f, 0.0f, 0.0f);
 						GL11.glRotatef(Sprintrotationy, 0.0f, 1.0f, 0.0f);
@@ -460,7 +462,7 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 						GL11.glTranslatef(Sprintoffsetx, Sprintoffsety, Sprintoffsetz);
 						GL11.glScalef(scala,scala,scala);
 						for(HMGGunParts parts:Partslist)
-							GunPartSidentification(parts,GunState.Default,0,remainbullets);
+							GunPartSidentification(parts,new GunState[]{GunState.Default},0,remainbullets);
 					}else{
 						int cockingtime = this.getintfromnbt("CockingTime");
 						if (cockingtime > 0){
@@ -468,7 +470,7 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 							this.glMatrixForRenderInEquipped(-0.2f);
 							GL11.glScalef(scala,scala,scala);
 							for(HMGGunParts parts:Partslist)
-								GunPartSidentification(parts,GunState.Cock,cockingprogress,remainbullets);
+								GunPartSidentification(parts,new GunState[]{GunState.Cock},cockingprogress,remainbullets);
 						}else if (!recoiled) {
 							//�ˌ����1tick���̂݌Ă΂�܂�
 							this.glMatrixForRenderInEquipped(-0.2f);
@@ -476,13 +478,13 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 							float recoileprogress = 10*(nbt.getByte("Bolt") + smoothing) / gunitem.gunInfo.cycle;
 							GL11.glScalef(scala,scala,scala);
 							for(HMGGunParts parts:Partslist)
-								GunPartSidentification(parts,GunState.Recoil,recoileprogress,remainbullets);
+								GunPartSidentification(parts,new GunState[]{GunState.Recoil},recoileprogress,remainbullets);
 						} else {
 							//�ʏ���
 							this.glMatrixForRenderInEquipped(-0.2f);
 							GL11.glScalef(scala,scala,scala);
 							for(HMGGunParts parts:Partslist)
-								GunPartSidentification(parts,GunState.Default,0,remainbullets);
+								GunPartSidentification(parts,new GunState[]{GunState.Default},0,remainbullets);
 						}
 					}
 //						renderpartsNormal(this,gunitem,gunstack,model,entity,type,data);
@@ -513,45 +515,45 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 					//���[�h���ɌĂ΂�镔��
 					int reloadprogress = this.getintfromnbt("RloadTime");
 					for (HMGGunParts parts : Partslist)
-						GunPartSidentification(parts, GunState.Reload, reloadprogress, remainbullets);
+						GunPartSidentification(parts, new GunState[]{GunState.Reload}, reloadprogress, remainbullets);
 				} else if (HandmadeGunsCore.Key_ADS(entity)) {
 					//ADS���ɌĂ΂�镔��
 					int cockingtime = this.getintfromnbt("CockingTime");
 					if (cockingtime > 0) {
 						float cockingprogress = cockingtime + this.getSmoothing() - 1;//�R�b�L���O�J�n����̎��ԁifloat�l�j
 						for (HMGGunParts parts : Partslist)
-							GunPartSidentification(parts, GunState.Cock, cockingprogress, remainbullets);
+							GunPartSidentification(parts, new GunState[]{GunState.Cock}, cockingprogress, remainbullets);
 					} else if (!recoiled) {
 						GL11.glRotatef(jump * (1 - this.getSmoothing()), 1.0f, 0.0f, 0.0f);//�e�����ˏオ��B���̏�Ԃ��ƃ��f����0,0,0�𒆐S�ɉ�]�B
 						float recoileprogress = 10 * (nbt.getByte("Bolt") + smoothing) / gunitem.gunInfo.cycle;
 						for (HMGGunParts parts : Partslist)
-							GunPartSidentification(parts, GunState.Recoil, recoileprogress, remainbullets);
+							GunPartSidentification(parts, new GunState[]{GunState.Recoil}, recoileprogress, remainbullets);
 					} else {
 						for (HMGGunParts parts : Partslist)
-							GunPartSidentification(parts, GunState.ADS, 0, remainbullets);
+							GunPartSidentification(parts, new GunState[]{GunState.ADS}, 0, remainbullets);
 					}
 				} else {
 					//�ʏ펞�ɌĂ΂�镔��
 					if (this.isentitysprinting(entity)) {
 						//�����Ă��違�ˌ����łȂ��Ƃ��ɌĂ΂��B
 						for (HMGGunParts parts : Partslist)
-							GunPartSidentification(parts, GunState.Default, 0, remainbullets);
+							GunPartSidentification(parts, new GunState[]{GunState.Default}, 0, remainbullets);
 					} else {
 						int cockingtime = this.getintfromnbt("CockingTime");
 						if (cockingtime > 0) {
 							float cockingprogress = cockingtime + this.getSmoothing() - 1;//�R�b�L���O�J�n����̎��ԁifloat�l�j
 							for (HMGGunParts parts : Partslist)
-								GunPartSidentification(parts, GunState.Cock, cockingprogress, remainbullets);
+								GunPartSidentification(parts, new GunState[]{GunState.Cock}, cockingprogress, remainbullets);
 						} else if (!recoiled) {
 							//�ˌ����1tick���̂݌Ă΂�܂�
 							GL11.glRotatef(jump * (1 - this.getSmoothing()), 1.0f, 0.0f, 0.0f);//�e�����ˏオ��B���̏�Ԃ��ƃ��f����0,0,0�𒆐S�ɉ�]�B
 							float recoileprogress = 10 * (nbt.getByte("Bolt") + smoothing) / gunitem.gunInfo.cycle;
 							for (HMGGunParts parts : Partslist)
-								GunPartSidentification(parts, GunState.Recoil, recoileprogress, remainbullets);
+								GunPartSidentification(parts, new GunState[]{GunState.Recoil}, recoileprogress, remainbullets);
 						} else {
 							//�ʏ���
 							for (HMGGunParts parts : Partslist)
-								GunPartSidentification(parts, GunState.Default, 0, remainbullets);
+								GunPartSidentification(parts, new GunState[]{GunState.Default}, 0, remainbullets);
 						}
 					}
 //						renderpartsNormal(this,gunitem,gunstack,model,entity,type,data);
@@ -572,24 +574,24 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 					//���[�h���ɌĂ΂�镔��
 					int reloadprogress = this.getintfromnbt("RloadTime");
 					for (HMGGunParts parts : Partslist)
-						GunPartSidentification(parts, GunState.Reload, reloadprogress, remainbullets);
+						GunPartSidentification(parts, new GunState[]{GunState.Reload}, reloadprogress, remainbullets);
 				} else {
 					//�ʏ펞�ɌĂ΂�镔��
 					int cockingtime = this.getintfromnbt("CockingTime");
 					if (cockingtime > 0) {
 						float cockingprogress = cockingtime + this.getSmoothing() - 1;//�R�b�L���O�J�n����̎��ԁifloat�l�j
 						for (HMGGunParts parts : Partslist)
-							GunPartSidentification(parts, GunState.Cock, cockingprogress, remainbullets);
+							GunPartSidentification(parts, new GunState[]{GunState.Cock}, cockingprogress, remainbullets);
 					} else if (!recoiled) {
 						//�ˌ����1tick���̂݌Ă΂�܂�
 						GL11.glRotatef(jump * (1 - this.getSmoothing()), 1.0f, 0.0f, 0.0f);//�e�����ˏオ��B���̏�Ԃ��ƃ��f����0,0,0�𒆐S�ɉ�]�B
 						float recoileprogress = 10 * (nbt.getByte("Bolt") + smoothing) / gunitem.gunInfo.cycle;
 						for (HMGGunParts parts : Partslist)
-							GunPartSidentification(parts, GunState.Recoil, recoileprogress, remainbullets);
+							GunPartSidentification(parts, new GunState[]{GunState.Recoil}, recoileprogress, remainbullets);
 					} else {
 						//�ʏ���
 						for (HMGGunParts parts : Partslist)
-							GunPartSidentification(parts, GunState.Default, 0, remainbullets);
+							GunPartSidentification(parts, new GunState[]{GunState.Default}, 0, remainbullets);
 					}
 //						renderpartsNormal(this,gunitem,gunstack,model,entity,type,data);
 				}
@@ -766,62 +768,79 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 		return colorBuffer;
 	}
 
-	public void GunPartSidentification(HMGGunParts part, GunState state, float flame, int remainbullets){//��Ԃŏ�������
-		switch (state){
-			case Default:
-				if(part.rendering_Def){
-					GunPartSidentification_Attach(part,state,flame,remainbullets,part.getRenderinfDefault_offset());
-				}
-				break;
-			case ADS:
-				if(part.rendering_Ads){
-					GunPartSidentification_Attach(part,state,flame,remainbullets,part.getRenderinfOfADS());
-				}
-				break;
-			case Recoil:
-				if(part.rendering_Recoil){
-					if(part.hasMotionRecoil){
-						HMGGunParts_Motion_PosAndRotation OffsetAndRotation = part.getRecoilmotion(flame + smooth);
-
-						GunPartSidentification_Attach(part,state,flame,remainbullets,OffsetAndRotation);
-					}else {
-						HMGGunParts_Motion_PosAndRotation OffsetAndRotation = part.getRenderinfOfRecoil();
-
-						GunPartSidentification_Attach(part,state,flame,remainbullets,OffsetAndRotation);
+	public void GunPartSidentification(HMGGunParts part, GunState[] states, float flame, int remainbullets){//��Ԃŏ�������
+		for(GunState state : states) {
+			switch (state) {
+				case Default:
+					if (part.rendering_Def) {
+						GunPartSidentification_Attach(part, state, flame, remainbullets, part.getRenderinfDefault_offset());
+						return;
 					}
-				}
-				break;
-			case Cock:
-				if(part.rendering_Cock){
-					if(part.hasMotionCock){
-						HMGGunParts_Motion_PosAndRotation OffsetAndRotation = part.getcockmotion(flame + smooth);
-
-						GunPartSidentification_Attach(part,state,flame,remainbullets,OffsetAndRotation);
-					}else {
-						HMGGunParts_Motion_PosAndRotation OffsetAndRotation = part.getRenderinfOfCock();
-
-						GunPartSidentification_Attach(part,state,flame,remainbullets,OffsetAndRotation);
+					break;
+				case ADS:
+					if (part.rendering_Ads) {
+						GunPartSidentification_Attach(part, state, flame, remainbullets, part.getRenderinfOfADS());
+						return;
 					}
-				}
-				break;
-			case Reload:
-				if(part.rendering_Reload){
-					HMGGunParts_Motion_PosAndRotation rotationCenterAndRotation = part.getRenderinfOfDef();
-					if(part.hasMotionReload){
-						HMGGunParts_Motion_PosAndRotation OffsetAndRotation = part.getReloadmotion(flame + smooth);
-
-						GunPartSidentification_Attach(part,state,flame,remainbullets,OffsetAndRotation);
-					}else {
-						HMGGunParts_Motion_PosAndRotation OffsetAndRotation = part.getRenderinfOfReload();
-
-						GunPartSidentification_Attach(part,state,flame,remainbullets,OffsetAndRotation);
+					break;
+				case Recoil:
+					if (part.rendering_Recoil) {
+						if (part.hasMotionRecoil) {
+							HMGGunParts_Motion_PosAndRotation OffsetAndRotation = part.getRecoilmotion(flame + smooth);
+							
+							GunPartSidentification_Attach(part, state, flame, remainbullets, OffsetAndRotation);
+						} else {
+							HMGGunParts_Motion_PosAndRotation OffsetAndRotation = part.getRenderinfOfRecoil();
+							
+							GunPartSidentification_Attach(part, state, flame, remainbullets, OffsetAndRotation);
+						}
+						return;
 					}
-				}
-				break;
+					break;
+				case Cock:
+					if (part.rendering_Cock) {
+						if (part.hasMotionCock) {
+							HMGGunParts_Motion_PosAndRotation OffsetAndRotation = part.getcockmotion(flame + smooth);
+							
+							GunPartSidentification_Attach(part, state, flame, remainbullets, OffsetAndRotation);
+						} else {
+							HMGGunParts_Motion_PosAndRotation OffsetAndRotation = part.getRenderinfOfCock();
+							
+							GunPartSidentification_Attach(part, state, flame, remainbullets, OffsetAndRotation);
+						}
+						return;
+					}
+					break;
+				case Reload:
+					if (part.rendering_Reload) {
+						HMGGunParts_Motion_PosAndRotation rotationCenterAndRotation = part.getRenderinfOfDef();
+						if (part.hasMotionReload) {
+							HMGGunParts_Motion_PosAndRotation OffsetAndRotation = part.getReloadmotion(flame + smooth);
+							
+							GunPartSidentification_Attach(part, state, flame, remainbullets, OffsetAndRotation);
+						} else {
+							HMGGunParts_Motion_PosAndRotation OffsetAndRotation = part.getRenderinfOfReload();
+							
+							GunPartSidentification_Attach(part, state, flame, remainbullets, OffsetAndRotation);
+						}
+						return;
+					}
+					break;
+			}
 		}
 	}
 
 	public void GunPartSidentification_Attach(HMGGunParts part, GunState state, float flame, int remainbullets, HMGGunParts_Motion_PosAndRotation OffsetAndRotation){
+		if(gunitem.gunInfo.magazine.length >1) {
+			if (part.current_magazineType != null) {
+				int currentmagazineid = nbt.getInteger("getcurrentMagazine");
+				if (!part.current_magazineType.get(currentmagazineid)) return;
+			}
+			if (part.select_magazineType != null) {
+				int selectmagazineid = nbt.getInteger("get_selectingMagazine");
+				if (!part.select_magazineType.get(selectmagazineid)) return;
+			}
+		}
 		if(OffsetAndRotation != null)
 			if(part.isattachpart) {
 				if (items[1] != null) {//�T�C�g
@@ -991,9 +1010,9 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 			GL11.glRotatef(rotationCenterAndRotation.rotationZ,0,0,1);
 			GL11.glTranslatef(-rotationCenterAndRotation.posX,-rotationCenterAndRotation.posY,-rotationCenterAndRotation.posZ);
 		}
-
-		if(isPlacedGun && part.hasbasePitchInfo){
-			HMGGunParts_Motion_PosAndRotation baserotationCenterAndRotation = part.getPitchInfo(turretPitch);
+		
+		if(isPlacedGun && part.hasbaseYawInfo) {
+			HMGGunParts_Motion_PosAndRotation baserotationCenterAndRotation = part.getYawInfo(turretYaw);
 			if (baserotationCenterAndRotation != null) {
 				GL11.glTranslatef(baserotationCenterAndRotation.posX, baserotationCenterAndRotation.posY, baserotationCenterAndRotation.posZ);
 				GL11.glTranslatef(rotationCenterAndRotation.posX, rotationCenterAndRotation.posY, rotationCenterAndRotation.posZ);
@@ -1003,8 +1022,8 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 				GL11.glTranslatef(-rotationCenterAndRotation.posX, -rotationCenterAndRotation.posY, -rotationCenterAndRotation.posZ);
 			}
 		}
-		if(isPlacedGun && part.hasbaseYawInfo) {
-			HMGGunParts_Motion_PosAndRotation baserotationCenterAndRotation = part.getYawInfo(turretYaw);
+		if(isPlacedGun && part.hasbasePitchInfo){
+			HMGGunParts_Motion_PosAndRotation baserotationCenterAndRotation = part.getPitchInfo(turretPitch);
 			if (baserotationCenterAndRotation != null) {
 				GL11.glTranslatef(baserotationCenterAndRotation.posX, baserotationCenterAndRotation.posY, baserotationCenterAndRotation.posZ);
 				GL11.glTranslatef(rotationCenterAndRotation.posX, rotationCenterAndRotation.posY, rotationCenterAndRotation.posZ);
@@ -1035,7 +1054,7 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 			}
 		}
 		for(HMGGunParts parts:part.childs)
-			GunPartSidentification(parts,state,flame,remainbullets);
+			GunPartSidentification(parts,new GunState[]{state},flame,remainbullets);
 		GL11.glPopMatrix();
 	}
 

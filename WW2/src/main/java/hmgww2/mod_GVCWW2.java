@@ -14,34 +14,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
-import hmgww2.blocks.BlockBaseBlock2_GER;
-import hmgww2.blocks.BlockBaseBlock2_JPN;
-import hmgww2.blocks.BlockBaseBlock2_RUS;
-import hmgww2.blocks.BlockBaseBlock2_USA;
-import hmgww2.blocks.BlockBaseBlock3_GER;
-import hmgww2.blocks.BlockBaseBlock3_JPN;
-import hmgww2.blocks.BlockBaseBlock3_RUS;
-import hmgww2.blocks.BlockBaseBlock3_USA;
-import hmgww2.blocks.BlockBaseBlock4_JPN;
-import hmgww2.blocks.BlockBaseBlock4_USA;
-import hmgww2.blocks.BlockBaseBlock_GER;
-import hmgww2.blocks.BlockBaseBlock_JPN;
-import hmgww2.blocks.BlockBaseBlock_RUS;
-import hmgww2.blocks.BlockBaseBlock_USA;
-import hmgww2.blocks.BlockFlag2_GER;
-import hmgww2.blocks.BlockFlag2_JPN;
-import hmgww2.blocks.BlockFlag2_RUS;
-import hmgww2.blocks.BlockFlag2_USA;
-import hmgww2.blocks.BlockFlag3_GER;
-import hmgww2.blocks.BlockFlag3_JPN;
-import hmgww2.blocks.BlockFlag3_RUS;
-import hmgww2.blocks.BlockFlag3_USA;
-import hmgww2.blocks.BlockFlag4_JPN;
-import hmgww2.blocks.BlockFlag4_USA;
-import hmgww2.blocks.BlockFlag_GER;
-import hmgww2.blocks.BlockFlag_JPN;
-import hmgww2.blocks.BlockFlag_RUS;
-import hmgww2.blocks.BlockFlag_USA;
+import hmgww2.blocks.*;
 import hmgww2.entity.*;
 import hmgww2.entity.EntityUSSR_TankSPG;
 import hmgww2.event.EventEntityBases;
@@ -187,6 +160,11 @@ public class mod_GVCWW2 {
 	public static Block b_base3_rus;
 	public static Block b_base4_rus;
 	
+	
+	public static Block[] BarrackBlocks;
+	public static Block[] FactoryBlocks;
+	public static Block[] AirBaseBlocks;
+	public static Block[] PortBlocks;
 	
 	public static Item b_magazine;
 	public static Item b_magazinehg;
@@ -380,33 +358,43 @@ public class mod_GVCWW2 {
 		bi_flag3_ger = new ItemSetFlag(b_flag3_ger).setUnlocalizedName("bi_flag3_ger").setTextureName("hmgww2:ger/bi_flag3_ger")
 				.setCreativeTab(tabgvc);
 		GameRegistry.registerItem(bi_flag3_ger, "bi_flag3_ger");
-		/*b_flag4_jpn	= new BlockFlag4_JPN().setBlockName("b_flag4_jpn").setBlockTextureName("hmgww2:nullblock");
-		GameRegistry.registerBlock(b_flag4_jpn, "b_flagb_flag4_jpn2_jpn");
-		bi_flag4_jpn = new ItemSetFlag(b_flag4_jpn).setUnlocalizedName("bi_flag4_jpn").setTextureName("hmgww2:jpn/bi_flag4_jpn")
-				.setCreativeTab(tabgvc);
-		GameRegistry.registerItem(bi_flag4_jpn, "bi_flag4_jpn");
-		*/
+		
+		b_flag4_ger	= new BlockFlag4_GER().setBlockName("b_flag4_ger").setBlockTextureName("hmgww2:nullblock");
+		GameRegistry.registerBlock(b_flag4_ger, "b_flag4_ger");
+		bi_flag4_ger = new ItemSetFlag(b_flag4_ger).setUnlocalizedName("bi_flag4_ger").setTextureName("hmgww2:ger/bi_flag4_ger")
+				               .setCreativeTab(tabgvc);
+		GameRegistry.registerItem(bi_flag4_ger, "bi_flag4_ger");
+		
 		b_flag_rus	= new BlockFlag_RUS().setBlockName("b_flag_rus").setBlockTextureName("hmgww2:nullblock");
 		GameRegistry.registerBlock(b_flag_rus, "b_flag_rus");
 		bi_flag_rus = new ItemSetFlag(b_flag_rus).setUnlocalizedName("bi_flag_rus").setTextureName("hmgww2:rus/bi_flag_rus")
 				.setCreativeTab(tabgvc);
 		GameRegistry.registerItem(bi_flag_rus, "bi_flag_rus");
+		
 		b_flag2_rus	= new BlockFlag2_RUS().setBlockName("b_flag2_rus").setBlockTextureName("hmgww2:nullblock");
 		GameRegistry.registerBlock(b_flag2_rus, "b_flag2_rus");
-		bi_flag2_rus = new ItemSetFlag(b_flag2_ger).setUnlocalizedName("bi_flag2_rus").setTextureName("hmgww2:rus/bi_flag2_rus")
+		bi_flag2_rus = new ItemSetFlag(b_flag2_rus).setUnlocalizedName("bi_flag2_rus").setTextureName("hmgww2:rus/bi_flag2_rus")
 				.setCreativeTab(tabgvc);
 		GameRegistry.registerItem(bi_flag2_rus, "bi_flag2_rus");
+		
 		b_flag3_rus	= new BlockFlag3_RUS().setBlockName("b_flag3_rus").setBlockTextureName("hmgww2:nullblock");
 		GameRegistry.registerBlock(b_flag3_rus, "b_flag3_rus");
-		bi_flag3_rus = new ItemSetFlag(b_flag3_ger).setUnlocalizedName("bi_flag3_rus").setTextureName("hmgww2:rus/bi_flag3_rus")
-				.setCreativeTab(tabgvc);
+		bi_flag3_rus = new ItemSetFlag(b_flag3_rus).setUnlocalizedName("bi_flag3_rus").setTextureName("hmgww2:rus/bi_flag3_rus")
+				               .setCreativeTab(tabgvc);
 		GameRegistry.registerItem(bi_flag3_rus, "bi_flag3_rus");
-		/*b_flag4_jpn	= new BlockFlag4_JPN().setBlockName("b_flag4_jpn").setBlockTextureName("hmgww2:nullblock");
-		GameRegistry.registerBlock(b_flag4_jpn, "b_flagb_flag4_jpn2_jpn");
-		bi_flag4_jpn = new ItemSetFlag(b_flag4_jpn).setUnlocalizedName("bi_flag4_jpn").setTextureName("hmgww2:jpn/bi_flag4_jpn")
-				.setCreativeTab(tabgvc);
-		GameRegistry.registerItem(bi_flag4_jpn, "bi_flag4_jpn");
-		*/
+		
+		b_flag4_rus	= new BlockFlag4_RUS().setBlockName("b_flag4_rus").setBlockTextureName("hmgww2:nullblock");
+		GameRegistry.registerBlock(b_flag4_rus, "b_flag4_rus");
+		bi_flag4_rus = new ItemSetFlag(b_flag4_rus).setUnlocalizedName("bi_flag4_rus").setTextureName("hmgww2:rus/bi_flag4_rus")
+				               .setCreativeTab(tabgvc);
+		GameRegistry.registerItem(bi_flag4_rus, "bi_flag4_rus");
+		
+		
+		
+		BarrackBlocks = new Block[]{b_flag_usa,b_flag_rus,b_flag_ger,b_flag_jpn};
+		FactoryBlocks = new Block[]{b_flag2_usa,b_flag2_rus,b_flag2_ger,b_flag2_jpn};
+		AirBaseBlocks = new Block[]{b_flag3_usa,b_flag3_rus,b_flag3_ger,b_flag3_jpn};
+		PortBlocks    = new Block[]{b_flag4_usa,b_flag4_rus,b_flag4_ger,b_flag4_jpn};
 		
 		
 		
@@ -456,8 +444,6 @@ public class mod_GVCWW2 {
 		b_base3_rus	= new BlockBaseBlock3_RUS().setBlockName("b_base3_rus").setBlockTextureName("hmgww2:b_base3_rus")
 				.setCreativeTab(tabgvc);
 		GameRegistry.registerBlock(b_base3_rus, "b_base3_rus");
-		
-		
 		
 		
 		

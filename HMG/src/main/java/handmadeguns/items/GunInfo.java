@@ -21,16 +21,16 @@ public class GunInfo {
 	
 	public final UUID field_110179_h = UUID.fromString("254F543F-8B6F-407F-931B-4B76FEB8BA0D");
 	public float turretanglelimtMxY = 0;
-	public int reloadtime = 15;
 	public int power;
 	public int bulletRound = 30;
 	public float speed;
-	public float spreadDiffusionMax = 10;
+	public boolean hasspreadDiffusionSettings = false;
+	public float spreadDiffusionMax = 0;
 	public float spreadDiffusionmin = 0;
-	public float spreadDiffusionRate = 1;
-	public float spreadDiffusionHeadRate = 0.05f;
-	public float spreadDiffusionWalkRate = 2;
-	public float spreadDiffusionReduceRate = 0.5f;
+	public float spreadDiffusionRate = 0;
+	public float spreadDiffusionHeadRate = 0;
+	public float spreadDiffusionWalkRate = 0;
+	public float spreadDiffusionReduceRate = 0;
 	public float spread_setting = 1;
 	public float ads_spread_cof = 0.5f;
 	public double recoil;
@@ -39,18 +39,18 @@ public class GunInfo {
 	public boolean restrictTurretMoveSpeed;
 	public float turretMoveSpeedP;
 	public float turretMoveSpeedY;
-	public float turreboxW;
-	public float turreboxH;
+	public float turreboxW = 1;
+	public float turreboxH = 1;
 	public int turretMaxHP = -1;
 	public boolean restrictTurretAngle = false;
 	public int canuseclass = -1;
 	public int guntype = -1;
 	public int cycle = 2;
 	public float ex = 2.5F;
-	public boolean destroyBlock = false;
-	public String soundre= "handmadeguns:handmadeguns.reload";
+	public boolean destroyBlock = true;
+	public String[] soundre= {"handmadeguns:handmadeguns.reload"};
 	public float soundrelevel = 1.0f;
-	public boolean canobj;
+	public boolean canobj = true;
 	public boolean renderMCcross = true;
 	public boolean renderHMGcross = true;
 	public String soundco = "handmadeguns:handmadeguns.cooking";
@@ -66,7 +66,8 @@ public class GunInfo {
 	public String lockSound_block = "handmadeguns:handmadeguns.lockon";
 	public float lockpitch_entity = 1;
 	public float lockpitch_block = 0.5f;
-	public Item magazine;
+	public Item[] magazine = new Item[1];
+	public int[] reloadTimes = new int[1];
 	public int magazineItemCount = 1;
 	public String adstexture = "handmadeguns:handmadeguns/textures/misc/ironsight";
 	public String adstexturer = "handmadeguns:handmadeguns.textures.misc.reddot";
@@ -85,7 +86,6 @@ public class GunInfo {
 	public boolean needcock = false;
 	public int pellet = 1;
 	//01/27
-	public float gra = 0.029F;
 	//02/14
 	public int cartType = 1;
 	public int magType = 5;
@@ -140,16 +140,19 @@ public class GunInfo {
 	public String bulletmodelTE = "default";
 	public String bulletmodelGL = "default";
 	public String bulletmodelRPG = "byfrou01_Rocket";
-	public String bulletmodelMAG = "default";
+	public String bulletmodelMAG = null;
 	public String bulletmodelCart = "default";
+	public int fuse = 0;
 	public double knockback = cfg_defaultknockback;
 	public double knockbackY =cfg_defaultknockbacky;
+	public float  bouncerate = 0.3f;
+	public float  bouncelimit = 90;
+	public float  resistance = 0.99f;
+	public float  acceleration;
+	public float  gra = 0.029F;
+	public boolean canbounce = false;
 	public ArrayList<Integer> burstcount = new ArrayList<Integer>();
 	public ArrayList<Integer> rates = new ArrayList<Integer>();
-	public boolean canbounce = false;
-	public int fuse = 0;
-	public float bouncerate = 0.3f;
-	public float bouncelimit = 90;
 	public boolean userenderscript = false;
 	public ScriptEngine renderscript;
 	public ScriptEngine script;
@@ -161,7 +164,6 @@ public class GunInfo {
 	public boolean isinRoot = true;
 	public boolean soldiercanstorage = true;
 	public boolean use_internal_secondary;
-	public float acceleration;
 	public boolean canlock = false;
 	public boolean canlockBlock = false;
 	public boolean canlockEntity = false;
@@ -169,7 +171,6 @@ public class GunInfo {
 	public String flashname = null;
 	public int flashfuse = 1;
 	public float flashScale = 1;
-	public float resistance = 0.99f;
 	public boolean canfix;
 	public boolean needfix;
 	public boolean fixAsEntity;

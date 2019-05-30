@@ -3,6 +3,7 @@ package DangeonDataCreator;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 
@@ -17,6 +18,7 @@ import static handmadeguns.HandmadeGunsCore.proxy;
 )
 public class mod_DungeonCreator {
     public static Item dangeonSelector;
+    public static Block blankBlock;
 
     public static File[] filelist1;
     public static File directory1;
@@ -28,6 +30,7 @@ public class mod_DungeonCreator {
         dangeonSelector	    = new DangeonSetter().setUnlocalizedName("Setter").setTextureName("dungeonCreator:setter");
         dangeonSelector.setCreativeTab(CreativeTabs.tabTools);
         GameRegistry.registerItem(dangeonSelector, "Setter");
+        GameRegistry.registerBlock(blankBlock = new BlockBlank(), "BlankBlock");
     }
 
 }

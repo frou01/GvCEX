@@ -8,8 +8,7 @@ import hmggvcmob.ai.AIattackOnCollide;
 import handmadeguns.entity.IFF;
 import hmggvcmob.ai.AIHurtByTarget;
 import hmggvcmob.entity.IGVCmob;
-import hmggvcmob.entity.IRideableTank;
-import hmggvcmob.entity.IdriveableVehicle;
+import hmvehicle.entity.parts.ITank;
 import hmggvcmob.entity.guerrilla.EntityGBase;
 import hmggvcmob.entity.guerrilla.EntityGBases;
 import littleMaidMobX.LMM_EntityLittleMaid;
@@ -96,9 +95,9 @@ public class EntityPMCBase extends EntitySoBases implements IFF,IGVCmob {
 		this.tasks.addTask(3, new AIattackOnCollide(this, EntityGBases.class, 1.0D, true));
 		this.tasks.addTask(4, new EntityAIRestrictOpenDoor(this));
 		this.tasks.addTask(5, AIOpenDoor);
-		this.tasks.addTask(6, new EntityAIMoveTowardsRestriction(this, this instanceof IdriveableVehicle ? 0: 1));
+		this.tasks.addTask(6, new EntityAIMoveTowardsRestriction(this, this instanceof hmvehicle.entity.parts.IVehicle ? 0: 1));
 		//こっから先は待機時（？）
-		this.tasks.addTask(7, new EntityAIWander(this, this instanceof IdriveableVehicle ? 0: 1));
+		this.tasks.addTask(7, new EntityAIWander(this, this instanceof hmvehicle.entity.parts.IVehicle ? 0: 1));
 		this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
 		this.tasks.addTask(8, new EntityAILookIdle(this));
 		//ターゲティング
@@ -152,7 +151,7 @@ public class EntityPMCBase extends EntitySoBases implements IFF,IGVCmob {
 				this.aiAttackGun.burstingtime++;
 			}
 		}
-		if(this instanceof IRideableTank){
+		if(this instanceof ITank){
 			if(mode == 2) {
 				if (this.getAttackTarget() == null && this.getDistanceSq(homeposX+1, homeposY+1, homeposZ+1)>256) {
 					if(this.getNavigator().getPath() != null && this.getNavigator().getPath().getFinalPathPoint().xCoord != homeposX+1 && this.getNavigator().getPath().getFinalPathPoint().xCoord != homeposY && this.getNavigator().getPath().getFinalPathPoint().xCoord != homeposZ+1)this.getNavigator().setPath(worldForPathfind.getEntityPathToXYZ(this, homeposX+1, homeposY, homeposZ+1, 80f, true, false, false, true), 1.0d);

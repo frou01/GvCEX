@@ -72,7 +72,7 @@ public class RenderTileFlag implements ISimpleBlockRenderingHandler {
 	        /*if(p_147500_1_.spawn){
 	        	tankk.renderPart("mat3");
 	        }*/
-	       // GL11.glTranslatef(0, -(p_147500_1_.getInvasionSet()*0.005F), 0);
+	       // GL11.glTranslatef(0, -(p_147500_1_.getInvasion()*0.005F), 0);
 	        tankk.renderPart("mat2");
 	        GL11.glDisable(GL12.GL_RESCALE_NORMAL);
 	        GL11.glPopMatrix();

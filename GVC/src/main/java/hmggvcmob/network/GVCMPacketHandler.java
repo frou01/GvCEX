@@ -13,21 +13,15 @@ public class GVCMPacketHandler {
  
     public static void init() {
         int id=0;
-        INSTANCE.registerMessage(GVCMMessageKeyPressedHandler.class, GVCMMessageKeyPressed.class, ++id, Side.SERVER);
         INSTANCE.registerMessage(GVCXMMessageGKdata.class, GVCXMPacketSyncGKdata.class, ++id, Side.CLIENT);
         INSTANCE.registerMessage(GVCMHandleSyncFlagdata.class, GVCMPacketSyncFlagdata.class, ++id, Side.CLIENT);
         INSTANCE.registerMessage(GVCMHandleSyncHeliData.class, GVCXMPacketSyncPMCHeliData.class, ++id, Side.SERVER);
-        INSTANCE.registerMessage(GVCMHandleVehicleState.class, GVCPakcetVehicleState.class, ++id, Side.SERVER);
-        INSTANCE.registerMessage(GVCMHandleVehicleState.class, GVCPakcetVehicleState.class, ++id, Side.CLIENT);
-        INSTANCE.registerMessage(GVCHandleSeatData.class, GVCPacketSeatData.class, ++id, Side.CLIENT);
-        INSTANCE.registerMessage(GVCHandleSeatData.class, GVCPacketSeatData.class, ++id, Side.SERVER);
+        INSTANCE.registerMessage(GVCMHandleHeliGunnerTriger.class, GVCPakcetHeliGunnerTrigger.class, ++id, Side.SERVER);
         INSTANCE.registerMessage(GVCHandleMGControl.class, GVCPacketMGControl.class, ++id, Side.SERVER);
         INSTANCE.registerMessage(GVCHandleMGControl.class, GVCPacketMGControl.class, ++id, Side.CLIENT);
-        INSTANCE.registerMessage(GVCMHandleHeliGunnerTriger.class, GVCPakcetHeliGunnerTrigger.class, ++id, Side.SERVER);
-        INSTANCE.registerMessage(GVCHandleHudEntityTracking.class, GVCPacket_HudEntitytracking.class, ++id, Side.CLIENT);
         INSTANCE.registerMessage(GVCHandleSpawnSpotCircle.class, GVCPacketSpawnSpotCircle.class, ++id, Side.CLIENT);
-        INSTANCE.registerMessage(GVCMHandleVehicleTurretSync.class, GVCPakcetVehicleTurretSync.class, ++id, Side.CLIENT);
-
+        
+        
     	
     }
 }

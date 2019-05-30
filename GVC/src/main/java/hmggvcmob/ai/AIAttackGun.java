@@ -201,7 +201,7 @@ public class AIAttackGun extends EntityAIBase {
                                 isSelectorChecked = true;
                             }
                             if (((HMGItem_Unified_Guns) shooter.getHeldItem().getItem()).getburstCount(shooter.getHeldItem().getTagCompound().getInteger("HMGMode")) != -1) {
-                                retriggerCool = rnd.nextInt((int) (abs(((HMGItem_Unified_Guns) shooter.getHeldItem().getItem()).gunInfo.recoil)+1) * 10);
+                                retriggerCool = rnd.nextInt((int) (abs(((HMGItem_Unified_Guns) shooter.getHeldItem().getItem()).gunInfo.recoil)+1) * 3);
                             }
                         }
                     }

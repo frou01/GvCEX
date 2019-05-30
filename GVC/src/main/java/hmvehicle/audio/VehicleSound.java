@@ -1,0 +1,85 @@
+package hmvehicle.audio;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import hmvehicle.entity.parts.HasLoopSound;
+import net.minecraft.client.audio.MovingSound;
+import net.minecraft.entity.Entity;
+import net.minecraft.util.ResourceLocation;
+
+import javax.vecmath.Vector3d;
+
+import static handmadeguns.HandmadeGunsCore.proxy;
+import static java.lang.Math.sqrt;
+
+@SideOnly(Side.CLIENT)
+public class VehicleSound extends MovingSound
+{
+	private final Entity attachedEntity;
+	private final HasLoopSound hasBaselogic;
+	private float maxdist;
+	private double disttoPlayer = -1;
+	
+	public VehicleSound(Entity p_i45105_1_,float maxdist)
+	{
+		super(new ResourceLocation(((HasLoopSound) p_i45105_1_).getBaseLogic().getsound()));
+		this.attachedEntity = p_i45105_1_;
+		this.hasBaselogic = (HasLoopSound) p_i45105_1_;
+		this.repeat = true;
+		this.field_147665_h = 0;
+		this.maxdist = maxdist;
+		volume = 1;
+	}
+	
+	/**
+	 * Updates the JList with a new model.
+	 */
+	public void update()
+	{
+		if (this.attachedEntity.isDead)
+		{
+			this.donePlaying = true;
+		}
+		else
+		{
+			hasBaselogic.getBaseLogic().yourSoundIsremain();
+			this.xPosF = (float)this.attachedEntity.posX;
+			this.yPosF = (float)this.attachedEntity.posY;
+			this.zPosF = (float)this.attachedEntity.posZ;
+			double prevdisttoPlayer = disttoPlayer;
+			disttoPlayer = attachedEntity.getDistanceSqToEntity(proxy.getMCInstance().renderViewEntity);
+			float soundpitch = hasBaselogic.getBaseLogic().getsoundPitch();
+			this.field_147663_c = 0.0F;
+			volume = 10;
+			
+			if (disttoPlayer < maxdist * maxdist) {
+				
+				if(disttoPlayer > volume*4 * volume*4)volume = (float) (sqrt(disttoPlayer)/4);
+				
+				Vector3d playerPos = new Vector3d(proxy.getMCInstance().renderViewEntity.posX,proxy.getMCInstance().renderViewEntity.posY,proxy.getMCInstance().renderViewEntity.posZ);
+				Vector3d thisPos = new Vector3d(xPosF,yPosF,zPosF);
+				Vector3d toPlayerVec = new Vector3d();
+				toPlayerVec.sub(playerPos,thisPos);
+				toPlayerVec.normalize();
+				toPlayerVec.scale(10);
+				thisPos.set(playerPos);
+				thisPos.add(toPlayerVec);
+				this.xPosF = (float) thisPos.x;
+				this.yPosF = (float) thisPos.y;
+				this.zPosF = (float) thisPos.z;
+				if (prevdisttoPlayer != -1) {
+					float doppler = (float) (sqrt(prevdisttoPlayer) - sqrt(disttoPlayer));
+					float tempsp = (318.8f / (318.8f - doppler * 20f));
+					field_147663_c = soundpitch * tempsp;
+				}
+				if(field_147663_c<0.01){
+					this.field_147663_c = 0.0F;
+					this.volume = 0.0F;
+				}
+			}else {
+				this.field_147663_c = 0.0F;
+				this.volume = 0.0F;
+			}
+		}
+	}
+}

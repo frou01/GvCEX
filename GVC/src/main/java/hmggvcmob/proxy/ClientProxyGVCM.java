@@ -8,6 +8,7 @@ import hmggvcmob.entity.guerrilla.*;
 import hmggvcmob.render.*;
 import hmggvcmob.tile.TileEntityFlag;
 import hmggvcmob.tile.TileEntityMobSpawner_Extend;
+import hmvehicle.entity.EntityChild;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import org.lwjgl.input.Keyboard;
@@ -107,7 +108,7 @@ public class ClientProxyGVCM extends CommonSideProxyGVCM {
 		RenderingRegistry.registerEntityRenderingHandler(GVCEntityPMCT90Tank.class, new GVCRenderTankT90PMC());
 		RenderingRegistry.registerEntityRenderingHandler(GVCEntitySoldierBMP.class, new GVCRenderBMP());
 		RenderingRegistry.registerEntityRenderingHandler(GVCEntityPMCBMP.class, new GVCRenderPMCBMP());
-		RenderingRegistry.registerEntityRenderingHandler(GVCEntityChild.class, new GVCRenderSeat());
+		RenderingRegistry.registerEntityRenderingHandler(EntityChild.class, new GVCRenderSeat());
 		RenderingRegistry.registerEntityRenderingHandler(GVCdummyhitbox.class, new GVCRenderSeat());
 		RenderingRegistry.registerEntityRenderingHandler(GVCEntityPMCHeli.class, new GVCRenderPMCHeliobj());
 		RenderingRegistry.registerEntityRenderingHandler(GVCEntityPlane.class, new GVCRenderPlane());

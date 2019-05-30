@@ -36,7 +36,7 @@ public class EntityUSSR_S extends EntityUSSRBase
     public void addRandomArmor()
     {
         super.addRandomArmor();
-        int iii = this.worldObj.rand.nextInt(10);
+        int iii = this.worldObj.rand.nextInt(20);
         if(iii == 0){
         	this.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_ppsh41));
 	        canuseAlreadyPlacedGun = true;

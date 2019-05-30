@@ -14,9 +14,9 @@ ZoomRenderTypeTxture,false,false,false
 Cycle,2
 Texture,AR_sample
 GunSound,handmadeguns.fire,handmadeguns.supu
-GunSoundReload,handmadeguns.Reload_Test
+GunSoundReload,handmadeguns.reload
 CanObj,true
-ObjModel,ar.obj
+ObjModel,ar.mqo
 ObjTexture,ar.png
 ModelScala,0.5f
 CustomFlash,arrow,1
@@ -66,30 +66,30 @@ Magazine,0,HandmadeGuns,bullet_hmg
 MagazineSG,0,HandmadeGuns,bullet_shell_hmg
 MagazineGL,0,HandmadeGuns,bullet_rr_hmg
 
-//ï¿½pï¿½[ï¿½cï¿½Ç‰ï¿½ï¿½Jï¿½n
+//ƒp[ƒc’Ç‰ÁŠJn
 AddParts,mat1
-//ï¿½pï¿½[ï¿½cï¿½ï¿½ï¿½ï¿½]ï¿½ï¿½ï¿½ï¿½ï¿½é’†ï¿½Sï¿½ÆAï¿½fï¿½tï¿½Hï¿½ï¿½ï¿½gï¿½Å‰ï¿½]ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ê‡ï¿½Ìİ’ï¿½
+//ƒp[ƒc‚ğ‰ñ“]‚³‚¹‚é’†S‚ÆAƒfƒtƒHƒ‹ƒg‚Å‰ñ“]‚³‚¹‚éê‡‚Ìİ’è
 AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
-//ï¿½Êíï¿½É•`ï¿½æ‚·ï¿½é‚©
+//’Êí‚É•`‰æ‚·‚é‚©
 RenderOnNormal
-//ADSï¿½ï¿½ï¿½É‚Ç‚Ì‚ï¿½ï¿½ç‚¢ï¿½Ú“ï¿½ï¿½ï¿½ï¿½é‚©ï¿½ÆAï¿½Ç‚Ì‚ï¿½ï¿½ç‚¢ï¿½ï¿½]ï¿½ï¿½ï¿½é‚©
+//ADS’†‚É‚Ç‚Ì‚­‚ç‚¢ˆÚ“®‚·‚é‚©‚ÆA‚Ç‚Ì‚­‚ç‚¢‰ñ“]‚·‚é‚©
 AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
-//ï¿½ï¿½ï¿½Rï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½É‚Ç‚Ì‚ï¿½ï¿½ç‚¢ï¿½Ú“ï¿½ï¿½ï¿½ï¿½é‚©ï¿½ÆAï¿½Ç‚Ì‚ï¿½ï¿½ç‚¢ï¿½ï¿½]ï¿½ï¿½ï¿½é‚© Stg44ï¿½Ì”rä°Œï¿½ï¿½Wï¿½ï¿½ï¿½ç‚¢ï¿½ï¿½ï¿½ï¿½ï¿½pï¿½rï¿½ï¿½ï¿½vï¿½ï¿½ï¿½Â‚ï¿½ï¿½È‚ï¿½ï¿½Bï¿½Å‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½ï¿½Æ‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½`ï¿½æ‚³ï¿½ï¿½È‚ï¿½
+//ƒŠƒRƒCƒ‹’†‚É‚Ç‚Ì‚­‚ç‚¢ˆÚ“®‚·‚é‚©‚ÆA‚Ç‚Ì‚­‚ç‚¢‰ñ“]‚·‚é‚© Stg44‚Ì”rä°ŒûŠW‚­‚ç‚¢‚µ‚©—p“r‚ªv‚¢‚Â‚©‚È‚¢B‚Å‚à‚±‚ê‚ğ‘‚©‚È‚¢‚Æ‚»‚à‚»‚à•`‰æ‚³‚ê‚È‚¢
 AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
-//ï¿½Rï¿½bï¿½Lï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½(RY
+//ƒRƒbƒLƒ“ƒO’†‚É(RY
 AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
-//ï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½ï¿½(RY
+//ƒŠƒ[‚„(RY
 AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
 AddChildParts,mat3
-    //ï¿½pï¿½[ï¿½cï¿½ï¿½ï¿½ï¿½]ï¿½ï¿½ï¿½ï¿½ï¿½é’†ï¿½Sï¿½ÆAï¿½fï¿½tï¿½Hï¿½ï¿½ï¿½gï¿½Å‰ï¿½]ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ê‡ï¿½Ìİ’ï¿½
+    //ƒp[ƒc‚ğ‰ñ“]‚³‚¹‚é’†S‚ÆAƒfƒtƒHƒ‹ƒg‚Å‰ñ“]‚³‚¹‚éê‡‚Ìİ’è
     AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
-    //ï¿½Êíï¿½É•`ï¿½æ‚·ï¿½é‚©
+    //’Êí‚É•`‰æ‚·‚é‚©
     RenderOnNormal
-    //ADSï¿½ï¿½ï¿½É‚Ç‚Ì‚ï¿½ï¿½ç‚¢ï¿½Ú“ï¿½ï¿½ï¿½ï¿½é‚©ï¿½ÆAï¿½Ç‚Ì‚ï¿½ï¿½ç‚¢ï¿½ï¿½]ï¿½ï¿½ï¿½é‚©
+    //ADS’†‚É‚Ç‚Ì‚­‚ç‚¢ˆÚ“®‚·‚é‚©‚ÆA‚Ç‚Ì‚­‚ç‚¢‰ñ“]‚·‚é‚©
     AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
-    //ï¿½ï¿½ï¿½Rï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½É‚Ç‚Ì‚ï¿½ï¿½ç‚¢ï¿½Ú“ï¿½ï¿½ï¿½ï¿½é‚©ï¿½ÆAï¿½Ç‚Ì‚ï¿½ï¿½ç‚¢ï¿½ï¿½]ï¿½ï¿½ï¿½é‚© Stg44ï¿½Ì”rä°Œï¿½ï¿½Wï¿½ï¿½ï¿½ç‚¢ï¿½ï¿½ï¿½ï¿½ï¿½pï¿½rï¿½ï¿½ï¿½vï¿½ï¿½ï¿½Â‚ï¿½ï¿½È‚ï¿½ï¿½Bï¿½Å‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½ï¿½Æ‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½`ï¿½æ‚³ï¿½ï¿½È‚ï¿½
+    //ƒŠƒRƒCƒ‹’†‚É‚Ç‚Ì‚­‚ç‚¢ˆÚ“®‚·‚é‚©‚ÆA‚Ç‚Ì‚­‚ç‚¢‰ñ“]‚·‚é‚© Stg44‚Ì”rä°ŒûŠW‚­‚ç‚¢‚µ‚©—p“r‚ªv‚¢‚Â‚©‚È‚¢B‚Å‚à‚±‚ê‚ğ‘‚©‚È‚¢‚Æ‚»‚à‚»‚à•`‰æ‚³‚ê‚È‚¢
     AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
-    //ï¿½Rï¿½bï¿½Lï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½(RY
+    //ƒRƒbƒLƒ“ƒO’†‚É(RY
     AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
 BackParts
 AddChildParts,mat20
@@ -191,7 +191,7 @@ GripSetPoint,0F,0.85F,3.5F
 GripSetAngle,0F,0F,0F
 
 
-Name,ï¿½Aï¿½Tï¿½ï¿½ï¿½gï¿½ï¿½ï¿½Cï¿½tï¿½ï¿½_ï¿½Tï¿½ï¿½ï¿½vï¿½ï¿½
+Name,ƒAƒTƒ‹ƒgƒ‰ƒCƒtƒ‹_ƒTƒ“ƒvƒ‹
 AR,AR_sample
 
 //addRecipe,AR_sample,1,abc,0ef,000,265,265,265,280,265,280,280,280,280

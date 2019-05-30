@@ -1,4 +1,0 @@
-ObjModel,DSHKBulletBox.mqo
-ObjTexture,DSHKBulletBox.png
-Objscale,2
-Name,DSHKBulletBox

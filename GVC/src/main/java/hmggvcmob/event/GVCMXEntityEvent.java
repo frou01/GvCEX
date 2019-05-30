@@ -7,7 +7,7 @@ import handmadeguns.HandmadeGunsCore;
 import handmadeguns.entity.bullets.HMGEntityBulletBase;
 import handmadeguns.event.GunSoundEvent;
 import handmadeguns.network.PacketSpawnParticle;
-import hmggvcmob.entity.GVCEntityChild;
+import hmvehicle.entity.EntityChild;
 import hmggvcmob.entity.TU95;
 import hmggvcmob.entity.friend.EntitySoBases;
 import hmggvcmob.entity.guerrilla.*;
@@ -55,7 +55,7 @@ public class GVCMXEntityEvent {
     {
         EntityLivingBase entity = event.entityLiving;
         if(entity != null){
-            if ((entity.ridingEntity instanceof EntitySoBases || entity.ridingEntity instanceof GVCEntityChild)) {
+            if ((entity.ridingEntity instanceof EntitySoBases || entity.ridingEntity instanceof EntityChild)) {
                 if(entity instanceof EntityPlayer) {
                     event.setCanceled(true);
                 }

@@ -6,7 +6,7 @@ Description: Unexpected error
 
 java.lang.NullPointerException: Unexpected error
 	at hmggvcmob.util.Calculater.getMinecraftVecObj(Calculater.java:454)
-	at hmggvcmob.entity.ModifiedBoundingBox.calculateIntercept(ModifiedBoundingBox.java:685)
+	at hmvehicle.entity.parts.ModifiedBoundingBox.calculateIntercept(ModifiedBoundingBox.java:685)
 	at net.minecraft.client.renderer.EntityRenderer.getMouseOver(EntityRenderer.java:393)
 	at net.minecraft.client.Minecraft.runTick(Minecraft.java:1688)
 	at net.minecraft.client.Minecraft.runGameLoop(Minecraft.java:1039)
@@ -28,7 +28,7 @@ A detailed walkthrough of the error, its code path and all known details is as f
 -- Head --
 Stacktrace:
 	at hmggvcmob.util.Calculater.getMinecraftVecObj(Calculater.java:454)
-	at hmggvcmob.entity.ModifiedBoundingBox.calculateIntercept(ModifiedBoundingBox.java:685)
+	at hmvehicle.entity.parts.ModifiedBoundingBox.calculateIntercept(ModifiedBoundingBox.java:685)
 	at net.minecraft.client.renderer.EntityRenderer.getMouseOver(EntityRenderer.java:393)
 
 -- Affected level --

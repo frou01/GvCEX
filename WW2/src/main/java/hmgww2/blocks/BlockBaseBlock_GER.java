@@ -190,8 +190,8 @@ public class BlockBaseBlock_GER extends Block
     
     public void BuildTower(World par1World, int par1, int par2, int par3){
     	for (int i0 = 0; i0 < 6; ++i0){
-    		for (int i1 = 0; i1 < 3; ++i1){
-    			for (int i2 = 0; i2 < 3; ++i2){
+    		for (int i1 = 0; i1 < 3; i1 += 2){
+    			for (int i2 = 0; i2 < 3; i2 += 2){
     				{
     					par1World.setBlock(par1+i1, par2+i0, par3+i2, Blocks.fence);
     				}

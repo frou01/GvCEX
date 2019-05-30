@@ -28,7 +28,7 @@ public class TU95 extends Entity {
             setDead();
         }
         if(worldObj.isRemote && !soundstarted){
-            proxy.playsoundatBullet("gvcmob:gvcmob.Tu-95prop",16,1,4096*4096,4096*4096,this,true);
+            proxy.playsoundatBullet("gvcmob:gvcmob.Tu-95prop",1,1,4096*4096,4096*4096,this,true);
             soundstarted = true;
         }
         fuse--;

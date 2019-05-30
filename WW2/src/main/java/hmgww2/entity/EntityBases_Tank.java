@@ -3,6 +3,10 @@ package hmgww2.entity;
 import hmggvcmob.GVCMobPlus;
 import hmggvcmob.ai.*;
 import hmggvcmob.entity.*;
+import hmvehicle.entity.parts.*;
+import hmvehicle.entity.parts.logics.IbaseLogic;
+import hmvehicle.entity.parts.logics.TankBaseLogic;
+import hmvehicle.entity.parts.turrets.TurretObj;
 import net.minecraft.entity.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -15,12 +19,15 @@ import net.minecraft.world.World;
 import javax.vecmath.Quat4d;
 import javax.vecmath.Vector3d;
 
+import java.util.List;
+
 import static hmggvcmob.GVCMobPlus.proxy;
 import static hmggvcmob.event.GVCMXEntityEvent.soundedentity;
+import static hmggvcmob.util.Calculater.transformVecByQuat;
 import static hmggvcmob.util.Calculater.transformVecforMinecraft;
 import static java.lang.Math.abs;
 
-public abstract class EntityBases_Tank extends EntityBases implements IRideableTank,IControlable
+public abstract class EntityBases_Tank extends EntityBases implements ITank, IControlable
 {
 	// public int type;
 	
@@ -29,13 +36,15 @@ public abstract class EntityBases_Tank extends EntityBases implements IRideableT
 	public int fireCycle1;
 	public int fireCycle2;
 	
+	public boolean seat_onTurret = true;
+	
 	public boolean subturret_is_mainTurret_child = false;
 	public float subturretrotationYaw;
 	public float subturretrotationPitch;
 	
 	public int mgMagazine;
 	public int mgReloadProgress;
-	public TankBaseLogic baseLogic = new TankBaseLogic(this,0.5f,2.0f,false,"gvcmob:gvcmob.T34Track");
+	public TankBaseLogic baseLogic = new TankBaseLogic(this,0.5f,2.0f,false,"hmgww2:hmgww2.T34Track");
 	ModifiedBoundingBox nboundingbox;
 	
 	Vector3d playerpos = new Vector3d(-0.525,2.1D,0.0);
@@ -59,7 +68,7 @@ public abstract class EntityBases_Tank extends EntityBases implements IRideableT
 		super(par1World);
 		this.setSize(4F, 2.5F);
 		
-		nboundingbox = new ModifiedBoundingBox(-20,-20,-20,20,20,20,
+		nboundingbox = new ModifiedBoundingBox(boundingBox.minX,boundingBox.minY,boundingBox.minZ,boundingBox.maxX,boundingBox.maxY,boundingBox.maxZ,
 				                                      0,1.5,0,
 				                                      3.4 , 3 , 6.5);
 		nboundingbox.rot.set(baseLogic.bodyRot);
@@ -74,15 +83,15 @@ public abstract class EntityBases_Tank extends EntityBases implements IRideableT
 	
 	protected void entityInit() {
 		super.entityInit();
-		this.dataWatcher.addObject(2, Integer.valueOf(0));
-		this.dataWatcher.addObject(3, Integer.valueOf(0));
-		this.dataWatcher.addObject(24, Float.valueOf(0));
-		this.dataWatcher.addObject(25, Float.valueOf(0));
-		this.dataWatcher.addObject(26, Float.valueOf(0));
-		this.dataWatcher.addObject(27, Float.valueOf(0));
-		this.dataWatcher.addObject(28, Float.valueOf(0));
-		this.dataWatcher.addObject(29, Float.valueOf(0));
-		this.dataWatcher.addObject(30, Float.valueOf(0));
+		this.dataWatcher.addObject(2, Integer.valueOf(0));//reloadProgress
+		this.dataWatcher.addObject(3, Integer.valueOf(0));//magazine
+		this.dataWatcher.addObject(24, Float.valueOf(0));//subY
+		this.dataWatcher.addObject(25, Float.valueOf(0));//subP
+		this.dataWatcher.addObject(26, Float.valueOf(0));//turY
+		this.dataWatcher.addObject(27, Float.valueOf(0));//turP
+		this.dataWatcher.addObject(28, Float.valueOf(0));//Y
+		this.dataWatcher.addObject(29, Float.valueOf(0));//P
+		this.dataWatcher.addObject(30, Float.valueOf(0));//R
 	}
 	public void setSubTurretrotationYaw(float floats) {
 		this.dataWatcher.updateObject(24, Float.valueOf(floats));
@@ -192,32 +201,51 @@ public abstract class EntityBases_Tank extends EntityBases implements IRideableT
 			}else if(!p_70085_1_.isRiding()){
 				mode = 0;
 				this.setMobMode(0);
-				p_70085_1_.mountEntity(this);
+				pickupEntity(p_70085_1_,0);
 			}
 			return true;
 		} else {
 			return false;
 		}
 	}
-	
+	public boolean pickupEntity(Entity p_70085_1_, int StartSeachSeatNum){
+		p_70085_1_.mountEntity(this);
+		return true;
+	}
 	public void updateRiderPosition() {
 		if (this.riddenByEntity != null) {
-			mainTurret.setmotherpos(new Vector3d(this.posX,this.posY,-this.posZ),baseLogic.bodyRot);
-			Vector3d temp = new Vector3d(mainTurret.pos);
-			Vector3d tempplayerPos = new Vector3d(proxy.iszooming() ? zoomingplayerpos:playerpos);
-			Vector3d playeroffsetter = new Vector3d(0,((worldObj.isRemote && this.riddenByEntity == proxy.getEntityPlayerInstance()) ? 0:(this.riddenByEntity.getEyeHeight() + this.riddenByEntity.yOffset)),0);
-			tempplayerPos.sub(playeroffsetter);
-			Vector3d temp2 = mainTurret.getGlobalVector_fromLocalVector_onTurretPoint(tempplayerPos);
-			temp.add(temp2);
-			transformVecforMinecraft(temp);
+			if(seat_onTurret) {
+				mainTurret.setmotherpos(new Vector3d(this.posX, this.posY, -this.posZ), baseLogic.bodyRot);
+				Vector3d temp = new Vector3d(mainTurret.pos);
+				Vector3d tempplayerPos = new Vector3d(proxy.iszooming() ? zoomingplayerpos : playerpos);
+				Vector3d playeroffsetter = new Vector3d(0, ((worldObj.isRemote && this.riddenByEntity == proxy.getEntityPlayerInstance()) ? 0 : (this.riddenByEntity.getEyeHeight() + this.riddenByEntity.yOffset)), 0);
+				tempplayerPos.sub(playeroffsetter);
+				Vector3d temp2 = mainTurret.getGlobalVector_fromLocalVector_onTurretPoint(tempplayerPos);
+				temp.add(temp2);
+				transformVecforMinecraft(temp);
 //			temp.add(playeroffsetter);
 //			System.out.println(temp);
-			this.riddenByEntity.setPosition(temp.x,
-					temp.y,
-					temp.z);
-			this.riddenByEntity.posX = temp.x;
-			this.riddenByEntity.posY = temp.y;
-			this.riddenByEntity.posZ = temp.z;
+				this.riddenByEntity.setPosition(temp.x,
+						temp.y,
+						temp.z);
+				this.riddenByEntity.posX = temp.x;
+				this.riddenByEntity.posY = temp.y;
+				this.riddenByEntity.posZ = temp.z;
+			}else {
+				Vector3d temp = new Vector3d(this.posX,this.posY,-this.posZ);
+				Vector3d tempplayerPos = new Vector3d(proxy.iszooming() ? zoomingplayerpos : playerpos);
+				Vector3d playeroffsetter = new Vector3d(0, ((worldObj.isRemote && this.riddenByEntity == proxy.getEntityPlayerInstance()) ? 0 : (this.riddenByEntity.getEyeHeight() + this.riddenByEntity.yOffset)), 0);
+				tempplayerPos.sub(playeroffsetter);
+				tempplayerPos = transformVecByQuat(tempplayerPos,this.baseLogic.bodyRot);
+				temp.add(tempplayerPos);
+				transformVecforMinecraft(temp);
+				this.riddenByEntity.setPosition(temp.x,
+						temp.y,
+						temp.z);
+				this.riddenByEntity.posX = temp.x;
+				this.riddenByEntity.posY = temp.y;
+				this.riddenByEntity.posZ = temp.z;
+			}
 		}
 	}
 	
@@ -283,7 +311,7 @@ public abstract class EntityBases_Tank extends EntityBases implements IRideableT
 	{
 		super.onUpdate();
 		tankUpdate();
-		worldObj.MAX_ENTITY_RADIUS = 32;
+		worldObj.MAX_ENTITY_RADIUS = 16;
 	}
 	public void tankUpdate(){
 		this.stepHeight = 1.5f;
@@ -301,7 +329,7 @@ public abstract class EntityBases_Tank extends EntityBases implements IRideableT
 				if(mgReloadProgress > 100){
 					mgMagazine = 100;
 				}
-				fireCycle1 = mainTurret.cycle_timer;
+				if(mainTurret != null)fireCycle1 = mainTurret.cycle_timer;
 				setremainMg(mgMagazine);
 				setCanonnreloadcycle(fireCycle1);
 			}
@@ -335,12 +363,10 @@ public abstract class EntityBases_Tank extends EntityBases implements IRideableT
 				this.setAttackTarget(null);
 				count_for_reset = 0;
 			}
-			mainTurret.turretrotationYaw = baseLogic.turretrotationYaw;
-			mainTurret.turretrotationPitch = baseLogic.turretrotationPitch;
 			mode= getMobMode();
 		}
 		baseLogic.updateCommon();
-		mainTurret.update(baseLogic.bodyRot,new Vector3d(this.posX,this.posY,-this.posZ));
+		if(mainTurret != null)mainTurret.update(baseLogic.bodyRot,new Vector3d(this.posX,this.posY,-this.posZ));
 		if(!subturret_is_mainTurret_child && subTurret != null)subTurret.update(baseLogic.bodyRot,new Vector3d(this.posX,this.posY,-this.posZ));
 		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.3D);
 	}
@@ -356,11 +382,11 @@ public abstract class EntityBases_Tank extends EntityBases implements IRideableT
 	}
 	
 	@Override
-	public TankBaseLogic getBaseLogic() {
+	public IbaseLogic getBaseLogic() {
 		return baseLogic;
 	}
 	
-	public void mainFire(Entity target){
+	public void mainFireToTarget(Entity target){
 		mainTurret.currentEntity = this;
 		mainTurret.fire();
 	}
@@ -368,7 +394,7 @@ public abstract class EntityBases_Tank extends EntityBases implements IRideableT
 		mainTurret.currentEntity = this.riddenByEntity;
 		mainTurret.fire();
 	}
-	public void subFire(Entity target){
+	public void subFireToTarget(Entity target){
 		if(subTurret != null) {
 			subTurret.currentEntity = this;
 			if (subTurret.aimToEntity(target)) {
@@ -448,27 +474,12 @@ public abstract class EntityBases_Tank extends EntityBases implements IRideableT
 	}
 	
 	@Override
-	public void setbodyrotationYaw(float value) {
-		baseLogic.bodyrotationYaw = value;
-	}
-	
-	@Override
-	public void setturretrotationYaw(float value) {
-		baseLogic.turretrotationYaw = value;
-	}
-	
-	@Override
-	public float getrotationYawmotion() {
-		return baseLogic.rotationmotion;
-	}
-	
-	@Override
 	public void setrotationYawmotion(float value) {
 		baseLogic.rotationmotion = value;
 	}
 	
 	@Override
-	public void setBodyrot(Quat4d rot) {
+	public void setBodyRot(Quat4d rot) {
 		baseLogic.bodyRot.set(rot);
 	}
 	
@@ -486,6 +497,10 @@ public abstract class EntityBases_Tank extends EntityBases implements IRideableT
 		baseLogic.moveFlying(p_70060_1_,p_70060_2_,p_70060_3_);
 	}
 	
+	public void setPosition(double x, double y, double z)
+	{
+		if(baseLogic != null)baseLogic.setPosition(x,y,z);
+	}
 	@Override
 	public void setControl_RightClick(boolean value) {
 		server1 = value;
@@ -664,5 +679,55 @@ public abstract class EntityBases_Tank extends EntityBases implements IRideableT
 	
 	public String getsightTex(){
 		return sightTex;
+	}
+	
+	protected void collideWithNearbyEntities()
+	{
+		List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox.expand(0.20000000298023224D, 0.0D, 0.20000000298023224D));
+		
+		if (list != null && !list.isEmpty())
+		{
+			for (int i = 0; i < list.size(); ++i)
+			{
+				Entity entity = (Entity)list.get(i);
+				
+				if (entity.canBePushed() && entity.width > 1.5)
+				{
+					this.collideWithEntity(entity);
+				}
+			}
+		}
+	}
+	
+	public void applyEntityCollision(Entity p_70108_1_)
+	{
+		if (p_70108_1_.riddenByEntity != this && p_70108_1_.ridingEntity != this && p_70108_1_.width > 1.5)
+		{
+			double d0 = p_70108_1_.posX - this.posX;
+			double d1 = p_70108_1_.posZ - this.posZ;
+			double d2 = MathHelper.abs_max(d0, d1);
+			
+			if (d2 >= 0.009999999776482582D)
+			{
+				d2 = (double)MathHelper.sqrt_double(d2);
+				d0 /= d2;
+				d1 /= d2;
+				double d3 = 1.0D / d2;
+				
+				if (d3 > 1.0D)
+				{
+					d3 = 1.0D;
+				}
+				
+				d0 *= d3;
+				d1 *= d3;
+				d0 *= 0.05000000074505806D;
+				d1 *= 0.05000000074505806D;
+				d0 *= (double)(1.0F - this.entityCollisionReduction);
+				d1 *= (double)(1.0F - this.entityCollisionReduction);
+				this.addVelocity(-d0, 0.0D, -d1);
+				p_70108_1_.addVelocity(d0, 0.0D, d1);
+			}
+		}
 	}
 }

@@ -3,7 +3,7 @@ Dont_Be_Inside_Root_Chest
 BulletPower,100
 BulletSpeed,1.375
 BlletSpread,10.0f
-Acceleration,0.1f
+Acceleration,0.5f
 Recoil,2.0d
 ReloadTime,50
 RemainingBullet,1

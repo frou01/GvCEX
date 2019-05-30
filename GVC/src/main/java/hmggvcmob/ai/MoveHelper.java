@@ -1,17 +1,12 @@
 package hmggvcmob.ai;
 
-import hmggvcmob.entity.IdriveableVehicle;
-import hmggvcmob.entity.ImultiRideableVehicle;
-import hmggvcmob.entity.friend.*;
-import hmggvcmob.entity.guerrilla.GVCEntityTank;
-import hmggvcmob.entity.guerrilla.GVCEntityTankT90;
+import hmvehicle.entity.parts.IVehicle;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.pathfinding.PathPoint;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
-import org.lwjgl.Sys;
 
 public class MoveHelper {
 	private EntityLiving entity;
@@ -102,7 +97,7 @@ public class MoveHelper {
 	}
 
 	public void gotank() {
-		float f1 = ((IdriveableVehicle)entity).getbodyrotationYaw() * (2 * (float) Math.PI / 360);
+		float f1 = ((IVehicle)entity).getbodyrotationYaw() * (2 * (float) Math.PI / 360);
 		this.entity.moveEntity(-MathHelper.sin(f1) * speed * 0.07,0,+MathHelper.cos(f1) * speed * 0.07);
 	}
 	public void goship() {

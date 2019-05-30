@@ -2,8 +2,9 @@
 package hmggvcmob.render;
 
 import cpw.mods.fml.client.FMLClientHandler;
-import hmggvcmob.entity.GVCEntityChild;
+import hmvehicle.entity.EntityChild;
 import hmggvcmob.entity.friend.GVCEntityPMCHeli;
+import hmvehicle.entity.parts.logics.PlaneBaseLogic;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraftforge.client.MinecraftForgeClient;
 import org.lwjgl.opengl.GL11;
@@ -37,6 +38,7 @@ public class GVCRenderPMCHeliobj extends Render {
 	*/
 	public void doRender(GVCEntityPMCHeli entity, double p_76986_2_, double p_76986_4_, double p_76986_6_,
 			float entityYaw, float partialTicks) {
+		PlaneBaseLogic planeBaseLogic = (PlaneBaseLogic) entity.getBaseLogic();
 		GL11.glPushMatrix();
 		GL11.glAlphaFunc(GL11.GL_GREATER, 0);
 		GL11.glEnable(GL_BLEND);
@@ -47,9 +49,9 @@ public class GVCRenderPMCHeliobj extends Render {
 		GL11.glTranslatef(0, 2.5f, 0);
 		//this.renderAngle(entity, 1);
 		GL11.glRotatef(180F, 0.0F, 1.0F, 0.0F);
-		GL11.glRotatef(180.0F - (entity.bodyrotationYaw +(entity.bodyrotationYaw - entity.prevbodyrotationYaw) * partialTicks), 0.0F, 1.0F, 0.0F);
-		GL11.glRotatef((entity.bodyrotationPitch +(entity.bodyrotationPitch - entity.prevbodyrotationPitch) * partialTicks), 1.0F, 0.0F, 0.0F);
-		GL11.glRotatef((entity.bodyrotationRoll +(entity.bodyrotationRoll - entity.prevbodyrotationRoll) * partialTicks), 0.0F, 0.0F, 1.0F);
+		GL11.glRotatef(180.0F - (planeBaseLogic.bodyrotationYaw +(planeBaseLogic.bodyrotationYaw - planeBaseLogic.prevbodyrotationYaw) * partialTicks), 0.0F, 1.0F, 0.0F);
+		GL11.glRotatef((planeBaseLogic.bodyrotationPitch +(planeBaseLogic.bodyrotationPitch - planeBaseLogic.prevbodyrotationPitch) * partialTicks), 1.0F, 0.0F, 0.0F);
+		GL11.glRotatef((planeBaseLogic.bodyrotationRoll +(planeBaseLogic.bodyrotationRoll - planeBaseLogic.prevbodyrotationRoll) * partialTicks), 0.0F, 0.0F, 1.0F);
 		GL11.glTranslatef(0, -2.5f, 0);
 		int pass = MinecraftForgeClient.getRenderPass();
 		if(pass == 1) {
@@ -59,11 +61,11 @@ public class GVCRenderPMCHeliobj extends Render {
 			{
 				GL11.glPushMatrix();
 				GL11.glTranslatef(-0.0022F, 5.0671f, -0.0027F);
-				GL11.glRotatef((float) (entity.prevangletime + (entity.angletime - entity.prevangletime) * partialTicks), 0.0F, 1.0F, 0.0F);
+				GL11.glRotatef((float) (planeBaseLogic.prevperapos + (planeBaseLogic.perapos - planeBaseLogic.prevperapos) * partialTicks), 0.0F, 1.0F, 0.0F);
 				GL11.glTranslatef(0.0022F, -5.0671f, 0.0027F);
-				glColor4f(1, 1, 1, (float) 1 - (entity.throttle / 5f) / 3);
+				glColor4f(1, 1, 1, (float) 1 - (planeBaseLogic.throttle / 5f) / 3);
 				tankk.renderPart("mainrot");
-				glColor4f(1, 1, 1, (float) (entity.throttle / 5f) / 3);
+				glColor4f(1, 1, 1, (float) (planeBaseLogic.throttle / 5f) / 3);
 				GL11.glDepthMask(false);
 				tankk.renderPart("maineffect");
 				GL11.glDepthMask(true);
@@ -72,18 +74,18 @@ public class GVCRenderPMCHeliobj extends Render {
 			{
 				GL11.glPushMatrix();
 				GL11.glTranslatef(-0.7575F, 4.8072f, -13.2466f);
-				GL11.glRotatef((entity.prevangletime + (entity.angletime - entity.prevangletime) * partialTicks) * 3, 1.0F, 0.0F, 0.0F);
+				GL11.glRotatef( (planeBaseLogic.prevperapos + (planeBaseLogic.perapos - planeBaseLogic.prevperapos) * partialTicks) * 3, 1.0F, 0.0F, 0.0F);
 				GL11.glTranslatef(0.7575F, -4.8072f, 13.2466f);
-				glColor4f(1, 1, 1, (float) 1 - (entity.throttle / 5f) / 3);
+				glColor4f(1, 1, 1, (float) 1 - (planeBaseLogic.throttle / 5f) / 3);
 				tankk.renderPart("tail");
-				glColor4f(1, 1, 1, (float) (entity.throttle / 5f) / 3);
+				glColor4f(1, 1, 1, (float) (planeBaseLogic.throttle / 5f) / 3);
 				GL11.glDepthMask(false);
 				tankk.renderPart("taileffect");
 				GL11.glDepthMask(true);
 				GL11.glPopMatrix();
 			}
 			glColor4f(1, 1, 1, 1);
-			if (entity.childEntities[5] != null && entity.childEntities[5].riddenByEntity == FMLClientHandler.instance().getClientPlayerEntity() && FMLClientHandler.instance().getClient().gameSettings.thirdPersonView == 0) {
+			if (planeBaseLogic.ispilot(FMLClientHandler.instance().getClientPlayerEntity()) && FMLClientHandler.instance().getClient().gameSettings.thirdPersonView == 0) {
 				GL11.glDepthMask(false);
 				tankk.renderPart("HUDPlate");
 				GL11.glDisable(GL11.GL_LIGHTING);
@@ -96,7 +98,7 @@ public class GVCRenderPMCHeliobj extends Render {
 				GL11.glEnable(GL11.GL_LIGHTING);
 				OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)lastBrightnessX, (float)lastBrightnessY);
 			}
-			if (entity.childEntities[4] != null && entity.childEntities[4].riddenByEntity == FMLClientHandler.instance().getClientPlayerEntity() && FMLClientHandler.instance().getClient().gameSettings.thirdPersonView == 0) {
+			/*if (entity.childEntities[4] != null && entity.childEntities[4].riddenByEntity == FMLClientHandler.instance().getClientPlayerEntity() && FMLClientHandler.instance().getClient().gameSettings.thirdPersonView == 0) {
 				GL11.glDepthMask(false);
 				tankk.renderPart("GunnerHudPlate");
 				GL11.glDisable(GL11.GL_LIGHTING);
@@ -117,7 +119,7 @@ public class GVCRenderPMCHeliobj extends Render {
 				glEnable(GL_DEPTH_TEST);
 				GL11.glEnable(GL11.GL_LIGHTING);
 				OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)lastBrightnessX, (float)lastBrightnessY);
-			}
+			}*/
 			GL11.glDisable(GL_BLEND);
 		}else {
 			GL11.glDepthMask(true);
@@ -145,28 +147,28 @@ public class GVCRenderPMCHeliobj extends Render {
 			{
 				GL11.glPushMatrix();
 				GL11.glTranslatef(0.1176f,0.4499f,6.443f);
-				GL11.glRotatef((float) -entity.turretYaw,0,1,0);
+//				GL11.glRotatef((float) -entity.turretYaw,0,1,0);
 				GL11.glTranslatef(-0.1176f,-0.4499f,-6.443f);
 				tankk.renderPart("FgunTurretY");
 				GL11.glTranslatef(0,0.8190f,6.4489f);
-				GL11.glRotatef((float) entity.turretPitch,1,0,0);
+//				GL11.glRotatef((float) entity.turretPitch,1,0,0);
 				GL11.glTranslatef(0,-0.8190f,-6.4489f);
 				tankk.renderPart("FgunTurretP");
 				tankk.renderPart("Fgun");
 				GL11.glPopMatrix();
 			}
 			boolean flag = true;
-			for (GVCEntityChild aseat : entity.childEntities) {
-				if (aseat != null) {
-					if (aseat.idinmasterEntityt == 4) {
-						break;
-					}
-					if (aseat.riddenByEntity != null) {
-						flag = false;
-						break;
-					}
-				}
-			}
+//			for (EntityChild aseat : entity.childEntities) {
+//				if (aseat != null) {
+//					if (aseat.idinmasterEntityt == 4) {
+//						break;
+//					}
+//					if (aseat.riddenByEntity != null) {
+//						flag = false;
+//						break;
+//					}
+//				}
+//			}
 			if (flag) tankk.renderPart("door");
 			tankk.renderPart("pilotseat");
 			tankk.renderPart("gunnerseat");

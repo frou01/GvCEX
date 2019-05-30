@@ -85,16 +85,17 @@ key_key.hotbar.6:7
 key_key.hotbar.7:8
 key_key.hotbar.8:9
 key_key.hotbar.9:10
-key_Reload:19
-key_Right ON/Off:46
+key_Reload Magazine:19
+key_Change Magazine Type:48
+key_Seeker Open/Close:46
 key_Attachment:45
-key_Knife:33
+key_Fire AttachedGun:33
 key_ADS_Key:47
 key_Mode_Key:41
 key_Fix Gun:35
 key_CannonCamera:44
-key_EXControl1:33
-key_EXControl2:45
+key_EXControl1:37
+key_EXControl2:38
 soundCategory_master:1.0
 soundCategory_music:0.0
 soundCategory_record:1.0

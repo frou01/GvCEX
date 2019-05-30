@@ -5,7 +5,7 @@ Time: 19/02/25 0:55
 Description: Ticking entity
 
 java.lang.NullPointerException: Ticking entity
-	at hmggvcmob.entity.TankBaseLogic.updateServer(TankBaseLogic.java:251)
+	at hmvehicle.entity.parts.logics.TankBaseLogic.updateServer(TankBaseLogic.java:251)
 	at hmggvcmob.entity.friend.GVCEntityPMCTank.onUpdate(GVCEntityPMCTank.java:265)
 	at net.minecraft.world.World.updateEntityWithOptionalForce(World.java:2298)
 	at net.minecraft.world.WorldServer.updateEntityWithOptionalForce(WorldServer.java:684)
@@ -24,7 +24,7 @@ A detailed walkthrough of the error, its code path and all known details is as f
 
 -- Head --
 Stacktrace:
-	at hmggvcmob.entity.TankBaseLogic.updateServer(TankBaseLogic.java:251)
+	at hmvehicle.entity.parts.logics.TankBaseLogic.updateServer(TankBaseLogic.java:251)
 	at hmggvcmob.entity.friend.GVCEntityPMCTank.onUpdate(GVCEntityPMCTank.java:265)
 	at net.minecraft.world.World.updateEntityWithOptionalForce(World.java:2298)
 	at net.minecraft.world.WorldServer.updateEntityWithOptionalForce(WorldServer.java:684)

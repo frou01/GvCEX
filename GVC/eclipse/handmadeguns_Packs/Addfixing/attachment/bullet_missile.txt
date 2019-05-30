@@ -1,5 +1,0 @@
-Texture,missile
-Stack,64
-Name,Missile
-Magazine,missile
-addRecipe,bullet_rr_hmg,2,abc,def,000,289,265,289,289,265,289,289,289,289

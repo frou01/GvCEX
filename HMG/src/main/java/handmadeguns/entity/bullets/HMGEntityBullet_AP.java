@@ -3,7 +3,6 @@ package handmadeguns.entity.bullets;
 //import littleMaidMobX.LMM_EntityLittleMaid;
 //import littleMaidMobX.LMM_EntityLittleMaidAvatar;
 
-import com.lulan.shincolle.entity.BasicEntityShipHostile;
 import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
 import handmadeguns.HMGMessageKeyPressedC;
 import handmadeguns.HMGPacketHandler;
@@ -22,9 +21,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
 
-import static handmadeguns.CommonSideProxyHMG.kanmusu_defence;
 import static handmadeguns.HandmadeGunsCore.islmmloaded;
-import static handmadeguns.HandmadeGunsCore.isshincoleloaded;
 
 public class HMGEntityBullet_AP extends HMGEntityBulletBase implements IEntityAdditionalSpawnData
 {
@@ -77,15 +74,6 @@ public class HMGEntityBullet_AP extends HMGEntityBulletBase implements IEntityAd
 			double moZback = var1.entityHit.motionZ;//ノックバック無効化用
 
 			float backdeflevel = 0;
-			if(isshincoleloaded){
-				if (var1.entityHit instanceof BasicEntityShipHostile){
-					try {
-						kanmusu_defence.set(var1.entityHit,0);
-					} catch (IllegalAccessException e) {
-						e.printStackTrace();
-					}
-				}
-			}
 			if(var1.entityHit.attackEntityFrom((new EntityDamageSourceIndirect("arrow", this, this.getThrower())).setProjectile(), (float)var2)){
 				var1.entityHit.motionX = moXback;
 				var1.entityHit.motionY = moYback;
@@ -110,15 +98,6 @@ public class HMGEntityBullet_AP extends HMGEntityBulletBase implements IEntityAd
 						var1.entityHit.motionX += knockvec.xCoord;
 						var1.entityHit.motionY += knockvec.yCoord + knockbackY;
 						var1.entityHit.motionZ += knockvec.zCoord;
-					}
-				}
-			}
-			if(isshincoleloaded){
-				if (hitedentity instanceof BasicEntityShipHostile){
-					try {
-						kanmusu_defence.set(hitedentity,backdeflevel);
-					} catch (IllegalAccessException e) {
-						e.printStackTrace();
 					}
 				}
 			}

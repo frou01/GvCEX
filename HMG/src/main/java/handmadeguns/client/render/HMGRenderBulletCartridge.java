@@ -55,7 +55,7 @@ public class HMGRenderBulletCartridge extends Render
         if(pass == 0) {
             GL11.glNormal3f(0,0,0);
 
-            int type = p_76986_1_.ttype;
+            int type = p_76986_1_.cartType;
 
             if (type == 1) {
                 GL11.glScalef(0.5f,0.5f,0.5f);
@@ -96,7 +96,7 @@ public class HMGRenderBulletCartridge extends Render
      */
     protected ResourceLocation getEntityTexture(HMGEntityBulletCartridge p_110775_1_)
     {
-    	int type = p_110775_1_.ttype;
+    	int type = p_110775_1_.cartType;
     	if(type == 3){
         return arrowTextures3;
     	}else if(type == 2){

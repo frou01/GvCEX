@@ -8,13 +8,16 @@ import hmggvcmob.GVCMobPlus;
 import hmggvcmob.ai.AITankAttack;
 import hmggvcmob.entity.*;
 import hmggvcmob.entity.friend.EntitySoBases;
-import hmggvcmob.tile.TileEntityFlag;
+import hmvehicle.entity.parts.ITank;
+import hmvehicle.entity.parts.ModifiedBoundingBox;
+import hmvehicle.entity.parts.logics.IbaseLogic;
+import hmvehicle.entity.parts.logics.TankBaseLogic;
+import hmvehicle.entity.parts.turrets.TurretObj;
 import net.minecraft.entity.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
 
@@ -30,7 +33,7 @@ import static hmggvcmob.util.Calculater.CalculateGunElevationAngle;
 import static hmggvcmob.util.Calculater.transformVecforMinecraft;
 import static java.lang.Math.abs;
 
-public class GVCEntityTankT90 extends EntityGBase implements IFF,IGVCmob,ITank
+public class GVCEntityTankT90 extends EntityGBase implements IFF,IGVCmob, ITank
 {
     int count_for_reset;
     public double angletime;
@@ -78,7 +81,7 @@ public class GVCEntityTankT90 extends EntityGBase implements IFF,IGVCmob,ITank
         super(par1World);
         this.tasks.removeTask(aiSwimming);
         this.setSize(3F, 1.6F);
-        nboundingbox = new ModifiedBoundingBox(-20,-20,-20,20,20,20,
+        nboundingbox = new ModifiedBoundingBox(-20,0,-20,20,20,20,
                 0,0.9,0,3,1.8,9);
         nboundingbox.rot.set(baseLogic.bodyRot);
         proxy.replaceBoundingbox(this,nboundingbox);
@@ -434,7 +437,7 @@ public class GVCEntityTankT90 extends EntityGBase implements IFF,IGVCmob,ITank
         ((ModifiedBoundingBox)this.boundingBox).rot.set(baseLogic.bodyRot);
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.3D);
     }
-    public void mainFire(Entity target){
+    public void mainFireToTarget(Entity target){
         mainTurret.currentEntity = this;
         mainTurret.fire();
 //        Vector3d Vec_transformedbybody = baseLogic.getTransformedVector_onturret(cannonpos,turretYawCenterpos);
@@ -479,7 +482,17 @@ public class GVCEntityTankT90 extends EntityGBase implements IFF,IGVCmob,ITank
 ////			}
 //        }
     }
-
+    
+    @Override
+    public void mainFire() {
+    
+    }
+    
+    @Override
+    public void subFire() {
+    
+    }
+    
     @Override
     public TurretObj getMainTurret() {
         return mainTurret;
@@ -491,7 +504,7 @@ public class GVCEntityTankT90 extends EntityGBase implements IFF,IGVCmob,ITank
     }
 
     @Override
-    public TankBaseLogic getBaseLogic() {
+    public IbaseLogic getBaseLogic() {
         return baseLogic;
     }
 
@@ -550,7 +563,7 @@ public class GVCEntityTankT90 extends EntityGBase implements IFF,IGVCmob,ITank
 ////			}
 //        }
     }
-    public void subFire(Entity target){
+    public void subFireToTarget(Entity target){
         subTurret.currentEntity = this;
         if(subTurret.aimToEntity(target)){
             subTurret.fire();
@@ -853,29 +866,14 @@ public class GVCEntityTankT90 extends EntityGBase implements IFF,IGVCmob,ITank
     public float getbodyrotationYaw() {
         return baseLogic.bodyrotationYaw;
     }
-
-    @Override
-    public void setbodyrotationYaw(float value) {
-        baseLogic.bodyrotationYaw = value;
-    }
-
-    @Override
-    public void setturretrotationYaw(float value) {
-        baseLogic.turretrotationYaw = value;
-    }
-
-    @Override
-    public float getrotationYawmotion() {
-        return baseLogic.rotationmotion;
-    }
-
+    
     @Override
     public void setrotationYawmotion(float value) {
         baseLogic.rotationmotion = value;
     }
 
     @Override
-    public void setBodyrot(Quat4d rot) {
+    public void setBodyRot(Quat4d rot) {
         baseLogic.bodyRot.set(rot);
     }
 
@@ -891,6 +889,10 @@ public class GVCEntityTankT90 extends EntityGBase implements IFF,IGVCmob,ITank
 
     public void moveFlying(float p_70060_1_, float p_70060_2_, float p_70060_3_){
         baseLogic.moveFlying(p_70060_1_,p_70060_2_,p_70060_3_);
+    }
+    public void setPosition(double x, double y, double z)
+    {
+        if(baseLogic != null)baseLogic.setPosition(x,y,z);
     }
 
     @Override
@@ -925,5 +927,20 @@ public class GVCEntityTankT90 extends EntityGBase implements IFF,IGVCmob,ITank
         }else {
             return false;
         }
+    }
+    
+    @Override
+    public int getMobMode() {
+        return 0;
+    }
+    
+    @Override
+    public double[] getwaitingpos() {
+        return new double[0];
+    }
+    
+    @Override
+    public boolean standalone() {
+        return false;
     }
 }

@@ -1,24 +1,9 @@
 package hmgww2.entity;
 
 
-import hmggvcmob.entity.*;
-import hmgww2.mod_GVCWW2;
-import hmgww2.network.WW2MessageKeyPressed;
-import hmgww2.network.WW2PacketHandler;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAISwimming;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.Vec3;
+import hmvehicle.entity.parts.turrets.TurretObj;
 import net.minecraft.world.World;
 
-import javax.vecmath.Quat4d;
 import javax.vecmath.Vector3d;
 
 public class EntityGER_Fighter extends EntityGER_FighterBase
@@ -35,12 +20,10 @@ public class EntityGER_Fighter extends EntityGER_FighterBase
 //		((ModifiedBoundingBox)this.boundingBox).updateOBB(this.posX,this.posY,this.posZ);
 		ignoreFrustumCheck = true;
 		armor = 4;
-		baseLogic.speedfactor = 0.003f;
-		baseLogic.throttle_gearDown = 1.7f;
 		baseLogic.throttle_Max = 5.0f;
-		baseLogic.rollspeed = 0.6f;
+		baseLogic.rollspeed = 0.4f;
 		baseLogic.pitchspeed = 0.2f;
-		baseLogic.yawspeed = 0.3f;
+		baseLogic.yawspeed = 0.1f;
 		baseLogic.maxDive = 60;
 		baseLogic.startDive = 40;
 		baseLogic.cruiseALT = 120;
@@ -71,11 +54,11 @@ public class EntityGER_Fighter extends EntityGER_FighterBase
 			baseLogic.mainTurret.firesound = "handmadeguns:handmadeguns.20mmfire";
 			baseLogic.mainTurret.flushoffset = 1;
 			baseLogic.mainTurret.spread = 2.5f;
-			baseLogic.mainTurret.speed = 3.5f;
+			baseLogic.mainTurret.speed = 8;
 			baseLogic.mainTurret.magazineMax = 50;
 			baseLogic.mainTurret.magazinerem = 50;
 			baseLogic.mainTurret.reloadTimer = 150;
-			baseLogic.mainTurret.canex = true;
+			baseLogic.mainTurret.canex = false;
 			baseLogic.mainTurret.guntype = 2;
 		}
 		baseLogic.subTurret = new TurretObj(worldObj);
@@ -95,7 +78,7 @@ public class EntityGER_Fighter extends EntityGER_FighterBase
 			baseLogic.subTurret.firesound = "handmadeguns:handmadeguns.fire";
 			baseLogic.subTurret.flushoffset = 1;
 			baseLogic.subTurret.spread = 1.5f;
-			baseLogic.subTurret.speed = 5;
+			baseLogic.subTurret.speed = 10;
 			baseLogic.subTurret.canex = true;
 			baseLogic.subTurret.magazineMax = 100;
 			baseLogic.subTurret.magazinerem = 100;
@@ -118,7 +101,7 @@ public class EntityGER_Fighter extends EntityGER_FighterBase
 				turretObj.firesound = "handmadeguns:handmadeguns.fire";
 				turretObj.flushoffset = 1;
 				turretObj.spread = 1.5f;
-				turretObj.speed = 5;
+				turretObj.speed = 10;
 				turretObj.canex = true;
 				turretObj.magazineMax = 100;
 				turretObj.magazinerem = 100;

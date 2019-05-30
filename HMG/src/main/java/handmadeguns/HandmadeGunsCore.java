@@ -11,7 +11,6 @@ import java.lang.reflect.Field;
 import java.nio.channels.FileChannel;
 import java.util.*;
 
-import com.lulan.shincolle.entity.BasicEntityShipHostile;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.discovery.ContainerType;
@@ -63,7 +62,6 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
-import static handmadeguns.CommonSideProxyHMG.kanmusu_defence;
 
 
 @Mod(
@@ -83,7 +81,6 @@ public class HandmadeGunsCore {
 
 	public static boolean isDebugMessage = true;
 	public static boolean islmmloaded;
-	public static boolean isshincoleloaded;
 	public static boolean isgvcloaded;
 
 	public static boolean cfg_exprotion = true;
@@ -214,7 +211,6 @@ public class HandmadeGunsCore {
 	    }*/
 		// ResourceLocation aa = new ResourceLocation("handmadeguns").getResourceDomain();
 		FMLCommonHandler.instance().bus().register(this);
-		proxy.ProxyFile();
 		proxy.setuprender();
 		File packdir = new File(proxy.ProxyFile(), "handmadeguns_Packs");
 		packdir.mkdirs();
@@ -331,7 +327,7 @@ public class HandmadeGunsCore {
 						});
 						for (int ii = 0; ii < filetab.length; ii++) {
 							if (filetab[ii].isFile()) {
-								HMGAddTabs.load(pEvent.getModConfigurationDirectory(), pEvent.getSide().isClient(), filetab[ii]);
+								HMGAddTabs.load(pEvent.getSide().isClient(), filetab[ii]);
 							}
 						}
 					}
@@ -708,8 +704,11 @@ public class HandmadeGunsCore {
 			ItemStack itemstack = event.entityPlayer.getCurrentEquippedItem();
 			RenderPlayer renderplayer = event.renderer;
 			if(itemstack != null && (itemstack.getItem() instanceof HMGItem_Unified_Guns) && itemstack.hasTagCompound()){
-				if(itemstack.getTagCompound().getBoolean("set_up"))
+				if(itemstack.getTagCompound().getBoolean("set_up")) {
 					renderplayer.modelArmor.aimedBow = renderplayer.modelArmorChestplate.aimedBow = renderplayer.modelBipedMain.aimedBow = true;
+				}else {
+					renderplayer.modelBipedMain.heldItemRight = renderplayer.modelArmor.heldItemRight = 4;
+				}
 			}
 			if(event.entityPlayer.ridingEntity instanceof PlacedGunEntity){
 				renderplayer.modelArmor.aimedBow = renderplayer.modelArmorChestplate.aimedBow = renderplayer.modelBipedMain.aimedBow = true;
@@ -729,18 +728,6 @@ public class HandmadeGunsCore {
 	{
 		System.out.println("debug");
 		islmmloaded = Loader.isModLoaded("lmmx");
-		isshincoleloaded = Loader.isModLoaded("shincolle");
-
-		if(isshincoleloaded) {
-			try {
-				kanmusu_defence = BasicEntityShipHostile.class.getDeclaredField("defValue");
-				kanmusu_defence.setAccessible(true);
-				System.out.println("debug" + kanmusu_defence);
-			} catch (NoSuchFieldException e) {
-				e.printStackTrace();
-			}
-
-		}
 		isgvcloaded = Loader.isModLoaded("GVCMob");
 
 		//TODO:INJCT

@@ -1,20 +1,7 @@
 package hmgww2;
 
 import cpw.mods.fml.common.registry.GameRegistry;
-import hmgww2.blocks.tile.TileEntityFlag2_GER;
-import hmgww2.blocks.tile.TileEntityFlag2_JPN;
-import hmgww2.blocks.tile.TileEntityFlag2_RUS;
-import hmgww2.blocks.tile.TileEntityFlag2_USA;
-import hmgww2.blocks.tile.TileEntityFlag3_GER;
-import hmgww2.blocks.tile.TileEntityFlag3_JPN;
-import hmgww2.blocks.tile.TileEntityFlag3_RUS;
-import hmgww2.blocks.tile.TileEntityFlag3_USA;
-import hmgww2.blocks.tile.TileEntityFlag4_JPN;
-import hmgww2.blocks.tile.TileEntityFlag4_USA;
-import hmgww2.blocks.tile.TileEntityFlag_GER;
-import hmgww2.blocks.tile.TileEntityFlag_JPN;
-import hmgww2.blocks.tile.TileEntityFlag_RUS;
-import hmgww2.blocks.tile.TileEntityFlag_USA;
+import hmgww2.blocks.tile.TileEntityBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
@@ -26,23 +13,7 @@ public class CommonSideProxyGVCWW2 {
 	public void IGuiHandler(){}
 	
     public void reisterRenderers(){
-    	GameRegistry.registerTileEntity(TileEntityFlag_JPN.class, "Flag_JPN");
-		GameRegistry.registerTileEntity(TileEntityFlag2_JPN.class, "Flag2_JPN");
-		GameRegistry.registerTileEntity(TileEntityFlag3_JPN.class, "Flag3_JPN");
-		GameRegistry.registerTileEntity(TileEntityFlag4_JPN.class, "Flag4_JPN");
-    	
-		GameRegistry.registerTileEntity(TileEntityFlag_USA.class, "Flag_USA");
-		GameRegistry.registerTileEntity(TileEntityFlag2_USA.class, "Flag2_USA");
-		GameRegistry.registerTileEntity(TileEntityFlag3_USA.class, "Flag3_USA");
-		GameRegistry.registerTileEntity(TileEntityFlag4_USA.class, "Flag4_USA");
-		
-		GameRegistry.registerTileEntity(TileEntityFlag_GER.class, "Flag_GER");
-		GameRegistry.registerTileEntity(TileEntityFlag2_GER.class, "Flag2_GER");
-		GameRegistry.registerTileEntity(TileEntityFlag3_GER.class, "Flag3_GER");
-		
-		GameRegistry.registerTileEntity(TileEntityFlag_RUS.class, "Flag_RUS");
-		GameRegistry.registerTileEntity(TileEntityFlag2_RUS.class, "Flag2_RUS");
-		GameRegistry.registerTileEntity(TileEntityFlag3_RUS.class, "Flag3_RUS");
+    	GameRegistry.registerTileEntity(TileEntityBase.class, "Flag_GVCWW2");
     }
 	
 	public World getCilentWorld(){

@@ -41,6 +41,8 @@ public class PlacedGunEntity extends Entity implements IEntityAdditionalSpawnDat
     public double prevRiddenByEntityPosZ;
     public float hitpoint;
     public float maxhitpoint = -1;
+    
+    int triggerFreeze = 10;
 
     public Entity preRiddenByEntity;
     public PlacedGunEntity(World p_i1582_1_) {
@@ -61,36 +63,15 @@ public class PlacedGunEntity extends Entity implements IEntityAdditionalSpawnDat
             setSize(1,1);
         }
     }
+    public void resize(){
+        setSize(gunItem.gunInfo.turreboxW, gunItem.gunInfo.turreboxH);
+    }
     @Override
     public void updateRiderPosition() {
         if(gunStack != null && gunItem != null) {
-            if(ridingEntity == null) {
-                if (worldObj.isRemote && riddenByEntity == FMLClientHandler.instance().getClientPlayerEntity()) {
-                     {
-                        Vec3 seatVec = seatVec();
-                        this.riddenByEntity.moveEntity(
-                                this.posX + seatVec.xCoord - riddenByEntity.posX,
-                                this.posY + this.gunyoffset + seatVec.yCoord - riddenByEntity.posY,
-                                this.posZ + seatVec.zCoord - riddenByEntity.posZ);
-                    }
-                    prevRiddenByEntityPosX = riddenByEntity.posX;
-                    prevRiddenByEntityPosY = riddenByEntity.posY;
-                    prevRiddenByEntityPosZ = riddenByEntity.posZ;
-                }else {
-                    {
-                        Vec3 seatVec = seatVec();
-                        this.riddenByEntity.moveEntity(
-                                this.posX + seatVec.xCoord - riddenByEntity.posX,
-                                this.posY + this.gunyoffset + seatVec.yCoord - riddenByEntity.posY - riddenByEntity.getEyeHeight(),
-                                this.posZ + seatVec.zCoord - riddenByEntity.posZ);
-                    }
-                    prevRiddenByEntityPosX = riddenByEntity.posX;
-                    prevRiddenByEntityPosY = riddenByEntity.posY;
-                    prevRiddenByEntityPosZ = riddenByEntity.posZ;
-                }
-            }else {
-                if (worldObj.isRemote && riddenByEntity == FMLClientHandler.instance().getClientPlayerEntity()) {
-                    Vec3 seatVec = seatVec();
+            Vec3 seatVec = seatVec();
+            if (worldObj.isRemote) {
+                if (riddenByEntity == FMLClientHandler.instance().getClientPlayerEntity()) {
                     this.riddenByEntity.setPosition(
                             this.posX + seatVec.xCoord,
                             this.posY + this.gunyoffset + seatVec.yCoord,
@@ -98,8 +79,17 @@ public class PlacedGunEntity extends Entity implements IEntityAdditionalSpawnDat
                     prevRiddenByEntityPosX = riddenByEntity.posX;
                     prevRiddenByEntityPosY = riddenByEntity.posY;
                     prevRiddenByEntityPosZ = riddenByEntity.posZ;
-                } else {
-                    Vec3 seatVec = seatVec();
+                }else if(!(riddenByEntity instanceof EntityPlayer)){
+                    this.riddenByEntity.setPosition(
+                            this.posX + seatVec.xCoord,
+                            this.posY + this.gunyoffset + seatVec.yCoord - riddenByEntity.getEyeHeight(),
+                            this.posZ + seatVec.zCoord);
+                    prevRiddenByEntityPosX = riddenByEntity.posX;
+                    prevRiddenByEntityPosY = riddenByEntity.posY;
+                    prevRiddenByEntityPosZ = riddenByEntity.posZ;
+                }
+            }else {
+                if (!(riddenByEntity instanceof EntityPlayer)) {
                     this.riddenByEntity.setPosition(
                             this.posX + seatVec.xCoord,
                             this.posY + this.gunyoffset + seatVec.yCoord - riddenByEntity.getEyeHeight(),
@@ -109,6 +99,48 @@ public class PlacedGunEntity extends Entity implements IEntityAdditionalSpawnDat
                     prevRiddenByEntityPosZ = riddenByEntity.posZ;
                 }
             }
+            /*if(ridingEntity == null) {
+                if (worldObj.isRemote) {
+                    if (riddenByEntity == FMLClientHandler.instance().getClientPlayerEntity()) {
+                        {
+                            this.riddenByEntity.moveEntity(
+                                    this.posX + seatVec.xCoord - riddenByEntity.posX,
+                                    this.posY + this.gunyoffset + seatVec.yCoord - riddenByEntity.posY,
+                                    this.posZ + seatVec.zCoord - riddenByEntity.posZ);
+                        }
+                        prevRiddenByEntityPosX = riddenByEntity.posX;
+                        prevRiddenByEntityPosY = riddenByEntity.posY;
+                        prevRiddenByEntityPosZ = riddenByEntity.posZ;
+                    }else if(!(riddenByEntity instanceof EntityPlayer)){
+                        this.riddenByEntity.setPosition(
+                                this.posX + seatVec.xCoord,
+                                this.posY + this.gunyoffset + seatVec.yCoord,
+                                this.posZ + seatVec.zCoord);
+                        prevRiddenByEntityPosX = riddenByEntity.posX;
+                        prevRiddenByEntityPosY = riddenByEntity.posY;
+                        prevRiddenByEntityPosZ = riddenByEntity.posZ;
+                    }
+                }else if(!(riddenByEntity instanceof EntityPlayer)){
+                    this.riddenByEntity.setPosition(
+                            this.posX + seatVec.xCoord,
+                            this.posY + this.gunyoffset + seatVec.yCoord,
+                            this.posZ + seatVec.zCoord);
+                    prevRiddenByEntityPosX = riddenByEntity.posX;
+                    prevRiddenByEntityPosY = riddenByEntity.posY;
+                    prevRiddenByEntityPosZ = riddenByEntity.posZ;
+                }
+            }else {
+                if (worldObj.isRemote && riddenByEntity == FMLClientHandler.instance().getClientPlayerEntity()) {
+                } else {
+                    this.riddenByEntity.setPosition(
+                            this.posX + seatVec.xCoord,
+                            this.posY + this.gunyoffset + seatVec.yCoord - riddenByEntity.getEyeHeight(),
+                            this.posZ + seatVec.zCoord);
+                    prevRiddenByEntityPosX = riddenByEntity.posX;
+                    prevRiddenByEntityPosY = riddenByEntity.posY;
+                    prevRiddenByEntityPosZ = riddenByEntity.posZ;
+                }
+            }*/
         }
     }
     public void onUpdate(){
@@ -122,6 +154,9 @@ public class PlacedGunEntity extends Entity implements IEntityAdditionalSpawnDat
         }else {
         }
 
+        if(riddenByEntity == null)triggerFreeze = 10;
+        else triggerFreeze--;
+        if(triggerFreeze>0)firing = false;
         if(gunItem != null){
             this.gunyoffset = gunItem.gunInfo.yoffset;
             maxhitpoint = gunItem.gunInfo.turretMaxHP;

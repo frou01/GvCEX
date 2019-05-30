@@ -319,28 +319,6 @@ public class Calculater {
         }
         return xyz;
     }
-    // 分離軸に投影された軸成分から投影線分長を算出
-    public static double LenSegOnSeparateAxis( Vector3d Sep, Vector3d e1, Vector3d e2, Vector3d e3 )
-    {
-        // 3つの内積の絶対値の和で投影線分長を計算
-        // 分離軸Sepは標準化されていること
-        Vector3d sep = new Vector3d(Sep);
-        sep.normalize();
-        double r1 = abs(sep.dot( e1 ));
-        double r2 = abs(sep.dot( e2 ));
-        double r3 = abs(sep.dot( e3 ));
-        return r1 + r2 + r3;
-    }
-    // 分離軸に投影された軸成分から投影線分長を算出
-    public static double LenSegOnSeparateAxis( Vector3d Sep, Vector3d e1, Vector3d e2)
-    {
-        // 3つの内積の絶対値の和で投影線分長を計算
-        // 分離軸Sepは標準化されていること
-        double r1 = abs(Sep.dot( e1 ));
-        double r2 = abs(Sep.dot( e2 ));
-        double r3 = 0;
-        return r1 + r2 + r3;
-    }
 
     public static void getCross(Vector3d tovec , Vector3d a,Vector3d b){
         tovec.cross(a,b);
@@ -430,9 +408,9 @@ public class Calculater {
     }
     public static Vector3d vector_interior_division(Vector3d var1,Vector3d var2,double coefficient) {
         Vector3d returnvec = new Vector3d();
-        returnvec.x = var1.x * (1 - coefficient) + var2.x * coefficient;
-        returnvec.y = var1.y * (1 - coefficient) + var2.y * coefficient;
-        returnvec.z = var1.z * (1 - coefficient) + var2.z * coefficient;
+        returnvec.x = var1.x * (1 - abs(coefficient)) + var2.x * coefficient;
+        returnvec.y = var1.y * (1 - abs(coefficient)) + var2.y * coefficient;
+        returnvec.z = var1.z * (1 - abs(coefficient)) + var2.z * coefficient;
         return returnvec;
     }
 

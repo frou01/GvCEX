@@ -1,30 +1,21 @@
 package hmgww2.entity;
 
-import hmggvcmob.GVCMobPlus;
-import hmggvcmob.ai.AITankAttack;
-import hmggvcmob.entity.*;
+import hmvehicle.HMVPacketHandler;
+import hmvehicle.entity.parts.IMultiTurretVehicle;
+import hmvehicle.entity.parts.ITank;
+import hmvehicle.entity.parts.ImultiRidable;
+import hmvehicle.entity.parts.turrets.TurretObj;
+import hmvehicle.packets.HMVPacketPickNewEntity;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import org.lwjgl.Sys;
 
-import javax.vecmath.Quat4d;
 import javax.vecmath.Vector3d;
 
-import static hmggvcmob.GVCMobPlus.proxy;
-import static hmggvcmob.event.GVCMXEntityEvent.soundedentity;
-import static hmggvcmob.util.Calculater.transformVecByQuat;
-import static hmggvcmob.util.Calculater.transformVecforMinecraft;
-
-public abstract class EntityBases_Ship extends EntityBases_Tank implements IMultiTurretVehicle
+public abstract class EntityBases_Ship extends EntityBases_Tank implements IMultiTurretVehicle , ITank , ImultiRidable
 {
 	
 	float draft = 1.8f;
@@ -76,7 +67,7 @@ public abstract class EntityBases_Ship extends EntityBases_Tank implements IMult
 				float f2 = 0.91F;
 				
 				if (this.onGround) {
-					f2 = this.worldObj.getBlock(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.boundingBox.minY) - 1, MathHelper.floor_double(this.posZ)).slipperiness * 0.91F;
+					f2 = 0;
 				}
 				
 				float f3 = 0.16277136F / (f2 * f2 * f2);
@@ -167,28 +158,33 @@ public abstract class EntityBases_Ship extends EntityBases_Tank implements IMult
 	public EntityBases_Ship(World par1World)
 	{
 		super(par1World);
+		if(par1World.isRemote)
+			HMVPacketHandler.INSTANCE.sendToAll(new HMVPacketPickNewEntity(this.getEntityId()));
 	}
 	
 	public void updateRiderPosition() {
-		if (this.riddenByEntity != null) {
-			Vector3d tempplayerPos = new Vector3d(proxy.iszooming() ? zoomingplayerpos:playerpos);
-			Vector3d temp = transformVecByQuat(tempplayerPos,baseLogic.bodyRot);
-			transformVecforMinecraft(temp);
-			temp.add(new Vector3d(this.posX,
-					                     this.posY,
-					                     this.posZ));
-//			temp.add(playeroffsetter);
-//			System.out.println(temp);
-			this.riddenByEntity.setPosition(temp.x,
-					temp.y,
-					temp.z);
-			this.riddenByEntity.posX = temp.x;
-			this.riddenByEntity.posY = temp.y;
-			this.riddenByEntity.posZ = temp.z;
-		}
+	
+	}
+	public boolean writeMountToNBT(NBTTagCompound p_98035_1_)
+	{
+		return false;
+	}
+	public void writeEntityToNBT(NBTTagCompound tagCompound){
+		super.writeEntityToNBT(tagCompound);
+//		try {
+//			int cnt = 0;
+//			for (Entity entity : riddenByEntities) {
+//				if(entity != null) tagCompound.setByteArray("RiddenbyUUID" + cnt, fromObject(entity.getUniqueID()));
+//				cnt++;
+//			}
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+	}
+	public void readFromNBT(NBTTagCompound tagCompound){
+		super.readFromNBT(tagCompound);
 	}
 	public void onUpdate() {
-		super.onUpdate();
 		if(this.standalone()){
 			if(this.getAttackTarget() != null && this.getAttackTarget() instanceof EntityBases_Ship && ((EntityBases_Ship) this.getAttackTarget()).issubmarine){
 				usingSP = true;
@@ -199,6 +195,7 @@ public abstract class EntityBases_Ship extends EntityBases_Tank implements IMult
 				resetassault();
 			}
 		}
+		super.onUpdate();
 	}
 	public void tankUpdate(){
 		this.stepHeight = 1.5f;
@@ -217,6 +214,8 @@ public abstract class EntityBases_Ship extends EntityBases_Tank implements IMult
 		}
 		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.3D);
 	}
+	
+	
 	@Override
 	public TurretObj[] getmainTurrets() {
 		return mainturrets;
@@ -226,9 +225,9 @@ public abstract class EntityBases_Ship extends EntityBases_Tank implements IMult
 	public TurretObj[] getsubTurrets() {
 		return usingSP? SPturrets:subturrets;
 	}
-	public void mainFire(Entity target){
+	public void mainFireToTarget(Entity target){
 		if(getmainTurrets() != null)for(TurretObj aturret :getmainTurrets()){
-			if(aturret.ready) {
+			if(aturret.readyaim) {
 				aturret.currentEntity = this;
 				aturret.fire();
 			}
@@ -236,15 +235,15 @@ public abstract class EntityBases_Ship extends EntityBases_Tank implements IMult
 	}
 	public void mainFire(){
 		if(getmainTurrets() != null)for(TurretObj aturret :getmainTurrets()){
-			if(aturret.ready) {
+			if(aturret.readyaim) {
 				aturret.currentEntity = this.riddenByEntity;
 				aturret.fire();
 			}
 		}
 	}
-	public void subFire(Entity target){
+	public void subFireToTarget(Entity target){
 		if(getsubTurrets() != null)for(TurretObj aturret :getsubTurrets()){
-			if(aturret.ready) {
+			if(aturret.readyaim) {
 				aturret.currentEntity = this;
 				aturret.fire();
 			}
@@ -252,7 +251,7 @@ public abstract class EntityBases_Ship extends EntityBases_Tank implements IMult
 	}
 	public void subFire(){
 		if(getsubTurrets() != null)for(TurretObj aturret :getsubTurrets()){
-			if(aturret.ready) {
+			if(aturret.readyaim) {
 				aturret.currentEntity = this.riddenByEntity;
 				aturret.fire();
 			}
@@ -289,5 +288,12 @@ public abstract class EntityBases_Ship extends EntityBases_Tank implements IMult
 	}
 	public void resetassault(){
 	
+	}
+	public void setPosition(double x, double y, double z)
+	{
+		if(Double.isInfinite(x))x = 0;
+		if(Double.isInfinite(y))y = 0;
+		if(Double.isInfinite(z))z = 0;
+		if(baseLogic != null)baseLogic.setPosition(x,y,z);
 	}
 }

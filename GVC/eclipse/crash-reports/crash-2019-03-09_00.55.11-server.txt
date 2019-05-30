@@ -5,7 +5,7 @@ Time: 19/03/09 0:55
 Description: Ticking entity
 
 java.lang.NullPointerException: Ticking entity
-	at hmggvcmob.entity.TankBaseLogic.aimMainTurret_toTarget(TankBaseLogic.java:401)
+	at hmvehicle.entity.parts.logics.TankBaseLogic.aimMainTurret_toTarget(TankBaseLogic.java:401)
 	at hmggvcmob.ai.AITankAttack.updateTask(AITankAttack.java:99)
 	at net.minecraft.entity.ai.EntityAITasks.onUpdateTasks(EntityAITasks.java:125)
 	at net.minecraft.entity.EntityLiving.updateAITasks(EntityLiving.java:613)
@@ -36,7 +36,7 @@ A detailed walkthrough of the error, its code path and all known details is as f
 
 -- Head --
 Stacktrace:
-	at hmggvcmob.entity.TankBaseLogic.aimMainTurret_toTarget(TankBaseLogic.java:401)
+	at hmvehicle.entity.parts.logics.TankBaseLogic.aimMainTurret_toTarget(TankBaseLogic.java:401)
 	at hmggvcmob.ai.AITankAttack.updateTask(AITankAttack.java:99)
 	at net.minecraft.entity.ai.EntityAITasks.onUpdateTasks(EntityAITasks.java:125)
 	at net.minecraft.entity.EntityLiving.updateAITasks(EntityLiving.java:613)

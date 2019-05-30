@@ -5,6 +5,7 @@ import hmggvcmob.ai.AITankAttack;
 import hmggvcmob.entity.*;
 import hmggvcmob.tile.TileEntityFlag;
 import hmgww2.Nation;
+import hmvehicle.entity.parts.logics.IbaseLogic;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
@@ -34,4 +35,5 @@ public class EntityUSSR_TankBase extends EntityBases_Tank{
 	public Nation getnation() {
 		return Nation.USSR;
 	}
+	
 }

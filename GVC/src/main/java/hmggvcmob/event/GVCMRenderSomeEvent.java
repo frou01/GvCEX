@@ -3,16 +3,22 @@ package hmggvcmob.event;
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import hmggvcmob.entity.*;
-import hmggvcmob.entity.friend.EntitySoBases;
 import hmggvcmob.entity.friend.GVCEntityPMCHeli;
 import hmggvcmob.entity.friend.GVCEntityPMCT90Tank;
-import hmggvcmob.entity.friend.GVCEntityPlane;
 import hmggvcmob.util.Calculater;
+import hmvehicle.entity.EntityCameraDummy;
+import hmvehicle.entity.EntityChild;
+import hmvehicle.entity.parts.IControlable;
+import hmvehicle.entity.parts.IVehicle;
+import hmvehicle.entity.parts.Iplane;
+import hmvehicle.entity.parts.logics.PlaneBaseLogic;
 import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraftforge.client.model.AdvancedModelLoader;
+import net.minecraftforge.client.model.IModelCustom;
 import net.minecraftforge.event.entity.PlaySoundAtEntityEvent;
 import org.lwjgl.opengl.GL11;
 
@@ -38,6 +44,9 @@ import java.util.ArrayList;
 import static handmadeguns.event.HMGEventZoom.renderPumpkinBlur;
 import static hmggvcmob.GVCMobPlus.proxy;
 import static java.lang.Math.*;
+import static org.lwjgl.opengl.GL11.GL_BLEND;
+import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
 
 public class GVCMRenderSomeEvent {
 
@@ -46,6 +55,8 @@ public class GVCMRenderSomeEvent {
 	public static boolean zooming;
 	static boolean needrest = true;
 	private double zLevel = 0;
+	private static final IModelCustom attitude_indicator = AdvancedModelLoader.loadModel(new ResourceLocation("gvcmob:textures/model/Attitude indicator.mqo"));
+	private static final ResourceLocation attitude_indicator_texture = new ResourceLocation("gvcmob:textures/model/Attitude indicator.png");
 
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
@@ -141,7 +152,7 @@ public class GVCMRenderSomeEvent {
 		Minecraft minecraft = FMLClientHandler.instance().getClient();
 		EntityPlayer entityplayer = minecraft.thePlayer;
 		if(event.entityLiving != entityplayer)return;
-		if(entityplayer.ridingEntity instanceof GVCEntityChild && FMLClientHandler.instance().getClient().gameSettings.thirdPersonView == 0){
+		if(entityplayer.ridingEntity instanceof EntityChild && FMLClientHandler.instance().getClient().gameSettings.thirdPersonView == 0){
 			event.setCanceled(true);
 		}
 	}
@@ -157,122 +168,21 @@ public class GVCMRenderSomeEvent {
 			case START :
 				if(event.renderTickTime<1){
 					if (entityplayer != null) {
-						if(entityplayer.ridingEntity instanceof IdriveableVehicle){
-							ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer, ((IdriveableVehicle) entityplayer.ridingEntity).getthirdDist(), "thirdPersonDistance", "E", "field_78490_B");
+						if(entityplayer.ridingEntity instanceof IVehicle){
+							ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer, ((IVehicle) entityplayer.ridingEntity).getthirdDist(), "thirdPersonDistance", "E", "field_78490_B");
 							needrest = true;
 						}
-						if (entityplayer.ridingEntity instanceof GVCEntityChild) {
-							ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer, ((GVCEntityChild) entityplayer.ridingEntity).thirddist, "thirdPersonDistance", "E", "field_78490_B");
-							if( ((GVCEntityChild) entityplayer.ridingEntity).master instanceof GVCEntityPMCHeli) {
-								GVCEntityPMCHeli heli = (GVCEntityPMCHeli) ((GVCEntityChild) entityplayer.ridingEntity).master;
-								Vector3d bodyvector = Calculater.transformVecByQuat(new Vector3d(0, 0, 1), heli.bodyRot);
-								Vector3d tailwingvector = Calculater.transformVecByQuat(new Vector3d(0, 1, 0), heli.bodyRot);
-								Vector3d mainwingvector = Calculater.transformVecByQuat(new Vector3d(1, 0, 0), heli.bodyRot);
-								if (((GVCEntityChild) entityplayer.ridingEntity).idinmasterEntityt == 5) {
-									Quat4d tempquat = new Quat4d(
-											heli.prevbodyRot.x * (1-event.renderTickTime) + heli.bodyRot.x * event.renderTickTime ,
-											heli.prevbodyRot.y * (1-event.renderTickTime) + heli.bodyRot.y * event.renderTickTime ,
-											heli.prevbodyRot.z * (1-event.renderTickTime) + heli.bodyRot.z * event.renderTickTime ,
-											heli.prevbodyRot.w * (1-event.renderTickTime) + heli.bodyRot.w * event.renderTickTime );
-
-									double[] xyz = Calculater.eulerfrommatrix(Calculater.matrixfromQuat(tempquat));
-									xyz[0] = toDegrees(xyz[0]);
-									xyz[1] = toDegrees(xyz[1]);
-									xyz[2] = toDegrees(xyz[2]);
-//							System.out.println("y" + xyz[0] + " , x" + xyz[1] + " , z" + xyz[2] + " , renderTickTime" + event.renderTickTime);
-									bodyvector = Calculater.transformVecByQuat(new Vector3d(0, 0, 1), tempquat);
-									tailwingvector = Calculater.transformVecByQuat(new Vector3d(0, 1, 0), tempquat);
-									mainwingvector = Calculater.transformVecByQuat(new Vector3d(1, 0, 0), tempquat);
-									Calculater.transformVecforMinecraft(tailwingvector);
-									Calculater.transformVecforMinecraft(bodyvector);
-									Calculater.transformVecforMinecraft(mainwingvector);
-									mainwingvector.scale(0.1075);
-									tailwingvector.scale(0.07);
-									bodyvector.scale(-4);
-									if (heli.camera != null) {
-										heli.camera.setLocationAndAngles(
-												heli.prevPosX + (heli.posX - heli.prevPosX) * event.renderTickTime + bodyvector.x + tailwingvector.x + mainwingvector.x,
-												heli.prevPosY + (heli.posY - heli.prevPosY) * event.renderTickTime + bodyvector.y + tailwingvector.y + mainwingvector.y + 2.5 - entityplayer.yOffset,
-												heli.prevPosZ + (heli.posZ - heli.prevPosZ) * event.renderTickTime + bodyvector.z + tailwingvector.z + mainwingvector.z,
-												(float) xyz[1], (float) xyz[0]);
-										minecraft.renderViewEntity = heli.camera;
-										heli.camera.rotationYaw = (float) xyz[1];
-										heli.camera.prevRotationYaw = (float) xyz[1];
-										heli.camera.rotationYawHead = (float) xyz[1];
-										heli.camera.prevRotationYawHead = (float) xyz[1];
-										heli.camera.rotationPitch = (float) xyz[0];
-										heli.camera.prevRotationPitch = (float) xyz[0];
-									}
-									heli.bodyrotationYaw = (float) xyz[1];
-									heli.prevbodyrotationYaw = (float) xyz[1];
-									heli.rotationYaw = (float) xyz[1];
-									heli.prevRotationYaw = (float) xyz[1];
-									heli.bodyrotationPitch = (float) xyz[0];
-									heli.prevbodyrotationPitch = (float) xyz[0];
-									heli.rotationPitch = (float) xyz[0];
-									heli.prevRotationPitch = (float) xyz[0];
-									heli.bodyrotationRoll = (float) xyz[2];
-									heli.prevbodyrotationRoll = (float) xyz[2];
-									ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer, (float) xyz[2], "camRoll", "R", "field_78495_O");
-									ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer, (float) xyz[2], "prevCamRoll", "R", "field_78495_O");
-									ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer, 24, "thirdPersonDistance", "E", "field_78490_B");
-									entityplayer.rotationYaw = heli.bodyrotationYaw;
-									entityplayer.prevRotationYaw = heli.bodyrotationYaw;
-									entityplayer.rotationPitch = heli.bodyrotationPitch;
-									entityplayer.prevRotationPitch = heli.bodyrotationPitch;
-									bodyvector = Calculater.transformVecByQuat(new Vector3d(0, 0, 1), tempquat);
-									tailwingvector = Calculater.transformVecByQuat(new Vector3d(0, 1, 0), tempquat);
-									mainwingvector = Calculater.transformVecByQuat(new Vector3d(1, 0, 0), tempquat);
-								}
-
-								tailwingvector.normalize();
-								bodyvector.normalize();
-								mainwingvector.normalize();
-								Calculater.transformVecforMinecraft(tailwingvector);
-								Calculater.transformVecforMinecraft(bodyvector);
-								Calculater.transformVecforMinecraft(mainwingvector);
-								needrest = true;
-
-
-								for (int i = 0; i < heli.childEntities.length; i++) {
-									GVCEntityChild aseat = heli.childEntities[i];
-									if (aseat != null) {
-										aseat.setLocationAndAngles(
-												heli.prevPosX + (heli.posX - heli.prevPosX) * event.renderTickTime + mainwingvector.x * heli.childInfo[i].pos[0] + tailwingvector.x * (heli.childInfo[i].pos[1] - 2.5) - bodyvector.x * heli.childInfo[i].pos[2]
-												, heli.prevPosY + (heli.posY - heli.prevPosY) * event.renderTickTime + mainwingvector.y * heli.childInfo[i].pos[0] + 2 + tailwingvector.y * (heli.childInfo[i].pos[1] - 2.5) - bodyvector.y * heli.childInfo[i].pos[2]
-												, heli.prevPosZ + (heli.posZ - heli.prevPosZ) * event.renderTickTime + mainwingvector.z * heli.childInfo[i].pos[0] + tailwingvector.z * (heli.childInfo[i].pos[1] - 2.5) - bodyvector.z * heli.childInfo[i].pos[2]
-												, heli.bodyrotationYaw, heli.bodyrotationPitch);
-										aseat.prevPosX = heli.prevPosX + (heli.posX - heli.prevPosX) * event.renderTickTime + mainwingvector.x * heli.childInfo[i].pos[0] + tailwingvector.x * (heli.childInfo[i].pos[1] - 2.5) - bodyvector.x * heli.childInfo[i].pos[2];
-										aseat.prevPosY = heli.prevPosY + (heli.posY - heli.prevPosY) * event.renderTickTime + mainwingvector.y * heli.childInfo[i].pos[0] + 2 + tailwingvector.y * (heli.childInfo[i].pos[1] - 2.5) - bodyvector.y * heli.childInfo[i].pos[2];
-										aseat.prevPosZ = heli.prevPosZ + (heli.posZ - heli.prevPosZ) * event.renderTickTime + mainwingvector.z * heli.childInfo[i].pos[0] + tailwingvector.z * (heli.childInfo[i].pos[1] - 2.5) - bodyvector.z * heli.childInfo[i].pos[2];
-										if (aseat.riddenByEntity != null) {
-											if (aseat.riddenByEntity == entityplayer) {
-												aseat.riddenByEntity.posX = heli.prevPosX + (heli.posX - heli.prevPosX) * event.renderTickTime + mainwingvector.x * heli.childInfo[i].pos[0] + tailwingvector.x * (heli.childInfo[i].pos[1] - 2.5) - bodyvector.x * heli.childInfo[i].pos[2];
-												aseat.riddenByEntity.posY = heli.prevPosY + (heli.posY - heli.prevPosY) * event.renderTickTime + mainwingvector.y * heli.childInfo[i].pos[0] + 2 + tailwingvector.y * (heli.childInfo[i].pos[1] - 2.5) - bodyvector.y * heli.childInfo[i].pos[2] + aseat.riddenByEntity.yOffset;
-												aseat.riddenByEntity.posZ = heli.prevPosZ + (heli.posZ - heli.prevPosZ) * event.renderTickTime + mainwingvector.z * heli.childInfo[i].pos[0] + tailwingvector.z * (heli.childInfo[i].pos[1] - 2.5) - bodyvector.z * heli.childInfo[i].pos[2];
-												aseat.riddenByEntity.prevPosX = heli.prevPosX + (heli.posX - heli.prevPosX) * event.renderTickTime + mainwingvector.x * heli.childInfo[i].pos[0] + tailwingvector.x * (heli.childInfo[i].pos[1] - 2.5) - bodyvector.x * heli.childInfo[i].pos[2];
-												aseat.riddenByEntity.prevPosY = heli.prevPosY + (heli.posY - heli.prevPosY) * event.renderTickTime + mainwingvector.y * heli.childInfo[i].pos[0] + 2 + tailwingvector.y * (heli.childInfo[i].pos[1] - 2.5) - bodyvector.y * heli.childInfo[i].pos[2] + aseat.riddenByEntity.yOffset;
-												aseat.riddenByEntity.prevPosZ = heli.prevPosZ + (heli.posZ - heli.prevPosZ) * event.renderTickTime + mainwingvector.z * heli.childInfo[i].pos[0] + tailwingvector.z * (heli.childInfo[i].pos[1] - 2.5) - bodyvector.z * heli.childInfo[i].pos[2];
-											} else {
-												aseat.riddenByEntity.posX = heli.prevPosX + (heli.posX - heli.prevPosX) * event.renderTickTime + mainwingvector.x * heli.childInfo[i].pos[0] + tailwingvector.x * (heli.childInfo[i].pos[1] - 2.5) - bodyvector.x * heli.childInfo[i].pos[2];
-												aseat.riddenByEntity.posY = heli.prevPosY + (heli.posY - heli.prevPosY) * event.renderTickTime + mainwingvector.y * heli.childInfo[i].pos[0] + 2 + tailwingvector.y * (heli.childInfo[i].pos[1] - 2.5) - bodyvector.y * heli.childInfo[i].pos[2] + aseat.riddenByEntity.yOffset;
-												aseat.riddenByEntity.posZ = heli.prevPosZ + (heli.posZ - heli.prevPosZ) * event.renderTickTime + mainwingvector.z * heli.childInfo[i].pos[0] + tailwingvector.z * (heli.childInfo[i].pos[1] - 2.5) - bodyvector.z * heli.childInfo[i].pos[2];
-												aseat.riddenByEntity.prevPosX = heli.prevPosX + (heli.posX - heli.prevPosX) * event.renderTickTime + mainwingvector.x * heli.childInfo[i].pos[0] + tailwingvector.x * (heli.childInfo[i].pos[1] - 2.5) - bodyvector.x * heli.childInfo[i].pos[2];
-												aseat.riddenByEntity.prevPosY = heli.prevPosY + (heli.posY - heli.prevPosY) * event.renderTickTime + mainwingvector.y * heli.childInfo[i].pos[0] + 2 + tailwingvector.y * (heli.childInfo[i].pos[1] - 2.5) - bodyvector.y * heli.childInfo[i].pos[2] + aseat.riddenByEntity.yOffset;
-												aseat.riddenByEntity.prevPosZ = heli.prevPosZ + (heli.posZ - heli.prevPosZ) * event.renderTickTime + mainwingvector.z * heli.childInfo[i].pos[0] + tailwingvector.z * (heli.childInfo[i].pos[1] - 2.5) - bodyvector.z * heli.childInfo[i].pos[2];
-											}
-										}
-										aseat.master = heli;
-									}
-								}
-							}else if(((GVCEntityChild) entityplayer.ridingEntity).master instanceof Iplane){
-								Entity panebody = ((GVCEntityChild) entityplayer.ridingEntity).master;
-								Iplane iplanebody = (Iplane) ((GVCEntityChild) entityplayer.ridingEntity).master;
-								PlaneBaseLogic plane = iplanebody.getBaseLogic();
+						if (entityplayer.ridingEntity instanceof Iplane) {
+							ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer, ((Iplane) entityplayer.ridingEntity).getthirdDist(), "thirdPersonDistance", "E", "field_78490_B");
+							PlaneBaseLogic heli = (PlaneBaseLogic) ((Iplane)entityplayer.ridingEntity).getBaseLogic();
+							{
+								Entity panebody = entityplayer.ridingEntity;
+								Iplane iplanebody = (Iplane) entityplayer.ridingEntity;
+								PlaneBaseLogic plane = (PlaneBaseLogic) iplanebody.getBaseLogic();
 								Vector3d bodyvector = Calculater.transformVecByQuat(new Vector3d(0, 0, 1), plane.bodyRot);
 								Vector3d tailwingvector = Calculater.transformVecByQuat(new Vector3d(0, 1, 0), plane.bodyRot);
 								Vector3d mainwingvector = Calculater.transformVecByQuat(new Vector3d(1, 0, 0), plane.bodyRot);
-								if (((GVCEntityChild) entityplayer.ridingEntity).idinmasterEntityt == 0) {
+								if (plane.ispilot(entityplayer)) {
 									Quat4d tempquat = new Quat4d(
 											plane.prevbodyRot.x * (1-event.renderTickTime) + plane.bodyRot.x * event.renderTickTime ,
 											plane.prevbodyRot.y * (1-event.renderTickTime) + plane.bodyRot.y * event.renderTickTime ,
@@ -381,9 +291,9 @@ public class GVCMRenderSomeEvent {
 				minecraft.displayHeight);
 		int i = scaledresolution.getScaledWidth();
 		int j = scaledresolution.getScaledHeight();
-		if(entityplayer.ridingEntity instanceof GVCEntityChild) {
-			if (((GVCEntityChild) entityplayer.ridingEntity).master instanceof EntityMGAX55) {
-				EntityMGAX55 gear = (EntityMGAX55) ((GVCEntityChild) entityplayer.ridingEntity).master;
+		if(entityplayer.ridingEntity instanceof EntityChild) {
+			if (((EntityChild) entityplayer.ridingEntity).master instanceof EntityMGAX55) {
+				EntityMGAX55 gear = (EntityMGAX55) ((EntityChild) entityplayer.ridingEntity).master;
 				FontRenderer fontrenderer = minecraft.fontRenderer;
 				String weaponmode;
 				int color = 0xFFFFFF;
@@ -421,14 +331,16 @@ public class GVCMRenderSomeEvent {
 					color = 0xFF0000;
 				}
 				fontrenderer.drawStringWithShadow("Armor : " + gear.health, i - 300, j - 40 - 10, color);
-			}else
-			if(((GVCEntityChild) entityplayer.ridingEntity).master instanceof Iplane){
-				FontRenderer fontrenderer = minecraft.fontRenderer;
-				Entity planebody = ((GVCEntityChild) entityplayer.ridingEntity).master;
-				Iplane iplane = (Iplane) ((GVCEntityChild) entityplayer.ridingEntity).master;
-				PlaneBaseLogic plane = iplane.getBaseLogic();
-
-				displayFlyersHUD(plane.prevbodyRot,plane.bodyRot,planebody,plane.prevmotionVec,event);
+			}
+		}
+		if(entityplayer.ridingEntity instanceof Iplane){
+			FontRenderer fontrenderer = minecraft.fontRenderer;
+			Entity planebody = entityplayer.ridingEntity;
+			Iplane iplane = (Iplane) entityplayer.ridingEntity;
+			PlaneBaseLogic plane = (PlaneBaseLogic) iplane.getBaseLogic();
+			
+			if(plane.displayModernHud)displayFlyersHUD_AftGen2(plane.prevbodyRot,plane.bodyRot,planebody,plane.prevmotionVec,event);
+			else displayFlyersHUD(plane.prevbodyRot,plane.bodyRot,planebody,plane.prevmotionVec,event);
 //				Quat4d tempquat = new Quat4d(
 //						plane.prevbodyRot.x * (1-event.partialTicks) + plane.bodyRot.x * event.partialTicks ,
 //						plane.prevbodyRot.y * (1-event.partialTicks) + plane.bodyRot.y * event.partialTicks ,
@@ -505,39 +417,24 @@ public class GVCMRenderSomeEvent {
 //				drawTexturedModalRect(0,height/2 - 150 * scale,sizeW,sizeH);
 //
 //				GL11.glPopMatrix();
-
-				int color = 0xFFFFFF;
-				color = 0xFFFFFF;
-				fontrenderer.drawStringWithShadow("Speed : " + (int)(sqrt(planebody.motionX * planebody.motionX + planebody.motionY * planebody.motionY + planebody.motionZ * planebody.motionZ)*72), i - 300, j - 80 - 10, color);
-				color = 0xFFFFFF;
-				fontrenderer.drawStringWithShadow("Throttle : " + (int)(plane.throttle*10) + (plane.throttle<2.5?"Gear Down":"") + "   Flap position : " + plane.flaplevel, i - 300, j - 60, color);
-				color = 0x00FF00;
-				if (plane.health < 100) {
-					color = 0xFF0000;
-				}
-				fontrenderer.drawStringWithShadow("Armor : " + plane.health, i - 300, j - 40 - 10, color);
-				color = 0x74AAFF;
-//				fontrenderer.drawStringWithShadow("Missile : " + plane.rocket + " : " + (plane.missile != null ? "Continue radar irradiation" : plane.illuminated != null?"LOCK":""), i - 300, j - 20 - 10, color);
-				GL11.glDisable(GL11.GL_BLEND);
-			}else
-			if(((GVCEntityChild) entityplayer.ridingEntity).master instanceof GVCEntityPMCHeli){
-				FontRenderer fontrenderer = minecraft.fontRenderer;
-				GVCEntityPMCHeli heli = (GVCEntityPMCHeli) ((GVCEntityChild) entityplayer.ridingEntity).master;
-				displayFlyersHUD(heli.prevbodyRot,heli.bodyRot,heli,heli.prevmotionVec,event);
-
-				int color = 0xFFFFFF;
-				color = 0x00FF00;
-				if (heli.health < 100) {
-					color = 0xFF0000;
-				}
-				fontrenderer.drawStringWithShadow("Armor : " + heli.health, i - 300, j - 40 - 10, color);
-				color = 0x00FF00;
-				fontrenderer.drawStringWithShadow("rocket : " + heli.rocket, i - 300, j - 20 - 10, color);
+			
+			int color = 0xFFFFFF;
+			color = 0xFFFFFF;
+			fontrenderer.drawStringWithShadow("Speed : " + (int)(sqrt(planebody.motionX * planebody.motionX + planebody.motionY * planebody.motionY + planebody.motionZ * planebody.motionZ)*72), i - 300, j - 80 - 10, color);
+			color = 0xFFFFFF;
+			fontrenderer.drawStringWithShadow("Throttle : " + (int)(plane.throttle*10) + (plane.throttle<plane.throttle_gearDown?"Gear Down":"") + "   Flap position : " + plane.flaplevel, i - 300, j - 60, color);
+			color = 0x00FF00;
+			if (plane.health < 100) {
+				color = 0xFF0000;
 			}
-		}
-		if (entityplayer.ridingEntity instanceof IdriveableVehicle && entityplayer.ridingEntity instanceof EntityLivingBase){//1
+			fontrenderer.drawStringWithShadow("Armor : " + plane.health, i - 300, j - 40 - 10, color);
+			color = 0x74AAFF;
+//				fontrenderer.drawStringWithShadow("Missile : " + plane.rocket + " : " + (plane.missile != null ? "Continue radar irradiation" : plane.illuminated != null?"LOCK":""), i - 300, j - 20 - 10, color);
+			GL11.glDisable(GL11.GL_BLEND);
+		}else
+		if (entityplayer.ridingEntity instanceof IVehicle && entityplayer.ridingEntity instanceof EntityLivingBase){//1
 			EntityLiving vehicleBody = (EntityLiving) entityplayer.ridingEntity;
-			IdriveableVehicle vehicle = (IdriveableVehicle) entityplayer.ridingEntity;
+			IVehicle vehicle = (IVehicle) entityplayer.ridingEntity;
 			FontRenderer fontrenderer = minecraft.fontRenderer;
 			GL11.glPushMatrix();
 			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -636,10 +533,57 @@ public class GVCMRenderSomeEvent {
 			}
 		}
 	}
-
-	public void displayFlyersHUD(Quat4d prevbodyRot,Quat4d bodyRot,Entity plane,Vector3d prevmotionVec,RenderGameOverlayEvent.Text event){
+	public void displayFlyersHUD(Quat4d prevbodyRot, Quat4d bodyRot, Entity plane, Vector3d prevmotionVec, RenderGameOverlayEvent.Text event){
+		GL11.glAlphaFunc(GL11.GL_GREATER, 0);
+		GL11.glEnable(GL_BLEND);
+		GL11.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		Minecraft minecraft = FMLClientHandler.instance().getClient();
-		EntityPlayer entityplayer = minecraft.thePlayer;
+		FontRenderer fontrenderer = minecraft.fontRenderer;
+		
+		ScaledResolution scaledresolution = new ScaledResolution(minecraft, minecraft.displayWidth,
+				                                                        minecraft.displayHeight);
+		Quat4d tempquat = new Quat4d(
+				                            prevbodyRot.x * (1-event.partialTicks) + bodyRot.x * event.partialTicks ,
+				                            prevbodyRot.y * (1-event.partialTicks) + bodyRot.y * event.partialTicks ,
+				                            prevbodyRot.z * (1-event.partialTicks) + bodyRot.z * event.partialTicks ,
+				                            prevbodyRot.w * (1-event.partialTicks) + bodyRot.w * event.partialTicks );
+		
+		
+		GL11.glPushMatrix();
+		double width = scaledresolution.getScaledWidth_double();
+		double height = scaledresolution.getScaledHeight_double();
+		//HUDは300×650
+		//一度3.6px
+		//横幅を合わせる
+		double scale = width/300;
+		float sizeW = (float) width;
+		float sizeH = (float) height;
+		double[] xyz = Calculater.eulerfrommatrix(Calculater.matrixfromQuat(tempquat));
+		xyz[0] = toDegrees(xyz[0]);
+		xyz[1] = toDegrees(xyz[1]);
+		xyz[2] = toDegrees(xyz[2]);
+		GL11.glEnable(GL11.GL_DEPTH_TEST);
+		GL11.glDepthFunc(GL11.GL_LEQUAL);
+		GL11.glDepthMask(true);
+		GL11.glEnable(GL11.GL_CULL_FACE);
+		minecraft.renderEngine.bindTexture(attitude_indicator_texture);
+		GL11.glTranslatef(sizeW - sizeW/6,sizeH - sizeH/6, 0);
+		GL11.glScalef(30,-30,30);
+		attitude_indicator.renderPart("obj2");
+		GL11.glRotatef((float) xyz[2],0,0,1);
+		GL11.glRotatef((float) -xyz[0],1,0,0);
+		attitude_indicator.renderPart("obj1");
+		GL11.glDepthMask(false);
+		GL11.glDisable(GL11.GL_DEPTH_TEST);
+		GL11.glPopMatrix();
+	}
+
+	public void displayFlyersHUD_AftGen2(Quat4d prevbodyRot, Quat4d bodyRot, Entity plane, Vector3d prevmotionVec, RenderGameOverlayEvent.Text event){
+		GL11.glAlphaFunc(GL11.GL_GREATER, 0);
+		GL11.glEnable(GL_BLEND);
+		GL11.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		Minecraft minecraft = FMLClientHandler.instance().getClient();
+		FontRenderer fontrenderer = minecraft.fontRenderer;
 
 		ScaledResolution scaledresolution = new ScaledResolution(minecraft, minecraft.displayWidth,
 				minecraft.displayHeight);
@@ -701,7 +645,82 @@ public class GVCMRenderSomeEvent {
 		}
 		minecraft.renderEngine.bindTexture(new ResourceLocation("gvcmob:textures/items/HUD.png"));
 //		drawTexturedModalRect(0,height/2 - 325 * scale - (xyz[0] - toDegrees(asin(motionvecE.y))) * 1.8 * scale,sizeW,sizeH);
-		drawTexturedModalRect(0,height/2 - 325 * scale - xyz[0] * 3.6 * scale,sizeW,sizeH);
+//		System.out.println(xyz[0]);
+		double offset = -xyz[0] % 5;
+		int currentLineNum = (int) (xyz[0]/5);
+		if(offset<0)offset+=5;
+		if(xyz[0]>0)currentLineNum +=1;
+		float lineWidh = 0.5f;
+		float lineLength = (float) (sizeW/6);
+		float midBlankLength = (float) (sizeW/24);
+		float lineLength2 = 0.5f;
+//		for(int num = 0;num + currentLineNum < 18&& num < 5;num ++){
+//			drawHudLine(sizeW/2 + midBlankLength/2 + (lineLength - midBlankLength)/4 * 3 ,height/2 + offset * 3.6 * scale + num * 5 * 3.6 * scale,(lineLength - midBlankLength)/2,lineWidh * scale);
+//			drawHudLine(sizeW/2 - midBlankLength/2 - (lineLength - midBlankLength)/4 * 3 ,height/2 + offset * 3.6 * scale + num * 5 * 3.6 * scale,(lineLength - midBlankLength)/2,lineWidh * scale);
+//			drawHudLine(sizeW/2 + lineLength + lineWidh * scale/2,
+//					height/2 + offset * 3.6 * scale + num * 5 * 3.6 * scale + (num + currentLineNum) * scale/2,
+//					lineWidh * scale,
+//					(num + currentLineNum) * scale * lineLength2);
+//
+//			fontrenderer.drawString(String.valueOf((num + currentLineNum) * 5),
+//					(int)(sizeW/2 + lineLength + lineWidh * scale/2),
+//					(int)(height/2 + offset * 3.6 * scale + num * 5 * 3.6 * scale + (num + currentLineNum) * scale/2),
+//					0xFAFF9E);
+//
+//			drawHudLine(sizeW/2 - lineLength + lineWidh * scale/2,
+//					height/2 + offset * 3.6 * scale + num * 5 * 3.6 * scale + (num + currentLineNum) * scale/2,
+//					lineWidh * scale,
+//					(num + currentLineNum) * scale * lineLength2);
+//
+//			fontrenderer.drawString(String.valueOf((num + currentLineNum) * 5),
+//					(int)(sizeW/2 - lineLength + lineWidh * scale/2),
+//					(int)(height/2 + offset * 3.6 * scale + num * 5 * 3.6 * scale + (num + currentLineNum) * scale/2),
+//					0xFAFF9E);
+//		}
+		int num = -4;
+		if(num + currentLineNum < -18){
+			num = currentLineNum - 18;
+		}
+		for(;num + currentLineNum < 18 && num < 4;num ++){
+			drawHudLine(
+					sizeW/2 + midBlankLength/2,
+					height/2 + offset * 3.6 * scale + num * 5 * 3.6 * scale,
+					sizeW/2 + lineLength/2,
+					height/2 + offset * 3.6 * scale + num * 5 * 3.6 * scale + lineWidh * scale);
+			drawHudLine(
+					sizeW/2 + lineLength/2,
+					height/2 + offset * 3.6 * scale + num * 5 * 3.6 * scale,
+					sizeW/2 + lineLength/2 - lineWidh * scale,
+					height/2 + offset * 3.6 * scale + num * 5 * 3.6 * scale - (currentLineNum + num) * lineLength2 * scale);
+			
+			
+			drawHudLine(
+					sizeW/2 - lineLength/2,
+					height/2 + offset * 3.6 * scale + num * 5 * 3.6 * scale,
+					sizeW/2 - midBlankLength/2,
+					height/2 + offset * 3.6 * scale + num * 5 * 3.6 * scale + lineWidh * scale);
+			drawHudLine(
+					sizeW/2 - lineLength/2,
+					height/2 + offset * 3.6 * scale + num * 5 * 3.6 * scale,
+					sizeW/2 - lineLength/2 + lineWidh * scale,
+					height/2 + offset * 3.6 * scale + num * 5 * 3.6 * scale - (currentLineNum + num) * lineLength2 * scale);
+			
+			fontrenderer.drawString(String.valueOf((num + currentLineNum) * 5),
+					(int)(sizeW/2 + lineLength + lineWidh * scale/2),
+					(int)(height/2 + offset * 3.6 * scale + num * 5 * 3.6 * scale + (num + currentLineNum) * scale/2),
+					0xFAFF9E);
+			
+//			drawHudLine(sizeW/2 - lineLength + lineWidh * scale/2,
+//					height/2 + offset * 3.6 * scale + num * 5 * 3.6 * scale + (num + currentLineNum) * scale/2,
+//					lineWidh * scale,
+//					(num + currentLineNum) * scale * lineLength2);
+			
+			fontrenderer.drawString(String.valueOf((num + currentLineNum) * 5),
+					(int)(sizeW/2 - lineLength + lineWidh * scale/2),
+					(int)(height/2 + offset * 3.6 * scale + num * 5 * 3.6 * scale + (num + currentLineNum) * scale/2),
+					0xFAFF9E);
+		}
+//		drawTexturedModalRect(0,height/2 - 325 * scale - xyz[0] * 3.6 * scale,sizeW,sizeH);
 		GL11.glPopMatrix();
 
 		GL11.glPushMatrix();
@@ -718,7 +737,7 @@ public class GVCMRenderSomeEvent {
 		scale = width/300;
 		sizeW = width;
 		sizeH = width;
-
+		
 		GL11.glTranslatef((float)( forDisplayplaneMotion.x * angle * 3.6 * scale), (float)( forDisplayplaneMotion.y * angle * 3.6 * scale),0);
 
 		minecraft.renderEngine.bindTexture(new ResourceLocation("gvcmob:textures/items/HUD3.png"));
@@ -731,6 +750,7 @@ public class GVCMRenderSomeEvent {
 	 */
 	public void drawTexturedModalRect(double p_73729_1_, double p_73729_2_, double p_73729_5_, double p_73729_6_)
 	{
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		Tessellator tessellator = Tessellator.instance;
 		tessellator.startDrawingQuads();
 		tessellator.addVertexWithUV((double)(p_73729_1_), (double)(p_73729_2_ + p_73729_6_), (double)this.zLevel			, 0, 1);
@@ -738,5 +758,19 @@ public class GVCMRenderSomeEvent {
 		tessellator.addVertexWithUV((double)(p_73729_1_ + p_73729_5_), (double)(p_73729_2_), (double)this.zLevel			, 1, 0);
 		tessellator.addVertexWithUV((double)(p_73729_1_), (double)(p_73729_2_), (double)this.zLevel						, 0, 0);
 		tessellator.draw();
+	}
+	
+	public void drawHudLine(double p_73729_1_, double p_73729_2_, double p_73729_5_, double p_73729_6_){
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		GL11.glDisable(GL11.GL_CULL_FACE);
+		Tessellator tessellator = Tessellator.instance;
+		tessellator.startDrawingQuads();
+		tessellator.setColorOpaque_I(0xFAFF9E);
+		tessellator.addVertex((double)(p_73729_1_), (double)(p_73729_6_), (double)this.zLevel);
+		tessellator.addVertex((double)(p_73729_5_), (double)(p_73729_6_), (double)this.zLevel);
+		tessellator.addVertex((double)(p_73729_5_), (double)(p_73729_2_), (double)this.zLevel);
+		tessellator.addVertex((double)(p_73729_1_), (double)(p_73729_2_), (double)this.zLevel);
+		tessellator.draw();
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
 	}
 }

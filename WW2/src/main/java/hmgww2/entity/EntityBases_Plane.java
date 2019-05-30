@@ -1,49 +1,29 @@
 package hmgww2.entity;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import handmadeguns.entity.IFF;
-import handmadeguns.entity.PlacedGunEntity;
-import handmadeguns.items.guns.HMGItem_Unified_Guns;
-import hmggvcmob.SlowPathFinder.WorldForPathfind;
-import hmggvcmob.ai.AIAttackGun;
-import hmggvcmob.ai.AIHurtByTarget;
-import hmggvcmob.ai.AINearestAttackableTarget;
-import hmggvcmob.ai.AIattackOnCollide;
-import hmggvcmob.entity.*;
-import hmggvcmob.entity.friend.EntitySoBases;
-import hmggvcmob.entity.guerrilla.EntityGBases;
 import hmgww2.Nation;
-import hmgww2.items.ItemIFFArmor;
-import littleMaidMobX.LMM_EntityLittleMaid;
-import net.minecraft.block.Block;
+import hmvehicle.entity.parts.Iplane;
+import hmvehicle.entity.parts.ModifiedBoundingBox;
+import hmvehicle.entity.parts.SeatInfo;
+import hmvehicle.entity.parts.logics.IbaseLogic;
+import hmvehicle.entity.parts.logics.PlaneBaseLogic;
 import net.minecraft.entity.*;
-import net.minecraft.entity.ai.*;
-import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
 
 import javax.vecmath.Quat4d;
-import java.util.List;
 
-import static handmadeguns.HandmadeGunsCore.islmmloaded;
-import static hmgww2.mod_GVCWW2.cfg_candespawn;
-import static hmgww2.mod_GVCWW2.cfg_canusePlacedGun;
+import static hmggvcmob.GVCMobPlus.proxy;
 import static java.lang.Math.abs;
-import static net.minecraft.util.MathHelper.wrapAngleTo180_float;
 
-public abstract class EntityBases_Plane extends EntityBases implements ImultiRideableVehicle,Iplane{
+public abstract class EntityBases_Plane extends EntityBases implements Iplane {
 	PlaneBaseLogic baseLogic;
 	float maxHealth = 150;
+//	ModifiedBoundingBox nboundingbox;
 	public EntityBases_Plane(World par1World) {
 		super(par1World);
 		this.setSize(5f, 5f);
@@ -53,17 +33,22 @@ public abstract class EntityBases_Plane extends EntityBases implements ImultiRid
 //		((ModifiedBoundingBox)this.boundingBox).updateOBB(this.posX,this.posY,this.posZ);
 		ignoreFrustumCheck = true;
 		baseLogic = new PlaneBaseLogic(worldObj, this);
-		baseLogic.speedfactor = 0.004f;
-		baseLogic.liftfactor = 0.03f;
-		baseLogic.flapliftfactor = 0.0001f;
-		baseLogic.flapdragfactor = 0.00001f;
-		baseLogic.geardragfactor = 0.00001f;
-		baseLogic.dragfactor = 0.01f;
-		baseLogic.gravity = 0.02f;
-		baseLogic.stability = 3000;
-		baseLogic.rotmotion_reduceSpeed = 0.2;
+		baseLogic.speedfactor = 0.009f;
+		baseLogic.liftfactor = 0.05f;
+		baseLogic.flapliftfactor = 0.00005f;
+		baseLogic.flapdragfactor = 0.0000000001f;
+		baseLogic.geardragfactor = 0.000000001f;
+		baseLogic.dragfactor = 0.07f;
+		baseLogic.gravity = 0.049f;
+		baseLogic.stability = 600;
+		baseLogic.rotmotion_reduceSpeed = 0.1;
+		baseLogic.slipresist = 0.05f;
 //		baseLogic.slipresist = 4;
 		
+		ModifiedBoundingBox nboundingbox = new ModifiedBoundingBox(-1.5,0,-1.5,1.5,5,1.5,0,0,-6.27,2.5,5,19);
+		nboundingbox.rot.set(baseLogic.bodyRot);
+		proxy.replaceBoundingbox(this,nboundingbox);
+		((ModifiedBoundingBox)this.boundingBox).updateOBB(this.posX,this.posY,this.posZ);
 	}
 	
 	public double getMountedYOffset() {
@@ -147,40 +132,6 @@ public abstract class EntityBases_Plane extends EntityBases implements ImultiRid
 		baseLogic.throttle = th;
 	}
 	
-	@Override
-	public void setTrigger(boolean trig1, boolean trig2) {
-		baseLogic.trigger1 = trig1;
-		baseLogic.trigger2 = trig2;
-	}
-	
-	@Override
-	public void initseat() {
-	
-	}
-	
-	@Override
-	public GVCEntityChild[] getChilds() {
-		return baseLogic.childEntities;
-	}
-	
-	@Override
-	public void addChild(GVCEntityChild seat) {
-		if (seat.idinmasterEntityt != -1 && seat.idinmasterEntityt < baseLogic.childEntities.length) {
-			baseLogic.childEntities[seat.idinmasterEntityt] = seat;
-			baseLogic.childEntities[seat.idinmasterEntityt].master = this;
-		}
-	}
-	
-	@Override
-	public boolean isRidingEntity(Entity entity) {
-		for (int i = 0; i < baseLogic.childEntities.length; i++) {
-			if (baseLogic.childEntities[i] != null) {
-				if (baseLogic.childEntities[i].riddenByEntity == entity) return true;
-			}
-		}
-		return false;
-	}
-	
 	public boolean interact(EntityPlayer p_70085_1_) {
 		if (!this.worldObj.isRemote && (this.riddenByEntity == null || this.riddenByEntity == p_70085_1_)) {
 			if (p_70085_1_.isSneaking()) {
@@ -229,8 +180,7 @@ public abstract class EntityBases_Plane extends EntityBases implements ImultiRid
 			} else if (!p_70085_1_.isRiding()) {
 				mode = 0;
 				this.setMobMode(0);
-				if (baseLogic.childEntities[getpilotseatid()] != null && baseLogic.childEntities[getpilotseatid()].riddenByEntity == null)
-					p_70085_1_.mountEntity(baseLogic.childEntities[getpilotseatid()]);
+				pickupEntity(p_70085_1_,0);
 			}
 			return true;
 		} else {
@@ -238,13 +188,6 @@ public abstract class EntityBases_Plane extends EntityBases implements ImultiRid
 		}
 	}
 	
-	@Override
-	public boolean isChild(Entity entity) {
-		for (Entity achild : baseLogic.childEntities) {
-			if (entity == achild) return true;
-		}
-		return entity == this;
-	}
 	
 	@Override
 	public int getpilotseatid() {
@@ -260,7 +203,7 @@ public abstract class EntityBases_Plane extends EntityBases implements ImultiRid
 	}
 	
 	@Override
-	public PlaneBaseLogic getBaseLogic() {
+	public IbaseLogic getBaseLogic() {
 		return baseLogic;
 	}
 	
@@ -322,6 +265,11 @@ public abstract class EntityBases_Plane extends EntityBases implements ImultiRid
 	public void moveFlying(float p_70060_1_, float p_70060_2_, float p_70060_3_) {
 	}
 	
+	@Override
+	public Nation getnation() {
+		return null;
+	}
+	
 	public void jump() {
 	
 	}
@@ -338,4 +286,9 @@ public abstract class EntityBases_Plane extends EntityBases implements ImultiRid
 	public boolean attackEntityFrom(DamageSource source, float par2) {
 		return super.attackEntityFrom(source,par2-armor);
 	}
+	public void setPosition(double x, double y, double z)
+	{
+		if(baseLogic != null)baseLogic.setPosition(x,y,z);
+	}
+	
 }

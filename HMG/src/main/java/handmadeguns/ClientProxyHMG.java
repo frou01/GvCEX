@@ -16,7 +16,6 @@ import handmadeguns.network.PacketSpawnParticle;
 import handmadeguns.client.render.*;
 import handmadeguns.tile.TileMounter;
 import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.client.gui.GuiKeyBindingList;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
@@ -39,16 +38,19 @@ import static cpw.mods.fml.relauncher.ReflectionHelper.setPrivateValue;
 import static handmadeguns.HandmadeGunsCore.proxy;
 
 public class ClientProxyHMG extends CommonSideProxyHMG {
-	public static final KeyBinding Reload = new KeyBinding("Reload", Keyboard.KEY_R, "HandmadeGuns");
-	public static final KeyBinding Light = new KeyBinding("Right ON/Off", Keyboard.KEY_C, "HandmadeGuns");
+	public static final KeyBinding Reload = new KeyBinding("Reload Magazine", Keyboard.KEY_R, "HandmadeGuns");
+	public static final KeyBinding SeekerOpen_Close = new KeyBinding("Seeker Open/Close", Keyboard.KEY_C, "HandmadeGuns");
+	public static final KeyBinding ChangeMagazineType = new KeyBinding("Change Magazine Type", Keyboard.KEY_B, "HandmadeGuns");
 	public static final KeyBinding Attachment = new KeyBinding("Attachment", Keyboard.KEY_X, "HandmadeGuns");
-	public static final KeyBinding Knife = new KeyBinding("Knife", Keyboard.KEY_F, "HandmadeGuns");
+	public static final KeyBinding Fire_AttachedGun = new KeyBinding("Fire AttachedGun", Keyboard.KEY_F, "HandmadeGuns");
 	public static final KeyBinding ADS = new KeyBinding("ADS_Key", Keyboard.KEY_V, "HandmadeGuns");
 	public static final KeyBinding Mode = new KeyBinding("Mode_Key", Keyboard.KEY_GRAVE, "HandmadeGuns");
 	public static final KeyBinding Fix = new KeyBinding("Fix Gun", Keyboard.KEY_H, "HandmadeGuns");
 	private static final String trailtexture = ("handmadeguns:textures/entity/trail");
+	private static final String lockonmarker = ("handmadeguns:textures/items/lockonmarker");
 	static boolean stopper_modekey = false;
 	static boolean stopper_Fkey = false;
+	static boolean stopper_ChangeMagazineTypekey = false;
 	static boolean stopper_Lightkey = false;
 	static boolean stopper_Fixkey = false;
 	static Field equippedProgress;
@@ -69,8 +71,6 @@ public class ClientProxyHMG extends CommonSideProxyHMG {
 	@Override
 	public void setuprender(){
 		AdvancedModelLoader.registerModelHandler(new MQO_ModelLoader());
-		System.out.println("forge.forceDisplayStencil  " + System.getProperty("forge.forceDisplayStencil"));
-		System.setProperty("forge.forceDisplayStencil","true");
 	}
 	@Override
 	public void playsoundat(String sound, float soundLV, float soundSP, float tempsp, double posX, double posY, double posZ){
@@ -113,9 +113,10 @@ public class ClientProxyHMG extends CommonSideProxyHMG {
     	//RenderItem renderitem = mc.getRenderItem();
     	
     	ClientRegistry.registerKeyBinding(Reload);
-    	ClientRegistry.registerKeyBinding(Light);
+	    ClientRegistry.registerKeyBinding(ChangeMagazineType);
+    	ClientRegistry.registerKeyBinding(SeekerOpen_Close);
     	ClientRegistry.registerKeyBinding(Attachment);
-    	ClientRegistry.registerKeyBinding(Knife);
+    	ClientRegistry.registerKeyBinding(Fire_AttachedGun);
     	ClientRegistry.registerKeyBinding(ADS);
 		ClientRegistry.registerKeyBinding(Mode);
 		ClientRegistry.registerKeyBinding(Fix);
@@ -253,7 +254,7 @@ public class ClientProxyHMG extends CommonSideProxyHMG {
 	}
 	@Override
 	public boolean lightkeydown(){
-		boolean flag =  keyDown(Light.getKeyCode());
+		boolean flag =  keyDown(SeekerOpen_Close.getKeyCode());
     	if(flag){
     		if(!stopper_Lightkey){
     			stopper_Lightkey = true;
@@ -283,11 +284,11 @@ public class ClientProxyHMG extends CommonSideProxyHMG {
 	}
 	@Override
 	public boolean Lightkeyispressed_no_stopper(){
-		return keyDown(Light.getKeyCode());
+		return keyDown(SeekerOpen_Close.getKeyCode());
 	}
     @Override
     public boolean Fclick(){
-		boolean flag = keyDown(Knife.getKeyCode());
+		boolean flag = keyDown(Fire_AttachedGun.getKeyCode());
 		if(flag){
 			if(!stopper_Fkey){
 				stopper_Fkey = true;
@@ -299,9 +300,23 @@ public class ClientProxyHMG extends CommonSideProxyHMG {
 		}
 		return flag;
 	}
+    @Override
+    public boolean ChangeMagazineTypeclick(){
+		boolean flag = keyDown(ChangeMagazineType.getKeyCode());
+		if(flag){
+			if(!stopper_ChangeMagazineTypekey){
+				stopper_ChangeMagazineTypekey = true;
+			}else {
+				flag = false;
+			}
+		}else {
+			stopper_ChangeMagazineTypekey = false;
+		}
+		return flag;
+	}
 	@Override
 	public boolean Fclick_no_stopper(){
-		boolean flag = keyDown(Knife.getKeyCode());
+		boolean flag = keyDown(Fire_AttachedGun.getKeyCode());
 		return flag;
 	}
     @Override
@@ -370,7 +385,7 @@ public class ClientProxyHMG extends CommonSideProxyHMG {
 					case 2:
 						
 						var10.setParticleIcon(HMGParticles.getInstance().getIcon("handmadeguns:lockonmarker"));
-						var10.setIcon("handmadeguns:textures/items/lockonmarker");
+						var10.setIcon(lockonmarker);
 						var10.setParticleScale(1);
 						var10.isglow = false;
 						var10.fuse = 1;
@@ -399,7 +414,7 @@ public class ClientProxyHMG extends CommonSideProxyHMG {
 					case 4:
 						
 						var10.setParticleIcon(HMGParticles.getInstance().getIcon("handmadeguns:lockonmarker"));
-						var10.setIcon("handmadeguns:textures/items/lockonmarker");
+						var10.setIcon(lockonmarker);
 						var10.setParticleScale(1);
 						var10.isglow = false;
 						var10.fuse = 0;

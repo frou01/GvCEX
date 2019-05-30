@@ -16,6 +16,12 @@ import hmggvcmob.entity.friend.EntitySoBases;
 import hmggvcmob.entity.guerrilla.EntityGBases;
 import hmgww2.Nation;
 import hmgww2.items.ItemIFFArmor;
+import hmvehicle.entity.parts.HasBaseLogic;
+import hmvehicle.entity.parts.Hasmode;
+import hmvehicle.entity.parts.ITank;
+import hmvehicle.entity.parts.IVehicle;
+import hmvehicle.entity.parts.logics.IbaseLogic;
+import hmvehicle.entity.parts.logics.TankBaseLogic;
 import littleMaidMobX.LMM_EntityLittleMaid;
 import net.minecraft.block.Block;
 import net.minecraft.entity.*;
@@ -41,7 +47,7 @@ import static hmgww2.mod_GVCWW2.cfg_canusePlacedGun;
 import static java.lang.Math.*;
 import static net.minecraft.util.MathHelper.wrapAngleTo180_float;
 
-public abstract class EntityBases extends EntityCreature implements IFF,INpc,IGVCmob,Hasmode {
+public abstract class EntityBases extends EntityCreature implements IFF,INpc,IGVCmob, Hasmode {
 	public int deathTicks;
 	public EntityLivingBase fri;
 	
@@ -53,14 +59,13 @@ public abstract class EntityBases extends EntityCreature implements IFF,INpc,IGV
 	public float armor_Back_cof = 0.5f;
 	public float armor_Side_cof = 0.7f;
 	
-	public boolean vehicle = false;
 	public boolean opentop = true;
 	
 	
 	public boolean server1 = false;
 	public boolean server2 = false;
 	public boolean serverx = false;
-	public boolean serverspace = false;
+	public boolean ignoreTargetAir = false;
 	
 	
 	
@@ -77,6 +82,7 @@ public abstract class EntityBases extends EntityCreature implements IFF,INpc,IGV
 	public int flagx;
 	public int flagy;
 	public int flagz;
+	public int repathCNT = 40;
 	
 	public float viewWide = 1.14f;
 	public double movespeed = 0.3d;
@@ -152,9 +158,9 @@ public abstract class EntityBases extends EntityCreature implements IFF,INpc,IGV
 		this.tasks.addTask(3, new AIattackOnCollide(this, EntityGBases.class, 1.0D, true));
 		this.tasks.addTask(4, new EntityAIRestrictOpenDoor(this));
 		this.tasks.addTask(5, AIOpenDoor);
-		this.tasks.addTask(6, new EntityAIMoveTowardsRestriction(this, this instanceof IdriveableVehicle ? 0: 1));
+		this.tasks.addTask(6, new EntityAIMoveTowardsRestriction(this, this instanceof IVehicle ? 0: 1));
 		//こっから先は待機時（？）
-		this.tasks.addTask(7, new EntityAIWander(this, this instanceof IdriveableVehicle ? 0: 1));
+		this.tasks.addTask(7, new EntityAIWander(this, this instanceof IVehicle ? 0: 1));
 		this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
 		this.tasks.addTask(8, new EntityAILookIdle(this));
 		//ターゲティング
@@ -178,7 +184,10 @@ public abstract class EntityBases extends EntityCreature implements IFF,INpc,IGV
 	public void onUpdate()
 	{
 		super.onUpdate();
-		if(this.getAttackTarget() != null && this.is_this_entity_friend(this.getAttackTarget()))this.setAttackTarget(null);
+		if(this.width<1){
+			width = 1;
+		}
+		if(this.getAttackTarget() != null && (getAttackTarget() instanceof EntityBases_Plane && ignoreTargetAir) || this.is_this_entity_friend(this.getAttackTarget()))this.setAttackTarget(null);
 		if(cfg_canusePlacedGun && canuseAlreadyPlacedGun && !worldObj.isRemote && ridingEntity == null && this.getAttackTarget() != null) {
 			List PlaceGunDetector = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox.expand(2, 3.0D, 2));
 			
@@ -194,22 +203,8 @@ public abstract class EntityBases extends EntityCreature implements IFF,INpc,IGV
 		}
 		if(this.getHeldItem() != null && this.aiAttackGun != null){
 			
-			if(this.rand.nextInt(10) == 0){
-				rndyaw = this.rand.nextGaussian() * (double)(this.rand.nextBoolean() ? -1 : 1)*spread;
-				rndpitch = this.rand.nextGaussian() * (double)(this.rand.nextBoolean() ? -1 : 1)*spread;
-			}else {
-				rndyaw += this.rand.nextGaussian() * (double)(this.rand.nextBoolean() ? -1 : 1)*spread/10;
-				rndpitch += this.rand.nextGaussian() * (double)(this.rand.nextBoolean() ? -1 : 1)*spread/10;
-			}
 			
-			this.rotationPitch+=rndpitch;
-			this.rotationYaw+=rndyaw;
-			float backpitch = this.rotationPitch;
-			this.getHeldItem().getItem().onUpdate(this.getHeldItem(),worldObj,this,0,true);
-			float recoiled = this.rotationPitch - backpitch;
-			this.rotationPitch-=rndpitch;
-			this.rotationYaw-=rndyaw;
-			rndpitch += recoiled;
+			if(this.getHeldItem() != null)this.getHeldItem().getItem().onUpdate(this.getHeldItem(),worldObj,this,0,true);
 			if(!worldObj.isRemote && cfg_canusePlacedGun && canPlacedGun && ridingEntity == null && onGround &&this.getAttackTarget() != null && this.getHeldItem().getItem()instanceof HMGItem_Unified_Guns && ((HMGItem_Unified_Guns) this.getHeldItem().getItem()).gunInfo.fixAsEntity){
 				placing ++;
 				if(placing>30) {
@@ -262,7 +257,7 @@ public abstract class EntityBases extends EntityCreature implements IFF,INpc,IGV
 //			}
 			
 			
-			if(this.getEntityData().getBoolean("HMGisUsingItem")){
+			if(this.isSneaking()){
 				this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(movespeed/4);
 			}else{
 				this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(movespeed);
@@ -287,10 +282,12 @@ public abstract class EntityBases extends EntityCreature implements IFF,INpc,IGV
 				((PlacedGunEntity) ridingEntity).firing = false;
 			}
 		}
-		{
+		if(repathCNT<0){
 			if(mode == 1) {
 				if (this.getAttackTarget() == null && this.getDistanceSq(homeposX+1, homeposY+1, homeposZ+1)>256) {
-					if(this.getNavigator().getPath() != null && this.getNavigator().getPath().getFinalPathPoint().xCoord != homeposX+1 && this.getNavigator().getPath().getFinalPathPoint().xCoord != homeposY && this.getNavigator().getPath().getFinalPathPoint().xCoord != homeposZ+1)this.getNavigator().setPath(worldForPathfind.getEntityPathToXYZ(this, homeposX+1, homeposY, homeposZ+1, 80f, true, false, false, true), 1.0d);
+					if(this.getNavigator().getPath() != null && this.getNavigator().getPath().getFinalPathPoint().xCoord != homeposX+1 && this.getNavigator().getPath().getFinalPathPoint().xCoord != homeposY && this.getNavigator().getPath().getFinalPathPoint().xCoord != homeposZ+1) {
+						this.getNavigator().setPath(worldForPathfind.getEntityPathToXYZ(this, homeposX + 1, homeposY, homeposZ + 1, 80f, true, false, false, true), 1.0d);
+					}
 					if(onGround)this.getNavigator().setPath(worldForPathfind.getEntityPathToXYZ(this, homeposX+1, homeposY, homeposZ+1, 80f, true, false, false, true), 1.0d);
 				}
 			}else if(mode == 2) {
@@ -299,7 +296,7 @@ public abstract class EntityBases extends EntityCreature implements IFF,INpc,IGV
 					homeposY = (int) master.posY;
 					homeposZ = (int) master.posZ;
 					if ((this.getAttackTarget() == null && this.getDistanceSq(homeposX, homeposY, homeposZ) > 64) || this.getDistanceSq(homeposX, homeposY + 1, homeposZ) > 256) {
-						if (resetFollowpathCnt > 10) {
+						{
 							homeposX = (int) master.posX + moveoffsetx;
 							homeposY = (int) master.posY;
 							homeposZ = (int) master.posZ + moveoffsetz;
@@ -312,7 +309,6 @@ public abstract class EntityBases extends EntityCreature implements IFF,INpc,IGV
 						moveoffsetz = rand.nextInt(12) * (this.rand.nextBoolean() ? -1 : 1);
 						resetFollowpathCnt = 0;
 					}
-					resetFollowpathCnt++;
 				} else {
 					mode = 0;
 				}
@@ -321,7 +317,9 @@ public abstract class EntityBases extends EntityCreature implements IFF,INpc,IGV
 			}else if(mode == 4){
 			
 			}
+			repathCNT = 40;
 		}
+		repathCNT--;
 		this.getEntityData().setBoolean("HMGisUsingItem",false);
 		if(rand.nextInt(10) == 0) this.addPotionEffect(new PotionEffect(Potion.regeneration.id, 1, 2));
 	}
@@ -331,7 +329,7 @@ public abstract class EntityBases extends EntityCreature implements IFF,INpc,IGV
 	
 	protected boolean canDespawn()
 	{
-		return this.getAttackTarget() == null && cfg_candespawn;
+		return this.getAttackTarget() == null && cfg_candespawn && (onGround ? getDistanceSq(homeposX,this.posY,homeposZ)>256 : getDistanceSq(homeposX,this.posY,homeposZ)>4096);
 	}
 	
 	protected void applyEntityAttributes() {
@@ -381,78 +379,84 @@ public abstract class EntityBases extends EntityCreature implements IFF,INpc,IGV
 	
 	
 	public boolean attackEntityFrom(DamageSource source, float par2) {
-		if (this.riddenByEntity == source.getEntity()) {
-			return false;
-		} else {
-			float temparomor = armor;
-			if(source instanceof EntityDamageSourceIndirect && source.getEntity() != null && this instanceof IRideableTank){
-				TankBaseLogic temp = ((IRideableTank)this).getBaseLogic();
-				Vector3d frontArmorVec = new Vector3d(0,0,-1);
-				Vector3d leftsideArmorVec = new Vector3d(1,0,0);
-				Vector3d rightsideArmorVec = new Vector3d(-1,0,0);
-				Vector3d backArmorVec = new Vector3d(0,0,1);
-				Vector3d topArmorVec = new Vector3d(0,1,0);
-				RotateVectorAroundX(frontArmorVec,-armor_tilt);
-				RotateVectorAroundZ(leftsideArmorVec,armor_tilt);
-				RotateVectorAroundZ(rightsideArmorVec,-armor_tilt);
-				RotateVectorAroundX(backArmorVec,armor_tilt);
-				frontArmorVec = transformVecByQuat(frontArmorVec,temp.bodyRot);
-				leftsideArmorVec = transformVecByQuat(leftsideArmorVec,temp.bodyRot);
-				rightsideArmorVec = transformVecByQuat(rightsideArmorVec,temp.bodyRot);
-				backArmorVec = transformVecByQuat(backArmorVec,temp.bodyRot);
-				topArmorVec = transformVecByQuat(topArmorVec,temp.bodyRot);
-				frontArmorVec.z *= -1;
-				backArmorVec.z *= -1;
-				leftsideArmorVec.z *= -1;
-				rightsideArmorVec.z *= -1;
-				topArmorVec.z *= -1;
-				Vector3d shooterMotionVec = new Vector3d(source.getSourceOfDamage().motionX,source.getSourceOfDamage().motionY,source.getSourceOfDamage().motionZ);
-				Vector3d shooterPositionVec = new Vector3d(source.getSourceOfDamage().posX - this.posX
-						                                          ,source.getSourceOfDamage().posY - (this.posY + 1.5f)
-						                                          ,source.getSourceOfDamage().posZ - this.posZ
-				);
-				Vector3d TankFrontVec = new Vector3d(0,0,-1);
-				TankFrontVec = transformVecByQuat(TankFrontVec,temp.bodyRot);
-				TankFrontVec.z *= -1;
-				double angle_position = abs(toDegrees(TankFrontVec.angle(shooterPositionVec)));
-				Vector3d TankRighttVec = new Vector3d(-1,0,0);
-				TankRighttVec = transformVecByQuat(TankRighttVec,temp.bodyRot);
-				TankRighttVec.z *= -1;
-				
-				if((angle_position)<45){//正面装甲にヒット
-					shooterMotionVec.scale(-1);
-					double angle_motion = abs(frontArmorVec.angle(shooterMotionVec));
-					temparomor *= (sin(angle_motion)) + armor_Front_cof;
-				}else if((angle_position)>=45 && (angle_position)<=135){//側面or天板にヒット
-					shooterMotionVec.scale(-1);
-					if(abs(toDegrees(topArmorVec.angle(shooterPositionVec)))<45){//天板or底面にヒット
-						double angle_motion = abs(topArmorVec.angle(shooterMotionVec));
-						temparomor *= (sin(angle_motion)) + armor_Top_cof;
-					}else {
-						if(abs(toDegrees(TankRighttVec.angle(shooterPositionVec)))>90) {
-							double angle_motion = abs(leftsideArmorVec.angle(shooterMotionVec));
-							temparomor *= (sin(angle_motion)) + armor_Side_cof;
-						}else {
-							double angle_motion = abs(rightsideArmorVec.angle(shooterMotionVec));
-							temparomor *= (sin(angle_motion)) + armor_Side_cof;
-						}
-					}
-				}else if((angle_position)>135){//背面にヒット
-					shooterMotionVec.scale(-1);
-					double angle_motion = abs(backArmorVec.angle(shooterMotionVec));
-					temparomor *= (sin(angle_motion)) + armor_Back_cof;
-				}
-			}
-			if(par2 > temparomor/2f){
-				armor-=1;
-			}
-			if (par2 <= temparomor) {
-				if(armor != 0)if (!source.getDamageType().equals("mob")) this.playSound("gvcmob:gvcmob.ArmorBounce", 0.5F, 2-(par2/temparomor));
+		if(!source.getDamageType().equals(DamageSource.fall.damageType)) {
+			if (this.riddenByEntity == source.getEntity()) {
 				return false;
+			} else if (this == source.getEntity()) {
+				return false;
+			} else {
+				float temparomor = armor;
+				IbaseLogic temp;
+				if (source instanceof EntityDamageSourceIndirect && source.getEntity() != null && this instanceof HasBaseLogic && (temp = ((HasBaseLogic) this).getBaseLogic()) instanceof TankBaseLogic) {
+					Vector3d frontArmorVec = new Vector3d(0, 0, -1);
+					Vector3d leftsideArmorVec = new Vector3d(1, 0, 0);
+					Vector3d rightsideArmorVec = new Vector3d(-1, 0, 0);
+					Vector3d backArmorVec = new Vector3d(0, 0, 1);
+					Vector3d topArmorVec = new Vector3d(0, 1, 0);
+					RotateVectorAroundX(frontArmorVec, -armor_tilt);
+					RotateVectorAroundZ(leftsideArmorVec, armor_tilt);
+					RotateVectorAroundZ(rightsideArmorVec, -armor_tilt);
+					RotateVectorAroundX(backArmorVec, armor_tilt);
+					frontArmorVec = transformVecByQuat(frontArmorVec, ((TankBaseLogic) temp).bodyRot);
+					leftsideArmorVec = transformVecByQuat(leftsideArmorVec, ((TankBaseLogic) temp).bodyRot);
+					rightsideArmorVec = transformVecByQuat(rightsideArmorVec, ((TankBaseLogic) temp).bodyRot);
+					backArmorVec = transformVecByQuat(backArmorVec, ((TankBaseLogic) temp).bodyRot);
+					topArmorVec = transformVecByQuat(topArmorVec, ((TankBaseLogic) temp).bodyRot);
+					frontArmorVec.z *= -1;
+					backArmorVec.z *= -1;
+					leftsideArmorVec.z *= -1;
+					rightsideArmorVec.z *= -1;
+					topArmorVec.z *= -1;
+					Vector3d shooterMotionVec = new Vector3d(source.getSourceOfDamage().motionX, source.getSourceOfDamage().motionY, source.getSourceOfDamage().motionZ);
+					Vector3d shooterPositionVec = new Vector3d(source.getSourceOfDamage().posX - this.posX
+							                                          , source.getSourceOfDamage().posY - (this.posY + 1.5f)
+							                                          , source.getSourceOfDamage().posZ - this.posZ
+					);
+					Vector3d TankFrontVec = new Vector3d(0, 0, -1);
+					TankFrontVec = transformVecByQuat(TankFrontVec, ((TankBaseLogic) temp).bodyRot);
+					TankFrontVec.z *= -1;
+					double angle_position = abs(toDegrees(TankFrontVec.angle(shooterPositionVec)));
+					Vector3d TankRighttVec = new Vector3d(-1, 0, 0);
+					TankRighttVec = transformVecByQuat(TankRighttVec, ((TankBaseLogic) temp).bodyRot);
+					TankRighttVec.z *= -1;
+					
+					if ((angle_position) < 45) {//正面装甲にヒット
+						shooterMotionVec.scale(-1);
+						double angle_motion = abs(frontArmorVec.angle(shooterMotionVec));
+						temparomor *= (sin(angle_motion)) + armor_Front_cof;
+					} else if ((angle_position) >= 45 && (angle_position) <= 135) {//側面or天板にヒット
+						shooterMotionVec.scale(-1);
+						if (abs(toDegrees(topArmorVec.angle(shooterPositionVec))) < 45) {//天板or底面にヒット
+							double angle_motion = abs(topArmorVec.angle(shooterMotionVec));
+							temparomor *= (sin(angle_motion)) + armor_Top_cof;
+						} else {
+							if (abs(toDegrees(TankRighttVec.angle(shooterPositionVec))) > 90) {
+								double angle_motion = abs(leftsideArmorVec.angle(shooterMotionVec));
+								temparomor *= (sin(angle_motion)) + armor_Side_cof;
+							} else {
+								double angle_motion = abs(rightsideArmorVec.angle(shooterMotionVec));
+								temparomor *= (sin(angle_motion)) + armor_Side_cof;
+							}
+						}
+					} else if ((angle_position) > 135) {//背面にヒット
+						shooterMotionVec.scale(-1);
+						double angle_motion = abs(backArmorVec.angle(shooterMotionVec));
+						temparomor *= (sin(angle_motion)) + armor_Back_cof;
+					}
+				}
+				if (armor != 0 && par2 > temparomor / 2f) {
+					armor -= 1;
+				}
+				if (par2 <= temparomor) {
+					if (armor != 0) if (!source.getDamageType().equals("mob"))
+						this.playSound("gvcmob:gvcmob.ArmorBounce", 0.5F, 2 - (par2 / temparomor));
+					return false;
+				}
+				if (armor != 0) this.playSound("gvcmob:gvcmob.armorhit", 0.5F, 1F);
+				return super.attackEntityFrom(source, par2 - temparomor);
 			}
-			if(armor != 0)this.playSound("gvcmob:gvcmob.armorhit", 0.5F, 1F);
-			return super.attackEntityFrom(source,par2-temparomor);
 		}
+		return super.attackEntityFrom(source, par2);
 	}
 	
 	

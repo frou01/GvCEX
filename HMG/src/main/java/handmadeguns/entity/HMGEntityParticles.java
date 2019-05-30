@@ -167,6 +167,7 @@ public class HMGEntityParticles extends EntityFX
         tessellator.startDrawingQuads();
         GL11.glPushAttrib(GL_FOG);
         GL11.glPushAttrib(GL_ALPHA_TEST);
+        GL11.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         GL11.glDisable(GL_FOG);
         if(disable_DEPTH_TEST) {
             GL11.glColor4f(1,1,1,0.1f);

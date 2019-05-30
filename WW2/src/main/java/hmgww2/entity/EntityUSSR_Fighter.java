@@ -1,22 +1,7 @@
 package hmgww2.entity;
 
 
-import hmggvcmob.entity.PlaneBaseLogic;
-import hmggvcmob.entity.TurretObj;
-import hmgww2.mod_GVCWW2;
-import hmgww2.network.WW2MessageKeyPressed;
-import hmgww2.network.WW2PacketHandler;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAISwimming;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.Vec3;
+import hmvehicle.entity.parts.turrets.TurretObj;
 import net.minecraft.world.World;
 
 import javax.vecmath.Vector3d;
@@ -35,16 +20,14 @@ public class EntityUSSR_Fighter extends EntityUSSR_FighterBase
 //		((ModifiedBoundingBox)this.boundingBox).updateOBB(this.posX,this.posY,this.posZ);
 	    ignoreFrustumCheck = true;
 	    armor = 5;
-	    baseLogic.speedfactor = 0.0024f;
-	    baseLogic.throttle_gearDown = 1.7f;
 	    baseLogic.throttle_Max = 4.0f;
-	    baseLogic.rollspeed = 0.6f;
-	    baseLogic.pitchspeed = 0.5f;
-	    baseLogic.yawspeed = 0.5f;
+	    baseLogic.rollspeed = 0.7f;
+	    baseLogic.pitchspeed = 0.4f;
+	    baseLogic.yawspeed = 0.1f;
 	    baseLogic.maxDive = 60;
 	    baseLogic.startDive = 30;
-	    baseLogic.maxClimb = -22;
-	    baseLogic.maxbank = 60;
+	    baseLogic.maxClimb = -25;
+	    baseLogic.maxbank = 50;
 	    baseLogic.soundname = "hmgww2:hmgww2.sound_pera";
 	    
 	    baseLogic.camerapos = new double[]{0,1.9,0};
@@ -64,17 +47,17 @@ public class EntityUSSR_Fighter extends EntityUSSR_FighterBase
 		    baseLogic.mainTurret.traverseSound = null;
 		    baseLogic.mainTurret.currentEntity = this;
 		    baseLogic.mainTurret.powor = 20;
-		    baseLogic.mainTurret.ex = 0.5f;
+		    baseLogic.mainTurret.ex = 0.1f;
 		    baseLogic.mainTurret.cycle_setting = 1;
 		    baseLogic.mainTurret.flushscale = 2;
 		    baseLogic.mainTurret.firesound = "handmadeguns:handmadeguns.20mmfire";
 		    baseLogic.mainTurret.flushoffset = 1;
 		    baseLogic.mainTurret.spread = 5;
-		    baseLogic.mainTurret.speed = 5;
+		    baseLogic.mainTurret.speed = 8;
 		    baseLogic.mainTurret.magazineMax = 50;
 		    baseLogic.mainTurret.magazinerem = 50;
 		    baseLogic.mainTurret.reloadTimer = 150;
-		    baseLogic.mainTurret.canex = true;
+		    baseLogic.mainTurret.canex = false;
 		    baseLogic.mainTurret.guntype = 2;
 	    }
 	    baseLogic.subTurret = new TurretObj(worldObj);
@@ -94,7 +77,7 @@ public class EntityUSSR_Fighter extends EntityUSSR_FighterBase
 		    baseLogic.subTurret.firesound = "handmadeguns:handmadeguns.fire";
 		    baseLogic.subTurret.flushoffset = 1;
 		    baseLogic.subTurret.spread = 10;
-		    baseLogic.subTurret.speed = 5;
+		    baseLogic.subTurret.speed = 10;
 		    baseLogic.subTurret.canex = true;
 		    baseLogic.subTurret.magazineMax = 100;
 		    baseLogic.subTurret.magazinerem = 100;

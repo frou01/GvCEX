@@ -3,10 +3,9 @@ package hmgww2.entity;
 
 import hmggvcmob.GVCMobPlus;
 import hmggvcmob.ai.AITankAttack;
-import hmggvcmob.entity.FireRist;
-import hmggvcmob.entity.ModifiedBoundingBox;
-import hmggvcmob.entity.TurretObj;
-import hmggvcmob.entity.VesselBaseLogic;
+import hmvehicle.entity.parts.ModifiedBoundingBox;
+import hmvehicle.entity.parts.turrets.TurretObj;
+import hmvehicle.entity.parts.logics.VesselBaseLogic;
 import net.minecraft.world.World;
 
 import javax.vecmath.Vector3d;
@@ -21,7 +20,7 @@ public class EntityGER_ShipSUB extends EntityGER_ShipBase
 		ignoreFrustumCheck = true;
 		renderDistanceWeight = Double.MAX_VALUE;
 		
-		nboundingbox = new ModifiedBoundingBox(-100,-100,-100,100,100,100,
+		nboundingbox = new ModifiedBoundingBox(boundingBox.minX,boundingBox.minY,boundingBox.minZ,boundingBox.maxX,boundingBox.maxY,boundingBox.maxZ,
 				                                      0,5,-1.078,
 				                                      7,10,67.2181);
 		nboundingbox.rot.set(baseLogic.bodyRot);
@@ -30,14 +29,14 @@ public class EntityGER_ShipSUB extends EntityGER_ShipBase
 		nboundingbox.centerRotY = 0;
 		nboundingbox.centerRotZ = 0;
 		
-		baseLogic = new VesselBaseLogic(this,0.065f,0.4f,false,"hmgww2:hmgww2.Uboat");
+		baseLogic = new VesselBaseLogic(this,0.025f,0.8f,false,"hmgww2:hmgww2.Uboat");
 		baseLogic.canControlonWater = true;
 		baseLogic.always_poit_to_target = true;
 		aiTankAttack = new AITankAttack(this,100,4,10,10);
 		aiTankAttack.setAlways_poit_to_target(true);
 		this.tasks.addTask(1,aiTankAttack);
-		playerpos = new Vector3d(0,15.1069,-0.6658);
-		zoomingplayerpos = new Vector3d(-0.8,3.2D,-0.3);
+		playerpos = new Vector3d(0,7.2D,-0.3);
+		zoomingplayerpos = new Vector3d(0,15.1069,-0.6658);
 		turretpos = new Vector3d(0,2.6440,-30.4535);
 		TurretObj torp1 = new TurretObj(worldObj);
 		{

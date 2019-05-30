@@ -1,7 +1,7 @@
 package hmggvcmob.ai;
 
 import handmadeguns.entity.IFF;
-import hmggvcmob.entity.IRideableTank;
+import hmvehicle.entity.parts.ITank;
 import hmggvcutil.entity.GVCEntityBox;
 import hmggvcmob.entity.IGVCmob;
 import hmggvcmob.entity.friend.EntitySoBases;
@@ -68,7 +68,7 @@ public class AINearestAttackableTarget extends EntityAITarget {
      */
     public boolean shouldExecute()
     {
-        if (((taskOwner instanceof IRideableTank) && !((IRideableTank) taskOwner).standalone()) || this.targetChance > 0 && taskOwner.getRNG().nextInt(this.targetChance) != 0 && this.taskOwner.getAttackTarget() != null)
+        if (((taskOwner instanceof ITank) && !((ITank) taskOwner).standalone()) || this.targetChance > 0 && taskOwner.getRNG().nextInt(this.targetChance) != 0 && this.taskOwner.getAttackTarget() != null)
         {
             return false;
         }

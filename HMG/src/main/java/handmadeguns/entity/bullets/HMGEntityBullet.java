@@ -3,7 +3,6 @@ package handmadeguns.entity.bullets;
 //import littleMaidMobX.LMM_EntityLittleMaid;
 //import littleMaidMobX.LMM_EntityLittleMaidAvatar;
 
-import com.lulan.shincolle.entity.BasicEntityShipHostile;
 import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
 import handmadeguns.HMGMessageKeyPressedC;
 import handmadeguns.HMGPacketHandler;
@@ -22,9 +21,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
         import net.minecraft.util.*;
 import net.minecraft.world.World;
 
-import static handmadeguns.CommonSideProxyHMG.kanmusu_defence;
 import static handmadeguns.HandmadeGunsCore.islmmloaded;
-import static handmadeguns.HandmadeGunsCore.isshincoleloaded;
 
 public class HMGEntityBullet extends HMGEntityBulletBase implements IEntityAdditionalSpawnData
 {
@@ -79,16 +76,6 @@ public class HMGEntityBullet extends HMGEntityBulletBase implements IEntityAddit
 			double moYback = var1.entityHit.motionY;//????オ???????p
 			double moZback = var1.entityHit.motionZ;//?m?b?N?o?b?N???????p
 
-			if(isshincoleloaded){
-				if (var1.entityHit instanceof BasicEntityShipHostile){
-					backdeflevel = ((BasicEntityShipHostile) var1.entityHit).getDefValue();
-					try {
-						kanmusu_defence.set(var1.entityHit,backdeflevel/10);
-					} catch (IllegalAccessException e) {
-						e.printStackTrace();
-					}
-				}
-			}
 			if(var1.entityHit.attackEntityFrom((new EntityDamageSourceIndirect("arrow", this, this.getThrower())).setProjectile(),var2)){
 				var1.entityHit.motionX = moXback;
 				var1.entityHit.motionY = moYback;
@@ -113,15 +100,6 @@ public class HMGEntityBullet extends HMGEntityBulletBase implements IEntityAddit
 						var1.entityHit.motionX += knockvec.xCoord;
 						var1.entityHit.motionY += knockvec.yCoord + knockbackY;
 						var1.entityHit.motionZ += knockvec.zCoord;
-					}
-				}
-			}
-			if(isshincoleloaded){
-				if (var1.entityHit instanceof BasicEntityShipHostile){
-					try {
-						kanmusu_defence.set(var1.entityHit,backdeflevel);
-					} catch (IllegalAccessException e) {
-						e.printStackTrace();
 					}
 				}
 			}

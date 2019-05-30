@@ -189,8 +189,8 @@ public class TileEntityFlag extends TileEntity
                                     float planeoffsetX = (float)closetplayer.posX - xCoord + (float) sin(toRadians(f)) * FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().getViewDistance() * 16;
                                     float planeoffsetZ = (float)closetplayer.posZ - zCoord + (float) cos(toRadians(f)) * FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().getViewDistance() * 16;
                                     motherplane.setLocationAndAngles(xCoord + 0.5 + planeoffsetX, spawnheight - 5 + rnd.nextInt(10), zCoord + 0.5 + planeoffsetZ, 0, 0.0F);
-                                    motherplane.motionX = -planeoffsetX / sqrt(planeoffsetX * planeoffsetX + planeoffsetZ * planeoffsetZ) * 12.84722222222222;
-                                    motherplane.motionZ = -planeoffsetZ / sqrt(planeoffsetX * planeoffsetX + planeoffsetZ * planeoffsetZ) * 12.84722222222222;
+                                    motherplane.motionX = -planeoffsetX / sqrt(planeoffsetX * planeoffsetX + planeoffsetZ * planeoffsetZ) * 4;
+                                    motherplane.motionZ = -planeoffsetZ / sqrt(planeoffsetX * planeoffsetX + planeoffsetZ * planeoffsetZ) * 4;
                                     motherplane.fuse = 100;
                                     worldObj.spawnEntityInWorld(motherplane);
                                 }

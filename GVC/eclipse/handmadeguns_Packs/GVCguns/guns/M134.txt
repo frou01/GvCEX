@@ -5,12 +5,13 @@ BulletGravity,0.485
 
 BlletSpread,6.0F
 ADS_Spread_coefficient,1
+BlletSpreadDiffusion,3,0,0.3,0,2,0.1
 Cycle,1
 
 Motion,0.2
 
-Recoil,22.0D
-Recoil_sneaking,6.0D
+Recoil,4
+Recoil_sneaking,2
 
 ReloadTime,200
 RemainingBullet,300
@@ -20,11 +21,11 @@ ZoomRender,true
 ZoomRenderType,true,true,true
 ZoomRenderTypeTxture,false,false,false
 Cycle,1
-Texture,m134
+Texture,M134
 GunSound,handmadeguns.fire,handmadeguns.supu
 GunSoundReload,handmadeguns.reload
 CanObj,true
-ObjModel,gatlinggun.obj
+ObjModel,gatlinggun.mqo
 ObjTexture,gatlinggun.png
 ModelScala,0.5f
 CustomFlash,arrow,1
@@ -33,6 +34,7 @@ CustomFlash,arrow,1
 Canfix,true
 FixAsEntity,true
 OnEntity_PlayerPosOffset,0,0,3
+OnEntity_Yoffset,0.5
 
 ModelEquipped,-0.7f,0.7f,0.0f
 ModelHigh,1.3,1.3f,1.3f

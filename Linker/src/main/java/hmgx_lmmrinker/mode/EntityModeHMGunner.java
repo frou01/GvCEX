@@ -112,7 +112,7 @@ public class EntityModeHMGunner extends LMM_EntityModeBase {
                 if (litemstack == null) continue;
                 if((litemstack.getItem()) instanceof HMGItem_Unified_Guns){
                     HMGItem_Unified_Guns gun = (HMGItem_Unified_Guns) litemstack.getItem();
-                    if(litemstack.getItemDamage() != gun.getMaxDamage()||owner.maidAvatar.inventory.hasItem(gun.gunInfo.magazine)){
+                    if(litemstack.getItemDamage() != gun.getMaxDamage()||owner.maidAvatar.inventory.hasItem(gun.getcurrentMagazine(litemstack))){
 //                        System.out.println("debug");
                         return li;
                     }

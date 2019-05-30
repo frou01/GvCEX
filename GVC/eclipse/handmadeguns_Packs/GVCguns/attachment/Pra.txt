@@ -1,6 +1,6 @@
 Texture,pra
 Stack,64
-Name,Plastic
+Name,Prastic
 Magazine,Prastic
 Recipe1,aba
 Recipe2,   

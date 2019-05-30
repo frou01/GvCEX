@@ -1,64 +1,13 @@
 package hmgww2.entity;
 
 
-import java.util.Calendar;
-import java.util.List;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import hmggvcmob.GVCMobPlus;
 import hmggvcmob.ai.AITankAttack;
-import hmggvcmob.entity.FireRist;
-import hmggvcmob.entity.ModifiedBoundingBox;
-import hmggvcmob.entity.TurretObj;
-import hmggvcmob.entity.VesselBaseLogic;
-import hmgww2.mod_GVCWW2;
-import hmgww2.blocks.BlockFlagBase;
-import hmgww2.blocks.BlockUSAFlagBase;
-import hmgww2.network.WW2MessageKeyPressed;
-import hmgww2.network.WW2PacketHandler;
-import net.minecraft.block.Block;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityFlying;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.EnumCreatureAttribute;
-import net.minecraft.entity.IEntityLivingData;
-import net.minecraft.entity.IRangedAttackMob;
-import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAIArrowAttack;
-import net.minecraft.entity.ai.EntityAIAttackOnCollide;
-import net.minecraft.entity.ai.EntityAIFleeSun;
-import net.minecraft.entity.ai.EntityAIHurtByTarget;
-import net.minecraft.entity.ai.EntityAILookIdle;
-import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
-import net.minecraft.entity.ai.EntityAIRestrictSun;
-import net.minecraft.entity.ai.EntityAISwimming;
-import net.minecraft.entity.ai.EntityAITempt;
-import net.minecraft.entity.ai.EntityAIWander;
-import net.minecraft.entity.ai.EntityAIWatchClosest;
-import net.minecraft.entity.monster.EntityCreeper;
-import net.minecraft.entity.monster.EntityGhast;
-import net.minecraft.entity.monster.EntityGolem;
-import net.minecraft.entity.monster.EntityMob;
-import net.minecraft.entity.monster.IMob;
-import net.minecraft.entity.passive.EntityVillager;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.stats.AchievementList;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.Vec3;
-import net.minecraft.world.EnumDifficulty;
-import net.minecraft.world.EnumSkyBlock;
+import hmvehicle.entity.parts.turrets.FireRist;
+import hmvehicle.entity.parts.ModifiedBoundingBox;
+import hmvehicle.entity.parts.turrets.TurretObj;
+import hmvehicle.entity.parts.logics.VesselBaseLogic;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldProviderHell;
-import net.minecraft.world.biome.BiomeGenBase;
 
 import javax.vecmath.Vector3d;
 
@@ -73,7 +22,7 @@ public class EntityUSA_ShipD  extends EntityUSA_ShipBase
 		ignoreFrustumCheck = true;
 		renderDistanceWeight = Double.MAX_VALUE;
 		draft = 2.2f;
-		nboundingbox = new ModifiedBoundingBox(-100,-100,-100,100,100,100,
+		nboundingbox = new ModifiedBoundingBox(boundingBox.minX,boundingBox.minY,boundingBox.minZ,boundingBox.maxX,boundingBox.maxY,boundingBox.maxZ,
 				                                      0,5,0,
 				                                      10,10,90);
 		nboundingbox.rot.set(baseLogic.bodyRot);
@@ -88,8 +37,8 @@ public class EntityUSA_ShipD  extends EntityUSA_ShipBase
 		aiTankAttack = new AITankAttack(this,3600,900,10,10);
 		aiTankAttack.setAlways_movearound(true);
 		this.tasks.addTask(1,aiTankAttack);
-		playerpos = new Vector3d(0,19.02,-13.32);
-		zoomingplayerpos = new Vector3d(-0.8,3.2D,-0.3);
+		playerpos = new Vector3d(0,14.7269,-24.8614);
+		zoomingplayerpos = new Vector3d(0,12.2064,-6.6070);
 		cannonpos = new Vector3d(0,2.175,-3.566);
 		Vector3d turretPitchCenterpos = new Vector3d(0,2.1706,0);
 		turretpos = new Vector3d(0,8.5442,-33.5458);
@@ -104,17 +53,17 @@ public class EntityUSA_ShipD  extends EntityUSA_ShipBase
 			mainTurret1.turretanglelimtPitchmin = -80;
 			mainTurret1.traverseSound = null;
 			mainTurret1.currentEntity = this;
-			mainTurret1.powor = 15;
+			mainTurret1.powor = 75;
 			mainTurret1.ex = 1.0F;
 			mainTurret1.cycle_setting = 60;
 			mainTurret1.firesound = "hmgww2:hmgww2.75mmfire";
-			mainTurret1.spread = 1;
-			mainTurret1.speed = 8;
+			mainTurret1.spread = 3;
+			mainTurret1.speed = 4;
 			mainTurret1.canex = true;
 			mainTurret1.guntype = 2;
 			mainTurret1.fireRists = new FireRist[]{new FireRist(160,-160,90,-90)};
 		}
-		turretpos = new Vector3d(-2.8444,10.0666,-7.5907);
+		turretpos = new Vector3d(2.8444,10.0666,-7.5907);
 		TurretObj mainTurret2 = new TurretObj(worldObj);
 		{
 			mainTurret2.onmotherPos = turretpos;
@@ -126,17 +75,17 @@ public class EntityUSA_ShipD  extends EntityUSA_ShipBase
 			mainTurret2.turretanglelimtPitchmin = -80;
 			mainTurret2.traverseSound = null;
 			mainTurret2.currentEntity = this;
-			mainTurret2.powor = 15;
+			mainTurret2.powor = 75;
 			mainTurret2.ex = 1.0F;
 			mainTurret2.cycle_setting = 60;
 			mainTurret2.firesound = "hmgww2:hmgww2.75mmfire";
-			mainTurret2.spread = 1;
-			mainTurret2.speed = 8;
+			mainTurret2.spread = 3;
+			mainTurret2.speed = 4;
 			mainTurret2.canex = true;
 			mainTurret2.guntype = 2;
-			mainTurret2.fireRists = new FireRist[]{new FireRist(180,10,90,-90)};
+			mainTurret2.fireRists = new FireRist[]{new FireRist(-10,-180,90,-90)};
 		}
-		turretpos = new Vector3d(2.8444,10.0666,-7.5907);
+		turretpos = new Vector3d(-2.8444,10.0666,-7.5907);
 		TurretObj mainTurret3 = new TurretObj(worldObj);
 		{
 			mainTurret3.onmotherPos = turretpos;
@@ -148,17 +97,17 @@ public class EntityUSA_ShipD  extends EntityUSA_ShipBase
 			mainTurret3.turretanglelimtPitchmin = -80;
 			mainTurret3.traverseSound = null;
 			mainTurret3.currentEntity = this;
-			mainTurret3.powor = 15;
+			mainTurret3.powor = 75;
 			mainTurret3.ex = 1.0F;
 			mainTurret3.cycle_setting = 60;
 			mainTurret3.firesound = "hmgww2:hmgww2.75mmfire";
-			mainTurret3.spread = 1;
-			mainTurret3.speed = 8;
+			mainTurret3.spread = 3;
+			mainTurret3.speed = 4;
 			mainTurret3.canex = true;
 			mainTurret3.guntype = 2;
-			mainTurret3.fireRists = new FireRist[]{new FireRist(-10,-180,90,-90)};
+			mainTurret3.fireRists = new FireRist[]{new FireRist(180,10,90,-90)};
 		}
-		turretpos = new Vector3d(-2.9801,6.5867,20.3231);
+		turretpos = new Vector3d(2.9801,6.5867,20.3231);
 		TurretObj mainTurret4 = new TurretObj(worldObj);
 		{
 			mainTurret4.onmotherPos = turretpos;
@@ -170,17 +119,17 @@ public class EntityUSA_ShipD  extends EntityUSA_ShipBase
 			mainTurret4.turretanglelimtPitchmin = -80;
 			mainTurret4.traverseSound = null;
 			mainTurret4.currentEntity = this;
-			mainTurret4.powor = 15;
+			mainTurret4.powor = 75;
 			mainTurret4.ex = 1.0F;
 			mainTurret4.cycle_setting = 60;
 			mainTurret4.firesound = "hmgww2:hmgww2.75mmfire";
-			mainTurret4.spread = 1;
-			mainTurret4.speed = 8;
+			mainTurret4.spread = 3;
+			mainTurret4.speed = 4;
 			mainTurret4.canex = true;
 			mainTurret4.guntype = 2;
-			mainTurret4.fireRists = new FireRist[]{new FireRist(180,20,90,-90)};
+			mainTurret4.fireRists = new FireRist[]{new FireRist(-20,-180,90,-90)};
 		}
-		turretpos = new Vector3d(2.7055,6.5867,24.6199);
+		turretpos = new Vector3d(-2.7055,6.5867,24.6199);
 		TurretObj mainTurret5 = new TurretObj(worldObj);
 		{
 			mainTurret5.onmotherPos = turretpos;
@@ -192,15 +141,15 @@ public class EntityUSA_ShipD  extends EntityUSA_ShipBase
 			mainTurret5.turretanglelimtPitchmin = -80;
 			mainTurret5.traverseSound = null;
 			mainTurret5.currentEntity = this;
-			mainTurret5.powor = 15;
+			mainTurret5.powor = 75;
 			mainTurret5.ex = 1.0F;
 			mainTurret5.cycle_setting = 60;
 			mainTurret5.firesound = "hmgww2:hmgww2.75mmfire";
-			mainTurret5.spread = 1;
-			mainTurret5.speed = 8;
+			mainTurret5.spread = 3;
+			mainTurret5.speed = 4;
 			mainTurret5.canex = true;
 			mainTurret5.guntype = 2;
-			mainTurret5.fireRists = new FireRist[]{new FireRist(-20,-180,90,-90)};
+			mainTurret5.fireRists = new FireRist[]{new FireRist(180,20,90,-90)};
 		}
 		turretpos = new Vector3d(0,8.5442,32.9060);
 		TurretObj mainTurret6 = new TurretObj(worldObj);
@@ -214,17 +163,17 @@ public class EntityUSA_ShipD  extends EntityUSA_ShipBase
 			mainTurret6.turretanglelimtPitchmin = -80;
 			mainTurret6.traverseSound = null;
 			mainTurret6.currentEntity = this;
-			mainTurret6.powor = 15;
+			mainTurret6.powor = 75;
 			mainTurret6.ex = 1.0F;
 			mainTurret6.cycle_setting = 60;
 			mainTurret6.firesound = "hmgww2:hmgww2.75mmfire";
-			mainTurret6.spread = 1;
-			mainTurret6.speed = 8;
+			mainTurret6.spread = 3;
+			mainTurret6.speed = 4;
 			mainTurret6.canex = true;
 			mainTurret6.guntype = 2;
 			mainTurret6.fireRists = new FireRist[]{new FireRist(-20,-180,90,-90),new FireRist(180,20,90,-90)};
 		}
-		turretpos = new Vector3d(-3.5077,7.1202,4.2273);
+		turretpos = new Vector3d(3.5077,7.1202,4.2273);
 		TurretObj torp1 = new TurretObj(worldObj);
 		{
 			torp1.onmotherPos = turretpos;
@@ -252,9 +201,9 @@ public class EntityUSA_ShipD  extends EntityUSA_ShipBase
 			torp1.fuse = 400;
 			torp1.torpdraft = 2;
 			torp1.bulletmodel = "byfrou01_torpedo";
-			torp1.fireRists = new FireRist[]{new FireRist(-10,-180,90,-90)};
+			torp1.fireRists = new FireRist[]{new FireRist(-30,-150,90,-90)};
 		}
-		turretpos = new Vector3d(3.2205,7.1202,8.5345);
+		turretpos = new Vector3d(-3.2205,7.1202,8.5345);
 		TurretObj torp2 = new TurretObj(worldObj);
 		{
 			torp2.onmotherPos = turretpos;
@@ -282,7 +231,7 @@ public class EntityUSA_ShipD  extends EntityUSA_ShipBase
 			torp2.fuse = 400;
 			torp2.torpdraft = 2;
 			torp2.bulletmodel = "byfrou01_torpedo";
-			torp2.fireRists = new FireRist[]{new FireRist(180,10,90,-90)};
+			torp2.fireRists = new FireRist[]{new FireRist(150,30,90,-90)};
 		}
 		turretpos = new Vector3d(-0.9984,7.0179,45.6628);
 		TurretObj depth_charge1 = new TurretObj(worldObj);
@@ -300,7 +249,7 @@ public class EntityUSA_ShipD  extends EntityUSA_ShipBase
 			depth_charge1.currentEntity = this;
 			depth_charge1.powor = 100;
 			depth_charge1.ex = 10.0F;
-			depth_charge1.cycle_setting = 5;
+			depth_charge1.cycle_setting = 7;
 			depth_charge1.firesound = null;
 			depth_charge1.flushName = null;
 			depth_charge1.spread = 4;
@@ -329,7 +278,7 @@ public class EntityUSA_ShipD  extends EntityUSA_ShipBase
 			depth_charge2.currentEntity = this;
 			depth_charge2.powor = 100;
 			depth_charge2.ex = 10.0F;
-			depth_charge2.cycle_setting = 5;
+			depth_charge2.cycle_setting = 7;
 			depth_charge2.firesound = null;
 			depth_charge2.flushName = null;
 			depth_charge2.spread = 4;

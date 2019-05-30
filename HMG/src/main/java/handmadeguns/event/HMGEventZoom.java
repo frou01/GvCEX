@@ -44,7 +44,6 @@ public class HMGEventZoom {
 	// public HMGItemGunBase gunbase;
 
 	public boolean zoomtype;
-	public int iii;
 	public Item itemss;
 	public boolean needreset = false;
 	public boolean slot;
@@ -154,15 +153,15 @@ public class HMGEventZoom {
 			// Entity entity = minecraft.pointedEntity;
 			EntityPlayer entityplayer = minecraft.thePlayer;
 			// EntityPlayer entityplayer = event.player;
-			ItemStack itemstack = ((entityplayer)).getCurrentEquippedItem();
+			ItemStack gunstack = ((entityplayer)).getCurrentEquippedItem();
 
 			Entity ridingEntity = entityplayer.ridingEntity;
 			if(ridingEntity instanceof PlacedGunEntity) {
 				if (((PlacedGunEntity) ridingEntity).gunStack != null && ((PlacedGunEntity) ridingEntity).gunStack.getItem() instanceof HMGItem_Unified_Guns) {
-					itemstack = ((PlacedGunEntity) ridingEntity).gunStack;
+					gunstack = ((PlacedGunEntity) ridingEntity).gunStack;
 				}
 			}
-			if (itemstack != previtemstack) {
+			if (gunstack != previtemstack) {
 				ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer,
 						1.0d, "cameraZoom", "field_78503_V");
 				needreset = true;
@@ -172,14 +171,14 @@ public class HMGEventZoom {
 			// OpenGlHelper.
 			GL11.glEnable(GL11.GL_BLEND);
 			if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
-				if (itemstack != null && itemstack.getItem() instanceof HMGItem_Unified_Guns) {
+				if (gunstack != null && gunstack.getItem() instanceof HMGItem_Unified_Guns) {
 					// this.modelArmor.aimedBow = true;
-					HMGItem_Unified_Guns gunbase = (HMGItem_Unified_Guns) itemstack.getItem();
+					HMGItem_Unified_Guns gunbase = (HMGItem_Unified_Guns) gunstack.getItem();
 					String ads = gunbase.gunInfo.adstexture;
 					String adsr = gunbase.gunInfo.adstexturer;
 					String adss = gunbase.gunInfo.adstextures;
-					((HMGItem_Unified_Guns) itemstack.getItem()).checkTags(itemstack);
-					NBTTagCompound nbt = itemstack.getTagCompound();
+					((HMGItem_Unified_Guns) gunstack.getItem()).checkTags(gunstack);
+					NBTTagCompound nbt = gunstack.getTagCompound();
 					//String ads = nbt.getString("adstexture");
 					EntityRenderer entityrender = minecraft.entityRenderer;
 					ItemRenderer itemrender = entityrender.itemRenderer;
@@ -193,10 +192,10 @@ public class HMGEventZoom {
 					float bure = gunbase.gunInfo.spread_setting;
 					bure *= HandmadeGunsCore.Key_ADS(entityplayer) ? gunbase.gunInfo.ads_spread_cof:1;
 					bure  += gunbase.gunInfo.spread_setting * spreadDiffusion;
-					((HMGItem_Unified_Guns) itemstack.getItem()).checkTags(itemstack);
+					((HMGItem_Unified_Guns) gunstack.getItem()).checkTags(gunstack);
 					ItemStack[] items = new ItemStack[6];
 					ItemStack itemstackSight = null;
-					NBTTagList tags = (NBTTagList) itemstack.getTagCompound().getTag("Items");
+					NBTTagList tags = (NBTTagList) gunstack.getTagCompound().getTag("Items");
 					if (tags != null) {
 						for (int i1 = 0; i1 < 7; i1++)//133
 						{
@@ -314,27 +313,43 @@ public class HMGEventZoom {
 					GL11.glEnable(GL11.GL_BLEND);
 					GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-					String d = String.format("%1$3d", itemstack.getMaxDamage() - itemstack.getItemDamage());
-					String d1 = String.format("%1$3d", itemstack.getMaxDamage());
+					String d = String.format("%1$3d", gunbase.remain_Bullet(gunstack));
+					String d1 = String.format("%1$3d", gunbase.max_Bullet(gunstack));
 					fontrenderer.drawStringWithShadow(d + " /" + d1, (int)screenWidth - 70, (int)screenHeight - fontrenderer.FONT_HEIGHT * 4, 0xFFFFFF);
 
 					GuiIngame g = minecraft.ingameGUI;
-					minecraft.getTextureManager().bindTexture(TextureMap.locationItemsTexture);
 					//g.drawTexturedModelRectFromIcon(screenWidth-40, screenHeight-33, gunbase.magazine.getIconFromDamage(0), 16, 16);
-					if (gunbase.gunInfo.magazine != null) {
-						g.drawTexturedModelRectFromIcon((int)screenWidth - 70, (int)screenHeight - 53, gunbase.gunInfo.magazine.getIconFromDamage(0), 16, 16);
+					if (gunbase.getcurrentMagazine(gunstack) != null) {
+						int stacksize = 0;
+						minecraft.getTextureManager().bindTexture(TextureMap.locationItemsTexture);
+						g.drawTexturedModelRectFromIcon((int)screenWidth - 70, (int)screenHeight - 53, gunbase.getcurrentMagazine(gunstack).getIconFromDamage(0), 16, 16);
 						for (int is = 0; is < 36; ++is) {
 							InventoryPlayer playerInv = entityplayer.inventory;
 							ItemStack itemi = playerInv.getStackInSlot(is);
-							if (itemi != null && itemi.getItem() == gunbase.gunInfo.magazine) {
-								iii = iii + itemi.stackSize;
+							if (itemi != null && itemi.getItem() == gunbase.getcurrentMagazine(gunstack)) {
+								stacksize += itemi.stackSize;
 							}
 						}
-						String d2 = String.format("%1$3d", iii);
+						String d2 = String.format("%1$3d", stacksize);
 						fontrenderer.drawStringWithShadow("x" + d2, (int)screenWidth - 50, (int)screenHeight - fontrenderer.FONT_HEIGHT * 5, 0xFFFFFF);
-						iii = 0;
 					}
-					this.renderBullet(fontrenderer, (int)screenWidth, (int)screenHeight, itemstack);
+					
+					if (gunbase.get_selectingMagazine(gunstack) != null && gunbase.getcurrentMagazine(gunstack) != gunbase.get_selectingMagazine(gunstack)) {
+						int stacksize = 0;
+						minecraft.getTextureManager().bindTexture(TextureMap.locationItemsTexture);
+						g.drawTexturedModelRectFromIcon((int)screenWidth - 120, (int)screenHeight - 53, gunbase.get_selectingMagazine(gunstack).getIconFromDamage(0), 16, 16);
+						for (int is = 0; is < 36; ++is) {
+							InventoryPlayer playerInv = entityplayer.inventory;
+							ItemStack itemi = playerInv.getStackInSlot(is);
+							if (itemi != null && itemi.getItem() == gunbase.get_selectingMagazine(gunstack)) {
+								stacksize += itemi.stackSize;
+							}
+						}
+						String d2 = String.format("%1$3d", stacksize);
+						fontrenderer.drawStringWithShadow("x" + d2, (int)screenWidth - 100, (int)screenHeight - fontrenderer.FONT_HEIGHT * 5, 0xFFFFFF);
+						fontrenderer.drawStringWithShadow("next", (int)screenWidth - 120, (int)screenHeight - fontrenderer.FONT_HEIGHT * 5 - 16, 0xFFFFFF);
+					}
+					this.renderBullet(fontrenderer, (int)screenWidth, (int)screenHeight, gunstack);
 					if (gunbase.gunInfo.canlock) {
 						if (nbt.getBoolean("SeekerOpened"))
 							fontrenderer.drawStringWithShadow("Seekeropen", (int)screenWidth - 60, (int)screenHeight - fontrenderer.FONT_HEIGHT * 2, 0xFFFFFF);
@@ -390,7 +405,7 @@ public class HMGEventZoom {
 			}
 			GL11.glPopMatrix();
 			GL11.glPopAttrib();
-			previtemstack = itemstack;
+			previtemstack = gunstack;
 		}
 
 		Minecraft.getMinecraft().renderEngine.bindTexture(icons);

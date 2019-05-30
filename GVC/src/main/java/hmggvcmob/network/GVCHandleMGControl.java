@@ -33,7 +33,7 @@ public class GVCHandleMGControl implements IMessageHandler<GVCPacketMGControl, I
                 ((EntityMGAX55) entity).trigger1 = message.trig1;
                 ((EntityMGAX55) entity).trigger2 = message.trig2;
                 ((EntityMGAX55) entity).weaponMode = message.weaponmode;
-                if(!world.isRemote)GVCMPacketHandler.INSTANCE.sendToAll(message);
+                if(!world.isRemote) GVCMPacketHandler.INSTANCE.sendToAll(message);
             }
         }
         return null;

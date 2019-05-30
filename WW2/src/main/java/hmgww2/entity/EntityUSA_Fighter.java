@@ -1,7 +1,7 @@
 package hmgww2.entity;
 
 
-import hmggvcmob.entity.TurretObj;
+import hmvehicle.entity.parts.turrets.TurretObj;
 import net.minecraft.world.World;
 
 import javax.vecmath.Vector3d;
@@ -18,12 +18,10 @@ public class EntityUSA_Fighter extends EntityUSA_FighterBase
 //		proxy.replaceBoundingbox(this,nboundingbox);
 //		((ModifiedBoundingBox)this.boundingBox).updateOBB(this.posX,this.posY,this.posZ);
 		ignoreFrustumCheck = true;
-		baseLogic.speedfactor = 0.003f;
-		baseLogic.throttle_gearDown = 1.7f;
-		baseLogic.throttle_Max = 4.0f;
+		baseLogic.throttle_Max = 4.5f;
 		baseLogic.rollspeed = 0.6f;
 		baseLogic.pitchspeed = 0.3f;
-		baseLogic.yawspeed = 0.4f;
+		baseLogic.yawspeed = 0.1f;
 		baseLogic.maxDive = 60;
 		baseLogic.maxClimb = -25;
 		baseLogic.maxbank = 60;
@@ -55,7 +53,7 @@ public class EntityUSA_Fighter extends EntityUSA_FighterBase
 				cannon1.magazineMax = 100;
 				cannon1.magazinerem = 100;
 				cannon1.reloadTimer = 70;
-				cannon1.canex = true;
+				cannon1.canex = false;
 				cannon1.guntype = 0;
 				
 				{
@@ -79,7 +77,7 @@ public class EntityUSA_Fighter extends EntityUSA_FighterBase
 					cannon2.magazineMax = 100;
 					cannon2.magazinerem = 100;
 					cannon2.reloadTimer = 70;
-					cannon2.canex = true;
+					cannon2.canex = false;
 					cannon2.guntype = 0;
 					cannon1.addchild(cannon2);
 				}
@@ -104,7 +102,7 @@ public class EntityUSA_Fighter extends EntityUSA_FighterBase
 					cannon3.magazineMax = 100;
 					cannon3.magazinerem = 100;
 					cannon3.reloadTimer = 70;
-					cannon3.canex = true;
+					cannon3.canex = false;
 					cannon3.guntype = 0;
 					cannon1.addchild(cannon3);
 				}
@@ -129,7 +127,7 @@ public class EntityUSA_Fighter extends EntityUSA_FighterBase
 					cannon4.magazineMax = 100;
 					cannon4.magazinerem = 100;
 					cannon4.reloadTimer = 70;
-					cannon4.canex = true;
+					cannon4.canex = false;
 					cannon4.guntype = 0;
 					cannon1.addchild(cannon4);
 				}

@@ -1,7 +1,7 @@
 package hmgww2.entity;
 
 
-import hmggvcmob.entity.*;
+import hmvehicle.entity.parts.turrets.TurretObj;
 import net.minecraft.world.World;
 
 import javax.vecmath.Vector3d;
@@ -21,28 +21,27 @@ public class EntityGER_FighterA extends EntityGER_FighterBase
 //		((ModifiedBoundingBox)this.boundingBox).updateOBB(this.posX,this.posY,this.posZ);
 		armor = 5;
 		ignoreFrustumCheck = true;
-		baseLogic.speedfactor = 0.0025f;
 		baseLogic.throttle_gearDown = 1.7f;
-		baseLogic.throttle_Max = 5.0f;
-		baseLogic.rollspeed = 0.4f;
-		baseLogic.pitchspeed = 0.3f;
+		baseLogic.throttle_Max = 3.0f;
+		baseLogic.rollspeed = 0.2f;
+		baseLogic.pitchspeed = 0.4f;
 		baseLogic.yawspeed = 0.15f;
 		baseLogic.throttledown_onDive = true;
 		baseLogic.Dive_bombing = true;
 		baseLogic.sholdUseMain_ToG = true;
 		baseLogic.startDive = 45;
-		baseLogic.maxDive = 70;
-		baseLogic.cruiseALT = 60;
+		baseLogic.maxDive = 90;
+		baseLogic.cruiseALT = 90;
 		baseLogic.maxClimb = -25;
-		baseLogic.maxbank = 60;
-		baseLogic.minALT = 20;
+		baseLogic.maxbank = 30;
+		baseLogic.minALT = 40;
 		baseLogic.soundname = "hmgww2:hmgww2.sound_pera";
 		baseLogic.pitchsighwidthmax = -1;
 		baseLogic.pitchsighwidthmin = -15;
 		baseLogic.yawsightwidthmax = 15;
 		baseLogic.yawsightwidthmin = -15;
 		
-		baseLogic.camerapos = new double[]{0,1.9,0};
+		baseLogic.camerapos = new double[]{0,2.1,-0.5};
 		baseLogic.rotcenter = new double[]{0,1.5,0};
 		
 		baseLogic.onground_pitch = -10;
@@ -65,11 +64,11 @@ public class EntityGER_FighterA extends EntityGER_FighterBase
 				cannon3.firesound = "handmadeguns:handmadeguns.20mmfire";
 				cannon3.flushoffset = 1;
 				cannon3.spread = 2.5f;
-				cannon3.speed = 2;
+				cannon3.speed = 8;
 				cannon3.magazineMax = 50;
 				cannon3.magazinerem = 50;
 				cannon3.reloadTimer = 150;
-				cannon3.canex = true;
+				cannon3.canex = false;
 				cannon3.guntype = 2;
 			}
 			{
@@ -90,11 +89,11 @@ public class EntityGER_FighterA extends EntityGER_FighterBase
 				cannon4.firesound = "handmadeguns:handmadeguns.20mmfire";
 				cannon4.flushoffset = 1;
 				cannon4.spread = 2.5f;
-				cannon4.speed = 2;
+				cannon4.speed = 8;
 				cannon4.magazineMax = 50;
 				cannon4.magazinerem = 50;
 				cannon4.reloadTimer = 150;
-				cannon4.canex = true;
+				cannon4.canex = false;
 				cannon4.guntype = 2;
 				cannon3.addchild(cannon4);
 			}
@@ -102,7 +101,7 @@ public class EntityGER_FighterA extends EntityGER_FighterBase
 		baseLogic.subTurret = cannon3;
 		baseLogic.mainTurret = new TurretObj(worldObj);
 		{
-			baseLogic.mainTurret.onmotherPos = new Vector3d(0,-1,-2);
+			baseLogic.mainTurret.onmotherPos = new Vector3d(0,-1,-4);
 			baseLogic.mainTurret.motherRotCenter = new Vector3d(baseLogic.rotcenter);
 			baseLogic.mainTurret.turretspeedY = 5;
 			baseLogic.mainTurret.turretspeedP = 8;

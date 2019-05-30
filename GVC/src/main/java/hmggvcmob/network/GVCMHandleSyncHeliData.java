@@ -21,9 +21,9 @@ public class GVCMHandleSyncHeliData implements IMessageHandler<GVCXMPacketSyncPM
         }
         Entity entity = world.getEntityByID(gvcmPacketSyncFlagdata.entityid);
         if(entity instanceof GVCEntityPMCHeli) {
-            ((GVCEntityPMCHeli)entity).bodyrotationYaw = gvcmPacketSyncFlagdata.bodyrotationYaw;
-            ((GVCEntityPMCHeli)entity).bodyrotationPitch = gvcmPacketSyncFlagdata.bodyrotationPitch;
-            ((GVCEntityPMCHeli)entity).bodyrotationRoll = gvcmPacketSyncFlagdata.bodyrotationRoll;
+//            ((GVCEntityPMCHeli)entity).bodyrotationYaw = gvcmPacketSyncFlagdata.bodyrotationYaw;
+//            ((GVCEntityPMCHeli)entity).bodyrotationPitch = gvcmPacketSyncFlagdata.bodyrotationPitch;
+//            ((GVCEntityPMCHeli)entity).bodyrotationRoll = gvcmPacketSyncFlagdata.bodyrotationRoll;
         }
         return null;
     }

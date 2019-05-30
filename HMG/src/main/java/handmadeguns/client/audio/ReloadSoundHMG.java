@@ -40,7 +40,11 @@ public class ReloadSoundHMG extends MovingSound
 	 */
 	public void update()
 	{
-		if (this.attachedEntity.isDead ||(attachedEntity instanceof EntityPlayer && prevslot != ((EntityPlayer) attachedEntity).inventory.currentItem))
+		if (
+				this.attachedEntity.isDead ||
+						(attachedEntity instanceof EntityPlayer &&
+								 (prevslot != ((EntityPlayer) attachedEntity).inventory.currentItem ||
+						       (((EntityPlayer) attachedEntity).getHeldItem() != null && ((EntityPlayer) attachedEntity).getHeldItem().getTagCompound() != null && (((EntityPlayer) attachedEntity).getHeldItem().getTagCompound().getBoolean("CannotReload"))))))
 		{
 			this.donePlaying = true;
 			this.repeat = false;

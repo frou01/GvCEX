@@ -1,13 +1,23 @@
 package hmgww2.render;
 
-import hmggvcmob.entity.*;
+import cpw.mods.fml.client.FMLClientHandler;
+import hmvehicle.entity.parts.Hasmode;
+import hmvehicle.entity.parts.Iplane;
+import hmvehicle.entity.parts.logics.PlaneBaseLogic;
+import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
+
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_EQUAL;
+import static org.lwjgl.opengl.GL11.glAlphaFunc;
 
 public class RenderPlane extends Render {
 	
@@ -37,12 +47,22 @@ public class RenderPlane extends Render {
 	public void doRender(Entity entity, double p_76986_2_, double p_76986_4_, double p_76986_6_,
 	                     float entityYaw, float partialTicks) {
 		if(entity instanceof Iplane){
+			int pass = MinecraftForgeClient.getRenderPass();
+			if(pass == 1) {
+				glEnable(GL_BLEND);
+				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+				GL11.glDepthMask(false);
+				glAlphaFunc(GL_LESS, 1);
+			}else {
+				GL11.glDepthMask(true);
+				glAlphaFunc(GL_EQUAL, 1);
+			}
 			this.bindEntityTexture(entity);
 			GL11.glPushMatrix();
 			GL11.glTranslatef((float) p_76986_2_, (float) p_76986_4_, (float) p_76986_6_);
 			GL11.glRotatef(180F, 0.0F, 1.0F, 0.0F);
 			GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-			PlaneBaseLogic baseLogic = ((Iplane) entity).getBaseLogic();
+			PlaneBaseLogic baseLogic = (PlaneBaseLogic) ((Iplane) entity).getBaseLogic();
 			GL11.glTranslatef((float) baseLogic.rotcenter[0], (float) baseLogic.rotcenter[1], (float) baseLogic.rotcenter[2]);
 			GL11.glRotatef(180.0F - (baseLogic.bodyrotationYaw + (baseLogic.bodyrotationYaw - baseLogic.prevbodyrotationYaw) * partialTicks), 0.0F, 1.0F, 0.0F);
 			GL11.glRotatef(baseLogic.bodyrotationPitch, 1.0F, 0.0F, 0.0F);
@@ -58,11 +78,30 @@ public class RenderPlane extends Render {
 				tankk.renderPart("obj8");
 				tankk.renderPart("mat8");
 			}
-			GL11.glTranslatef((float) perapos[0], (float) perapos[1], (float) perapos[2]);
-			GL11.glRotatef((baseLogic.perapos + (baseLogic.perapos - baseLogic.prevperapos) * partialTicks), 0.0F, 0.0F, 1.0F);
-			GL11.glTranslatef((float) -perapos[0], (float) -perapos[1], (float) -perapos[2]);
-			tankk.renderPart("obj7");
-			tankk.renderPart("mat7");
+			GL11.glPushMatrix();{
+				GL11.glTranslatef((float) perapos[0], (float) perapos[1], (float) perapos[2]);
+				GL11.glRotatef((baseLogic.perapos + (baseLogic.perapos - baseLogic.prevperapos) * partialTicks), 0.0F, 0.0F, 1.0F);
+				GL11.glTranslatef((float) -perapos[0], (float) -perapos[1], (float) -perapos[2]);
+				tankk.renderPart("obj7");
+				tankk.renderPart("mat7");
+			}GL11.glPopMatrix();
+			if (baseLogic.ispilot(FMLClientHandler.instance().getClientPlayerEntity())&& FMLClientHandler.instance().getClient().gameSettings.thirdPersonView == 0) {
+				float lastBrightnessX = OpenGlHelper.lastBrightnessX;
+				float lastBrightnessY = OpenGlHelper.lastBrightnessY;
+				OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
+				RenderHelper.disableStandardItemLighting();
+				GL11.glDepthMask(false);
+				GL11.glDepthFunc(GL11.GL_ALWAYS);//強制描画
+				tankk.renderPart("sight");
+				GL11.glDepthMask(true);
+				GL11.glDepthFunc(GL11.GL_LEQUAL);
+				OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)lastBrightnessX, (float)lastBrightnessY);
+				RenderHelper.enableStandardItemLighting();
+			}
+			GL11.glDepthMask(true);
+			GL11.glAlphaFunc(GL11.GL_GREATER, 0);
+			glDisable(GL_BLEND);
+			GL11.glDisable(GL12.GL_RESCALE_NORMAL);
 			GL11.glPopMatrix();
 		}
 		

@@ -1,4 +1,4 @@
 ObjModel,14.5mm_cart.mqo
 ObjTexture,14_5mmbullet&Cart.png
-Objscale,2
+Objscale,1
 Name,14_5mmCart

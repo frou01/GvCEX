@@ -7,6 +7,7 @@ import handmadeguns.items.guns.HMGItem_Unified_Guns;
 import handmadeguns.network.PacketreturnMgazineItem;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -30,15 +31,8 @@ public class MessageCatcher_returnMagazineItem implements IMessageHandler<Packet
                 if(shooter != null && shooter instanceof EntityPlayer && ((EntityLivingBase) shooter).getHeldItem() != null) {
                     Item gunitem = ((EntityLivingBase) shooter).getHeldItem().getItem();
                     ItemStack itemStack = ((EntityLivingBase) shooter).getHeldItem();
-                    if(gunitem instanceof HMGItem_Unified_Guns){
-                        {
-                            int returnmagazineCount = (int)((float) ((HMGItem_Unified_Guns) gunitem).gunInfo.magazineItemCount * ((((gunitem).getMaxDamage() - itemStack.getItemDamage()) / (float)(gunitem).getMaxDamage())));
-//                            System.out.println("debug" + returnmagazineCount);
-                            for(int i= 0;i<returnmagazineCount;i++) {
-                                ((EntityPlayer) shooter).inventory.addItemStackToInventory(new ItemStack(((HMGItem_Unified_Guns) gunitem).gunInfo.magazine));
-                            }
-                        }
-                        itemStack.setItemDamage(itemStack.getMaxDamage());
+                    if(gunitem instanceof HMGItem_Unified_Guns && ((HMGItem_Unified_Guns) gunitem).remain_Bullet(itemStack) > 0){
+                        ((HMGItem_Unified_Guns) gunitem).returnInternalMagazines(itemStack,shooter);
                     }
                 }
             }

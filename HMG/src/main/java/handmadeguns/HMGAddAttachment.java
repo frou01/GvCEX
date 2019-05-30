@@ -16,6 +16,8 @@ import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
 
+import static handmadeguns.HandmadeGunsCore.tabshmg;
+
 public class HMGAddAttachment
 {
 	public static List Attach = new ArrayList();
@@ -25,6 +27,7 @@ public class HMGAddAttachment
 	{
 		String GunName = null;
 		String Namegun = null;
+		boolean cosume_onCraft = true;
 		int kazu = 1;
 		String texture = "null";
 		String hud = null;
@@ -32,30 +35,42 @@ public class HMGAddAttachment
 		float zoom = -1;
 		boolean isnightvision = false;
 		boolean textureOnly = false;
-		float zoomads = 1;
 		float damagemodify = 1;
+		
+		
 		float slowdownrate = 1;
 		float speedmodify = 1;
 
 
 		int fuse = -1;
-		boolean needset_fuse = false;
-		boolean flame = false;
-		boolean needset_flame = false;
-		boolean explosion = false;
-		boolean needset_explosion = false;
-		boolean blockdestroyex = false;
-		boolean needset_blockdestroyex = false;
-		float explosionlevel = 1;
-		boolean needset_explosionlevel = false;
-		String bulletmodel = "default";
-		boolean needset_bulletmodel = false;
+		boolean blockdestroyex = true;
+		boolean autoDestroy = true;
+		boolean hasRoundOption = false;
+		int round = 0;
+		boolean hasReloadOption = false;
+		int reloadTime = 0;
+		int bullettype = -1;
+		float explosionlevel = -1;
+		
+		double knockback = Double.NaN;
+		double knockbackY = Double.NaN;
+		float  bouncerate = Float.NaN;
+		float  bouncelimit = Float.NaN;
+		float  resistance = Float.NaN;
+		float  acceleration = Float.NaN;
+		float  gra = Float.NaN;
+		
+		
+		String bulletItemName = null;
+		String cartItemName = null;
+		String bulletModelName = null;
+		String cartridgeModelName = null;
 		float gunoffset[] = new float[3];
 		float gunrotation[] = new float[3];
 		boolean needgunoffset = false;
 
 		boolean canobj = false;
-		String  objmodel = "null";
+		String  objmodel = null;
 		String objtexture = "null";
 		Item itema = null;
 		Item itemb = null;
@@ -113,7 +128,12 @@ public class HMGAddAttachment
 								break;
 							case "Zoom":
 								zoom = Float.parseFloat(type[1]);
+								break;
+							case "isnightvision":
 								isnightvision = Boolean.parseBoolean(type[1]);
+								break;
+							case "cosume_onCraft":
+								cosume_onCraft = Boolean.parseBoolean(type[1]);
 								break;
 							case "ZoomRender":
 								textureOnly = Boolean.parseBoolean(type[1]);
@@ -145,11 +165,70 @@ public class HMGAddAttachment
 							case "AntiBure_ADS":
 								reduceSpreadLevel_ADS = Float.parseFloat(type[1]);
 								break;
+							case "AntiSpread":
+								reduceSpreadLevel = Float.parseFloat(type[1]);
+								break;
+							case "AntiSpread_ADS":
+								reduceSpreadLevel_ADS = Float.parseFloat(type[1]);
+								break;
 							case "isBase":
 								isbase = Boolean.parseBoolean(type[1]);
 								break;
 							case "Slowdown":
 								slowdownrate = Float.parseFloat(type[1]);
+								break;
+							case "BulletRound":
+								hasRoundOption = true;
+								round = Integer.parseInt(type[1]);
+								break;
+							case "ReloadTimeOption":
+								hasReloadOption = true;
+								reloadTime = Integer.parseInt(type[1]);
+								break;
+							case "BulletType":
+								bullettype = Integer.parseInt(type[1]);
+								break;
+							case "Explosionlevel":
+								explosionlevel = Float.parseFloat(type[1]);
+								break;
+								
+							case "knockback":
+								knockback = Double.parseDouble(type[1]);
+								knockbackY = Double.parseDouble(type[2]);
+								break;
+							case "bouncerate":
+								bouncerate = Float.parseFloat(type[1]);
+								break;
+							case "bouncelimit":
+								bouncelimit = Float.parseFloat(type[1]);
+								break;
+							case "resistance":
+								resistance = Float.parseFloat(type[1]);
+								break;
+							case "acceleration":
+								acceleration = Float.parseFloat(type[1]);
+								break;
+							case "gravity":
+								gra = Float.parseFloat(type[1]);
+								break;
+								
+							case "Blockdestroy":
+								blockdestroyex = Boolean.parseBoolean(type[1]);
+								break;
+							case "AutoDestroy":
+								autoDestroy = Boolean.parseBoolean(type[1]);
+								break;
+							case "BulletItemName":
+								bulletItemName = (type[1]);
+								break;
+							case "CartItemName":
+								cartItemName = (type[1]);
+								break;
+							case "BulletModelName":
+								bulletModelName = (type[1]);
+								break;
+							case "CartModelName":
+								cartridgeModelName = (type[1]);
 								break;
 							case "CenterPoint":
 								for (int i = 0; i < 3; i++)
@@ -337,20 +416,38 @@ public class HMGAddAttachment
 							System.out.println("" + GunName);
 							Magazines.add(newitem);
 						}
+						else if(type[0].equals("CustomMagazine")){
+							GunName = type[1];
+							newitem	= new HMGItemCustomMagazine().setUnlocalizedName(GunName).setMaxStackSize(kazu)
+									.setTextureName("handmadeguns:"+texture);
+							
+							if(Namegun != null){
+								LanguageRegistry.instance().addNameForObject(newitem, "jp_JP", Namegun);
+								LanguageRegistry.instance().addNameForObject(newitem, "en_US", GunName);
+							}else{
+								LanguageRegistry.instance().addNameForObject(newitem, "en_US", GunName);
+							}
+							Magazines.add(newitem);
+						}
+						else if(type[0].equals("SimpleMaterial")){
+							GunName = type[1];
+							newitem	= new HMG_simpleMaterial().setUnlocalizedName(GunName).setMaxStackSize(kazu)
+									.setTextureName("handmadeguns:"+texture);
+							if(!cosume_onCraft){
+								newitem.setContainerItem(newitem);
+							}
+							((HMG_simpleMaterial)newitem).cosume_onCraft = cosume_onCraft;
+							if(Namegun != null){
+								LanguageRegistry.instance().addNameForObject(newitem, "jp_JP", Namegun);
+								LanguageRegistry.instance().addNameForObject(newitem, "en_US", GunName);
+							}else{
+								LanguageRegistry.instance().addNameForObject(newitem, "en_US", GunName);
+							}
+						}
 						else if(type[0].equals("BulletAP")){
 							GunName = type[1];
 							newitem	= new HMGItemBullet_AP().setUnlocalizedName(GunName).setMaxStackSize(kazu)
 									.setTextureName("handmadeguns:"+texture);
-							((HMGItemBulletBase)newitem).damagemodify = damagemodify;
-							((HMGItemBulletBase)newitem).speedmodify = speedmodify;
-							((HMGItemBulletBase)newitem).slowdownrate = slowdownrate;
-
-							if(needset_fuse)((HMGItemBulletBase)newitem).fuse = fuse;
-							if(needset_flame)((HMGItemBulletBase)newitem).flame = flame;
-							if(needset_explosion)((HMGItemBulletBase)newitem).explosion = explosion;
-							if(needset_blockdestroyex)((HMGItemBulletBase)newitem).blockdestroyex = blockdestroyex;
-							if(needset_explosionlevel)((HMGItemBulletBase)newitem).explosionlevel = explosionlevel;
-							if(needset_bulletmodel)((HMGItemBulletBase)newitem).bulletmodel = bulletmodel;
 							if(Namegun != null){
 								LanguageRegistry.instance().addNameForObject(newitem, "jp_JP", Namegun);
 								LanguageRegistry.instance().addNameForObject(newitem, "en_US", GunName);
@@ -362,16 +459,6 @@ public class HMGAddAttachment
 							GunName = type[1];
 							newitem	= new HMGItemBullet_AT().setUnlocalizedName(GunName).setMaxStackSize(kazu)
 									.setTextureName("handmadeguns:"+texture);
-							((HMGItemBulletBase)newitem).damagemodify = damagemodify;
-							((HMGItemBulletBase)newitem).speedmodify = speedmodify;
-							((HMGItemBulletBase)newitem).slowdownrate = slowdownrate;
-
-							if(needset_fuse)((HMGItemBulletBase)newitem).fuse = fuse;
-							if(needset_flame)((HMGItemBulletBase)newitem).flame = flame;
-							if(needset_explosion)((HMGItemBulletBase)newitem).explosion = explosion;
-							if(needset_blockdestroyex)((HMGItemBulletBase)newitem).blockdestroyex = blockdestroyex;
-							if(needset_explosionlevel)((HMGItemBulletBase)newitem).explosionlevel = explosionlevel;
-							if(needset_bulletmodel)((HMGItemBulletBase)newitem).bulletmodel = bulletmodel;
 							if(Namegun != null){
 								LanguageRegistry.instance().addNameForObject(newitem, "jp_JP", Namegun);
 								LanguageRegistry.instance().addNameForObject(newitem, "en_US", GunName);
@@ -383,16 +470,6 @@ public class HMGAddAttachment
 							GunName = type[1];
 							newitem	= new HMGItemBullet_AP().setUnlocalizedName(GunName).setMaxStackSize(kazu)
 									.setTextureName("handmadeguns:"+texture);
-							((HMGItemBulletBase)newitem).damagemodify = damagemodify;
-							((HMGItemBulletBase)newitem).speedmodify = speedmodify;
-							((HMGItemBulletBase)newitem).slowdownrate = slowdownrate;
-
-							if(needset_fuse)((HMGItemBulletBase)newitem).fuse = fuse;
-							if(needset_flame)((HMGItemBulletBase)newitem).flame = flame;
-							if(needset_explosion)((HMGItemBulletBase)newitem).explosion = explosion;
-							if(needset_blockdestroyex)((HMGItemBulletBase)newitem).blockdestroyex = blockdestroyex;
-							if(needset_explosionlevel)((HMGItemBulletBase)newitem).explosionlevel = explosionlevel;
-							if(needset_bulletmodel)((HMGItemBulletBase)newitem).bulletmodel = bulletmodel;
 							if(Namegun != null){
 								LanguageRegistry.instance().addNameForObject(newitem, "jp_JP", Namegun);
 								LanguageRegistry.instance().addNameForObject(newitem, "en_US", GunName);
@@ -404,16 +481,6 @@ public class HMGAddAttachment
 							GunName = type[1];
 							newitem	= new HMGItemBullet_Frag().setUnlocalizedName(GunName).setMaxStackSize(kazu)
 									.setTextureName("handmadeguns:"+texture);
-							((HMGItemBulletBase)newitem).damagemodify = damagemodify;
-							((HMGItemBulletBase)newitem).speedmodify = speedmodify;
-							((HMGItemBulletBase)newitem).slowdownrate = slowdownrate;
-
-							if(needset_fuse)((HMGItemBulletBase)newitem).fuse = fuse;
-							if(needset_flame)((HMGItemBulletBase)newitem).flame = flame;
-							if(needset_explosion)((HMGItemBulletBase)newitem).explosion = explosion;
-							if(needset_blockdestroyex)((HMGItemBulletBase)newitem).blockdestroyex = blockdestroyex;
-							if(needset_explosionlevel)((HMGItemBulletBase)newitem).explosionlevel = explosionlevel;
-							if(needset_bulletmodel)((HMGItemBulletBase)newitem).bulletmodel = bulletmodel;
 							if(Namegun != null){
 								LanguageRegistry.instance().addNameForObject(newitem, "jp_JP", Namegun);
 								LanguageRegistry.instance().addNameForObject(newitem, "en_US", GunName);
@@ -428,16 +495,6 @@ public class HMGAddAttachment
 							newitem	= new HMGItemBullet_TE(texture).setUnlocalizedName(GunName).setMaxStackSize(kazu)
 									//.setTextureName("minecraft:"+"mods" + File.separatorChar + "handmadeguns/attachment/texture/"+texture)
 									.setTextureName("handmadeguns:"+texture);
-							((HMGItemBulletBase)newitem).damagemodify = damagemodify;
-							((HMGItemBulletBase)newitem).speedmodify = speedmodify;
-							((HMGItemBulletBase)newitem).slowdownrate = slowdownrate;
-
-							if(needset_fuse)((HMGItemBulletBase)newitem).fuse = fuse;
-							if(needset_flame)((HMGItemBulletBase)newitem).flame = flame;
-							if(needset_explosion)((HMGItemBulletBase)newitem).explosion = explosion;
-							if(needset_blockdestroyex)((HMGItemBulletBase)newitem).blockdestroyex = blockdestroyex;
-							if(needset_explosionlevel)((HMGItemBulletBase)newitem).explosionlevel = explosionlevel;
-							if(needset_bulletmodel)((HMGItemBulletBase)newitem).bulletmodel = bulletmodel;
 							if(Namegun != null){
 								LanguageRegistry.instance().addNameForObject(newitem, "jp_JP", Namegun);
 								LanguageRegistry.instance().addNameForObject(newitem, "en_US", GunName);
@@ -459,7 +516,41 @@ public class HMGAddAttachment
 							}catch (Exception e){
 								e.printStackTrace();
 							}
-							newitem.setCreativeTab(HandmadeGunsCore.tabhmg);
+							if(tabname == null) newitem.setCreativeTab(HandmadeGunsCore.tabhmg);
+							else if(tabshmg.containsKey(tabname)){
+								newitem.setCreativeTab(tabshmg.get(tabname));
+							}
+							if(newitem instanceof HMGItemCustomMagazine){
+								((HMGItemCustomMagazine)newitem).damagemodify = damagemodify;
+								((HMGItemCustomMagazine)newitem).speedmodify = speedmodify;
+								((HMGItemCustomMagazine)newitem).slowdownrate = slowdownrate;
+								((HMGItemCustomMagazine)newitem).bullettype = bullettype;
+								((HMGItemCustomMagazine)newitem).hasRoundOption = hasRoundOption;
+								((HMGItemCustomMagazine)newitem).round = round;
+								((HMGItemCustomMagazine)newitem).hasReloadOption = hasReloadOption;
+								((HMGItemCustomMagazine)newitem).reloadTime = reloadTime;
+								if(hasRoundOption){
+									((HMGItemCustomMagazine)newitem).setMaxDamage(round);
+								}
+								((HMGItemCustomMagazine)newitem).fuse = fuse;
+								((HMGItemCustomMagazine)newitem).blockdestroyex = blockdestroyex;
+								((HMGItemCustomMagazine)newitem).autoDestroy = autoDestroy;
+								((HMGItemCustomMagazine)newitem).explosionlevel = explosionlevel;
+								
+								((HMGItemCustomMagazine)newitem).bulletItemName = bulletItemName;
+								((HMGItemCustomMagazine)newitem).cartridgeItemName = cartItemName;
+								
+								((HMGItemCustomMagazine)newitem).bulletmodel = bulletModelName;
+								((HMGItemCustomMagazine)newitem).cartridgeModelName = cartridgeModelName;
+								((HMGItemCustomMagazine)newitem).magmodel = objmodel;
+								((HMGItemCustomMagazine)newitem).knockback = knockback;
+								((HMGItemCustomMagazine)newitem).knockbackY = knockbackY;
+								((HMGItemCustomMagazine)newitem).bouncerate = bouncerate;
+								((HMGItemCustomMagazine)newitem).bouncelimit = bouncelimit;
+								((HMGItemCustomMagazine)newitem).resistance = resistance;
+								((HMGItemCustomMagazine)newitem).acceleration = acceleration;
+								((HMGItemCustomMagazine)newitem).gra = gra;
+							}
 							GameRegistry.registerItem(newitem, GunName);
 						}
 

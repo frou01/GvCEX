@@ -7,6 +7,8 @@ public class HMGGunParts {
     public boolean isLarm;
     public boolean isRarm;
     public ArrayList<HMGGunParts> childs = new ArrayList<HMGGunParts>();
+    public ArrayList<Boolean> current_magazineType = null;
+    public ArrayList<Boolean> select_magazineType = null;
     public boolean isfounder;
     public HMGGunParts mother;
     public int motherIndex;
@@ -142,91 +144,91 @@ public class HMGGunParts {
         defaultPosAndRotation.rotationZ =rotationZ;
     }
     public void AddRenderinfDefoffset(float offsetx,float offsety,float offsetz,float rotationX,float rotationY,float rotationZ){
-        defaultPosAndRotation = new HMGGunParts_Motion_PosAndRotation();
-        defaultPosAndRotation.posX      =offsetx;
-        defaultPosAndRotation.posY      =offsety;
-        defaultPosAndRotation.posZ      =offsetz;
-        defaultPosAndRotation.rotationX =rotationX;
-        defaultPosAndRotation.rotationY =rotationY;
-        defaultPosAndRotation.rotationZ =rotationZ;
+        defaultPosAndRotation_ForOffset = new HMGGunParts_Motion_PosAndRotation();
+        defaultPosAndRotation_ForOffset.posX      =offsetx;
+        defaultPosAndRotation_ForOffset.posY      =offsety;
+        defaultPosAndRotation_ForOffset.posZ      =offsetz;
+        defaultPosAndRotation_ForOffset.rotationX =rotationX;
+        defaultPosAndRotation_ForOffset.rotationY =rotationY;
+        defaultPosAndRotation_ForOffset.rotationZ =rotationZ;
     }
-    public void AddRenderinfADS(float centerX,float centerY,float centerZ,float rotationX,float rotationY,float rotationZ){
+    public void AddRenderinfADS(float offsetX,float offsetY,float offsetZ,float rotationX,float rotationY,float rotationZ){
         adsPosAndRotation = new HMGGunParts_Motion_PosAndRotation();
-        adsPosAndRotation.posX      =centerX;
-        adsPosAndRotation.posY      =centerY;
-        adsPosAndRotation.posZ      =centerZ;
+        adsPosAndRotation.posX      =offsetX;
+        adsPosAndRotation.posY      =offsetY;
+        adsPosAndRotation.posZ      =offsetZ;
         adsPosAndRotation.rotationX =rotationX;
         adsPosAndRotation.rotationY =rotationY;
         adsPosAndRotation.rotationZ =rotationZ;
         rendering_Ads = true;
     }
-    public void AddRenderinfCock(float centerX,float centerY,float centerZ,float rotationX,float rotationY,float rotationZ){
+    public void AddRenderinfCock(float offsetX,float offsetY,float offsetZ,float rotationX,float rotationY,float rotationZ){
         cockPosAndRotation = new HMGGunParts_Motion_PosAndRotation();
-        cockPosAndRotation.posX      =centerX;
-        cockPosAndRotation.posY      =centerY;
-        cockPosAndRotation.posZ      =centerZ;
+        cockPosAndRotation.posX      =offsetX;
+        cockPosAndRotation.posY      =offsetY;
+        cockPosAndRotation.posZ      =offsetZ;
         cockPosAndRotation.rotationX =rotationX;
         cockPosAndRotation.rotationY =rotationY;
         cockPosAndRotation.rotationZ =rotationZ;
         rendering_Cock = true;
     }
-    public void AddRenderinfReload(float centerX,float centerY,float centerZ,float rotationX,float rotationY,float rotationZ){
+    public void AddRenderinfReload(float offsetX,float offsetY,float offsetZ,float rotationX,float rotationY,float rotationZ){
         reloadPosAndRotation = new HMGGunParts_Motion_PosAndRotation();
-        reloadPosAndRotation.posX      =centerX;
-        reloadPosAndRotation.posY      =centerY;
-        reloadPosAndRotation.posZ      =centerZ;
+        reloadPosAndRotation.posX      =offsetX;
+        reloadPosAndRotation.posY      =offsetY;
+        reloadPosAndRotation.posZ      =offsetZ;
         reloadPosAndRotation.rotationX =rotationX;
         reloadPosAndRotation.rotationY =rotationY;
         reloadPosAndRotation.rotationZ =rotationZ;
         rendering_Reload = true;
     }
-    public void AddRenderinfRecoil(float centerX,float centerY,float centerZ,float rotationX,float rotationY,float rotationZ){
+    public void AddRenderinfRecoil(float offsetX,float offsetY,float offsetZ,float rotationX,float rotationY,float rotationZ){
         recoilPosAndRotation = new HMGGunParts_Motion_PosAndRotation();
-        recoilPosAndRotation.posX      =centerX;
-        recoilPosAndRotation.posY      =centerY;
-        recoilPosAndRotation.posZ      =centerZ;
+        recoilPosAndRotation.posX      =offsetX;
+        recoilPosAndRotation.posY      =offsetY;
+        recoilPosAndRotation.posZ      =offsetZ;
         recoilPosAndRotation.rotationX =rotationX;
         recoilPosAndRotation.rotationY =rotationY;
         recoilPosAndRotation.rotationZ =rotationZ;
         rendering_Recoil = true;
     }
-    public void AddRenderinfBullet(float centerX,float centerY,float centerZ,float rotationX,float rotationY,float rotationZ){
+    public void AddRenderinfBullet(float offsetX,float offsetY,float offsetZ,float rotationX,float rotationY,float rotationZ){
         //��Ɏc�e�����ݒ�l�ŉ�]�y�шړ����s���`�悷��B
         bulletPosAndRotation = new HMGGunParts_Motion_PosAndRotation();
-        bulletPosAndRotation.posX      =centerX;
-        bulletPosAndRotation.posY      =centerY;
-        bulletPosAndRotation.posZ      =centerZ;
+        bulletPosAndRotation.posX      =offsetX;
+        bulletPosAndRotation.posY      =offsetY;
+        bulletPosAndRotation.posZ      =offsetZ;
         bulletPosAndRotation.rotationX =rotationX;
         bulletPosAndRotation.rotationY =rotationY;
         bulletPosAndRotation.rotationZ =rotationZ;
         isbullet = true;
     }
     public void AddMotionKeyRecoil(int   startflame,
-                                   float startcenterX,
-                                   float startcenterY,
-                                   float startcenterZ,
+                                   float startoffsetX,
+                                   float startoffsetY,
+                                   float startoffsetZ,
                                    float startrotationX,
                                    float startrotationY,
                                    float startrotationZ,
                                    int   endflame,
-                                   float endcenterX,
-                                   float endcenterY,
-                                   float endcenterZ,
+                                   float endoffsetX,
+                                   float endoffsetY,
+                                   float endoffsetZ,
                                    float endrotationX,
                                    float endrotationY,
                                    float endrotationZ){
         HMGGunParts_Motion motion = new HMGGunParts_Motion();
         motion.startflame =         startflame;
-        motion.startposX =          startcenterX;
-        motion.startposY =          startcenterY;
-        motion.startposZ =          startcenterZ;
+        motion.startposX =          startoffsetX;
+        motion.startposY =          startoffsetY;
+        motion.startposZ =          startoffsetZ;
         motion.startrotationX =     startrotationX;
         motion.startrotationY =     startrotationY;
         motion.startrotationZ =     startrotationZ;
         motion.endflame =         endflame;
-        motion.endposX =          endcenterX;
-        motion.endposY =          endcenterY;
-        motion.endposZ =          endcenterZ;
+        motion.endposX =          endoffsetX;
+        motion.endposY =          endoffsetY;
+        motion.endposZ =          endoffsetZ;
         motion.endrotationX =     endrotationX;
         motion.endrotationY =     endrotationY;
         motion.endrotationZ =     endrotationZ;
@@ -246,31 +248,31 @@ public class HMGGunParts {
         hasMotionRecoil = true;
     }
     public void AddMotionKeyCock(int   startflame,
-                                   float startcenterX,
-                                   float startcenterY,
-                                   float startcenterZ,
+                                   float startoffsetX,
+                                   float startoffsetY,
+                                   float startoffsetZ,
                                    float startrotationX,
                                    float startrotationY,
                                    float startrotationZ,
                                    int   endflame,
-                                   float endcenterX,
-                                   float endcenterY,
-                                   float endcenterZ,
+                                   float endoffsetX,
+                                   float endoffsetY,
+                                   float endoffsetZ,
                                    float endrotationX,
                                    float endrotationY,
                                    float endrotationZ){
         HMGGunParts_Motion motion = new HMGGunParts_Motion();
         motion.startflame =         startflame;
-        motion.startposX =          startcenterX;
-        motion.startposY =          startcenterY;
-        motion.startposZ =          startcenterZ;
+        motion.startposX =          startoffsetX;
+        motion.startposY =          startoffsetY;
+        motion.startposZ =          startoffsetZ;
         motion.startrotationX =     startrotationX;
         motion.startrotationY =     startrotationY;
         motion.startrotationZ =     startrotationZ;
         motion.endflame =         endflame;
-        motion.endposX =          endcenterX;
-        motion.endposY =          endcenterY;
-        motion.endposZ =          endcenterZ;
+        motion.endposX =          endoffsetX;
+        motion.endposY =          endoffsetY;
+        motion.endposZ =          endoffsetZ;
         motion.endrotationX =     endrotationX;
         motion.endrotationY =     endrotationY;
         motion.endrotationZ =     endrotationZ;
@@ -290,31 +292,31 @@ public class HMGGunParts {
         hasMotionCock = true;
     }
     public void AddMotionKeyReload(int   startflame,
-                                   float startcenterX,
-                                   float startcenterY,
-                                   float startcenterZ,
+                                   float startoffsetX,
+                                   float startoffsetY,
+                                   float startoffsetZ,
                                    float startrotationX,
                                    float startrotationY,
                                    float startrotationZ,
                                    int   endflame,
-                                   float endcenterX,
-                                   float endcenterY,
-                                   float endcenterZ,
+                                   float endoffsetX,
+                                   float endoffsetY,
+                                   float endoffsetZ,
                                    float endrotationX,
                                    float endrotationY,
                                    float endrotationZ){
         HMGGunParts_Motion motion = new HMGGunParts_Motion();
         motion.startflame =         startflame;
-        motion.startposX =          startcenterX;
-        motion.startposY =          startcenterY;
-        motion.startposZ =          startcenterZ;
+        motion.startposX =          startoffsetX;
+        motion.startposY =          startoffsetY;
+        motion.startposZ =          startoffsetZ;
         motion.startrotationX =     startrotationX;
         motion.startrotationY =     startrotationY;
         motion.startrotationZ =     startrotationZ;
         motion.endflame =         endflame;
-        motion.endposX =          endcenterX;
-        motion.endposY =          endcenterY;
-        motion.endposZ =          endcenterZ;
+        motion.endposX =          endoffsetX;
+        motion.endposY =          endoffsetY;
+        motion.endposZ =          endoffsetZ;
         motion.endrotationX =     endrotationX;
         motion.endrotationY =     endrotationY;
         motion.endrotationZ =     endrotationZ;
@@ -323,31 +325,31 @@ public class HMGGunParts {
         hasMotionReload = true;
     }
     public void AddInfoKeyTurretYaw(int   startflame,
-                                   float startcenterX,
-                                   float startcenterY,
-                                   float startcenterZ,
+                                   float startoffsetX,
+                                   float startoffsetY,
+                                   float startoffsetZ,
                                    float startrotationX,
                                    float startrotationY,
                                    float startrotationZ,
                                    int   endflame,
-                                   float endcenterX,
-                                   float endcenterY,
-                                   float endcenterZ,
+                                   float endoffsetX,
+                                   float endoffsetY,
+                                   float endoffsetZ,
                                    float endrotationX,
                                    float endrotationY,
                                    float endrotationZ){
         HMGGunParts_Motion motion = new HMGGunParts_Motion();
         motion.startflame =         startflame;
-        motion.startposX =          startcenterX;
-        motion.startposY =          startcenterY;
-        motion.startposZ =          startcenterZ;
+        motion.startposX =          startoffsetX;
+        motion.startposY =          startoffsetY;
+        motion.startposZ =          startoffsetZ;
         motion.startrotationX =     startrotationX;
         motion.startrotationY =     startrotationY;
         motion.startrotationZ =     startrotationZ;
         motion.endflame =         endflame;
-        motion.endposX =          endcenterX;
-        motion.endposY =          endcenterY;
-        motion.endposZ =          endcenterZ;
+        motion.endposX =          endoffsetX;
+        motion.endposY =          endoffsetY;
+        motion.endposZ =          endoffsetZ;
         motion.endrotationX =     endrotationX;
         motion.endrotationY =     endrotationY;
         motion.endrotationZ =     endrotationZ;
@@ -367,31 +369,31 @@ public class HMGGunParts {
         hasbaseYawInfo = true;
     }
     public void AddInfoKeyTurretPitch(int   startflame,
-                                   float startcenterX,
-                                   float startcenterY,
-                                   float startcenterZ,
+                                   float startoffsetX,
+                                   float startoffsetY,
+                                   float startoffsetZ,
                                    float startrotationX,
                                    float startrotationY,
                                    float startrotationZ,
                                    int   endflame,
-                                   float endcenterX,
-                                   float endcenterY,
-                                   float endcenterZ,
+                                   float endoffsetX,
+                                   float endoffsetY,
+                                   float endoffsetZ,
                                    float endrotationX,
                                    float endrotationY,
                                    float endrotationZ){
         HMGGunParts_Motion motion = new HMGGunParts_Motion();
         motion.startflame =         startflame;
-        motion.startposX =          startcenterX;
-        motion.startposY =          startcenterY;
-        motion.startposZ =          startcenterZ;
+        motion.startposX =          startoffsetX;
+        motion.startposY =          startoffsetY;
+        motion.startposZ =          startoffsetZ;
         motion.startrotationX =     startrotationX;
         motion.startrotationY =     startrotationY;
         motion.startrotationZ =     startrotationZ;
         motion.endflame =         endflame;
-        motion.endposX =          endcenterX;
-        motion.endposY =          endcenterY;
-        motion.endposZ =          endcenterZ;
+        motion.endposX =          endoffsetX;
+        motion.endposY =          endoffsetY;
+        motion.endposZ =          endoffsetZ;
         motion.endrotationX =     endrotationX;
         motion.endrotationY =     endrotationY;
         motion.endrotationZ =     endrotationZ;
@@ -423,32 +425,32 @@ public class HMGGunParts {
         hasMotionReload = true;
     }
     public void AddBulletPositions(int   startflame,
-                                   float startcenterX,
-                                   float startcenterY,
-                                   float startcenterZ,
+                                   float startoffsetX,
+                                   float startoffsetY,
+                                   float startoffsetZ,
                                    float startrotationX,
                                    float startrotationY,
                                    float startrotationZ,
                                    int   endflame,
-                                   float endcenterX,
-                                   float endcenterY,
-                                   float endcenterZ,
+                                   float endoffsetX,
+                                   float endoffsetY,
+                                   float endoffsetZ,
                                    float endrotationX,
                                    float endrotationY,
                                    float endrotationZ){
         //�w�肳�ꂽ�o�H�����ǂ��Ēe��`�悷��p
         HMGGunParts_Motion motion = new HMGGunParts_Motion();
         motion.startflame =         startflame;
-        motion.startposX =          startcenterX;
-        motion.startposY =          startcenterY;
-        motion.startposZ =          startcenterZ;
+        motion.startposX =          startoffsetX;
+        motion.startposY =          startoffsetY;
+        motion.startposZ =          startoffsetZ;
         motion.startrotationX =     startrotationX;
         motion.startrotationY =     startrotationY;
         motion.startrotationZ =     startrotationZ;
         motion.endflame =         endflame;
-        motion.endposX =          endcenterX;
-        motion.endposY =          endcenterY;
-        motion.endposZ =          endcenterZ;
+        motion.endposX =          endoffsetX;
+        motion.endposY =          endoffsetY;
+        motion.endposZ =          endoffsetZ;
         motion.endrotationX =     endrotationX;
         motion.endrotationY =     endrotationY;
         motion.endrotationZ =     endrotationZ;

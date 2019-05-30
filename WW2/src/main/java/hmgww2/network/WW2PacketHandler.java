@@ -13,6 +13,7 @@ public class WW2PacketHandler {
  
     public static void init() {
         INSTANCE.registerMessage(WW2MessageKeyPressedHandler.class, WW2MessageKeyPressed.class, 0, Side.SERVER);
+        INSTANCE.registerMessage(WW2HandleFlagSync.class, WW2PacketFlagSync.class, 1, Side.CLIENT);
     	
     	
     	

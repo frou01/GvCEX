@@ -126,14 +126,7 @@ public class HMGInventoryItem implements IInventory
     public void openInventory()
     {
         if(currentItem != null && currentItem.getItem() instanceof HMGItem_Unified_Guns) {
-            if (!currentItem.hasTagCompound()) {
-                currentItem.setTagCompound(new NBTTagCompound());
-                currentItem.getTagCompound().setTag("Items", new NBTTagList());
-            }
-            if (currentItem.getTagCompound().getTag("Items") == null) {
-                currentItem.setTagCompound(new NBTTagCompound());
-                currentItem.getTagCompound().setTag("Items", new NBTTagList());
-            }
+            ((HMGItem_Unified_Guns) currentItem.getItem()).checkTags(currentItem);
             NBTTagList tags = (NBTTagList) currentItem.getTagCompound().getTag("Items");
 
             for (int i = 0; i < tags.tagCount(); i++)//133

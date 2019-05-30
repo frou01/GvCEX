@@ -11,6 +11,10 @@ import hmggvcmob.SlowPathFinder.WorldForPathfind;
 import hmggvcmob.network.GVCMPacketHandler;
 import hmggvcmob.network.GVCPacketMGControl;
 import hmggvcmob.util.Calculater;
+import hmvehicle.entity.EntityChild;
+import hmvehicle.entity.parts.IControlable;
+import hmvehicle.entity.parts.SeatInfo;
+import hmvehicle.entity.parts.logics.IbaseLogic;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
@@ -34,7 +38,7 @@ import static hmggvcmob.GVCMobPlus.proxy;
 import static java.lang.Math.*;
 import static net.minecraft.util.MathHelper.wrapAngleTo180_float;
 
-public class EntityMGAX55 extends Entity implements ImultiRideableVehicle{
+public class EntityMGAX55 extends Entity {
     public float health = 1000;
     public float maxhealth = 1000;
     public float bodyrotationYaw;
@@ -114,8 +118,8 @@ public class EntityMGAX55 extends Entity implements ImultiRideableVehicle{
     public Vector3d xVector = new Vector3d();
     public Vector3d yVector = new Vector3d();
     public Vector3d zVector = new Vector3d();
-    public GVCEntityChild[] childEntities = new GVCEntityChild[6];
-    public ChildInfo[] childInfo = new ChildInfo[6];
+    public EntityChild[] childEntities = new EntityChild[6];
+    public SeatInfo[] SeatInfo = new SeatInfo[6];
     private HMGGunParts_Motions onforwardmotions = new HMGGunParts_Motions();;
     public Entity pilot;
     Entity TGT;
@@ -241,9 +245,9 @@ public class EntityMGAX55 extends Entity implements ImultiRideableVehicle{
     }
     public void initseat(){
         for (int i = 0; i< childEntities.length; i++) {
-            childInfo[i] = new ChildInfo();
+            SeatInfo[i] = new SeatInfo();
             if(!worldObj.isRemote) {
-                childEntities[i] = new GVCEntityChild(worldObj,1,1,true);
+                childEntities[i] = new EntityChild(worldObj,1,1,true);
                 childEntities[i].setLocationAndAngles(this.posX,this.posY,this.posZ,0,0);
                 childEntities[i].master = this;
                 childEntities[i].idinmasterEntityt = i;
@@ -252,42 +256,42 @@ public class EntityMGAX55 extends Entity implements ImultiRideableVehicle{
             }
             switch (i){
                 case 0:
-                    childInfo[i].pos[0] = 0;
-                    childInfo[i].pos[1] = 7.35;
-                    childInfo[i].pos[2] = 2.65;
+                    SeatInfo[i].pos[0] = 0;
+                    SeatInfo[i].pos[1] = 7.35;
+                    SeatInfo[i].pos[2] = 2.65;
                     if(childEntities[i] != null){
                         childEntities[i].setsize(3,3);
                         childEntities[i].rideable = true;
                     }
                     break;
                 case 1:
-                    childInfo[i].pos[0] = -1.23;
-                    childInfo[i].pos[1] = 0;
-                    childInfo[i].pos[2] = 0;
+                    SeatInfo[i].pos[0] = -1.23;
+                    SeatInfo[i].pos[1] = 0;
+                    SeatInfo[i].pos[2] = 0;
                     if(childEntities[i] != null) childEntities[i].setsize(3,6);
                     break;
                 case 2:
-                    childInfo[i].pos[0] = 1.23;
-                    childInfo[i].pos[1] = 0;
-                    childInfo[i].pos[2] = 0;
+                    SeatInfo[i].pos[0] = 1.23;
+                    SeatInfo[i].pos[1] = 0;
+                    SeatInfo[i].pos[2] = 0;
                     if(childEntities[i] != null) childEntities[i].setsize(3,6);
                     break;
                 case 3:
-                    childInfo[i].pos[0] = 0;
-                    childInfo[i].pos[1] = 6.5;
-                    childInfo[i].pos[2] = 0;
+                    SeatInfo[i].pos[0] = 0;
+                    SeatInfo[i].pos[1] = 6.5;
+                    SeatInfo[i].pos[2] = 0;
                     if(childEntities[i] != null) childEntities[i].setsize(5,3);
                     break;
                 case 4:
-                    childInfo[i].pos[0] = 0;
-                    childInfo[i].pos[1] = 8.2;
-                    childInfo[i].pos[2] = -4.6;
+                    SeatInfo[i].pos[0] = 0;
+                    SeatInfo[i].pos[1] = 8.2;
+                    SeatInfo[i].pos[2] = -4.6;
                     if(childEntities[i] != null) childEntities[i].setsize(5,3);
                     break;
                 case 5:
-                    childInfo[i].pos[0] = 5.5;
-                    childInfo[i].pos[1] = 10.2;
-                    childInfo[i].pos[2] = -3.8;
+                    SeatInfo[i].pos[0] = 5.5;
+                    SeatInfo[i].pos[1] = 10.2;
+                    SeatInfo[i].pos[2] = -3.8;
                     if(childEntities[i] != null) childEntities[i].setsize(3,3);
                     break;
             }
@@ -565,7 +569,7 @@ public class EntityMGAX55 extends Entity implements ImultiRideableVehicle{
 
 
         for(int i = 0; i< childEntities.length; i++) {
-            GVCEntityChild achild = childEntities[i];
+            EntityChild achild = childEntities[i];
             if(achild != null && !achild.isDead) {
                 List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(achild, achild.boundingBox.expand(0.20000000298023224D, 0.0D, 0.20000000298023224D));
 
@@ -594,14 +598,14 @@ public class EntityMGAX55 extends Entity implements ImultiRideableVehicle{
                     achild.thirddist = 25;
                 }
                 achild.setLocationAndAngles(
-                          this.posX + xVector.x * childInfo[i].pos[0] + yVector.x * (childInfo[i].pos[1]) + zVector.x * childInfo[i].pos[2]
-                        , this.posY + xVector.y * childInfo[i].pos[0] + yVector.y * (childInfo[i].pos[1]) + pilotseatoffsety + zVector.y * childInfo[i].pos[2]
-                        , this.posZ + xVector.z * childInfo[i].pos[0] + yVector.z * (childInfo[i].pos[1]) + zVector.z * childInfo[i].pos[2]
+                          this.posX + xVector.x * SeatInfo[i].pos[0] + yVector.x * (SeatInfo[i].pos[1]) + zVector.x * SeatInfo[i].pos[2]
+                        , this.posY + xVector.y * SeatInfo[i].pos[0] + yVector.y * (SeatInfo[i].pos[1]) + pilotseatoffsety + zVector.y * SeatInfo[i].pos[2]
+                        , this.posZ + xVector.z * SeatInfo[i].pos[0] + yVector.z * (SeatInfo[i].pos[1]) + zVector.z * SeatInfo[i].pos[2]
                         , bodyrotationYaw, 0);
                 achild.master = this;
             }else {
                 if(!worldObj.isRemote) {
-                    childEntities[i] = new GVCEntityChild(worldObj,1,1,true);
+                    childEntities[i] = new EntityChild(worldObj,1,1,true);
                     childEntities[i].setLocationAndAngles(this.posX,this.posY,this.posZ,0,0);
                     childEntities[i].master = this;
                     childEntities[i].idinmasterEntityt = i;
@@ -1488,69 +1492,20 @@ public class EntityMGAX55 extends Entity implements ImultiRideableVehicle{
 
     }
 
-    @Override
-    public int getfirecyclesettings1() {
-        return 0;
-    }
-
-    @Override
-    public int getfirecycleprogress1() {
-        return 0;
-    }
-
-    @Override
-    public int getfirecyclesettings2() {
-        return 0;
-    }
-
-    @Override
-    public int getfirecycleprogress2() {
-        return 0;
-    }
-
-    @Override
-    public float getturretrotationYaw() {
-        return 0;
-    }
-
-    @Override
-    public float getbodyrotationYaw() {
-        return 0;
-    }
-
-    @Override
-    public float getthrottle() {
-        return 0;
-    }
-
-    @Override
-    public void setBodyRot(Quat4d quat4d) {
-
-    }
-
-    @Override
-    public void setthrottle(float th) {
-
-    }
-
-    @Override
     public void setTrigger(boolean trig1, boolean trig2) {
 
     }
 
-    @Override
-    public GVCEntityChild[] getChilds() {
+    public EntityChild[] getChildren() {
         return childEntities;
     }
 
-    @Override
-    public void addChild(GVCEntityChild seat) {
+    public void addChild(EntityChild seat) {
         if(seat.idinmasterEntityt != -1 && seat.idinmasterEntityt < childEntities.length){
             this.childEntities[seat.idinmasterEntityt] = seat;
         }
     }
 
-    @Override
     public boolean isRidingEntity(Entity entity) {
         for(int i = 0; i < childEntities.length; i++){
             if(childEntities[i] != null){
@@ -1566,7 +1521,7 @@ public class EntityMGAX55 extends Entity implements ImultiRideableVehicle{
 
     public void applyEntityCollision(Entity p_70108_1_)
     {
-//		for(GVCEntityChild aseat: childEntities){
+//		for(EntityChild aseat: childEntities){
 //			if(aseat != null && aseat.riddenByEntity == p_70108_1_)return;
 //		}
 //		super.applyEntityCollision(p_70108_1_);
@@ -1611,7 +1566,6 @@ public class EntityMGAX55 extends Entity implements ImultiRideableVehicle{
         return entity == this;
     }
 
-    @Override
     public int getpilotseatid() {
         return -1;
     }

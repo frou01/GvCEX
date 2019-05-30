@@ -138,9 +138,9 @@ public class GVCEntityBoxSpawner extends EntityMob
             this.dropItem(GVCUtils.fn_box, 1);
             if (hasItems) {
                 Item gun = (Item) Guns.get(new Random().nextInt(Guns.size()));
-                if (gun instanceof HMGItem_Unified_Guns && ((HMGItem_Unified_Guns) gun).gunInfo.magazine != null) {
+                if (gun instanceof HMGItem_Unified_Guns && ((HMGItem_Unified_Guns) gun).getcurrentMagazine(null) != null) {
                     for (var4 = 0; var4 < var3; ++var4) {
-                        this.dropItem(((HMGItem_Unified_Guns) gun).gunInfo.magazine, 3);
+                        this.dropItem(((HMGItem_Unified_Guns) gun).getcurrentMagazine(null), 3);
                     }
                 }
                 this.dropItem(gun, 1);

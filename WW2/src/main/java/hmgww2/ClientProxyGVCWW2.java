@@ -1,6 +1,7 @@
 package hmgww2;
 
 
+import hmgww2.blocks.tile.TileEntityBase;
 import hmgww2.entity.*;
 import hmgww2.render.*;
 import org.lwjgl.input.Keyboard;
@@ -8,22 +9,8 @@ import org.lwjgl.input.Keyboard;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
-import hmgww2.blocks.tile.TileEntityFlag2_GER;
-import hmgww2.blocks.tile.TileEntityFlag2_JPN;
-import hmgww2.blocks.tile.TileEntityFlag2_RUS;
-import hmgww2.blocks.tile.TileEntityFlag2_USA;
-import hmgww2.blocks.tile.TileEntityFlag3_GER;
-import hmgww2.blocks.tile.TileEntityFlag3_JPN;
-import hmgww2.blocks.tile.TileEntityFlag3_RUS;
-import hmgww2.blocks.tile.TileEntityFlag3_USA;
-import hmgww2.blocks.tile.TileEntityFlag4_JPN;
-import hmgww2.blocks.tile.TileEntityFlag4_USA;
-import hmgww2.blocks.tile.TileEntityFlag_GER;
-import hmgww2.blocks.tile.TileEntityFlag_JPN;
-import hmgww2.blocks.tile.TileEntityFlag_RUS;
-import hmgww2.blocks.tile.TileEntityFlag_USA;
 import hmgww2.entity.EntityUSSR_TankSPG;
-import hmgww2.render.tile.TileRenderFlag_JPN;
+import hmgww2.render.tile.TileRenderFlag;
 import net.minecraft.client.Minecraft;
 //import net.java.games.input.Keyboard;
 import net.minecraft.client.settings.KeyBinding;
@@ -66,7 +53,8 @@ public class ClientProxyGVCWW2 extends CommonSideProxyGVCWW2 {
 		ClientRegistry.registerKeyBinding(RidingShip);
 		
     	RenderingRegistry.registerEntityRenderingHandler(EntityJPN_S.class, new RenderJPN_S());
-    	RenderingRegistry.registerEntityRenderingHandler(EntityJPN_Tank.class, new RenderJPN_Tank());
+    	RenderingRegistry.registerEntityRenderingHandler(EntityJPN_Tank.class, new RenderTank("hmgww2:textures/mob/jpn/type97.png","hmgww2:textures/mob/jpn/type97.obj",
+			                                                                                         new float[]{0,0,0},new float[]{0F, 2.00F, 1.00F},true,true, new float[]{0.4f,2.8f,0.2f},new float[]{0.4f,2.8f,0.2f}));
     	RenderingRegistry.registerEntityRenderingHandler(EntityJPN_Fighter.class, new RenderPlane("hmgww2:textures/mob/jpn/type0.png","hmgww2:textures/mob/jpn/type0.mqo",new double[]{0,1.0,0}));
     	RenderingRegistry.registerEntityRenderingHandler(EntityJPN_TankAA.class, new RenderJPN_TankAA());
     	RenderingRegistry.registerEntityRenderingHandler(EntityJPN_TankSPG.class, new RenderJPN_TankSPG());
@@ -91,7 +79,8 @@ public class ClientProxyGVCWW2 extends CommonSideProxyGVCWW2 {
     	RenderingRegistry.registerEntityRenderingHandler(EntityGER_Fighter.class, new RenderPlane("hmgww2:textures/mob/ger/Bf109.png","hmgww2:textures/mob/ger/Bf109.mqo",new double[]{0,1.2,0}));
     	RenderingRegistry.registerEntityRenderingHandler(EntityGER_TankAA.class, new RenderTank("hmgww2:textures/mob/ger/PzVI.png","hmgww2:textures/mob/ger/Sd.Kfz.10_FLAK38.mqo",
 			                                                                                           new float[]{0,0,-2.3059f},new float[]{0F, 2.1303f, -2.6810f},false));
-    	RenderingRegistry.registerEntityRenderingHandler(EntityGER_TankSPG.class, new RenderGER_TankSPG());
+    	RenderingRegistry.registerEntityRenderingHandler(EntityGER_TankSPG.class, new RenderTank("hmgww2:textures/mob/ger/PzIISPG.png","hmgww2:textures/mob/ger/PzIISPG.mqo",
+			                                                                                            new float[]{0F,2.1500f, 0.200f},new float[]{0F,2.1500f, 0.200f},true));
     	RenderingRegistry.registerEntityRenderingHandler(EntityGER_FighterA.class, new RenderPlane("hmgww2:textures/mob/ger/Ju87.png","hmgww2:textures/mob/ger/Ju87D.mqo",new double[]{0,1.0,0}));
     	RenderingRegistry.registerEntityRenderingHandler(EntityGER_TankH.class, new RenderTank("hmgww2:textures/mob/ger/PzVI.png","hmgww2:textures/mob/ger/PzVI.mqo",
 			                                                                                           new float[]{0,0,0},new float[]{0F, 2.194f, 1.100f},true));
@@ -110,37 +99,37 @@ public class ClientProxyGVCWW2 extends CommonSideProxyGVCWW2 {
 			                                                                                           new float[]{0,0,0},new float[]{0F, 2.65F, 1.2f},true));
     	
     	
-    	ClientRegistry.registerTileEntity(TileEntityFlag_JPN.class, "Flag_JPN", 
-    			new TileRenderFlag_JPN("hmgww2:textures/blocks/tile/flag_jpn.png"));
-    	ClientRegistry.registerTileEntity(TileEntityFlag2_JPN.class, "Flag2_JPN", 
-    			new TileRenderFlag_JPN("hmgww2:textures/blocks/tile/flag2_jpn.png"));
-    	ClientRegistry.registerTileEntity(TileEntityFlag3_JPN.class, "Flag3_JPN", 
-    			new TileRenderFlag_JPN("hmgww2:textures/blocks/tile/flag3_jpn.png"));
-    	ClientRegistry.registerTileEntity(TileEntityFlag4_JPN.class, "Flag4_JPN", 
-    			new TileRenderFlag_JPN("hmgww2:textures/blocks/tile/flag4_jpn.png"));
-    	
-    	ClientRegistry.registerTileEntity(TileEntityFlag_USA.class, "Flag_USA", 
-    			new TileRenderFlag_JPN("hmgww2:textures/blocks/tile/flag_usa.png"));
-    	ClientRegistry.registerTileEntity(TileEntityFlag2_USA.class, "Flag2_USA", 
-    			new TileRenderFlag_JPN("hmgww2:textures/blocks/tile/flag2_usa.png"));
-    	ClientRegistry.registerTileEntity(TileEntityFlag3_USA.class, "Flag3_USA", 
-    			new TileRenderFlag_JPN("hmgww2:textures/blocks/tile/flag3_usa.png"));
-    	ClientRegistry.registerTileEntity(TileEntityFlag4_USA.class, "Flag4_USA", 
-    			new TileRenderFlag_JPN("hmgww2:textures/blocks/tile/flag4_usa.png"));
-    	
-    	ClientRegistry.registerTileEntity(TileEntityFlag_GER.class, "Flag_GER", 
-    			new TileRenderFlag_JPN("hmgww2:textures/blocks/tile/flag_ger.png"));
-    	ClientRegistry.registerTileEntity(TileEntityFlag2_GER.class, "Flag2_GER", 
-    			new TileRenderFlag_JPN("hmgww2:textures/blocks/tile/flag2_ger.png"));
-    	ClientRegistry.registerTileEntity(TileEntityFlag3_GER.class, "Flag3_GER", 
-    			new TileRenderFlag_JPN("hmgww2:textures/blocks/tile/flag3_ger.png"));
-    	
-    	ClientRegistry.registerTileEntity(TileEntityFlag_RUS.class, "Flag_RUS", 
-    			new TileRenderFlag_JPN("hmgww2:textures/blocks/tile/flag_rus.png"));
-    	ClientRegistry.registerTileEntity(TileEntityFlag2_RUS.class, "Flag2_RUS", 
-    			new TileRenderFlag_JPN("hmgww2:textures/blocks/tile/flag2_rus.png"));
-    	ClientRegistry.registerTileEntity(TileEntityFlag3_RUS.class, "Flag3_RUS", 
-    			new TileRenderFlag_JPN("hmgww2:textures/blocks/tile/flag3_rus.png"));
+    	ClientRegistry.registerTileEntity(TileEntityBase.class, "Flag_GVCWW2",
+    			new TileRenderFlag());
+//    	ClientRegistry.registerTileEntity(TileEntityFlag2_JPN.class, "Flag2_JPN",
+//    			new TileRenderFlag("hmgww2:textures/blocks/tile/flag2_jpn.png"));
+//    	ClientRegistry.registerTileEntity(TileEntityFlag3_JPN.class, "Flag3_JPN",
+//    			new TileRenderFlag("hmgww2:textures/blocks/tile/flag3_jpn.png"));
+//    	ClientRegistry.registerTileEntity(TileEntityFlag4_JPN.class, "Flag4_JPN",
+//    			new TileRenderFlag("hmgww2:textures/blocks/tile/flag4_jpn.png"));
+//
+//    	ClientRegistry.registerTileEntity(TileEntityFlag_USA.class, "Flag_USA",
+//    			new TileRenderFlag("hmgww2:textures/blocks/tile/flag_usa.png"));
+//    	ClientRegistry.registerTileEntity(TileEntityFlag2_USA.class, "Flag2_USA",
+//    			new TileRenderFlag("hmgww2:textures/blocks/tile/flag2_usa.png"));
+//    	ClientRegistry.registerTileEntity(TileEntityFlag3_USA.class, "Flag3_USA",
+//    			new TileRenderFlag("hmgww2:textures/blocks/tile/flag3_usa.png"));
+//    	ClientRegistry.registerTileEntity(TileEntityFlag4_USA.class, "Flag4_USA",
+//    			new TileRenderFlag("hmgww2:textures/blocks/tile/flag4_usa.png"));
+//
+//    	ClientRegistry.registerTileEntity(TileEntityFlag_GER.class, "Flag_GER",
+//    			new TileRenderFlag("hmgww2:textures/blocks/tile/flag_ger.png"));
+//    	ClientRegistry.registerTileEntity(TileEntityFlag2_GER.class, "Flag2_GER",
+//    			new TileRenderFlag("hmgww2:textures/blocks/tile/flag2_ger.png"));
+//    	ClientRegistry.registerTileEntity(TileEntityFlag3_GER.class, "Flag3_GER",
+//    			new TileRenderFlag("hmgww2:textures/blocks/tile/flag3_ger.png"));
+//
+//    	ClientRegistry.registerTileEntity(TileEntityFlag_RUS.class, "Flag_RUS",
+//    			new TileRenderFlag("hmgww2:textures/blocks/tile/flag_rus.png"));
+//    	ClientRegistry.registerTileEntity(TileEntityFlag2_RUS.class, "Flag2_RUS",
+//    			new TileRenderFlag("hmgww2:textures/blocks/tile/flag2_rus.png"));
+//    	ClientRegistry.registerTileEntity(TileEntityFlag3_RUS.class, "Flag3_RUS",
+//    			new TileRenderFlag("hmgww2:textures/blocks/tile/flag3_rus.png"));
     }
     
     @Override

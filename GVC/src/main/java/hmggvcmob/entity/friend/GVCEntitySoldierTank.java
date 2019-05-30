@@ -3,12 +3,14 @@ package hmggvcmob.entity.friend;
 
 import hmggvcmob.ai.AITankAttack;
 import hmggvcmob.entity.*;
-import hmggvcmob.tile.TileEntityFlag;
+import hmvehicle.entity.parts.*;
+import hmvehicle.entity.parts.logics.IbaseLogic;
+import hmvehicle.entity.parts.logics.TankBaseLogic;
+import hmvehicle.entity.parts.turrets.TurretObj;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
@@ -21,7 +23,7 @@ import static hmggvcmob.event.GVCMXEntityEvent.soundedentity;
 import static hmggvcmob.util.Calculater.CalculateGunElevationAngle;
 import static hmggvcmob.util.Calculater.transformVecforMinecraft;
 
-public class GVCEntitySoldierTank extends EntitySoBase implements IRideableTank,IControlable
+public class GVCEntitySoldierTank extends EntitySoBase implements ITank
 {
 	int count_for_reset;
 	public double angletime;
@@ -46,7 +48,7 @@ public class GVCEntitySoldierTank extends EntitySoBase implements IRideableTank,
 
 	public int mgMagazine;
 	public int mgReloadProgress;
-	public TankBaseLogic baseLogic = new TankBaseLogic(this,0.4f,1.2f,true,"gvcmob:gvcmob.Leopard1Track");
+	public TankBaseLogic baseLogic = new TankBaseLogic(this,0.25f,1.2f,true,"gvcmob:gvcmob.Leopard1Track");
 	ModifiedBoundingBox nboundingbox;
 
 	Vector3d playerpos = new Vector3d(-0.514f,2.4f,-0.02124 + 0.2448);
@@ -66,7 +68,7 @@ public class GVCEntitySoldierTank extends EntitySoBase implements IRideableTank,
 		super(par1World);
 		this.tasks.removeTask(aiSwimming);
 		this.setSize(3F, 1.6F);
-		nboundingbox = new ModifiedBoundingBox(-20,-20,-20,20,20,20,
+		nboundingbox = new ModifiedBoundingBox(boundingBox.minX,boundingBox.minY,boundingBox.minZ,boundingBox.maxX,boundingBox.maxY,boundingBox.maxZ,
 				0,1.5,0,3.4,3,6.5);
 		nboundingbox.rot.set(baseLogic.bodyRot);
 		proxy.replaceBoundingbox(this,nboundingbox);
@@ -264,7 +266,12 @@ public class GVCEntitySoldierTank extends EntitySoBase implements IRideableTank,
 	public float getRotationRoll() {
 		return this.dataWatcher.getWatchableObjectFloat(30);
 	}
-
+	
+	@Override
+	public boolean ishittingWater() {
+		return false;
+	}
+	
 	public void setCanonnreloadcycle(int ints) {
 		this.dataWatcher.updateObject(2, Integer.valueOf(ints));
 	}
@@ -382,7 +389,7 @@ public class GVCEntitySoldierTank extends EntitySoBase implements IRideableTank,
 		((ModifiedBoundingBox)this.boundingBox).rot.set(baseLogic.bodyRot);
 		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.3D);
 	}
-	public void mainFire(Entity target){
+	public void mainFireToTarget(Entity target){
 		mainTurret.currentEntity = this;
 		mainTurret.fire();
 //        Vector3d Vec_transformedbybody = baseLogic.getTransformedVector_onturret(cannonpos,turretYawCenterpos);
@@ -439,7 +446,7 @@ public class GVCEntitySoldierTank extends EntitySoBase implements IRideableTank,
 	}
 
 	@Override
-	public TankBaseLogic getBaseLogic() {
+	public IbaseLogic getBaseLogic() {
 		return baseLogic;
 	}
 
@@ -498,7 +505,7 @@ public class GVCEntitySoldierTank extends EntitySoBase implements IRideableTank,
 ////			}
 //        }
 	}
-	public void subFire(Entity target){
+	public void subFireToTarget(Entity target){
 		subTurret.currentEntity = this;
 		if(subTurret.aimToEntity(target)){
 			subTurret.fire();
@@ -567,7 +574,12 @@ public class GVCEntitySoldierTank extends EntitySoBase implements IRideableTank,
 //            }
 //        }
 	}
-
+	
+	@Override
+	public TurretObj[] getmotherTurrets() {
+		return new TurretObj[0];
+	}
+	
 	@Override
 	public boolean standalone() {
 		return riddenByEntity == null;
@@ -756,29 +768,14 @@ public class GVCEntitySoldierTank extends EntitySoBase implements IRideableTank,
 	public float getbodyrotationYaw() {
 		return baseLogic.bodyrotationYaw;
 	}
-
-	@Override
-	public void setbodyrotationYaw(float value) {
-		baseLogic.bodyrotationYaw = value;
-	}
-
-	@Override
-	public void setturretrotationYaw(float value) {
-		baseLogic.turretrotationYaw = value;
-	}
-
-	@Override
-	public float getrotationYawmotion() {
-		return baseLogic.rotationmotion;
-	}
-
+	
 	@Override
 	public void setrotationYawmotion(float value) {
 		baseLogic.rotationmotion = value;
 	}
 
 	@Override
-	public void setBodyrot(Quat4d rot) {
+	public void setBodyRot(Quat4d rot) {
 		baseLogic.bodyRot.set(rot);
 	}
 
@@ -791,99 +788,9 @@ public class GVCEntitySoldierTank extends EntitySoBase implements IRideableTank,
 	public void setthrottle(float value) {
 		baseLogic.throttle = value;
 	}
-
+	
 	public void moveFlying(float p_70060_1_, float p_70060_2_, float p_70060_3_){
 		baseLogic.moveFlying(p_70060_1_,p_70060_2_,p_70060_3_);
-	}
-
-	@Override
-	public void setControl_RightClick(boolean value) {
-		server1 = value;
-	}
-
-	@Override
-	public void setControl_LeftClick(boolean value) {
-		server2 = value;
-	}
-
-	@Override
-	public void setControl_Space(boolean value) {
-		serverspace = value;
-	}
-
-	@Override
-	public void setControl_x(boolean value) {
-		serverx = value;
-	}
-
-	@Override
-	public void setControl_w(boolean value) {
-		serverw = value;
-	}
-
-	@Override
-	public void setControl_a(boolean value) {
-		servera = value;
-	}
-
-	@Override
-	public void setControl_s(boolean value) {
-		servers = value;
-	}
-
-	@Override
-	public void setControl_d(boolean value) {
-		serverd = value;
-	}
-
-	@Override
-	public void setControl_f(boolean value) {
-		serverf = value;
-	}
-
-	@Override
-	public boolean getControl_RightClick() {
-		return server1;
-	}
-
-	@Override
-	public boolean getControl_LeftClick() {
-		return server2;
-	}
-
-	@Override
-	public boolean getControl_Space() {
-		return serverspace;
-	}
-
-	@Override
-	public boolean getControl_x() {
-		return serverx;
-	}
-
-	@Override
-	public boolean getControl_w() {
-		return serverw;
-	}
-
-	@Override
-	public boolean getControl_a() {
-		return servera;
-	}
-
-	@Override
-	public boolean getControl_s() {
-		return servers;
-	}
-
-	@Override
-	public boolean getControl_d() {
-		return serverd;
-	}
-
-	@Override
-	public boolean getControl_f() {
-		return serverf;
 	}
 
 	@Override

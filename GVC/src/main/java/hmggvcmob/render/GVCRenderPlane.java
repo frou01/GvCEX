@@ -1,9 +1,10 @@
 
 package hmggvcmob.render;
 
-import hmggvcmob.entity.PlaneBaseLogic;
+import hmvehicle.entity.parts.logics.PlaneBaseLogic;
 import hmggvcmob.entity.friend.GVCEntityPlane;
 import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
@@ -35,7 +36,7 @@ public class GVCRenderPlane extends Render {
 	*/
 	public void doRender(GVCEntityPlane entity, double p_76986_2_, double p_76986_4_, double p_76986_6_,
 						 float entityYaw, float partialTicks) {
-		PlaneBaseLogic planeBaseLogic = entity.getBaseLogic();
+		PlaneBaseLogic planeBaseLogic = (PlaneBaseLogic) entity.getBaseLogic();
 		GL11.glPushMatrix();
 		GL11.glAlphaFunc(GL11.GL_GREATER, 0);
 		GL11.glEnable(GL_BLEND);
@@ -73,8 +74,9 @@ public class GVCRenderPlane extends Render {
 		model.renderPart("body");
 		model.renderPart("bone");
 		model.renderPart("mainwing");
-		for(int mid = 1;mid <= planeBaseLogic.rocket;mid++){
-			model.renderPart("missile" + mid);
+		for(int mid = 0;mid < entity.getsubTurrets().length;mid++){
+			if(entity.getsubTurrets()[mid].readyload)
+				model.renderPart("missile" + (mid + 1));
 		}
 
 		GL11.glPushMatrix();
@@ -193,9 +195,11 @@ public class GVCRenderPlane extends Render {
 			float lastBrightnessX = OpenGlHelper.lastBrightnessX;
 			float lastBrightnessY = OpenGlHelper.lastBrightnessY;
 			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
+			RenderHelper.disableStandardItemLighting();
 			GL11.glColor4f(1,1,1,(planeBaseLogic.throttle-9.5f)*2);
 			model.renderPart("A/F");
 			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)lastBrightnessX, (float)lastBrightnessY);
+			RenderHelper.enableStandardItemLighting();
 			GL11.glColor4f(1,1,1,1);
 		}
 

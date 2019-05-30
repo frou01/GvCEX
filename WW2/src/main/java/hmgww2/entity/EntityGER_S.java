@@ -26,7 +26,7 @@ public class EntityGER_S extends EntityGERBase
     protected void applyEntityAttributes()
     {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(movespeed = 0.33000000417232513D);
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(movespeed = 0.5);
         this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(20.0D);
         //this.getEntityAttribute(SharedMonsterAttributes.knockbackResistance).setBaseValue(30.0D);
     }

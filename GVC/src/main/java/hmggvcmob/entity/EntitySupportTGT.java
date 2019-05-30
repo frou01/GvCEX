@@ -341,7 +341,7 @@ public class EntitySupportTGT extends Entity {
                                 Vec3 playersdir = Vec3.createVectorHelper(shootingEntity.posX - field_145791_d,shootingEntity.posY - field_145792_e,shootingEntity.posZ - field_145789_f);
                                 playersdir.normalize();
                                 entityskeleton.setLocationAndAngles(field_145791_d, field_145792_e + 64, field_145789_f, 0, 0.0F);
-                                entityskeleton.throttle = 2.5f;
+                                entityskeleton.setthrottle(2.5f);
                                 this.worldObj.spawnEntityInWorld(entityskeleton);
                             }
                             break;

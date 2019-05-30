@@ -23,7 +23,7 @@ public class GVCMHandleHeliGunnerTriger implements IMessageHandler<GVCPakcetHeli
         if(world != null) {
             Entity entity = world.getEntityByID(message.targetID);
             if (entity instanceof GVCEntityPMCHeli) {
-                ((GVCEntityPMCHeli) entity).turretTrigger = message.trigger2;
+//                ((GVCEntityPMCHeli) entity).turretTrigger = message.trigger2;
             }
         }
         return null;

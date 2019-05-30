@@ -3,3 +3,15 @@ Slot1,minecraft:iron_ingot:
 Slot2,minecraft:iron_ingot:
 Slot3,minecraft:planks:
 CraftItem,HandmadeGuns:byfrou01_Bayonet:0:1
+
+AddRecipe
+Slot1,minecraft:paper:
+Slot2,minecraft:iron_ingot:
+Slot3,minecraft:dye:1
+CraftItem,HandmadeGuns:WP_Certificate:0:1
+
+AddRecipe
+Slot1,minecraft:paper:
+Slot2,minecraft:iron_ingot:
+Slot3,minecraft:dye:4
+CraftItem,HandmadeGuns:NATO_Certificate:0:1

@@ -44,7 +44,6 @@ public class EntityGBase extends EntityGBases implements IFF,IGVCmob,IMGGunner {
 	public int type = 0;
 	public float spread = 10;
 	public double movespeed = 0.3d;
-	public double rndyaw;
 	public double rndpitch;
 	TileEntity spawnedtile = null;
 	int placing;
@@ -102,8 +101,8 @@ public class EntityGBase extends EntityGBases implements IFF,IGVCmob,IMGGunner {
 		if(!worldObj.isRemote) {
 			if (this.getHeldItem() != null && (source.getEntity() != getAttackTarget()||par2>7) && (source.getDamageType().equals("mob") || source.getDamageType().equals("player"))) {
 				this.entityDropItem(this.getHeldItem(), 1);
-				if (this.getHeldItem().getItem() instanceof HMGItem_Unified_Guns) {
-					this.dropItem(((HMGItem_Unified_Guns) this.getHeldItem().getItem()).gunInfo.magazine, 1);
+				if (this.getHeldItem().getItem() instanceof HMGItem_Unified_Guns && ((HMGItem_Unified_Guns) this.getHeldItem().getItem()).getcurrentMagazine(this.getHeldItem()) != null) {
+					this.dropItem(((HMGItem_Unified_Guns) this.getHeldItem().getItem()).getcurrentMagazine(this.getHeldItem()), 1);
 				}
 				staningtime = 10;
 				this.setCurrentItemOrArmor(0, null);
@@ -111,6 +110,11 @@ public class EntityGBase extends EntityGBases implements IFF,IGVCmob,IMGGunner {
 		}
 		return super.attackEntityFrom(source, par2);
 
+	}
+	public void dropMagazine(){
+		if (this.getHeldItem().getItem() instanceof HMGItem_Unified_Guns && ((HMGItem_Unified_Guns) this.getHeldItem().getItem()).getcurrentMagazine(this.getHeldItem()) != null) {
+			this.dropItem(((HMGItem_Unified_Guns) this.getHeldItem().getItem()).getcurrentMagazine(this.getHeldItem()), 1);
+		}
 	}
 //	@SideOnly(Side.CLIENT)
 //	public int getBrightnessForRender(float par1) {
@@ -143,16 +147,12 @@ public class EntityGBase extends EntityGBases implements IFF,IGVCmob,IMGGunner {
     }
     public void onUpdate(){
 		super.onUpdate();
+		if(this.width<1){
+			width = 1;
+		}
 		staningtime--;
 		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(movespeed);
 
-		if(this.rand.nextInt(10) == 0){
-			rndyaw = this.rand.nextGaussian() * (double)(this.rand.nextBoolean() ? -1 : 1)*spread;
-			rndpitch = this.rand.nextGaussian() * (double)(this.rand.nextBoolean() ? -1 : 1)*spread;
-		}else {
-			rndyaw += this.rand.nextGaussian() * (double)(this.rand.nextBoolean() ? -1 : 1)*spread/10;
-			rndpitch += this.rand.nextGaussian() * (double)(this.rand.nextBoolean() ? -1 : 1)*spread/10;
-		}
 	
 	    if(cfg_guerrillacanusePlacedGun && canuseAlreadyPlacedGun && !worldObj.isRemote && ridingEntity == null && this.getAttackTarget() != null) {
 		    List PlaceGunDetector = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox.expand(2, 3.0D, 2));
@@ -169,12 +169,10 @@ public class EntityGBase extends EntityGBases implements IFF,IGVCmob,IMGGunner {
 	    }
 		if(this.getHeldItem() != null && this.aiAttackGun != null){
 			this.rotationPitch+=rndpitch;
-			this.rotationYaw+=rndyaw;
 			float backpitch = this.rotationPitch;
 			this.getHeldItem().getItem().onUpdate(this.getHeldItem(),worldObj,this,0,true);
 			float recoiled = this.rotationPitch - backpitch;
-			this.rotationPitch-=rndpitch;
-			this.rotationYaw-=rndyaw;
+			this.rotationPitch=backpitch;
 			rndpitch += recoiled;
 			if(!worldObj.isRemote && cfg_guerrillacanusePlacedGun && canusePlacedGun && ridingEntity == null && onGround &&this.getAttackTarget() != null && this.getHeldItem().getItem()instanceof HMGItem_Unified_Guns && ((HMGItem_Unified_Guns) this.getHeldItem().getItem()).gunInfo.fixAsEntity){
 				placing ++;
@@ -234,7 +232,7 @@ public class EntityGBase extends EntityGBases implements IFF,IGVCmob,IMGGunner {
 				this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(movespeed);
 			}
 		}
-
+	    rndpitch *= 0.9;
 
 		if(!worldObj.isRemote &&
 				this.ridingEntity instanceof PlacedGunEntity &&
@@ -407,7 +405,6 @@ public class EntityGBase extends EntityGBases implements IFF,IGVCmob,IMGGunner {
 	@Override
 	public void extraprocessInMGFire() {
 		if(ridingEntity != null) {
-			ridingEntity.rotationYaw += this.rndyaw;
 			ridingEntity.rotationPitch += this.rndpitch;
 		}
 	}

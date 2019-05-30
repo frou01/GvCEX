@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import static DangeonDataCreator.mod_DungeonCreator.blankBlock;
 import static handmadeguns.HandmadeGunsCore.proxy;
 
 public class DangeonSetter extends Item {
@@ -61,7 +62,7 @@ public class DangeonSetter extends Item {
                     FileWriter fw = new FileWriter(test);
                     for (int blocky = minposy; blocky <= MAXposy; blocky++) for (int blockx = minposx; blockx <= MAXposx; blockx++) for (int blockz = minposz; blockz <= MAXposz; blockz++) {
                         Block block =world.getBlock(blockx,blocky,blockz);
-                        if(block != Blocks.dirt) {
+                        if(block != blankBlock) {
                             if (world.getBlockMetadata(blockx, blocky, blockz) != 0)
                                 fw.write((blockx - minposx) + "," + (blocky - minposy) + "," + (blockz - minposz) + "," + Block.blockRegistry.getNameForObject(block) + "," + world.getBlockMetadata(blockx, blocky, blockz) + "\n");
                             else

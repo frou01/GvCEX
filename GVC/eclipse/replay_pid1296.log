@@ -1289,7 +1289,7 @@ instanceKlass hmggvcmob/network/GVCMPacketHandler
 instanceKlass hmggvcmob/entity/ImultiRideableVehicle
 instanceKlass handmadeguns/entity/SpHitCheckEntity
 instanceKlass hmggvcmob/entity/IControlable
-instanceKlass hmggvcmob/entity/IRideableTank
+instanceKlass hmggvcmob/entity/ITank
 instanceKlass hmggvcmob/entity/IIRVING
 instanceKlass handmadeguns/entity/IMGGunner
 instanceKlass hmggvcmob/entity/ITank
