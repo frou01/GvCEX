@@ -64,4 +64,8 @@ public class AIHurtByTarget extends EntityAITarget
 
         super.startExecuting();
     }
+    @Override
+    public void resetTask()
+    {
+    }
 }

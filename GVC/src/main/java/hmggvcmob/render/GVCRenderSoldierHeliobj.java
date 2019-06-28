@@ -100,7 +100,7 @@ public class GVCRenderSoldierHeliobj extends Render {
 				GL11.glEnable(GL11.GL_LIGHTING);
 				OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)lastBrightnessX, (float)lastBrightnessY);
 			}
-			/*if (entity.childEntities[4] != null && entity.childEntities[4].riddenByEntity == FMLClientHandler.instance().getClientPlayerEntity() && FMLClientHandler.instance().getClient().gameSettings.thirdPersonView == 0) {
+			if (planeBaseLogic.riddenByEntities[1] == FMLClientHandler.instance().getClientPlayerEntity() && FMLClientHandler.instance().getClient().gameSettings.thirdPersonView == 0) {
 				GL11.glDepthMask(false);
 				tankk.renderPart("GunnerHudPlate");
 				GL11.glDisable(GL11.GL_LIGHTING);
@@ -108,24 +108,24 @@ public class GVCRenderSoldierHeliobj extends Render {
 				float lastBrightnessY = OpenGlHelper.lastBrightnessY;
 				OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
 				glDisable(GL_DEPTH_TEST);
-
+				
 				GL11.glPushMatrix();
 				GL11.glTranslatef(0.1176f,0.4499f,6.443f);
-				GL11.glRotatef((float) -entity.turretYaw,0,1,0);
+				GL11.glRotatef((float) -planeBaseLogic.riddenByEntitiesInfo[1].gun.turretrotationYaw,0,1,0);
 				GL11.glTranslatef(-0.1176f,-0.4499f,-6.443f);
 				GL11.glTranslatef(0,0.8190f,6.4489f);
-				GL11.glRotatef((float) entity.turretPitch,1,0,0);
+				GL11.glRotatef((float) planeBaseLogic.riddenByEntitiesInfo[1].gun.turretrotationPitch,1,0,0);
 				GL11.glTranslatef(0,-0.8190f,-6.4489f);
 				tankk.renderPart("GunnerReticle");
 				GL11.glPopMatrix();
 				glEnable(GL_DEPTH_TEST);
 				GL11.glEnable(GL11.GL_LIGHTING);
 				OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)lastBrightnessX, (float)lastBrightnessY);
-			}*/
+			}
 			GL11.glDisable(GL_BLEND);
 		}else {
 			GL11.glDepthMask(true);
-			if (!entity.onGround) {
+			if (planeBaseLogic.gearprogress < 10) {
 				tankk.renderPart("leftWheelCover");
 				tankk.renderPart("rightWheelCover");
 			} else {
@@ -149,11 +149,11 @@ public class GVCRenderSoldierHeliobj extends Render {
 			{
 				GL11.glPushMatrix();
 				GL11.glTranslatef(0.1176f,0.4499f,6.443f);
-//				GL11.glRotatef((float) -entity.turretYaw,0,1,0);
+				GL11.glRotatef((float) -planeBaseLogic.riddenByEntitiesInfo[1].gun.turretrotationYaw,0,1,0);
 				GL11.glTranslatef(-0.1176f,-0.4499f,-6.443f);
 				tankk.renderPart("FgunTurretY");
 				GL11.glTranslatef(0,0.8190f,6.4489f);
-//				GL11.glRotatef((float) entity.turretPitch,1,0,0);
+				GL11.glRotatef((float) planeBaseLogic.riddenByEntitiesInfo[1].gun.turretrotationPitch,1,0,0);
 				GL11.glTranslatef(0,-0.8190f,-6.4489f);
 				tankk.renderPart("FgunTurretP");
 				tankk.renderPart("Fgun");

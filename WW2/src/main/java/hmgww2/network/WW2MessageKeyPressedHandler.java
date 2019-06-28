@@ -468,10 +468,10 @@ public class WW2MessageKeyPressedHandler implements IMessageHandler<WW2MessageKe
 						    order = "flag";
 						    break;
 					    case 4:
-						    order = "vfree";
+						    order = "weaponFree";
 						    break;
 					    case 5:
-						    order = "vwait";
+						    order = "holdFire";
 						    break;
 				    }
 				    switch (playernation) {
@@ -512,6 +512,7 @@ public class WW2MessageKeyPressedHandler implements IMessageHandler<WW2MessageKe
 						    Entity entity1 = (Entity) llist.get(lj);
 						    if (entity1.canBeCollidedWith()) {
 							    if (entity1 instanceof EntityBases && playernation == ((EntityBases) entity1).getnation()) {
+							    	boolean holdfire = ((EntityBases) entity1).holdFire;
 								    switch (set_to_this_mode){
 									    case 0://follow me
 										    ((EntityBases) entity1).mode = 2;
@@ -527,14 +528,14 @@ public class WW2MessageKeyPressedHandler implements IMessageHandler<WW2MessageKe
 										    ((EntityBases) entity1).homeposZ = (int) entityplayer.posZ;
 										    continue;
 									    case 2://free
-										    ((EntityBases) entity1).mode = 1;
+										    ((EntityBases) entity1).mode = 0;
 										    ((EntityBases) entity1).homeposX = (int) entityplayer.posX;
 										    ((EntityBases) entity1).homeposY = (int) entityplayer.posY;
 										    ((EntityBases) entity1).homeposZ = (int) entityplayer.posZ;
 										    continue;
 									    case 3://attack enemy flag
 										    if(targetflag != null) {
-											    ((EntityBases) entity1).mode = 1;
+											    ((EntityBases) entity1).mode = 3;
 											    ((EntityBases) entity1).homeposX = (int) targetflag.xCoord;
 											    ((EntityBases) entity1).homeposY = (int) targetflag.yCoord;
 											    ((EntityBases) entity1).homeposZ = (int) targetflag.zCoord;
@@ -546,17 +547,10 @@ public class WW2MessageKeyPressedHandler implements IMessageHandler<WW2MessageKe
 										    }
 										    continue;
 									    case 4:
-										    if(entity1 instanceof ITank){
-											    ((EntityBases) entity1).mode = 0;
-										    }
+									    	((EntityBases) entity1).holdFire = false;
 										    continue;
 									    case 5:
-										    if(entity1 instanceof ITank){
-											    ((EntityBases) entity1).mode = 2;
-											    ((EntityBases) entity1).homeposX = (int) entityplayer.posX;
-											    ((EntityBases) entity1).homeposY = (int) entityplayer.posY;
-											    ((EntityBases) entity1).homeposZ = (int) entityplayer.posZ;
-										    }
+										    ((EntityBases) entity1).holdFire = true;
 										    continue;
 								    }
 							    }

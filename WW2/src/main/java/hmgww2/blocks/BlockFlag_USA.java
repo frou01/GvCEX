@@ -22,7 +22,7 @@ public class BlockFlag_USA extends BlockUSAFlagBase
     public BlockFlag_USA() {
 	    super();
 	    flagType = FlagType.Barrack;
-	    maxs = 45;
+	    maxs = 18;
 	    spawntime = 750;
     }
     

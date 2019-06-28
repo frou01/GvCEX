@@ -19,8 +19,10 @@ public class MovingSoundHMG extends MovingSound
 	public double disttoPlayer = -1;
 	public double prevdisttoPlayer = -1;
 	public float savedfield_147663_c;
+	private int tick = 0;
+	private int tickMax = 0;
 	
-	public MovingSoundHMG(Entity p_i45105_1_,String soundName,boolean repeat,float soundLV,float soundSP)
+	public MovingSoundHMG(Entity p_i45105_1_,String soundName,boolean repeat,float soundLV,float soundSP,int tickMax)
 	{
 		super(new ResourceLocation(soundName));
 		this.attachedEntity = p_i45105_1_;
@@ -28,6 +30,7 @@ public class MovingSoundHMG extends MovingSound
 		this.field_147665_h = 0;
 		this.savedfield_147663_c = this.field_147663_c = soundSP;
 		this.volume = soundLV;
+		this.tickMax = tickMax;
 	}
 	
 	/**
@@ -35,6 +38,11 @@ public class MovingSoundHMG extends MovingSound
 	 */
 	public void update()
 	{
+		tick++;
+		if(tick > tickMax){
+			donePlaying = true;
+			return;
+		}
 		if (this.attachedEntity.isDead)
 		{
 			this.donePlaying = true;

@@ -20,6 +20,7 @@ public class EntityUSSR_S extends EntityUSSRBase
 	    aiAttackGun.assault = true;
 	    aiAttackGun.assaultrange = 40;
 	    spread = 4;
+	    interval = 2;
     }
 	protected void applyEntityAttributes()
 	{

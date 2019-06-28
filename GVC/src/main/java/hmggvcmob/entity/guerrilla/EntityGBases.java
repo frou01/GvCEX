@@ -1,6 +1,7 @@
 package hmggvcmob.entity.guerrilla;
 
 import hmggvcmob.IflagBattler;
+import hmggvcmob.SlowPathFinder.ModifiedPathNavigater;
 import hmggvcmob.tile.TileEntityFlag;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
@@ -8,12 +9,14 @@ import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 
+import static handmadeguns.Util.Utils.getmovingobjectPosition_forBlock;
 import static hmggvcmob.GVCMobPlus.fn_Guerrillaflag;
 import static java.lang.Math.abs;
 
@@ -28,14 +31,23 @@ public class EntityGBases extends EntityMob implements IflagBattler{
     public int flagx;
     public int flagy;
     public int flagz;
-	
-	
-	public EntityGBases(World par1World) {
-	    super(par1World);
+    
+    private ModifiedPathNavigater modifiedPathNavigater;
+    
+    public EntityGBases(World par1World) {
+        super(par1World);
         renderDistanceWeight = 16384;
-	}
-
-	
+        this.modifiedPathNavigater = new ModifiedPathNavigater(this, worldObj);
+    }
+    public PathNavigate getNavigator()
+    {
+        return this.modifiedPathNavigater;
+    }
+    protected void updateAITasks()
+    {
+        super.updateAITasks();
+        modifiedPathNavigater.onUpdateNavigation();
+    }
 	/**
      * (abstract) Protected helper method to read subclass entity data from NBT.
      */
@@ -65,6 +77,7 @@ public class EntityGBases extends EntityMob implements IflagBattler{
 	public void onUpdate()
     {
         super.onUpdate();
+        if(this.getAttackTarget() != null && this.getAttackTarget().isDead)this.setAttackTarget(null);
         if(getMoveHelper().getSpeed()<0){
             getNavigator().clearPathEntity();
         }
@@ -85,6 +98,26 @@ public class EntityGBases extends EntityMob implements IflagBattler{
                 this.setDead();
             }
         }
+    }
+    public boolean isEntityInsideOpaqueBlock()
+    {
+        for (int i = 0; i < 8; ++i)
+        {
+            float width = (float) (boundingBox.maxX - boundingBox.maxZ);
+            float f = ((float)((i >> 0) % 2) - 0.5F) * width * 0.8F;
+            float f1 = ((float)((i >> 1) % 2) - 0.5F) * 0.1F;
+            float f2 = ((float)((i >> 2) % 2) - 0.5F) * width * 0.8F;
+            int j = MathHelper.floor_double(this.posX + (double)f);
+            int k = MathHelper.floor_double(this.posY + (double)this.getEyeHeight() + (double)f1);
+            int l = MathHelper.floor_double(this.posZ + (double)f2);
+            
+            if (this.worldObj.getBlock(j, k, l).isNormalCube())
+            {
+                return true;
+            }
+        }
+        
+        return false;
     }
     
     
@@ -149,7 +182,7 @@ public class EntityGBases extends EntityMob implements IflagBattler{
     
     protected boolean canDespawn()
     {
-        return candespawn;
+        return candespawn && getAttackTarget() == null;
     }
     
     /**
@@ -202,22 +235,11 @@ public class EntityGBases extends EntityMob implements IflagBattler{
     {
         Vec3 startpos = Vec3.createVectorHelper(this.posX, this.posY + (double) this.getEyeHeight(), this.posZ);
         Vec3 targetpos = Vec3.createVectorHelper(p_70685_1_.posX, p_70685_1_.posY + (double) p_70685_1_.getEyeHeight(), p_70685_1_.posZ);
-        Vec3 penerater = Vec3.createVectorHelper(p_70685_1_.posX - this.posX,  p_70685_1_.posY + (double) p_70685_1_.getEyeHeight()-(this.posY + (double) this.getEyeHeight()),p_70685_1_.posZ - this.posZ);
-        penerater = penerater.normalize();
-        MovingObjectPosition movingobjectposition = this.worldObj.rayTraceBlocks(startpos, targetpos);
-        int abortcnt=0;
-        while(movingobjectposition!=null) {
-            if(abortcnt > 4)return false;
-            Block hitedblock = this.worldObj.getBlock(movingobjectposition.blockX, movingobjectposition.blockY, movingobjectposition.blockZ);
-            if(hitedblock.getMaterial().isOpaque()){
-                return false;
-            }
-            Vec3 newstartpos = Vec3.createVectorHelper(movingobjectposition.hitVec.xCoord + penerater.xCoord, movingobjectposition.hitVec.yCoord + penerater.yCoord, movingobjectposition.hitVec.zCoord + penerater.zCoord);
-            if(startpos.squareDistanceTo(newstartpos)>startpos.squareDistanceTo(targetpos))break;
-            movingobjectposition = this.worldObj.rayTraceBlocks(newstartpos,targetpos);
-            abortcnt++;
+        MovingObjectPosition movingobjectposition = getmovingobjectPosition_forBlock(worldObj,startpos, targetpos, false, true, false);
+        if(movingobjectposition!=null) {
+            return false;
         }
-        return true;
+        return !((this.isInWater() || p_70685_1_.isInWater()) && getDistanceSqToEntity(p_70685_1_) > 256);
     }
     /**
      * returns a (normalized) vector of where this entity is looking

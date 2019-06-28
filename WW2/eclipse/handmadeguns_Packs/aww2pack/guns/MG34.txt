@@ -1,6 +1,8 @@
 BulletPower,8
 BulletSpeed,4.0f
-BlletSpread,4.0f
+BlletSpread,3.0f
+ADS_Spread_coefficient,0.1
+BlletSpreadDiffusion,4,0,0.1,0,2,0.05
 Recoil,5.5d
 ReloadTime,50
 RemainingBullet,50

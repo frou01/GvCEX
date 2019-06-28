@@ -4,6 +4,7 @@ BulletGravity,0.485
 
 BlletSpread,6.0F
 ADS_Spread_coefficient,0.2F
+BlletSpreadDiffusion,3,0,0.3,0,2,0.1
 Cycle,2
 
 Motion,0.4
@@ -13,7 +14,7 @@ Recoil_sneaking,0.125
 
 ReloadTime,100
 
-RemainingBullet,200
+RemainingBullet,100
 
 Attacking,3.0f
 Zoom,1.0f,1.0f,4.0f
@@ -66,7 +67,7 @@ SoundSpeed,0.8F
 ScopeTexture,null.png,null.png,scope.png
 RenderCross,false
 
-Magazine,0,HandmadeGuns,bullet_lmg_hmg
+Magazine,0,HandmadeGuns,bullet_lmg_hmg_7_62_NATO
 MagazineSG,0,HandmadeGuns,bullet_shell_hmg
 MagazineGL,0,HandmadeGuns,bullet_rr_hmg
 

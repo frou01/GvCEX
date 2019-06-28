@@ -1,10 +1,10 @@
 package hmvehicle.entity.parts.logics;
 
+import hmvehicle.Utils;
 import hmvehicle.HMVPacketHandler;
 import hmvehicle.entity.parts.ITank;
 import hmvehicle.entity.parts.ModifiedBoundingBox;
 import hmvehicle.packets.HMVMMessageKeyPressed;
-import hmggvcmob.util.Calculater;
 import hmvehicle.packets.HMVPakcetVehicleState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -20,8 +20,7 @@ import java.util.ArrayList;
 
 import static hmggvcmob.GVCMobPlus.cfgVehicleWheel_DownRange;
 import static hmggvcmob.GVCMobPlus.cfgVehicleWheel_UpRange;
-import static hmggvcmob.GVCMobPlus.proxy;
-import static hmggvcmob.util.Calculater.*;
+import static hmvehicle.Utils.*;
 import static hmvehicle.HMVehicle.proxy_HMVehicle;
 import static java.lang.Math.*;
 import static net.minecraft.util.MathHelper.wrapAngleTo180_float;
@@ -112,10 +111,7 @@ public class TankBaseLogic implements IbaseLogic{
 
 
         ((ModifiedBoundingBox)tank.boundingBox).rot.set(bodyRot);
-        ((ModifiedBoundingBox)tank.boundingBox).updateOBB(tank.posX, tank.posY, tank.posZ);
-        ((ModifiedBoundingBox)tank.boundingBox).posX = tank.posX;
-        ((ModifiedBoundingBox)tank.boundingBox).posY = tank.posY;
-        ((ModifiedBoundingBox)tank.boundingBox).posZ = tank.posZ;
+        ((ModifiedBoundingBox)tank.boundingBox).update(tank.posX, tank.posY, tank.posZ);
 
 
         tracksoundticks--;
@@ -124,7 +120,7 @@ public class TankBaseLogic implements IbaseLogic{
     
         if(needStartSound){
             needStartSound = false;
-            if(tank.worldObj.isRemote)proxy_HMVehicle.playsoundasVehicle(128,tank);
+            if(tank.worldObj.isRemote)proxy_HMVehicle.playsoundasVehicle(64,tank);
         }
         needStartSound = true;
         this.prevbodyrotationYaw = this.bodyrotationYaw;
@@ -170,33 +166,33 @@ public class TankBaseLogic implements IbaseLogic{
         }
 
         ismanual = (tank instanceof ITank) && !((ITank) tank).standalone();
-        if(ismanual && tank.riddenByEntity == proxy.getEntityPlayerInstance()){
+        if(ismanual && tank.riddenByEntity == proxy_HMVehicle.getEntityPlayerInstance()){
             ArrayList<Integer> keys = new ArrayList<>();
-            if (proxy.leftclick()) {
+            if (proxy_HMVehicle.leftclick()) {
                 keys.add(11);
             }
-            if (proxy.rightclick()) {
+            if (proxy_HMVehicle.rightclick()) {
                 keys.add(12);
             }
-            if (proxy.jumped()) {
+            if (proxy_HMVehicle.spaceKeyDown()) {
                 keys.add(13);
             }
-            if (proxy.xclick()) {
+            if (proxy_HMVehicle.xclick()) {
                 keys.add(14);
             }
-            if (proxy.wclick()) {
+            if (proxy_HMVehicle.wclick()) {
                 keys.add(16);
             }
-            if (proxy.aclick()) {
+            if (proxy_HMVehicle.aclick()) {
                 keys.add(17);
             }
-            if (proxy.sclick()) {
+            if (proxy_HMVehicle.sclick()) {
                 keys.add(18);
             }
-            if (proxy.dclick()) {
+            if (proxy_HMVehicle.dclick()) {
                 keys.add(19);
             }
-            if (proxy.fclick()) {
+            if (proxy_HMVehicle.fclick()) {
                 keys.add(20);
             }
             int[] i = new int[keys.size()];
@@ -208,6 +204,39 @@ public class TankBaseLogic implements IbaseLogic{
     }
     public void updateServer(){
         HMVPacketHandler.INSTANCE.sendToAll(new HMVPakcetVehicleState(tank.getEntityId(),bodyRot, throttle,false,false));
+        followGround();
+
+        bodyrotationYaw = wrapAngleTo180_float(bodyrotationYaw);
+        turretrotationYaw = wrapAngleTo180_float(turretrotationYaw);
+        idriveableVehicle.setTurretrotationYaw(this.turretrotationYaw);
+        idriveableVehicle.setTurretrotationPitch(this.turretrotationPitch);
+        idriveableVehicle.setRotationYaw(bodyrotationYaw);
+        idriveableVehicle.setRotationPitch(bodyrotationPitch);
+        idriveableVehicle.setRotationRoll(bodyrotationRoll);
+
+        boolean needTracksound = false;
+        ismanual = (tank instanceof ITank) && !((ITank) tank).standalone();
+        if(ismanual && tank.riddenByEntity != null){
+            aimMainTurret_toAngle(tank.riddenByEntity.getRotationYawHead(),tank.riddenByEntity.rotationPitch);
+        }
+        needTracksound = control();
+        
+        rotationmotion*=tank.onGround?0.8f:idriveableVehicle.ishittingWater() ? 0.95:0.999;
+        if(tank.onGround || (canControlonWater && idriveableVehicle.ishittingWater()))bodyrotationYaw += rotationmotion;
+        if(abs(rotationmotion)<0.01)rotationmotion = 0;
+
+//        tracksoundticks--;
+//        if ((abs(throttle) > 0.0||needTracksound)&& tracksoundticks < 0) {
+//            tank.worldObj.playSoundEffect(tank.posX, tank.posY, tank.posZ, tracksound, 4, throttle < 0.05 ? 1 : 0.8f + throttle/10);
+//            tank.getEntityData().setFloat("GunshotLevel", 4);
+//            if (tank.getEntityData().getFloat("GunshotLevel") < 0.1)
+//                soundedentity.add(tank);
+//            tracksoundticks = 10;
+//        }
+    }
+
+    public void followGround(){
+    
         {
             Vec3 tankFrontVec_level;
             Vec3 tankRight;
@@ -269,7 +298,7 @@ public class TankBaseLogic implements IbaseLogic{
                 if(amovingObjectPosition == null)BL = vec31;
                 else BL = amovingObjectPosition.hitVec;
             }
-
+        
             {
                 Vec3 vec1 = BL.addVector(-FR.xCoord,-FR.yCoord,-FR.zCoord);
                 Vec3 vec2 = BR.addVector(-FL.xCoord,-FL.yCoord,-FL.zCoord);
@@ -292,37 +321,7 @@ public class TankBaseLogic implements IbaseLogic{
 //                }
             }
         }
-
-
-        bodyrotationYaw = wrapAngleTo180_float(bodyrotationYaw);
-        turretrotationYaw = wrapAngleTo180_float(turretrotationYaw);
-        idriveableVehicle.setTurretrotationYaw(this.turretrotationYaw);
-        idriveableVehicle.setTurretrotationPitch(this.turretrotationPitch);
-        idriveableVehicle.setRotationYaw(bodyrotationYaw);
-        idriveableVehicle.setRotationPitch(bodyrotationPitch);
-        idriveableVehicle.setRotationRoll(bodyrotationRoll);
-
-        boolean needTracksound = false;
-        ismanual = (tank instanceof ITank) && !((ITank) tank).standalone();
-        if(ismanual && tank.riddenByEntity != null){
-            aimMainTurret_toAngle(tank.riddenByEntity.getRotationYawHead(),tank.riddenByEntity.rotationPitch);
-        }
-        needTracksound = control();
-        
-        rotationmotion*=tank.onGround?0.8f:idriveableVehicle.ishittingWater() ? 0.95:0.999;
-        if(tank.onGround || (canControlonWater && idriveableVehicle.ishittingWater()))bodyrotationYaw += rotationmotion;
-        if(abs(rotationmotion)<0.01)rotationmotion = 0;
-
-//        tracksoundticks--;
-//        if ((abs(throttle) > 0.0||needTracksound)&& tracksoundticks < 0) {
-//            tank.worldObj.playSoundEffect(tank.posX, tank.posY, tank.posZ, tracksound, 4, throttle < 0.05 ? 1 : 0.8f + throttle/10);
-//            tank.getEntityData().setFloat("GunshotLevel", 4);
-//            if (tank.getEntityData().getFloat("GunshotLevel") < 0.1)
-//                soundedentity.add(tank);
-//            tracksoundticks = 10;
-//        }
     }
-
     public boolean control(){
         boolean needTracksound = false;
         if(ismanual && tank instanceof ITank && tank.riddenByEntity != null){
@@ -371,9 +370,11 @@ public class TankBaseLogic implements IbaseLogic{
             }else {
                 float angledef = -wrapAngleTo180_float(bodyrotationYaw - tank.rotationYaw);
                 if (angledef > 15) {
+                    throttle += throttle_speed;
                     rotationmotion += (throttle + (spinturn && abs(throttle) == 0 ? 1 : 0)) * yawspeed * (tank.onGround ? 1 : idriveableVehicle.ishittingWater() ? 0.5 : 0);
                     if (abs(throttle) > 0 || spinturn) needTracksound = true;
                 } else if (angledef < -15) {
+                    throttle += throttle_speed;
                     rotationmotion -= (throttle + (spinturn && abs(throttle) == 0 ? 1 : 0)) * yawspeed * (tank.onGround ? 1 : idriveableVehicle.ishittingWater() ? 0.5 : 0);
                     if (abs(throttle) > 0 || spinturn) needTracksound = true;
                 } else {
@@ -403,16 +404,16 @@ public class TankBaseLogic implements IbaseLogic{
     
             if (f3 >= 1.0E-4F)
             {
-                f3 = MathHelper.sqrt_float(f3);
-        
-                if (f3 < 1.0F)
-                {
-                    f3 = 1.0F;
+                if(tank.getMoveHelper().getSpeed() > 0) {
+                    if (throttle < tank.getMoveHelper().getSpeed() * 5)
+                        throttle += throttle_speed;
+                    else throttle -= throttle_speed;
+                }else {
+                    if (throttle > tank.getMoveHelper().getSpeed() * 2.5)
+                        throttle -= throttle_speed;
+                    else throttle += throttle_speed;
                 }
-                f3 = p_70060_3_ / f3;
-                f3 = abs(f3);
-                throttle += throttle_speed;
-                f3 *= throttle * 0.15 * speed;
+                f3 = (float) (throttle * 0.15 * speed);
                 if(idriveableVehicle.ishittingWater())f3 *= 0.4;
                 front_speed *= f3;
                 if(tank.onGround || (canControlonWater && idriveableVehicle.ishittingWater())) {
@@ -424,7 +425,7 @@ public class TankBaseLogic implements IbaseLogic{
                     tank.motionZ += frontVec.z;
                 }
             }else {
-                throttle *= 0.999;
+                throttle *= 0.7;
             }
         }
     }
@@ -434,20 +435,10 @@ public class TankBaseLogic implements IbaseLogic{
 
         if (f3 >= 1.0E-4F)
         {
-            f3 = MathHelper.sqrt_float(f3);
-
-            if (f3 < 1.0F)
-            {
-                f3 = 1.0F;
-            }
-            f3 = p_70060_3_ / f3;
-            f3 = abs(f3);
-            f3 *= throttle * 0.15 * speed;
+            f3 = (float) (throttle * 0.15 * speed);
             if(idriveableVehicle.ishittingWater())f3 *= 0.4;
             front_speed *= f3;
-//			System.out.println("debug" + throttle);
             if(tank.onGround || (canControlonWater && idriveableVehicle.ishittingWater())) {
-
                 Vector3d frontVec = getTransformedVector_onbody(new Vector3d(0,0,-1));
                 frontVec.scale(front_speed);
                 transformVecforMinecraft(frontVec);
@@ -486,12 +477,12 @@ public class TankBaseLogic implements IbaseLogic{
 //    public Vector3d getTransformedVector_onturret(Vector3d naturalVector,Vector3d turretYawCenterpos){
 //        Quat4d turretyawrot = new Quat4d(0,0,0,1);
 //
-//        Vector3d axisy = Calculater.transformVecByQuat(new Vector3d(0,1,0), turretyawrot);
+//        Vector3d axisy = Utils.transformVecByQuat(new Vector3d(0,1,0), turretyawrot);
 //        AxisAngle4d axisyangled = new AxisAngle4d(axisy, toRadians(turretrotationYaw)/2);
-//        turretyawrot = Calculater.quatRotateAxis(turretyawrot,axisyangled);
-//        Vector3d Vec_transformedbyturret = Calculater.transformVecByQuat(naturalVector,turretyawrot);
+//        turretyawrot = Utils.quatRotateAxis(turretyawrot,axisyangled);
+//        Vector3d Vec_transformedbyturret = Utils.transformVecByQuat(naturalVector,turretyawrot);
 //
-//        Vector3d Vec_transformedbybody = Calculater.transformVecByQuat(Vec_transformedbyturret,bodyRot);
+//        Vector3d Vec_transformedbybody = Utils.transformVecByQuat(Vec_transformedbyturret,bodyRot);
 //
 //        Vector3d TurretRotCenterVec_transformedbybody = getTransformedVector_onbody(turretYawCenterpos);
 //        Vec_transformedbybody.add(TurretRotCenterVec_transformedbybody);
@@ -507,7 +498,7 @@ public class TankBaseLogic implements IbaseLogic{
 //        return lookVec;
 //    }
     public Vector3d getTransformedVector_onbody(Vector3d naturalVector){
-        return Calculater.transformVecByQuat(naturalVector,bodyRot);
+        return Utils.transformVecByQuat(naturalVector,bodyRot);
     }
 
 //    public boolean turretMove(double targetyaw, double targetpitch){
@@ -678,9 +669,9 @@ public class TankBaseLogic implements IbaseLogic{
         float f1 = tank.height;
         tank.boundingBox.setBounds(p_70107_1_ - (double)f, p_70107_3_ - (double)tank.yOffset + (double)tank.ySize, p_70107_5_ - (double)f, p_70107_1_ + (double)f, p_70107_3_ - (double)tank.yOffset + (double)tank.ySize + (double)f1, p_70107_5_ + (double)f);
         if(tank.boundingBox instanceof ModifiedBoundingBox){
-            ((ModifiedBoundingBox) tank.boundingBox).posX = tank.posX;
-            ((ModifiedBoundingBox) tank.boundingBox).posY = tank.posY;
-            ((ModifiedBoundingBox) tank.boundingBox).posZ = tank.posZ;
+            ((ModifiedBoundingBox) tank.boundingBox).update(tank.posX,
+                    tank.posY,
+                    tank.posZ);
         }
     }
     @Override
@@ -694,5 +685,9 @@ public class TankBaseLogic implements IbaseLogic{
     
     public void yourSoundIsremain(){
         needStartSound = false;
+    }
+    
+    public boolean riddenbyPlayer(){
+        return proxy_HMVehicle.getEntityPlayerInstance() == tank.riddenByEntity;
     }
 }

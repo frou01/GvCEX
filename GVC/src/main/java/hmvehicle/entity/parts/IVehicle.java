@@ -1,8 +1,13 @@
 package hmvehicle.entity.parts;
 
+import handmadeguns.entity.I_SPdamageHandle;
+import net.minecraft.entity.Entity;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.MovingObjectPosition;
+
 import javax.vecmath.Quat4d;
 
-public interface IVehicle extends HasLoopSound , HasBaseLogic , Hasmode{
+public interface IVehicle extends HasLoopSound , HasBaseLogic , Hasmode,I_SPdamageHandle {
     int getfirecyclesettings1();
     int getfirecycleprogress1();
     int getfirecyclesettings2();

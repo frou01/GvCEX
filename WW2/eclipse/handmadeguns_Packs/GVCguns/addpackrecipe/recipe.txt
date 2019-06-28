@@ -3,7 +3,6 @@ Slot1,minecraft:iron_ingot:
 Slot2,minecraft:iron_ingot:
 Slot3,minecraft:iron_ingot:
 Slot4,minecraft:iron_ingot:
-Slot5,HandmadeGuns:7.62mm magazine:
 Slot6,minecraft:planks:
 Slot7,minecraft:emerald:
 Slot8,minecraft:emerald:
@@ -15,7 +14,6 @@ Slot1,minecraft:stone:
 Slot2,minecraft:stone:
 Slot3,minecraft:stone:
 Slot4,minecraft:stone:
-Slot5,HandmadeGuns:7.62mm magazine:
 Slot6,minecraft:planks:
 Slot9,minecraft:planks:
 CraftItem,HandmadeGuns:CopiedAK:0:1
@@ -35,7 +33,6 @@ AddRecipe
 Slot1,minecraft:iron_ingot:
 Slot2,minecraft:iron_ingot:
 Slot3,minecraft:planks:
-Slot5,HandmadeGuns:5.45mm magazine:
 Slot7,minecraft:emerald:
 Slot8,minecraft:emerald:
 Slot9,minecraft:emerald:
@@ -44,7 +41,6 @@ CraftItem,HandmadeGuns:AK74:0:1
 AddRecipe
 Slot2,minecraft:iron_ingot:
 Slot3,minecraft:iron_ingot:
-Slot5,HandmadeGuns:5.45mm magazine:
 Slot7,minecraft:emerald:
 CraftItem,HandmadeGuns:AKS74U:0:1
 
@@ -52,7 +48,6 @@ AddRecipe
 Slot1,minecraft:iron_ingot:
 Slot2,minecraft:iron_ingot:
 Slot3,minecraft:iron_ingot:
-Slot5,HandmadeGuns:5.45mm magazine:
 Slot6,minecraft:planks:
 Slot7,minecraft:emerald:
 Slot8,minecraft:emerald:
@@ -82,7 +77,6 @@ Slot1,minecraft:iron_ingot:
 Slot2,HandmadeGuns:scope:
 Slot3,minecraft:iron_ingot:
 Slot4,minecraft:planks:
-Slot5,HandmadeGuns:7.62mm magazine:
 Slot6,minecraft:planks:
 CraftItem,HandmadeGuns:SVD:0:1
 
@@ -100,7 +94,6 @@ Slot1,minecraft:iron_ingot:
 Slot2,minecraft:iron_ingot:
 Slot3,HandmadeGuns:Prastic
 Slot4,minecraft:emerald:
-Slot5,HandmadeGuns:5.56mm magazine
 Slot6,HandmadeGuns:Prastic
 CraftItem,HandmadeGuns:M16A4:0:1
 
@@ -108,7 +101,6 @@ AddRecipe
 Slot2,minecraft:iron_ingot:
 Slot3,HandmadeGuns:Prastic
 Slot4,minecraft:emerald:
-Slot5,HandmadeGuns:5.56mm magazine
 Slot6,HandmadeGuns:Prastic
 CraftItem,HandmadeGuns:M4A1:0:1
 
@@ -183,7 +175,6 @@ Slot3,minecraft:iron_block:
 Slot4,HandmadeGuns:Prastic
 Slot5,HandmadeGuns:Prastic
 Slot6,HandmadeGuns:Prastic
-Slot8,HandmadeGuns:12.7mm Magazine:
 CraftItem,HandmadeGuns:M82A3:0:1
 
 AddRecipe
@@ -191,7 +182,6 @@ Slot1,minecraft:iron_ingot:
 Slot2,minecraft:iron_ingot:
 Slot3,HandmadeGuns:Prastic
 Slot4,HandmadeGuns:Prastic
-Slot5,HandmadeGuns:5.56mm magazine
 Slot6,HandmadeGuns:Prastic
 Slot9,minecraft:emerald:
 CraftItem,HandmadeGuns:G36:0:1
@@ -200,7 +190,6 @@ AddRecipe
 Slot2,HandmadeGuns:scope:
 Slot3,HandmadeGuns:Prastic
 Slot4,HandmadeGuns:Prastic
-Slot5,HandmadeGuns:5.56mm magazine
 Slot6,HandmadeGuns:Prastic
 Slot9,minecraft:emerald:
 CraftItem,HandmadeGuns:G36K:0:1
@@ -210,7 +199,6 @@ Slot1,minecraft:iron_ingot:
 Slot2,HandmadeGuns:scope:
 Slot3,HandmadeGuns:Prastic
 Slot4,HandmadeGuns:Prastic
-Slot5,HandmadeGuns:5.56mm magazine
 Slot6,HandmadeGuns:Prastic
 Slot7,minecraft:iron_ingot:
 Slot9,minecraft:emerald:
@@ -271,7 +259,6 @@ CraftItem,HandmadeGuns:M134:0:1
 AddRecipe
 Slot1,minecraft:iron_block:
 Slot2,minecraft:iron_block:
-Slot3,HandmadeGuns:14.5mm Ammo:
 Slot5,minecraft:planks:
 Slot6,minecraft:wool:
 CraftItem,HandmadeGuns:PTRD1941:0:1
@@ -282,7 +269,6 @@ Slot2,minecraft:diamond:
 Slot3,minecraft:diamond:
 Slot4,minecraft:iron_block:
 Slot5,minecraft:iron_block:
-Slot6,HandmadeGuns:14.5mm APFSDS:
 Slot8,minecraft:emerald_block:
 Slot9,minecraft:beacon:
 CraftItem,HandmadeGuns:PTRK2041:0:1
@@ -293,7 +279,6 @@ Slot2,minecraft:diamond:
 Slot3,minecraft:diamond_block:
 Slot4,minecraft:iron_block:
 Slot5,minecraft:iron_block:
-Slot6,HandmadeGuns:RailAPFSDS:
 Slot8,minecraft:beacon:
 Slot9,minecraft:beacon:
 CraftItem,HandmadeGuns:2A115:0:1

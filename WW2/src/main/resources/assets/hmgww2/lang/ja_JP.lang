@@ -166,32 +166,30 @@ entity.HMGGVCWW2.EntityRUS_FighterA.name=ソ連軍 攻撃機
 entity.HMGGVCWW2.EntityRUS_ShipB.name=ソ連軍 戦艦
 entity.HMGGVCWW2.EntityRUS_ShipD.name=ソ連軍 駆逐艦
 
-hmgww2.followjpn.name=各部隊は集合せよ！
-hmgww2.waitjpn.name=各部隊待機せよ！
-hmgww2.freejpn.name=各個迎撃せよ！
-hmgww2.flagjpn.name=各部隊陣地を占領せよ！
-hmgww2.vfreejpn.name=各車両は戦闘を開始せよ！
-hmgww2.vwaitjpn.name=各車両待機せよ！
-hmgww2.ridejpn.name=車両に搭乗せよ！
+hmgww2.followjpn.name=ついてこい！
+hmgww2.waitjpn.name=ここ待て！
+hmgww2.freejpn.name=自由戦闘！
+hmgww2.flagjpn.name=旗を取りに行け！
+hmgww2.weaponFree.name=射撃せよ！
+hmgww2.holdFire.name=撃つな！
 
-hmgww2.followusa.name=Units come on!
-hmgww2.waitusa.name=Units wait!
-hmgww2.freeusa.name=Units attack!
-hmgww2.flagusa.name=Units capture the flag!
-hmgww2.vfreeusa.name=Vehicles attack!
-hmgww2.vwaitusa.name=Vehicles wait!
+hmgww2.followusa.name=Follow me!（ついてこい！）
+hmgww2.waitusa.name=Wait here!（ここで待て！）
+hmgww2.freeusa.name=Fights freely!（自由戦闘！）
+hmgww2.flagusa.name=Attack Enemy position!（旗を取りに行け！）
+hmgww2.weaponFree.name=Fire!（射撃せよ！）
+hmgww2.holdFire.name=Hold your fire!（撃つな！）
 
-hmgww2.followger.name=Einheiten kommen!
-hmgww2.waitger.name=Einheiten warten!
-hmgww2.freeger.name=Einheiten Angriff!
-hmgww2.flagger.name=Einheiten erfassen die Flagge!
-hmgww2.vfreeger.name=Panzer Vier!
-hmgww2.vwaitger.name=Fahrzeuge warten!
+hmgww2.followger.name=Folge mir!（ついてこい！）
+hmgww2.waitger.name=Wartet Sie hier.!（ここで待て！）
+hmgww2.freeger.name=Freier Kampf!（自由戦闘！）
+hmgww2.flagger.name=Greife die feindliche Flagge an!（旗を取りに行け！）
+hmgww2.weaponFree.name=Achtung,Feuer!（射撃せよ！）
+hmgww2.holdFire.name=Nicht feuer!（撃つな！）
 
-hmgww2.followrus.name=Единицы приходят на!
-hmgww2.waitrus.name=Единицы измерения ждать!
-hmgww2.freerus.name=Единицы атаки!
-hmgww2.flagrus.name=Единицы захватить флаг!
-hmgww2.vfreerus.name=Транспортные средства атаки!
-hmgww2.vwaitrus.name=Транспортные средства ждать!
-
+hmgww2.followrus.name=Следуй за мной!（ついてこい！）
+hmgww2.waitrus.name=Подожди здесь!（ここで待て！）
+hmgww2.freerus.name=Свободная битва!（自由戦闘！）
+hmgww2.flagrus.name=атаковать вражескую позицию!（旗を取りに行け！）
+hmgww2.weaponFree.name=Огонь!（射撃せよ！）
+hmgww2.holdFire.name=Прекрати стрелять!（撃つな！）

@@ -16,8 +16,8 @@ public class EntityGER_Tank extends EntityGER_TankBase
     {
         super(par1World);
         this.setSize(4F, 2.5F);
-        baseLogic = new TankBaseLogic(this,0.17f,0.85f,false,"hmgww2:hmgww2.PzIVTrack");
-        aiTankAttack = new AITankAttack(this,6400,1600,10,10);
+        baseLogic = new TankBaseLogic(this,0.27f,0.65f,false,"hmgww2:hmgww2.PzIVTrack");
+        aiTankAttack = new AITankAttack(this,6400,1600,200,200);
         this.tasks.addTask(1,aiTankAttack);
         aiTankAttack.setAlways_poit_to_target(true);
         playerpos = new Vector3d(0,3.4D,0.7);
@@ -27,14 +27,15 @@ public class EntityGER_Tank extends EntityGER_TankBase
         
         mainTurret = new TurretObj(worldObj);
         {
-            mainTurret.onmotherPos = turretpos;
-            mainTurret.cannonpos = cannonpos;
+            mainTurret.onMotherPos = turretpos;
+            mainTurret.cannonPos = cannonpos;
             mainTurret.turretPitchCenterpos = new Vector3d(0F, 2.00F, 1.00F);
             mainTurret.turretspeedY = 3;
             mainTurret.turretspeedP = 3;
             mainTurret.currentEntity = this;
             mainTurret.powor = 90;
             mainTurret.ex = 2.0F;
+            mainTurret.reloadsound = "hmgww2:hmgww2.deload_pick_load";
             mainTurret.firesound = "hmgww2:hmgww2.75mmfire";
             mainTurret.spread = 0.5f;
             mainTurret.speed = 8;
@@ -53,16 +54,16 @@ public class EntityGER_Tank extends EntityGER_TankBase
             subTurret.traverseSound = null;
     
             subturretpos = new Vector3d(0,2.9,0.7);
-            subTurret.onmotherPos = subturretpos;
+            subTurret.onMotherPos = subturretpos;
             subTurret.turretPitchCenterpos = new Vector3d(0,0.25, 0.5 + 0.7);
-            subTurret.cannonpos = new Vector3d(0,0.285,1.2);
+            subTurret.cannonPos = new Vector3d(0,0.285,1.2);
             subTurret.cycle_setting = 0;
             subTurret.spread = 5;
             subTurret.speed = 8;
             subTurret.firesound = "handmadeguns:handmadeguns.MG34";
-            subTurret.flushName  = "arrow";
-            subTurret.flushfuse  = 1;
-            subTurret.flushscale  = 1.5f;
+            subTurret.flashName = "arrow";
+            subTurret.flashfuse = 1;
+            subTurret.flashscale = 1.5f;
         
             subTurret.powor = 8;
             subTurret.ex = 0;
@@ -71,10 +72,10 @@ public class EntityGER_Tank extends EntityGER_TankBase
         
             subTurret.magazineMax = 500;
             subTurret.reloadSetting = 100;
-            subTurret.flushoffset = 0.5f;
+            subTurret.flashoffset = 0.5f;
         }
         subturret_is_mainTurret_child = true;
-        mainTurret.addchild(subTurret);
+        mainTurret.addchild_NOTtriggerLinked(subTurret);
         turrets = new TurretObj[]{mainTurret,subTurret};
         armor = 40;
     }

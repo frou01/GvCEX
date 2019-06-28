@@ -23,7 +23,8 @@ public class BlockFlag2_USA extends BlockUSAFlagBase
 	
 	    super();
 	    flagType = FlagType.Factory;
-	    maxs = 5;
+	    maxs = 3;
+	    flagRange = 32;
 	    spawntime = 1200;
     }
 }

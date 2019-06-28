@@ -40,7 +40,7 @@ public class EntityChild extends Entity implements IEntityAdditionalSpawnData,En
         motionX = motionY = motionZ = 0;
         super.onUpdate();
         motionX = motionY = motionZ = 0;
-        if(master == null||worldObj.getEntityByID(master.getEntityId()) == null||master.isDead || (master instanceof EntityMGAX55 && !((EntityMGAX55) master).isChild(this))){
+        if(master == null||worldObj.getEntityByID(master.getEntityId()) == null||master.isDead){
             setDead();
         }else if(master instanceof EntityLiving){
             if(this.riddenByEntity != null && this.riddenByEntity instanceof EntityLiving){

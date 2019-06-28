@@ -8,6 +8,7 @@ import handmadeguns.HMGMessageKeyPressedC;
 import handmadeguns.HMGPacketHandler;
 import handmadeguns.HandmadeGunsCore;
 import handmadeguns.entity.IFF;
+import handmadeguns.entity.I_SPdamageHandle;
 import io.netty.buffer.ByteBuf;
 import littleMaidMobX.LMM_EntityLittleMaid;
 import littleMaidMobX.LMM_EntityLittleMaidAvatar;
@@ -91,7 +92,13 @@ public class HMGEntityBulletExprode extends HMGEntityBulletBase implements IEnti
 				this.posX = hitobjectposition.hitVec.xCoord;
 				this.posY = hitobjectposition.hitVec.yCoord;
 				this.posZ = hitobjectposition.hitVec.zCoord;
-				if(hitedentity.attackEntityFrom((new EntityDamageSourceIndirect("arrow", this, this.getThrower())).setProjectile(), (float)i)){
+				boolean flag;
+				if(hitobjectposition.entityHit instanceof I_SPdamageHandle){
+					flag = ((I_SPdamageHandle)hitobjectposition.entityHit).attackEntityFrom_with_Info(hitobjectposition,(new EntityDamageSourceIndirect("arrow", this, this.getThrower())).setProjectile(),i);
+				}else {
+					flag = hitobjectposition.entityHit.attackEntityFrom((new EntityDamageSourceIndirect("arrow", this, this.getThrower())).setProjectile(),i);
+				}
+				if(flag){
 					hitedentity.motionX = moXback;
 					hitedentity.motionY = moYback;
 					hitedentity.motionZ = moZback;
@@ -195,7 +202,6 @@ public class HMGEntityBulletExprode extends HMGEntityBulletBase implements IEnti
 					onBreakBlock(var1, var1.blockX, var1.blockY, var1.blockZ, lblock, lmeta);
 				}
 			} else {
-				// 逹�ｼｾ繝代�繝�ぅ繧ｯ繝ｫ
 				for (int i = 0; i < 8; ++i) {
 //					worldObj.spawnParticle("snowballpoof", this.posX, this.posY,
 					worldObj.spawnParticle("smoke",

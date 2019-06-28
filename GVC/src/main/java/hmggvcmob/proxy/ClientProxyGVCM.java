@@ -1,7 +1,6 @@
 package hmggvcmob.proxy;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.ReflectionHelper;
 import hmggvcmob.entity.*;
 import hmggvcmob.entity.friend.*;
 import hmggvcmob.entity.guerrilla.*;
@@ -9,9 +8,6 @@ import hmggvcmob.render.*;
 import hmggvcmob.tile.TileEntityFlag;
 import hmggvcmob.tile.TileEntityMobSpawner_Extend;
 import hmvehicle.entity.EntityChild;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.entity.Entity;
-import org.lwjgl.input.Keyboard;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderSnowball;
@@ -21,19 +17,8 @@ import net.minecraft.init.Items;
 import net.minecraft.world.World;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
-import org.lwjgl.input.Mouse;
-
-import static hmggvcmob.event.GVCMRenderSomeEvent.zooming;
 
 public class ClientProxyGVCM extends CommonSideProxyGVCM {
-	public static final KeyBinding Zoom = new KeyBinding("CannonCamera", Keyboard.KEY_Z, "GVCMob");
-	public static final KeyBinding F = new KeyBinding("EXControl1", Keyboard.KEY_F, "GVCMob");
-	public static final KeyBinding X = new KeyBinding("EXControl2", Keyboard.KEY_X, "GVCMob");
-	public static final KeyBinding Flapextension = new KeyBinding("Flap extension", Keyboard.KEY_F, "GVCMob");
-	public static final KeyBinding Flapstorage = new KeyBinding("Flap storage", Keyboard.KEY_F, "GVCMob");
-	static boolean zoomkey_stopper;
-	static boolean fkey_stopper;
-	static boolean reload_stopper;
     //�L�[��UnlocalizedName�A�o�C���h����L�[�̑Ή������l�iKeyboard�N���X�Q�Ƃ̂��Ɓj�A�J�e�S���[��
     //public static final KeyBinding Speedreload = new KeyBinding("Key.reload", Keyboard.KEY_R, "CategoryName");
 	@Override
@@ -41,15 +26,9 @@ public class ClientProxyGVCM extends CommonSideProxyGVCM {
 		return FMLClientHandler.instance().getClient().theWorld;
 		}
 	
-	@Override
-    public EntityPlayer getEntityPlayerInstance() {
-        return Minecraft.getMinecraft().thePlayer;
-    }
 	
-	public void reisterRenderers(){
-		ClientRegistry.registerKeyBinding(Zoom);
-		ClientRegistry.registerKeyBinding(F);
-		ClientRegistry.registerKeyBinding(X);
+	public void initSome(){
+		super.initSome();
 		RenderingRegistry.registerEntityRenderingHandler(GVCEntityGuerrilla.class, new GVCRenderGuerrilla());
 		RenderingRegistry.registerEntityRenderingHandler(GVCEntityGuerrilla_Flamer.class, GVCRenderGuerrilla.onlyoneTexture("guerrilla_f"));
 		//RenderingRegistry.registerEntityRenderingHandler(GVCEntityGuerrilla.class, new GVCRenderGuerrillaobj());
@@ -136,124 +115,5 @@ public class ClientProxyGVCM extends CommonSideProxyGVCM {
     public void registerTileEntity() {
 		ClientRegistry.registerTileEntity(TileEntityFlag.class, "FlagTile", new RenderTileFlag());//※ついで
 		GameRegistry.registerTileEntity(TileEntityMobSpawner_Extend.class, "MobspawnerEX");//※ついで
-		try {
-			nextstepdistance = ReflectionHelper.findField(Entity.class,"nextStepDistance");
-		} catch (Exception e) {
-			e.printStackTrace();
-			try {
-				nextstepdistance = ReflectionHelper.findField(Entity.class,"nextStepDistance");
-			}catch (Exception ea){
-				ea.printStackTrace();
-			}
-		}
     }
- 
-    @Override
-    public boolean reload(){
-		//return Minecraft.getMinecraft().gameSettings.keyBindJump.isKeyDown();
-		return Keyboard.isCreated() && Keyboard.isKeyDown(Keyboard.KEY_R);
-		//return false;
-	}
-
-    @Override
-    public boolean reload_Semi(){
-
-		boolean flag = Keyboard.isCreated() && Keyboard.isKeyDown(Keyboard.KEY_R);
-		if(flag){
-			if(!reload_stopper) {
-				reload_stopper = true;
-			}else {
-				flag = false;
-			}
-		}else {
-			reload_stopper = false;
-		}
-		return flag;
-	}
-    @Override
-    public boolean jumped(){
-		return Minecraft.getMinecraft().gameSettings.keyBindJump.getIsKeyPressed();
-		//return false;
-	}
-    
-    @Override
-    public boolean leftclick(){
-		return Minecraft.getMinecraft().gameSettings.keyBindAttack.getIsKeyPressed();
-		//return false;
-	}
-	@Override
-    public boolean rightclick(){
-		return Minecraft.getMinecraft().gameSettings.keyBindUseItem.getIsKeyPressed();
-		//return false;
-	}
-	@Override
-	public boolean wclick(){
-		return Minecraft.getMinecraft().gameSettings.keyBindForward.getIsKeyPressed();
-		//return false;
-	}
-	@Override
-	public boolean aclick(){
-		return Minecraft.getMinecraft().gameSettings.keyBindLeft.getIsKeyPressed();
-		//return false;
-	}
-	@Override
-	public boolean sclick(){
-		return Minecraft.getMinecraft().gameSettings.keyBindBack.getIsKeyPressed();
-		//return false;
-	}
-	@Override
-	public boolean dclick(){
-		return Minecraft.getMinecraft().gameSettings.keyBindRight.getIsKeyPressed();
-		//return false;
-	}
-    @Override
-    public boolean zoomclick(){
-		boolean flag = Zoom.getIsKeyPressed();
-		if(flag){
-			if(!zoomkey_stopper) {
-				zoomkey_stopper = true;
-			}else {
-				flag = false;
-			}
-		}else {
-			zoomkey_stopper = false;
-		}
-		return flag;
-		//return false;
-	}
-	@Override
-    public boolean fclick(){
-		return  F.getIsKeyPressed();
-		//return false;
-	}
-	@Override
-    public boolean xclick(){
-		return X.getIsKeyPressed();
-		//return false;
-	}
-    public boolean FalpEclick(){
-		boolean flag = Flapextension.getIsKeyPressed();
-		return flag;
-		//return false;
-	}
-    public boolean FalpSclick(){
-		boolean flag = Flapstorage.getIsKeyPressed();
-		return flag;
-		//return false;
-	}
-	public Minecraft getMCInstance() {
-		return Minecraft.getMinecraft();
-	}
-	public boolean keyDown(int keyCode)
-	{
-		boolean state = false;
-		if (getMCInstance().currentScreen == null || getMCInstance().currentScreen.allowUserInput) {
-			state = (keyCode < 0 ? Mouse.isButtonDown(keyCode + 100) : Keyboard.isKeyDown(keyCode));
-		}
-		return state;
-	}
-
-	public boolean iszooming(){
-		return zooming;
-	}
 }

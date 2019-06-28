@@ -37,42 +37,6 @@ public class MoveHelper {
 		return this.entity.worldObj.getBlock(par1, par2, par3);
 	}
 
-	public void go() {
-		EntityLivingBase entitylivingbase = this.entity.getAttackTarget();
-		if (entitylivingbase != null) {
-			this.entity.getLookHelper().setLookPositionWithEntity(entitylivingbase, 30.0F, 30.0F);
-			double d0 = this.entity.getDistanceSq(entitylivingbase.posX, entitylivingbase.boundingBox.minY, entitylivingbase.posZ);
-			double d1 = (double) (this.entity.width * 2.0F * this.entity.width * 2.0F + entitylivingbase.width);
-			--this.field_75445_i;
-			if ((this.entity.getEntitySenses().canSee(entitylivingbase)) && this.field_75445_i <= 0 && (this.field_151497_i == 0.0D && this.field_151495_j == 0.0D && this.field_151496_k == 0.0D || entitylivingbase.getDistanceSq(this.field_151497_i, this.field_151495_j, this.field_151496_k) >= 1.0D || this.entity.getRNG().nextFloat() < 0.05F)) {
-				this.field_151497_i = entitylivingbase.posX;
-				this.field_151495_j = entitylivingbase.boundingBox.minY;
-				this.field_151496_k = entitylivingbase.posZ;
-				this.field_75445_i = failedPathFindingPenalty + 4 + this.entity.getRNG().nextInt(7);
-
-				if (this.entity.getNavigator().getPath() != null) {
-					PathPoint finalPathPoint = this.entity.getNavigator().getPath().getFinalPathPoint();
-					if (finalPathPoint != null && entitylivingbase.getDistanceSq(finalPathPoint.xCoord, finalPathPoint.yCoord, finalPathPoint.zCoord) < 1) {
-						failedPathFindingPenalty = 0;
-					} else {
-						failedPathFindingPenalty += 10;
-					}
-				} else {
-					failedPathFindingPenalty += 10;
-				}
-				if (d0 > 1024.0D) {
-					this.field_75445_i += 10;
-				} else if (d0 > 256.0D) {
-					this.field_75445_i += 5;
-				}
-
-				if (!this.entity.getNavigator().tryMoveToEntityLiving(entitylivingbase, 2)) {
-					this.field_75445_i += 15;
-				}
-			}
-		}
-	}
-
 	private void move(Vec3 look, int i) {
 		float f1 = this.entity.rotationYawHead * (2 * (float) Math.PI / 360);
 		if (i == 1) {

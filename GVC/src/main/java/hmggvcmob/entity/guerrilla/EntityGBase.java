@@ -145,11 +145,15 @@ public class EntityGBase extends EntityGBases implements IFF,IGVCmob,IMGGunner {
         }
         super.onLivingUpdate();
     }
+	public int getVerticalFaceSpeed()
+	{
+		return 90;
+	}
     public void onUpdate(){
 		super.onUpdate();
-		if(this.width<1){
-			width = 1;
-		}
+	    if(this.width<1){
+		    width = 1;
+	    }
 		staningtime--;
 		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(movespeed);
 
@@ -187,25 +191,25 @@ public class EntityGBase extends EntityGBases implements IFF,IGVCmob,IMGGunner {
 					switch (headdirction_four) {
 						case 0:
 							//south
-							willGunSetBlock = worldObj.getBlock((int) posX-1, (int) posY, (int) posZ);
+							willGunSetBlock = worldObj.getBlock((int) posX-1, (int) posY-1, (int) posZ);
 							offset[0] = -1;
 							offset[1] = 0;
 							break;
 						case -1:
 							//east
-							willGunSetBlock = worldObj.getBlock((int) posX, (int) posY, (int) posZ-1);
+							willGunSetBlock = worldObj.getBlock((int) posX, (int) posY-1, (int) posZ-1);
 							offset[0] = 0;
 							offset[1] = -1;
 							break;
 						case 1:
 							//west
-							willGunSetBlock = worldObj.getBlock((int) posX-2, (int) posY, (int) posZ-1);
+							willGunSetBlock = worldObj.getBlock((int) posX-2, (int) posY-1, (int) posZ-1);
 							offset[0] = -2;
 							offset[1] = -1;
 							break;
 						case 2:
 							//north
-							willGunSetBlock = worldObj.getBlock((int) posX-1, (int) posY, (int) posZ - 2);
+							willGunSetBlock = worldObj.getBlock((int) posX-1, (int) posY-1, (int) posZ - 2);
 							offset[0] = -1;
 							offset[1] = -2;
 							break;

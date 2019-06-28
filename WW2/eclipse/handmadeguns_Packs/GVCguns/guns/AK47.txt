@@ -4,10 +4,11 @@ BulletGravity,0.485
 
 BlletSpread,4.0f
 ADS_Spread_coefficient,0.8
+BlletSpreadDiffusion,10,0,1.5,0.2,3,0.5
 Cycle,2
 
-Recoil,14
-Recoil_sneaking,10
+Recoil,3
+Recoil_sneaking,1.5
 
 ReloadTime,50
 
@@ -56,7 +57,7 @@ SoundSpeed,0.8f
 ScopeTexture,null.png,null.png,scope.png
 RenderCross,false
 
-Magazine,0,HandmadeGuns,7.62mm magazine
+Magazine,0,HandmadeGuns,7.62mm magazine 30Round
 MagazineSG,0,HandmadeGuns,bullet_shell_hmg
 MagazineGL,0,HandmadeGuns,bullet_rr_hmg
 

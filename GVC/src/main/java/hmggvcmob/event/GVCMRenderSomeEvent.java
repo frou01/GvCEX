@@ -3,20 +3,22 @@ package hmggvcmob.event;
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import hmggvcmob.entity.*;
-import hmggvcmob.entity.friend.GVCEntityPMCHeli;
-import hmggvcmob.entity.friend.GVCEntityPMCT90Tank;
-import hmggvcmob.util.Calculater;
+import hmvehicle.Utils;
+import hmvehicle.CLProxy;
 import hmvehicle.entity.EntityCameraDummy;
 import hmvehicle.entity.EntityChild;
 import hmvehicle.entity.parts.IControlable;
+import hmvehicle.entity.parts.IShip;
 import hmvehicle.entity.parts.IVehicle;
 import hmvehicle.entity.parts.Iplane;
 import hmvehicle.entity.parts.logics.PlaneBaseLogic;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
 import net.minecraftforge.event.entity.PlaySoundAtEntityEvent;
@@ -30,7 +32,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiIngame;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.FOVUpdateEvent;
@@ -42,7 +43,7 @@ import javax.vecmath.Vector3d;
 import java.util.ArrayList;
 
 import static handmadeguns.event.HMGEventZoom.renderPumpkinBlur;
-import static hmggvcmob.GVCMobPlus.proxy;
+import static hmvehicle.HMVehicle.proxy_HMVehicle;
 import static java.lang.Math.*;
 import static org.lwjgl.opengl.GL11.GL_BLEND;
 import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
@@ -52,7 +53,6 @@ public class GVCMRenderSomeEvent {
 
 	public boolean zoomtype;
 	public static float mouseSensO = -1;
-	public static boolean zooming;
 	static boolean needrest = true;
 	private double zLevel = 0;
 	private static final IModelCustom attitude_indicator = AdvancedModelLoader.loadModel(new ResourceLocation("gvcmob:textures/model/Attitude indicator.mqo"));
@@ -60,9 +60,9 @@ public class GVCMRenderSomeEvent {
 
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
-	public void renderridding(RenderPlayerEvent event)
+	public void renderridding(RenderPlayerEvent.Pre event)
 	{
-		event.setCanceled(true);
+		if(event.entityPlayer.ridingEntity instanceof IVehicle && FMLClientHandler.instance().getClient().gameSettings.thirdPersonView == 0)event.setCanceled(true);
 	}
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
@@ -72,15 +72,15 @@ public class GVCMRenderSomeEvent {
 		EntityPlayer entityplayer = minecraft.thePlayer;
 		if (entityplayer.ridingEntity != null) {
 			if(entityplayer.ridingEntity instanceof IControlable){
-				boolean rc = proxy.zoomclick();
-				if(rc)zooming = !zooming;
+				boolean rc = proxy_HMVehicle.zoomclick();
+				if(rc) CLProxy.zooming = !CLProxy.zooming;
 
-				if(zooming) {
+				if(CLProxy.zooming) {
 					event.newfov = event.fov / 2;
 				}
 			}
 		}else {
-			zooming = false;
+			CLProxy.zooming = false;
 		}
 	}
 //	@SideOnly(Side.CLIENT)
@@ -148,17 +148,6 @@ public class GVCMRenderSomeEvent {
 
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
-	public void renderPlayer(RenderPlayerEvent.Pre event){
-		Minecraft minecraft = FMLClientHandler.instance().getClient();
-		EntityPlayer entityplayer = minecraft.thePlayer;
-		if(event.entityLiving != entityplayer)return;
-		if(entityplayer.ridingEntity instanceof EntityChild && FMLClientHandler.instance().getClient().gameSettings.thirdPersonView == 0){
-			event.setCanceled(true);
-		}
-	}
-
-	@SideOnly(Side.CLIENT)
-	@SubscribeEvent
 	public void renderTick(TickEvent.RenderTickEvent event)
 	{
 		Minecraft minecraft = FMLClientHandler.instance().getClient();
@@ -179,9 +168,9 @@ public class GVCMRenderSomeEvent {
 								Entity panebody = entityplayer.ridingEntity;
 								Iplane iplanebody = (Iplane) entityplayer.ridingEntity;
 								PlaneBaseLogic plane = (PlaneBaseLogic) iplanebody.getBaseLogic();
-								Vector3d bodyvector = Calculater.transformVecByQuat(new Vector3d(0, 0, 1), plane.bodyRot);
-								Vector3d tailwingvector = Calculater.transformVecByQuat(new Vector3d(0, 1, 0), plane.bodyRot);
-								Vector3d mainwingvector = Calculater.transformVecByQuat(new Vector3d(1, 0, 0), plane.bodyRot);
+								Vector3d bodyvector = Utils.transformVecByQuat(new Vector3d(0, 0, 1), plane.bodyRot);
+								Vector3d tailwingvector = Utils.transformVecByQuat(new Vector3d(0, 1, 0), plane.bodyRot);
+								Vector3d mainwingvector = Utils.transformVecByQuat(new Vector3d(1, 0, 0), plane.bodyRot);
 								if (plane.ispilot(entityplayer)) {
 									Quat4d tempquat = new Quat4d(
 											plane.prevbodyRot.x * (1-event.renderTickTime) + plane.bodyRot.x * event.renderTickTime ,
@@ -189,32 +178,32 @@ public class GVCMRenderSomeEvent {
 											plane.prevbodyRot.z * (1-event.renderTickTime) + plane.bodyRot.z * event.renderTickTime ,
 											plane.prevbodyRot.w * (1-event.renderTickTime) + plane.bodyRot.w * event.renderTickTime );
 //									if (abs(plane.pitchladder) > 0.001) {
-//										Vector3d axisx = Calculater.transformVecByQuat(new Vector3d(1, 0, 0), tempquat);
+//										Vector3d axisx = Utils.transformVecByQuat(new Vector3d(1, 0, 0), tempquat);
 //										AxisAngle4d axisxangled = new AxisAngle4d(axisx, toRadians(-plane.pitchladder * event.renderTickTime / 4));
-//										tempquat = Calculater.quatRotateAxis(tempquat, axisxangled);
+//										tempquat = Utils.quatRotateAxis(tempquat, axisxangled);
 //									}
 //									if (abs(plane.yawladder) > 0.001) {
-//										Vector3d axisy = Calculater.transformVecByQuat(new Vector3d(0, 1, 0), tempquat);
+//										Vector3d axisy = Utils.transformVecByQuat(new Vector3d(0, 1, 0), tempquat);
 //										AxisAngle4d axisyangled = new AxisAngle4d(axisy, toRadians(plane.yawladder * event.renderTickTime / 4));
-//										tempquat = Calculater.quatRotateAxis(tempquat, axisyangled);
+//										tempquat = Utils.quatRotateAxis(tempquat, axisyangled);
 //									}
 //									if (abs(plane.rollladder) > 0.001) {
-//										Vector3d axisz = Calculater.transformVecByQuat(new Vector3d(0, 0, 1), tempquat);
+//										Vector3d axisz = Utils.transformVecByQuat(new Vector3d(0, 0, 1), tempquat);
 //										AxisAngle4d axiszangled = new AxisAngle4d(axisz, toRadians(plane.rollladder * event.renderTickTime / 4));
-//										tempquat = Calculater.quatRotateAxis(tempquat, axiszangled);
+//										tempquat = Utils.quatRotateAxis(tempquat, axiszangled);
 //									}
 
-									double[] xyz = Calculater.eulerfrommatrix(Calculater.matrixfromQuat(tempquat));
+									double[] xyz = Utils.eulerfrommatrix(Utils.matrixfromQuat(tempquat));
 									xyz[0] = toDegrees(xyz[0]);
 									xyz[1] = toDegrees(xyz[1]);
 									xyz[2] = toDegrees(xyz[2]);
 //							System.out.println("y" + xyz[0] + " , x" + xyz[1] + " , z" + xyz[2] + " , renderTickTime" + event.renderTickTime);
-									bodyvector = Calculater.transformVecByQuat(new Vector3d(0, 0, 1), tempquat);
-									tailwingvector = Calculater.transformVecByQuat(new Vector3d(0, 1, 0), tempquat);
-									mainwingvector = Calculater.transformVecByQuat(new Vector3d(1, 0, 0), tempquat);
-									Calculater.transformVecforMinecraft(tailwingvector);
-									Calculater.transformVecforMinecraft(bodyvector);
-									Calculater.transformVecforMinecraft(mainwingvector);
+									bodyvector = Utils.transformVecByQuat(new Vector3d(0, 0, 1), tempquat);
+									tailwingvector = Utils.transformVecByQuat(new Vector3d(0, 1, 0), tempquat);
+									mainwingvector = Utils.transformVecByQuat(new Vector3d(1, 0, 0), tempquat);
+									Utils.transformVecforMinecraft(tailwingvector);
+									Utils.transformVecforMinecraft(bodyvector);
+									Utils.transformVecforMinecraft(mainwingvector);
 									mainwingvector.scale(plane.camerapos[0]-plane.rotcenter[0]);
 									tailwingvector.scale(plane.camerapos[1]-plane.rotcenter[1]);
 									bodyvector.scale(plane.camerapos[2]-plane.rotcenter[2]);
@@ -249,17 +238,17 @@ public class GVCMRenderSomeEvent {
 									entityplayer.prevRotationYaw = plane.bodyrotationYaw;
 									entityplayer.rotationPitch = plane.bodyrotationPitch;
 									entityplayer.prevRotationPitch = plane.bodyrotationPitch;
-									bodyvector = Calculater.transformVecByQuat(new Vector3d(0, 0, 1), tempquat);
-									tailwingvector = Calculater.transformVecByQuat(new Vector3d(0, 1, 0), tempquat);
-									mainwingvector = Calculater.transformVecByQuat(new Vector3d(1, 0, 0), tempquat);
+									bodyvector = Utils.transformVecByQuat(new Vector3d(0, 0, 1), tempquat);
+									tailwingvector = Utils.transformVecByQuat(new Vector3d(0, 1, 0), tempquat);
+									mainwingvector = Utils.transformVecByQuat(new Vector3d(1, 0, 0), tempquat);
 								}
 
 								tailwingvector.normalize();
 								bodyvector.normalize();
 								mainwingvector.normalize();
-								Calculater.transformVecforMinecraft(tailwingvector);
-								Calculater.transformVecforMinecraft(bodyvector);
-								Calculater.transformVecforMinecraft(mainwingvector);
+								Utils.transformVecforMinecraft(tailwingvector);
+								Utils.transformVecforMinecraft(bodyvector);
+								Utils.transformVecforMinecraft(mainwingvector);
 								needrest = true;
 							}
 							needrest = true;
@@ -283,7 +272,8 @@ public class GVCMRenderSomeEvent {
 	}
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
-	public void renderover(RenderGameOverlayEvent.Text event) {
+	public void renderover(RenderGameOverlayEvent.Pre event) {
+		GuiIngameForge.renderCrosshairs = true;
 		Minecraft minecraft = FMLClientHandler.instance().getClient();
 		EntityPlayer entityplayer = minecraft.thePlayer;
 
@@ -333,12 +323,11 @@ public class GVCMRenderSomeEvent {
 				fontrenderer.drawStringWithShadow("Armor : " + gear.health, i - 300, j - 40 - 10, color);
 			}
 		}
-		if(entityplayer.ridingEntity instanceof Iplane){
+		if(entityplayer.ridingEntity instanceof Iplane && ((PlaneBaseLogic)((Iplane) entityplayer.ridingEntity).getBaseLogic()).ispilot(entityplayer)){
 			FontRenderer fontrenderer = minecraft.fontRenderer;
 			Entity planebody = entityplayer.ridingEntity;
 			Iplane iplane = (Iplane) entityplayer.ridingEntity;
 			PlaneBaseLogic plane = (PlaneBaseLogic) iplane.getBaseLogic();
-			
 			if(plane.displayModernHud)displayFlyersHUD_AftGen2(plane.prevbodyRot,plane.bodyRot,planebody,plane.prevmotionVec,event);
 			else displayFlyersHUD(plane.prevbodyRot,plane.bodyRot,planebody,plane.prevmotionVec,event);
 //				Quat4d tempquat = new Quat4d(
@@ -347,19 +336,19 @@ public class GVCMRenderSomeEvent {
 //						plane.prevbodyRot.z * (1-event.partialTicks) + plane.bodyRot.z * event.partialTicks ,
 //						plane.prevbodyRot.w * (1-event.partialTicks) + plane.bodyRot.w * event.partialTicks );
 ////									if (abs(plane.pitchladder) > 0.001) {
-////										Vector3d axisx = Calculater.transformVecByQuat(new Vector3d(1, 0, 0), tempquat);
+////										Vector3d axisx = Utils.transformVecByQuat(new Vector3d(1, 0, 0), tempquat);
 ////										AxisAngle4d axisxangled = new AxisAngle4d(axisx, toRadians(-plane.pitchladder * event.renderTickTime / 4));
-////										tempquat = Calculater.quatRotateAxis(tempquat, axisxangled);
+////										tempquat = Utils.quatRotateAxis(tempquat, axisxangled);
 ////									}
 ////									if (abs(plane.yawladder) > 0.001) {
-////										Vector3d axisy = Calculater.transformVecByQuat(new Vector3d(0, 1, 0), tempquat);
+////										Vector3d axisy = Utils.transformVecByQuat(new Vector3d(0, 1, 0), tempquat);
 ////										AxisAngle4d axisyangled = new AxisAngle4d(axisy, toRadians(plane.yawladder * event.renderTickTime / 4));
-////										tempquat = Calculater.quatRotateAxis(tempquat, axisyangled);
+////										tempquat = Utils.quatRotateAxis(tempquat, axisyangled);
 ////									}
 ////									if (abs(plane.rollladder) > 0.001) {
-////										Vector3d axisz = Calculater.transformVecByQuat(new Vector3d(0, 0, 1), tempquat);
+////										Vector3d axisz = Utils.transformVecByQuat(new Vector3d(0, 0, 1), tempquat);
 ////										AxisAngle4d axiszangled = new AxisAngle4d(axisz, toRadians(plane.rollladder * event.renderTickTime / 4));
-////										tempquat = Calculater.quatRotateAxis(tempquat, axiszangled);
+////										tempquat = Utils.quatRotateAxis(tempquat, axiszangled);
 ////									}
 //
 //				GL11.glPushMatrix();
@@ -371,7 +360,7 @@ public class GVCMRenderSomeEvent {
 //				double scale = width/300;
 //				double sizeW = width;
 //				double sizeH = sizeW * 650/300;
-//				double[] xyz = Calculater.eulerfrommatrix(Calculater.matrixfromQuat(tempquat));
+//				double[] xyz = Utils.eulerfrommatrix(Utils.matrixfromQuat(tempquat));
 //				xyz[0] = toDegrees(xyz[0]);
 //				xyz[1] = toDegrees(xyz[1]);
 //				xyz[2] = toDegrees(xyz[2]);
@@ -402,7 +391,7 @@ public class GVCMRenderSomeEvent {
 //
 //				Quat4d quat4d = new Quat4d();
 //				quat4d.inverse(tempquat);
-//				forDisplayPlaneMotion = Calculater.transformVecByQuat(forDisplayPlaneMotion,quat4d);
+//				forDisplayPlaneMotion = Utils.transformVecByQuat(forDisplayPlaneMotion,quat4d);
 //				forDisplayPlaneMotion.scale(-1);
 //				double angle = toDegrees(forDisplayPlaneMotion.angle(new Vector3d(0,0,1)));
 //
@@ -448,19 +437,7 @@ public class GVCMRenderSomeEvent {
 			String rotep = String.format("%1$3d", (int)vehicle.getturretrotationYaw());
 			String rote = String.format("%1$3d", (int)vehicle.getbodyrotationYaw());
 
-			if(vehicleBody instanceof GVCEntityPMCT90Tank){
-				if(((GVCEntityPMCT90Tank) vehicleBody).fireCycle1 > 0)
-				{
-					fontrenderer.drawStringWithShadow("Weapon1 " + ((GVCEntityPMCT90Tank) vehicleBody).fireCycle1, i - 180, j - 20 - 10, 0xFFFFFF);
-				}else{
-					fontrenderer.drawStringWithShadow("Weapon1 " + "Ready", i - 180, j - 20 - 10, 0xFFFFFF);
-				}
-				if (((GVCEntityPMCT90Tank) vehicleBody).mgMagazine > 0) {
-					fontrenderer.drawStringWithShadow("Kord " + ((GVCEntityPMCT90Tank) vehicleBody).mgMagazine, i - 180, j - 20 - 20, 0xFFFFFF);
-				} else {
-					fontrenderer.drawStringWithShadow("Kord " + "reloading", i - 200, j - 20 - 20, 0xFFFFFF);
-				}
-			}else {
+			{
 				am1 = vehicle.getfirecyclesettings1() - vehicle.getfirecycleprogress1();
 				if(am1 < vehicle.getfirecyclesettings1())
 				{
@@ -481,10 +458,15 @@ public class GVCMRenderSomeEvent {
 			//fontrenderer.drawStringWithShadow("Speed"+ speed, (i/2) - 80, j/2 +20, 0xFFFFFF);
 			fontrenderer.drawStringWithShadow("Turret"+ rotep, (i/2) + 40, j/2 +0, 0xFFFFFF);
 			fontrenderer.drawStringWithShadow("Body"+ rote, (i/2) + 40, j/2 +10, 0xFFFFFF);
+			
+			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+			int color = 0xFFFFFF;
+			fontrenderer.drawStringWithShadow("Speed : " + (int)(sqrt(vehicleBody.motionX * vehicleBody.motionX + vehicleBody.motionY * vehicleBody.motionY + vehicleBody.motionZ * vehicleBody.motionZ)*72), i - 300, j - 80 - 10, color);
 
-
+			if(vehicleBody instanceof IShip){
+				fontrenderer.drawStringWithShadow("Draft : " + ((IShip) vehicleBody).getDraft(), i - 300, j - 160 - 10, color);
+			}
 			GuiIngame g  = minecraft.ingameGUI;
-			minecraft.getTextureManager().bindTexture(TextureMap.locationItemsTexture);
 			//g.drawTexturedModelRectFromIcon(i-70, j-63, armor.getIconFromDamage(0), 16, 16);
 			GL11.glPopMatrix();
 
@@ -512,10 +494,8 @@ public class GVCMRenderSomeEvent {
 			}
 			
 			if(vehicleBody instanceof IControlable && vehicle.getsightTex() != null){
-				boolean rc = proxy.zoomclick();
-				if(rc)zooming = !zooming;
 				
-				if(zooming) {
+				if(CLProxy.zooming) {
 					float screenposX = 0;
 					float screenposY = 0;
 					float screenWidth = scaledresolution.getScaledWidth();
@@ -529,11 +509,16 @@ public class GVCMRenderSomeEvent {
 						screenposY = (scaledresolution.getScaledHeight() - screenHeight)/2;
 					}
 					renderPumpkinBlur(minecraft, screenposX, screenposY, screenWidth, screenHeight, new ResourceLocation(vehicle.getsightTex()));
+					GuiIngameForge.renderCrosshairs = false;
 				}
 			}
 		}
+		minecraft.getTextureManager().bindTexture(Gui.icons);
+		boolean rc = proxy_HMVehicle.zoomclick();
+		if(rc) CLProxy.zooming = !CLProxy.zooming;
 	}
-	public void displayFlyersHUD(Quat4d prevbodyRot, Quat4d bodyRot, Entity plane, Vector3d prevmotionVec, RenderGameOverlayEvent.Text event){
+	public void displayFlyersHUD(Quat4d prevbodyRot, Quat4d bodyRot, Entity plane, Vector3d prevmotionVec, RenderGameOverlayEvent.Pre event){
+		GL11.glColor4f(1,1,1,1);
 		GL11.glAlphaFunc(GL11.GL_GREATER, 0);
 		GL11.glEnable(GL_BLEND);
 		GL11.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -558,7 +543,7 @@ public class GVCMRenderSomeEvent {
 		double scale = width/300;
 		float sizeW = (float) width;
 		float sizeH = (float) height;
-		double[] xyz = Calculater.eulerfrommatrix(Calculater.matrixfromQuat(tempquat));
+		double[] xyz = Utils.eulerfrommatrix(Utils.matrixfromQuat(tempquat));
 		xyz[0] = toDegrees(xyz[0]);
 		xyz[1] = toDegrees(xyz[1]);
 		xyz[2] = toDegrees(xyz[2]);
@@ -578,7 +563,7 @@ public class GVCMRenderSomeEvent {
 		GL11.glPopMatrix();
 	}
 
-	public void displayFlyersHUD_AftGen2(Quat4d prevbodyRot, Quat4d bodyRot, Entity plane, Vector3d prevmotionVec, RenderGameOverlayEvent.Text event){
+	public void displayFlyersHUD_AftGen2(Quat4d prevbodyRot, Quat4d bodyRot, Entity plane, Vector3d prevmotionVec, RenderGameOverlayEvent.Pre event){
 		GL11.glAlphaFunc(GL11.GL_GREATER, 0);
 		GL11.glEnable(GL_BLEND);
 		GL11.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -603,7 +588,7 @@ public class GVCMRenderSomeEvent {
 		if(motionvec.length()>0.01) {
 			Quat4d quat4d = new Quat4d();
 			quat4d.inverse(bodyRot);
-			forDisplayplaneMotion = Calculater.transformVecByQuat(motionvec, quat4d);
+			forDisplayplaneMotion = Utils.transformVecByQuat(motionvec, quat4d);
 			forDisplayplaneMotion.scale(-1);
 			angle = toDegrees(forDisplayplaneMotion.angle(new Vector3d(0, 0, 1)));
 			forDisplayplaneMotion.normalize();
@@ -621,7 +606,7 @@ public class GVCMRenderSomeEvent {
 		double scale = width/300;
 		double sizeW = width;
 		double sizeH = sizeW * 650/300;
-		double[] xyz = Calculater.eulerfrommatrix(Calculater.matrixfromQuat(tempquat));
+		double[] xyz = Utils.eulerfrommatrix(Utils.matrixfromQuat(tempquat));
 		xyz[0] = toDegrees(xyz[0]);
 		xyz[1] = toDegrees(xyz[1]);
 		xyz[2] = toDegrees(xyz[2]);

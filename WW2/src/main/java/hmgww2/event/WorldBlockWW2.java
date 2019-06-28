@@ -3,6 +3,8 @@ package hmgww2.event;
 import java.util.Random;
 
 import hmgww2.mod_GVCWW2;
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;
@@ -21,9 +23,13 @@ public class WorldBlockWW2 extends WorldGenerator{
 	@Override
 	public boolean generate(World par1World, Random random, int par1, int par2, int par3) {
 		if(be == 0){
-			if(par1World.getBlock(par1, par2-1, par3) != Blocks.air
-					&& par1World.getBlock(par1, par2-1, par3) != Blocks.water
-					&& par1World.getBlock(par1, par2-1, par3) != Blocks.lava){
+			Block currentBlock = par1World.getBlock(par1, par2-1, par3);
+			if(currentBlock != Blocks.air
+					   && currentBlock != Blocks.water
+					   && currentBlock != Blocks.lava
+					   && currentBlock.getMaterial() != Material.leaves
+					   && currentBlock.getMaterial() != Material.wood
+					){
 				if(i == 0){
 					if(mod_GVCWW2.cfg_buildbase_usa){
 		    		par1World.setBlock(par1+0, par2+0, par3+0, mod_GVCWW2.b_base2_usa);

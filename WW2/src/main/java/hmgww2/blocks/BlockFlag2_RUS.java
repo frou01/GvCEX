@@ -22,7 +22,8 @@ public class BlockFlag2_RUS extends BlockRUSFlagBase
     public BlockFlag2_RUS() {
 	    super();
 	    flagType = FlagType.Factory;
-	    maxs = 5;
+	    maxs = 4;
+	    flagRange = 32;
 	    spawntime = 1200;
     }
 	

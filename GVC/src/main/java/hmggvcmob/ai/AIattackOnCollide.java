@@ -128,7 +128,7 @@ public class AIattackOnCollide extends EntityAIBase
             resetTask();
             return;
         }
-        this.attacker.getLookHelper().setLookPositionWithEntity(entitylivingbase, 30.0F, 30.0F);
+        this.attacker.getLookHelper().setLookPositionWithEntity(entitylivingbase, 30.0F, 90.0F);
         double d0 = this.attacker.getDistanceSq(entitylivingbase.posX, entitylivingbase.boundingBox.minY, entitylivingbase.posZ);
         double d1 = (double)(this.attacker.width * 2.0F * this.attacker.width * 2.0F + entitylivingbase.width);
         --this.field_75445_i;

@@ -42,7 +42,7 @@ public class CommonSideProxyHMG {
 
 	public void playsoundat(String sound, float soundLV, float soundSP, float tempsp, double posX, double posY, double posZ){
 	}
-	public void playsoundatEntity(String sound, float soundLV, float soundSP,Entity attached,boolean repeat){
+	public void playsoundatEntity(String sound, float soundLV, float soundSP,Entity attached,boolean repeat,int time){
 	
 	}
 	public void playsoundatEntity_reload(String sound, float soundLV, float soundSP, Entity attached, boolean repeat){

@@ -7,7 +7,7 @@ import handmadeguns.client.render.HMGRenderItemGun_U;
 import handmadeguns.client.render.HMGRenderItemGun_U_NEW;
 
 public class RenderTickSmoothing {
-    public static float smooth;
+    public static float smooth = 0;
     @SubscribeEvent
     public void renderTick(TickEvent.RenderTickEvent event)
     {

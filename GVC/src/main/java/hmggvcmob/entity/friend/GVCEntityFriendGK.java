@@ -19,7 +19,7 @@ import net.minecraft.world.World;
 import java.util.Random;
 
 import static hmggvcmob.GVCMobPlus.cfg_guerrillasrach;
-import static hmggvcmob.util.Calculater.CalculateGunElevationAngle;
+import static hmvehicle.Utils.CalculateGunElevationAngle;
 
 public class GVCEntityFriendGK extends EntityPMCBase implements IIRVING
 {

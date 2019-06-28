@@ -22,9 +22,10 @@ import javax.vecmath.Vector3d;
 
 import static hmggvcmob.GVCMobPlus.proxy;
 import static hmggvcmob.event.GVCMXEntityEvent.soundedentity;
-import static hmggvcmob.util.Calculater.CalculateGunElevationAngle;
-import static hmggvcmob.util.Calculater.transformVecByQuat;
-import static hmggvcmob.util.Calculater.transformVecforMinecraft;
+import static hmvehicle.Utils.CalculateGunElevationAngle;
+import static hmvehicle.Utils.transformVecByQuat;
+import static hmvehicle.Utils.transformVecforMinecraft;
+import static hmvehicle.HMVehicle.proxy_HMVehicle;
 
 public class GVCEntitySoldierBMP extends EntitySoBase implements ITank
 {
@@ -55,7 +56,7 @@ public class GVCEntitySoldierBMP extends EntitySoBase implements ITank
 
 	public int mgMagazine;
 	public int mgReloadProgress;
-	public TankBaseLogic baseLogic = new TankBaseLogic(this,0.2f,1.5f,false,"gvcmob:gvcmob.BMPTrack");
+	public TankBaseLogic baseLogic = new TankBaseLogic(this,0.2f,0.8f,false,"gvcmob:gvcmob.BMPTrack");
 	ModifiedBoundingBox nboundingbox;
 
 	Vector3d playerpos = new Vector3d(-0.464f,2.2f,0.2948f);
@@ -94,8 +95,8 @@ public class GVCEntitySoldierBMP extends EntitySoBase implements ITank
 		yOffset = 0;
 		mainTurret = new TurretObj(worldObj);
 		{
-			mainTurret.onmotherPos = turretpos;
-			mainTurret.cannonpos = cannonpos;
+			mainTurret.onMotherPos = turretpos;
+			mainTurret.cannonPos = cannonpos;
 			mainTurret.currentEntity = this;
 			mainTurret.powor = 60;
 			mainTurret.ex = 5.0F;
@@ -115,14 +116,14 @@ public class GVCEntitySoldierBMP extends EntitySoBase implements ITank
 			missile.traverseSound = null;
 
 			missile.turretYawCenterpos = missilepos;
-			missile.cannonpos = missilepos;
+			missile.cannonPos = missilepos;
 			missile.cycle_setting = 200;
 			missile.spread = 5;
 			missile.speed = 8;
 			missile.canHoming = true;
 			missile.acceler = 1;
 			missile.firesound = "gvcmob:gvcmob.missile1";
-			missile.flushName  = null;
+			missile.flashName = null;
 
 
 			missile.powor =140;
@@ -130,7 +131,7 @@ public class GVCEntitySoldierBMP extends EntitySoBase implements ITank
 			missile.canex = false;
 			missile.guntype = 3;
 		}
-		mainTurret.addchild(missile);
+		mainTurret.addchild_triggerLinked(missile);
 		subTurret = new TurretObj(worldObj);
 		{
 			subTurret.currentEntity = this;
@@ -142,14 +143,14 @@ public class GVCEntitySoldierBMP extends EntitySoBase implements ITank
 			subTurret.turretspeedP = 10;
 			subTurret.traverseSound = null;
 
-			subTurret.onmotherPos = subturretpos;
+			subTurret.onMotherPos = subturretpos;
 			subTurret.cycle_setting = 1;
 			subTurret.spread = 5;
 			subTurret.speed = 8;
 			subTurret.firesound = "handmadeguns:handmadeguns.fire";
-			subTurret.flushName  = "arrow";
-			subTurret.flushfuse  = 1;
-			subTurret.flushscale  = 1.5f;
+			subTurret.flashName = "arrow";
+			subTurret.flashfuse = 1;
+			subTurret.flashscale = 1.5f;
 
 			subTurret.powor = 8;
 			subTurret.ex = 0;
@@ -158,9 +159,9 @@ public class GVCEntitySoldierBMP extends EntitySoBase implements ITank
 
 			subTurret.magazineMax = 250;
 			subTurret.reloadSetting = 200;
-			subTurret.flushoffset = 0.5f;
+			subTurret.flashoffset = 0.5f;
 		}
-		mainTurret.addchild(subTurret);
+		mainTurret.addchild_triggerLinked(subTurret);
 
 		turrets = new TurretObj[]{mainTurret,subTurret};
 	}
@@ -180,8 +181,8 @@ public class GVCEntitySoldierBMP extends EntitySoBase implements ITank
 		if (this.riddenByEntity != null) {
 			mainTurret.setmotherpos(new Vector3d(this.posX,this.posY,-this.posZ),baseLogic.bodyRot);
 			Vector3d temp = new Vector3d(mainTurret.pos);
-			Vector3d tempplayerPos = new Vector3d(proxy.iszooming() ? zoomingplayerpos:playerpos);
-			Vector3d playeroffsetter = new Vector3d(0,((worldObj.isRemote && this.riddenByEntity == proxy.getEntityPlayerInstance()) ? 0:(this.riddenByEntity.getEyeHeight() + this.riddenByEntity.yOffset)),0);
+			Vector3d tempplayerPos = new Vector3d(proxy_HMVehicle.iszooming() ? zoomingplayerpos:playerpos);
+			Vector3d playeroffsetter = new Vector3d(0,((worldObj.isRemote && this.riddenByEntity == proxy_HMVehicle.getEntityPlayerInstance()) ? 0:(this.riddenByEntity.getEyeHeight() + this.riddenByEntity.yOffset)),0);
 			tempplayerPos.sub(playeroffsetter);
 			Vector3d temp2 = mainTurret.getGlobalVector_fromLocalVector_onTurretPoint(tempplayerPos);
 			temp.add(temp2);
@@ -481,12 +482,12 @@ public class GVCEntitySoldierBMP extends EntitySoBase implements ITank
 		mainTurret.fire();
 //        Vector3d Vec_transformedbybody = baseLogic.getTransformedVector_onturret(cannonpos,turretYawCenterpos);
 //
-//        Calculater.transformVecforMinecraft(Vec_transformedbybody);
+//        Utils.transformVecforMinecraft(Vec_transformedbybody);
 //        if(fireCycle1 <0){
 //            fireCycle1 = 100;
 //            if (!this.worldObj.isRemote) {
 //                Vector3d lookVec = baseLogic.getCannonDir();
-//                Calculater.transformVecforMinecraft(lookVec);
+//                Utils.transformVecforMinecraft(lookVec);
 //                HMGPacketHandler.INSTANCE.sendToAll(new PacketPlaysound(this, "gvcmob:gvcmob.120mmFire", 1, 5));
 //                if (this.getEntityData().getFloat("GunshotLevel") < 0.1)
 //                    soundedentity.add(this);
@@ -555,13 +556,13 @@ public class GVCEntitySoldierBMP extends EntitySoBase implements ITank
 //            if (!this.worldObj.isRemote) {
 //
 //                Vector3d lookVec = baseLogic.getCannonDir();
-//                Calculater.transformVecforMinecraft(lookVec);
+//                Utils.transformVecforMinecraft(lookVec);
 //
 //
 //
 //                Vector3d Vec_transformedbybody = baseLogic.getTransformedVector_onturret(cannonpos,turretYawCenterpos);
 //
-//                Calculater.transformVecforMinecraft(Vec_transformedbybody);
+//                Utils.transformVecforMinecraft(Vec_transformedbybody);
 //
 //                HMGPacketHandler.INSTANCE.sendToAll(new PacketPlaysound(this,"gvcmob:gvcmob.120mmFire",1,10));
 //                this.getEntityData().setFloat("GunshotLevel",10);
@@ -651,9 +652,9 @@ public class GVCEntitySoldierBMP extends EntitySoBase implements ITank
 		missile.aimtoAngle(targetyaw,targetpitch);
 //        Quat4d turretyawrot = new Quat4d(0,0,0,1);
 //
-//        Vector3d axisy = Calculater.transformVecByQuat(new Vector3d(0,1,0), turretyawrot);
+//        Vector3d axisy = Utils.transformVecByQuat(new Vector3d(0,1,0), turretyawrot);
 //        AxisAngle4d axisyangled = new AxisAngle4d(axisy, toRadians(baseLogic.turretrotationYaw)/2);
-//        turretyawrot = Calculater.quatRotateAxis(turretyawrot,axisyangled);
+//        turretyawrot = Utils.quatRotateAxis(turretyawrot,axisyangled);
 //        Quat4d gunnerRot = new Quat4d(0, 0, 0, 1);
 //
 //

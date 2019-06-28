@@ -20,7 +20,8 @@ import javax.vecmath.Vector3d;
 
 import static hmggvcmob.GVCMobPlus.proxy;
 import static hmggvcmob.event.GVCMXEntityEvent.soundedentity;
-import static hmggvcmob.util.Calculater.transformVecforMinecraft;
+import static hmvehicle.Utils.transformVecforMinecraft;
+import static hmvehicle.HMVehicle.proxy_HMVehicle;
 
 public class GVCEntityAPC extends EntityGBase implements ITank {
 	int count_for_reset;
@@ -42,7 +43,7 @@ public class GVCEntityAPC extends EntityGBase implements ITank {
 //	public float subturretrotationPitch;
 
 	public byte hatchprogress;
-	public TankBaseLogic baseLogic = new TankBaseLogic(this,0.3f,1.4f,false,"gvcmob:gvcmob.APCTrack");
+	public TankBaseLogic baseLogic = new TankBaseLogic(this,0.3f,0.6f,false,"gvcmob:gvcmob.APCTrack");
 	ModifiedBoundingBox nboundingbox;
 
 	Vector3d playerpos = new Vector3d(-0.764f,2.4f,0.02124 - 0.59742);
@@ -88,13 +89,13 @@ public class GVCEntityAPC extends EntityGBase implements ITank {
 			mainTurret.turretspeedP = 10;
 			mainTurret.traverseSound = null;
 
-			mainTurret.onmotherPos = turretpos;
-			mainTurret.cannonpos = cannonpos;
+			mainTurret.onMotherPos = turretpos;
+			mainTurret.cannonPos = cannonpos;
 			mainTurret.cycle_setting = 2;
 			mainTurret.spread = 5;
 			mainTurret.speed = 8;
 			mainTurret.firesound = "handmadeguns:handmadeguns.HeavyMachineGun";
-			mainTurret.flushscale  = 2;
+			mainTurret.flashscale = 2;
 
 
 			mainTurret.powor = 20;
@@ -104,7 +105,7 @@ public class GVCEntityAPC extends EntityGBase implements ITank {
 
 			mainTurret.magazineMax = 50;
 			mainTurret.reloadSetting = 300;
-			mainTurret.flushoffset = 0.5f;
+			mainTurret.flashoffset = 0.5f;
 		}
 		canusePlacedGun = false;
 		canuseAlreadyPlacedGun = false;
@@ -117,8 +118,8 @@ public class GVCEntityAPC extends EntityGBase implements ITank {
 	public void updateRiderPosition() {
 		if (this.riddenByEntity != null) {
 			Vector3d temp = new Vector3d(mainTurret.pos);
-			Vector3d tempplayerPos = new Vector3d(proxy.iszooming() ? zoomingplayerpos:playerpos);
-			Vector3d playeroffsetter = new Vector3d(0,((worldObj.isRemote && this.riddenByEntity == proxy.getEntityPlayerInstance()) ? 0:(this.riddenByEntity.getEyeHeight() + this.riddenByEntity.yOffset)),0);
+			Vector3d tempplayerPos = new Vector3d(proxy_HMVehicle.iszooming() ? zoomingplayerpos:playerpos);
+			Vector3d playeroffsetter = new Vector3d(0,((worldObj.isRemote && this.riddenByEntity == proxy_HMVehicle.getEntityPlayerInstance()) ? 0:(this.riddenByEntity.getEyeHeight() + this.riddenByEntity.yOffset)),0);
 			tempplayerPos.sub(playeroffsetter);
 			Vector3d temp2 = mainTurret.getGlobalVector_fromLocalVector_onTurretPoint(tempplayerPos);
 			temp.add(temp2);
@@ -337,12 +338,12 @@ public class GVCEntityAPC extends EntityGBase implements ITank {
 		mainTurret.fire();
 //        Vector3d Vec_transformedbybody = baseLogic.getTransformedVector_onturret(cannonpos,turretYawCenterpos);
 //
-//        Calculater.transformVecforMinecraft(Vec_transformedbybody);
+//        Utils.transformVecforMinecraft(Vec_transformedbybody);
 //        if(fireCycle1 <0){
 //            fireCycle1 = 100;
 //            if (!this.worldObj.isRemote) {
 //                Vector3d lookVec = baseLogic.getCannonDir();
-//                Calculater.transformVecforMinecraft(lookVec);
+//                Utils.transformVecforMinecraft(lookVec);
 //                HMGPacketHandler.INSTANCE.sendToAll(new PacketPlaysound(this, "gvcmob:gvcmob.120mmFire", 1, 5));
 //                if (this.getEntityData().getFloat("GunshotLevel") < 0.1)
 //                    soundedentity.add(this);
@@ -403,13 +404,13 @@ public class GVCEntityAPC extends EntityGBase implements ITank {
 //            if (!this.worldObj.isRemote) {
 //
 //                Vector3d lookVec = baseLogic.getCannonDir();
-//                Calculater.transformVecforMinecraft(lookVec);
+//                Utils.transformVecforMinecraft(lookVec);
 //
 //
 //
 //                Vector3d Vec_transformedbybody = baseLogic.getTransformedVector_onturret(cannonpos,turretYawCenterpos);
 //
-//                Calculater.transformVecforMinecraft(Vec_transformedbybody);
+//                Utils.transformVecforMinecraft(Vec_transformedbybody);
 //
 //                HMGPacketHandler.INSTANCE.sendToAll(new PacketPlaysound(this,"gvcmob:gvcmob.120mmFire",1,10));
 //                this.getEntityData().setFloat("GunshotLevel",10);
@@ -650,7 +651,7 @@ public class GVCEntityAPC extends EntityGBase implements ITank {
 	}
 	
 	@Override
-	public double[] getwaitingpos() {
+	public double[] getTargetpos() {
 		return new double[0];
 	}
 	

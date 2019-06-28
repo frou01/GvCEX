@@ -22,7 +22,7 @@ public class BlockFlag_RUS extends BlockRUSFlagBase
     public BlockFlag_RUS() {
 	    super();
 	    flagType = FlagType.Barrack;
-	    maxs = 60;
+	    maxs = 25;
 	    spawntime = 600;
     }
 }

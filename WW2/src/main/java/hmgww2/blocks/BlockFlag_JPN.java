@@ -20,7 +20,7 @@ public class BlockFlag_JPN extends BlockJPNFlagBase
 	public BlockFlag_JPN() {
 		super();
 		flagType = FlagType.Barrack;
-		maxs = 50;
+		maxs = 10;
 		spawntime = 800;
 	}
 }

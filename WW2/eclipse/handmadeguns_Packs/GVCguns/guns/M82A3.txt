@@ -4,6 +4,7 @@ BulletGravity,0.485
 
 BlletSpread,4.0f
 ADS_Spread_coefficient,0.01
+BlletSpreadDiffusion,8,0,4,0.5,4,1
 Cycle,2
 
 Recoil,10
@@ -57,7 +58,8 @@ SoundSpeed,1
 ScopeTexture,scope_m82a3.png,scope_m82a3.png,scope_m82a3_16.png
 RenderCross,false
 
-Magazine,0,HandmadeGuns,12.7mm Magazine
+//Magazine,0,HandmadeGuns,12.7mm Magazine
+MultiMagazine,HandmadeGuns:12.7mm Magazine,HandmadeGuns:12.7mm Magazine HE
 MagazineSG,0,HandmadeGuns,bullet_shell_hmg
 MagazineGL,0,HandmadeGuns,bullet_rr_hmg
 

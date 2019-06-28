@@ -16,9 +16,9 @@ public class HMVHandleMouseD implements IMessageHandler<HMVPacketMouseD, IMessag
         EntityPlayer entityPlayer = messageContext.getServerHandler().playerEntity;
         Entity en = entityPlayer.worldObj.getEntityByID(packetMouseD.fre);
         if(en instanceof HasBaseLogic && ((HasBaseLogic) en).getBaseLogic() instanceof IneedMouseTrack){
-            ((IneedMouseTrack)((HasBaseLogic) en).getBaseLogic()).setMouse(packetMouseD.x,packetMouseD.y);
+            ((IneedMouseTrack)((HasBaseLogic) en).getBaseLogic()).setMouse(packetMouseD.x,packetMouseD.y,packetMouseD.z);
         }else if(en instanceof IneedMouseTrack){
-            ((IneedMouseTrack) en).setMouse(packetMouseD.x,packetMouseD.y);
+            ((IneedMouseTrack) en).setMouse(packetMouseD.x,packetMouseD.y,packetMouseD.z);
         }
         return null;
     }

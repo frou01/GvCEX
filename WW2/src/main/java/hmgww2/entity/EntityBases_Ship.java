@@ -1,29 +1,35 @@
 package hmgww2.entity;
 
-import hmvehicle.HMVPacketHandler;
-import hmvehicle.entity.parts.IMultiTurretVehicle;
-import hmvehicle.entity.parts.ITank;
-import hmvehicle.entity.parts.ImultiRidable;
+import hmvehicle.entity.parts.*;
+import hmvehicle.entity.parts.logics.MultiRiderLogics;
 import hmvehicle.entity.parts.turrets.TurretObj;
-import hmvehicle.packets.HMVPacketPickNewEntity;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
 import javax.vecmath.Vector3d;
 
-public abstract class EntityBases_Ship extends EntityBases_Tank implements IMultiTurretVehicle , ITank , ImultiRidable
+import static handmadeguns.Util.Utils.getmovingobjectPosition_forBlock;
+import static hmvehicle.HMVehicle.proxy_HMVehicle;
+
+public abstract class EntityBases_Ship extends EntityBases_Tank implements IShip , ITank , ImultiRidable
 {
 	
 	float draft = 1.8f;
 	TurretObj[] mainturrets;
 	TurretObj[] subturrets;
 	TurretObj[] SPturrets;
-	boolean usingSP = false;
+	public boolean usingSP = false;
+	public boolean prevusingSP = true;
 	boolean issubmarine;
+	
+	public String modeBell_normal = "hmgww2:hmgww2.WeaponBell";
+	public String modeBell_SP = "hmgww2:hmgww2.WeaponBell";
 	
 	boolean fstopper = false;
 	public void moveEntityWithHeading(float p_70612_1_, float p_70612_2_)
@@ -44,14 +50,8 @@ public abstract class EntityBases_Ship extends EntityBases_Tank implements IMult
 				f4 = this.getAIMoveSpeed() * f3;
 				
 				this.moveFlying(p_70612_1_, p_70612_2_, f4);
-				double prevmotionX = motionX;
-				double prevmotionZ = motionZ;
 				this.moveEntity(this.motionX, this.motionY, this.motionZ);
 				handleWaterMovement();
-				if(!this.isInWater() && isCollidedHorizontally){
-					this.moveEntity(0, 1, 0);
-					this.moveEntity(prevmotionX/10, 0, prevmotionZ/10);
-				}
 				this.motionX *= 0.800000011920929D;
 				this.motionY *= 0.800000011920929D;
 				this.motionZ *= 0.800000011920929D;
@@ -78,8 +78,6 @@ public abstract class EntityBases_Ship extends EntityBases_Tank implements IMult
 				} else {
 					f4 = this.jumpMovementFactor;
 				}
-				
-				this.moveFlying(p_70612_1_, p_70612_2_, f4);
 				f2 = 0.91F;
 				
 				if (this.onGround) {
@@ -140,6 +138,23 @@ public abstract class EntityBases_Ship extends EntityBases_Tank implements IMult
 		
 		return this.inWater;
 	}
+	protected void entityInit() {
+		super.entityInit();
+		this.dataWatcher.addObject(3, Integer.valueOf(0));//mode
+		this.dataWatcher.addObject(23, Float.valueOf(0));//draft
+	}
+	public void setWeaponMode(int ints) {
+		this.dataWatcher.updateObject(3, Integer.valueOf(ints));
+	}
+	public int getWeaponMode() {
+		return this.dataWatcher.getWatchableObjectInt(3);
+	}
+	public void setDraft_dataWatcher(float floats) {
+		this.dataWatcher.updateObject(23, Float.valueOf(floats));
+	}
+	public float getDraft_dataWatcher() {
+		return this.dataWatcher.getWatchableObjectFloat(23);
+	}
 	public boolean ishittingWater()
 	{
 		boolean inWater = false;
@@ -158,8 +173,11 @@ public abstract class EntityBases_Ship extends EntityBases_Tank implements IMult
 	public EntityBases_Ship(World par1World)
 	{
 		super(par1World);
-		if(par1World.isRemote)
-			HMVPacketHandler.INSTANCE.sendToAll(new HMVPacketPickNewEntity(this.getEntityId()));
+//		if(par1World.isRemote)
+//			HMVPacketHandler.INSTANCE.sendToAll(new HMVPacketPickNewEntity(this.getEntityId()));
+		
+		
+		interval = 32;
 	}
 	
 	public void updateRiderPosition() {
@@ -188,14 +206,40 @@ public abstract class EntityBases_Ship extends EntityBases_Tank implements IMult
 		if(this.standalone()){
 			if(this.getAttackTarget() != null && this.getAttackTarget() instanceof EntityBases_Ship && ((EntityBases_Ship) this.getAttackTarget()).issubmarine){
 				usingSP = true;
-//				System.out.println("debug");
 				setassault();
 			}else {
 				usingSP = false;
 				resetassault();
 			}
 		}
+		if(worldObj.isRemote){
+			usingSP = getWeaponMode() == 0;
+			if(prevusingSP != usingSP) {
+				if (!usingSP) {
+					if (modeBell_normal != null) proxy_HMVehicle.playsoundasVehicle_noRepeat(modeBell_normal, 2 * 2 * 16, this, this, 40);
+				}else if(modeBell_SP != null)proxy_HMVehicle.playsoundasVehicle_noRepeat(modeBell_SP, 2 * 2 * 16, this, this, 40);
+			}
+			prevusingSP = usingSP;
+			draft = getDraft_dataWatcher();
+		}else {
+			setWeaponMode(usingSP?0:1);
+			setDraft_dataWatcher(draft);
+		}
+		nboundingbox.update(this.posX,this.posY,this.posZ);
 		super.onUpdate();
+		baseLogic.updateCommon();
+	}
+	
+	@Override
+	public boolean canEntityBeSeen(Entity p_70685_1_)
+	{
+		Vec3 startpos = Vec3.createVectorHelper(this.posX, this.posY + (double) this.getEyeHeight(), this.posZ);
+		Vec3 targetpos = Vec3.createVectorHelper(p_70685_1_.posX, p_70685_1_.posY + (double) p_70685_1_.getEyeHeight(), p_70685_1_.posZ);
+		MovingObjectPosition movingobjectposition = getmovingobjectPosition_forBlock(worldObj,startpos, targetpos, false, true, false);
+		if(movingobjectposition!=null) {
+			return false;
+		}
+		return true;
 	}
 	public void tankUpdate(){
 		this.stepHeight = 1.5f;
@@ -205,11 +249,7 @@ public abstract class EntityBases_Ship extends EntityBases_Tank implements IMult
 			baseLogic.updateClient();
 			mode= getMobMode();
 		}
-		baseLogic.updateCommon();
-		if(getmainTurrets() != null)for(TurretObj aturret :getmainTurrets()){
-			aturret.update(baseLogic.bodyRot,new Vector3d(this.posX,this.posY,-this.posZ));
-		}
-		if(getsubTurrets() != null)for(TurretObj aturret :getsubTurrets()){
+		if(getTurrets() != null)for(TurretObj aturret :getTurrets()){
 			aturret.update(baseLogic.bodyRot,new Vector3d(this.posX,this.posY,-this.posZ));
 		}
 		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.3D);
@@ -242,7 +282,7 @@ public abstract class EntityBases_Ship extends EntityBases_Tank implements IMult
 		}
 	}
 	public void subFireToTarget(Entity target){
-		if(getsubTurrets() != null)for(TurretObj aturret :getsubTurrets()){
+		if(!usingSP && getsubTurrets() != null)for(TurretObj aturret :getsubTurrets()){
 			if(aturret.readyaim) {
 				aturret.currentEntity = this;
 				aturret.fire();
@@ -295,5 +335,13 @@ public abstract class EntityBases_Ship extends EntityBases_Tank implements IMult
 		if(Double.isInfinite(y))y = 0;
 		if(Double.isInfinite(z))z = 0;
 		if(baseLogic != null)baseLogic.setPosition(x,y,z);
+	}
+	
+	public boolean pickupEntity(Entity p_70085_1_, int StartSeachSeatNum){
+		return ((MultiRiderLogics)((HasBaseLogic)this).getBaseLogic()).pickupEntity(p_70085_1_,StartSeachSeatNum);
+	}
+	
+	public float getDraft(){
+		return draft;
 	}
 }

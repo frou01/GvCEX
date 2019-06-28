@@ -8,6 +8,7 @@ import handmadeguns.HMGMessageKeyPressedC;
 import handmadeguns.HMGPacketHandler;
 import handmadeguns.HandmadeGunsCore;
 import handmadeguns.entity.IFF;
+import handmadeguns.entity.I_SPdamageHandle;
 import io.netty.buffer.ByteBuf;
 import littleMaidMobX.LMM_EntityLittleMaid;
 import littleMaidMobX.LMM_EntityLittleMaidAvatar;
@@ -21,7 +22,10 @@ import net.minecraft.entity.player.EntityPlayerMP;
         import net.minecraft.util.*;
 import net.minecraft.world.World;
 
+import java.util.List;
+
 import static handmadeguns.HandmadeGunsCore.islmmloaded;
+import static handmadeguns.Util.Utils.getmovingobjectPosition_forBlock;
 
 public class HMGEntityBullet extends HMGEntityBulletBase implements IEntityAdditionalSpawnData
 {
@@ -64,7 +68,6 @@ public class HMGEntityBullet extends HMGEntityBulletBase implements IEntityAddit
 					var2 = 0;
 				}
 			}
-			float backdeflevel = 0;
 			if(this.thrower instanceof IFF){
 				if(((IFF) this.thrower).is_this_entity_friend(var1.entityHit)){
 					var2 = 0;
@@ -72,11 +75,17 @@ public class HMGEntityBullet extends HMGEntityBulletBase implements IEntityAddit
 			}
 			var1.entityHit.hurtResistantTime = 0;
 
-			double moXback = var1.entityHit.motionX;//?m?b?N?o?b?N???????p
-			double moYback = var1.entityHit.motionY;//????オ???????p
-			double moZback = var1.entityHit.motionZ;//?m?b?N?o?b?N???????p
+			double moXback = var1.entityHit.motionX;
+			double moYback = var1.entityHit.motionY;
+			double moZback = var1.entityHit.motionZ;
 
-			if(var1.entityHit.attackEntityFrom((new EntityDamageSourceIndirect("arrow", this, this.getThrower())).setProjectile(),var2)){
+			boolean flag;
+			if(var1.entityHit instanceof I_SPdamageHandle){
+				flag = ((I_SPdamageHandle)var1.entityHit).attackEntityFrom_with_Info(var1,(new EntityDamageSourceIndirect("arrow", this, this.getThrower())).setProjectile(),var2);
+			}else {
+				flag = var1.entityHit.attackEntityFrom((new EntityDamageSourceIndirect("arrow", this, this.getThrower())).setProjectile(),var2);
+			}
+			if(flag){
 				var1.entityHit.motionX = moXback;
 				var1.entityHit.motionY = moYback;
 				var1.entityHit.motionZ = moZback;

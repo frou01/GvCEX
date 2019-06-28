@@ -17,7 +17,7 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
 import static hmggvcmob.GVCMobPlus.cfg_guerrillasrach;
-import static hmggvcmob.util.Calculater.CalculateGunElevationAngle;
+import static hmvehicle.Utils.CalculateGunElevationAngle;
 
 public class GVCEntityGK extends EntityGBase implements IIRVING
 {

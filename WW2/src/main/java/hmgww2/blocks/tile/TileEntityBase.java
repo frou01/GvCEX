@@ -7,15 +7,11 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import hmgww2.Nation;
 import hmgww2.entity.*;
-import hmgww2.mod_GVCWW2;
 import hmgww2.network.WW2PacketFlagSync;
 import hmgww2.network.WW2PacketHandler;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
@@ -104,8 +100,8 @@ public class TileEntityBase extends TileEntity
 			                                               new Class[]{EntityGER_S.class,EntityGER_S.class,EntityGER_S.class,EntityGER_ShipSUB.class},
 			                                               new Class[]{EntityGER_S.class,EntityGER_S.class,EntityGER_S.class,EntityGER_Tank.class});
 	NationEntityList JPNlist = new NationEntityList(new Class[]{EntityJPN_S.class},
-			                                               new Class[]{EntityJPN_S.class,EntityJPN_Tank.class,EntityJPN_TankAA.class,EntityJPN_TankSPG.class},
-			                                               new Class[]{EntityJPN_S.class,EntityJPN_TankAA.class,
+			                                               new Class[]{EntityJPN_S.class,EntityJPN_Tank.class,/*EntityJPN_TankAA.class,*/EntityJPN_TankSPG.class},
+			                                               new Class[]{EntityJPN_S.class,/*EntityJPN_TankAA.class,*/
 					                                               EntityJPN_Fighter.class,EntityJPN_FighterA.class,
 					                                               EntityJPN_Fighter.class,
 					                                               EntityJPN_Fighter.class,
@@ -228,7 +224,7 @@ public class TileEntityBase extends TileEntity
 					}
 				}
 			}
-			if ((ticks >= spawntime)) {//周辺の兵士の数がスポーン最大数以下ならスポーン処理
+			if ((ticks >= spawntime) && spawn) {//周辺の兵士の数がスポーン最大数以下ならスポーン処理
 				if((nearEnemySize <= 0 || nearEnemySize < nearAlliesSize) && nearAlliesSize + nearEnemySize < maxs){
 					NationEntityList nationEntityList = null;
 					switch (nation) {

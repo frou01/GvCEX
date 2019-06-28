@@ -663,14 +663,14 @@ public class WZ10 extends ModelBase
 				{
 					GL11.glPushMatrix();
 					GL11.glTranslatef(0, 0, -80);
-//					GL11.glRotatef((float) -entity.turretYaw,0,1,0);
+					GL11.glRotatef( 180f - (float)entity.riddenByEntitiesInfo[1].gun.turretrotationYaw,0,1,0);
 					GL11.glTranslatef(0, 0, 80);
 					chaingun1.render(f5);
 					chaingun2.render(f5);
 					{
 						GL11.glPushMatrix();
 						GL11.glTranslatef(0, 15, -80);
-//						GL11.glRotatef((float) entity.turretPitch,1,0,0);
+						GL11.glRotatef((float) entity.riddenByEntitiesInfo[1].gun.turretrotationPitch,1,0,0);
 						GL11.glTranslatef(0, -15, 80);
 						chaingun3.render(f5);
 						chaingun4.render(f5);
@@ -718,7 +718,7 @@ public class WZ10 extends ModelBase
 				{
 					GL11.glPushMatrix();
 					GL11.glTranslatef(0, 3.6f, 1);
-//					GL11.glRotatef((float) (entity.prevangletime + (entity.angletime - entity.prevangletime) * smooth), 0.0F, 1.0F, 0.0F);
+					GL11.glRotatef((float) (entity.prevperapos + (entity.perapos - entity.prevperapos) * smooth), 0.0F, 1.0F, 0.0F);
 					GL11.glTranslatef(0, -3.6f, 1);
 					propellerbase.render(f5);
 					propellerbase1.render(f5);

@@ -77,8 +77,8 @@ public class ClientProxyHMG extends CommonSideProxyHMG {
 		Minecraft.getMinecraft().getSoundHandler().playSound(new PositionedSoundRecord(new ResourceLocation(sound),soundLV,soundSP*tempsp,(float)posX,(float)posY,(float)posZ));
 	}
 	@Override
-	public void playsoundatEntity(String sound, float soundLV, float soundSP,Entity attached,boolean repeat){
-		Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundHMG(attached,sound,repeat,soundLV,soundSP));
+	public void playsoundatEntity(String sound, float soundLV, float soundSP,Entity attached,boolean repeat,int time){
+		Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundHMG(attached,sound,repeat,soundLV,soundSP,time));
 	}
 	@Override
 	public void playsoundatEntity_reload(String sound, float soundLV, float soundSP, Entity attached, boolean repeat){

@@ -1100,7 +1100,7 @@ public class HMGItem_Unified_Guns extends Item {
     public void reloadBullets(ItemStack itemstack, World world, Entity entity){
         itemstack.getTagCompound().setBoolean("detached",false);
         IInventory inventory = getInventory_fromEntity(entity);
-        if(inventory != null)consumeAndSetMagazine(itemstack,world,inventory);
+        if(inventory != null&&get_selectingMagazine(itemstack) != null)consumeAndSetMagazine(itemstack,world,inventory);
         else setMagazine(itemstack,world);
     }
     public boolean canreloadBullets(ItemStack itemstack, World world, Entity entity){

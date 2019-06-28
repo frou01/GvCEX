@@ -1,8 +1,12 @@
 package hmgww2.render;
 
+import cpw.mods.fml.client.FMLClientHandler;
 import hmvehicle.entity.parts.ITank;
+import hmvehicle.entity.parts.ModifiedBoundingBox;
 import hmvehicle.entity.parts.logics.TankBaseLogic;
 import hmvehicle.entity.parts.turrets.TurretObj;
+import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
@@ -10,6 +14,9 @@ import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
+
+import static hmvehicle.CLProxy.drawOutlinedBoundingBox;
+import static net.minecraft.client.renderer.entity.RenderManager.debugBoundingBox;
 
 public class RenderTank extends Render {
 	
@@ -24,15 +31,13 @@ public class RenderTank extends Render {
 	float[] subturretpos = new float[3];
 	float[] subturretpitchpos = new float[3];
 	
-	public RenderTank(String texture,String model,float[] turretpos,float[] turretpitchpos,boolean user_onMainTurret) {
+	public RenderTank(String texture,String model,boolean user_onMainTurret) {
 		skeletonTexturesz = new ResourceLocation(texture);
 		tankk = AdvancedModelLoader.loadModel(new ResourceLocation(model));
-		this.turretpos = turretpos;
-		this.turretpitchpos = turretpitchpos;
 		this.user_onMainTurret = user_onMainTurret;
 	}
-	public RenderTank(String texture,String model,float[] turretpos,float[] turretpitchpos,boolean user_onMainTurret,boolean subturret_onMainTurret,float[] subturretpos,float[] subturretpitchpos) {
-		this(texture,model,turretpos,turretpitchpos,user_onMainTurret);
+	public RenderTank(String texture,String model,boolean user_onMainTurret,boolean subturret_onMainTurret,float[] subturretpos,float[] subturretpitchpos) {
+		this(texture,model,user_onMainTurret);
 		this.hassubturret = true;
 		this.subturret_onMainTurret = subturret_onMainTurret;
 		this.subturretpos = subturretpos;
@@ -63,6 +68,7 @@ public class RenderTank extends Render {
 			GL11.glRotatef(180.0F - (baseLogic.bodyrotationYaw + (baseLogic.bodyrotationYaw - baseLogic.prevbodyrotationYaw) * partialTicks), 0.0F, 1.0F, 0.0F);
 			GL11.glRotatef(baseLogic.bodyrotationPitch, 1.0F, 0.0F, 0.0F);
 			GL11.glRotatef(baseLogic.bodyrotationRoll, 0.0F, 0.0F, 1.0F);
+			GL11.glPushMatrix();
 			tankk.renderPart("mat1");
 			tankk.renderPart("obj1");
 			if(!user_onMainTurret && ((ITank) entity).standalone()){
@@ -88,9 +94,11 @@ public class RenderTank extends Render {
 			
 			TurretObj main = ((ITank) entity).getMainTurret();
 			if(main != null){
-				GL11.glTranslatef(turretpos[0], turretpos[1], turretpos[2]);
+				GL11.glTranslatef((float) main.onMotherPos.x, (float) main.onMotherPos.y, (float) -main.onMotherPos.z);
+				GL11.glTranslatef((float) main.turretYawCenterpos.x, (float) main.turretYawCenterpos.y, (float) main.turretYawCenterpos.z);
 				GL11.glRotatef((float) -(main.turretrotationYaw), 0.0F, 1.0F, 0.0F);
-				GL11.glTranslatef(-turretpos[0], -turretpos[1], -turretpos[2]);
+				GL11.glTranslatef((float) -main.turretYawCenterpos.x, (float) -main.turretYawCenterpos.y, (float) -main.turretYawCenterpos.z);
+				GL11.glTranslatef((float) -main.onMotherPos.x, (float) -main.onMotherPos.y, (float) main.onMotherPos.z);
 				tankk.renderPart("mat4");
 				tankk.renderPart("obj4");
 				if(user_onMainTurret && ((ITank) entity).standalone()){
@@ -112,12 +120,46 @@ public class RenderTank extends Render {
 					tankk.renderPart("obj7");
 					GL11.glPopMatrix();
 				}
-				GL11.glTranslatef(turretpitchpos[0], turretpitchpos[1], turretpitchpos[2]);
+				GL11.glTranslatef((float) main.onMotherPos.x, (float) main.onMotherPos.y, (float) -main.onMotherPos.z);
+				GL11.glTranslatef((float) main.turretPitchCenterpos.x, (float) main.turretPitchCenterpos.y, (float) main.turretPitchCenterpos.z);
+//				GL11.glTranslatef(turretpitchpos[0], turretpitchpos[1], turretpitchpos[2]);
 				GL11.glRotatef((float) main.turretrotationPitch, 1.0F, 0.0F, 0.0F);
-				GL11.glTranslatef(-turretpitchpos[0], -turretpitchpos[1], -turretpitchpos[2]);
+//				GL11.glTranslatef(-turretpitchpos[0], -turretpitchpos[1], -turretpitchpos[2]);
+				GL11.glTranslatef((float) -main.turretPitchCenterpos.x, (float) -main.turretPitchCenterpos.y, (float) -main.turretPitchCenterpos.z);
+				GL11.glTranslatef((float) -main.onMotherPos.x, (float) -main.onMotherPos.y, (float) main.onMotherPos.z);
 				tankk.renderPart("mat5");
 				tankk.renderPart("obj5");
+				if(baseLogic.riddenbyPlayer() && FMLClientHandler.instance().getClient().gameSettings.thirdPersonView == 0) {
+					float lastBrightnessX = OpenGlHelper.lastBrightnessX;
+					float lastBrightnessY = OpenGlHelper.lastBrightnessY;
+					OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
+					RenderHelper.disableStandardItemLighting();
+					GL11.glDepthMask(false);
+					GL11.glDepthFunc(GL11.GL_ALWAYS);//強制描画
+					tankk.renderPart("sight");
+					GL11.glDepthMask(true);
+					GL11.glDepthFunc(GL11.GL_LEQUAL);
+					OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)lastBrightnessX, (float)lastBrightnessY);
+					RenderHelper.enableStandardItemLighting();
+				}
 			}
+			GL11.glPopMatrix();
+			GL11.glPushMatrix();
+			if(debugBoundingBox && entity.boundingBox instanceof ModifiedBoundingBox){
+				GL11.glDepthMask(false);
+				GL11.glDisable(GL11.GL_TEXTURE_2D);
+				GL11.glDisable(GL11.GL_LIGHTING);
+				GL11.glDisable(GL11.GL_CULL_FACE);
+				GL11.glDisable(GL11.GL_BLEND);
+				ModifiedBoundingBox axisalignedbb = (ModifiedBoundingBox) entity.boundingBox;
+				drawOutlinedBoundingBox(axisalignedbb, 16777215);
+				GL11.glEnable(GL11.GL_TEXTURE_2D);
+				GL11.glEnable(GL11.GL_LIGHTING);
+				GL11.glEnable(GL11.GL_CULL_FACE);
+				GL11.glDisable(GL11.GL_BLEND);
+				GL11.glDepthMask(true);
+			}
+			GL11.glPopMatrix();
 			GL11.glPopMatrix();
 		}
 		

@@ -4,10 +4,11 @@ BulletGravity,0.485
 
 BlletSpread,4.0f
 ADS_Spread_coefficient,0.8
+BlletSpreadDiffusion,10,0,0.9,0.2,3,0.4
 Cycle,2
 
-Recoil,8
-Recoil_sneaking,6
+Recoil,3
+Recoil_sneaking,1.2
 
 ReloadTime,50
 
@@ -39,7 +40,7 @@ allowattach,byfrou01_Bayonet
 ModelEquipped,-0.7f,0.7f,0.0f
 ModelHigh,1.10415f,0.9520,0.85f
 ModelWidthX,0.697f,0.697f,0.697f
-ModelWidthZ,0.8f,0.8f,0.8f
+ModelWidthZ,0.8f,0.3f,0.8f
 ModelRotationX,180f,180f,180f
 ModelRotationY,45f,45f,45
 ModelRotationZ,180f,180f,180f
@@ -119,7 +120,7 @@ AddParts,mat1
         attachpart
         dot
     BackParts
-    AddChildParts,mat4_re
+    AddChildParts,mat41
     	AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
     	AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
         attachpart

@@ -1,10 +1,6 @@
 package hmggvcmob.entity.friend;
 
 
-import cpw.mods.fml.client.FMLClientHandler;
-import handmadeguns.HandmadeGunsCore;
-import handmadeguns.entity.bullets.HMGEntityBulletBase;
-import handmadeguns.network.PacketSpawnParticle;
 import hmvehicle.entity.parts.IMultiTurretVehicle;
 import hmvehicle.entity.parts.Iplane;
 import hmvehicle.entity.parts.ModifiedBoundingBox;
@@ -22,6 +18,7 @@ import javax.vecmath.Vector3d;
 import java.util.ArrayList;
 
 import static hmggvcmob.GVCMobPlus.proxy;
+import static hmvehicle.Utils.addAllTurret;
 
 public class GVCEntityPlane extends Entity implements Iplane,IMultiTurretVehicle
 {
@@ -38,8 +35,6 @@ public class GVCEntityPlane extends Entity implements Iplane,IMultiTurretVehicle
 	public float throttle;
 	public int mode = 0;//0:attack 1:leave 2:follow player 3:go to home
 //	public int soundtick = 0;
-	public Entity illuminated = null;
-	public HMGEntityBulletBase missile;
 	public float[][] trackedEntityPos;
 	public GVCEntityPlane(World par1World)
 	{
@@ -48,14 +43,14 @@ public class GVCEntityPlane extends Entity implements Iplane,IMultiTurretVehicle
 //		nboundingbox = new ModifiedBoundingBox(-20,-20,-20,20,20,20,0,0,-6.27,2.5,5,19);
 //		nboundingbox.rot.set(this.bodyRot);
 //		proxy.replaceBoundingbox(this,nboundingbox);
-//		((ModifiedBoundingBox)this.boundingBox).updateOBB(this.posX,this.posY,this.posZ);
+//		((ModifiedBoundingBox)this.boundingBox).update(this.posX,this.posY,this.posZ);
 		ignoreFrustumCheck = true;
 		this.fireCycle1 = 1;
 		baseLogic = new PlaneBaseLogic(worldObj,this);
 		
-		baseLogic.speedfactor =    0.0045f;
-		baseLogic.speedfactor_af = 0.001f;
-		baseLogic.liftfactor = 0.01f;
+		baseLogic.speedfactor =    0.0043f;
+		baseLogic.speedfactor_af = 0.002f;
+		baseLogic.liftfactor = 0.04f;
 		baseLogic.flapliftfactor = 0.00005f;
 		baseLogic.flapdragfactor = 0.0000000001f;
 		baseLogic.geardragfactor = 0.000000001f;
@@ -66,7 +61,7 @@ public class GVCEntityPlane extends Entity implements Iplane,IMultiTurretVehicle
 		baseLogic.rotmotion_reduceSpeed = 0.05;
 		
 		
-		baseLogic.rollspeed = 0.1f;
+		baseLogic.rollspeed = 0.12f;
 		baseLogic.pitchspeed = 0.15f;
 		baseLogic.yawspeed = 0.05f;
 		baseLogic.maxDive = 60;
@@ -74,15 +69,16 @@ public class GVCEntityPlane extends Entity implements Iplane,IMultiTurretVehicle
 		baseLogic.maxClimb = -22;
 		baseLogic.maxbank = 60;
 		baseLogic.slipresist = 0.01f;
+		baseLogic.throttle_gearDown = 0.25f;
 		{
 			TurretObj gun1 = new TurretObj(worldObj);
-			gun1.onmotherPos = new Vector3d(0.04, 0.8659, 0);
+			gun1.onMotherPos = new Vector3d(0.04, 0.8659, 0);
 			gun1.traverseSound = null;
 			gun1.currentEntity = this;
 			gun1.powor = 23;
 			gun1.ex = 0.5f;
 			gun1.cycle_setting = 0;
-			gun1.flushscale = 1;
+			gun1.flashscale = 1;
 			gun1.firesound = "handmadeguns:handmadeguns.HeavyMachineGun";
 			gun1.spread = 2;
 			gun1.speed = 8;
@@ -93,14 +89,14 @@ public class GVCEntityPlane extends Entity implements Iplane,IMultiTurretVehicle
 			gun1.fireAll = false;
 			gun1.guntype = 0;
 			TurretObj gun2 = new TurretObj(worldObj);
-			gun2.onmotherPos = new Vector3d(-0.04, 0.8659, 0);
-			gun2.onmotherPos.sub(gun1.onmotherPos);
+			gun2.onMotherPos = new Vector3d(-0.04, 0.8659, 0);
+			gun2.onMotherPos.sub(gun1.onMotherPos);
 			gun2.traverseSound = null;
 			gun2.currentEntity = this;
 			gun2.powor = 23;
 			gun2.ex = 0.5f;
 			gun2.cycle_setting = 0;
-			gun2.flushscale = 1;
+			gun2.flashscale = 1;
 			gun2.firesound = "handmadeguns:handmadeguns.HeavyMachineGun";
 			gun2.spread = 2;
 			gun2.speed = 8;
@@ -110,13 +106,13 @@ public class GVCEntityPlane extends Entity implements Iplane,IMultiTurretVehicle
 			gun2.canex = false;
 			gun2.fireAll = false;
 			gun2.guntype = 0;
-			gun1.addchild(gun2);
+			gun1.addchild_triggerLinked(gun2);
 			
 			baseLogic.mainTurret = gun1;
 		}
 		{
 			TurretObj missile1 = new TurretObj(worldObj);
-			missile1.onmotherPos = new Vector3d(2.0399, 1.0591, -0.6568);
+			missile1.onMotherPos = new Vector3d(2.0399, 1.0591, -0.6568);
 			missile1.traverseSound = null;
 			missile1.currentEntity = this;
 			missile1.powor = 600;
@@ -128,7 +124,7 @@ public class GVCEntityPlane extends Entity implements Iplane,IMultiTurretVehicle
 			missile1.ex = 3;
 			missile1.cycle_setting = 1200;
 			missile1.cycle_timer = -1;
-			missile1.flushscale = 1;
+			missile1.flashscale = 1;
 			missile1.firesound = "handmadeguns:handmadeguns.firecannon";
 			missile1.spread = 0;
 			missile1.speed = 1;
@@ -141,7 +137,7 @@ public class GVCEntityPlane extends Entity implements Iplane,IMultiTurretVehicle
 			missile1.seekerSize = 30;
 			
 			TurretObj missile2 = new TurretObj(worldObj);
-			missile2.onmotherPos = new Vector3d(-2.0399, 1.0591, -0.6568);
+			missile2.onMotherPos = new Vector3d(-2.0399, 1.0591, -0.6568);
 			missile2.traverseSound = null;
 			missile2.currentEntity = this;
 			missile2.powor = 600;
@@ -153,7 +149,7 @@ public class GVCEntityPlane extends Entity implements Iplane,IMultiTurretVehicle
 			missile2.ex = 3;
 			missile2.cycle_setting = 1200;
 			missile2.cycle_timer = -1;
-			missile2.flushscale = 1;
+			missile2.flashscale = 1;
 			missile2.firesound = "handmadeguns:handmadeguns.firecannon";
 			missile2.spread = 0;
 			missile2.speed = 1;
@@ -165,7 +161,7 @@ public class GVCEntityPlane extends Entity implements Iplane,IMultiTurretVehicle
 			missile2.guntype = 3;
 			missile2.seekerSize = 30;
 			
-			missile1.addchild(missile2);
+			missile1.addbrother(missile2);
 			baseLogic.subTurret = missile1;
 		}
 		
@@ -180,7 +176,7 @@ public class GVCEntityPlane extends Entity implements Iplane,IMultiTurretVehicle
 		ModifiedBoundingBox nboundingbox = new ModifiedBoundingBox(-1.5,0,-1.5,1.5,5,1.5,0,0,-6.27,2.5,5,19);
 		nboundingbox.rot.set(baseLogic.bodyRot);
 		proxy.replaceBoundingbox(this,nboundingbox);
-		((ModifiedBoundingBox)this.boundingBox).updateOBB(this.posX,this.posY,this.posZ);
+		((ModifiedBoundingBox)this.boundingBox).update(this.posX,this.posY,this.posZ);
 	}
 
 	@Override
@@ -255,15 +251,15 @@ public class GVCEntityPlane extends Entity implements Iplane,IMultiTurretVehicle
 //		double backmotionY1 = motionY;
 //		super.onUpdate();
 //		motionY = backmotionY1;
-//		Vector3d tailwingvector = Calculater.transformVecByQuat(new Vector3d(unitY), bodyRot);
-//		Vector3d bodyvector = Calculater.transformVecByQuat(new Vector3d(unitZ), bodyRot);
-//		Vector3d mainwingvector = Calculater.transformVecByQuat(new Vector3d(unitX), bodyRot);
+//		Vector3d tailwingvector = Utils.transformVecByQuat(new Vector3d(unitY), bodyRot);
+//		Vector3d bodyvector = Utils.transformVecByQuat(new Vector3d(unitZ), bodyRot);
+//		Vector3d mainwingvector = Utils.transformVecByQuat(new Vector3d(unitX), bodyRot);
 //		tailwingvector.normalize();
 //		bodyvector.normalize();
 //		mainwingvector.normalize();
-//		Calculater.transformVecforMinecraft(tailwingvector);
-//		Calculater.transformVecforMinecraft(bodyvector);
-//		Calculater.transformVecforMinecraft(mainwingvector);
+//		Utils.transformVecforMinecraft(tailwingvector);
+//		Utils.transformVecforMinecraft(bodyvector);
+//		Utils.transformVecforMinecraft(mainwingvector);
 //		if(!isinit){
 //			initseat();
 //		}
@@ -304,17 +300,17 @@ public class GVCEntityPlane extends Entity implements Iplane,IMultiTurretVehicle
 //				childEntities[0].motionY = this.motionY;
 //				childEntities[0].motionZ = this.motionZ;
 //			}else{
-//				tailwingvector = Calculater.transformVecByQuat(new Vector3d(unitY), bodyRot);
-//				bodyvector = Calculater.transformVecByQuat(new Vector3d(unitZ), bodyRot);
-//				mainwingvector = Calculater.transformVecByQuat(new Vector3d(unitX), bodyRot);
+//				tailwingvector = Utils.transformVecByQuat(new Vector3d(unitY), bodyRot);
+//				bodyvector = Utils.transformVecByQuat(new Vector3d(unitZ), bodyRot);
+//				mainwingvector = Utils.transformVecByQuat(new Vector3d(unitX), bodyRot);
 //				tailwingvector.normalize();
 //				bodyvector.normalize();
 //				mainwingvector.normalize();
-//				Calculater.transformVecforMinecraft(tailwingvector);
-//				Calculater.transformVecforMinecraft(bodyvector);
-//				Calculater.transformVecforMinecraft(mainwingvector);
+//				Utils.transformVecforMinecraft(tailwingvector);
+//				Utils.transformVecforMinecraft(bodyvector);
+//				Utils.transformVecforMinecraft(mainwingvector);
 //
-//				double[] xyz = Calculater.eulerfrommatrix(Calculater.matrixfromQuat(bodyRot));
+//				double[] xyz = Utils.eulerfrommatrix(Utils.matrixfromQuat(bodyRot));
 //				bodyrotationPitch = (float) toDegrees(xyz[0]);
 //				if(!Double.isNaN(xyz[1])){
 //					bodyrotationYaw = (float) toDegrees(xyz[1]);
@@ -339,7 +335,7 @@ public class GVCEntityPlane extends Entity implements Iplane,IMultiTurretVehicle
 //			FCS(mainwingvector,tailwingvector,bodyvector);
 ////			turret(mainwingvector,tailwingvector,bodyvector);
 //
-//			double[] xyz = Calculater.eulerfrommatrix(Calculater.matrixfromQuat(bodyRot));
+//			double[] xyz = Utils.eulerfrommatrix(Utils.matrixfromQuat(bodyRot));
 //			bodyrotationPitch = (float) toDegrees(xyz[0]);
 //			if(!Double.isNaN(xyz[1])){
 //				bodyrotationYaw = (float) toDegrees(xyz[1]);
@@ -410,29 +406,29 @@ public class GVCEntityPlane extends Entity implements Iplane,IMultiTurretVehicle
 //		if(motionvec.length() > 0.1) {
 //			double cos = -angle_cos(bodyvector, motionvec) * motionvec.length();
 //			if (abs(pitchladder) > 0.001) {
-//				Vector3d axisx = Calculater.transformVecByQuat(new Vector3d(unitX), bodyRot);
+//				Vector3d axisx = Utils.transformVecByQuat(new Vector3d(unitX), bodyRot);
 //				AxisAngle4d axisxangled = new AxisAngle4d(unitX, toRadians(-pitchladder / 4 * cos*0.06));
-//				rotationmotion = Calculater.quatRotateAxis(rotationmotion, axisxangled);
+//				rotationmotion = Utils.quatRotateAxis(rotationmotion, axisxangled);
 //			}
 //			if (abs(yawladder) > 0.001) {
 //				AxisAngle4d axisyangled;
 //				if(onGround && motionvec.length()<0.2){
-//					Vector3d axisy = Calculater.transformVecByQuat(new Vector3d(unitY), bodyRot);
+//					Vector3d axisy = Utils.transformVecByQuat(new Vector3d(unitY), bodyRot);
 //					axisyangled = new AxisAngle4d(unitY, toRadians(yawladder / 4 * cos * 0.2));
 //				}else {
-//					Vector3d axisy = Calculater.transformVecByQuat(new Vector3d(unitY), bodyRot);
+//					Vector3d axisy = Utils.transformVecByQuat(new Vector3d(unitY), bodyRot);
 //					axisyangled = new AxisAngle4d(unitY, toRadians(yawladder / 4 * cos * 0.06));
 //				}
-//				rotationmotion = Calculater.quatRotateAxis(rotationmotion, axisyangled);
+//				rotationmotion = Utils.quatRotateAxis(rotationmotion, axisyangled);
 //			}
 //			if (abs(rollladder) > 0.001) {
-//				Vector3d axisz = Calculater.transformVecByQuat(new Vector3d(unitZ), bodyRot);
+//				Vector3d axisz = Utils.transformVecByQuat(new Vector3d(unitZ), bodyRot);
 //				AxisAngle4d axiszangled = new AxisAngle4d(unitZ, toRadians(rollladder / 4 * cos*0.06));
-//				rotationmotion = Calculater.quatRotateAxis(rotationmotion, axiszangled);
+//				rotationmotion = Utils.quatRotateAxis(rotationmotion, axiszangled);
 //			}
 //		}
 //
-//		double[] xyz = Calculater.eulerfrommatrix(Calculater.matrixfromQuat(bodyRot));
+//		double[] xyz = Utils.eulerfrommatrix(Utils.matrixfromQuat(bodyRot));
 //		bodyrotationPitch = (float) toDegrees(xyz[0]);
 //		if(!Double.isNaN(xyz[1])){
 //			bodyrotationYaw = (float) toDegrees(xyz[1]);
@@ -465,7 +461,7 @@ public class GVCEntityPlane extends Entity implements Iplane,IMultiTurretVehicle
 ////				if (proxy.leftclick()) {
 ////					GVCMPacketHandler.INSTANCE.sendToServer(new HMVMMessageKeyPressed(11, this.getEntityId()));
 ////				}
-////				if (proxy.jumped()) {
+////				if (proxy.spaceKeyDown()) {
 ////					GVCMPacketHandler.INSTANCE.sendToServer(new HMVMMessageKeyPressed(12, this.getEntityId()));
 ////				}
 ////				if (proxy.fclick()) {
@@ -493,22 +489,22 @@ public class GVCEntityPlane extends Entity implements Iplane,IMultiTurretVehicle
 ////
 ////				prevmousex = mousex;
 ////				if (abs(mousex)>0.00001) {
-////					mainwingvector = Calculater.rotationVector_byAxisVector(bodyVector,mainwingvector, abs(mousex)>4 ? (mousex>0?4f:-4f):mousex);
-////					tailwingvector = Calculater.rotationVector_byAxisVector(bodyVector,tailwingvector, abs(mousex)>4 ? (mousex>0?4f:-4f):mousex);
+////					mainwingvector = Utils.rotationVector_byAxisVector(bodyVector,mainwingvector, abs(mousex)>4 ? (mousex>0?4f:-4f):mousex);
+////					tailwingvector = Utils.rotationVector_byAxisVector(bodyVector,tailwingvector, abs(mousex)>4 ? (mousex>0?4f:-4f):mousex);
 ////				}
 ////				mousex*=0.9;
 ////
 ////				prevmousey = mousey;
 ////				if (abs(mousey)>0.00001) {
-////					bodyVector     = Calculater.rotationVector_byAxisVector(mainwingvector,bodyVector    ,abs(mousey)>4?(mousey>0?-4f:4f):-mousey);
-////					tailwingvector = Calculater.rotationVector_byAxisVector(mainwingvector,tailwingvector,abs(mousey)>4?(mousey>0?-4f:4f):-mousey);
+////					bodyVector     = Utils.rotationVector_byAxisVector(mainwingvector,bodyVector    ,abs(mousey)>4?(mousey>0?-4f:4f):-mousey);
+////					tailwingvector = Utils.rotationVector_byAxisVector(mainwingvector,tailwingvector,abs(mousey)>4?(mousey>0?-4f:4f):-mousey);
 ////				}
 ////				mousey*=0.9;
 ////				prevyawladder = yawladder;
 ////				yawladder *=0.8;
 ////				if(abs(yawladder) < 0.001) yawladder = prevyawladder =0;else {
-////					bodyVector = Calculater.rotationVector_byAxisVector(tailwingvector, bodyVector, yawladder);
-////					mainwingvector = Calculater.rotationVector_byAxisVector(tailwingvector, mainwingvector, yawladder);
+////					bodyVector = Utils.rotationVector_byAxisVector(tailwingvector, bodyVector, yawladder);
+////					mainwingvector = Utils.rotationVector_byAxisVector(tailwingvector, mainwingvector, yawladder);
 ////				}
 ////				bodyrotationPitch = wrapAngleTo180_float((float) toDegrees(asin(bodyVector.yCoord)));
 ////
@@ -694,28 +690,28 @@ public class GVCEntityPlane extends Entity implements Iplane,IMultiTurretVehicle
 //		this.dataWatcher.updateObject(27,(int)health);
 //	}
 
-	void hudUpdate(){
-		if(trackedEntityPos != null)
-		for(float[] pos :trackedEntityPos){
-			if(pos.length == 3){
-				if(FMLClientHandler.instance().getClientPlayerEntity().getDistanceSq(pos[0],
-						pos[1],
-						pos[2])>4096) {
-					Vector3d toentityVec = new Vector3d(
-							pos[0] - FMLClientHandler.instance().getClientPlayerEntity().posX,
-							pos[1] - FMLClientHandler.instance().getClientPlayerEntity().posY + FMLClientHandler.instance().getClientPlayerEntity().getEyeHeight(),
-							pos[2] - FMLClientHandler.instance().getClientPlayerEntity().posZ
-					);
-					toentityVec.normalize();
-					toentityVec.scale(64);
-					pos[0] = (float) (toentityVec.x + FMLClientHandler.instance().getClientPlayerEntity().posX);
-					pos[1] = (float) (toentityVec.y + FMLClientHandler.instance().getClientPlayerEntity().posY + FMLClientHandler.instance().getClientPlayerEntity().getEyeHeight());
-					pos[2] = (float) (toentityVec.z + FMLClientHandler.instance().getClientPlayerEntity().posZ);
-				}
-				HandmadeGunsCore.proxy.spawnParticles(new PacketSpawnParticle(pos[0],pos[1],pos[2], 2));
-			}
-		}
-	}
+//	void hudUpdate(){
+//		if(trackedEntityPos != null)
+//		for(float[] pos :trackedEntityPos){
+//			if(pos.length == 3){
+//				if(FMLClientHandler.instance().getClientPlayerEntity().getDistanceSq(pos[0],
+//						pos[1],
+//						pos[2])>4096) {
+//					Vector3d toentityVec = new Vector3d(
+//							pos[0] - FMLClientHandler.instance().getClientPlayerEntity().posX,
+//							pos[1] - FMLClientHandler.instance().getClientPlayerEntity().posY + FMLClientHandler.instance().getClientPlayerEntity().getEyeHeight(),
+//							pos[2] - FMLClientHandler.instance().getClientPlayerEntity().posZ
+//					);
+//					toentityVec.normalize();
+//					toentityVec.scale(64);
+//					pos[0] = (float) (toentityVec.x + FMLClientHandler.instance().getClientPlayerEntity().posX);
+//					pos[1] = (float) (toentityVec.y + FMLClientHandler.instance().getClientPlayerEntity().posY + FMLClientHandler.instance().getClientPlayerEntity().getEyeHeight());
+//					pos[2] = (float) (toentityVec.z + FMLClientHandler.instance().getClientPlayerEntity().posZ);
+//				}
+//				HandmadeGunsCore.proxy.spawnParticles(new PacketSpawnParticle(pos[0],pos[1],pos[2], 2));
+//			}
+//		}
+//	}
 //	void seatUpdate(Vector3d mainwingvector,Vector3d tailwingvector,Vector3d bodyvector){
 //		for(int i = 0; i< childEntities.length; i++){
 //			EntityChild achild = childEntities[i];
@@ -795,10 +791,10 @@ public class GVCEntityPlane extends Entity implements Iplane,IMultiTurretVehicle
 //				Quat4d quat4d = new Quat4d();
 //				quat4d.inverse(bodyRot);
 //				quat4d.normalize();
-//				axisstall = Calculater.transformVecByQuat(axisstall,quat4d);
+//				axisstall = Utils.transformVecByQuat(axisstall,quat4d);
 //				if(! Double.isNaN(axisstall.x) && ! Double.isNaN(axisstall.y) && ! Double.isNaN(axisstall.z)) {
 //					AxisAngle4d axisxangledstall = new AxisAngle4d(axisstall, abs(cos) * acos(-cos) / 500);
-//					rotationmotion = Calculater.quatRotateAxis(rotationmotion, axisxangledstall);
+//					rotationmotion = Utils.quatRotateAxis(rotationmotion, axisxangledstall);
 //				}
 //			}
 //		}
@@ -879,9 +875,9 @@ public class GVCEntityPlane extends Entity implements Iplane,IMultiTurretVehicle
 //				attackEntityFrom(DamageSource.fall, (float) (30));
 //			}
 //			AxisAngle4d axisxangled = new AxisAngle4d(axisx, toRadians(-bodyrotationPitch/10));
-//			bodyRot = Calculater.quatRotateAxis(bodyRot,axisxangled);
+//			bodyRot = Utils.quatRotateAxis(bodyRot,axisxangled);
 //
-//			axisx = Calculater.transformVecByQuat(new Vector3d(unitZ), bodyRot);
+//			axisx = Utils.transformVecByQuat(new Vector3d(unitZ), bodyRot);
 //			if(bodyrotationRoll<45 && bodyrotationRoll>-45){
 //				axisxangled = new AxisAngle4d(axisx, toRadians(-bodyrotationRoll/10));
 //			}
@@ -901,7 +897,7 @@ public class GVCEntityPlane extends Entity implements Iplane,IMultiTurretVehicle
 //				attackEntityFrom(DamageSource.fall, (float) (30));
 //				axisxangled = new AxisAngle4d(axisx, toRadians((-180-bodyrotationRoll)/10));
 //			}
-//			bodyRot = Calculater.quatRotateAxis(bodyRot,axisxangled);
+//			bodyRot = Utils.quatRotateAxis(bodyRot,axisxangled);
 //
 //			gearprogress = 100;
 //		}else {
@@ -926,9 +922,9 @@ public class GVCEntityPlane extends Entity implements Iplane,IMultiTurretVehicle
 //			flaplevel=75;
 //		}
 //		nboundingbox.rot.set(this.bodyRot);
-//		nboundingbox.updateOBB(posX,posY,posZ);
+//		nboundingbox.update(posX,posY,posZ);
 //		((ModifiedBoundingBox)this.boundingBox).rot.inverse(this.bodyRot);
-//		((ModifiedBoundingBox)this.boundingBox).updateOBB(this.posX,this.posY,this.posZ);
+//		((ModifiedBoundingBox)this.boundingBox).update(this.posX,this.posY,this.posZ);
 //
 //		if(childEntities[0]!=null) {
 //			childEntities[0].motionX = this.motionX;
@@ -1057,12 +1053,6 @@ public class GVCEntityPlane extends Entity implements Iplane,IMultiTurretVehicle
 		}
 		return baseLogic.turrets;
 	}
-	public void addAllTurret(ArrayList<TurretObj> turrets , TurretObj current){
-		turrets.add(current);
-		for(TurretObj a_child :current.getChilds()){
-			addAllTurret(turrets,a_child);
-		}
-	}
 	
 	@Override
 	public int getMobMode() {
@@ -1070,7 +1060,7 @@ public class GVCEntityPlane extends Entity implements Iplane,IMultiTurretVehicle
 	}
 	
 	@Override
-	public double[] getwaitingpos() {
+	public double[] getTargetpos() {
 		return new double[0];
 	}
 	

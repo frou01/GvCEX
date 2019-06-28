@@ -275,7 +275,7 @@ public class EntityBulletBase extends Entity implements IProjectile, IEntityAddi
 					// 発射後5tickは射手に当たらない
 					if (entity1.canBeCollidedWith()
 							&& (entity1 != entitylivingbase || this.ticksInAir >= 5)) {
-						float f = 0.3F;
+						float f = 0.1F;
 						AxisAlignedBB axisalignedbb =
 								entity1.boundingBox.expand((double) f, (double) f, (double) f);
 						MovingObjectPosition movingobjectposition1 =

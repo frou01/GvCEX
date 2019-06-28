@@ -21,6 +21,7 @@ public class EntityJPN_S extends EntityJPNBase
 		aiAttackGun.assault = true;
 		aiAttackGun.assaultrange = 30;
 		spread = 1;
+		interval = 10;
 	}
 	protected void applyEntityAttributes()
 	{

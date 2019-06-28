@@ -10,11 +10,10 @@ import handmadeguns.client.render.HMGGunParts_Motions;
 import hmggvcmob.SlowPathFinder.WorldForPathfind;
 import hmggvcmob.network.GVCMPacketHandler;
 import hmggvcmob.network.GVCPacketMGControl;
-import hmggvcmob.util.Calculater;
-import hmvehicle.entity.EntityChild;
-import hmvehicle.entity.parts.IControlable;
+import hmvehicle.Utils;
+import hmvehicle.entity.parts.ModifiedBoundingBox;
+import hmvehicle.entity.parts.OBB;
 import hmvehicle.entity.parts.SeatInfo;
-import hmvehicle.entity.parts.logics.IbaseLogic;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
@@ -27,6 +26,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
 
+import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Quat4d;
 import javax.vecmath.Vector3d;
 
@@ -35,6 +35,9 @@ import java.util.Random;
 
 import static hmggvcmob.GVCMobPlus.METAL_GEAR;
 import static hmggvcmob.GVCMobPlus.proxy;
+import static hmvehicle.Utils.quatRotateAxis;
+import static hmvehicle.Utils.transformVecByQuat;
+import static hmvehicle.HMVehicle.proxy_HMVehicle;
 import static java.lang.Math.*;
 import static net.minecraft.util.MathHelper.wrapAngleTo180_float;
 
@@ -107,6 +110,7 @@ public class EntityMGAX55 extends Entity {
     public int rocketreloadCnt;
     public int rocketreload;
     public int rocketMagazine = 90;
+    public Quat4d bodyRot = new Quat4d(0,0,0,1);
 
 
 
@@ -118,7 +122,6 @@ public class EntityMGAX55 extends Entity {
     public Vector3d xVector = new Vector3d();
     public Vector3d yVector = new Vector3d();
     public Vector3d zVector = new Vector3d();
-    public EntityChild[] childEntities = new EntityChild[6];
     public SeatInfo[] SeatInfo = new SeatInfo[6];
     private HMGGunParts_Motions onforwardmotions = new HMGGunParts_Motions();;
     public Entity pilot;
@@ -131,8 +134,11 @@ public class EntityMGAX55 extends Entity {
     int weaponchangeCnt;
 
     int moveMode = 0;
-
-
+    
+    public ModifiedBoundingBox nboundingbox;
+    public static final Vector3d unitX = new Vector3d(1,0,0);
+    public static final Vector3d unitY = new Vector3d(0,1,0);
+    public static final Vector3d unitZ = new Vector3d(0,0,1);
     public float pilotseatoffsety;
     @Override
     protected void entityInit() {
@@ -148,8 +154,18 @@ public class EntityMGAX55 extends Entity {
     }
     public EntityMGAX55(World p_i1582_1_) {
         super(p_i1582_1_);
-
-        setSize(5,10);
+        setSize(10,10);
+    
+//        World.MAX_ENTITY_RADIUS = 32;
+        nboundingbox = new ModifiedBoundingBox(-2.5,0,-2.5,2.5,10,2.5,
+                                                                          0,5,0,5,10,5);
+        nboundingbox.rot.set(this.bodyRot);
+        nboundingbox.boxes = new OBB[7];
+        initseat(nboundingbox);
+        nboundingbox.calculateMax_And_Min();
+        proxy.replaceBoundingbox(this,nboundingbox);
+        ((ModifiedBoundingBox)this.boundingBox).update(this.posX,this.posY,this.posZ);
+        
         stepHeight = 5;
 
         this.navigator = new GearPathNavigate(this,worldObj);
@@ -243,59 +259,66 @@ public class EntityMGAX55 extends Entity {
         motion.setup();
         onforwardmotions.addmotion(motion);
     }
-    public void initseat(){
-        for (int i = 0; i< childEntities.length; i++) {
-            SeatInfo[i] = new SeatInfo();
-            if(!worldObj.isRemote) {
-                childEntities[i] = new EntityChild(worldObj,1,1,true);
-                childEntities[i].setLocationAndAngles(this.posX,this.posY,this.posZ,0,0);
-                childEntities[i].master = this;
-                childEntities[i].idinmasterEntityt = i;
-                childEntities[i].rideable = i == 0;
-                worldObj.spawnEntityInWorld(childEntities[i]);
-            }
-            switch (i){
-                case 0:
-                    SeatInfo[i].pos[0] = 0;
-                    SeatInfo[i].pos[1] = 7.35;
-                    SeatInfo[i].pos[2] = 2.65;
-                    if(childEntities[i] != null){
-                        childEntities[i].setsize(3,3);
-                        childEntities[i].rideable = true;
-                    }
-                    break;
-                case 1:
-                    SeatInfo[i].pos[0] = -1.23;
-                    SeatInfo[i].pos[1] = 0;
-                    SeatInfo[i].pos[2] = 0;
-                    if(childEntities[i] != null) childEntities[i].setsize(3,6);
-                    break;
-                case 2:
-                    SeatInfo[i].pos[0] = 1.23;
-                    SeatInfo[i].pos[1] = 0;
-                    SeatInfo[i].pos[2] = 0;
-                    if(childEntities[i] != null) childEntities[i].setsize(3,6);
-                    break;
-                case 3:
-                    SeatInfo[i].pos[0] = 0;
-                    SeatInfo[i].pos[1] = 6.5;
-                    SeatInfo[i].pos[2] = 0;
-                    if(childEntities[i] != null) childEntities[i].setsize(5,3);
-                    break;
-                case 4:
-                    SeatInfo[i].pos[0] = 0;
-                    SeatInfo[i].pos[1] = 8.2;
-                    SeatInfo[i].pos[2] = -4.6;
-                    if(childEntities[i] != null) childEntities[i].setsize(5,3);
-                    break;
-                case 5:
-                    SeatInfo[i].pos[0] = 5.5;
-                    SeatInfo[i].pos[1] = 10.2;
-                    SeatInfo[i].pos[2] = -3.8;
-                    if(childEntities[i] != null) childEntities[i].setsize(3,3);
-                    break;
-            }
-        }
+    public void initseat(ModifiedBoundingBox motherBox){
+        motherBox.boxes[0] = new OBB(new Vector3d(0,7.325,-2.65),new Vector3d(1.5,1.5,1.5));
+        motherBox.boxes[1] = new OBB(new Vector3d(-1.23,1.5,0),new Vector3d(1.5,3,1.5));
+        motherBox.boxes[2] = new OBB(new Vector3d(1.23,1.5,0),new Vector3d(1.5,3,1.5));
+        motherBox.boxes[3] = new OBB(new Vector3d(0,6.5,0),new Vector3d(2.5,1.5,2.5));
+        motherBox.boxes[4] = new OBB(new Vector3d(0, 8.2, 4.6),new Vector3d(2.5,1.5,2.5));
+        motherBox.boxes[5] = new OBB(new Vector3d(-5.5 ,10.2, 3.8),new Vector3d(1.5,1.5,1.5));
+        motherBox.boxes[6] = new OBB(new Vector3d(5.5 ,10.2, 3.8),new Vector3d(1.5,1.5,4));
+//        for (int i = 0; i< childEntities.length; i++) {
+//            SeatInfo[i] = new SeatInfo();
+//            if(!worldObj.isRemote) {
+//                childEntities[i] = new EntityChild(worldObj,1,1,true);
+//                childEntities[i].setLocationAndAngles(this.posX,this.posY,this.posZ,0,0);
+//                childEntities[i].master = this;
+//                childEntities[i].idinmasterEntityt = i;
+//                childEntities[i].rideable = i == 0;
+//                worldObj.spawnEntityInWorld(childEntities[i]);
+//            }
+//            switch (i){
+//                case 0:
+//                    SeatInfo[i].pos[0] = 0;
+//                    SeatInfo[i].pos[1] = 7.35;
+//                    SeatInfo[i].pos[2] = 2.65;
+//                    if(childEntities[i] != null){
+//                        childEntities[i].setsize(3,3);
+//                        childEntities[i].rideable = true;
+//                    }
+//                    break;
+//                case 1:
+//                    SeatInfo[i].pos[0] = -1.23;
+//                    SeatInfo[i].pos[1] = 0;
+//                    SeatInfo[i].pos[2] = 0;
+//                    if(childEntities[i] != null) childEntities[i].setsize(3,6);
+//                    break;
+//                case 2:
+//                    SeatInfo[i].pos[0] = 1.23;
+//                    SeatInfo[i].pos[1] = 0;
+//                    SeatInfo[i].pos[2] = 0;
+//                    if(childEntities[i] != null) childEntities[i].setsize(3,6);
+//                    break;
+//                case 3:
+//                    SeatInfo[i].pos[0] = 0;
+//                    SeatInfo[i].pos[1] = 6.5;
+//                    SeatInfo[i].pos[2] = 0;
+//                    if(childEntities[i] != null) childEntities[i].setsize(5,3);
+//                    break;
+//                case 4:
+//                    SeatInfo[i].pos[0] = 0;
+//                    SeatInfo[i].pos[1] = 8.2;
+//                    SeatInfo[i].pos[2] = -4.6;
+//                    if(childEntities[i] != null) childEntities[i].setsize(5,3);
+//                    break;
+//                case 5:
+//                    SeatInfo[i].pos[0] = 5.5;
+//                    SeatInfo[i].pos[1] = 10.2;
+//                    SeatInfo[i].pos[2] = -3.8;
+//                    if(childEntities[i] != null) childEntities[i].setsize(3,3);
+//                    break;
+//            }
+//        }
     }
 
     public boolean attackEntityFrom(DamageSource source, float par2)
@@ -303,9 +326,7 @@ public class EntityMGAX55 extends Entity {
         if(source.getEntity() == this){
             return false;
         }
-        if(this.childEntities[0] != null && source.getEntity() == this.childEntities[0].riddenByEntity){
-            return false;
-        }
+        if(this.riddenByEntity == source.getEntity())return false;
         if(par2 <= 50){
             this.playSound("random.anvil_land", 0.5F, 1F);
             return false;
@@ -319,34 +340,32 @@ public class EntityMGAX55 extends Entity {
         return super.attackEntityFrom(source, par2);
 
     }
-    public void onUpdate()
-    {
-        if(!isinit){
-            isinit = true;
-            initseat();
-        }
-        xVector.set(-1,0,0);
-        yVector.set(0,1,0);
-        zVector.set(0,0,1);
-        Calculater.RotateVectorAroundY(xVector,-bodyrotationYaw);
-        Calculater.RotateVectorAroundY(zVector,-bodyrotationYaw);
-        if(childEntities[0] != null){
-            pilot = childEntities[0].riddenByEntity;
-        }
-        if(worldObj.isRemote){
+    public void onUpdate() {
+        nboundingbox.update(this.posX,this.posY,this.posZ);
+        bodyRot = new Quat4d(0,0,0,1);
+        Vector3d axisy = transformVecByQuat(new Vector3d(unitY), bodyRot);
+        AxisAngle4d axisyangled = new AxisAngle4d(axisy, toRadians(bodyrotationYaw)/2);
+        bodyRot = quatRotateAxis(bodyRot,axisyangled);
+        nboundingbox.rot = bodyRot;
+        xVector.set(-1, 0, 0);
+        yVector.set(0, 1, 0);
+        zVector.set(0, 0, 1);
+        Utils.RotateVectorAroundY(xVector, -bodyrotationYaw);
+        Utils.RotateVectorAroundY(zVector, -bodyrotationYaw);
+        if (worldObj.isRemote) {
             prevbodyrotationYaw = bodyrotationYaw;
             prevbodyrotationRoll = bodyrotationRoll;
-            prevbodyrotationYaw=wrapAngleTo180_float(prevbodyrotationYaw);
+            prevbodyrotationYaw = wrapAngleTo180_float(prevbodyrotationYaw);
             bodyrotationYaw = wrapAngleTo180_float(bodyrotationYaw);
-            if(this.health <= this.maxhealth/2) {
+            if (this.health <= this.maxhealth / 2) {
                 if (this.health <= this.maxhealth / 4) {
                     this.worldObj.spawnParticle("smoke", this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D);
                     this.worldObj.spawnParticle("smoke", this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D);
                 }
             }
-            if(pilot == FMLClientHandler.instance().getClientPlayerEntity()) {
+            if (pilot == FMLClientHandler.instance().getClientPlayerEntity()) {
                 control_Pilot();
-            }else if(pilot != null){
+            } else if (pilot != null) {
                 updateLeg();
             }
             bodyrotationYaw = this.dataWatcher.getWatchableObjectFloat(23);
@@ -354,12 +373,12 @@ public class EntityMGAX55 extends Entity {
             headrotationPitch = this.dataWatcher.getWatchableObjectFloat(4);
             RailGUNrotationYaw = this.dataWatcher.getWatchableObjectFloat(5);
             RailGUNrotationPitch = this.dataWatcher.getWatchableObjectFloat(6);
-            switch(weaponMode){
+            switch (weaponMode) {
                 case 0:
-                    if(this.dataWatcher.getWatchableObjectInt(9)==0) {
+                    if (this.dataWatcher.getWatchableObjectInt(9) == 0) {
                         railGunChargecnt = this.dataWatcher.getWatchableObjectInt(7);
                         railGunCoolcnt = 0;
-                    }else {
+                    } else {
                         railGunCoolcnt = this.dataWatcher.getWatchableObjectInt(7);
                         railGunChargecnt = 0;
                     }
@@ -373,11 +392,11 @@ public class EntityMGAX55 extends Entity {
                     break;
             }
             health = this.dataWatcher.getWatchableObjectInt(10);
-        }else{
-            if(pilot instanceof EntityPlayer){
-                ((EntityPlayer) pilot).addStat(METAL_GEAR,1);
+        } else {
+            if (pilot instanceof EntityPlayer) {
+                ((EntityPlayer) pilot).addStat(METAL_GEAR, 1);
             }
-            if(legSneak_CTRL || legSneak_State){
+            if (legSneak_CTRL || legSneak_State) {
                 pilotseatoffsety = -2.6f;
                 legmodeForward = false;
                 legmodeForwardstop = false;
@@ -399,18 +418,19 @@ public class EntityMGAX55 extends Entity {
                 legStateLeft = 0;
                 legStateTurnRight = 0;
                 legStateTurnLeft = 0;
-            }else {
+            } else {
                 pilotseatoffsety = 0;
             }
-            if(pilot instanceof EntityLivingBase) {
-                if(pilot instanceof EntityLiving) {
+            if (pilot instanceof EntityLivingBase) {
+                if (pilot instanceof EntityLiving) {
                     pilot.setLocationAndAngles(this.posX, this.posY + 6, this.posZ, ((EntityLiving) pilot).rotationYawHead, pilot.rotationPitch);
-
-                    if(((EntityLiving) pilot).getAttackTarget() != null) ((EntityLiving) pilot).getLookHelper().setLookPositionWithEntity(((EntityLiving) pilot).getAttackTarget(),360,360);
+    
+                    if (((EntityLiving) pilot).getAttackTarget() != null)
+                        ((EntityLiving) pilot).getLookHelper().setLookPositionWithEntity(((EntityLiving) pilot).getAttackTarget(), 360, 360);
                     ((EntityLiving) pilot).getLookHelper().onUpdateLook();
                 }
                 float Angulardifference;
-                if(!legSneak_CTRL && !legSneak_State) {
+                if (!legSneak_CTRL && !legSneak_State) {
                     bodyrotationYaw = wrapAngleTo180_float(bodyrotationYaw);
                     ((EntityLivingBase) pilot).rotationYawHead = wrapAngleTo180_float(((EntityLivingBase) pilot).rotationYawHead);
                     Angulardifference = wrapAngleTo180_float(bodyrotationYaw - ((EntityLivingBase) pilot).rotationYawHead);
@@ -422,59 +442,60 @@ public class EntityMGAX55 extends Entity {
                         bodyrotationYaw = ((EntityLivingBase) pilot).rotationYawHead;
                     }
                 }
-
+    
                 float temp;
                 this.headrotationYaw = wrapAngleTo180_float(this.headrotationYaw);
                 ((EntityLivingBase) pilot).rotationYawHead = wrapAngleTo180_float(((EntityLivingBase) pilot).rotationYawHead);
-
+    
                 temp = wrapAngleTo180_float(this.headrotationYaw + bodyrotationYaw);
                 Angulardifference = wrapAngleTo180_float(temp - ((EntityLivingBase) pilot).rotationYawHead);
-                if(Angulardifference > 6){
-                    temp -=6;
-                }else if(Angulardifference < -6){
-                    temp +=6;
-                }else{
+                if (Angulardifference > 6) {
+                    temp -= 6;
+                } else if (Angulardifference < -6) {
+                    temp += 6;
+                } else {
                     temp = ((EntityLivingBase) pilot).rotationYawHead;
                 }
-
+    
                 this.headrotationYaw = temp - bodyrotationYaw;
                 this.headrotationYaw = wrapAngleTo180_float(this.headrotationYaw);
-
-
-                if(headrotationYaw > 30){
+    
+    
+                if (headrotationYaw > 30) {
                     headrotationYaw = 30;
-                }else if(headrotationYaw < -30){
+                } else if (headrotationYaw < -30) {
                     headrotationYaw = -30;
                 }
-
+    
                 this.headrotationPitch = wrapAngleTo180_float(this.headrotationPitch);
                 ((EntityLivingBase) pilot).rotationPitch = wrapAngleTo180_float(((EntityLivingBase) pilot).rotationPitch);
                 Angulardifference = wrapAngleTo180_float(this.headrotationPitch - ((EntityLivingBase) pilot).rotationPitch);
-                if(Angulardifference > 6){
-                    this.headrotationPitch -=6;
-                }else if(Angulardifference < -6){
-                    this.headrotationPitch +=6;
-                }else{
+                if (Angulardifference > 6) {
+                    this.headrotationPitch -= 6;
+                } else if (Angulardifference < -6) {
+                    this.headrotationPitch += 6;
+                } else {
                     this.headrotationPitch = ((EntityLivingBase) pilot).rotationPitch;
                 }
-                if(headrotationPitch>70){
+                if (headrotationPitch > 70) {
                     headrotationPitch = 70;
-                }else if(headrotationPitch<-70){
+                } else if (headrotationPitch < -70) {
                     headrotationPitch = -70;
                 }
-                if(weaponMode == 0) {
-
-                    if(pilot instanceof EntityLiving){
+                if (weaponMode == 0) {
+    
+                    if (pilot instanceof EntityLiving) {
                         Entity target = ((EntityLiving) pilot).getAttackTarget();
-                        if(target != null){
+                        if (target != null) {
                             pilot.setLocationAndAngles(this.posX + xVector.x * (gunpos[0][0]) + yVector.x * (gunpos[0][1]) + zVector.x * gunpos[0][2]
                                     , this.posY + xVector.y * (gunpos[0][0]) + yVector.y * (gunpos[0][1]) + 4.12 + pilotseatoffsety + zVector.y * gunpos[0][2]
-                                    , this.posZ + xVector.z * (gunpos[0][0]) + yVector.z * (gunpos[0][1]) + zVector.z * gunpos[0][2],((EntityLiving) pilot).rotationYawHead,pilot.rotationPitch);
-                            if(((EntityLiving) pilot).getAttackTarget() != null) ((EntityLiving) pilot).getLookHelper().setLookPositionWithEntity(((EntityLiving) pilot).getAttackTarget(),360,360);
+                                    , this.posZ + xVector.z * (gunpos[0][0]) + yVector.z * (gunpos[0][1]) + zVector.z * gunpos[0][2], ((EntityLiving) pilot).rotationYawHead, pilot.rotationPitch);
+                            if (((EntityLiving) pilot).getAttackTarget() != null)
+                                ((EntityLiving) pilot).getLookHelper().setLookPositionWithEntity(((EntityLiving) pilot).getAttackTarget(), 360, 360);
                             ((EntityLiving) pilot).getLookHelper().onUpdateLook();
                         }
                     }
-
+    
                     temp = wrapAngleTo180_float(this.RailGUNrotationYaw + bodyrotationYaw);
                     Angulardifference = wrapAngleTo180_float(temp - ((EntityLivingBase) pilot).rotationYawHead);
                     if (Angulardifference > 2) {
@@ -484,7 +505,7 @@ public class EntityMGAX55 extends Entity {
                     } else {
                         temp = ((EntityLivingBase) pilot).rotationYawHead;
                     }
-
+    
                     this.RailGUNrotationYaw = temp - bodyrotationYaw;
                     this.RailGUNrotationYaw = wrapAngleTo180_float(this.RailGUNrotationYaw);
                     if (RailGUNrotationYaw > 10) {
@@ -492,12 +513,12 @@ public class EntityMGAX55 extends Entity {
                     } else if (RailGUNrotationYaw < -10) {
                         RailGUNrotationYaw = -10;
                     }
-
-
+    
+    
                     this.RailGUNrotationPitch = wrapAngleTo180_float(this.RailGUNrotationPitch);
                     ((EntityLivingBase) pilot).rotationPitch = wrapAngleTo180_float(((EntityLivingBase) pilot).rotationPitch);
-
-
+    
+    
                     Angulardifference = wrapAngleTo180_float(this.RailGUNrotationPitch - ((EntityLivingBase) pilot).rotationPitch);
                     if (Angulardifference > 2) {
                         this.RailGUNrotationPitch -= 2;
@@ -513,138 +534,124 @@ public class EntityMGAX55 extends Entity {
                     }
                 }
             }
-            if(pilot != null && pilot instanceof EntityLivingBase &&!(pilot instanceof EntityPlayer)) {
+            if (pilot != null && pilot instanceof EntityLivingBase && !(pilot instanceof EntityPlayer)) {
                 control_ByMob();
             }
             this.rotationYaw = bodyrotationYaw;
-            this.dataWatcher.updateObject(23,bodyrotationYaw);
-            this.dataWatcher.updateObject(3,headrotationYaw);
-            this.dataWatcher.updateObject(4,headrotationPitch);
-            this.dataWatcher.updateObject(5,RailGUNrotationYaw);
-            this.dataWatcher.updateObject(6,RailGUNrotationPitch);
-            switch(weaponMode){
+            this.dataWatcher.updateObject(23, bodyrotationYaw);
+            this.dataWatcher.updateObject(3, headrotationYaw);
+            this.dataWatcher.updateObject(4, headrotationPitch);
+            this.dataWatcher.updateObject(5, RailGUNrotationYaw);
+            this.dataWatcher.updateObject(6, RailGUNrotationPitch);
+            switch (weaponMode) {
                 case 0:
-                    if(railGunChargecnt>0)
-                        this.dataWatcher.updateObject(7,railGunChargecnt);
+                    if (railGunChargecnt > 0)
+                        this.dataWatcher.updateObject(7, railGunChargecnt);
                     else
-                        this.dataWatcher.updateObject(7,railGunCoolcnt);
-                    this.dataWatcher.updateObject(9,railGunChargecnt>0?0:1);
-                    this.dataWatcher.updateObject(8,railGunMagazine);
+                        this.dataWatcher.updateObject(7, railGunCoolcnt);
+                    this.dataWatcher.updateObject(9, railGunChargecnt > 0 ? 0 : 1);
+                    this.dataWatcher.updateObject(8, railGunMagazine);
                     break;
                 case 1:
-                    this.dataWatcher.updateObject(8,rocketMagazine);
+                    this.dataWatcher.updateObject(8, rocketMagazine);
                     break;
                 case 2:
-                    this.dataWatcher.updateObject(7,normalGunHeat);
+                    this.dataWatcher.updateObject(7, normalGunHeat);
                     break;
             }
-            this.dataWatcher.updateObject(10,(int)health);
+            this.dataWatcher.updateObject(10, (int) health);
         }
-        FCS(xVector,zVector);
-        motionUpdate(xVector,zVector);
-
-        if(health<0)setDead();
-        if(pilot == null && !worldObj.isRemote && childEntities[0] != null){
-            List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox.expand(0.20000000298023224D, 0.0D, 0.20000000298023224D));
-
-            if (list != null && !list.isEmpty()) {
-                for (int i1 = 0; i1 < list.size(); ++i1) {
-                    Entity colliedentity = (Entity) list.get(i1);
-//                    if (colliedentity != this && colliedentity != pilot && colliedentity.canBePushed() && !isChild(colliedentity) && colliedentity instanceof IFF) {
-//                        colliedentity.setCurrentItemOrArmor(0,null);
-////                        colliedentity.mountEntity(childEntities[0]);
-//                    }
-                }
-            }
-        }
-
-        double movespeed =  sqrt(motionX * motionX + motionY * motionY + motionZ * motionZ);
-
-        if(!worldObj.isRemote) {
+        FCS(xVector, zVector);
+        motionUpdate(xVector, zVector);
+    
+        if (health < 0) setDead();
+        pilot = riddenByEntity;
+    
+        double movespeed = sqrt(motionX * motionX + motionY * motionY + motionZ * motionZ);
+    
+        if (!worldObj.isRemote) {
 //            destroyNearBlocks(this.boundingBox,movespeed);
         }
 
 
-
-
-
-        for(int i = 0; i< childEntities.length; i++) {
-            EntityChild achild = childEntities[i];
-            if(achild != null && !achild.isDead) {
-                List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(achild, achild.boundingBox.expand(0.20000000298023224D, 0.0D, 0.20000000298023224D));
-
-                try {
-                    if (list != null && !list.isEmpty()) {
-                        for (int i1 = 0; i1 < list.size(); ++i1) {
-                            Entity colliedentity = (Entity) list.get(i1);
-
-                            if (!(pilot instanceof EntityPlayer) && colliedentity != null && colliedentity != this && colliedentity != pilot && colliedentity.canBePushed() && !isChild(colliedentity)) {
-                                colliedentity.attackEntityFrom(DamageSource.causeMobDamage((EntityLivingBase) pilot), (float) (64 * movespeed));
-                                ;
-                            }
-                        }
-                    }
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-                
-                if(!worldObj.isRemote) {
-
-//                    destroyNearBlocks(achild.boundingBox,movespeed);
-                }
-
-                if(i == 0){
-                    achild.rideable = true;
-                    achild.thirddist = 25;
-                }
-                achild.setLocationAndAngles(
-                          this.posX + xVector.x * SeatInfo[i].pos[0] + yVector.x * (SeatInfo[i].pos[1]) + zVector.x * SeatInfo[i].pos[2]
-                        , this.posY + xVector.y * SeatInfo[i].pos[0] + yVector.y * (SeatInfo[i].pos[1]) + pilotseatoffsety + zVector.y * SeatInfo[i].pos[2]
-                        , this.posZ + xVector.z * SeatInfo[i].pos[0] + yVector.z * (SeatInfo[i].pos[1]) + zVector.z * SeatInfo[i].pos[2]
-                        , bodyrotationYaw, 0);
-                achild.master = this;
-            }else {
-                if(!worldObj.isRemote) {
-                    childEntities[i] = new EntityChild(worldObj,1,1,true);
-                    childEntities[i].setLocationAndAngles(this.posX,this.posY,this.posZ,0,0);
-                    childEntities[i].master = this;
-                    childEntities[i].idinmasterEntityt = i;
-                    worldObj.spawnEntityInWorld(childEntities[i]);
-                }
-            }
-            switch (i){
-                case 0:
-                    if(childEntities[i] != null){
-                        childEntities[i].setsize(3,3);
-                        childEntities[i].rideable = true;
-                    }
-                    break;
-                case 1:
-                    if(childEntities[i] != null) childEntities[i].setsize(3,5);
-                    break;
-                case 2:
-                    if(childEntities[i] != null) childEntities[i].setsize(3,5);
-                    break;
-                case 3:
-                    if(childEntities[i] != null) childEntities[i].setsize(5,3);
-                    break;
-                case 4:
-                    if(childEntities[i] != null) childEntities[i].setsize(5,3);
-                    break;
-                case 5:
-                    if(childEntities[i] != null) childEntities[i].setsize(3,3);
-                    break;
-            }
-        }
+//        for(int i = 0; i< childEntities.length; i++) {
+//            EntityChild achild = childEntities[i];
+//            if(achild != null && !achild.isDead) {
+//                List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(achild, achild.boundingBox.expand(0.20000000298023224D, 0.0D, 0.20000000298023224D));
+//
+//                try {
+//                    if (list != null && !list.isEmpty()) {
+//                        for (int i1 = 0; i1 < list.size(); ++i1) {
+//                            Entity colliedentity = (Entity) list.get(i1);
+//
+//                            if (!(pilot instanceof EntityPlayer) && colliedentity != null && colliedentity != this && colliedentity != pilot && colliedentity.canBePushed() && !isChild(colliedentity)) {
+//                                colliedentity.attackEntityFrom(DamageSource.causeMobDamage((EntityLivingBase) pilot), (float) (64 * movespeed));
+//                                ;
+//                            }
+//                        }
+//                    }
+//                }catch (Exception e){
+//                    e.printStackTrace();
+//                }
+//
+//                if(!worldObj.isRemote) {
+//
+////                    destroyNearBlocks(achild.boundingBox,movespeed);
+//                }
+//
+//                if(i == 0){
+//                    achild.rideable = true;
+//                    achild.thirddist = 25;
+//                }
+//                achild.setLocationAndAngles(
+//                          this.posX + xVector.x * SeatInfo[i].pos[0] + yVector.x * (SeatInfo[i].pos[1]) + zVector.x * SeatInfo[i].pos[2]
+//                        , this.posY + xVector.y * SeatInfo[i].pos[0] + yVector.y * (SeatInfo[i].pos[1]) + pilotseatoffsety + zVector.y * SeatInfo[i].pos[2]
+//                        , this.posZ + xVector.z * SeatInfo[i].pos[0] + yVector.z * (SeatInfo[i].pos[1]) + zVector.z * SeatInfo[i].pos[2]
+//                        , bodyrotationYaw, 0);
+//                achild.master = this;
+//            }else {
+//                if(!worldObj.isRemote) {
+//                    childEntities[i] = new EntityChild(worldObj,1,1,true);
+//                    childEntities[i].setLocationAndAngles(this.posX,this.posY,this.posZ,0,0);
+//                    childEntities[i].master = this;
+//                    childEntities[i].idinmasterEntityt = i;
+//                    worldObj.spawnEntityInWorld(childEntities[i]);
+//                }
+//            }
+//            switch (i){
+//                case 0:
+//                    if(childEntities[i] != null){
+//                        childEntities[i].setsize(3,3);
+//                        childEntities[i].rideable = true;
+//                    }
+//                    break;
+//                case 1:
+//                    if(childEntities[i] != null) childEntities[i].setsize(3,5);
+//                    break;
+//                case 2:
+//                    if(childEntities[i] != null) childEntities[i].setsize(3,5);
+//                    break;
+//                case 3:
+//                    if(childEntities[i] != null) childEntities[i].setsize(5,3);
+//                    break;
+//                case 4:
+//                    if(childEntities[i] != null) childEntities[i].setsize(5,3);
+//                    break;
+//                case 5:
+//                    if(childEntities[i] != null) childEntities[i].setsize(3,3);
+//                    break;
+//            }
+//        }
+//    }
     }
 
     void control_Pilot(){
         GVCPacketMGControl packetMGControl = new GVCPacketMGControl();
-        packetMGControl.w = w =  proxy.wclick();
-        packetMGControl.a = a =  proxy.aclick();
-        packetMGControl.s = s =  proxy.sclick();
-        packetMGControl.d = d =  proxy.dclick();
-        if(proxy.wclick()){
+        packetMGControl.w = w =  proxy_HMVehicle.wclick();
+        packetMGControl.a = a =  proxy_HMVehicle.aclick();
+        packetMGControl.s = s =  proxy_HMVehicle.sclick();
+        packetMGControl.d = d =  proxy_HMVehicle.dclick();
+        if(proxy_HMVehicle.wclick()){
             legmodeForward = true;
             legmodeBack = false;
             legStateBack = 0;
@@ -663,7 +670,7 @@ public class EntityMGAX55 extends Entity {
         }
 
 
-        if(proxy.sclick()){
+        if(proxy_HMVehicle.sclick()){
             legmodeBack = true;
             legmodeForward = false;
             legStateFoward = 0;
@@ -683,7 +690,7 @@ public class EntityMGAX55 extends Entity {
 
 
 
-        if(proxy.dclick()){
+        if(proxy_HMVehicle.dclick()){
             legmodeRight = true;
             legmodeLeft = false;
             legmodeRightstop = false;
@@ -694,7 +701,7 @@ public class EntityMGAX55 extends Entity {
             legStateRight = 0;
             legmodeRight = false;
         }
-        if(proxy.aclick()){
+        if(proxy_HMVehicle.aclick()){
             legmodeLeft = true;
             legmodeRight = false;
             legmodeLeftstop = false;
@@ -705,7 +712,7 @@ public class EntityMGAX55 extends Entity {
             legStateLeft = 0;
             legmodeLeft = false;
         }
-        if(proxy.zoomclick()){
+        if(proxy_HMVehicle.zoomclick()){
             legSneak_CTRL = !legSneak_CTRL;
         }
         if(!onGround){
@@ -767,13 +774,13 @@ public class EntityMGAX55 extends Entity {
         }
 
         packetMGControl.targetID = this.getEntityId();
-        if (proxy.leftclick()) {
+        if (proxy_HMVehicle.leftclick()) {
             packetMGControl.trig1 = true;
         }
-        if (proxy.rightclick()) {
+        if (proxy_HMVehicle.rightclick()) {
             packetMGControl.trig2 = true;
         }
-        packetMGControl.sp = sp = proxy.jumped();
+        packetMGControl.sp = sp = proxy_HMVehicle.spaceKeyDown();
         packetMGControl.hold = legSneak_CTRL;
         if(legmodeForward){
             if(legStateFoward == 25||legStateFoward == 37) HandmadeGunsCore.proxy.playsoundat("gvcmob:gvcmob.Gear_Moving",5,1,1,(float)this.posX,(float)this.posY,(float)this.posZ);
@@ -800,7 +807,7 @@ public class EntityMGAX55 extends Entity {
             legStateTurnLeft+=2;
         }
 
-        if(proxy.reload_Semi())weaponMode++;
+        if(proxy_HMVehicle.reload_Semi())weaponMode++;
         if(weaponMode > 2)weaponMode = 0;
         packetMGControl.weaponmode = weaponMode;
         GVCMPacketHandler.INSTANCE.sendToServer(packetMGControl);
@@ -1174,7 +1181,7 @@ public class EntityMGAX55 extends Entity {
                         }
                     }
                 }else {
-                    if(pilot == proxy.getEntityPlayerInstance()) {
+                    if(pilot == proxy_HMVehicle.getEntityPlayerInstance()) {
                         Vec3 vec3 = Vec3.createVectorHelper(
                                 this.posX + xVector.x * (gunpos[0][0]) + yVector.x * (gunpos[0][1]) + zVector.x * gunpos[0][2],
                                 this.posY + xVector.y * (gunpos[0][0]) + yVector.y * (gunpos[0][1]) + 4.12 + pilotseatoffsety + zVector.y * gunpos[0][2],
@@ -1206,7 +1213,7 @@ public class EntityMGAX55 extends Entity {
                         double d1 = 0;
                         for (int i1 = 0; i1 < list.size(); ++i1) {
                             Entity entity1 = (Entity) list.get(i1);
-                            if (entity1 != this && entity1.canBeCollidedWith() && (entity1 != entitylivingbase) && !isChild(entity1)) {
+                            if (entity1 != this && entity1.canBeCollidedWith() && (entity1 != entitylivingbase)) {
                                 float f = 0.3F;
                                 AxisAlignedBB axisalignedbb = entity1.boundingBox.expand((double) f, (double) f, (double) f);
                                 MovingObjectPosition movingobjectposition1 = axisalignedbb.calculateIntercept(vec3, vec31);
@@ -1263,7 +1270,7 @@ public class EntityMGAX55 extends Entity {
                         double d1 = 0;
                         for (int i1 = 0; i1 < list.size(); ++i1) {
                             Entity entity1 = (Entity) list.get(i1);
-                            if (entity1 != this && entity1.canBeCollidedWith() && (entity1 != entitylivingbase) && !isChild(entity1)) {
+                            if (entity1 != this && entity1.canBeCollidedWith() && (entity1 != entitylivingbase)) {
                                 float f = 0.3F;
                                 AxisAlignedBB axisalignedbb = entity1.boundingBox.expand((double) f, (double) f, (double) f);
                                 MovingObjectPosition movingobjectposition1 = axisalignedbb.calculateIntercept(vec3, vec31);
@@ -1303,7 +1310,7 @@ public class EntityMGAX55 extends Entity {
                             FireMissile();
                         }
                     }
-                }else if(pilot == proxy.getEntityPlayerInstance()){
+                }else if(pilot == proxy_HMVehicle.getEntityPlayerInstance()){
                     Vec3 vec3 = Vec3.createVectorHelper(this.posX, this.posY + 8.5, this.posZ);
                     Vec3 playerlook = ((EntityLivingBase) pilot).getLook(1.0f);
                     playerlook = Vec3.createVectorHelper(playerlook.xCoord * 256, playerlook.yCoord * 256, playerlook.zCoord * 256);
@@ -1323,7 +1330,7 @@ public class EntityMGAX55 extends Entity {
                     double d1 = 0;
                     for (int i1 = 0; i1 < list.size(); ++i1) {
                         Entity entity1 = (Entity) list.get(i1);
-                        if (entity1 != this && entity1.canBeCollidedWith() && (entity1 != entitylivingbase) && !isChild(entity1)) {
+                        if (entity1 != this && entity1.canBeCollidedWith() && (entity1 != entitylivingbase)) {
                             float f = 0.3F;
                             AxisAlignedBB axisalignedbb = entity1.boundingBox.expand((double) f, (double) f, (double) f);
                             MovingObjectPosition movingobjectposition1 = axisalignedbb.calculateIntercept(vec3, vec31);
@@ -1496,26 +1503,19 @@ public class EntityMGAX55 extends Entity {
 
     }
 
-    public EntityChild[] getChildren() {
-        return childEntities;
-    }
+//    public EntityChild[] getChildren() {
+//        return childEntities;
+//    }
 
-    public void addChild(EntityChild seat) {
-        if(seat.idinmasterEntityt != -1 && seat.idinmasterEntityt < childEntities.length){
-            this.childEntities[seat.idinmasterEntityt] = seat;
-        }
-    }
+//    public void addChild(EntityChild seat) {
+//        if(seat.idinmasterEntityt != -1 && seat.idinmasterEntityt < childEntities.length){
+//            this.childEntities[seat.idinmasterEntityt] = seat;
+//        }
+//    }
 
     public boolean isRidingEntity(Entity entity) {
-        for(int i = 0; i < childEntities.length; i++){
-            if(childEntities[i] != null){
-                if(childEntities[i].riddenByEntity == entity){
-//                    System.out.println("debug");
-                    return true;
-                }
-            }
-        }
-        return false;
+        
+        return entity == riddenByEntity;
     }
 
 
@@ -1528,27 +1528,27 @@ public class EntityMGAX55 extends Entity {
     }
     @Override
     public boolean interactFirst(EntityPlayer entityplayer) {
-        if(entityplayer.isSneaking()) {
-            if (entityplayer.getEquipmentInSlot(0) != null) {
-                ItemStack itemstack = entityplayer.getEquipmentInSlot(0);
-                if (itemstack.getItem() == Items.iron_ingot) {
-                    itemstack.stackSize--;
-                    this.health += 20;
-                    if(this.health > maxhealth)health = maxhealth;
-                    if (itemstack.stackSize <= 0 && !entityplayer.capabilities.isCreativeMode) {
-                        entityplayer.destroyCurrentEquippedItem();
+        if(!worldObj.isRemote) {
+            if (entityplayer.isSneaking()) {
+                if (entityplayer.getEquipmentInSlot(0) != null) {
+                    ItemStack itemstack = entityplayer.getEquipmentInSlot(0);
+                    if (itemstack.getItem() == Items.iron_ingot) {
+                        itemstack.stackSize--;
+                        this.health += 20;
+                        if (this.health > maxhealth) health = maxhealth;
+                        if (itemstack.stackSize <= 0 && !entityplayer.capabilities.isCreativeMode) {
+                            entityplayer.destroyCurrentEquippedItem();
+                        }
                     }
+                    return true;
                 }
+            }else
+            if (riddenByEntity == null && entityplayer.ridingEntity == null) {
+                entityplayer.mountEntity(this);
                 return true;
             }
         }
-        if (riddenByEntity != null && (riddenByEntity instanceof EntityPlayer) && riddenByEntity != entityplayer) {
-            return true;
-        }
-        if (!worldObj.isRemote && childEntities[0] != null && childEntities[0].riddenByEntity == null) {
-            entityplayer.mountEntity(childEntities[0]);
-        }
-        return true;
+        return false;
     }
     public boolean canBePushed()
     {
@@ -1559,12 +1559,12 @@ public class EntityMGAX55 extends Entity {
         return true;
     }
 
-    public boolean isChild(Entity entity){
-        for(Entity achild:childEntities){
-            if(entity == achild)return true;
-        }
-        return entity == this;
-    }
+//    public boolean isChild(Entity entity){
+//        for(Entity achild:childEntities){
+//            if(entity == achild)return true;
+//        }
+//        return entity == this;
+//    }
 
     public int getpilotseatid() {
         return -1;

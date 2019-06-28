@@ -13,10 +13,22 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
 public class CommonSideProxyGVCM {
-	static Field nextstepdistance;
+	public static Field nextstepdistance;
 	Field boundingboxField = null;
 	Field modifiersField = null;
-	public void reisterRenderers(){}
+	public void initSome(){
+		try {
+			nextstepdistance = Entity.class.getDeclaredField("field_70150_b");
+		} catch (Exception e) {
+			e.printStackTrace();
+			try {
+				nextstepdistance = Entity.class.getDeclaredField("nextStepDistance");
+			}catch (Exception ea){
+				ea.printStackTrace();
+			}
+		}
+		nextstepdistance.setAccessible(true);
+	}
 	
 	public World getCilentWorld(){
 		return null;}
@@ -28,16 +40,6 @@ public class CommonSideProxyGVCM {
 		GameRegistry.registerTileEntity(TileEntityFlag.class, "FlagTile");
 		GameRegistry.registerTileEntity(TileEntityMobSpawner_Extend.class, "MobspawnerEX");
 		//������
-		try {
-			nextstepdistance = ReflectionHelper.findField(Entity.class,"field_70150_b");
-		} catch (Exception e) {
-			e.printStackTrace();
-			try {
-				nextstepdistance = ReflectionHelper.findField(Entity.class,"nextStepDistance");
-			}catch (Exception ea){
-				ea.printStackTrace();
-			}
-		}
 	}
 	public void setNextstepdistance(Entity instance, int value){
 		try {
@@ -84,55 +86,5 @@ public class CommonSideProxyGVCM {
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		}
-	}
-	public boolean reload(){
-		return false;
-	}
-	public boolean reload_Semi(){
-		return false;
-	}
-	
-	public boolean jumped(){
-		return false;
-	}
-	
-	public boolean leftclick(){
-		return false;
-	}
-	public boolean leftclickreplacer(){
-		return false;
-	}
-	
-	public boolean rightclick(){
-		return false;
-	}
-	public boolean xclick(){
-		return false;
-	}
-	public boolean wclick(){
-		return false;
-	}
-	public boolean aclick(){
-		return false;
-	}
-	public boolean sclick(){
-		return false;
-	}
-	public boolean dclick(){
-		return false;
-	}
-	public boolean zoomclick(){
-		return false;
-	}
-	public boolean fclick(){
-		return false;
-	}
-
-	public int mcbow(){
-		return 1;
-	}
-	public EntityPlayer getEntityPlayerInstance() {return null;}
-	public boolean iszooming(){
-		return false;
 	}
 }

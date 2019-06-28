@@ -3,6 +3,7 @@ package hmgww2.entity;
 
 import hmggvcmob.GVCMobPlus;
 import hmggvcmob.ai.AITankAttack;
+import hmvehicle.entity.parts.OBB;
 import hmvehicle.entity.parts.SeatInfo;
 import hmvehicle.entity.parts.turrets.FireRist;
 import hmvehicle.entity.parts.ModifiedBoundingBox;
@@ -21,20 +22,58 @@ public class EntityJPN_ShipD extends EntityJPN_ShipBase
 		super(par1World);
 		this.setSize(7, 10);
 		ignoreFrustumCheck = true;
-		renderDistanceWeight = Double.MAX_VALUE;
+		renderDistanceWeight = 1024*1024;
 		
-		nboundingbox = new ModifiedBoundingBox(boundingBox.minX,boundingBox.minY,boundingBox.minZ,boundingBox.maxX,boundingBox.maxY,boundingBox.maxZ,
-				                                      0,5,-10.53,
+		baseLogic = new VesselBaseLogic(this,0.02f,0.6f,false,"hmgww2:hmgww2.VesselTurbine");
+		baseLogic.canControlonWater = true;
+		baseLogic.always_poit_to_target = false;
+		
+		nboundingbox = new ModifiedBoundingBox(-7,0,-7,7,13,7,
+				                                      0,6.5,8.6,
 				                                      10,13,82);
+		nboundingbox.boxes = new OBB[7];
+		
+		nboundingbox.boxes[0] = new OBB
+				                        (
+						                        new Vector3d(0,2.6,40),
+						                        new Vector3d(5.6,5.7,5)
+				                        );
+		nboundingbox.boxes[1] = new OBB
+				                        (
+						                        new Vector3d(0,2.6,28),
+						                        new Vector3d(7.5,5.7,18.5)
+				                        );
+		nboundingbox.boxes[2] = new OBB
+				                        (
+						                        new Vector3d(0,2.6,13.5),
+						                        new Vector3d(7.5,5.7,13.5)
+				                        );
+		nboundingbox.boxes[3] = new OBB
+				                        (
+						                        new Vector3d(0,2.6,-2.1),
+						                        new Vector3d(7.5,5.7,19.5)
+				                        );
+		nboundingbox.boxes[4] = new OBB
+				                        (
+						                        new Vector3d(0,2.6,-2.1),
+						                        new Vector3d(7.5,5.7,19.5)
+				                        );
+		nboundingbox.boxes[5] = new OBB
+				                        (
+						                        new Vector3d(0,3.6,-17  ),
+						                        new Vector3d(7.5,7.6,19.5)
+				                        );
+		nboundingbox.boxes[6] = new OBB
+				                        (
+						                        new Vector3d(0,4,-33  ),
+						                        new Vector3d(5,8.3,13.5)
+				                        );
+		
 		nboundingbox.rot.set(baseLogic.bodyRot);
 		GVCMobPlus.proxy.replaceBoundingbox(this,nboundingbox);
 		nboundingbox.centerRotX = 0;
 		nboundingbox.centerRotY = 0;
 		nboundingbox.centerRotZ = 0;
-		
-		baseLogic = new VesselBaseLogic(this,0.02f,2.0f,false,"hmgww2:hmgww2.VesselTurbine");
-		baseLogic.canControlonWater = true;
-		baseLogic.always_poit_to_target = false;
 		aiTankAttack = new AITankAttack(this,3600,900,10,10);
 		aiTankAttack.setAlways_movearound(true);
 		this.tasks.addTask(1,aiTankAttack);
@@ -64,8 +103,8 @@ public class EntityJPN_ShipD extends EntityJPN_ShipBase
 		
 		TurretObj mainTurret1 = new TurretObj(worldObj);
 		{
-			mainTurret1.onmotherPos = turretpos;
-			mainTurret1.cannonpos = cannonpos;
+			mainTurret1.onMotherPos = turretpos;
+			mainTurret1.cannonPos = cannonpos;
 			mainTurret1.turretPitchCenterpos = new Vector3d(0,0.7329,0.01402);
 			mainTurret1.turretspeedY = 5;
 			mainTurret1.turretspeedP = 8;
@@ -86,8 +125,8 @@ public class EntityJPN_ShipD extends EntityJPN_ShipBase
 		turretpos = new Vector3d(0,5.8224,9.864);
 		TurretObj mainTurret2 = new TurretObj(worldObj);
 		{
-			mainTurret2.onmotherPos = turretpos;
-			mainTurret2.cannonpos = cannonpos;
+			mainTurret2.onMotherPos = turretpos;
+			mainTurret2.cannonPos = cannonpos;
 			mainTurret2.turretPitchCenterpos = new Vector3d(0,0.7329,0.01402);
 			mainTurret2.turretspeedY = 5;
 			mainTurret2.turretspeedP = 8;
@@ -108,8 +147,8 @@ public class EntityJPN_ShipD extends EntityJPN_ShipBase
 		turretpos = new Vector3d(0,5.311,3.527);
 		TurretObj torp1 = new TurretObj(worldObj);
 		{
-			torp1.onmotherPos = turretpos;
-			torp1.cannonpos = cannonpos;
+			torp1.onMotherPos = turretpos;
+			torp1.cannonPos = cannonpos;
 			torp1.turretPitchCenterpos = new Vector3d(0,0,0);
 			torp1.turretspeedY = 5;
 			torp1.turretspeedP = 8;
@@ -120,13 +159,13 @@ public class EntityJPN_ShipD extends EntityJPN_ShipBase
 			torp1.powor = 2400;
 			torp1.ex = 1.0F;
 			torp1.cycle_setting = 20;
-			torp1.firesound = null;
-			torp1.flushName = null;
+			torp1.firesound = "hmgww2:hmgww2.TorpLaunch";
+			torp1.flashName = null;
 			torp1.spread = 4;
 			torp1.speed = 1f;
 			torp1.acceler = 0.001f;
-			torp1.magazinerem = 1;
-			torp1.magazineMax = 1;
+			torp1.magazinerem = 2;
+			torp1.magazineMax = 2;
 			torp1.reloadSetting = 1200;
 			torp1.canex = true;
 			torp1.guntype = 11;
@@ -136,11 +175,11 @@ public class EntityJPN_ShipD extends EntityJPN_ShipBase
 			torp1.fireRists = new FireRist[]{new FireRist(150,30,90,-90),new FireRist(-30,-150,90,-90)};
 		}
 		
-		turretpos = new Vector3d(-2.7768,5.311,37.6780);
+		turretpos = new Vector3d(-1.7710,5.311,44.3919);
 		TurretObj depth_charge1 = new TurretObj(worldObj);
 		{
-			depth_charge1.onmotherPos = turretpos;
-			depth_charge1.cannonpos = cannonpos;
+			depth_charge1.onMotherPos = turretpos;
+			depth_charge1.cannonPos = cannonpos;
 			depth_charge1.turretPitchCenterpos = new Vector3d(0,0,0);
 			depth_charge1.turretspeedY = 5;
 			depth_charge1.turretspeedP = 8;
@@ -151,10 +190,10 @@ public class EntityJPN_ShipD extends EntityJPN_ShipBase
 			depth_charge1.traverseSound = null;
 			depth_charge1.currentEntity = this;
 			depth_charge1.powor = 100;
-			depth_charge1.ex = 10.0F;
-			depth_charge1.cycle_setting = 7;
+			depth_charge1.ex = 1;
+			depth_charge1.cycle_setting = 20;
 			depth_charge1.firesound = null;
-			depth_charge1.flushName = null;
+			depth_charge1.flashName = null;
 			depth_charge1.spread = 4;
 			depth_charge1.speed = 0.4f;
 			depth_charge1.magazinerem = 20;
@@ -162,14 +201,16 @@ public class EntityJPN_ShipD extends EntityJPN_ShipBase
 			depth_charge1.reloadSetting = 1200;
 			depth_charge1.canex = true;
 			depth_charge1.guntype = 2;
+			depth_charge1.resistanceinwater = 1;
 			depth_charge1.fuse = 30;
+			depth_charge1.damageRange = 30;
 			depth_charge1.bulletmodel = "byfrou01_depth_charge";
 		}
-		turretpos = new Vector3d(2.7768,5.311,37.6780);
+			turretpos = new Vector3d(1.7710,5.311,44.3919);
 		TurretObj depth_charge2 = new TurretObj(worldObj);
 		{
-			depth_charge2.onmotherPos = turretpos;
-			depth_charge2.cannonpos = cannonpos;
+			depth_charge2.onMotherPos = turretpos;
+			depth_charge2.cannonPos = cannonpos;
 			depth_charge2.turretPitchCenterpos = new Vector3d(0,0,0);
 			depth_charge2.turretspeedY = 5;
 			depth_charge2.turretspeedP = 8;
@@ -180,10 +221,10 @@ public class EntityJPN_ShipD extends EntityJPN_ShipBase
 			depth_charge2.traverseSound = null;
 			depth_charge2.currentEntity = this;
 			depth_charge2.powor = 100;
-			depth_charge2.ex = 10.0F;
-			depth_charge2.cycle_setting = 7;
+			depth_charge2.ex = 1;
+			depth_charge2.cycle_setting = 20;
 			depth_charge2.firesound = null;
-			depth_charge2.flushName = null;
+			depth_charge2.flashName = null;
 			depth_charge2.spread = 4;
 			depth_charge2.speed = 0.4f;
 			depth_charge2.magazinerem = 20;
@@ -191,7 +232,9 @@ public class EntityJPN_ShipD extends EntityJPN_ShipBase
 			depth_charge2.reloadSetting = 1200;
 			depth_charge2.canex = true;
 			depth_charge2.guntype = 2;
+			depth_charge2.resistanceinwater = 1;
 			depth_charge2.fuse = 30;
+			depth_charge2.damageRange = 30;
 			depth_charge2.bulletmodel = "byfrou01_depth_charge";
 		}
 		
@@ -199,7 +242,11 @@ public class EntityJPN_ShipD extends EntityJPN_ShipBase
 		mainturrets = new TurretObj[]{mainTurret1,mainTurret2};
 		subturrets = new TurretObj[]{torp1};
 		SPturrets = new TurretObj[]{depth_charge1,depth_charge2};
-		armor = 12;
+		armor = 24;
+		armor_Top_cof =
+				armor_Front_cof =
+						armor_Back_cof =
+								armor_Side_cof = 1;
 	}
 	public void onUpdate() {
 		if (this.standalone()) {
@@ -216,6 +263,14 @@ public class EntityJPN_ShipD extends EntityJPN_ShipBase
 					if (!pickupEntity(entityJPN_s, 1)) entityJPN_s.setDead();
 				}
 				
+			}
+			if(usingSP && getAttackTarget() != null){
+				if(getsubTurrets() != null)for(TurretObj aturret :getsubTurrets()){
+					if(getAttackTarget().getDistanceSq(aturret.pos.x,getAttackTarget().posY,-aturret.pos.z) < 900) {
+						aturret.currentEntity = this;
+						aturret.fire();
+					}
+				}
 			}
 		}
 		super.onUpdate();

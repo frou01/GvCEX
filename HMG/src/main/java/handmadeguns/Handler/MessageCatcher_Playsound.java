@@ -29,8 +29,10 @@ public class MessageCatcher_Playsound implements IMessageHandler<PacketPlaysound
                     else {
                         if(message.isreload)
                             proxy.playsoundatEntity_reload(message.sound, message.level, message.speed, shooter, false);
+                        else if(message.time != -1)
+                            proxy.playsoundatEntity(message.sound, message.level, message.speed, shooter, false, message.time);
                         else
-                            proxy.playsoundat(message.sound, message.level, message.speed,1, shooter.posX,shooter.posY,shooter.posZ);
+                            proxy.playsoundat(message.sound, message.level, message.speed, message.speed, shooter.posX, shooter.posY , shooter.posZ);
                     }
                 }
             }

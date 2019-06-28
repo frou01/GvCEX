@@ -23,6 +23,7 @@ public class EntityUSA_S extends EntityUSABase
 		aiAttackGun.assault = true;
 		aiAttackGun.assaultrange = 40;
 		spread = 3;
+		interval = 4;
 	}
 	protected void applyEntityAttributes()
 	{
@@ -43,6 +44,11 @@ public class EntityUSA_S extends EntityUSABase
 	public void addRandomArmor()
 	{
 		super.addRandomArmor();
+		addGun(type);
+		this.setCurrentItemOrArmor(4, new ItemStack(mod_GVCWW2.armor_usa));
+	}
+	
+	public void addGun(int type){
 		int iii = this.worldObj.rand.nextInt(10);
 		if(iii == 0){
 			this.setCurrentItemOrArmor(0, new ItemStack(mod_GVCWW2.gun_m1917));
@@ -77,9 +83,7 @@ public class EntityUSA_S extends EntityUSABase
 			aiAttackGun.minshootrange = 20;
 			aiAttackGun.assaultrange = 30;
 		}
-		this.setCurrentItemOrArmor(4, new ItemStack(mod_GVCWW2.armor_jpn));
 	}
-	
 	public void onUpdate()
 	{
 		super.onUpdate();

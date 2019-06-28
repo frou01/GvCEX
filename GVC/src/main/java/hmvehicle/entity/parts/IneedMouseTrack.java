@@ -1,5 +1,5 @@
 package hmvehicle.entity.parts;
 
 public interface IneedMouseTrack {
-	public void setMouse(int x,int y);
+	public void setMouse(float x,float y,float z);
 }

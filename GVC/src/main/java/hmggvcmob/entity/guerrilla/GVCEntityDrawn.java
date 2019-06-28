@@ -3,7 +3,7 @@ package hmggvcmob.entity.guerrilla;
 import handmadeguns.entity.bullets.HMGEntityBulletExprode;
 import hmggvcmob.GVCMobPlus;
 import hmggvcmob.entity.GVCEx;
-import hmggvcmob.util.Calculater;
+import hmvehicle.Utils;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
@@ -18,7 +18,7 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
 import static handmadeguns.HandmadeGunsCore.cfg_defgravitycof;
-import static hmggvcmob.util.Calculater.CalculateGunElevationAngle;
+import static hmvehicle.Utils.CalculateGunElevationAngle;
 import static java.lang.Math.*;
 import static java.lang.Math.abs;
 import static net.minecraft.util.MathHelper.wrapAngleTo180_float;
@@ -378,8 +378,8 @@ public class GVCEntityDrawn extends EntityGBase {
     }
     public Vec3 getupperVec()
     {
-        Vec3 bodyVector     = Calculater.getLook(1,bodyrotationYaw,bodyrotationPitch);
-        return Calculater.rotationVector_byAxisVector(bodyVector,Calculater.getLook(1,bodyrotationYaw+90,0),bodyrotationRoll+90);
+        Vec3 bodyVector     = Utils.getLook(1,bodyrotationYaw,bodyrotationPitch);
+        return Utils.rotationVector_byAxisVector(bodyVector, Utils.getLook(1,bodyrotationYaw+90,0),bodyrotationRoll+90);
     }
     public boolean getCanSpawnHere()
     {

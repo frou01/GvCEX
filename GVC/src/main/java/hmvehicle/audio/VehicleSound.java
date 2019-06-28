@@ -16,7 +16,7 @@ import static java.lang.Math.sqrt;
 public class VehicleSound extends MovingSound
 {
 	private final Entity attachedEntity;
-	private final HasLoopSound hasBaselogic;
+	private final HasLoopSound hasLoopSound;
 	private float maxdist;
 	private double disttoPlayer = -1;
 	
@@ -24,7 +24,7 @@ public class VehicleSound extends MovingSound
 	{
 		super(new ResourceLocation(((HasLoopSound) p_i45105_1_).getBaseLogic().getsound()));
 		this.attachedEntity = p_i45105_1_;
-		this.hasBaselogic = (HasLoopSound) p_i45105_1_;
+		this.hasLoopSound = (HasLoopSound) p_i45105_1_;
 		this.repeat = true;
 		this.field_147665_h = 0;
 		this.maxdist = maxdist;
@@ -42,19 +42,19 @@ public class VehicleSound extends MovingSound
 		}
 		else
 		{
-			hasBaselogic.getBaseLogic().yourSoundIsremain();
+			hasLoopSound.yourSoundIsremain();
 			this.xPosF = (float)this.attachedEntity.posX;
 			this.yPosF = (float)this.attachedEntity.posY;
 			this.zPosF = (float)this.attachedEntity.posZ;
 			double prevdisttoPlayer = disttoPlayer;
 			disttoPlayer = attachedEntity.getDistanceSqToEntity(proxy.getMCInstance().renderViewEntity);
-			float soundpitch = hasBaselogic.getBaseLogic().getsoundPitch();
+			float soundpitch = hasLoopSound.getBaseLogic().getsoundPitch();
 			this.field_147663_c = 0.0F;
-			volume = 10;
+			volume = 4;
 			
 			if (disttoPlayer < maxdist * maxdist) {
 				
-				if(disttoPlayer > volume*4 * volume*4)volume = (float) (sqrt(disttoPlayer)/4);
+				if(disttoPlayer > volume * volume)volume = (float) (sqrt(disttoPlayer));
 				
 				Vector3d playerPos = new Vector3d(proxy.getMCInstance().renderViewEntity.posX,proxy.getMCInstance().renderViewEntity.posY,proxy.getMCInstance().renderViewEntity.posZ);
 				Vector3d thisPos = new Vector3d(xPosF,yPosF,zPosF);

@@ -11,6 +11,7 @@ public class PacketPlaysound implements IMessage {
     public String sound;
     public float speed;
     public float level;
+    public int time = -1;
     
     public boolean isreload = false;
 
@@ -20,10 +21,15 @@ public class PacketPlaysound implements IMessage {
         sound = so;
         speed =sp;
         level = lv;
+        
     }
     public PacketPlaysound(Entity shootentity, String so,float sp,float lv,boolean isreload){
         this(shootentity,so,sp,lv);
         this.isreload = isreload;
+    }
+    public PacketPlaysound(Entity shootentity, String so,float sp,float lv,int time){
+        this(shootentity,so,sp,lv);
+        this.time = time;
     }
 
 
@@ -31,6 +37,7 @@ public class PacketPlaysound implements IMessage {
     public void toBytes(ByteBuf buffer)
     {
         buffer.writeInt(shooterid);
+        buffer.writeInt(time);
         try {
             byte[] soundname = fromObject(this.sound);
             buffer.writeInt(soundname.length);
@@ -47,6 +54,7 @@ public class PacketPlaysound implements IMessage {
     public void fromBytes(ByteBuf buffer)
     {
         shooterid = buffer.readInt();
+        time = buffer.readInt();
         byte[] temp = new byte[buffer.readInt()];
         buffer.readBytes(temp);
         try {

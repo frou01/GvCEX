@@ -4,6 +4,7 @@ BulletGravity,0.485
 Class,0
 BlletSpread,10.0f
 ADS_Spread_coefficient,0.9
+BlletSpreadDiffusion,8,0,4,0.5,4,2
 Cycle,1
 
 Recoil,6

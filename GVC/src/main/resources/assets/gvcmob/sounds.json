@@ -172,5 +172,11 @@
     "sounds": [
       "ArmorBounce"
     ]
+  },
+  "gvcmob.Arty_reload": {
+    "category": "neutral",
+    "sounds": [
+      "Arty_reload"
+    ]
   }
 }

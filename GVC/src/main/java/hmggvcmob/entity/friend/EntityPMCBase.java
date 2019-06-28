@@ -106,16 +106,6 @@ public class EntityPMCBase extends EntitySoBases implements IFF,IGVCmob {
 		this.targetTasks.addTask(3, new AINearestAttackableTarget(this, EntityLiving.class, 0, true, false, IMob.mobSelector));
 	}
 
-	public boolean CanAttack(Entity entity) {
-		boolean cri = true;
-		if ((entity instanceof EntityMob) && !entity.isDead  && ((EntityLivingBase) entity).getHealth() > 0.0F && getEntitySenses().canSee(entity)) {
-			return true;
-		}else {
-			return false;
-		}
-	}
-
-
 
 
 	public boolean canAttackClass(Class par1Class) {
@@ -123,8 +113,9 @@ public class EntityPMCBase extends EntitySoBases implements IFF,IGVCmob {
 	}
 	public void onUpdate()
     {
+	    this.getEntityData().setBoolean("HMGisUsingItem",false);
         super.onUpdate();
-        if(this.getAttackTarget() != null && (this.getAttackTarget() instanceof EntitySoBases || this.getAttackTarget() instanceof EntityPlayer || (islmmloaded && this.getAttackTarget() instanceof LMM_EntityLittleMaid)))this.setAttackTarget(null);
+        
 		if(this.getHeldItem() != null) {
 			if(this.getHeldItem().hasTagCompound()){
 				if(this.getHeldItem().getItem() instanceof HMGItem_Unified_Guns)((HMGItem_Unified_Guns)this.getHeldItem().getItem()).checkTags(this.getHeldItem());
@@ -211,7 +202,6 @@ public class EntityPMCBase extends EntitySoBases implements IFF,IGVCmob {
 				}
 			}
 		}
-		this.getEntityData().setBoolean("HMGisUsingItem",false);
 		if(rand.nextInt(10) == 0) this.addPotionEffect(new PotionEffect(Potion.regeneration.id, 1, 2));
     }
 	
@@ -349,7 +339,7 @@ public class EntityPMCBase extends EntitySoBases implements IFF,IGVCmob {
 	public void setspawnedtile(TileEntity flag) {
 
 	}
-	public double[] getwaitingpos() {
+	public double[] getTargetpos() {
 		return new double[]{homeposX,homeposY,homeposZ};
 	}
 }

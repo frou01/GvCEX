@@ -1,6 +1,6 @@
 package hmvehicle.entity.parts;
 
-import hmggvcmob.util.Calculater;
+import hmvehicle.Utils;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
@@ -8,54 +8,72 @@ import net.minecraft.util.Vec3;
 import javax.vecmath.Quat4d;
 import javax.vecmath.Vector3d;
 
-import static hmggvcmob.util.Calculater.*;
+import static hmvehicle.Utils.*;
 import static java.lang.Math.abs;
 
 public class ModifiedBoundingBox extends AxisAlignedBB {
-    public double centerOffsetX = 0;
-    public double centerOffsetY = 0;
-    public double centerOffsetZ = 0;
     public double centerRotX = 0;
     public double centerRotY = 0;
     public double centerRotZ = 0;
-    public double realmaxX;
-    public double realmaxY;
-    public double realmaxZ;
-    public double minXforColCheck;
-    public double minYforColCheck;
-    public double minZforColCheck;
-    public double maxXforColCheck;
-    public double maxYforColCheck;
-    public double maxZforColCheck;
+    
+//    public double centerOffsetX = 0;
+//    public double centerOffsetY = 0;
+//    public double centerOffsetZ = 0;
+//    public double realmaxX;
+//    public double realmaxY;
+//    public double realmaxZ;
+//    public double minXforColCheck;
+//    public double minYforColCheck;
+//    public double minZforColCheck;
+//    public double maxXforColCheck;
+//    public double maxYforColCheck;
+//    public double maxZforColCheck;
+    
+    public Vector3d maxvertex = new Vector3d();
+    public Vector3d minvertex = new Vector3d();
+    public OBB[] boxes = new OBB[1];
 
     public double posX;
     public double posY;
     public double posZ;
+    
+    double expandedminX = 0;
+    double expandedminY = 0;
+    double expandedminZ = 0;
+    double expandedmaxX = 0;
+    double expandedmaxY = 0;
+    double expandedmaxZ = 0;
 
     public Quat4d rot = new Quat4d(0,0,0,1);
 
-    public static ModifiedBoundingBox getBoundingBox(double p_72330_0_, double p_72330_2_, double p_72330_4_, double p_72330_6_, double p_72330_8_, double p_72330_10_,ModifiedBoundingBox origin)
+    public static ModifiedBoundingBox getBoundingBox(double newminX, double newminY, double newminZ, double newMaxX, double newMaxY, double newMaxZ,ModifiedBoundingBox origin)
     {
-        ModifiedBoundingBox newbox = new ModifiedBoundingBox(p_72330_0_, p_72330_2_, p_72330_4_, p_72330_6_, p_72330_8_, p_72330_10_);
-        newbox.realmaxX = origin.realmaxX;
-        newbox.realmaxY = origin.realmaxY;
-        newbox.realmaxZ = origin.realmaxZ;
+        ModifiedBoundingBox newbox = new ModifiedBoundingBox(newminX, newminY, newminZ, newMaxX, newMaxY, newMaxZ);
+        newbox.expandedminX = newminX - origin.minX;
+        newbox.expandedminY = newminY - origin.minY;
+        newbox.expandedminZ = newminZ - origin.minZ;
+        newbox.expandedmaxX = newMaxX - origin.maxX;
+        newbox.expandedmaxY = newMaxY - origin.maxY;
+        newbox.expandedmaxZ = newMaxZ - origin.maxZ;
+        
+        
+        
+        
+        newbox.boxes = origin.boxes;
+        newbox.maxvertex = origin.maxvertex;
+        newbox.minvertex = origin.minvertex;
+//        newbox.realmaxY = origin.realmaxY;
+//        newbox.realmaxZ = origin.realmaxZ;
         newbox.posX = origin.posX;
         newbox.posY = origin.posY;
         newbox.posZ = origin.posZ;
         newbox.centerRotX = origin.centerRotX;
         newbox.centerRotY = origin.centerRotY;
         newbox.centerRotZ = origin.centerRotZ;
-        newbox.centerOffsetX = origin.centerOffsetX;
-        newbox.centerOffsetY = origin.centerOffsetY;
-        newbox.centerOffsetZ = origin.centerOffsetZ;
+//        newbox.centerOffsetX = origin.centerOffsetX;
+//        newbox.centerOffsetY = origin.centerOffsetY;
+//        newbox.centerOffsetZ = origin.centerOffsetZ;
         newbox.rot = origin.rot;
-        newbox.minXforColCheck =  origin.minXforColCheck;
-        newbox.minYforColCheck =  origin.minYforColCheck;
-        newbox.minZforColCheck =  origin.minZforColCheck;
-        newbox.maxXforColCheck =  origin.maxXforColCheck;
-        newbox.maxYforColCheck =  origin.maxYforColCheck;
-        newbox.maxZforColCheck =  origin.maxZforColCheck;
         return newbox;
     }
     public ModifiedBoundingBox(double p_i2300_1_, double p_i2300_3_, double p_i2300_5_, double p_i2300_7_, double p_i2300_9_, double p_i2300_11_) {
@@ -63,13 +81,36 @@ public class ModifiedBoundingBox extends AxisAlignedBB {
     }
     public ModifiedBoundingBox(double p_i2300_1_, double p_i2300_3_, double p_i2300_5_, double p_i2300_7_, double p_i2300_9_, double p_i2300_11_,double cOffX,double cOffY,double cOffZ,double rMX,double rMY,double rMZ) {
         super(p_i2300_1_, p_i2300_3_, p_i2300_5_, p_i2300_7_, p_i2300_9_, p_i2300_11_);
-        centerOffsetX = cOffX;
-        centerOffsetY = cOffY;
-        centerOffsetZ = cOffZ;
-
-        realmaxX = rMX;
-        realmaxY = rMY;
-        realmaxZ = rMZ;
+//        centerOffsetX = cOffX;
+//        centerOffsetY = cOffY;
+//        centerOffsetZ = cOffZ;
+//
+//        realmaxX = rMX;
+//        realmaxY = rMY;
+//        realmaxZ = rMZ;
+        boxes[0] = new OBB(new Vector3d(cOffX, cOffY, cOffZ),
+                                  new Vector3d(rMX,
+                                                      rMY,
+                                                      rMZ));
+        maxvertex.add(boxes[0].GetPos_W(),boxes[0].size);
+        minvertex.sub(boxes[0].GetPos_W(),boxes[0].size);
+        calculateMax_And_Min();
+    }
+    public void calculateMax_And_Min(){
+        //X
+        for(OBB abox:boxes){
+            Vector3d tempMaxvertex = new Vector3d();
+            tempMaxvertex.add(abox.pos,abox.size);
+            Vector3d tempminvertex = new Vector3d();
+            tempminvertex.sub(abox.pos,abox.size);
+            if(maxvertex.x < tempMaxvertex.x)maxvertex.x = tempMaxvertex.x;
+            if(maxvertex.y < tempMaxvertex.y)maxvertex.y = tempMaxvertex.y;
+            if(maxvertex.z < tempMaxvertex.z)maxvertex.z = tempMaxvertex.z;
+            
+            if(minvertex.x > tempminvertex.x)minvertex.x = tempminvertex.x;
+            if(minvertex.y > tempminvertex.y)minvertex.y = tempminvertex.y;
+            if(minvertex.z > tempminvertex.z)minvertex.z = tempminvertex.z;
+        }
     }
     public AxisAlignedBB setBounds(double p_72324_1_, double p_72324_3_, double p_72324_5_, double p_72324_7_, double p_72324_9_, double p_72324_11_)
     {
@@ -142,21 +183,7 @@ public class ModifiedBoundingBox extends AxisAlignedBB {
         /**
          * Returns a bounding box with the specified bounds. Args: minX, minY, minZ, maxX, maxY, maxZ
          */
-        ModifiedBoundingBox returner = new ModifiedBoundingBox(d3, d4, d5, d6, d7, d8,centerOffsetX,centerOffsetY,centerOffsetZ,
-                realmaxX,
-                realmaxY,
-                realmaxZ);
-        returner.centerRotX = this.centerRotX;
-        returner.centerRotY = this.centerRotY;
-        returner.centerRotZ = this.centerRotZ;
-        returner.centerOffsetX = this.centerOffsetX;
-        returner.centerOffsetY = this.centerOffsetY;
-        returner.centerOffsetZ = this.centerOffsetZ;
-        returner.posX = this.posX;
-        returner.posY = this.posY;
-        returner.posZ = this.posZ;
-        returner.rot = this.rot;
-        return returner;
+        return getBoundingBox(d3, d4, d5, d6, d7, d8, this);
 
     }
 
@@ -337,44 +364,65 @@ public class ModifiedBoundingBox extends AxisAlignedBB {
 //    }
 
 
-    public void updateOBB(double posX,double posY,double posZ){
+    public void update(double posX, double posY, double posZ){
         this.posX = posX;
         this.posY = posY;
         this.posZ = posZ;
-        Vector3d[] points = {
-                new Vector3d(centerOffsetX + realmaxX/2,centerOffsetY + realmaxY/2,centerOffsetZ + realmaxZ/2),
-                new Vector3d(centerOffsetX + realmaxX/2,centerOffsetY + realmaxY/2,centerOffsetZ - realmaxZ/2),
-                new Vector3d(centerOffsetX + realmaxX/2,centerOffsetY - realmaxY/2,centerOffsetZ + realmaxZ/2),
-                new Vector3d(centerOffsetX + realmaxX/2,centerOffsetY - realmaxY/2,centerOffsetZ - realmaxZ/2),
-                new Vector3d(centerOffsetX - realmaxX/2,centerOffsetY - realmaxY/2,centerOffsetZ + realmaxZ/2),
-                new Vector3d(centerOffsetX - realmaxX/2,centerOffsetY - realmaxY/2,centerOffsetZ - realmaxZ/2),
-                new Vector3d(centerOffsetX - realmaxX/2,centerOffsetY + realmaxY/2,centerOffsetZ + realmaxZ/2),
-                new Vector3d(centerOffsetX - realmaxX/2,centerOffsetY + realmaxY/2,centerOffsetZ - realmaxZ/2)};
-        Vector3d rotcenterVec = new Vector3d(centerRotX,centerRotY,centerRotZ);
-        for(int i =0;i<points.length;i++){
-            Vector3d temp = points[i];
-            temp.sub(rotcenterVec);
-            temp.set(Calculater.transformVecByQuat(temp,rot));
-            transformVecforMinecraft(temp);
-            temp.add(rotcenterVec);
+//        Vector3d[] points = {
+//                new Vector3d(maxvertex.x,maxvertex.y,maxvertex.z),
+//                new Vector3d(maxvertex.x,maxvertex.y,minvertex.z),
+//                new Vector3d(maxvertex.x,minvertex.y,maxvertex.z),
+//                new Vector3d(maxvertex.x,minvertex.y,minvertex.z),
+//                new Vector3d(minvertex.x,maxvertex.y,maxvertex.z),
+//                new Vector3d(minvertex.x,maxvertex.y,minvertex.z),
+//                new Vector3d(minvertex.x,minvertex.y,maxvertex.z),
+//                new Vector3d(minvertex.x,minvertex.y,minvertex.z)};
+//        Vector3d rotcenterVec = new Vector3d(centerRotX,centerRotY,centerRotZ);
+//        for(int i =0;i<points.length;i++){
+//            Vector3d temp = points[i];
+//            temp.sub(rotcenterVec);
+//            temp.set(Utils.transformVecByQuat(temp,rot));
+//            transformVecforMinecraft(temp);
+//            temp.add(rotcenterVec);
+//        }
+//
+//        minXforColCheck = this.posX + (Utils.getmininsomeVectors(points,0));
+//        minYforColCheck = this.posY + (Utils.getmininsomeVectors(points,1));
+//        minZforColCheck = this.posZ + (Utils.getmininsomeVectors(points,2));
+//        maxXforColCheck = this.posX + (Utils.getMaxinsomeVectors(points,0));
+//        maxYforColCheck = this.posY + (Utils.getMaxinsomeVectors(points,1));
+//        maxZforColCheck = this.posZ + (Utils.getMaxinsomeVectors(points,2));
+        for(OBB abox:boxes){
+            abox.updateColChecker(this);
+//            System.out.println("debug" + abox);
         }
-    
-        minXforColCheck = this.posX + (Calculater.getmininsomeVectors(points,0))-1;
-        minYforColCheck = this.posY + (Calculater.getmininsomeVectors(points,1))-1;
-        minZforColCheck = this.posZ + (Calculater.getmininsomeVectors(points,2))-1;
-        maxXforColCheck = this.posX + (Calculater.getMaxinsomeVectors(points,0))+1;
-        maxYforColCheck = this.posY + (Calculater.getMaxinsomeVectors(points,1))+1;
-        maxZforColCheck = this.posZ + (Calculater.getMaxinsomeVectors(points,2))+1;
     }
-
+@Override
     public boolean intersectsWith(AxisAlignedBB hittingbox){
-//        System.out.println("debug hiting max x " + (hittingbox.maxZ));
-//        System.out.println("debug hiting min x " + (hittingbox.minZ));
-//        System.out.println("debug max x " + (maxZ));
-        return
-                hittingbox.maxX > minXforColCheck  && hittingbox.minX < maxXforColCheck &&
-                hittingbox.maxY > minYforColCheck  && hittingbox.minY < maxYforColCheck &&
-                hittingbox.maxZ > minZforColCheck  && hittingbox.minZ < maxZforColCheck;
+//        System.out.println("debug" + hittingbox);
+//        int cnt = 0;
+//        if(hittingbox.maxX - hittingbox.minX > 1) {
+//            System.out.println("debug" + hittingbox);
+//        }
+        for(OBB abox:boxes){
+//            if(hittingbox.maxX - hittingbox.minX > 1){
+//                System.out.println("debug" + cnt + " , " + abox);
+//            }
+//            if(abox.intersectsWith(this,hittingbox))
+            if(abox.intersectsWith(this,hittingbox)){
+                return true;
+            }
+//            cnt++;
+        }
+        return false;
+        
+////        System.out.println("debug hiting max x " + (hittingbox.maxZ));
+////        System.out.println("debug hiting min x " + (hittingbox.minZ));
+////        System.out.println("debug max x " + (maxZ));
+//        return
+//                hittingbox.maxX > minXforColCheck  && hittingbox.minX < maxXforColCheck &&
+//                hittingbox.maxY > minYforColCheck  && hittingbox.minY < maxYforColCheck &&
+//                hittingbox.maxZ > minZforColCheck  && hittingbox.minZ < maxZforColCheck;
     }
 
     /**
@@ -400,10 +448,15 @@ public class ModifiedBoundingBox extends AxisAlignedBB {
      */
     public boolean isVecInside(Vec3 p_72318_1_)
     {
-        return
-                p_72318_1_.xCoord > minXforColCheck  && p_72318_1_.xCoord < maxXforColCheck  &&
-                p_72318_1_.yCoord > minYforColCheck  && p_72318_1_.yCoord < maxYforColCheck  &&
-                p_72318_1_.zCoord > minZforColCheck  && p_72318_1_.zCoord < maxZforColCheck  ;
+//        return
+//                p_72318_1_.xCoord > minXforColCheck  && p_72318_1_.xCoord < maxXforColCheck  &&
+//                p_72318_1_.yCoord > minYforColCheck  && p_72318_1_.yCoord < maxYforColCheck  &&
+//                p_72318_1_.zCoord > minZforColCheck  && p_72318_1_.zCoord < maxZforColCheck  ;
+    
+        for(OBB abox:boxes){
+            if(abox.isVecInside(this,p_72318_1_))return true;
+        }
+        return false;
     }
 
     /**
@@ -458,136 +511,144 @@ public class ModifiedBoundingBox extends AxisAlignedBB {
         transformVecforMinecraft(startVec);
         transformVecforMinecraft(endVec);
 
-        startVec = Calculater.transformVecByQuat(startVec,temp);
-        endVec = Calculater.transformVecByQuat(endVec,temp);
+        startVec = Utils.transformVecByQuat(startVec,temp);
+        endVec = Utils.transformVecByQuat(endVec,temp);
 
         startVec.add(rotcenterVec);
         endVec.add(rotcenterVec);
 //
 //        System.out.println("1"+startVec);
 //        System.out.println("2"+endVec);
-
-        Vector3d vec32 = getIntermediateWithXValue(startVec,endVec, -(this.realmaxX/2) + centerOffsetX);
-        Vector3d vec33 = getIntermediateWithXValue(startVec,endVec,  (this.realmaxX/2) + centerOffsetX);
-
-        Vector3d vec34 = getIntermediateWithYValue(startVec,endVec, -(this.realmaxY/2) + centerOffsetY);
-        Vector3d vec35 = getIntermediateWithYValue(startVec,endVec,  (this.realmaxY/2) + centerOffsetY);
-
-        Vector3d vec36 = getIntermediateWithZValue(startVec,endVec, -(this.realmaxZ/2) + centerOffsetZ);
-        Vector3d vec37 = getIntermediateWithZValue(startVec,endVec,  (this.realmaxZ/2) + centerOffsetZ);
-
-
-
-
-        if (!this.isVecInYZ(getMinecraftVecObj(vec32)))
-        {
-            vec32 = null;
+        Vector3d[] tempHitpoint = new Vector3d[boxes.length];
+        int[] tempHitSide = new int[boxes.length];
+        for(int cnt = 0;cnt < boxes.length;cnt++) {
+            VectorAndHitSide vectorAndHitSide = boxes[cnt].getIntercept(this,startVec,endVec,posVec,rotcenterVec);
+            tempHitpoint[cnt] = vectorAndHitSide.vector3d;
+            tempHitSide[cnt] = vectorAndHitSide.hitside;
+//            System.out.println(" " + cnt + "" + tempHitpoint[cnt]);
+//            System.out.println("debug" + vectorAndHitSide.vector3d);
+//            Vector3d tempMaxvertex = new Vector3d();
+//            tempMaxvertex.add(boxes[cnt].pos,boxes[cnt].size);
+//            Vector3d tempminvertex = new Vector3d();
+//            tempminvertex.sub(boxes[cnt].pos,boxes[cnt].size);
+//            Vector3d vec32 = getIntermediateWithXValue(startVec, endVec, tempminvertex.x);
+//            Vector3d vec33 = getIntermediateWithXValue(startVec, endVec, tempMaxvertex.x);
+//
+//            Vector3d vec34 = getIntermediateWithYValue(startVec, endVec, tempminvertex.y);
+//            Vector3d vec35 = getIntermediateWithYValue(startVec, endVec, tempMaxvertex.y);
+//
+//            Vector3d vec36 = getIntermediateWithZValue(startVec, endVec, tempminvertex.z);
+//            Vector3d vec37 = getIntermediateWithZValue(startVec, endVec, tempMaxvertex.z);
+//
+//
+//            if (!this.isVecInYZ(getMinecraftVecObj(vec32))) {
+//                vec32 = null;
+//            }
+//
+//            if (!this.isVecInYZ(getMinecraftVecObj(vec33))) {
+//                vec33 = null;
+//            }
+//
+//            if (!this.isVecInXZ(getMinecraftVecObj(vec34))) {
+//                vec34 = null;
+//            }
+//
+//            if (!this.isVecInXZ(getMinecraftVecObj(vec35))) {
+//                vec35 = null;
+//            }
+//
+//            if (!this.isVecInXY(getMinecraftVecObj(vec36))) {
+//                vec36 = null;
+//            }
+//
+//            if (!this.isVecInXY(getMinecraftVecObj(vec37))) {
+//                vec37 = null;
+//            }
+//
+//            Vector3d vec38 = null;
+//
+//            if (vec32 != null) {
+//                vec38 = vec32;
+//            }
+//
+//            if (vec33 != null && (vec38 == null || getDistanceSq(startVec, vec33) < getDistanceSq(startVec, vec38))) {
+//                vec38 = vec33;
+//            }
+//
+//            if (vec34 != null && (vec38 == null || getDistanceSq(startVec, vec34) < getDistanceSq(startVec, vec38))) {
+//                vec38 = vec34;
+//            }
+//
+//            if (vec35 != null && (vec38 == null || getDistanceSq(startVec, vec35) < getDistanceSq(startVec, vec38))) {
+//                vec38 = vec35;
+//            }
+//
+//            if (vec36 != null && (vec38 == null || getDistanceSq(startVec, vec36) < getDistanceSq(startVec, vec38))) {
+//                vec38 = vec36;
+//            }
+//
+//            if (vec37 != null && (vec38 == null || getDistanceSq(startVec, vec37) < getDistanceSq(startVec, vec38))) {
+//                vec38 = vec37;
+//            }
+//
+//            if (vec38 == null) {
+////                return null;
+//            } else {
+//                byte b0 = -1;
+//
+//                if (vec38 == vec32) {
+//                    b0 = 4;
+//                }
+//
+//                if (vec38 == vec33) {
+//                    b0 = 5;
+//                }
+//
+//                if (vec38 == vec34) {
+//                    b0 = 0;
+//                }
+//
+//                if (vec38 == vec35) {
+//                    b0 = 1;
+//                }
+//
+//                if (vec38 == vec36) {
+//                    b0 = 2;
+//                }
+//
+//                if (vec38 == vec37) {
+//                    b0 = 3;
+//                }
+//
+//                vec38.sub(rotcenterVec);
+//                vec38 = Utils.transformVecByQuat(vec38, rot);
+//                transformVecforMinecraft(vec38);
+//                vec38.add(rotcenterVec);
+////            System.out.println("3"+vec38);
+//
+//                vec38.add(posVec);
+////                return new MovingObjectPosition(0, 0, 0, b0, getMinecraftVecObj(vec38));
+//                tempHitpoint[cnt] = vec38;
+//                tempHitSide[cnt] = b0;
+//            }
         }
-
-        if (!this.isVecInYZ(getMinecraftVecObj(vec33)))
-        {
-            vec33 = null;
-        }
-
-        if (!this.isVecInXZ(getMinecraftVecObj(vec34)))
-        {
-            vec34 = null;
-        }
-
-        if (!this.isVecInXZ(getMinecraftVecObj(vec35)))
-        {
-            vec35 = null;
-        }
-
-        if (!this.isVecInXY(getMinecraftVecObj(vec36)))
-        {
-            vec36 = null;
-        }
-
-        if (!this.isVecInXY(getMinecraftVecObj(vec37)))
-        {
-            vec37 = null;
-        }
-
-        Vector3d vec38 = null;
-
-        if (vec32 != null)
-        {
-            vec38 = vec32;
-        }
-
-        if (vec33 != null && (vec38 == null || getDistanceSq(startVec,vec33) < getDistanceSq(startVec,vec38)))
-        {
-            vec38 = vec33;
-        }
-
-        if (vec34 != null && (vec38 == null || getDistanceSq(startVec,vec34) < getDistanceSq(startVec,vec38)))
-        {
-            vec38 = vec34;
-        }
-
-        if (vec35 != null && (vec38 == null || getDistanceSq(startVec,vec35) < getDistanceSq(startVec,vec38)))
-        {
-            vec38 = vec35;
-        }
-
-        if (vec36 != null && (vec38 == null || getDistanceSq(startVec,vec36) < getDistanceSq(startVec,vec38)))
-        {
-            vec38 = vec36;
-        }
-
-        if (vec37 != null && (vec38 == null || getDistanceSq(startVec,vec37) < getDistanceSq(startVec,vec38)))
-        {
-            vec38 = vec37;
-        }
-
-        if (vec38 == null)
-        {
-            return null;
-        }
-        else
-        {
-            byte b0 = -1;
-
-            if (vec38 == vec32)
-            {
-                b0 = 4;
+        Vector3d temp_return = null;
+        int hitside = -1;
+        double dist = -1;
+        for(int cnt = 0;cnt < tempHitpoint.length;cnt++){
+            Vector3d a_Hitpoint = tempHitpoint[cnt];
+            if(a_Hitpoint == null)continue;
+            double tempdist = start.squareDistanceTo(a_Hitpoint.x,a_Hitpoint.y,a_Hitpoint.z);
+            if(tempdist < dist || dist == -1){
+                dist = tempdist;
+                temp_return = a_Hitpoint;
+                hitside = tempHitSide[cnt] + cnt * 6;
             }
-
-            if (vec38 == vec33)
-            {
-                b0 = 5;
-            }
-
-            if (vec38 == vec34)
-            {
-                b0 = 0;
-            }
-
-            if (vec38 == vec35)
-            {
-                b0 = 1;
-            }
-
-            if (vec38 == vec36)
-            {
-                b0 = 2;
-            }
-
-            if (vec38 == vec37)
-            {
-                b0 = 3;
-            }
-
-            vec38.sub(rotcenterVec);
-            vec38 = Calculater.transformVecByQuat(vec38,rot);
-            transformVecforMinecraft(vec38);
-            vec38.add(rotcenterVec);
-//            System.out.println("3"+vec38);
-
-            vec38.add(posVec);
-            return new MovingObjectPosition(0, 0, 0, b0, getMinecraftVecObj(vec38));
         }
+//        System.out.println("debug "  + hitside);
+        if(temp_return != null)
+            return new MovingObjectPosition(0, 0, 0, hitside, getMinecraftVecObj(temp_return));
+        return null;
     }
 
     /**
@@ -595,7 +656,7 @@ public class ModifiedBoundingBox extends AxisAlignedBB {
      */
     private boolean isVecInYZ(Vec3 checkingVec)
     {
-        return checkingVec != null && (checkingVec.yCoord >= -this.realmaxY/2 + centerOffsetY && checkingVec.yCoord <= this.realmaxY/2 + centerOffsetY && checkingVec.zCoord >= -this.realmaxZ/2 + centerOffsetZ && checkingVec.zCoord <= this.realmaxZ/2 + centerOffsetZ);
+        return checkingVec != null && (checkingVec.yCoord >= minvertex.y && checkingVec.yCoord <= maxvertex.y && checkingVec.zCoord >= minvertex.z && checkingVec.zCoord <= maxvertex.z);
     }
 
     /**
@@ -603,7 +664,7 @@ public class ModifiedBoundingBox extends AxisAlignedBB {
      */
     private boolean isVecInXZ(Vec3 checkingVec)
     {
-        return checkingVec != null && (checkingVec.xCoord >= -this.realmaxX/2 + centerOffsetX && checkingVec.xCoord <= this.realmaxX/2 + centerOffsetX && checkingVec.zCoord >= -this.realmaxZ/2 + centerOffsetZ && checkingVec.zCoord <= this.realmaxZ/2 + centerOffsetZ);
+        return checkingVec != null && (checkingVec.xCoord >= minvertex.x && checkingVec.xCoord <= maxvertex.x && checkingVec.zCoord >= minvertex.z && checkingVec.zCoord <= maxvertex.z);
     }
 
     /**
@@ -611,7 +672,7 @@ public class ModifiedBoundingBox extends AxisAlignedBB {
      */
     private boolean isVecInXY(Vec3 checkingVec)
     {
-        return checkingVec != null && (checkingVec.xCoord >= -this.realmaxX/2 + centerOffsetX && checkingVec.xCoord <= this.realmaxX/2 + centerOffsetX && checkingVec.yCoord >= -this.realmaxY/2 + centerOffsetY && checkingVec.yCoord <= this.realmaxY/2 + centerOffsetY);
+        return checkingVec != null && (checkingVec.xCoord >= minvertex.x && checkingVec.xCoord <= maxvertex.x && checkingVec.yCoord >= minvertex.y && checkingVec.yCoord <= maxvertex.y);
     }
 
     /**
@@ -638,5 +699,12 @@ public class ModifiedBoundingBox extends AxisAlignedBB {
          */
         return getBoundingBox(this.minX, this.minY, this.minZ, this.maxX, this.maxY, this.maxZ,
                 this);
+    }
+    public AxisAlignedBB noMod_copy()
+    {
+        /**
+         * Returns a bounding box with the specified bounds. Args: minX, minY, minZ, maxX, maxY, maxZ
+         */
+        return AxisAlignedBB.getBoundingBox(this.minX, this.minY, this.minZ, this.maxX, this.maxY, this.maxZ);
     }
 }

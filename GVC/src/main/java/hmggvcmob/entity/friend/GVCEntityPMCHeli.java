@@ -1,44 +1,235 @@
 package hmggvcmob.entity.friend;
 
 
-import hmvehicle.entity.parts.Iplane;
+import hmvehicle.entity.parts.*;
 import hmvehicle.entity.parts.logics.IbaseLogic;
 import hmvehicle.entity.parts.logics.PlaneBaseLogic;
+import hmvehicle.entity.parts.turrets.TurretObj;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
 import javax.vecmath.*;
 
-import static hmggvcmob.util.Calculater.CalculateGunElevationAngle;
+import java.util.ArrayList;
 
-public class GVCEntityPMCHeli extends EntityPMCBase implements Iplane
+import static hmggvcmob.GVCMobPlus.proxy;
+import static hmvehicle.Utils.CalculateGunElevationAngle;
+import static hmvehicle.Utils.addAllTurret;
+
+public class GVCEntityPMCHeli extends EntityPMCBase implements Iplane,IMultiTurretVehicle
 {
-	public int homeposX;
-	public int homeposY;
-	public int homeposZ;
 	PlaneBaseLogic baseLogic;
+	TurretObj gunnerturret;
 	float maxHealth = 150;
+	//	ModifiedBoundingBox nboundingbox;
+	public void updateRiderPosition() {
+//		baseLogic.riderPosUpdate();
+	}
 	public GVCEntityPMCHeli(World par1World) {
 		super(par1World);
 		this.setSize(5f, 5f);
 //		nboundingbox = new ModifiedBoundingBox(-20,-20,-20,20,20,20,0,0,-6.27,2.5,5,19);
 //		nboundingbox.rot.set(this.bodyRot);
 //		proxy.replaceBoundingbox(this,nboundingbox);
-//		((ModifiedBoundingBox)this.boundingBox).updateOBB(this.posX,this.posY,this.posZ);
+//		((ModifiedBoundingBox)this.boundingBox).update(this.posX,this.posY,this.posZ);
 		ignoreFrustumCheck = true;
 		baseLogic = new PlaneBaseLogic(worldObj, this);
-		baseLogic.speedfactor = 0.009f;
-		baseLogic.liftfactor = 0.05f;
-		baseLogic.flapliftfactor = 0.00005f;
-		baseLogic.flapdragfactor = 0.0000000001f;
-		baseLogic.geardragfactor = 0.000000001f;
+		baseLogic.soundname = "gvcmob:gvcmob.heli";
+		baseLogic.soundpitch = 1.2f;
+		baseLogic.speedfactor = 0.012f;
+		baseLogic.liftfactor = 0.01f;
+		baseLogic.flapliftfactor = 0;
+		baseLogic.flapdragfactor = 0;
+		baseLogic.geardragfactor = 0;
 		baseLogic.dragfactor = 0.07f;
 		baseLogic.gravity = 0.049f;
-		baseLogic.stability = 600;
-		baseLogic.rotmotion_reduceSpeed = 0.1;
+		baseLogic.stability2 = 0;
+		baseLogic.stability = 0;
+		baseLogic.rotmotion_reduceSpeed = 0;
+		baseLogic.forced_rudder_effect = 0.99f;
+		baseLogic.forced_rotmotion_reduceSpeed = 0.05f;
+		baseLogic.slipresist = 0;
+		baseLogic.throttle_Max = 5;
+		baseLogic.unitThrottle.set(0,-1,0);
+		baseLogic.brakedragfactor = 0;
+		baseLogic.maxClimb = 0;
+		baseLogic.maxDive = 30;
+		baseLogic.minALT = 10;
+		baseLogic.cruiseALT = 25;
+		baseLogic.changeWeaponCycleSetting = 50;
+		baseLogic.type_F_Plane_T_Heli = true;
+		baseLogic.displayModernHud = true;
+		
+		{
+			TurretObj turret = new TurretObj(worldObj);
+			turret.onMotherPos = new Vector3d(0.1260, 0.9463, -6.444);
+			turret.turretPitchCenterpos = new Vector3d(0, 0.8189, -6.449);
+			turret.turretPitchCenterpos.sub(turret.onMotherPos);
+			turret.cannonPos = new Vector3d(0.1260, 0.5770, -7.278);
+			turret.cannonPos.sub(turret.onMotherPos);
+			turret.turretanglelimtYawMax = 90;
+			turret.turretanglelimtYawmin = -90;
+			turret.turretanglelimtPitchMax = 60;
+			turret.turretanglelimtPitchmin = -15;
+			turret.turretspeedY = 20;
+			turret.turretspeedP = 20;
+//			turret.traverseSound = null;
+			turret.currentEntity = this;
+			turret.powor = 26;
+			turret.ex = 0.5f;
+			turret.cycle_setting = 0;
+			turret.flashscale = 1;
+			turret.flashoffset = 0;
+			turret.firesound = "handmadeguns:handmadeguns.HeavyMachineGun";
+			turret.spread = 3;
+			turret.speed = 8;
+			turret.magazineMax = 500;
+			turret.magazinerem = 500;
+			turret.reloadTimer = 1200;
+			turret.canex = false;
+			turret.guntype = 0;
+			gunnerturret = turret;
+		}
+		{
+			TurretObj gun1 = new TurretObj(worldObj);
+			gun1.onMotherPos = new Vector3d(2.17, 1.27, -0.3262);
+			gun1.traverseSound = null;
+			gun1.currentEntity = this;
+			gun1.powor = 60;
+			gun1.ex = 0.5f;
+			gun1.cycle_setting = 0;
+			gun1.flashscale = 1;
+			gun1.flashoffset = 0;
+			gun1.firesound = "handmadeguns:handmadeguns.HeavyMachineGun";
+			gun1.spread = 2;
+			gun1.speed = 8;
+			gun1.magazineMax = 500;
+			gun1.magazinerem = 500;
+			gun1.reloadTimer = 1200;
+			gun1.canex = false;
+			gun1.guntype = 0;
+			TurretObj gun2 = new TurretObj(worldObj);
+			gun2.onMotherPos = new Vector3d(-1.96, 1.275, -0.3262);
+			gun2.traverseSound = null;
+			gun2.currentEntity = this;
+			gun2.powor = 60;
+			gun2.ex = 0.5f;
+			gun2.cycle_setting = 0;
+			gun2.flashscale = 1;
+			gun2.flashoffset = 0;
+			gun2.firesound = "handmadeguns:handmadeguns.HeavyMachineGun";
+			gun2.spread = 2;
+			gun2.speed = 8;
+			gun2.magazineMax = 500;
+			gun2.magazinerem = 500;
+			gun2.reloadTimer = 1200;
+			gun2.canex = false;
+			gun2.guntype = 0;
+			gun1.addbrother(gun2);
+			
+			baseLogic.mainTurret = gun1;
+		}
+		{
+			TurretObj rocket1 = new TurretObj(worldObj);
+			rocket1.onMotherPos = new Vector3d(-2.685, 1.035, -0.4187);
+			rocket1.traverseSound = null;
+			rocket1.currentEntity = this;
+			rocket1.powor = 75;
+			rocket1.acceler = 0.1f;
+			rocket1.ex = 0.5f;
+			rocket1.cycle_setting = 1;
+			rocket1.cycle_timer = -1;
+			rocket1.flashscale = 1;
+			rocket1.flashoffset = 0;
+			rocket1.firesound = "handmadeguns:handmadeguns.missileLaunch";
+			rocket1.spread = 0.5f;
+			rocket1.speed = 2;
+			rocket1.magazineMax = 32;
+			rocket1.magazinerem = 32;
+			rocket1.reloadTimer = 600;
+			rocket1.canex = true;
+			rocket1.guntype = 3;
+			
+			TurretObj rocket2 = new TurretObj(worldObj);
+			rocket2.onMotherPos = new Vector3d(2.915, 1.035, -0.4187);
+			rocket2.traverseSound = null;
+			rocket2.currentEntity = this;
+			rocket2.powor = 75;
+			rocket2.acceler = 0.1f;
+			rocket2.ex = 0.5f;
+			rocket2.cycle_setting = 1;
+			rocket2.cycle_timer = -1;
+			rocket2.flashscale = 1;
+			rocket2.flashoffset = 0;
+			rocket2.firesound = "handmadeguns:handmadeguns.missileLaunch";
+			rocket2.spread = 0.5f;
+			rocket2.speed = 2;
+			rocket2.magazineMax = 32;
+			rocket2.magazinerem = 32;
+			rocket2.reloadTimer = 600;
+			rocket2.canex = true;
+			rocket2.guntype = 3;
+			
+			rocket1.addbrother(rocket2);
+			baseLogic.subTurret = rocket1;
+		}
+		
+		baseLogic.riddenByEntitiesInfo = new SeatInfo[6];
+		baseLogic.riddenByEntitiesInfo_zoom = new SeatInfo[6];
+		baseLogic.riddenByEntities = new Entity[6];
+		baseLogic.riddenByEntitiesInfo[0] = new SeatInfo();
+		baseLogic.riddenByEntitiesInfo[0].pos[0] = 0.1074;
+		baseLogic.riddenByEntitiesInfo[0].pos[1] = 2.584;
+		baseLogic.riddenByEntitiesInfo[0].pos[2] = -4.245;
+		
+		baseLogic.riddenByEntitiesInfo[1] = new SeatInfo();
+		baseLogic.riddenByEntitiesInfo[1].pos[0] = 0.1278;
+		baseLogic.riddenByEntitiesInfo[1].pos[1] = 1.726;
+		baseLogic.riddenByEntitiesInfo[1].pos[2] = -6.145;
+		baseLogic.riddenByEntitiesInfo[1].hasGun = true;
+		baseLogic.riddenByEntitiesInfo[1].gun = gunnerturret;
+		
+		baseLogic.riddenByEntitiesInfo_zoom[1] = new SeatInfo();
+		baseLogic.riddenByEntitiesInfo_zoom[1].pos[0] = 0.1278;
+		baseLogic.riddenByEntitiesInfo_zoom[1].pos[1] = -2 + 1.726;
+		baseLogic.riddenByEntitiesInfo_zoom[1].pos[2] = -6.145;
+		
+		baseLogic.riddenByEntitiesInfo[2] = new SeatInfo();
+		baseLogic.riddenByEntitiesInfo[2].pos[0] = 0.0332 + 1;
+		baseLogic.riddenByEntitiesInfo[2].pos[1] = 2.117;
+		baseLogic.riddenByEntitiesInfo[2].pos[2] = -1.35 + 1;
+		
+		baseLogic.riddenByEntitiesInfo[3] = new SeatInfo();
+		baseLogic.riddenByEntitiesInfo[3].pos[0] = 0.0332 - 1;
+		baseLogic.riddenByEntitiesInfo[3].pos[1] = 2.117;
+		baseLogic.riddenByEntitiesInfo[3].pos[2] = -1.35 + 1;
+		
+		baseLogic.riddenByEntitiesInfo[4] = new SeatInfo();
+		baseLogic.riddenByEntitiesInfo[4].pos[0] = 0.0332 + 1;
+		baseLogic.riddenByEntitiesInfo[4].pos[1] = 2.117;
+		baseLogic.riddenByEntitiesInfo[4].pos[2] = -1.35 - 1;
+		
+		baseLogic.riddenByEntitiesInfo[5] = new SeatInfo();
+		baseLogic.riddenByEntitiesInfo[5].pos[0] = 0.0332 - 1;
+		baseLogic.riddenByEntitiesInfo[5].pos[1] = 2.117;
+		baseLogic.riddenByEntitiesInfo[5].pos[2] = -1.35 - 1;
+		baseLogic.camerapos = new double[]{0.1074,2.584,-4.245};
+		
+		
 //		baseLogic.slipresist = 4;
-	
+		
+		ModifiedBoundingBox nboundingbox = new ModifiedBoundingBox(-1.5,0,-1.5,1.5,5,1.5,0,0,-6.27,2.5,5,19);
+		nboundingbox.rot.set(baseLogic.bodyRot);
+		proxy.replaceBoundingbox(this,nboundingbox);
+		((ModifiedBoundingBox)this.boundingBox).update(this.posX,this.posY,this.posZ);
 	}
 	
 	public double getMountedYOffset() {
@@ -49,12 +240,29 @@ public class GVCEntityPMCHeli extends EntityPMCBase implements Iplane
 	protected void applyEntityAttributes() {
 		super.applyEntityAttributes();
 		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0D);
-		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(maxHealth);
+		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(150);
 		this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(80.0D);
 		this.getEntityAttribute(SharedMonsterAttributes.knockbackResistance).setBaseValue(30.0D);
 	}
 	
 	public void onUpdate() {
+		
+		if (this.standalone()) {
+			if (!worldObj.isRemote && rand.nextInt(100) == 1) {
+				boolean flag = false;
+				for (int id = 1; id < (baseLogic).riddenByEntities.length; id++) {
+					if((baseLogic).riddenByEntities[id] == null)flag = true;
+				}
+				if(flag) {
+					GVCEntityPMCMG entityPMCMG = new GVCEntityPMCMG(worldObj);
+					entityPMCMG.addRandomArmor();
+					entityPMCMG.setLocationAndAngles(this.posX, this.posY, this.posZ, 0, 0);
+					worldObj.spawnEntityInWorld(entityPMCMG);
+					if (!pickupEntity(entityPMCMG, 0)) entityPMCMG.setDead();
+				}
+				
+			}
+		}
 		double[] pos = new double[]{this.posX, this.posY, this.posZ};
 		double[] motion = new double[]{this.motionX, this.motionY, this.motionZ};
 		boolean onground = this.onGround;
@@ -70,6 +278,7 @@ public class GVCEntityPMCHeli extends EntityPMCBase implements Iplane
 //			baseLogic.throttle--;
 //		}
 		baseLogic.onUpdate();
+		mode= getMobMode();
 	}
 	
 	public void setVelocity(double p_70016_1_, double p_70016_3_, double p_70016_5_) {
@@ -121,12 +330,102 @@ public class GVCEntityPMCHeli extends EntityPMCBase implements Iplane
 		baseLogic.throttle = th;
 	}
 	
+	public boolean interact(EntityPlayer p_70085_1_) {
+		if (!this.worldObj.isRemote && (this.riddenByEntity == null || this.riddenByEntity == p_70085_1_)) {
+			if (p_70085_1_.isSneaking()) {
+				if (p_70085_1_.getEquipmentInSlot(0) != null) {
+					ItemStack itemstack = p_70085_1_.getEquipmentInSlot(0);
+					if (itemstack.getItem() == Items.iron_ingot) {
+						if (!p_70085_1_.capabilities.isCreativeMode) itemstack.stackSize--;
+						if (itemstack.stackSize <= 0 && !p_70085_1_.capabilities.isCreativeMode) {
+							p_70085_1_.destroyCurrentEquippedItem();
+						}
+						this.setHealth(this.getHealth() + 30);
+					}
+					if (itemstack.getItem() == Item.getItemFromBlock(Blocks.iron_block)) {
+						if (!p_70085_1_.capabilities.isCreativeMode) itemstack.stackSize--;
+						if (itemstack.stackSize <= 0 && !p_70085_1_.capabilities.isCreativeMode) {
+							p_70085_1_.destroyCurrentEquippedItem();
+						}
+						this.setHealth(this.getHealth() + 300);
+					}
+				} else if (this.getMobMode() == 0) {
+					mode = 1;
+					this.setMobMode(1);
+					
+					p_70085_1_.addChatComponentMessage(new ChatComponentTranslation(
+							                                                               "Defense  " + (int) posX + "," + (int) posZ));
+					homeposX = (int) posX;
+					homeposY = (int) posY;
+					homeposZ = (int) posZ;
+				} else if (this.getMobMode() == 2) {
+					mode = 2;
+					this.setMobMode(2);
+					homeposX = (int) p_70085_1_.posX;
+					homeposY = (int) p_70085_1_.posY;
+					homeposZ = (int) p_70085_1_.posZ;
+					master = p_70085_1_;
+					p_70085_1_.addChatComponentMessage(new ChatComponentTranslation(
+							                                                               "Cover mode"));
+				} else if (this.getMobMode() == 2) {
+					p_70085_1_.addChatComponentMessage(new ChatComponentTranslation("wait "));
+					mode = 3;
+					this.setMobMode(3);
+				} else if (this.getMobMode() == 3) {
+					mode = 0;
+					this.setMobMode(0);
+				}
+			} else if (!p_70085_1_.isRiding()) {
+				
+				if(baseLogic.riddenByEntities[0] == null) {
+					mode = 0;
+					this.setMobMode(0);
+				}
+				pickupEntity(p_70085_1_,0);
+			}
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	
 	@Override
 	public int getpilotseatid() {
 		return 0;
 	}
-	
+	@Override
 	public void applyEntityCollision(Entity p_70108_1_) {
+		boolean flag = p_70108_1_.riddenByEntity != this && p_70108_1_.ridingEntity != this;
+		flag &= !isRidingEntity(this);
+		if (flag)
+		{
+			double d0 = p_70108_1_.posX - this.posX;
+			double d1 = p_70108_1_.posZ - this.posZ;
+			double d2 = MathHelper.abs_max(d0, d1);
+			
+			if (d2 >= 0.009999999776482582D)
+			{
+				d2 = (double)MathHelper.sqrt_double(d2);
+				d0 /= d2;
+				d1 /= d2;
+				double d3 = 1.0D / d2;
+				
+				if (d3 > 1.0D)
+				{
+					d3 = 1.0D;
+				}
+				
+				d0 *= d3;
+				d1 *= d3;
+				d0 *= 0.05000000074505806D;
+				d1 *= 0.05000000074505806D;
+				d0 *= (double)(1.0F - this.entityCollisionReduction);
+				d1 *= (double)(1.0F - this.entityCollisionReduction);
+				this.addVelocity(-d0, 0.0D, -d1);
+				p_70108_1_.addVelocity(d0, 0.0D, d1);
+			}
+		}
 	}
 	
 	@Override
@@ -197,6 +496,8 @@ public class GVCEntityPMCHeli extends EntityPMCBase implements Iplane
 	public void moveFlying(float p_70060_1_, float p_70060_2_, float p_70060_3_) {
 	}
 	
+	
+	
 	public void jump() {
 	
 	}
@@ -207,10 +508,42 @@ public class GVCEntityPMCHeli extends EntityPMCBase implements Iplane
 	
 	@Override
 	public boolean standalone() {
-		return true;
+		return mode != 0;
 	}
 	public void setPosition(double x, double y, double z)
 	{
 		if(baseLogic != null)baseLogic.setPosition(x,y,z);
+	}
+	
+	@Override
+	public TurretObj[] getmainTurrets() {
+		if(baseLogic.mainTurrets == null) {
+			ArrayList<TurretObj> turrets = new ArrayList<TurretObj>();
+			addAllTurret(turrets, baseLogic.mainTurret);
+			baseLogic.mainTurrets = turrets.toArray(new TurretObj[turrets.size()]);
+		}
+		return baseLogic.mainTurrets;
+	}
+	
+	@Override
+	public TurretObj[] getsubTurrets() {
+		if(baseLogic.subTurrets == null) {
+			ArrayList<TurretObj> turrets = new ArrayList<TurretObj>();
+			addAllTurret(turrets, baseLogic.subTurret);
+			baseLogic.subTurrets = turrets.toArray(new TurretObj[turrets.size()]);
+		}
+		return baseLogic.subTurrets;
+	}
+	
+	@Override
+	public TurretObj[] getTurrets() {
+		if(baseLogic.turrets == null) {
+			ArrayList<TurretObj> turrets = new ArrayList<TurretObj>();
+			addAllTurret(turrets, baseLogic.mainTurret);
+			addAllTurret(turrets, gunnerturret);
+			addAllTurret(turrets, baseLogic.subTurret);
+			baseLogic.turrets = turrets.toArray(new TurretObj[turrets.size()]);
+		}
+		return baseLogic.turrets;
 	}
 }

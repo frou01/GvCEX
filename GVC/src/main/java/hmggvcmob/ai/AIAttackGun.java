@@ -8,6 +8,8 @@ import hmggvcmob.SlowPathFinder.WorldForPathfind;
 import hmggvcmob.entity.IGVCmob;
 import hmggvcmob.entity.friend.EntitySoBases;
 import hmggvcmob.entity.guerrilla.EntityGBases;
+import hmvehicle.entity.parts.Hasmode;
+import hmvehicle.entity.parts.ITank;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
@@ -118,7 +120,7 @@ public class AIAttackGun extends EntityAIBase {
 //                System.out.println("debug");
                 double maxrange = maxshootrange * maxshootrange;
                 double minrange = minshootrange * minshootrange;
-                if(!(shooter.ridingEntity instanceof PlacedGunEntity) && !(shooter.getHeldItem() != null && shooter.getHeldItem().getItem() instanceof HMGItem_Unified_Guns)){
+                if(shooter.ridingEntity == null && !(shooter.getHeldItem() != null && shooter.getHeldItem().getItem() instanceof HMGItem_Unified_Guns)){
                     maxrange = 0;
                     minrange = 0;
                 }
@@ -132,27 +134,42 @@ public class AIAttackGun extends EntityAIBase {
                     if (shooter instanceof IGVCmob)
                         cansee = ((IGVCmob) shooter).canSeeTarget(target);
                 }
-                if (ismoveable && !(cansee) && know_the_position_of_the_enemy) {
-                    //敵の位置を把握していて、敵が隠れたなら追いかけにかかる
-                    if(canNavigate())shooter.getNavigator().setPath(worldForPathfind.getEntityPathToXYZ(shooter, MathHelper.floor_double(lastTargetX), MathHelper.floor_double(lastTargetY), MathHelper.floor_double(lastTargetZ), 60, true, false, false, true), 1.0d);
-                    if(tolastseepoint>4)if(know_the_position_of_the_enemy)shooter.getLookHelper().setLookPosition(lastTargetX, lastTargetY, lastTargetZ, 90F, 90F);
-                } else if (!(target.riddenByEntity instanceof GVCEntityBox && target.isSneaking()) && cansee ) {
-                    //敵がダンボールに隠れていなくて、視界内に居るなら
-                    lastTargetX = target.posX;
-                    lastTargetY = target.posY + target.getEyeHeight();
-                    lastTargetZ = target.posZ;
-                    know_the_position_of_the_enemy = true;
-                    if(maxrange < totargetdist || (assault && assaultrange * assaultrange < totargetdist)) {
-                        if(canNavigate())shooter.getNavigator().setPath(worldForPathfind.getEntityPathToXYZ(shooter, MathHelper.floor_double(target.posX), MathHelper.floor_double(target.posY), MathHelper.floor_double(target.posZ), 60f, true, false, false, true), 1.0d);
-                    } else if(minrange > totargetdist){
-                        if(canNavigate())shooter.getNavigator().setPath(worldForPathfind.getEntityPathToXYZ(shooter, MathHelper.floor_double(target.posX), MathHelper.floor_double(target.posY), MathHelper.floor_double(target.posZ), 60f, true, false, false, true), -1.0d);
-                    }else {
-                        shooter.getNavigator().clearPathEntity();
+                if(shooter instanceof Hasmode && (((Hasmode) shooter).getMobMode() == 1 ||  ((Hasmode) shooter).getMobMode() == 2) && (!cansee || totargetdist < 256 && ((Hasmode) shooter).distToTargetPos() < 256)){
+                    shooter.getLookHelper().setLookPositionWithEntity(target, 90F, 18000000);
+                    if (!(target.riddenByEntity instanceof GVCEntityBox && target.isSneaking()) && cansee) {
+                        //敵がダンボールに隠れていなくて、視界内に居るなら
+                        lastTargetX = target.posX;
+                        lastTargetY = target.posY + target.getEyeHeight();
+                        lastTargetZ = target.posZ;
+                        know_the_position_of_the_enemy = true;
+                        shooter.getLookHelper().setLookPositionWithEntity(target, 90F, 18000000);
                     }
-                    shooter.getLookHelper().setLookPositionWithEntity(target, 90F, 90F);
+                }else {
+                    if (ismoveable && !(cansee) && know_the_position_of_the_enemy) {
+                        //敵の位置を把握していて、敵が隠れたなら追いかけにかかる
+                        if (canNavigate())
+                            if(target.onGround||target.isInWater()||(target instanceof ITank && ((ITank) target).ishittingWater()))shooter.getNavigator().setPath(worldForPathfind.getEntityPathToXYZ(shooter, MathHelper.floor_double(lastTargetX), MathHelper.floor_double(lastTargetY), MathHelper.floor_double(lastTargetZ), 60, true, false, false, true), 1.0d);
+                        if (tolastseepoint > 4) if (know_the_position_of_the_enemy)
+                            shooter.getLookHelper().setLookPosition(lastTargetX, lastTargetY, lastTargetZ, 90F, 18000000);
+                    } else if (!(target.riddenByEntity instanceof GVCEntityBox && target.isSneaking()) && cansee) {
+                        //敵がダンボールに隠れていなくて、視界内に居るなら
+                        lastTargetX = target.posX;
+                        lastTargetY = target.posY + target.getEyeHeight();
+                        lastTargetZ = target.posZ;
+                        know_the_position_of_the_enemy = true;
+                        if (maxrange < totargetdist || (assault && assaultrange * assaultrange < totargetdist)) {
+                            if (canNavigate())
+                                if(target.onGround||target.isInWater()||(target instanceof ITank && ((ITank) target).ishittingWater()))shooter.getNavigator().setPath(worldForPathfind.getEntityPathToXYZ(shooter, MathHelper.floor_double(target.posX), MathHelper.floor_double(target.posY), MathHelper.floor_double(target.posZ), 60f, true, false, false, true), 1.0d);
+                        } else if (minrange > totargetdist) {
+                            if (canNavigate())
+                                if(target.onGround||target.isInWater()||(target instanceof ITank && ((ITank) target).ishittingWater()))shooter.getNavigator().setPath(worldForPathfind.getEntityPathToXYZ(shooter, MathHelper.floor_double(target.posX), MathHelper.floor_double(target.posY), MathHelper.floor_double(target.posZ), 60f, true, false, false, true), -1.0d);
+                        } else {
+                            shooter.getNavigator().clearPathEntity();
+                        }
+                        shooter.getLookHelper().setLookPositionWithEntity(target, 90F, 18000000);
+                    }
                 }
                 if(!cansee){
-                    shooter.getLookHelper().onUpdateLook();
                     changesearchdircool--;
                     if(changesearchdircool<0){
                         searchdirY = rnd.nextBoolean();
@@ -168,8 +185,11 @@ public class AIAttackGun extends EntityAIBase {
                     f3 = -MathHelper.cos(-(shooter.rotationPitch + (searchdirP?8:-8)) * 0.017453292F);
                     f4 = MathHelper.sin(-(shooter.rotationPitch + (searchdirP?8:-8)) * 0.017453292F);
                     Vec3 look = Vec3.createVectorHelper((double)(f2 * f3), (double)f4, (double)(f1 * f3));
-                    shooter.getLookHelper().setLookPosition(shooter.posX + look.xCoord, shooter.posY + shooter.getEyeHeight() + look.yCoord, shooter.posZ + look.zCoord, 90F, 90F);
+                    shooter.getLookHelper().setLookPosition(shooter.posX + look.xCoord, shooter.posY + shooter.getEyeHeight() + look.yCoord, shooter.posZ + look.zCoord, 90F, 18000000);
                 }
+//                System.out.println("debug PR" + shooter.rotationPitch);
+//                shooter.getLookHelper().onUpdateLook();
+//                System.out.println("debug AF" + shooter.rotationPitch);
                 refindpath-=10;
                 if (!cansee) {
                     aiming = 0;
@@ -232,17 +252,21 @@ public class AIAttackGun extends EntityAIBase {
                                 retriggerCool = rnd.nextInt((int) (abs(((HMGItem_Unified_Guns) shooter.getHeldItem().getItem()).gunInfo.recoil)+1) * 10);
                             }
                         }
+                    }else
+                    if(shooter.ridingEntity != null){
+                        System.out.println("debug");
+                        shooter.getEntityData().setBoolean("HMGisUsingItem", true);
                     }
                     forget = 0;
                 }
                 burstingtime--;
                 if (!cansee) {
                     forget++;
-                    if(shooter instanceof IflagBattler && ((IflagBattler) shooter).istargetingflag()){
-                        forget+=100;
-                        Vec3 flagpos = ((IflagBattler) shooter).getflagposition();
-                        if(shooter.getDistanceSq((int)flagpos.xCoord, (int) flagpos.yCoord, (int) flagpos.zCoord)>10 && (shooter.onGround || shooter.isWet())) if(canNavigate())shooter.getNavigator().setPath(worldForPathfind.getEntityPathToXYZ(shooter, (int)flagpos.xCoord, (int) flagpos.yCoord, (int) flagpos.zCoord, 120, true, false, false, true), 1.0d);
-                    }
+//                    if(shooter instanceof IflagBattler && ((IflagBattler) shooter).istargetingflag()){
+//                        forget+=100;
+//                        Vec3 flagpos = ((IflagBattler) shooter).getflagposition();
+//                        if(shooter.getDistanceSq((int)flagpos.xCoord, (int) flagpos.yCoord, (int) flagpos.zCoord)>10 && (shooter.onGround || shooter.isWet())) if(canNavigate())shooter.getNavigator().setPath(worldForPathfind.getEntityPathToXYZ(shooter, (int)flagpos.xCoord, (int) flagpos.yCoord, (int) flagpos.zCoord, 120, true, false, false, true), 1.0d);
+//                    }
                 }
                 if (burstingtime < 0) {
                     if(burstcoolcnt<0) {

@@ -27,14 +27,14 @@ import static hmggvcmob.GVCMobPlus.Guns_HVG;
 import static hmggvcmob.GVCMobPlus.cfg_guerrillasrach;
 import static hmggvcmob.GVCMobPlus.proxy;
 import static hmggvcmob.event.GVCMXEntityEvent.soundedentity;
-import static hmggvcmob.util.Calculater.transformVecByQuat;
-import static hmggvcmob.util.Calculater.transformVecforMinecraft;
+import static hmvehicle.Utils.transformVecByQuat;
+import static hmvehicle.Utils.transformVecforMinecraft;
 
 public class GVCEntityJeep extends EntityGBase implements ITank
 {
     public float bodyrotationYaw;
     float rotationmotion;
-    TankBaseLogic baseLogic = new TankBaseLogic(this,0.24f,1.5f,false,"gvcmob:gvcmob.JeepWheel");
+    TankBaseLogic baseLogic = new TankBaseLogic(this,0.24f,0.7f,false,"gvcmob:gvcmob.JeepWheel");
     public Quat4d bodyRot = new Quat4d(0,0,0,1);
     private float throttle;
     ModifiedBoundingBox nboundingbox;
@@ -419,7 +419,7 @@ public class GVCEntityJeep extends EntityGBase implements ITank
     }
     
     @Override
-    public double[] getwaitingpos() {
+    public double[] getTargetpos() {
         return new double[0];
     }
     

@@ -23,7 +23,8 @@ import javax.vecmath.Vector3d;
 
 import static hmggvcmob.GVCMobPlus.proxy;
 import static hmggvcmob.event.GVCMXEntityEvent.soundedentity;
-import static hmggvcmob.util.Calculater.*;
+import static hmvehicle.Utils.*;
+import static hmvehicle.HMVehicle.proxy_HMVehicle;
 
 public class GVCEntityPMCTank extends EntityPMCBase implements ITank
 {
@@ -50,7 +51,7 @@ public class GVCEntityPMCTank extends EntityPMCBase implements ITank
 
     public int mgMagazine;
     public int mgReloadProgress;
-    public TankBaseLogic baseLogic = new TankBaseLogic(this,0.25f,1.2f,true,"gvcmob:gvcmob.Leopard1Track");
+    public TankBaseLogic baseLogic = new TankBaseLogic(this,0.25f,0.65f,true,"gvcmob:gvcmob.Leopard1Track");
     ModifiedBoundingBox nboundingbox;
 
     Vector3d playerpos = new Vector3d(-0.514f,2.4f,-0.02124 + 0.2448);
@@ -84,8 +85,8 @@ public class GVCEntityPMCTank extends EntityPMCBase implements ITank
         yOffset = 0;
         mainTurret = new TurretObj(worldObj);
         {
-            mainTurret.onmotherPos = turretpos;
-            mainTurret.cannonpos = cannonpos;
+            mainTurret.onMotherPos = turretpos;
+            mainTurret.cannonPos = cannonpos;
             mainTurret.currentEntity = this;
             mainTurret.powor = 120;
             mainTurret.ex = 5.0F;
@@ -102,12 +103,12 @@ public class GVCEntityPMCTank extends EntityPMCBase implements ITank
             subTurret.traverseSound = null;
 
             subTurret.turretYawCenterpos = subturretpos;
-            subTurret.cannonpos = subturretpos;
+            subTurret.cannonPos = subturretpos;
             subTurret.cycle_setting = 1;
             subTurret.spread = 5;
             subTurret.speed = 8;
             subTurret.firesound = "handmadeguns:handmadeguns.HeavyMachineGun";
-            subTurret.flushscale  = 2;
+            subTurret.flashscale = 2;
 
 
             subTurret.powor = 20;
@@ -117,9 +118,9 @@ public class GVCEntityPMCTank extends EntityPMCBase implements ITank
 
             subTurret.magazineMax = 250;
             subTurret.reloadSetting = 300;
-            subTurret.flushoffset = 0.5f;
+            subTurret.flashoffset = 0.5f;
         }
-        mainTurret.addchild(subTurret);
+        mainTurret.addchild_triggerLinked(subTurret);
 
         turrets = new TurretObj[]{mainTurret,subTurret};
     }
@@ -179,8 +180,8 @@ public class GVCEntityPMCTank extends EntityPMCBase implements ITank
         if (this.riddenByEntity != null) {
             mainTurret.setmotherpos(new Vector3d(this.posX,this.posY,-this.posZ),baseLogic.bodyRot);
             Vector3d temp = new Vector3d(mainTurret.pos);
-            Vector3d tempplayerPos = new Vector3d(proxy.iszooming() ? zoomingplayerpos:playerpos);
-            Vector3d playeroffsetter = new Vector3d(0,((worldObj.isRemote && this.riddenByEntity == proxy.getEntityPlayerInstance()) ? 0:(this.riddenByEntity.getEyeHeight() + this.riddenByEntity.yOffset)),0);
+            Vector3d tempplayerPos = new Vector3d(proxy_HMVehicle.iszooming() ? zoomingplayerpos:playerpos);
+            Vector3d playeroffsetter = new Vector3d(0,((worldObj.isRemote && this.riddenByEntity == proxy_HMVehicle.getEntityPlayerInstance()) ? 0:(this.riddenByEntity.getEyeHeight() + this.riddenByEntity.yOffset)),0);
             tempplayerPos.sub(playeroffsetter);
             Vector3d temp2 = mainTurret.getGlobalVector_fromLocalVector_onTurretPoint(tempplayerPos);
             temp.add(temp2);

@@ -34,7 +34,7 @@ public class GVCEntityHeli extends EntityGBase implements Iplane {
 //		nboundingbox = new ModifiedBoundingBox(-20,-20,-20,20,20,20,0,0,-6.27,2.5,5,19);
 //		nboundingbox.rot.set(this.bodyRot);
 //		proxy.replaceBoundingbox(this,nboundingbox);
-//		((ModifiedBoundingBox)this.boundingBox).updateOBB(this.posX,this.posY,this.posZ);
+//		((ModifiedBoundingBox)this.boundingBox).update(this.posX,this.posY,this.posZ);
 		ignoreFrustumCheck = true;
 		baseLogic = new PlaneBaseLogic(worldObj, this);
 		baseLogic.speedfactor = 0.009f;
@@ -220,7 +220,7 @@ public class GVCEntityHeli extends EntityGBase implements Iplane {
 	}
 	
 	@Override
-	public double[] getwaitingpos() {
+	public double[] getTargetpos() {
 		return new double[3];
 	}
 	

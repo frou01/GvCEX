@@ -6,6 +6,7 @@ guntype,7
 
 BlletSpread,4.0f
 ADS_Spread_coefficient,0.01
+BlletSpreadDiffusion,16,0,4,1,6,2
 Motion,0.35
 
 Recoil,50

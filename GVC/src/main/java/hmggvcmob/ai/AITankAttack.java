@@ -2,6 +2,7 @@ package hmggvcmob.ai;
 
 import hmggvcmob.SlowPathFinder.WorldForPathfind;
 import hmvehicle.entity.parts.ITank;
+import hmvehicle.entity.parts.IVehicle;
 import hmvehicle.entity.parts.logics.TankBaseLogic;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -9,6 +10,9 @@ import net.minecraft.entity.ai.EntityAIBase;
 
 import javax.vecmath.Vector3d;
 import java.util.Random;
+
+import static java.lang.Math.atan2;
+import static java.lang.Math.toDegrees;
 
 public class AITankAttack extends EntityAIBase {
     private EntityLiving Tank_body;//戦車
@@ -86,10 +90,14 @@ public class AITankAttack extends EntityAIBase {
         double dist = Tank_body.getDistanceSqToEntity(target);
         if((always_poit_to_target || !movearound) && !always_movearound) {
             if (dist > maxrenge || !Tank_body.getEntitySenses().canSee(target)) {
-                Tank_body.getNavigator().setPath(worldForPathfind.getEntityPathToXYZ(Tank_body, (int) target.posX, (int) target.posY, (int) target.posZ, 80f, true, false, false, true), 1.2);
+                if(target.onGround||target.isInWater()||(target instanceof ITank && ((ITank) target).ishittingWater()))Tank_body.getNavigator().setPath(worldForPathfind.getEntityPathToXYZ(Tank_body, (int) target.posX, (int) target.posY, (int) target.posZ, 80f, true, false, false, true), 1.2);
             } else if (dist < minrenge) {
-                Tank_body.getNavigator().setPath(worldForPathfind.getEntityPathToXYZ(Tank_body, (int) target.posX, (int) target.posY, (int) target.posZ, 80f, true, false, false, true), -1);
+                if(target.onGround||target.isInWater()||(target instanceof ITank && ((ITank) target).ishittingWater()))Tank_body.getNavigator().setPath(worldForPathfind.getEntityPathToXYZ(Tank_body, (int) target.posX, (int) target.posY, (int) target.posZ, 80f, true, false, false, true), -1);
             }else Tank_body.getNavigator().clearPathEntity();
+            
+            if(always_poit_to_target){
+                Tank_body.rotationYaw = (float) -toDegrees(atan2(target.posX - Tank_body.posX, target.posZ - Tank_body.posZ));
+            }
         }else {
             {
                 Vector3d courseVec = new Vector3d(target.posX,target.posY,target.posZ);
@@ -120,7 +128,7 @@ public class AITankAttack extends EntityAIBase {
                     courseVec.x = -courseVec.z;
                     courseVec.z = tempx;
                 }
-                Tank_body.getNavigator().setPath(worldForPathfind.getEntityPathToXYZ(Tank_body, (int) (Tank_body.posX + courseVec.x), (int) target.posY, (int) (Tank_body.posZ + courseVec.z), 80f, true, false, false, true), 1.2);
+                if(target.onGround||target.isInWater()||(target instanceof ITank && ((ITank) target).ishittingWater()))Tank_body.getNavigator().setPath(worldForPathfind.getEntityPathToXYZ(Tank_body, (int) (Tank_body.posX + courseVec.x), (int) target.posY, (int) (Tank_body.posZ + courseVec.z), 80f, true, false, false, true), 1.2);
             }
         }
         if(rnd.nextInt(100) == 1){

@@ -27,7 +27,7 @@ public class EntityUSA_FighterA extends EntityUSA_FighterBase
 		baseLogic.throttledown_onDive = true;
 		baseLogic.Dive_bombing = true;
 		baseLogic.startDive = 30;
-		baseLogic.cruiseALT = 80;
+		baseLogic.cruiseALT = 45;
 		baseLogic.minALT = 30;
 		baseLogic.maxClimb = -25;
 		baseLogic.maxbank = 60;
@@ -40,9 +40,9 @@ public class EntityUSA_FighterA extends EntityUSA_FighterBase
 		TurretObj cannon3 = new TurretObj(worldObj);
 		{
 			{
-				cannon3.onmotherPos = new Vector3d(0,0,0);
+				cannon3.onMotherPos = new Vector3d(0,0,0);
 				cannon3.motherRotCenter = new Vector3d(baseLogic.rotcenter);
-				cannon3.cannonpos = new Vector3d(1.4,0.6,-2);
+				cannon3.cannonPos = new Vector3d(1.4,0.6,-2);
 				cannon3.turretspeedY = 5;
 				cannon3.turretspeedP = 8;
 				cannon3.turretanglelimtPitchMax = 5;
@@ -52,9 +52,9 @@ public class EntityUSA_FighterA extends EntityUSA_FighterBase
 				cannon3.powor = 15;
 				cannon3.ex = 0.5f;
 				cannon3.cycle_setting = 1;
-				cannon3.flushscale = 2;
+				cannon3.flashscale = 2;
 				cannon3.firesound = "handmadeguns:handmadeguns.20mmfire";
-				cannon3.flushoffset = 1;
+				cannon3.flashoffset = 1;
 				cannon3.spread = 2.5f;
 				cannon3.speed = 8;
 				cannon3.magazineMax = 50;
@@ -65,9 +65,9 @@ public class EntityUSA_FighterA extends EntityUSA_FighterBase
 			}
 			{
 				TurretObj cannon4 = new TurretObj(worldObj);
-				cannon4.onmotherPos = new Vector3d(0,0,0);
+				cannon4.onMotherPos = new Vector3d(0,0,0);
 				cannon4.motherRotCenter = new Vector3d(baseLogic.rotcenter);
-				cannon4.cannonpos = new Vector3d(-1.4,0.6,-2);
+				cannon4.cannonPos = new Vector3d(-1.4,0.6,-2);
 				cannon4.turretspeedY = 5;
 				cannon4.turretspeedP = 8;
 				cannon4.turretanglelimtPitchMax = 5;
@@ -77,9 +77,9 @@ public class EntityUSA_FighterA extends EntityUSA_FighterBase
 				cannon4.powor = 15;
 				cannon4.ex = 0.5f;
 				cannon4.cycle_setting = 1;
-				cannon4.flushscale = 2;
+				cannon4.flashscale = 2;
 				cannon4.firesound = "handmadeguns:handmadeguns.20mmfire";
-				cannon4.flushoffset = 1;
+				cannon4.flashoffset = 1;
 				cannon4.spread = 2.5f;
 				cannon4.speed = 8;
 				cannon4.magazineMax = 50;
@@ -87,15 +87,15 @@ public class EntityUSA_FighterA extends EntityUSA_FighterBase
 				cannon4.reloadTimer = 150;
 				cannon4.canex = false;
 				cannon4.guntype = 2;
-				cannon3.addchild(cannon4);
+				cannon3.addchild_triggerLinked(cannon4);
 			}
 		}
 		baseLogic.subTurret = cannon3;
 		baseLogic.mainTurret = new TurretObj(worldObj);
 		{
-			baseLogic.mainTurret.onmotherPos = new Vector3d(0,0,0);
+			baseLogic.mainTurret.onMotherPos = new Vector3d(0,0,0);
 			baseLogic.mainTurret.motherRotCenter = new Vector3d(baseLogic.rotcenter);
-			baseLogic.mainTurret.cannonpos = new Vector3d(0,-0.2,-2);
+			baseLogic.mainTurret.cannonPos = new Vector3d(0,-0.2,-2);
 			baseLogic.mainTurret.turretspeedY = 5;
 			baseLogic.mainTurret.turretspeedP = 8;
 			baseLogic.mainTurret.turretanglelimtPitchMax = 5;
@@ -107,7 +107,7 @@ public class EntityUSA_FighterA extends EntityUSA_FighterBase
 			baseLogic.mainTurret.cycle_setting = 2;
 			baseLogic.mainTurret.firesound = null;
 			baseLogic.mainTurret.bulletmodel = "byfrou01_Bomb";
-			baseLogic.mainTurret.flushName = null;
+			baseLogic.mainTurret.flashName = null;
 			baseLogic.mainTurret.spread = 0.1f;
 			baseLogic.mainTurret.speed = 0.5f;
 			baseLogic.mainTurret.canex = true;

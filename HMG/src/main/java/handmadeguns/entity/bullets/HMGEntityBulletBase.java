@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.io.NotSerializableException;
 import java.io.OptionalDataException;
 import java.io.StreamCorruptedException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 //import littleMaidMobX.LMM_EntityLittleMaid;
 //import littleMaidMobX.LMM_EntityLittleMaidAvatar;
@@ -16,19 +16,26 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import handmadeguns.HMGAddBullets;
 import handmadeguns.HMGPacketHandler;
+import handmadeguns.HandmadeGunsCore;
 import handmadeguns.Util.SoundInfo;
 import handmadeguns.Util.TrailInfo;
+import handmadeguns.Util.Utils;
 import handmadeguns.Util.sendEntitydata;
 import handmadeguns.entity.EntityHasMaster;
+import handmadeguns.entity.IFF;
+import handmadeguns.entity.MovingObjectPosition_And_Entity;
 import handmadeguns.entity.SpHitCheckEntity;
 import handmadeguns.network.PacketFixClientbullet;
 import handmadeguns.network.PacketSpawnParticle;
 import io.netty.buffer.ByteBuf;
+import littleMaidMobX.LMM_EntityLittleMaid;
+import littleMaidMobX.LMM_EntityLittleMaidAvatar;
+import littleMaidMobX.LMM_EntityLittleMaidAvatarMP;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.Blocks;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.*;
@@ -38,6 +45,7 @@ import net.minecraft.world.WorldServer;
 
 import static handmadeguns.HMGAddBullets.soundlist;
 import static handmadeguns.HandmadeGunsCore.*;
+import static handmadeguns.Util.Utils.getmovingobjectPosition_forBlock;
 import static handmadeguns.network.PacketShotBullet.fromObject;
 import static handmadeguns.network.PacketShotBullet.toObject;
 import static java.lang.Math.*;
@@ -46,6 +54,7 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
 {
     private static final boolean isDebugMessage = false;
     public Entity thrower;
+    public Entity avoidEntity;
     protected Block inBlock;
     public boolean noex;
     public Entity hitedentity;
@@ -58,20 +67,27 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
     public double knockbackXZ = 0.0001;
     public double knockbackY = 0;
     public float resistance = 0.9999f;
-    public float resistanceinwater = 0.9999f;
+    public float resistanceinwater = 0.4f;
     public float acceleration = 0f;
     public String flyingSound = "handmadeguns:handmadeguns.bulletflyby";
     public float flyingSoundLV = 2f;
     public float flyingSoundSP = 1f;
     public float flyingSoundminspeed = 3f;
     public float flyingSoundmaxdist = 3f;
+    public float firstSpeed;
+    public int canPenerate_entity = 1;
+    
+    public int killCNT = -10;
+    
+    
+    public float damageRange = -1;
     //public int fuse;
     
     /**
      * Is the entity that throws this 'thing' (snowball, ender pearl, eye of ender or potion)
      */
     protected int ticksInGround;
-    private int ticksInAir;
+    protected int ticksInAir;
     public int fuse=0;
     
     protected int Bdamege;
@@ -126,7 +142,7 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
         this.thrower = par2Entity;
         this.setSize(0.25F, 0.25F);
         this.setLocationAndAngles(par2Entity.posX, par2Entity.posY + (double)par2Entity.getEyeHeight()*0.85, par2Entity.posZ, (par2Entity instanceof EntityLivingBase ? ((EntityLivingBase)par2Entity).rotationYawHead : par2Entity.rotationYaw), par2Entity.rotationPitch);
-        Vec3 look = getLook(1.0f,par2Entity);
+        Vec3 look = Utils.getLook(1.0f,par2Entity);
         if(look != null) {
             this.posX = par2Entity.posX + look.xCoord;
             this.posY = par2Entity.posY + look.yCoord + par2Entity.getEyeHeight();
@@ -165,6 +181,7 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
     
     public void setThrowableHeading(double par1, double par3, double par5, float par7, float par8)
     {
+        firstSpeed = par7;
         par8 /=2;
         float f2 = MathHelper.sqrt_double(par1 * par1 + par3 * par3 + par5 * par5);
         par1 /= (double)f2;
@@ -230,7 +247,7 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
     
     public void setHeadingFromThrower(Entity entityThrower, float rotationPitchIn, float rotationYawIn, float pitchOffset, float velocity, float inaccuracy)
     {
-        Vec3 look = getLook(1.0f,entityThrower);
+        Vec3 look = Utils.getLook(1.0f,entityThrower);
         if(look == null) {
         }else {
 //            this.motionX = (look.xCoord+this.rand.nextGaussian() * (double)(this.rand.nextBoolean() ? -1 : 1) * 0.00249999994 * (double)inaccuracy) * velocity;
@@ -243,7 +260,7 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
     
     public void setHeadingFromThrower(EntityLivingBase entityThrower, float velocity, float inaccuracy)
     {
-        Vec3 look = getLook(1.0f,entityThrower);
+        Vec3 look = Utils.getLook(1.0f,entityThrower);
         if(look == null) {
         }else {
             this.setThrowableHeading(look.xCoord, look.yCoord, look.zCoord, velocity, inaccuracy);
@@ -312,11 +329,6 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
         this.lastTickPosX = this.posX;
         this.lastTickPosY = this.posY;
         this.lastTickPosZ = this.posZ;
-        if(this.onGround){
-            this.motionX *= 0.3;
-            this.motionY *= 0.3;
-            this.motionZ *= 0.3;
-        }
         this.setSize(0.25F, 0.25F);
         if(!inGround){
             float f = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionZ * this.motionZ);
@@ -424,6 +436,45 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
     
     @Override
     public void setDead() {
+        if(damageRange>0){
+            List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox.expand(damageRange, damageRange, damageRange));
+            for (int j = 0; j < list.size(); ++j) {
+                Entity entity1 = (Entity) list.get(j);
+                if ((this.isInWater() == entity1.isInWater()) && entity1.canBeCollidedWith() && (ticksInAir > 20 ||
+                                                            (iscandamageentity(entity1)))) {
+                    double f = this.getDistanceSq(entity1.posX,entity1.posY + entity1.height/2,entity1.posZ);
+                    if(f < damageRange * damageRange){
+                        Vec3 vec3 = Vec3.createVectorHelper(this.posX, this.posY, this.posZ);
+                        Vec3 vec31 = Vec3.createVectorHelper(entity1.posX,entity1.posY + entity1.height/2,entity1.posZ);
+                        MovingObjectPosition movingobjectposition = getmovingobjectPosition_forBlock(worldObj,vec3, vec31, false, true, false);//衝突するブロックを調べる
+                        if(movingobjectposition == null){
+                            int var2 = this.Bdamege;
+                            if(islmmloaded&&(this.thrower instanceof LMM_EntityLittleMaid || this.thrower instanceof LMM_EntityLittleMaidAvatar || this.thrower instanceof LMM_EntityLittleMaidAvatarMP) && HandmadeGunsCore.cfg_FriendFireLMM){
+                                if (entity1 instanceof LMM_EntityLittleMaid)
+                                {
+                                    var2 = 0;
+                                }
+                                if (entity1 instanceof LMM_EntityLittleMaidAvatar)
+                                {
+                                    var2 = 0;
+                                }
+                                if (entity1 instanceof EntityPlayer)
+                                {
+                                    var2 = 0;
+                                }
+                            }
+                            if(this.thrower instanceof IFF){
+                                if(((IFF) this.thrower).is_this_entity_friend(entity1)){
+                                    var2 = 0;
+                                }
+                            }
+                            entity1.hurtResistantTime = 0;
+                            entity1.attackEntityFrom((new EntityDamageSourceIndirect("explosion", this, this.getThrower())).setProjectile(),var2);
+                        }
+                    }
+                }
+            }
+        }
         super.setDead();
     }
     
@@ -590,25 +641,7 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
         this.fuse = lpbuf.readInt();
         thrower = worldObj.getEntityByID(lpbuf.readInt());
     }
-    public static Vec3 getLook(float p_70676_1_,Entity entity)
-    {
-        float f1;
-        float f2;
-        float f3;
-        float f4;
-        
-        
-        if (p_70676_1_ == 1.0F)
-        {
-            f1 = MathHelper.cos(-(entity instanceof EntityLivingBase ? ((EntityLivingBase)entity).rotationYawHead : entity.rotationYaw) * 0.017453292F - (float)Math.PI);
-            f2 = MathHelper.sin(-(entity instanceof EntityLivingBase ? ((EntityLivingBase)entity).rotationYawHead : entity.rotationYaw) * 0.017453292F - (float)Math.PI);
-            f3 = -MathHelper.cos(-entity.rotationPitch * 0.017453292F);
-            f4 = MathHelper.sin(-entity.rotationPitch * 0.017453292F);
-            return Vec3.createVectorHelper((double)(f2 * f3), (double)f4, (double)(f1 * f3));
-        }else {
-            return null;
-        }
-    }
+    
     public Vec3 getLook(float p_70676_1_,float rotationYawin,float rotationPitchin)
     {
         float f1;
@@ -633,27 +666,15 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
             return Vec3.createVectorHelper((double)(f2 * f3)*p_70676_1_, (double)f4*p_70676_1_, (double)(f1 * f3)*p_70676_1_);
         }
     }
-    static Vec3 RotationVector_byAxisVector(Vec3 axis,Vec3 tovec, float angle)
-    {
-        double axisVectorX = axis.xCoord;
-        double axisVectorY = axis.yCoord;
-        double axisVectorZ = axis.zCoord;
-        double toVectorX = tovec.xCoord;
-        double toVectorY = tovec.yCoord;
-        double toVectorZ = tovec.zCoord;
-        double angleRad = (double)angle / 180.0D * Math.PI;
-        double sintheta = Math.sin(angleRad);
-        double costheta = Math.cos(angleRad);
-        double returnVectorX = (axisVectorX * axisVectorX * (1 - costheta) + costheta)               * toVectorX + (axisVectorX * axisVectorY * (1 - costheta) - axisVectorZ * sintheta) * toVectorY + (axisVectorZ * axisVectorX * (1 - costheta) + axisVectorY * sintheta) * toVectorZ;
-        double returnVectorY = (axisVectorX * axisVectorY * (1 - costheta) + axisVectorZ * sintheta) * toVectorX + (axisVectorY * axisVectorY * (1 - costheta) + costheta)               * toVectorY + (axisVectorY * axisVectorZ * (1 - costheta) - axisVectorX * sintheta) * toVectorZ;
-        double returnVectorZ = (axisVectorZ * axisVectorX * (1 - costheta) - axisVectorY * sintheta) * toVectorX + (axisVectorY * axisVectorZ * (1 - costheta) + axisVectorX * sintheta) * toVectorY + (axisVectorZ * axisVectorZ * (1 - costheta) + costheta)               * toVectorZ;
-        
-        return Vec3.createVectorHelper(returnVectorX, returnVectorY, returnVectorZ);
-    }
-    private boolean iscandamageentity(Entity entity){
+    
+    protected boolean iscandamageentity(Entity entity){
         if(entity != thrower) {
             if(entity instanceof SpHitCheckEntity){
                 if (((SpHitCheckEntity)entity).isRidingEntity(thrower))
+                    return false;
+            }
+            if(entity.ridingEntity instanceof SpHitCheckEntity){
+                if (((SpHitCheckEntity)entity.ridingEntity).isRidingEntity(thrower))
                     return false;
             }
             if(entity instanceof EntityHasMaster && ((EntityHasMaster) entity).getmaster() instanceof SpHitCheckEntity && (((SpHitCheckEntity) ((EntityHasMaster) entity).getmaster()).isRidingEntity(entity) || ((SpHitCheckEntity) ((EntityHasMaster) entity).getmaster()).isRidingEntity(thrower)))return false;
@@ -713,15 +734,14 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
         
         double remainingMovelength = backupmotion.lengthVector();
         Vec3 hitedpos = null;
-        Vec3 remainingMoveVec = Vec3.createVectorHelper(motionX,motionY,motionZ);
-        Vec3 lastpos = Vec3.createVectorHelper(this.posX, this.posY, this.posZ);
+        Vec3 motionVec = Vec3.createVectorHelper(motionX,motionY,motionZ);
         boolean changemotionflag = false;
-        int breakcnt = 0;
-        while(remainingMovelength>0.1) {
+//        int breakcnt = 0;
+        {
             //反射・ヒット処理
             Vec3 vec3 = Vec3.createVectorHelper(this.posX, this.posY, this.posZ);
-            Vec3 vec31 = Vec3.createVectorHelper(this.posX + remainingMoveVec.xCoord, this.posY + remainingMoveVec.yCoord, this.posZ + remainingMoveVec.zCoord);
-            MovingObjectPosition movingobjectposition = this.getmovingobjectPosition_forBlock(vec3, vec31, false, true, false);//衝突するブロックを調べる
+            Vec3 vec31 = Vec3.createVectorHelper(this.posX + motionVec.xCoord, this.posY + motionVec.yCoord, this.posZ + motionVec.zCoord);
+            MovingObjectPosition movingobjectposition = Utils.getmovingobjectPosition_forBlock(worldObj,vec3, vec31, false, true, false);//衝突するブロックを調べる
             //これをやるときに除外判定があればここまでやる必要はなかったのだ、故に作った。
 //            while (movingobjectposition != null) {
 //                hitblock = this.worldObj.getBlock(movingobjectposition.blockX, movingobjectposition.blockY, movingobjectposition.blockZ);
@@ -734,121 +754,105 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
 //                        break;
 //                    }
 //                    breakcnt++;
-//                    Vec3 penerater = Vec3.createVectorHelper(remainingMoveVec.xCoord, remainingMoveVec.yCoord, remainingMoveVec.zCoord);
+//                    Vec3 penerater = Vec3.createVectorHelper(motionVec.xCoord, motionVec.yCoord, motionVec.zCoord);
 //                    penerater = penerater.normalize();
 //                    boolean flag =
-//                            ((this.posX + remainingMoveVec.xCoord - movingobjectposition.hitVec.xCoord)<0 && (this.posX + remainingMoveVec.xCoord - movingobjectposition.hitVec.xCoord-penerater.xCoord)>0) || ((this.posX + remainingMoveVec.xCoord - movingobjectposition.hitVec.xCoord)>0 && (this.posX + remainingMoveVec.xCoord - movingobjectposition.hitVec.xCoord-penerater.xCoord)<0) &&
-//                                                                                                                                                                                                                       ((this.posY + remainingMoveVec.yCoord - movingobjectposition.hitVec.yCoord)<0 && (this.posY + remainingMoveVec.yCoord - movingobjectposition.hitVec.yCoord-penerater.yCoord)>0) || ((this.posY + remainingMoveVec.yCoord - movingobjectposition.hitVec.yCoord)>0 && (this.posY + remainingMoveVec.yCoord - movingobjectposition.hitVec.yCoord-penerater.yCoord)<0) &&
-//                                                                                                                                                                                                                                                                                                                                                                                                                  ((this.posZ + remainingMoveVec.zCoord - movingobjectposition.hitVec.zCoord)<0 && (this.posZ + remainingMoveVec.zCoord - movingobjectposition.hitVec.zCoord-penerater.zCoord)>0) || ((this.posZ + remainingMoveVec.zCoord - movingobjectposition.hitVec.zCoord)>0 && (this.posZ + remainingMoveVec.zCoord - movingobjectposition.hitVec.zCoord-penerater.zCoord)<0);//処理が本来動く範囲を超えた
+//                            ((this.posX + motionVec.xCoord - movingobjectposition.hitVec.xCoord)<0 && (this.posX + motionVec.xCoord - movingobjectposition.hitVec.xCoord-penerater.xCoord)>0) || ((this.posX + motionVec.xCoord - movingobjectposition.hitVec.xCoord)>0 && (this.posX + motionVec.xCoord - movingobjectposition.hitVec.xCoord-penerater.xCoord)<0) &&
+//                                                                                                                                                                                                                       ((this.posY + motionVec.yCoord - movingobjectposition.hitVec.yCoord)<0 && (this.posY + motionVec.yCoord - movingobjectposition.hitVec.yCoord-penerater.yCoord)>0) || ((this.posY + motionVec.yCoord - movingobjectposition.hitVec.yCoord)>0 && (this.posY + motionVec.yCoord - movingobjectposition.hitVec.yCoord-penerater.yCoord)<0) &&
+//                                                                                                                                                                                                                                                                                                                                                                                                                  ((this.posZ + motionVec.zCoord - movingobjectposition.hitVec.zCoord)<0 && (this.posZ + motionVec.zCoord - movingobjectposition.hitVec.zCoord-penerater.zCoord)>0) || ((this.posZ + motionVec.zCoord - movingobjectposition.hitVec.zCoord)>0 && (this.posZ + motionVec.zCoord - movingobjectposition.hitVec.zCoord-penerater.zCoord)<0);//処理が本来動く範囲を超えた
 //                    if(flag){
 //                        movingobjectposition = null;
 //                        break;
 //                    }
 //                    vec3 = Vec3.createVectorHelper(movingobjectposition.hitVec.xCoord + penerater.xCoord, movingobjectposition.hitVec.yCoord + penerater.yCoord, movingobjectposition.hitVec.zCoord + penerater.zCoord);
-//                    vec31 = Vec3.createVectorHelper(this.posX + remainingMoveVec.xCoord, this.posY + remainingMoveVec.yCoord, this.posZ + remainingMoveVec.zCoord);
+//                    vec31 = Vec3.createVectorHelper(this.posX + motionVec.xCoord, this.posY + motionVec.yCoord, this.posZ + motionVec.zCoord);
 //                    movingobjectposition = this.worldObj.func_147447_a(vec3, vec31, false, true, false);
 //                } else {
 //                    break;
 //                }
 //            }
-            breakcnt++;
-            if (breakcnt > 50) {//50回も反射するって無いやろお前…
-                inGround = true;
-                System.out.println("debug1" + hitedpos);
-                System.out.println("debug2" + lastpos);
-                System.out.println("debug3" + remainingMoveVec);
-                break;
-            }
+//            breakcnt++;
+//            if (breakcnt > 50) {//50回も反射するって無いやろお前…
+//                inGround = true;
+//                System.out.println("debug1" + hitedpos);
+//                System.out.println("debug2" + lastpos);
+//                System.out.println("debug3" + motionVec);
+//            }
             vec3 = Vec3.createVectorHelper(this.posX, this.posY, this.posZ);
-            vec31 = Vec3.createVectorHelper(this.posX + remainingMoveVec.xCoord, this.posY + remainingMoveVec.yCoord, this.posZ + remainingMoveVec.zCoord);
+            vec31 = Vec3.createVectorHelper(this.posX + motionVec.xCoord, this.posY + motionVec.yCoord, this.posZ + motionVec.zCoord);
             if (movingobjectposition != null) {
                 vec31 = Vec3.createVectorHelper(movingobjectposition.hitVec.xCoord, movingobjectposition.hitVec.yCoord, movingobjectposition.hitVec.zCoord);
             }
-            float f2;
-            double d0 = 0.0D;
-            Entity entity = null;
-            List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox.addCoord(remainingMoveVec.xCoord, remainingMoveVec.yCoord, remainingMoveVec.zCoord).expand(1, 1, 1));
-            double d1;
-            for (int j = 0; j < list.size(); ++j) {
-                Entity entity1 = (Entity) list.get(j);
-                
-                if (entity1.canBeCollidedWith() && (ticksInAir>8 ||
-                                                            (iscandamageentity(entity1)))) {
-                    float f = 0.3F;
-                    AxisAlignedBB axisalignedbb = entity1.boundingBox.expand((double) f, (double) f, (double) f);
-                    MovingObjectPosition movingobjectposition1 = axisalignedbb.calculateIntercept(vec3, vec31);
-                    if (movingobjectposition1 != null) {
-                        d1 = vec3.distanceTo(movingobjectposition1.hitVec);
-                        
-                        if (d1 < d0 || d0 == 0.0D) {
-                            entity = entity1;
-                            d0 = d1;
+            if(remainingMovelength > firstSpeed/10){
+                List entitylist = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox.addCoord(motionVec.xCoord, motionVec.yCoord, motionVec.zCoord).expand(1, 1, 1));
+                ArrayList<MovingObjectPosition_And_Entity> entities = new ArrayList<MovingObjectPosition_And_Entity>();
+                for (int j = 0; j < entitylist.size(); ++j) {
+                    Entity entity1 = (Entity) entitylist.get(j);
+                    if(entity1 == avoidEntity)continue;
+                    if (entity1.canBeCollidedWith() && (ticksInAir > 8 ||
+                                                                (iscandamageentity(entity1)))) {
+                        entities.add(new MovingObjectPosition_And_Entity(entity1));
+                    }
+                }
+                double d0 = 0.0D;
+                double d1;
+                float f = 0.1F;
+                if(!entities.isEmpty()) {
+                    MovingObjectPosition_And_Entity backup = entities.get(0);//cnt - 1
+                    for (int cnt = 0; cnt < entities.size(); cnt++) {
+                        MovingObjectPosition_And_Entity movingObjectPosition_and_entity = entities.get(cnt);
+                        AxisAlignedBB axisalignedbb = movingObjectPosition_and_entity.entity.boundingBox.expand((double) f, (double) f, (double) f);
+                        MovingObjectPosition movingobjectposition1 = axisalignedbb.calculateIntercept(vec3, vec31);
+                        movingObjectPosition_and_entity.movingObjectPosition = movingobjectposition1;
+                        if (movingobjectposition1 != null) {
+                            d1 = vec3.distanceTo(movingobjectposition1.hitVec);
+                            if ((d1 < d0 || d0 == 0.0D) && cnt > 0) {
+                                entities.set(cnt, backup);
+                                entities.set(cnt-1, movingObjectPosition_and_entity);
+                            }else {
+                                d0 = d1;
+                                backup = movingObjectPosition_and_entity;
+                            }
+                        }else {
+                            entities.remove(cnt);
+                            cnt--;
                         }
                     }
                 }
-            }
-            
-            if (entity != null) {
-                d1 = vec3.distanceTo(vec31);
-                vec3.xCoord = vec3.xCoord + (vec31.xCoord - vec3.xCoord) * d0 / d1;
-                vec3.yCoord = vec3.yCoord + (vec31.yCoord - vec3.yCoord) * d0 / d1;
-                vec3.zCoord = vec3.zCoord + (vec31.zCoord - vec3.zCoord) * d0 / d1;
-                
-                movingobjectposition = new MovingObjectPosition(entity);
-                movingobjectposition.hitVec = vec3;
-            }
-            int hitside = -1;
-            Vec3 tohitposVec = Vec3.createVectorHelper(remainingMoveVec.xCoord,remainingMoveVec.yCoord,remainingMoveVec.zCoord);
-            if (movingobjectposition != null) {
-                if (movingobjectposition.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY && movingobjectposition.entityHit != null &&  movingobjectposition.hitVec != null) {
-                    tohitposVec.xCoord = (double) ((float) (movingobjectposition.hitVec.xCoord - this.posX));
-                    tohitposVec.yCoord = (double) ((float) (movingobjectposition.hitVec.yCoord - this.posY));
-                    tohitposVec.zCoord = (double) ((float) (movingobjectposition.hitVec.zCoord - this.posZ));
-                    if(canbounce && !isDead){
-                        if(tohitposVec.lengthVector() >0.1) {
+//                System.out.println("debug" + entities);
+                int hitedCNT = 0;
+                for(MovingObjectPosition_And_Entity current : entities){
+                    if(!canbounce && canPenerate_entity <= hitedCNT)break;
+                    hitedCNT++;
+                    MovingObjectPosition movingobjectposition1 = current.movingObjectPosition;
+                    if (movingobjectposition1 != null) {
+                        vec3.xCoord = movingobjectposition1.hitVec.xCoord;
+                        vec3.yCoord = movingobjectposition1.hitVec.yCoord;
+                        vec3.zCoord = movingobjectposition1.hitVec.zCoord;
+    
+                        movingobjectposition = new MovingObjectPosition(current.entity);
+                        movingobjectposition.hitVec = vec3;
+                        movingobjectposition.sideHit = movingobjectposition1.sideHit;
+                        avoidEntity = current.entity;
+                        if (canbounce && !isDead) {
                             this.onImpact(movingobjectposition);
-                            Vec3 temp = tohitposVec.normalize();
-                            hitedpos = movingobjectposition.hitVec;
-                            hitedpos.xCoord += temp.xCoord*1;
-                            hitedpos.yCoord += temp.yCoord*1;
-                            hitedpos.zCoord += temp.zCoord*1;
-                            tohitposVec.xCoord += temp.xCoord;
-                            tohitposVec.yCoord += temp.yCoord;
-                            tohitposVec.zCoord += temp.zCoord;
                             motionX *= 0.5;
                             motionY *= 0.5;
                             motionZ *= 0.5;
                             changemotionflag = true;
-                        }else {
-                            hitedpos = movingobjectposition.hitVec;
-                            if(hitedpos != null) {
-                                this.posX = hitedpos.xCoord;
-                                this.posY = hitedpos.yCoord;
-                                this.posZ = hitedpos.zCoord;
-                            }
-                        }
-                    }else {
-                        this.onImpact(movingobjectposition);
-                        if(this instanceof HMGEntityBullet_AP){
-                            Vec3 temp = tohitposVec.normalize();
-                            hitedpos = movingobjectposition.hitVec;
-                            hitedpos.xCoord += temp.xCoord*1;
-                            hitedpos.yCoord += temp.yCoord*1;
-                            hitedpos.zCoord += temp.zCoord*1;
-                            remainingMoveVec.xCoord -= tohitposVec.xCoord;
-                            remainingMoveVec.yCoord -= tohitposVec.yCoord;
-                            remainingMoveVec.zCoord -= tohitposVec.zCoord;
-                        }else {
-                            remainingMoveVec.xCoord = 0;
-                            remainingMoveVec.yCoord = 0;
-                            remainingMoveVec.zCoord = 0;
-                            tohitposVec.xCoord = 0;
-                            tohitposVec.yCoord = 0;
-                            tohitposVec.zCoord = 0;
-                            hitedpos = movingobjectposition.hitVec;
-                            break;
+                        } else {
+                            this.onImpact(movingobjectposition);
                         }
                     }
+                }
+            }else {
+                killCNT++;
+            }
+            if(killCNT>0)this.setDead();
+            int hitside = -1;
+            if (movingobjectposition != null) {
+                hitedpos = movingobjectposition.hitVec;
+                if (movingobjectposition.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY && movingobjectposition.entityHit != null &&  movingobjectposition.hitVec != null) {
                 } else if (movingobjectposition.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
                     this.onImpact(movingobjectposition);
                     this.xTile = movingobjectposition.blockX;
@@ -856,18 +860,8 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
                     this.zTile = movingobjectposition.blockZ;
                     this.inBlock = this.worldObj.getBlock(this.xTile, this.yTile, this.zTile);
                     hitside = movingobjectposition.sideHit;
-                    tohitposVec.xCoord = (double) ((float) (movingobjectposition.hitVec.xCoord - this.posX));
-                    tohitposVec.yCoord = (double) ((float) (movingobjectposition.hitVec.yCoord - this.posY));
-                    tohitposVec.zCoord = (double) ((float) (movingobjectposition.hitVec.zCoord - this.posZ));
                     
-                    f2 = MathHelper.sqrt_double(remainingMoveVec.xCoord * remainingMoveVec.xCoord + remainingMoveVec.zCoord * remainingMoveVec.zCoord + remainingMoveVec.yCoord * remainingMoveVec.yCoord);
-                    movingobjectposition.hitVec.xCoord = movingobjectposition.hitVec.xCoord - remainingMoveVec.xCoord / f2 * 0.25;
-                    movingobjectposition.hitVec.yCoord = movingobjectposition.hitVec.yCoord - remainingMoveVec.yCoord / f2 * 0.25;
-                    movingobjectposition.hitVec.zCoord = movingobjectposition.hitVec.zCoord - remainingMoveVec.zCoord / f2 * 0.25;
-                    this.inGround = true;
-                    hitedpos = movingobjectposition.hitVec;
-                    lockedpos = movingobjectposition.hitVec;
-                    if (canbounce) {
+                    if(canbounce){
                         switch (hitside) {//ヒットさせる処理
                             case 0:
                             case 1://Y面
@@ -886,61 +880,52 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
                                 break;
                         }
                     }
+                    float f2 = (float) motionVec.lengthVector();
+                    hitedpos.xCoord = hitedpos.xCoord - motionVec.xCoord / f2 * 0.26;
+                    hitedpos.yCoord = hitedpos.yCoord - motionVec.yCoord / f2 * 0.26;
+                    hitedpos.zCoord = hitedpos.zCoord - motionVec.zCoord / f2 * 0.26;
+                    if(!canbounce) {
+                        this.inGround = true;
+                        lockedpos = movingobjectposition.hitVec;
+                    }
                     if (this.inBlock.getMaterial() != Material.air) {
                         this.inBlock.onEntityCollidedWithBlock(this.worldObj, this.xTile, this.yTile, this.zTile, this);
                     }
                 }
-                remainingMoveVec.xCoord = remainingMoveVec.xCoord - tohitposVec.xCoord;
-                remainingMoveVec.yCoord = remainingMoveVec.yCoord - tohitposVec.yCoord;
-                remainingMoveVec.zCoord = remainingMoveVec.zCoord - tohitposVec.zCoord;
                 if (canbounce) {
                     switch (hitside) {
                         case 0:
                         case 1:
-                            remainingMoveVec.yCoord = -remainingMoveVec.yCoord * bouncerate;
+                            if(motionY < 0)
+                                onGround = true;
                             motionY = -motionY * bouncerate;
                             changemotionflag = true;
-                            onGround = true;
                             break;
                         case 2:
                         case 3:
-                            remainingMoveVec.zCoord = -remainingMoveVec.zCoord * bouncerate;
                             motionZ = -motionZ * bouncerate;
                             changemotionflag = true;
                             break;
                         case 4:
                         case 5:
-                            remainingMoveVec.xCoord = -remainingMoveVec.xCoord * bouncerate;
                             motionX = -motionX * bouncerate;
                             changemotionflag = true;
                             break;
                     }
+                    lockedpos = null;
                     inGround = false;
-                } else {
-                    remainingMoveVec.xCoord =
-                            remainingMoveVec.yCoord =
-                                    remainingMoveVec.zCoord =0;
                 }
-                lastpos = Vec3.createVectorHelper(this.posX + tohitposVec.xCoord,
-                        this.posY + tohitposVec.yCoord,
-                        this.posZ + tohitposVec.zCoord);
-            }else {
-                lastpos = Vec3.createVectorHelper(this.posX + tohitposVec.xCoord,
-                        this.posY + tohitposVec.yCoord,
-                        this.posZ + tohitposVec.zCoord);
-                remainingMoveVec = Vec3.createVectorHelper(0,0,0);
-                break;
             }
-            remainingMovelength = remainingMoveVec.lengthVector();
             if(hitedpos != null) {
                 this.posX = hitedpos.xCoord;
                 this.posY = hitedpos.yCoord;
                 this.posZ = hitedpos.zCoord;
+            }else {
+                this.posX += this.motionX;
+                this.posY += this.motionY;
+                this.posZ += this.motionZ;
             }
         }
-        this.posX = lastpos.xCoord;
-        this.posY = lastpos.yCoord;
-        this.posZ = lastpos.zCoord;
 //            if(inGround && canbounce){
 //                this.motionX = backupmotion.xCoord;
 //                this.motionY = backupmotion.yCoord;
@@ -1028,7 +1013,7 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
             Vec3 axis = backupmotion.crossProduct(course);
             double deg = toDegrees(acos(backupmotion.dotProduct(course)));
             if(abs(deg)<induction_precision) backupmotion = course;
-            else backupmotion = RotationVector_byAxisVector(axis,backupmotion, induction_precision);
+            else backupmotion = Utils.RotationVector_byAxisVector(axis,backupmotion, induction_precision);
             this.motionX = backupmotion.xCoord * f2;
             this.motionY = backupmotion.yCoord * f2;
             this.motionZ = backupmotion.zCoord * f2;
@@ -1055,7 +1040,7 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
             Vec3 axis = backupmotion.crossProduct(course);
             double deg = toDegrees(acos(backupmotion.dotProduct(course)));
             if(abs(deg)<induction_precision) backupmotion = course;
-            else backupmotion = RotationVector_byAxisVector(axis,backupmotion, induction_precision);
+            else backupmotion = Utils.RotationVector_byAxisVector(axis,backupmotion, induction_precision);
             this.motionX = backupmotion.xCoord * f2;
             this.motionY = backupmotion.yCoord * f2;
             this.motionZ = backupmotion.zCoord * f2;
@@ -1065,226 +1050,12 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
             ismotionupdate |= true;
         }
         this.motionY -= (double) gra * cfg_defgravitycof;
+        if(onGround && this.motionY < 0)this.motionY = 0;
+        if(this.onGround){
+            this.motionX *= 0.8;
+            this.motionY *= 0.8;
+            this.motionZ *= 0.8;
+        }
         return ismotionupdate;
-    }
-    private MovingObjectPosition getmovingobjectPosition_forBlock(Vec3 start, Vec3 end, boolean p_147447_3_, boolean p_147447_4_, boolean p_147447_5_){
-        if (!Double.isNaN(start.xCoord) && !Double.isNaN(start.yCoord) && !Double.isNaN(start.zCoord))
-        {
-            if (!Double.isNaN(end.xCoord) && !Double.isNaN(end.yCoord) && !Double.isNaN(end.zCoord))
-            {
-                int i = MathHelper.floor_double(end.xCoord);
-                int j = MathHelper.floor_double(end.yCoord);
-                int k = MathHelper.floor_double(end.zCoord);
-                int l = MathHelper.floor_double(start.xCoord);
-                int i1 = MathHelper.floor_double(start.yCoord);
-                int j1 = MathHelper.floor_double(start.zCoord);
-                Block block = worldObj.getBlock(l, i1, j1);
-                int k1 = worldObj.getBlockMetadata(l, i1, j1);
-                
-                if ((!p_147447_4_ || block.getCollisionBoundingBoxFromPool(worldObj, l, i1, j1) != null) && isCollidableBlock(block) && block.canCollideCheck(k1, p_147447_3_))
-                {
-                    MovingObjectPosition movingobjectposition = block.collisionRayTrace(worldObj, l, i1, j1, start, end);
-                    
-                    if (movingobjectposition != null)
-                    {
-                        return movingobjectposition;
-                    }
-                }
-                
-                MovingObjectPosition movingobjectposition2 = null;
-                k1 = 200;
-                
-                while (k1-- >= 0)
-                {
-                    if (Double.isNaN(start.xCoord) || Double.isNaN(start.yCoord) || Double.isNaN(start.zCoord))
-                    {
-                        return null;
-                    }
-                    
-                    if (l == i && i1 == j && j1 == k)
-                    {
-                        return p_147447_5_ ? movingobjectposition2 : null;
-                    }
-                    
-                    boolean flag6 = true;
-                    boolean flag3 = true;
-                    boolean flag4 = true;
-                    double d0 = 999.0D;
-                    double d1 = 999.0D;
-                    double d2 = 999.0D;
-                    
-                    if (i > l)
-                    {
-                        d0 = (double)l + 1.0D;
-                    }
-                    else if (i < l)
-                    {
-                        d0 = (double)l + 0.0D;
-                    }
-                    else
-                    {
-                        flag6 = false;
-                    }
-                    
-                    if (j > i1)
-                    {
-                        d1 = (double)i1 + 1.0D;
-                    }
-                    else if (j < i1)
-                    {
-                        d1 = (double)i1 + 0.0D;
-                    }
-                    else
-                    {
-                        flag3 = false;
-                    }
-                    
-                    if (k > j1)
-                    {
-                        d2 = (double)j1 + 1.0D;
-                    }
-                    else if (k < j1)
-                    {
-                        d2 = (double)j1 + 0.0D;
-                    }
-                    else
-                    {
-                        flag4 = false;
-                    }
-                    
-                    double d3 = 999.0D;
-                    double d4 = 999.0D;
-                    double d5 = 999.0D;
-                    double d6 = end.xCoord - start.xCoord;
-                    double d7 = end.yCoord - start.yCoord;
-                    double d8 = end.zCoord - start.zCoord;
-                    
-                    if (flag6)
-                    {
-                        d3 = (d0 - start.xCoord) / d6;
-                    }
-                    
-                    if (flag3)
-                    {
-                        d4 = (d1 - start.yCoord) / d7;
-                    }
-                    
-                    if (flag4)
-                    {
-                        d5 = (d2 - start.zCoord) / d8;
-                    }
-                    byte b0;
-                    
-                    if (d3 < d4 && d3 < d5)
-                    {
-                        if (i > l)
-                        {
-                            b0 = 4;
-                        }
-                        else
-                        {
-                            b0 = 5;
-                        }
-                        
-                        start.xCoord = d0;
-                        start.yCoord += d7 * d3;
-                        start.zCoord += d8 * d3;
-                    }
-                    else if (d4 < d5)
-                    {
-                        if (j > i1)
-                        {
-                            b0 = 0;
-                        }
-                        else
-                        {
-                            b0 = 1;
-                        }
-                        
-                        start.xCoord += d6 * d4;
-                        start.yCoord = d1;
-                        start.zCoord += d8 * d4;
-                    }
-                    else
-                    {
-                        if (k > j1)
-                        {
-                            b0 = 2;
-                        }
-                        else
-                        {
-                            b0 = 3;
-                        }
-                        
-                        start.xCoord += d6 * d5;
-                        start.yCoord += d7 * d5;
-                        start.zCoord = d2;
-                    }
-                    
-                    Vec3 vec32 = Vec3.createVectorHelper(start.xCoord, start.yCoord, start.zCoord);
-                    l = (int)(vec32.xCoord = (double)MathHelper.floor_double(start.xCoord));
-                    
-                    if (b0 == 5)
-                    {
-                        --l;
-                        ++vec32.xCoord;
-                    }
-                    
-                    i1 = (int)(vec32.yCoord = (double)MathHelper.floor_double(start.yCoord));
-                    
-                    if (b0 == 1)
-                    {
-                        --i1;
-                        ++vec32.yCoord;
-                    }
-                    
-                    j1 = (int)(vec32.zCoord = (double)MathHelper.floor_double(start.zCoord));
-                    
-                    if (b0 == 3)
-                    {
-                        --j1;
-                        ++vec32.zCoord;
-                    }
-                    
-                    Block block1 = worldObj.getBlock(l, i1, j1);
-                    int l1 = worldObj.getBlockMetadata(l, i1, j1);
-                    
-                    if (!p_147447_4_ || isCollidableBlock(block1) && block1.getCollisionBoundingBoxFromPool(worldObj, l, i1, j1) != null)
-                    {
-                        if ( block1.canCollideCheck(l1, p_147447_3_))
-                        {
-                            MovingObjectPosition movingobjectposition1 = block1.collisionRayTrace(worldObj, l, i1, j1, start, end);
-                            
-                            if (movingobjectposition1 != null)
-                            {
-                                return movingobjectposition1;
-                            }
-                        }
-                        else
-                        {
-                            movingobjectposition2 = new MovingObjectPosition(l, i1, j1, b0, start, false);
-                        }
-                    }
-                }
-                
-                return p_147447_5_ ? movingobjectposition2 : null;
-            }
-            else
-            {
-                return null;
-            }
-        }
-        else
-        {
-            return null;
-        }
-    }
-    public static boolean isCollidableBlock(Block block){
-        Random rand = new Random();
-        return !((((block.getMaterial() == Material.plants) || (block.getMaterial() == Material.leaves) || ((
-                                                                                                                    block.getMaterial() == Material.glass ||
-                                                                                                                            block instanceof BlockFence ||
-                                                                                                                            block instanceof BlockFenceGate ||
-                                                                                                                            block == Blocks.iron_bars) && rand.nextInt(5) < 2))));
     }
 }

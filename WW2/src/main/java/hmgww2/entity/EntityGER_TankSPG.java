@@ -2,6 +2,7 @@ package hmgww2.entity;
 
 
 import hmggvcmob.ai.AITankAttack;
+import hmgww2.entity.ai.AITankBombEnemyFlag;
 import hmvehicle.entity.parts.logics.TankBaseLogic;
 import hmvehicle.entity.parts.turrets.TurretObj;
 import net.minecraft.world.World;
@@ -16,9 +17,13 @@ public class EntityGER_TankSPG extends EntityGER_TankBase
     {
         super(par1World);
         this.setSize(4F, 2.5F);
-        baseLogic = new TankBaseLogic(this,0.14f,0.65f,false,"gvcmob:gvcmob.T34Track");
+        baseLogic = new TankBaseLogic(this,0.14f,0.5f,false,"hmgww2:hmgww2.PzIVTrack");
+        AITankBombEnemyFlag tankBombEnemyFlag = new AITankBombEnemyFlag(this);
+        this.tasks.addTask(1,tankBombEnemyFlag);
         aiTankAttack = new AITankAttack(this,6400,400,10,10);
-        this.tasks.addTask(1,aiTankAttack);
+        aiTankAttack.setAlways_poit_to_target(true);
+        baseLogic.always_poit_to_target = true;
+        this.tasks.addTask(2,aiTankAttack);
         playerpos = new Vector3d(0.7,2.85,1.6);
         seat_onTurret = false;
         zoomingplayerpos = new Vector3d(0.3,2.70,0.6);
@@ -26,16 +31,16 @@ public class EntityGER_TankSPG extends EntityGER_TankBase
         turretpos = new Vector3d(0F,2.1500f, 0.200f);
         mainTurret = new TurretObj(worldObj);
         {
-            mainTurret.onmotherPos = new Vector3d(0F,2.1500f, -0.200f);
-            mainTurret.cannonpos = cannonpos;
+            mainTurret.onMotherPos = new Vector3d(0F,2.1500f, -0.200f);
+            mainTurret.cannonPos = cannonpos;
             mainTurret.turretPitchCenterpos = new Vector3d(0,0,0);
-            mainTurret.turretspeedY = 2;
-            mainTurret.turretspeedP = 3;
+            mainTurret.turretspeedY = 1;
+            mainTurret.turretspeedP = 0.5;
             mainTurret.currentEntity = this;
             mainTurret.powor = 500;
             mainTurret.cycle_setting = 400;
             mainTurret.ex = 3.0F;
-            mainTurret.firesound = "hmgww2:hmgww2.152mmhowit";
+            mainTurret.firesound = "hmgww2:hmgww2.10.5cmLefh";
             mainTurret.spread = 2;
             mainTurret.speed = 4;
             mainTurret.canex = true;

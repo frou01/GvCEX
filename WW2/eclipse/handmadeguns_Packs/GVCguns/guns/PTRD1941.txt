@@ -4,6 +4,7 @@ BulletGravity,0.485
 
 BlletSpread,4.0f
 ADS_Spread_coefficient,0.01
+BlletSpreadDiffusion,16,0,4,1,6,0.8
 Motion,0.35
 
 Recoil,30
@@ -58,7 +59,7 @@ ScopeTexture,scope_svd.png,scope_svd.png,scope_svd.png
 RenderCross,false
 DropMagazine,false
 
-Magazine,0,HandmadeGuns,14.5mm Ammo
+MultiMagazine,HandmadeGuns:14.5mm Ammo,HandmadeGuns:14.5mm Ammo (HE)
 MagazineSG,0,HandmadeGuns,bullet_shell_hmg
 MagazineGL,0,HandmadeGuns,bullet_rr_hmg
 

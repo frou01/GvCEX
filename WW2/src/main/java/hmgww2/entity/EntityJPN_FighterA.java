@@ -16,7 +16,7 @@ public class EntityJPN_FighterA extends EntityJPN_FighterBase
 //		nboundingbox = new ModifiedBoundingBox(-20,-20,-20,20,20,20,0,0,-6.27,2.5,5,19);
 //		nboundingbox.rot.set(this.bodyRot);
 //		proxy.replaceBoundingbox(this,nboundingbox);
-//		((ModifiedBoundingBox)this.boundingBox).updateOBB(this.posX,this.posY,this.posZ);
+//		((ModifiedBoundingBox)this.boundingBox).update(this.posX,this.posY,this.posZ);
 		ignoreFrustumCheck = true;
 		baseLogic.throttle_gearDown = 1.7f;
 		baseLogic.throttle_Max = 2.7f;
@@ -42,8 +42,8 @@ public class EntityJPN_FighterA extends EntityJPN_FighterBase
 			TurretObj cannon1 = new TurretObj(worldObj);
 			{
 				cannon1.motherRotCenter = new Vector3d(baseLogic.rotcenter);
-				cannon1.cannonpos = new Vector3d(-1.45, 0.72, -0.65);
-				cannon1.flushoffset = 0;
+				cannon1.cannonPos = new Vector3d(-1.45, 0.72, -0.65);
+				cannon1.flashoffset = 0;
 				cannon1.turretspeedY = 5;
 				cannon1.turretspeedP = 8;
 				cannon1.turretanglelimtPitchMax = 5;
@@ -65,8 +65,8 @@ public class EntityJPN_FighterA extends EntityJPN_FighterBase
 			{
 				TurretObj cannon2 = new TurretObj(worldObj);
 				cannon2.motherRotCenter = new Vector3d(baseLogic.rotcenter);
-				cannon2.cannonpos = new Vector3d(1.45, 0.72, -0.65);
-				cannon2.flushoffset = 0;
+				cannon2.cannonPos = new Vector3d(1.45, 0.72, -0.65);
+				cannon2.flashoffset = 0;
 				cannon2.turretspeedY = 5;
 				cannon2.turretspeedP = 8;
 				cannon2.turretanglelimtPitchMax = 5;
@@ -83,15 +83,15 @@ public class EntityJPN_FighterA extends EntityJPN_FighterBase
 				cannon2.speed = 8;
 				cannon2.canex = false;
 				cannon2.guntype = 2;
-				cannon1.addchild(cannon2);
+				cannon1.addchild_triggerLinked(cannon2);
 			}
 			baseLogic.subTurret = cannon1;
 		}
 		baseLogic.mainTurret = new TurretObj(worldObj);
 		{
-			baseLogic.mainTurret.onmotherPos = new Vector3d(0,-1,-2);
+			baseLogic.mainTurret.onMotherPos = new Vector3d(0,-1,-2);
 			baseLogic.mainTurret.motherRotCenter = new Vector3d(0,1.2,0);
-			baseLogic.mainTurret.cannonpos = new Vector3d(0,-0.1,-2);
+			baseLogic.mainTurret.cannonPos = new Vector3d(0,-0.1,-2);
 			baseLogic.mainTurret.turretspeedY = 5;
 			baseLogic.mainTurret.turretspeedP = 8;
 			baseLogic.mainTurret.turretanglelimtPitchMax = 5;
@@ -102,7 +102,7 @@ public class EntityJPN_FighterA extends EntityJPN_FighterBase
 			baseLogic.mainTurret.ex = 4.0F;
 			baseLogic.mainTurret.cycle_setting = 2;
 			baseLogic.mainTurret.firesound = null;
-			baseLogic.mainTurret.flushName = null;
+			baseLogic.mainTurret.flashName = null;
 			baseLogic.mainTurret.spread = 0;
 			baseLogic.mainTurret.speed = 0.1f;
 			baseLogic.mainTurret.acceler = 0.1f;

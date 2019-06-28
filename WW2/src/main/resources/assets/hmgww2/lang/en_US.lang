@@ -132,32 +132,30 @@ entity.HMGGVCWW2.EntityRUS_FighterA.name=USSR Attacker
 entity.HMGGVCWW2.EntityRUS_ShipB.name=USSR BattleShip
 entity.HMGGVCWW2.EntityRUS_ShipD.name=USSR Gunboat
 
-hmgww2.followjpn.name=ついてこい！
-hmgww2.waitjpn.name=待て！
-hmgww2.freejpn.name=撃て！
-hmgww2.flagjpn.name=旗を取りに行け！
-hmgww2.vfreejpn.name=車両の支援を要請する！
-hmgww2.vwaitjpn.name=車両待て！
-hmgww2.ridejpn.name=車両を起動せよ！
+hmgww2.followjpn.name=ついてこい！(Follow me!)
+hmgww2.waitjpn.name=待て！(Wait here!)
+hmgww2.freejpn.name=自由戦闘！(Fights freely!)
+hmgww2.flagjpn.name=旗を取りに行け！(Attack Enemy position!)
+hmgww2.weaponFreejpn.name=射撃せよ！(Open fire!)
+hmgww2.holdFirejpn..name=撃つな！(Hold your fire!)
 
 hmgww2.followusa.name=Follow me!
 hmgww2.waitusa.name=Wait here!
-hmgww2.freeusa.name=Fire!
+hmgww2.freeusa.name=Fights freely!
 hmgww2.flagusa.name=Attack Enemy position!
-hmgww2.vfreeusa.name=Tanks,Fire!
-hmgww2.vwaitusa.name=Tanks wait!
+hmgww2.weaponFreeusa.name=Fire!
+hmgww2.holdFireusa.name=Hold your fire!
 
-hmgww2.followger.name=Folge mir!
-hmgww2.waitger.name=Wartet Sie hier.!
-hmgww2.freeger.name=Achtung,Feuer!
-hmgww2.flagger.name=Greife die feindliche Flagge an!
-hmgww2.vfreeger.name=Panzer,Feuer!
-hmgww2.vwaitger.name=Panzer warten!
+hmgww2.followger.name=Folge mir!(Follow me!)
+hmgww2.waitger.name=Wartet Sie hier.!(Wait here!)
+hmgww2.freeger.name=Achtung,Feuer!(Fights freely!)
+hmgww2.flagger.name=Greife die feindliche Flagge an!(Attack Enemy position!)
+hmgww2.weaponFreeger.name=Achtung,Feuer!(Open fire!)
+hmgww2.holdFireger.name=Nicht feuer!(Hold your fire!)
 
-hmgww2.followrus.name=Следуй за мной!
-hmgww2.waitrus.name=Подожди здесь!
-hmgww2.freerus.name=ОГОНЬ!
-hmgww2.flagrus.name=атаковать вражескую позицию!
-hmgww2.vfreerus.name=Танки, Огонь!
-hmgww2.vwaitrus.name=Танки, погоди!
-
+hmgww2.followrus.name=Следуй за мной!(Follow me!)
+hmgww2.waitrus.name=Подожди здесь!(Wait here!)
+hmgww2.freerus.name=Свободная битва!(Fights freely!)
+hmgww2.flagrus.name=атаковать вражескую позицию!(Attack Enemy position!)
+hmgww2.weaponFreerus.name=Огонь!(Open fire!)
+hmgww2.holdFirerus.name=Прекрати стрелять!(Hold your fire!)

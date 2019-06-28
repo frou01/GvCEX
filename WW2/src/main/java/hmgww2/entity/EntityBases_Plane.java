@@ -3,7 +3,6 @@ package hmgww2.entity;
 import hmgww2.Nation;
 import hmvehicle.entity.parts.Iplane;
 import hmvehicle.entity.parts.ModifiedBoundingBox;
-import hmvehicle.entity.parts.SeatInfo;
 import hmvehicle.entity.parts.logics.IbaseLogic;
 import hmvehicle.entity.parts.logics.PlaneBaseLogic;
 import net.minecraft.entity.*;
@@ -27,10 +26,6 @@ public abstract class EntityBases_Plane extends EntityBases implements Iplane {
 	public EntityBases_Plane(World par1World) {
 		super(par1World);
 		this.setSize(5f, 5f);
-//		nboundingbox = new ModifiedBoundingBox(-20,-20,-20,20,20,20,0,0,-6.27,2.5,5,19);
-//		nboundingbox.rot.set(this.bodyRot);
-//		proxy.replaceBoundingbox(this,nboundingbox);
-//		((ModifiedBoundingBox)this.boundingBox).updateOBB(this.posX,this.posY,this.posZ);
 		ignoreFrustumCheck = true;
 		baseLogic = new PlaneBaseLogic(worldObj, this);
 		baseLogic.speedfactor = 0.009f;
@@ -45,10 +40,13 @@ public abstract class EntityBases_Plane extends EntityBases implements Iplane {
 		baseLogic.slipresist = 0.05f;
 //		baseLogic.slipresist = 4;
 		
-		ModifiedBoundingBox nboundingbox = new ModifiedBoundingBox(-1.5,0,-1.5,1.5,5,1.5,0,0,-6.27,2.5,5,19);
+		ModifiedBoundingBox nboundingbox = new ModifiedBoundingBox(-1.5,0,-1.5,
+				                                                          1.5,5,1.5,
+				                                                          0,1.5,0,2.5,3,8);
 		nboundingbox.rot.set(baseLogic.bodyRot);
 		proxy.replaceBoundingbox(this,nboundingbox);
-		((ModifiedBoundingBox)this.boundingBox).updateOBB(this.posX,this.posY,this.posZ);
+		((ModifiedBoundingBox)this.boundingBox).update(this.posX,this.posY,this.posZ);
+		interval = 10;
 	}
 	
 	public double getMountedYOffset() {
@@ -283,9 +281,6 @@ public abstract class EntityBases_Plane extends EntityBases implements Iplane {
 		return mode != 0;
 	}
 	
-	public boolean attackEntityFrom(DamageSource source, float par2) {
-		return super.attackEntityFrom(source,par2-armor);
-	}
 	public void setPosition(double x, double y, double z)
 	{
 		if(baseLogic != null)baseLogic.setPosition(x,y,z);

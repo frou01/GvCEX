@@ -22,7 +22,7 @@ public class BlockFlag_GER extends BlockGERFlagBase
 	public BlockFlag_GER() {
 		super();
 		flagType = FlagType.Barrack;
-		maxs = 40;
+		maxs = 15;
 		spawntime = 800;
 	}
 }

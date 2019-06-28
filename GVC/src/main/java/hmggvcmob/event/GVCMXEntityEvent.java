@@ -51,22 +51,6 @@ public class GVCMXEntityEvent {
         }
     }
     @SubscribeEvent
-    public void entitydamaged(LivingHurtEvent event)
-    {
-        EntityLivingBase entity = event.entityLiving;
-        if(entity != null){
-            if ((entity.ridingEntity instanceof EntitySoBases || entity.ridingEntity instanceof EntityChild)) {
-                if(entity instanceof EntityPlayer) {
-                    event.setCanceled(true);
-                }
-                if(event.source.getDamageType().equals("explosion") || event.source.getDamageType().equals("explosion.player")){
-                    event.setCanceled(true);
-                }
-                entity.ridingEntity.attackEntityFrom(event.source,event.ammount);
-            }
-        }
-    }
-    @SubscribeEvent
     public void canupdate(EntityEvent.CanUpdate event){
         if(event.entity instanceof TU95){
             event.entity.setDead();

@@ -42,5 +42,14 @@
   "hmgww2.PzIVTrack": { "category": "neutral","sounds": ["hmgww2:PzIVTrack"]},
   "hmgww2.TigerTrack": { "category": "neutral","sounds": ["hmgww2:TigerTrack"]},
   "hmgww2.Chi-haTrack": { "category": "neutral","sounds": ["hmgww2:Chi-haTrack"]},
-  "hmgww2.T34Track": { "category": "neutral","sounds": ["hmgww2:T34Track"]}
+  "hmgww2.T34Track": { "category": "neutral","sounds": ["hmgww2:T34Track"]},
+  "hmgww2.10.5cmLefh": { "category": "neutral","sounds": ["hmgww2:10.5cmLefh"]},
+  "hmgww2.75mm-M3Fire": { "category": "neutral","sounds": ["hmgww2:75mm-M3Fire"]}
+,"hmgww2.M4Engine": { "category": "neutral","sounds": ["hmgww2:M4Engine"]}
+,"hmgww2.TorpLaunch": { "category": "neutral","sounds": ["hmgww2:TorpLaunch"]}
+,"hmgww2.sub_torpLaunch": { "category": "neutral","sounds": ["hmgww2:sub_torpLaunch"]}
+,"hmgww2.WeaponBell": { "category": "neutral","sounds": ["hmgww2:WeaponBell"]}
+,"hmgww2.deload_pick_load": { "category": "neutral","sounds": ["hmgww2:deload_pick_load"]}
+,"hmgww2.ML-20DeloadAndReload": { "category": "neutral","sounds": ["hmgww2:ML-20DeloadAndReload"]}
+,"hmgww2.ShipAlert": { "category": "neutral","sounds": ["hmgww2:ShipAlert"]}
 }

@@ -70,6 +70,7 @@ public class TileEntityFlag extends TileEntity
     }
     public TileEntityFlag(){
         super();
+        getMaxRenderDistanceSquared();
     }
     @Override
     public Packet getDescriptionPacket() {

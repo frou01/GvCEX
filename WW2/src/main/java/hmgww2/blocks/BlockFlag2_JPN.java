@@ -22,7 +22,8 @@ public class BlockFlag2_JPN extends BlockJPNFlagBase
     public BlockFlag2_JPN() {
 	    super();
 	    flagType = FlagType.Factory;
-	    maxs = 5;
+	    maxs = 2;
+	    flagRange = 32;
 	    spawntime = 1200;
     }
 	

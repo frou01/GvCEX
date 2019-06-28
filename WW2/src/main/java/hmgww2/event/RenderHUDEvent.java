@@ -39,7 +39,7 @@ public class RenderHUDEvent {
 			
 			Nation playernation = ((ItemIFFArmor) entityplayer.getEquipmentInSlot(4).getItem()).nation;
 			List llist1 = entityplayer.worldObj.getEntitiesWithinAABBExcludingEntity(null,
-					entityplayer.boundingBox.addCoord(entityplayer.motionX, entityplayer.motionY, entityplayer.motionZ).expand(40D, 30D, 40D));
+					entityplayer.boundingBox.addCoord(entityplayer.motionX, entityplayer.motionY, entityplayer.motionZ).expand(40D, 40D, 40D));
 			if (llist1 != null) {
 				switch (playernation) {
 					case JPN:

@@ -81,35 +81,35 @@ public class GVCRenderPlane extends Render {
 
 		GL11.glPushMatrix();
 		GL11.glTranslatef(1.9927f, 1.5105f, -10.7406f);
-		GL11.glRotatef(planeBaseLogic.rollladder,120.7f,-2.89f,-30.68f);
+		GL11.glRotatef(planeBaseLogic.rollladder * 10,120.7f,-2.89f,-30.68f);
 		GL11.glTranslatef(-1.9927f, -1.5105f, 10.7406f);
 		model.renderPart("LAileron");
 		GL11.glPopMatrix();
 
 		GL11.glPushMatrix();
 		GL11.glTranslatef(-1.9927f, 1.5105f, -10.7406f);
-		GL11.glRotatef(planeBaseLogic.rollladder,-120.7f,-2.89f,-30.68f);
+		GL11.glRotatef(planeBaseLogic.rollladder * 10,-120.7f,-2.89f,-30.68f);
 		GL11.glTranslatef(1.9927f, -1.5105f, 10.7406f);
 		model.renderPart("RAileron");
 		GL11.glPopMatrix();
 
 		GL11.glPushMatrix();
 		GL11.glTranslatef(0.6834f, 1.5139f, -10.8821f);
-		GL11.glRotatef(-10 * (float)planeBaseLogic.flaplevel/100,119.64f,-0.33f,0);
+		GL11.glRotatef(-30 * (float)planeBaseLogic.flaplevel/100,119.64f,-0.33f,0);
 		GL11.glTranslatef(-0.6834f, -1.5139f, 10.8821f);
 		model.renderPart("Lflap");
 		GL11.glPopMatrix();
 
 		GL11.glPushMatrix();
 		GL11.glTranslatef(-0.6834f, 1.5139f, -10.8821f);
-		GL11.glRotatef(10 * (float)planeBaseLogic.flaplevel/100,-119.64f,-0.33f,0);
+		GL11.glRotatef(30 * (float)planeBaseLogic.flaplevel/100,-119.64f,-0.33f,0);
 		GL11.glTranslatef(0.6834f, -1.5139f, 10.8821f);
 		model.renderPart("Rflap");
 		GL11.glPopMatrix();
 
 		GL11.glPushMatrix();
 		GL11.glTranslatef(0.4882f, 1.5925f, -14.0326f);
-		GL11.glRotatef(planeBaseLogic.pitchladder*3,125.85f,4.84f,-98.44f);
+		GL11.glRotatef(planeBaseLogic.pitchladder*7,125.85f,4.84f,-98.44f);
 		GL11.glTranslatef(-0.4882f, -1.5925f, 14.0326f);
 		model.renderPart("Lelevator");
 		GL11.glPopMatrix();
@@ -117,7 +117,7 @@ public class GVCRenderPlane extends Render {
 		model.renderPart("tailwing");
 		GL11.glPushMatrix();
 		GL11.glTranslatef(-0.4882f, 1.5925f, -14.0326f);
-		GL11.glRotatef(-planeBaseLogic.pitchladder*3,-125.85f,4.84f,-98.44f);
+		GL11.glRotatef(-planeBaseLogic.pitchladder*7,-125.85f,4.84f,-98.44f);
 		GL11.glTranslatef(0.4882f, -1.5925f, 14.0326f);
 		model.renderPart("Relevator");
 		GL11.glPopMatrix();
@@ -125,7 +125,7 @@ public class GVCRenderPlane extends Render {
 		model.renderPart("tailwingV");
 		GL11.glPushMatrix();
 		GL11.glTranslatef(0, 2.4143f, -14.0213f);
-		GL11.glRotatef(planeBaseLogic.yawladder*3,0,140.98f,-130.03f);
+		GL11.glRotatef(planeBaseLogic.yawladder*7,0,140.98f,-130.03f);
 		GL11.glTranslatef(0, -2.4143f, 14.0213f);
 		model.renderPart("YawLadder");
 		GL11.glPopMatrix();
@@ -162,21 +162,21 @@ public class GVCRenderPlane extends Render {
 
 		GL11.glPushMatrix();
 		GL11.glTranslatef(0, 0.9934f, -4.5152f);
-		GL11.glRotatef(-90 * (100 - planeBaseLogic.gearprogress) / 100, 1, 0, 0);
+		GL11.glRotatef(-180 * (100 - planeBaseLogic.gearprogress) / 100, 1, 0, 0);
 		GL11.glTranslatef(0, -0.9934f, 4.5152f);
 		model.renderPart("Cgear");
 		GL11.glPopMatrix();
 
 		GL11.glPushMatrix();
 		GL11.glTranslatef(0.1606f, 1.0239f, -3.918f);
-		GL11.glRotatef(-105 * (100 - planeBaseLogic.gearprogress) / 100, 0, 0.08715574274f, 0.99619469809f);
+		GL11.glRotatef(-105 * (planeBaseLogic.gearprogress <20 ? 100 - planeBaseLogic.gearprogress*5 : 0) / 100, 0, 0.08715574274f, 0.99619469809f);
 		GL11.glTranslatef(-0.1606f, -1.0239f, 3.918f);
 		model.renderPart("CgearCoverL");
 		GL11.glPopMatrix();
 
 		GL11.glPushMatrix();
 		GL11.glTranslatef(-0.1606f, 1.0239f, -3.918f);
-		GL11.glRotatef(105 * (100 - planeBaseLogic.gearprogress) / 100, 0, 0.08715574274f, 0.99619469809f);
+		GL11.glRotatef( 105 * (planeBaseLogic.gearprogress <20 ? 100 - planeBaseLogic.gearprogress*5 : 0) / 100, 0, 0.08715574274f, 0.99619469809f);
 		GL11.glTranslatef(0.1606f, -1.0239f, 3.918f);
 		model.renderPart("CgearCoverR");
 		GL11.glPopMatrix();

@@ -18,7 +18,7 @@ public class EntityGER_FighterA extends EntityGER_FighterBase
 //		nboundingbox = new ModifiedBoundingBox(-20,-20,-20,20,20,20,0,0,-6.27,2.5,5,19);
 //		nboundingbox.rot.set(this.bodyRot);
 //		proxy.replaceBoundingbox(this,nboundingbox);
-//		((ModifiedBoundingBox)this.boundingBox).updateOBB(this.posX,this.posY,this.posZ);
+//		((ModifiedBoundingBox)this.boundingBox).update(this.posX,this.posY,this.posZ);
 		armor = 5;
 		ignoreFrustumCheck = true;
 		baseLogic.throttle_gearDown = 1.7f;
@@ -26,18 +26,17 @@ public class EntityGER_FighterA extends EntityGER_FighterBase
 		baseLogic.rollspeed = 0.2f;
 		baseLogic.pitchspeed = 0.4f;
 		baseLogic.yawspeed = 0.15f;
-		baseLogic.throttledown_onDive = true;
 		baseLogic.Dive_bombing = true;
 		baseLogic.sholdUseMain_ToG = true;
-		baseLogic.startDive = 45;
-		baseLogic.maxDive = 90;
-		baseLogic.cruiseALT = 90;
+		baseLogic.startDive = 40;
+		baseLogic.maxDive = 85;
+		baseLogic.cruiseALT = 80;
 		baseLogic.maxClimb = -25;
-		baseLogic.maxbank = 30;
-		baseLogic.minALT = 40;
+		baseLogic.maxbank = 40;
+		baseLogic.minALT = 30;
 		baseLogic.soundname = "hmgww2:hmgww2.sound_pera";
-		baseLogic.pitchsighwidthmax = -1;
-		baseLogic.pitchsighwidthmin = -15;
+		baseLogic.pitchsighwidthmax = 20;
+		baseLogic.pitchsighwidthmin = -20;
 		baseLogic.yawsightwidthmax = 15;
 		baseLogic.yawsightwidthmin = -15;
 		
@@ -48,9 +47,9 @@ public class EntityGER_FighterA extends EntityGER_FighterBase
 		TurretObj cannon3 = new TurretObj(worldObj);
 		{
 			{
-				cannon3.onmotherPos = new Vector3d(0,0,0);
+				cannon3.onMotherPos = new Vector3d(0,0,0);
 				cannon3.motherRotCenter = new Vector3d(baseLogic.rotcenter);
-				cannon3.cannonpos = new Vector3d(1.4,0.6,-2);
+				cannon3.cannonPos = new Vector3d(1.4,0.6,-2);
 				cannon3.turretspeedY = 5;
 				cannon3.turretspeedP = 8;
 				cannon3.turretanglelimtPitchMax = 5;
@@ -60,9 +59,9 @@ public class EntityGER_FighterA extends EntityGER_FighterBase
 				cannon3.powor = 15;
 				cannon3.ex = 0.5f;
 				cannon3.cycle_setting = 1;
-				cannon3.flushscale = 2;
+				cannon3.flashscale = 2;
 				cannon3.firesound = "handmadeguns:handmadeguns.20mmfire";
-				cannon3.flushoffset = 1;
+				cannon3.flashoffset = 1;
 				cannon3.spread = 2.5f;
 				cannon3.speed = 8;
 				cannon3.magazineMax = 50;
@@ -73,9 +72,9 @@ public class EntityGER_FighterA extends EntityGER_FighterBase
 			}
 			{
 				TurretObj cannon4 = new TurretObj(worldObj);
-				cannon4.onmotherPos = new Vector3d(0,0,0);
+				cannon4.onMotherPos = new Vector3d(0,0,0);
 				cannon4.motherRotCenter = new Vector3d(baseLogic.rotcenter);
-				cannon4.cannonpos = new Vector3d(-1.4,0.6,-2);
+				cannon4.cannonPos = new Vector3d(-1.4,0.6,-2);
 				cannon4.turretspeedY = 5;
 				cannon4.turretspeedP = 8;
 				cannon4.turretanglelimtPitchMax = 5;
@@ -85,9 +84,9 @@ public class EntityGER_FighterA extends EntityGER_FighterBase
 				cannon4.powor = 15;
 				cannon4.ex = 0.5f;
 				cannon4.cycle_setting = 1;
-				cannon4.flushscale = 2;
+				cannon4.flashscale = 2;
 				cannon4.firesound = "handmadeguns:handmadeguns.20mmfire";
-				cannon4.flushoffset = 1;
+				cannon4.flashoffset = 1;
 				cannon4.spread = 2.5f;
 				cannon4.speed = 8;
 				cannon4.magazineMax = 50;
@@ -95,13 +94,13 @@ public class EntityGER_FighterA extends EntityGER_FighterBase
 				cannon4.reloadTimer = 150;
 				cannon4.canex = false;
 				cannon4.guntype = 2;
-				cannon3.addchild(cannon4);
+				cannon3.addchild_triggerLinked(cannon4);
 			}
 		}
 		baseLogic.subTurret = cannon3;
 		baseLogic.mainTurret = new TurretObj(worldObj);
 		{
-			baseLogic.mainTurret.onmotherPos = new Vector3d(0,-1,-4);
+			baseLogic.mainTurret.onMotherPos = new Vector3d(0,-1,0);
 			baseLogic.mainTurret.motherRotCenter = new Vector3d(baseLogic.rotcenter);
 			baseLogic.mainTurret.turretspeedY = 5;
 			baseLogic.mainTurret.turretspeedP = 8;
@@ -114,8 +113,8 @@ public class EntityGER_FighterA extends EntityGER_FighterBase
 			baseLogic.mainTurret.cycle_setting = 0;
 			baseLogic.mainTurret.firesound = null;
 			baseLogic.mainTurret.bulletmodel = "byfrou01_Bomb";
-			baseLogic.mainTurret.flushName = null;
-			baseLogic.mainTurret.spread = 5f;
+			baseLogic.mainTurret.flashName = null;
+			baseLogic.mainTurret.spread = 30;
 			baseLogic.mainTurret.speed = 0.1f;
 			baseLogic.mainTurret.canex = true;
 			baseLogic.mainTurret.guntype = 2;

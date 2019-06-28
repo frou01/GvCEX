@@ -3,22 +3,33 @@ package hmggvcmob.entity.friend;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import hmggvcmob.IflagBattler;
+import hmggvcmob.SlowPathFinder.ModifiedPathNavigater;
 import hmggvcmob.tile.TileEntityFlag;
+import hmvehicle.entity.parts.IhasprevRidingEntity;
+import hmvehicle.entity.parts.ImultiRidable;
+import littleMaidMobX.LMM_EntityLittleMaid;
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.*;
 import net.minecraft.entity.passive.EntityHorse;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.pathfinding.PathNavigate;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
+import static handmadeguns.HandmadeGunsCore.islmmloaded;
+import static handmadeguns.Util.Utils.getmovingobjectPosition_forBlock;
 import static hmggvcmob.GVCMobPlus.fn_PMCflag;
 import static hmggvcmob.GVCMobPlus.fn_Supplyflag;
 import static java.lang.Math.abs;
 
-public class EntitySoBases extends EntityCreature implements INpc , IflagBattler {
+public class EntitySoBases extends EntityCreature implements INpc , IflagBattler , IhasprevRidingEntity {
+	public Entity prevRidingEntity;
 	private static final IEntitySelector horseBreedingSelector = new IEntitySelector()
 	{
 		private static final String __OBFID = "CL_00001642";
@@ -73,12 +84,22 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
 	public int flagx;
 	public int flagy;
 	public int flagz;
+	private ModifiedPathNavigater modifiedPathNavigater;
 	
 	public EntitySoBases(World par1World) {
 		super(par1World);
 		renderDistanceWeight = 16384;
+		this.modifiedPathNavigater = new ModifiedPathNavigater(this, worldObj);
 	}
-
+	public PathNavigate getNavigator()
+	{
+		return this.modifiedPathNavigater;
+	}
+	protected void updateAITasks()
+	{
+		super.updateAITasks();
+		modifiedPathNavigater.onUpdateNavigation();
+	}
 	
 	/**
      * (abstract) Protected helper method to read subclass entity data from NBT.
@@ -95,6 +116,7 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
     public void writeEntityToNBT(NBTTagCompound p_70014_1_)
     {
         super.writeEntityToNBT(p_70014_1_);
+	    if(ridingEntity instanceof ImultiRidable)ridingEntity = null;
         
         p_70014_1_.setInteger("MobMode", getMobMode());
     }
@@ -237,27 +259,17 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
 		flagy = y;
 		flagz = z;
 	}
+	
 	@Override
 	public boolean canEntityBeSeen(Entity p_70685_1_)
 	{
 		Vec3 startpos = Vec3.createVectorHelper(this.posX, this.posY + (double) this.getEyeHeight(), this.posZ);
 		Vec3 targetpos = Vec3.createVectorHelper(p_70685_1_.posX, p_70685_1_.posY + (double) p_70685_1_.getEyeHeight(), p_70685_1_.posZ);
-		Vec3 penerater = Vec3.createVectorHelper(p_70685_1_.posX - this.posX,  p_70685_1_.posY + (double) p_70685_1_.getEyeHeight()-(this.posY + (double) this.getEyeHeight()),p_70685_1_.posZ - this.posZ);
-		penerater = penerater.normalize();
-		MovingObjectPosition movingobjectposition = this.worldObj.rayTraceBlocks(startpos, targetpos);
-		int abortcnt=0;
-		while(movingobjectposition!=null) {
-			if(abortcnt > 7)return false;
-			Block hitedblock = this.worldObj.getBlock(movingobjectposition.blockX, movingobjectposition.blockY, movingobjectposition.blockZ);
-			if(hitedblock.getMaterial().isOpaque()){
-				return false;
-			}
-			Vec3 newstartpos = Vec3.createVectorHelper(movingobjectposition.hitVec.xCoord + penerater.xCoord, movingobjectposition.hitVec.yCoord + penerater.yCoord, movingobjectposition.hitVec.zCoord + penerater.zCoord);
-			if(startpos.squareDistanceTo(newstartpos)>startpos.squareDistanceTo(targetpos))break;
-			movingobjectposition = this.worldObj.rayTraceBlocks(newstartpos,targetpos);
-			abortcnt++;
+		MovingObjectPosition movingobjectposition = getmovingobjectPosition_forBlock(worldObj,startpos, targetpos, false, true, false);
+		if(movingobjectposition!=null) {
+			return false;
 		}
-		return true;
+		return !((this.isInWater() || p_70685_1_.isInWater()) && getDistanceSqToEntity(p_70685_1_) > 256);
 	}
 	/**
 	 * returns a (normalized) vector of where this entity is looking
@@ -297,10 +309,86 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
 		}
 	}
 	public void onUpdate() {
-		if(this.width<1){
-			width = 1;
-		}
+		if(this.getAttackTarget() != null && this.getAttackTarget().isDead)this.setAttackTarget(null);
 		super.onUpdate();
+		if(this.ridingEntity != getprevRidingEntity() && getprevRidingEntity() != null){
+			if(!getprevRidingEntity().isDead && getprevRidingEntity() instanceof ImultiRidable && ((ImultiRidable) getprevRidingEntity()).isRidingEntity(this)){
+				this.ridingEntity = getprevRidingEntity();
+			}
+		}
+		if(ridingEntity != null && !ridingEntity.isDead && ridingEntity instanceof ImultiRidable && ((ImultiRidable)ridingEntity).isRidingEntity(this))this.ridingEntity.updateRiderPosition();
+	}
+	public void dismountEntity(Entity p_110145_1_)
+	{
+	}
+	@Override
+	public void mountEntity(Entity p_70078_1_)
+	{
+		
+		if (p_70078_1_ == null)
+		{
+			if (this.ridingEntity != null)
+			{
+				this.ridingEntity.riddenByEntity = null;
+			}
+			
+			this.ridingEntity = null;
+		}
+		else
+		{
+			if (this.ridingEntity != null)
+			{
+				this.ridingEntity.riddenByEntity = null;
+			}
+			
+			if (p_70078_1_ != null)
+			{
+				for (Entity entity1 = p_70078_1_.ridingEntity; entity1 != null; entity1 = entity1.ridingEntity)
+				{
+					if (entity1 == this)
+					{
+						return;
+					}
+				}
+			}
+			
+			this.ridingEntity = p_70078_1_;
+			p_70078_1_.riddenByEntity = this;
+		}
+	}
+	
+	public void applyEntityCollision(Entity p_70108_1_)
+	{
+		boolean flag = p_70108_1_.riddenByEntity != this && p_70108_1_.ridingEntity != this;
+		flag &= !(p_70108_1_ instanceof ImultiRidable) || !((ImultiRidable) p_70108_1_).isRidingEntity(this);
+		if (flag)
+		{
+			double d0 = p_70108_1_.posX - this.posX;
+			double d1 = p_70108_1_.posZ - this.posZ;
+			double d2 = MathHelper.abs_max(d0, d1);
+			
+			if (d2 >= 0.009999999776482582D)
+			{
+				d2 = (double)MathHelper.sqrt_double(d2);
+				d0 /= d2;
+				d1 /= d2;
+				double d3 = 1.0D / d2;
+				
+				if (d3 > 1.0D)
+				{
+					d3 = 1.0D;
+				}
+				
+				d0 *= d3;
+				d1 *= d3;
+				d0 *= 0.05000000074505806D;
+				d1 *= 0.05000000074505806D;
+				d0 *= (double)(1.0F - this.entityCollisionReduction);
+				d1 *= (double)(1.0F - this.entityCollisionReduction);
+				this.addVelocity(-d0, 0.0D, -d1);
+				p_70108_1_.addVelocity(d0, 0.0D, d1);
+			}
+		}
 	}
 	public void moveFlying(float p_70060_1_, float p_70060_2_, float p_70060_3_)
 	{
@@ -335,4 +423,13 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
 	}
 	
 	
+	@Override
+	public void setprevRidingEntity(Entity entity) {
+		prevRidingEntity = entity;
+	}
+	
+	@Override
+	public Entity getprevRidingEntity() {
+		return prevRidingEntity;
+	}
 }

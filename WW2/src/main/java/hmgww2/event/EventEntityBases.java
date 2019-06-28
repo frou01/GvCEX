@@ -3,6 +3,8 @@ package hmgww2.event;
 import hmgww2.Nation;
 import hmgww2.entity.*;
 import hmgww2.items.ItemIFFArmor;
+import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.RenderHelper;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
@@ -33,11 +35,18 @@ public class EventEntityBases {
 	
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
-	public void renderEntity(RenderLivingEvent.Post event) {
+	public void renderEntity(RenderLivingEvent.Pre event) {
+		GL11.glPushMatrix();
 		EntityLivingBase entity = (EntityLivingBase) event.entity;
 		Minecraft minecraft = FMLClientHandler.instance().getClient();
 		EntityPlayer entityplayer = minecraft.thePlayer;
 		if (entity != null && entity instanceof EntityBases) {
+			GL11.glTranslatef((float)-entityplayer.posX,(float)-entityplayer.posY,(float)-entityplayer.posZ);
+			GL11.glTranslatef((float)entity.posX,(float)entity.posY,(float)entity.posZ);
+			float lastBrightnessX = OpenGlHelper.lastBrightnessX;
+			float lastBrightnessY = OpenGlHelper.lastBrightnessY;
+			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
+			RenderHelper.disableStandardItemLighting();
 			if (entityplayer.getEquipmentInSlot(4) != null
 					    && entityplayer.getEquipmentInSlot(4).getItem() instanceof ItemIFFArmor) {
 				Nation playernation = ((ItemIFFArmor) entityplayer.getEquipmentInSlot(4).getItem()).nation;
@@ -52,17 +61,27 @@ public class EventEntityBases {
 							GL11.glTranslatef(0, entity.height + 0.5F, 0);
 							Minecraft.getMinecraft().renderEngine.bindTexture(m2);
 							tankk.renderPart("mat1");
+							break;
 						case 3:
 							GL11.glTranslatef(0, entity.height + 0.5F, 0);
-							Minecraft.getMinecraft().renderEngine.bindTexture(m3);
+							Minecraft.getMinecraft().renderEngine.bindTexture(m2);
 							tankk.renderPart("mat1");
-						case 4:
-							GL11.glTranslatef(0, entity.height + 0.5F, 0);
-							Minecraft.getMinecraft().renderEngine.bindTexture(m4);
-							tankk.renderPart("mat1");
+							break;
+					}
+					if(((EntityBases) entity).holdFire){
+						GL11.glTranslatef(0,  + 0.5F, 0);
+						Minecraft.getMinecraft().renderEngine.bindTexture(m3);
+						tankk.renderPart("mat1");
+					}else {
+						GL11.glTranslatef(0,  + 0.5F, 0);
+						Minecraft.getMinecraft().renderEngine.bindTexture(m4);
+						tankk.renderPart("mat1");
 					}
 				}
 			}
+			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)lastBrightnessX, (float)lastBrightnessY);
+			RenderHelper.enableStandardItemLighting();
 		}
+		GL11.glPopMatrix();
 	}
 }

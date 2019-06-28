@@ -799,9 +799,6 @@ public class mod_GVCWW2 {
 			if (ClientProxyGVCWW2.ShipWait.getIsKeyPressed()) {
 				WW2PacketHandler.INSTANCE.sendToServer(new WW2MessageKeyPressed(5,entityid));
 	        }
-			if (ClientProxyGVCWW2.RidingShip.getIsKeyPressed()) {
-				WW2PacketHandler.INSTANCE.sendToServer(new WW2MessageKeyPressed(7,entityid));
-	        }
 			
 		}
 	}

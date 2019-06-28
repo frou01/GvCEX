@@ -30,7 +30,8 @@ import static handmadeguns.HandmadeGunsCore.cfg_blockdestroy;
 import static hmggvcmob.GVCMobPlus.cfg_blockdestory;
 import static hmggvcmob.GVCMobPlus.proxy;
 import static hmggvcmob.event.GVCMXEntityEvent.soundedentity;
-import static hmggvcmob.util.Calculater.transformVecforMinecraft;
+import static hmvehicle.Utils.transformVecforMinecraft;
+import static hmvehicle.HMVehicle.proxy_HMVehicle;
 
 public class GVCEntityPMCT90Tank extends EntityPMCBase implements ITank
 {
@@ -59,7 +60,7 @@ public class GVCEntityPMCT90Tank extends EntityPMCBase implements ITank
 
 	public int mgMagazine;
 	public int mgReloadProgress;
-	public TankBaseLogic baseLogic = new TankBaseLogic(this,0.3f,1.5f,true,"gvcmob:gvcmob.T-90Track");
+	public TankBaseLogic baseLogic = new TankBaseLogic(this,0.3f,0.7f,true,"gvcmob:gvcmob.T-90Track");
 	ModifiedBoundingBox nboundingbox;
 
 	Vector3d playerpos = new Vector3d(-0.525,2.1D,0.0);
@@ -96,8 +97,8 @@ public class GVCEntityPMCT90Tank extends EntityPMCBase implements ITank
 		yOffset = 0;
 		mainTurret = new TurretObj(worldObj);
 		{
-			mainTurret.onmotherPos = turretpos;
-			mainTurret.cannonpos = cannonpos;
+			mainTurret.onMotherPos = turretpos;
+			mainTurret.cannonPos = cannonpos;
 			mainTurret.turretspeedY = 10;
 			mainTurret.turretspeedP = 10;
 			mainTurret.currentEntity = this;
@@ -119,12 +120,12 @@ public class GVCEntityPMCT90Tank extends EntityPMCBase implements ITank
 			subTurret.turretspeedP = 10;
 			subTurret.traverseSound = null;
 
-			subTurret.onmotherPos = subturretpos;
+			subTurret.onMotherPos = subturretpos;
 			subTurret.cycle_setting = 1;
 			subTurret.spread = 5;
 			subTurret.speed = 8;
 			subTurret.firesound = "handmadeguns:handmadeguns.dshk38Fire";
-			subTurret.flushscale  = 1.5f;
+			subTurret.flashscale = 1.5f;
 
 			subTurret.powor = 30;
 			subTurret.ex = 0;
@@ -133,9 +134,9 @@ public class GVCEntityPMCT90Tank extends EntityPMCBase implements ITank
 
 			subTurret.magazineMax = 250;
 			subTurret.reloadSetting = 300;
-			subTurret.flushoffset = 0.5f;
+			subTurret.flashoffset = 0.5f;
 		}
-		mainTurret.addchild(subTurret);
+		mainTurret.addchild_triggerLinked(subTurret);
 
 		turrets = new TurretObj[]{mainTurret,subTurret};
 	}
@@ -201,8 +202,8 @@ public class GVCEntityPMCT90Tank extends EntityPMCBase implements ITank
 		if (this.riddenByEntity != null) {
 			mainTurret.setmotherpos(new Vector3d(this.posX,this.posY,-this.posZ),baseLogic.bodyRot);
 			Vector3d temp = new Vector3d(mainTurret.pos);
-			Vector3d tempplayerPos = new Vector3d(proxy.iszooming() ? zoomingplayerpos:playerpos);
-			Vector3d playeroffsetter = new Vector3d(0,((worldObj.isRemote && this.riddenByEntity == proxy.getEntityPlayerInstance()) ? 0:(this.riddenByEntity.getEyeHeight() + this.riddenByEntity.yOffset)),0);
+			Vector3d tempplayerPos = new Vector3d(proxy_HMVehicle.iszooming() ? zoomingplayerpos:playerpos);
+			Vector3d playeroffsetter = new Vector3d(0,((worldObj.isRemote && this.riddenByEntity == proxy_HMVehicle.getEntityPlayerInstance()) ? 0:(this.riddenByEntity.getEyeHeight() + this.riddenByEntity.yOffset)),0);
 			tempplayerPos.sub(playeroffsetter);
 			Vector3d temp2 = mainTurret.getGlobalVector_fromLocalVector_onTurretPoint(tempplayerPos);
 			temp.add(temp2);
@@ -474,12 +475,12 @@ public class GVCEntityPMCT90Tank extends EntityPMCBase implements ITank
 		mainTurret.fire();
 //        Vector3d Vec_transformedbybody = baseLogic.getTransformedVector_onturret(cannonpos,turretYawCenterpos);
 //
-//        Calculater.transformVecforMinecraft(Vec_transformedbybody);
+//        Utils.transformVecforMinecraft(Vec_transformedbybody);
 //        if(fireCycle1 <0){
 //            fireCycle1 = 100;
 //            if (!this.worldObj.isRemote) {
 //                Vector3d lookVec = baseLogic.getCannonDir();
-//                Calculater.transformVecforMinecraft(lookVec);
+//                Utils.transformVecforMinecraft(lookVec);
 //                HMGPacketHandler.INSTANCE.sendToAll(new PacketPlaysound(this, "gvcmob:gvcmob.120mmFire", 1, 5));
 //                if (this.getEntityData().getFloat("GunshotLevel") < 0.1)
 //                    soundedentity.add(this);
@@ -540,13 +541,13 @@ public class GVCEntityPMCT90Tank extends EntityPMCBase implements ITank
 //            if (!this.worldObj.isRemote) {
 //
 //                Vector3d lookVec = baseLogic.getCannonDir();
-//                Calculater.transformVecforMinecraft(lookVec);
+//                Utils.transformVecforMinecraft(lookVec);
 //
 //
 //
 //                Vector3d Vec_transformedbybody = baseLogic.getTransformedVector_onturret(cannonpos,turretYawCenterpos);
 //
-//                Calculater.transformVecforMinecraft(Vec_transformedbybody);
+//                Utils.transformVecforMinecraft(Vec_transformedbybody);
 //
 //                HMGPacketHandler.INSTANCE.sendToAll(new PacketPlaysound(this,"gvcmob:gvcmob.120mmFire",1,10));
 //                this.getEntityData().setFloat("GunshotLevel",10);
@@ -599,9 +600,9 @@ public class GVCEntityPMCT90Tank extends EntityPMCBase implements ITank
 		subTurret.fire();
 //        Quat4d turretyawrot = new Quat4d(0,0,0,1);
 //
-//        Vector3d axisy = Calculater.transformVecByQuat(new Vector3d(0,1,0), turretyawrot);
+//        Vector3d axisy = Utils.transformVecByQuat(new Vector3d(0,1,0), turretyawrot);
 //        AxisAngle4d axisyangled = new AxisAngle4d(axisy, toRadians(baseLogic.turretrotationYaw)/2);
-//        turretyawrot = Calculater.quatRotateAxis(turretyawrot,axisyangled);
+//        turretyawrot = Utils.quatRotateAxis(turretyawrot,axisyangled);
 //
 //
 //
@@ -626,14 +627,14 @@ public class GVCEntityPMCT90Tank extends EntityPMCBase implements ITank
 //                lookVec = transformVecByQuat(lookVec,turretyawrot);
 //                lookVec = transformVecByQuat(lookVec,baseLogic.bodyRot);
 //
-//                Calculater.transformVecforMinecraft(lookVec);
+//                Utils.transformVecforMinecraft(lookVec);
 //
 //
 //
 //
 //                Vector3d Vec_transformed = baseLogic.getTransformedVector_onturret(subturretpos,turretYawCenterpos);
 //
-//                Calculater.transformVecforMinecraft(Vec_transformed);
+//                Utils.transformVecforMinecraft(Vec_transformed);
 //
 //
 //                fireCycle2 = 1;
@@ -667,9 +668,9 @@ public class GVCEntityPMCT90Tank extends EntityPMCBase implements ITank
 		subturretrotationPitch = (float) subTurret.turretrotationPitch;
 //        Quat4d turretyawrot = new Quat4d(0,0,0,1);
 //
-//        Vector3d axisy = Calculater.transformVecByQuat(new Vector3d(0,1,0), turretyawrot);
+//        Vector3d axisy = Utils.transformVecByQuat(new Vector3d(0,1,0), turretyawrot);
 //        AxisAngle4d axisyangled = new AxisAngle4d(axisy, toRadians(baseLogic.turretrotationYaw)/2);
-//        turretyawrot = Calculater.quatRotateAxis(turretyawrot,axisyangled);
+//        turretyawrot = Utils.quatRotateAxis(turretyawrot,axisyangled);
 //        Quat4d gunnerRot = new Quat4d(0, 0, 0, 1);
 //
 //

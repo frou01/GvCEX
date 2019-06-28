@@ -22,6 +22,7 @@ public class EntityGER_S extends EntityGERBase
         aiAttackGun.assaultrange = 60;
         
         spread = 2;
+        interval = 6;
     }
     protected void applyEntityAttributes()
     {

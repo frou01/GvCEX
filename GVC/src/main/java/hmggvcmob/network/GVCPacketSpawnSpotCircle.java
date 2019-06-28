@@ -1,16 +1,14 @@
 package hmggvcmob.network;
 
-import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import hmggvcmob.util.SpotObj;
 import hmggvcmob.util.SpotType;
+import hmvehicle.CMProxy;
 import io.netty.buffer.ByteBuf;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
-import static hmggvcmob.GVCMobPlus.proxy;
-import static hmggvcmob.util.Calculater.*;
+import static hmvehicle.HMVehicle.proxy_HMVehicle;
 
 public class GVCPacketSpawnSpotCircle implements IMessage {
 	ArrayList<SpotObj> recievedSpotobj = new ArrayList<>();
@@ -37,7 +35,7 @@ public class GVCPacketSpawnSpotCircle implements IMessage {
 				addobj.pos[1] = buf.readFloat();
 				addobj.pos[2] = buf.readFloat();
 				addobj.remaintime = buf.readInt();
-				if(proxy.getEntityPlayerInstance() != null && (proxy.getEntityPlayerInstance().getTeam() == null || proxy.getEntityPlayerInstance().getTeam().getRegisteredName().equals(addobj.teamname)))recievedSpotobj.add(addobj);
+				if(proxy_HMVehicle.getEntityPlayerInstance() != null && (proxy_HMVehicle.getEntityPlayerInstance().getTeam() == null || proxy_HMVehicle.getEntityPlayerInstance().getTeam().getRegisteredName().equals(addobj.teamname)))recievedSpotobj.add(addobj);
 			}
 		}
 		

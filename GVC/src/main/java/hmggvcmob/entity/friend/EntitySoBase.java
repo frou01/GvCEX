@@ -202,7 +202,7 @@ public class EntitySoBase extends EntitySoBases implements IFF,IGVCmob {
 	}
 	protected boolean canDespawn()
 	{
-		return true;
+		return getAttackTarget() == null;
 	}
 	protected boolean func_146066_aG()
 	{
@@ -249,7 +249,7 @@ public class EntitySoBase extends EntitySoBases implements IFF,IGVCmob {
 	public void setspawnedtile(TileEntity flag) {
 		spawnedtile = flag;
 	}
-	public double[] getwaitingpos() {
+	public double[] getTargetpos() {
 		return new double[]{};
 	}
 }

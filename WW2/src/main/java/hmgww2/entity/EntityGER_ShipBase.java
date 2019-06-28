@@ -17,13 +17,13 @@ public class EntityGER_ShipBase extends EntityBases_Ship
 	
 	public void Excontrol1(boolean keystate){
 		if(keystate) {
-			draft++;
+			draft+=0.1;
 			if (draft > 40) draft = 40;
 		}
 	}
 	public void Excontrol2(boolean keystate){
 		if(keystate) {
-			draft--;
+			draft-=0.1;
 			if (draft < 4.1306) draft = 4.1306f;
 		}
 	}

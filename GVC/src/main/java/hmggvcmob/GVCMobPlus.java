@@ -444,8 +444,6 @@ public class GVCMobPlus
         EntityRegistry.registerModEntity(EntitySupportTGT.class, "SysSummonsupportEntity", ++id, this, 128, 3, false);
         EntityRegistry.registerModEntity(GVCEntityAPCSpawn.class, "GVC_Spawner_Throw", ++id, this, 250, 3, false);
         EntityRegistry.registerModEntity(EntityParachute.class, "GVC_EntityParachute", ++id, this, 250, 3, false);
-        EntityRegistry.registerModEntity(GVCEntitySoldier_HeliSpawner.class, "GVC_EntitySoldierHeliSpawn", 74, this, 250, 3, false);
-        EntityRegistry.registerModEntity(GVCEntityGuerrilla_HeliSpawner.class, "GVC_EntityGuerrillaHeliSpawn", 74, this, 250, 3, false);
         EntityRegistry.registerModEntity(EntityMGAX55.class, "GVC_EntityMGAX55", ++id, this, 250, 3, true);
         EntityRegistry.registerModEntity(GVCEntityGuerrilla_Flamer.class, "GuerrillaFlamer", ++id, this, 250, 3, true);
         EntityRegistry.registerModEntity(EntitySupplyBox.class, "SupplyBox", ++id, this, 250, 3, true);
@@ -593,7 +591,7 @@ public class GVCMobPlus
                 'r', Blocks.redstone_block
         );
 
-        proxy.reisterRenderers();
+        proxy.initSome();
         if (cfg_setCamp == true) {
             GameRegistry.registerWorldGenerator(new WWorld(), 10);
         }
@@ -606,12 +604,6 @@ public class GVCMobPlus
         MinecraftForge.EVENT_BUS.register(new GVCMSpawnEvent());
 
         proxy.registerTileEntity();
-        proxy.jumped();
-        proxy.leftclick();
-        proxy.rightclick();
-        proxy.getEntityPlayerInstance();
-        proxy.reload();
-        proxy.zoomclick();
 
         Object guns = new ArrayList();
         ((List)guns).addAll(HMGAddGunsNew.Guns);
@@ -690,7 +682,7 @@ public class GVCMobPlus
             }
             if ((cfg_guerrillaspawndrawn) && (biome != BiomeGenBase.hell)) {
                 EntityRegistry.addSpawn(GVCEntityDrawn.class, cfg_guerrillaspawntank * 5, 1, 1, EnumCreatureType.monster, new BiomeGenBase[] { biome });
-                EntityRegistry.addSpawn(GVCEntityGuerrilla_HeliSpawner.class, cfg_guerrillaspawntank * 1, cfg_guerrillaspawntank, cfg_guerrillaspawntank, EnumCreatureType.monster, new BiomeGenBase[] { biome });
+                EntityRegistry.addSpawn(GVCEntityWZ10AttackHeli.class, cfg_guerrillaspawntank * 1, cfg_guerrillaspawntank, cfg_guerrillaspawntank, EnumCreatureType.monster, new BiomeGenBase[] { biome });
             }
             EntityRegistry.addSpawn(GVCEntityTankT90.class, cfg_guerrillaspawntank * 1, cfg_guerrillaspawntank, cfg_guerrillaspawntank, EnumCreatureType.monster, new BiomeGenBase[] { biome });
             
@@ -709,7 +701,7 @@ public class GVCMobPlus
 
             EntityRegistry.addSpawn(GVCEntitySoldierBMP.class, (int)(cfg_soldierspawntank * 6.0F), 1, 1, EnumCreatureType.monster, new BiomeGenBase[] { biome });
 
-            EntityRegistry.addSpawn(GVCEntitySoldier_HeliSpawner.class, (int)(cfg_soldierspawntank * 2.0F), 1, 1, EnumCreatureType.monster, new BiomeGenBase[] { biome });
+            EntityRegistry.addSpawn(GVCEntitySoldierHeli.class, (int)(cfg_soldierspawntank * 2.0F), 1, 1, EnumCreatureType.monster, new BiomeGenBase[] { biome });
         }
     }
     public void addspawnHell(BiomeGenBase biome)

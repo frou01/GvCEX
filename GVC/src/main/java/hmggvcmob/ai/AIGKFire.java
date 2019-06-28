@@ -15,7 +15,7 @@ import net.minecraft.util.MathHelper;
 import java.util.Random;
 
 import static handmadeguns.HandmadeGunsCore.cfg_defgravitycof;
-import static hmggvcmob.util.Calculater.CalculateGunElevationAngle;
+import static hmvehicle.Utils.CalculateGunElevationAngle;
 import static net.minecraft.util.MathHelper.wrapAngleTo180_float;
 
 public class AIGKFire extends EntityAIBase{

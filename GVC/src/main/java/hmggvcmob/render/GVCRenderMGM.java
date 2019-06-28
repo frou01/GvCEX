@@ -7,8 +7,14 @@ import handmadeguns.client.render.HMGGunParts_Motion_PosAndRotation;
 import handmadeguns.client.render.HMGGunParts_Motions;
 import handmadeguns.client.render.HMGParts;
 import hmggvcmob.entity.EntityMGAX55;
+import hmvehicle.entity.parts.ModifiedBoundingBox;
+import hmvehicle.entity.parts.OBB;
+import net.minecraft.client.renderer.RenderGlobal;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
@@ -19,7 +25,9 @@ import javax.vecmath.Vector3d;
 
 import java.util.ArrayList;
 
+import static hmvehicle.CLProxy.drawOutlinedBoundingBox;
 import static java.lang.Math.abs;
+import static net.minecraft.client.renderer.entity.RenderManager.debugBoundingBox;
 
 public class GVCRenderMGM extends Render {
 
@@ -659,6 +667,10 @@ public class GVCRenderMGM extends Render {
 		GL11.glRotatef(180F, 0.0F, 1.0F, 0.0F);
 		GL11.glEnable(GL12.GL_RESCALE_NORMAL);
 		GL11.glRotatef(180 - (entity.bodyrotationYaw), 0.0F, 1.0F, 0.0F);
+		
+		GL11.glPushMatrix();
+		
+		
 
 		renderLegForward(entity);
 
@@ -679,7 +691,7 @@ public class GVCRenderMGM extends Render {
 		GL11.glPopMatrix();
 
 
-		if(entity.childEntities[0] != null && entity.childEntities[0].riddenByEntity != FMLClientHandler.instance().getClientPlayerEntity() ||  FMLClientHandler.instance().getClient().gameSettings.thirdPersonView != 0) {
+		if(entity.riddenByEntity != FMLClientHandler.instance().getClientPlayerEntity() ||  FMLClientHandler.instance().getClient().gameSettings.thirdPersonView != 0) {
 			GL11.glPushMatrix();
 			GL11.glTranslatef((float) EntityMGAX55.gunpos[5][0], (float) EntityMGAX55.gunpos[5][1], (float) EntityMGAX55.gunpos[5][2]);
 			GL11.glRotatef(-entity.headrotationYaw, 0.0F, 1.0F, 0.0F);
@@ -688,8 +700,24 @@ public class GVCRenderMGM extends Render {
 			model.renderPart("Head");
 			GL11.glPopMatrix();
 		}
-
-
+		GL11.glPopMatrix();
+		GL11.glPushMatrix();
+		if(debugBoundingBox && entity.nboundingbox != null){
+			GL11.glDepthMask(false);
+			GL11.glDisable(GL11.GL_TEXTURE_2D);
+			GL11.glDisable(GL11.GL_LIGHTING);
+			GL11.glDisable(GL11.GL_CULL_FACE);
+			GL11.glDisable(GL11.GL_BLEND);
+			ModifiedBoundingBox axisalignedbb = entity.nboundingbox;
+			GL11.glTranslatef(0,-3f,0);
+			drawOutlinedBoundingBox(axisalignedbb, 16777215);
+			GL11.glEnable(GL11.GL_TEXTURE_2D);
+			GL11.glEnable(GL11.GL_LIGHTING);
+			GL11.glEnable(GL11.GL_CULL_FACE);
+			GL11.glDisable(GL11.GL_BLEND);
+			GL11.glDepthMask(true);
+		}
+		GL11.glPopMatrix();
 		GL11.glDisable(GL12.GL_RESCALE_NORMAL);
 		GL11.glPopMatrix();
 	}
