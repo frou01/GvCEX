@@ -3,6 +3,7 @@ package hmggvcmob.render;
 
  
 import hmggvcmob.entity.guerrilla.GVCEntityHeli;
+import handmadevehicle.entity.parts.logics.PlaneBaseLogic;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
@@ -50,8 +51,12 @@ public class GVCRenderHeliobj extends Render
         //GL11.glRotatef(p_76986_1_.prevRotationYaw + (p_76986_1_.rotationYaw - p_76986_1_.prevRotationYaw) * p_76986_9_ - 360.0F, 0.0F, 1.0F, 0.0F);
         //GL11.glRotatef(p_76986_1_.prevRotationPitch + (p_76986_1_.rotationPitch - p_76986_1_.prevRotationPitch) * p_76986_9_, 0.0F, 0.0F, 1.0F);
         GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-        
-        GL11.glRotatef(180.0F - p_76986_8_, 0.0F, 1.0F, 0.0F);
+		PlaneBaseLogic baseLogic = (PlaneBaseLogic) (p_76986_1_).getBaseLogic();
+		GL11.glTranslatef((float) baseLogic.planeInfo.rotcenter[0], (float) baseLogic.planeInfo.rotcenter[1], (float) baseLogic.planeInfo.rotcenter[2]);
+		GL11.glRotatef(180.0F - (baseLogic.bodyrotationYaw + (baseLogic.bodyrotationYaw - baseLogic.prevbodyrotationYaw) * p_76986_9_), 0.0F, 1.0F, 0.0F);
+		GL11.glRotatef(baseLogic.bodyrotationPitch, 1.0F, 0.0F, 0.0F);
+		GL11.glRotatef(baseLogic.bodyrotationRoll, 0.0F, 0.0F, 1.0F);
+		GL11.glTranslatef((float) -baseLogic.planeInfo.rotcenter[0], (float) -baseLogic.planeInfo.rotcenter[1], (float) -baseLogic.planeInfo.rotcenter[2]);
         if(p_76986_1_.deathTicks > 0){
 			GL11.glColor4f(0.1F, 0.1F, 0.1F, 1F);
 		}

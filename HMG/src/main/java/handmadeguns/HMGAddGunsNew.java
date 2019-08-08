@@ -24,6 +24,8 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
 import static handmadeguns.HandmadeGunsCore.*;
+import static java.lang.Double.parseDouble;
+import static java.lang.Integer.parseInt;
 
 public class HMGAddGunsNew {
 	public static ArrayList Guns = new ArrayList();
@@ -36,35 +38,6 @@ public class HMGAddGunsNew {
 		GunInfo gunInfo = new GunInfo();
 		String  GunName = null;
 		String  displayNamegun = null;
-//		int     power;
-//		float   speed;
-//		float   bure;
-//		float   spread_cof;
-//		double  recoil;
-//		double  recoilwhensneak;
-//		int     retime;
-//		int     gunInfo.bulletRound;
-//		float   bayonet = 0;
-//		float   zoom;
-//		float   zoomred;
-//		float   zoomscope;
-//		int     cycle;
-//		float   ex;
-//		boolean canex;
-//		String  texture;
-//		float   soundbaselevel = 4.0f;
-//		String  sound;
-//		float   soundsuplevel = 4.0f;
-//		String  soundsu;
-//		float soundrelv = 1.0f;
-//		String  soundre;
-//		String  soundco;
-//		boolean canobj;
-//		boolean isuserenderscript = false;
-//		String  renderscript = null;
-//		boolean isusegunscript = false;
-//		String  gunscript = null;
-//		float   modelscala = 1;
 		String  objtexture;
 		String  objmodel;
 		float   modelhigh = 0;
@@ -130,42 +103,23 @@ public class HMGAddGunsNew {
 		float   mat25rotex;
 		float   mat25rotey;
 		float   mat25rotez;
-//		int     cockti;
-//		boolean needcock;
 		float   spposx;
 		float   spposy;
 		float   spposz;
 		float   sprotex;
 		float   sprotey;
 		float   sprotez;
-//		int     pellet;
-//		boolean rendercross = false;
 		int     firetype = 0;
 		int     righttype = 0;
 		boolean semi = false;
-//		String  ads = "null";
-//		String  adsr = "null";
-//		String  adss = "null";
 		int     BPitemstack;
 		Item[]  BPaddi;
 		String[]  bptemnames = null;
-//		boolean zoomrender = false;
-//		boolean zoomrendern = false;
-//		boolean zoomrenderr = false;
-//		boolean zoomrenders = false;
-//		boolean zoomrendernt = false;
-//		boolean zoomrenderrt = false;
-//		boolean zoomrenderst = false;
-//		Item    magazine;
-//		Item    magazinesg;
-//		Item    magazinegl;
-//		double  motionn;
 		boolean mat25;
 		boolean mat2;
 		boolean alljump;
 		float   jump;
 		boolean cockleft;
-//		float   gra;
 		Item    itema = null;
 		Item    itemb = null;
 		Item    itemc = null;
@@ -188,102 +142,11 @@ public class HMGAddGunsNew {
 		String  re1 = "abc";
 		String  re2 = "def";
 		String  re3 = "ghi";
-//		boolean cartridge = true;
-//		boolean cartridgedroponcocked = false;
-//		int     cartridgetype;
-//		int     magtype;
-//		int     magcnt;
-//		int     cartcnt;
-//		boolean canmagazine;
-//		float   soundspeed;
 		boolean remat31;
-//		boolean          attachRestriction = false;
-//		ArrayList<String> canset = new ArrayList<String>();
-//		boolean          useundergunsmodel = false;
-//		float            underoffsetpx;
-//		float            underoffsetpy;
-//		float            underoffsetpz;
-//		float            underrotationx;
-//		float            underrotationy;
-//		float            underrotationz;
-//
-//		float onunderoffsetpx  = 0;
-//		float onunderoffsetpy  = 0;
-//		float onunderoffsetpz  = 0;
-//		float onunderrotationx = 0;
-//		float onunderrotationy = 0;
-//		float onunderrotationz = 0;
-//		String soundunder_gl;
-//		String soundunder_sg;
-//		int under_gl_power = 20;
-//		boolean under_gl_canbounce = false;
-//		int under_gl_fuse = -1;
-//		float under_gl_speed = 2;
-//		float under_gl_bure = 5;
-//		double under_gl_recoil = 5;
-//		float under_gl_gra;
-//		int under_sg_power = 4;
-//		float under_sg_speed = 3;
-//		float under_sg_bure = 20;
-//		double under_sg_recoil = 5;
-//		float under_sg_gra;
 		boolean reloadanim = true;
 		ArrayList<Float[]> reloadanimation = new ArrayList<Float[]>();
-//		boolean hasbmodel = false;
-//		boolean hascmodel = false;
-//		boolean hasmagmodel = false;
-//		String bulletmodelNameN    = "default";
-//		String bulletmodelNameAR   = "default";
-//		String bulletmodelNameAP   = "default";
-//		String bulletmodelNameAT   = "default";
-//		String bulletmodelNameFrag = "default";
-//		String bulletmodelNameHE   = "default";
-//		String bulletmodelNameTE   = "default";
-//		String bulletmodelNameCart = "default";
-//		String bulletmodelNameGL   = "default";
-//		String bulletmodelNameRPG  = "default";
-//		String bulletmodelNameMAG  = "default";
-//		double knock;
-//		double knocky;
-//		ArrayList<Integer> burstcount = new ArrayList<Integer>();
-//		ArrayList<Integer> rates = new ArrayList<Integer>();
-//		boolean canbounce = false;
-//		int fuse = 0;
-//		float bouncerate = 0.2f;
-//		float bouncelimit = 90f;
-//		boolean isOneuse = false;
 		int maxstacksize = 1;
-//		boolean muzzleflash = false;
-//		int magazineCount = 1;
-//		int guntype = -1;
-//		String flashname = null;
-//		int flashfuse = 1;
-//		float flashScale = 1;
-//		boolean canfix = false;
-//		boolean needfix = false;
-//		boolean fixAsEntity = false;
-//		double turretRotationYawPoint[] = new double[3];
-//		double turretRotationPitchPoint[] = new double[3];
-//		double[] barrelpos = new double[]{0,0.1,1};
-//		float yoffset = 0;
 		double[] seatoffset = new double[]{0,0,0};
-//
-//
-//		float inworldScale = 1;
-//		GunName ="noname";
-//		displayNamegun = null;
-//		power = 0;
-//		speed = 1;
-//		burstcount = new ArrayList<Integer>();
-//		rates = new ArrayList<Integer>();
-////			burstcount.add(0);
-////			burstcount.add(-1);
-////			burstcount.add(1);
-////			burstcount.add(3);
-////			rates.add(2);
-////			rates.add(2);
-////			rates.add(2);
-////			rates.add(2);
 		objmodel = "ar.obj";
 		objtexture = "ar.png";
 		BPitemstack = 1;
@@ -433,6 +296,7 @@ public class HMGAddGunsNew {
 							type[i] = type[i].trim();
 						}
 					}
+					readFireInfo(gunInfo,type);
 
 
 					if (type.length != 0){// 1
@@ -441,176 +305,57 @@ public class HMGAddGunsNew {
 							case "Name":
 								displayNamegun = type[1];
 								break;
-							case "BulletPower":
-								gunInfo.power = Integer.parseInt(type[1]);
-								break;
-							case "BulletSpeed":
-								gunInfo.speed = Float.parseFloat(type[1]);
-								break;
-							case "BulletGravity":
-								gunInfo.gra = Float.parseFloat(type[1]);
-								break;
-							case "Explosion":
-								gunInfo.ex = Float.parseFloat(type[1]);
-								break;
-							case "BlockDestory":
-								gunInfo.destroyBlock = Boolean.parseBoolean(type[1]);
-								break;
-							case "Acceleration":
-								gunInfo.acceleration = Float.parseFloat(type[1]);
-								break;
-							case "Induction_precision":
-								gunInfo.induction_precision = Float.parseFloat(type[1]);
-								break;
-							case "canBounce":
-								gunInfo.canbounce = Boolean.parseBoolean(type[1]);
-								break;
-							case "BounceRate":
-								gunInfo.bouncerate = Float.parseFloat(type[1]);
-								break;
-							case "BounceLimit":
-								gunInfo.bouncelimit = Float.parseFloat(type[1]);
-								break;
-							case "bulletFuse":
-								gunInfo.fuse = Integer.parseInt(type[1]);
-								break;
-							case "BlletSpread":
-								gunInfo.spread_setting = Float.parseFloat(type[1]);
-								break;
-							case "BulletSpread":
-								gunInfo.spread_setting = Float.parseFloat(type[1]);
-								break;
-							case "BlletSpreadDiffusion":
-								gunInfo.hasspreadDiffusionSettings = true;
-								gunInfo.spreadDiffusionMax = Float.parseFloat(type[1]);
-								gunInfo.spreadDiffusionmin = Float.parseFloat(type[2]);
-								gunInfo.spreadDiffusionRate = Float.parseFloat(type[3]);
-								gunInfo.spreadDiffusionHeadRate = Float.parseFloat(type[4]);
-								gunInfo.spreadDiffusionWalkRate = Float.parseFloat(type[5]);
-								gunInfo.spreadDiffusionReduceRate = Float.parseFloat(type[6]);
-								break;
-							case "BulletSpreadDiffusion":
-								gunInfo.hasspreadDiffusionSettings = true;
-								gunInfo.spreadDiffusionMax = Float.parseFloat(type[1]);
-								gunInfo.spreadDiffusionmin = Float.parseFloat(type[2]);
-								gunInfo.spreadDiffusionRate = Float.parseFloat(type[3]);
-								gunInfo.spreadDiffusionHeadRate = Float.parseFloat(type[4]);
-								gunInfo.spreadDiffusionWalkRate = Float.parseFloat(type[5]);
-								gunInfo.spreadDiffusionReduceRate = Float.parseFloat(type[6]);
-								break;
-							case "ADS_Spread_coefficient":
-								gunInfo.ads_spread_cof = Float.parseFloat(type[1]);
-								break;
-							case "Recoil":
-								gunInfo.recoil = Double.parseDouble(type[1]);
-								gunInfo.recoil_sneak = Double.parseDouble(type[1]) / 2;
-								break;
-							case "Recoil_sneaking":
-								gunInfo.recoil_sneak = Double.parseDouble(type[1]);
-								break;
-							case "ReloadTime":
-								gunInfo.reloadTimes = new int[type.length-1];
-								for(int i = 1;i < type.length;i++){
-									gunInfo.reloadTimes[i-1] = Integer.parseInt(type[i]);
+							case "ReloadMotion":
+								while ((str = br.readLine()) != null) {
+									reloadanim = true;
+									if (str.equals("{")) continue;
+									if (str.equals("}")) break;
+									if (str.isEmpty()) continue;
+									String[] key = str.split(",");
+									reloadanimation.add(parseInt(key[0]), new Float[]{
+													Float.parseFloat(key[1]),
+													
+													Float.parseFloat(key[2]),
+													Float.parseFloat(key[3]), Float.parseFloat(key[4]), Float.parseFloat(key[5]),
+													Float.parseFloat(key[6]), Float.parseFloat(key[7]), Float.parseFloat(key[8]),
+													
+													Float.parseFloat(key[9]),
+													
+													Float.parseFloat(key[10]), Float.parseFloat(key[11]), Float.parseFloat(key[12]),
+													Float.parseFloat(key[13]), Float.parseFloat(key[14]), Float.parseFloat(key[15]),
+													
+													Float.parseFloat(key[16]), Float.parseFloat(key[17]), Float.parseFloat(key[18]),
+													Float.parseFloat(key[19]), Float.parseFloat(key[20]), Float.parseFloat(key[21]),
+													
+													Float.parseFloat(key[22]),
+													Float.parseFloat(key[23]), Float.parseFloat(key[24]), Float.parseFloat(key[25]),
+													Float.parseFloat(key[26]), Float.parseFloat(key[27]), Float.parseFloat(key[28]),
+													Float.parseFloat(key[29]), Float.parseFloat(key[30]), Float.parseFloat(key[31])
+											}
+									);
 								}
 								break;
-							case "RemainingBullet":
-								gunInfo.bulletRound = Integer.parseInt(type[1]);
-								break;
-							case "Attacking":
-								gunInfo.attackDamage = Float.parseFloat(type[1]);
-								break;
-							case "Motion":
-								gunInfo.motion = Double.parseDouble(type[1]);
-								break;
-							case "Zoom":
-								gunInfo.scopezoombase = Float.parseFloat(type[1]);
-								gunInfo.scopezoomred = Float.parseFloat(type[2]);
-								gunInfo.scopezoomscope = Float.parseFloat(type[3]);
-								break;
-							case "ZoomRender":
-								gunInfo.zoomren = Boolean.parseBoolean(type[1]);
-								break;
-							case "ZoomRenderType":
-								gunInfo.zoomren = Boolean.parseBoolean(type[1]);
-								gunInfo.zoomrer = Boolean.parseBoolean(type[2]);
-								gunInfo.zoomres = Boolean.parseBoolean(type[3]);
-								break;
-							case "ZoomRenderTypeTxture":
-								gunInfo.zoomrent = Boolean.parseBoolean(type[1]);
-								gunInfo.zoomrert = Boolean.parseBoolean(type[2]);
-								gunInfo.zoomrest = Boolean.parseBoolean(type[3]);
-								break;
-							case "ScopeTexture":
-								gunInfo.adstexture =  "handmadeguns:textures/misc/" + type[1];
-								gunInfo.adstexturer = "handmadeguns:textures/misc/" + type[2];
-								gunInfo.adstextures = "handmadeguns:textures/misc/" + type[3];
-								break;
-							case "RenderCross":
-								gunInfo.renderMCcross = Boolean.parseBoolean(type[1]);
-								break;
-							case "RenderHMGCross":
-								gunInfo.renderHMGcross = Boolean.parseBoolean(type[1]);
-								break;
-							case "NightVision":
-								gunInfo.hasNightVision[0] = Boolean.parseBoolean(type[1]);
-								gunInfo.hasNightVision[1] = Boolean.parseBoolean(type[2]);
-								gunInfo.hasNightVision[2] = Boolean.parseBoolean(type[3]);
-								break;
-							case "Cycle":
-								gunInfo.cycle = Integer.parseInt(type[1]);
-								break;
-							case "Bursts":
-								for (int i = 1; i < type.length; i++)
-									gunInfo.burstcount.add(Integer.parseInt(type[i]));
-								break;
-							case "Rates":
-								for (int i = 1; i < type.length; i++)
-									gunInfo.rates.add(Integer.parseInt(type[i]));
-								break;
-							case "Texture":
-								gunInfo.texture = type[1];
-								break;
-							case "GunSound":
-								gunInfo.soundbase = "handmadeguns:" + type[1];
-								gunInfo.soundsu = "handmadeguns:" + type[2];
-								break;
-							case "SoundSpeed":
-								gunInfo.soundspeed = Float.parseFloat(type[1]);
-								break;
-							case "GunSoundLV":
-								gunInfo.soundbaselevel = Float.parseFloat(type[1]);
-								gunInfo.soundsuplevel = Float.parseFloat(type[2]);
-								break;
-							case "GunSoundReload":
-								gunInfo.soundre = new String[type.length-1];
-								for (int i = 1; i < type.length; i++)
-									gunInfo.soundre[i-1] = "handmadeguns:" + type[1];
-								break;
-							case "GunSoundReloadLV":
-								gunInfo.soundrelevel = Float.parseFloat(type[1]);
-								break;
-							case "GunSoundCooking":
-								gunInfo.soundco = "handmadeguns:" + type[1];
-								break;
-							case "Magazine": {
-								int ii = Integer.parseInt(type[1]);
-								
-								if (ii == 0) {
-									gunInfo.magazine[0] = GameRegistry.findItem(type[2], type[3]);
-								} else {
-									gunInfo.magazine[0] = Item.getItemById(ii);
-								}
+							case "RendeScript": {
+								gunInfo.userenderscript = true;
+								FileReader sc = new FileReader(new File(proxy.ProxyFile(), "mods" + File.separatorChar + "handmadeguns"
+										                                                           + File.separatorChar + "assets" + File.separatorChar + "handmadeguns" + File.separatorChar +
+										                                                           "scripts" + File.separatorChar + type[1])); // ファイルを開く
+								gunInfo.renderscript = doScript(sc);
 								break;
 							}
-							case "MultiMagazine": {
-								gunInfo.magazine = new Item[type.length-1];
-								for(int i = 1;i < type.length;i++){
-									String[] parts = type[i].split(":");
-									String modId = parts[0];
-									String name = parts[1];
-									gunInfo.magazine[i-1] = GameRegistry.findItem(modId, name);
-								}
+							case "Script": {
+								gunInfo.userenderscript = true;
+								FileReader sc = new FileReader(new File(proxy.ProxyFile(), "mods" + File.separatorChar + "handmadeguns"
+										                                                           + File.separatorChar + "assets" + File.separatorChar + "handmadeguns" + File.separatorChar +
+										                                                           "scripts" + File.separatorChar + type[1])); // ファイルを開く
+								gunInfo.renderscript = doScript(sc);
+								break;
+							}
+							case "GunScript": {
+								FileReader sc = new FileReader(new File(proxy.ProxyFile(), "mods" + File.separatorChar + "handmadeguns"
+										                                                           + File.separatorChar + "assets" + File.separatorChar + "handmadeguns" + File.separatorChar +
+										                                                           "scripts" + File.separatorChar + type[1])); // ファイルを開く
+								gunInfo.script = doScript(sc);
 								break;
 							}
 							case "CanObj":
@@ -621,12 +366,6 @@ public class HMGAddGunsNew {
 								break;
 							case "ObjTexture":
 								objtexture = type[1];
-								break;
-							case "ModelScala":
-								gunInfo.modelscale = Float.parseFloat(type[1]);
-								break;
-							case "InworldScale":
-								gunInfo.inworldScale = Float.parseFloat(type[1]);
 								break;
 							case "ModelEquipped":
 								nox = Float.parseFloat(type[1]);
@@ -762,22 +501,6 @@ public class HMGAddGunsNew {
 								sprotey = Float.parseFloat(type[2]);
 								sprotez = Float.parseFloat(type[3]);
 								break;
-							case "CockingTime":
-								gunInfo.cocktime = Integer.parseInt(type[1]);
-								gunInfo.needcock = true;
-								break;
-							case "ShotGun_Pellet":
-								gunInfo.pellet = Integer.parseInt(type[1]);
-								break;
-							case "PerFireRound":
-								gunInfo.pellet = Integer.parseInt(type[1]);
-								break;
-							case "Cartridge":
-								gunInfo.dropcart = Boolean.parseBoolean(type[1]);
-								break;
-							case "DropCartridgeEndCocked":
-								gunInfo.cart_cocked = Boolean.parseBoolean(type[1]);
-								break;
 							case "MuzzleJump":
 								jump = Float.parseFloat(type[1]);
 								break;
@@ -787,147 +510,8 @@ public class HMGAddGunsNew {
 							case "ALLCocked":
 								alljump = Boolean.parseBoolean(type[1]);
 								break;
-							case "UnderGL_Sound":
-								gunInfo.use_internal_secondary = true;
-								gunInfo.soundunder_gl = type[1];
-								break;
-							case "UnderGL_Power":
-								gunInfo.use_internal_secondary = true;
-								gunInfo.under_gl_power = Integer.parseInt(type[1]);
-								break;
-							case "UnderGL_Canbounce":
-								gunInfo.use_internal_secondary = true;
-								gunInfo.under_gl_canbounce = Boolean.parseBoolean(type[1]);
-								break;
-							case "UnderGL_Fuse":
-								gunInfo.use_internal_secondary = true;
-								gunInfo.under_gl_fuse = Integer.parseInt(type[1]);
-								break;
-							case "UnderGL_Speed":
-								gunInfo.use_internal_secondary = true;
-								gunInfo.under_gl_speed = Float.parseFloat(type[1]);
-								break;
-							case "UnderGL_Spread":
-								gunInfo.use_internal_secondary = true;
-								gunInfo.under_gl_bure = Float.parseFloat(type[1]);
-								break;
-							case "UnderGL_Recoil":
-								gunInfo.use_internal_secondary = true;
-								gunInfo.under_gl_recoil = Double.parseDouble(type[1]);
-								break;
-							case "UnderGL_Gravity":
-								gunInfo.use_internal_secondary = true;
-								gunInfo.under_gl_gra = Float.parseFloat(type[1]);
-								break;
-							case "UnderSG_Sound":
-								gunInfo.use_internal_secondary = true;
-								gunInfo.soundunder_sg = type[1];
-								break;
-							case "UnderSG_Power":
-								gunInfo.use_internal_secondary = true;
-								gunInfo.under_sg_power = Integer.parseInt(type[1]);
-								break;
-							case "UnderSG_Speed":
-								gunInfo.use_internal_secondary = true;
-								gunInfo.under_sg_speed = Float.parseFloat(type[1]);
-								break;
-							case "UnderSG_Spread":
-								gunInfo.use_internal_secondary = true;
-								gunInfo.under_sg_bure = Float.parseFloat(type[1]);
-								break;
-							case "UnderSG_Recoil":
-								gunInfo.use_internal_secondary = true;
-								gunInfo.under_sg_recoil = Double.parseDouble(type[1]);
-								break;
-							case "UnderSG_Gravity":
-								gunInfo.use_internal_secondary = true;
-								gunInfo.under_sg_gra = Float.parseFloat(type[1]);
-								break;
-							case "CartridgeType":
-								gunInfo.cartType = Integer.parseInt(type[1]);
-								break;
-							case "MagType":
-								gunInfo.magType = Integer.parseInt(type[1]);
-								break;
-							case "MagCount":
-								gunInfo.magentityCnt = Integer.parseInt(type[1]);
-								break;
-							case "CartCount":
-								gunInfo.cartentityCnt = Integer.parseInt(type[1]);
-								break;
-							case "DropMagazine":
-								gunInfo.dropMagEntity = Boolean.parseBoolean(type[1]);
-								break;
 							case "ReloadMat31":
 								remat31 = Boolean.parseBoolean(type[1]);
-								break;
-							case "ReloadMotion":
-								while ((str = br.readLine()) != null) {
-									reloadanim = true;
-									if (str.equals("{")) continue;
-									if (str.equals("}")) break;
-									if (str.isEmpty()) continue;
-									String[] key = str.split(",");
-									reloadanimation.add(Integer.parseInt(key[0]), new Float[]{
-													Float.parseFloat(key[1]),
-
-													Float.parseFloat(key[2]),
-													Float.parseFloat(key[3]), Float.parseFloat(key[4]), Float.parseFloat(key[5]),
-													Float.parseFloat(key[6]), Float.parseFloat(key[7]), Float.parseFloat(key[8]),
-
-													Float.parseFloat(key[9]),
-
-													Float.parseFloat(key[10]), Float.parseFloat(key[11]), Float.parseFloat(key[12]),
-													Float.parseFloat(key[13]), Float.parseFloat(key[14]), Float.parseFloat(key[15]),
-
-													Float.parseFloat(key[16]), Float.parseFloat(key[17]), Float.parseFloat(key[18]),
-													Float.parseFloat(key[19]), Float.parseFloat(key[20]), Float.parseFloat(key[21]),
-
-													Float.parseFloat(key[22]),
-													Float.parseFloat(key[23]), Float.parseFloat(key[24]), Float.parseFloat(key[25]),
-													Float.parseFloat(key[26]), Float.parseFloat(key[27]), Float.parseFloat(key[28]),
-													Float.parseFloat(key[29]), Float.parseFloat(key[30]), Float.parseFloat(key[31])
-											}
-									);
-								}
-								break;
-							case "setunderRestriction":
-								gunInfo.hasAttachRestriction = Boolean.parseBoolean(type[1]);
-								break;
-							case "attachRestriction":
-								gunInfo.hasAttachRestriction = Boolean.parseBoolean(type[1]);
-								break;
-							case "allowundername":
-								for (int i = 1; i < type.length; i++)
-									gunInfo.attachwhitelist.add(type[i]);
-								break;
-							case "allowattach":
-								for (int i = 1; i < type.length; i++)
-									gunInfo.attachwhitelist.add(type[i]);
-								break;
-							case "UseUnderGun'smodel":
-								gunInfo.useundergunsmodel = Boolean.parseBoolean(type[1]);
-//								System.out.println("useundergunsmodel" + useundergunsmodel);
-								break;
-							case "UnderGunOffset":
-								gunInfo.underoffsetpx = Float.parseFloat(type[1]);
-								gunInfo.underoffsetpy = Float.parseFloat(type[2]);
-								gunInfo.underoffsetpz = Float.parseFloat(type[3]);
-								break;
-							case "UnderGunRotation":
-								gunInfo.underrotationx = Float.parseFloat(type[1]);
-								gunInfo.underrotationy = Float.parseFloat(type[2]);
-								gunInfo.underrotationz = Float.parseFloat(type[3]);
-								break;
-							case "OnUnderGunOffset":
-								gunInfo.onunderoffsetpx = Float.parseFloat(type[1]);
-								gunInfo.onunderoffsetpy = Float.parseFloat(type[2]);
-								gunInfo.onunderoffsetpz = Float.parseFloat(type[3]);
-								break;
-							case "OnUnderGunRotation":
-								gunInfo.onunderrotationx = Float.parseFloat(type[1]);
-								gunInfo.onunderrotationy = Float.parseFloat(type[2]);
-								gunInfo.onunderrotationz = Float.parseFloat(type[3]);
 								break;
 							case "GripSetPoint":
 								for (int i = 0; i < 3; i++)
@@ -937,127 +521,11 @@ public class HMGAddGunsNew {
 								for (int i = 0; i < 3; i++)
 									gripattachrotation[i] = Float.parseFloat(type[i + 1]);
 								break;
-							case "BulletNameALL":
-								gunInfo.bulletmodelN =
-										gunInfo.bulletmodelAR =
-												gunInfo.bulletmodelAP =
-														gunInfo.bulletmodelAT =
-																gunInfo.bulletmodelFrag =
-																		gunInfo.bulletmodelHE =
-																				gunInfo.bulletmodelTE =
-																						gunInfo.bulletmodelCart =
-																								gunInfo.bulletmodelGL =
-																										gunInfo.bulletmodelRPG = type[1];
-								gunInfo.hascustombulletmodel = true;
-								break;
-							case "BulletNameNormal":
-								gunInfo.bulletmodelN = type[1];
-								gunInfo.hascustombulletmodel = true;
-								break;
-							case "BulletNameAR":
-								gunInfo.bulletmodelAR = type[1];
-								gunInfo.hascustombulletmodel = true;
-								break;
-							case "BulletNameAP":
-								gunInfo.bulletmodelAP = type[1];
-								gunInfo.hascustombulletmodel = true;
-								break;
-							case "BulletNameAT":
-								gunInfo.bulletmodelAT = type[1];
-								gunInfo.hascustombulletmodel = true;
-								break;
-							case "BulletNameFrag":
-								gunInfo.bulletmodelFrag = type[1];
-								gunInfo.hascustombulletmodel = true;
-								break;
-							case "BulletNameHE":
-								gunInfo.bulletmodelHE = type[1];gunInfo.hascustombulletmodel = true;
-								break;
-							case "BulletNameTE":
-								gunInfo.bulletmodelTE = type[1];
-								gunInfo.hascustombulletmodel = true;
-								break;
-							case "BulletNameGL":
-								gunInfo.bulletmodelGL = type[1];
-								gunInfo.hascustombulletmodel = true;
-								break;
-							case "BulletNameRPG":
-								gunInfo.bulletmodelRPG = type[1];
-								gunInfo.hascustombulletmodel = true;
-								break;
-							case "BulletNameCart":
-								gunInfo.bulletmodelCart = type[1];
-								gunInfo.hascustomcartridgemodel = true;
-								break;
-							case "BulletNameMAG":
-								gunInfo.bulletmodelMAG = type[1];
-								gunInfo.hascustommagemodel = true;
-								break;
-							case "KnockBack":
-								gunInfo.knockback = Double.parseDouble(type[1]);
-								gunInfo.knockbackY = Double.parseDouble(type[2]);
-								break;
-							case "isOneuse":
-								gunInfo.isOneuse = Boolean.parseBoolean(type[1]);
-								break;
 							case "MaxstackSize":
-								maxstacksize = Integer.parseInt(type[1]);
+								maxstacksize = parseInt(type[1]);
 								break;
-							case "MuzzleFlash":
-								gunInfo.muzzleflash = Boolean.parseBoolean(type[1]);
-								break;
-							case "MagazineItemCount":
-								gunInfo.magazineItemCount = Integer.parseInt(type[1]);
-								break;
-							case "RendeScript": {
-								gunInfo.userenderscript = true;
-								FileReader sc = new FileReader(new File(proxy.ProxyFile(), "mods" + File.separatorChar + "handmadeguns"
-										                                                           + File.separatorChar + "assets" + File.separatorChar + "handmadeguns" + File.separatorChar +
-										                                                           "scripts" + File.separatorChar + type[1])); // ファイルを開く
-								gunInfo.renderscript = doScript(sc);
-								break;
-							}
-							case "Script": {
-								gunInfo.userenderscript = true;
-								FileReader sc = new FileReader(new File(proxy.ProxyFile(), "mods" + File.separatorChar + "handmadeguns"
-										                                                           + File.separatorChar + "assets" + File.separatorChar + "handmadeguns" + File.separatorChar +
-										                                                           "scripts" + File.separatorChar + type[1])); // ファイルを開く
-								gunInfo.renderscript = doScript(sc);
-								break;
-							}
-							case "GunScript": {
-								FileReader sc = new FileReader(new File(proxy.ProxyFile(), "mods" + File.separatorChar + "handmadeguns"
-										                                                           + File.separatorChar + "assets" + File.separatorChar + "handmadeguns" + File.separatorChar +
-										                                                           "scripts" + File.separatorChar + type[1])); // ファイルを開く
-								gunInfo.script = doScript(sc);
-								break;
-							}
 							case "armoffsetScale":
 								armscale = Float.parseFloat(type[1]);
-								break;
-							case "guerrila_cant_use_this":
-								gunInfo.guerrila_can_use = false;
-								break;
-							case "Dont_Be_Inside_Root_Chest":
-								gunInfo.isinRoot = false;
-								break;
-							case "soldier_cant_storage_this":
-								gunInfo.soldiercanstorage = false;
-								break;
-							case "Canlock":
-								gunInfo.canlock = gunInfo.canlockEntity = Boolean.parseBoolean(type[1]);
-								break;
-							case "canlockEntity":
-								gunInfo.canlockEntity = Boolean.parseBoolean(type[1]);
-								break;
-							case "CanlockBlock":
-								gunInfo.canlockBlock = Boolean.parseBoolean(type[1]);
-								break;
-							case "guntype":
-								gunInfo.guntype = Integer.parseInt(type[1]);
-								break;
-							case "Class":
-								gunInfo.canuseclass = Integer.parseInt(type[1]);
 								break;
 							case "SightSetPoint":
 								for (int i = 0; i < 3; i++)
@@ -1079,64 +547,11 @@ public class HMGAddGunsNew {
 								for (int i = 0; i < 3; i++)
 									barrelattachrotation[i] = Float.parseFloat(type[i + 1]);
 								break;
-							case "CustomFlash":
-								gunInfo.flashname = type[1];
-								gunInfo.flashfuse = Integer.parseInt(type[2]);
-								if (type.length == 4) {
-									gunInfo.flashScale = Float.parseFloat(type[3]);
-								}
-								break;
 							case "Tabname":
 								tabname = type[1];
 								break;
-							case "Canfix":
-								gunInfo.canfix = Boolean.parseBoolean(type[1]);
-								break;
-							case "NeedFix":
-								gunInfo.needfix = Boolean.parseBoolean(type[1]);
-								break;
-							case "FixAsEntity":
-								gunInfo.fixAsEntity = Boolean.parseBoolean(type[1]);
-								break;
-							case "OnEntity_RotationYawPoint":
-								gunInfo.posGetter.turretRotationYawPoint = new double[]{Double.parseDouble(type[1]), Double.parseDouble(type[2]), Double.parseDouble(type[3])};
-								break;
-							case "OnEntity_RotationPitchPoint":
-								gunInfo.posGetter.turretRotationPitchPoint = new double[]{Double.parseDouble(type[1]), Double.parseDouble(type[2]), Double.parseDouble(type[3])};
-								break;
-							case "OnEntity_BarrelPoint":
-								gunInfo.posGetter.barrelpos = new double[]{Double.parseDouble(type[1]), Double.parseDouble(type[2]), Double.parseDouble(type[3])};
-								break;
-							case "OnEntity_Yoffset":
-								gunInfo.yoffset = Float.parseFloat(type[1]);
-								break;
-							case "OnEntity_PlayerPosOffset":
-								seatoffset = new double[]{Double.parseDouble(type[1]), Double.parseDouble(type[2]), Double.parseDouble(type[3])};
-								break;
-							case "restrictTurretMoveSpeed":
-								gunInfo.restrictTurretMoveSpeed = true;
-								gunInfo.turretMoveSpeedY = Float.parseFloat(type[1]);
-								gunInfo.turretMoveSpeedP = Float.parseFloat(type[2]);
-								break;
-							case "Turretanglelimit":
-								gunInfo.restrictTurretAngle = true;
-								gunInfo.turretanglelimtMxP = Float.parseFloat(type[1]);
-								gunInfo.turretanglelimtmnP = Float.parseFloat(type[2]);
-								gunInfo.turretanglelimtMxY = Float.parseFloat(type[3]);
-								gunInfo.turretanglelimtmnY = Float.parseFloat(type[4]);
-								break;
-							case "TurretBoxSize":
-								gunInfo.turreboxW = Float.parseFloat(type[1]);
-								gunInfo.turreboxH = Float.parseFloat(type[2]);
-								break;
-							case "OnTurretScale":
-								gunInfo.onTurretScale = Float.parseFloat(type[1]);
-								break;
-							case "TurretHP":
-								gunInfo.turretMaxHP = Integer.parseInt(type[1]);
-								break;
 							case "BPItemStack":
-								BPitemstack = Integer.parseInt(type[1]);
+								BPitemstack = parseInt(type[1]);
 								BPaddi = new Item[BPitemstack];
 								bptemnames = new String[BPitemstack];
 								break;
@@ -1188,41 +603,41 @@ public class HMGAddGunsNew {
 									break;
 								case "AddRecoilMotionKey":
 									if (type.length > 3) {
-										currentParts.AddMotionKeyRecoil(Integer.parseInt(type[1]), Float.parseFloat(type[2]), Float.parseFloat(type[3]), Float.parseFloat(type[4]), Float.parseFloat(type[5]), Float.parseFloat(type[6]), Float.parseFloat(type[7]), Integer.parseInt(type[8]), Float.parseFloat(type[9]), Float.parseFloat(type[10]), Float.parseFloat(type[11]), Float.parseFloat(type[12]), Float.parseFloat(type[13]), Float.parseFloat(type[14]));
+										currentParts.AddMotionKeyRecoil(parseInt(type[1]), Float.parseFloat(type[2]), Float.parseFloat(type[3]), Float.parseFloat(type[4]), Float.parseFloat(type[5]), Float.parseFloat(type[6]), Float.parseFloat(type[7]), parseInt(type[8]), Float.parseFloat(type[9]), Float.parseFloat(type[10]), Float.parseFloat(type[11]), Float.parseFloat(type[12]), Float.parseFloat(type[13]), Float.parseFloat(type[14]));
 									} else {
-										currentParts.AddMotionKeyRecoil(Integer.parseInt(type[1]), Boolean.parseBoolean(type[2]), Integer.parseInt(type[3]));
+										currentParts.AddMotionKeyRecoil(parseInt(type[1]), Boolean.parseBoolean(type[2]), parseInt(type[3]));
 									}
 									break;
 								case "AddYawInfoKey":
 									if (type.length > 3) {
-										currentParts.AddInfoKeyTurretYaw(Integer.parseInt(type[1]), Float.parseFloat(type[2]), Float.parseFloat(type[3]), Float.parseFloat(type[4]), Float.parseFloat(type[5]), Float.parseFloat(type[6]), Float.parseFloat(type[7]), Integer.parseInt(type[8]), Float.parseFloat(type[9]), Float.parseFloat(type[10]), Float.parseFloat(type[11]), Float.parseFloat(type[12]), Float.parseFloat(type[13]), Float.parseFloat(type[14]));
+										currentParts.AddInfoKeyTurretYaw(parseInt(type[1]), Float.parseFloat(type[2]), Float.parseFloat(type[3]), Float.parseFloat(type[4]), Float.parseFloat(type[5]), Float.parseFloat(type[6]), Float.parseFloat(type[7]), parseInt(type[8]), Float.parseFloat(type[9]), Float.parseFloat(type[10]), Float.parseFloat(type[11]), Float.parseFloat(type[12]), Float.parseFloat(type[13]), Float.parseFloat(type[14]));
 									} else {
-										currentParts.AddInfoKeyTurretYaw(Integer.parseInt(type[1]), Boolean.parseBoolean(type[2]), Integer.parseInt(type[3]));
+										currentParts.AddInfoKeyTurretYaw(parseInt(type[1]), Boolean.parseBoolean(type[2]), parseInt(type[3]));
 									}
 									break;
 								case "AddPitchInfoKey":
 									if (type.length > 3) {
-										currentParts.AddInfoKeyTurretPitch(Integer.parseInt(type[1]), Float.parseFloat(type[2]), Float.parseFloat(type[3]), Float.parseFloat(type[4]), Float.parseFloat(type[5]), Float.parseFloat(type[6]), Float.parseFloat(type[7]), Integer.parseInt(type[8]), Float.parseFloat(type[9]), Float.parseFloat(type[10]), Float.parseFloat(type[11]), Float.parseFloat(type[12]), Float.parseFloat(type[13]), Float.parseFloat(type[14]));
+										currentParts.AddInfoKeyTurretPitch(parseInt(type[1]), Float.parseFloat(type[2]), Float.parseFloat(type[3]), Float.parseFloat(type[4]), Float.parseFloat(type[5]), Float.parseFloat(type[6]), Float.parseFloat(type[7]), parseInt(type[8]), Float.parseFloat(type[9]), Float.parseFloat(type[10]), Float.parseFloat(type[11]), Float.parseFloat(type[12]), Float.parseFloat(type[13]), Float.parseFloat(type[14]));
 									} else {
-										currentParts.AddInfoKeyTurretPitch(Integer.parseInt(type[1]), Boolean.parseBoolean(type[2]), Integer.parseInt(type[3]));
+										currentParts.AddInfoKeyTurretPitch(parseInt(type[1]), Boolean.parseBoolean(type[2]), parseInt(type[3]));
 									}
 									break;
 								case "AddCockMotionKey":
 									if (type.length > 3) {
-										currentParts.AddMotionKeyCock(Integer.parseInt(type[1]), Float.parseFloat(type[2]), Float.parseFloat(type[3]), Float.parseFloat(type[4]), Float.parseFloat(type[5]), Float.parseFloat(type[6]), Float.parseFloat(type[7]), Integer.parseInt(type[8]), Float.parseFloat(type[9]), Float.parseFloat(type[10]), Float.parseFloat(type[11]), Float.parseFloat(type[12]), Float.parseFloat(type[13]), Float.parseFloat(type[14]));
+										currentParts.AddMotionKeyCock(parseInt(type[1]), Float.parseFloat(type[2]), Float.parseFloat(type[3]), Float.parseFloat(type[4]), Float.parseFloat(type[5]), Float.parseFloat(type[6]), Float.parseFloat(type[7]), parseInt(type[8]), Float.parseFloat(type[9]), Float.parseFloat(type[10]), Float.parseFloat(type[11]), Float.parseFloat(type[12]), Float.parseFloat(type[13]), Float.parseFloat(type[14]));
 									} else {
-										currentParts.AddMotionKeyCock(Integer.parseInt(type[1]), Boolean.parseBoolean(type[2]), Integer.parseInt(type[3]));
+										currentParts.AddMotionKeyCock(parseInt(type[1]), Boolean.parseBoolean(type[2]), parseInt(type[3]));
 									}
 									break;
 								case "AddReloadMotionKey":
 									if (type.length > 4) {
-										currentParts.AddMotionKeyReload(Integer.parseInt(type[1]), Float.parseFloat(type[2]), Float.parseFloat(type[3]), Float.parseFloat(type[4]), Float.parseFloat(type[5]), Float.parseFloat(type[6]), Float.parseFloat(type[7]), Integer.parseInt(type[8]), Float.parseFloat(type[9]), Float.parseFloat(type[10]), Float.parseFloat(type[11]), Float.parseFloat(type[12]), Float.parseFloat(type[13]), Float.parseFloat(type[14]));
+										currentParts.AddMotionKeyReload(parseInt(type[1]), Float.parseFloat(type[2]), Float.parseFloat(type[3]), Float.parseFloat(type[4]), Float.parseFloat(type[5]), Float.parseFloat(type[6]), Float.parseFloat(type[7]), parseInt(type[8]), Float.parseFloat(type[9]), Float.parseFloat(type[10]), Float.parseFloat(type[11]), Float.parseFloat(type[12]), Float.parseFloat(type[13]), Float.parseFloat(type[14]));
 									} else {
-										currentParts.AddMotionKeyReload(Integer.parseInt(type[1]), Boolean.parseBoolean(type[2]), Integer.parseInt(type[3]));
+										currentParts.AddMotionKeyReload(parseInt(type[1]), Boolean.parseBoolean(type[2]), parseInt(type[3]));
 									}
 									break;
 								case "AddBulletPositions":
-									currentParts.AddBulletPositions(Integer.parseInt(type[1]), Float.parseFloat(type[2]), Float.parseFloat(type[3]), Float.parseFloat(type[4]), Float.parseFloat(type[5]), Float.parseFloat(type[6]), Float.parseFloat(type[7]), Integer.parseInt(type[8]), Float.parseFloat(type[9]), Float.parseFloat(type[10]), Float.parseFloat(type[11]), Float.parseFloat(type[12]), Float.parseFloat(type[13]), Float.parseFloat(type[14]));
+									currentParts.AddBulletPositions(parseInt(type[1]), Float.parseFloat(type[2]), Float.parseFloat(type[3]), Float.parseFloat(type[4]), Float.parseFloat(type[5]), Float.parseFloat(type[6]), Float.parseFloat(type[7]), parseInt(type[8]), Float.parseFloat(type[9]), Float.parseFloat(type[10]), Float.parseFloat(type[11]), Float.parseFloat(type[12]), Float.parseFloat(type[13]), Float.parseFloat(type[14]));
 									break;
 								case "NeedDraw_Current_Magazine_ID_List":
 									currentParts.current_magazineType = new ArrayList<Boolean>();
@@ -1237,7 +652,7 @@ public class HMGAddGunsNew {
 									}
 									break;
 								case "Isbullet":
-									currentParts.setIsbullet(Boolean.parseBoolean(type[1]), Integer.parseInt(type[2]));
+									currentParts.setIsbullet(Boolean.parseBoolean(type[1]), parseInt(type[2]));
 									break;
 								case "attachpart":
 									currentParts.isattachpart = true;
@@ -1305,6 +720,9 @@ public class HMGAddGunsNew {
 								case "underOnly_not":
 									currentParts.underOnly_not = true;
 									break;
+								case "reticleAndPlate":
+									currentParts.reticleAndPlate = true;
+									break;
 								case "AddChildParts":
 									currentIndex = currentParts.childs.size();
 									currentParts.childs.add(currentParts = createGunPart(type, currentIndex, currentParts));
@@ -1312,6 +730,10 @@ public class HMGAddGunsNew {
 								case "BackParts":
 									currentIndex = currentParts.motherIndex;
 									currentParts = currentParts.mother;
+									break;
+								
+								case "OnEntity_PlayerPosOffset":
+									seatoffset = new double[]{parseDouble(type[1]), parseDouble(type[2]), parseDouble(type[3])};
 									break;
 							}
 						}
@@ -1828,19 +1250,19 @@ public class HMGAddGunsNew {
 						if (type[0].equals("addRecipe")) {
 							Item additem = GameRegistry.findItem("HandmadeGuns", type[1]);
 							if(additem != null) {
-								int num = Integer.parseInt(type[2]);
+								int num = parseInt(type[2]);
 								re1 = type[3];
 								re2 = type[4];
 								re3 = type[5];
-								int ia = Integer.parseInt(type[6]);
-								int ib = Integer.parseInt(type[7]);
-								int ic = Integer.parseInt(type[8]);
-								int id = Integer.parseInt(type[9]);
-								int ie = Integer.parseInt(type[10]);
-								int ief = Integer.parseInt(type[11]);
-								int ig = Integer.parseInt(type[12]);
-								int ih = Integer.parseInt(type[13]);
-								int ii = Integer.parseInt(type[14]);
+								int ia = parseInt(type[6]);
+								int ib = parseInt(type[7]);
+								int ic = parseInt(type[8]);
+								int id = parseInt(type[9]);
+								int ie = parseInt(type[10]);
+								int ief = parseInt(type[11]);
+								int ig = parseInt(type[12]);
+								int ih = parseInt(type[13]);
+								int ii = parseInt(type[14]);
 
 								itema = Item.getItemById(ia);
 								itemb = Item.getItemById(ib);
@@ -1864,7 +1286,7 @@ public class HMGAddGunsNew {
 							if(additem != null) {
 								float xp = Float.parseFloat(type[2]);
 
-								int ia = Integer.parseInt(type[3]);
+								int ia = parseInt(type[3]);
 								itema = Item.getItemById(ia);
 
 								if(itema != null && additem != null)
@@ -1947,7 +1369,7 @@ public class HMGAddGunsNew {
 						if(type[0].equals("addNewRecipe")){
 							Item additem = GameRegistry.findItem(type[1], type[2]);
 							if(additem != null) {
-								int num = Integer.parseInt(type[3]);
+								int num = parseInt(type[3]);
 								try {
 									GameRegistry.addRecipe(new ItemStack(additem, num),
 											re1,
@@ -2075,12 +1497,12 @@ public class HMGAddGunsNew {
 									break;
 							}
 
-							System.out.println(new ItemStack(GameRegistry.findItem(itemids[0], itemids[1]), Integer.parseInt(itemids[3]), Integer.parseInt(itemids[2])));
+							System.out.println(new ItemStack(GameRegistry.findItem(itemids[0], itemids[1]), parseInt(itemids[3]), parseInt(itemids[2])));
 
 							if(isfixationrecipe == 0){
 								try{
 									GameRegistry.addRecipe(
-											new ItemStack(GameRegistry.findItem(itemids[0], itemids[1]), Integer.parseInt(itemids[3]), Integer.parseInt(itemids[2])),
+											new ItemStack(GameRegistry.findItem(itemids[0], itemids[1]), parseInt(itemids[3]), parseInt(itemids[2])),
 											String.valueOf(new char[]{rf[0], rf[1], rf[2]}),
 											String.valueOf(new char[]{rf[3], rf[4], rf[5]}),
 											String.valueOf(new char[]{rf[6], rf[7], rf[8]}),
@@ -2100,7 +1522,7 @@ public class HMGAddGunsNew {
 							}else if(isfixationrecipe == 1){
 								try{
 									GameRegistry.addRecipe(
-											new ItemStack(GameRegistry.findItem(itemids[0], itemids[1]), Integer.parseInt(itemids[3]), Integer.parseInt(itemids[2])),
+											new ItemStack(GameRegistry.findItem(itemids[0], itemids[1]), parseInt(itemids[3]), parseInt(itemids[2])),
 											String.valueOf(new char[]{rf[0], rf[1]}),
 											String.valueOf(new char[]{rf[2], rf[3]}),
 											'a',itemlist.get(0),
@@ -2121,7 +1543,7 @@ public class HMGAddGunsNew {
 								}
 								try{
 									GameRegistry.addShapelessRecipe(
-											new ItemStack(GameRegistry.findItem(itemids[0], itemids[1]), Integer.parseInt(itemids[3]), Integer.parseInt(itemids[2])),
+											new ItemStack(GameRegistry.findItem(itemids[0], itemids[1]), parseInt(itemids[3]), parseInt(itemids[2])),
 											recipeitems.toArray(new Object[recipeitems.size()])
 									);
 								}catch(Exception e){
@@ -2158,9 +1580,9 @@ public class HMGAddGunsNew {
 				}
 			}
 			if(itemids.length == 3){
-				itemstacks[index] = new ItemStack(GameRegistry.findItem(itemids[0], itemids[1]), 1, Integer.parseInt(itemids[2]));
+				itemstacks[index] = new ItemStack(GameRegistry.findItem(itemids[0], itemids[1]), 1, parseInt(itemids[2]));
 				if(itemstacks[index] == null){
-					itemstacks[index] = new ItemStack(GameRegistry.findBlock(itemids[0], itemids[1]), 1, Integer.parseInt(itemids[2]));
+					itemstacks[index] = new ItemStack(GameRegistry.findBlock(itemids[0], itemids[1]), 1, parseInt(itemids[2]));
 				}
 				items[index] = null;
 			}
@@ -2259,6 +1681,481 @@ public class HMGAddGunsNew {
 			throw new RuntimeException("Script exec error", e);
 		}
 	}
+	
+	public static void readFireInfo(GunInfo gunInfo,String[] type){
+		switch (type[0]){
+			case "BulletPower":
+				gunInfo.power = parseInt(type[1]);
+				break;
+			case "BulletSpeed":
+				gunInfo.speed = Float.parseFloat(type[1]);
+				break;
+			case "BulletGravity":
+				gunInfo.gravity = Float.parseFloat(type[1]);
+				break;
+			case "Explosion":
+				gunInfo.ex = Float.parseFloat(type[1]);
+				break;
+			case "BlockDestory":
+				gunInfo.destroyBlock = Boolean.parseBoolean(type[1]);
+				break;
+			case "Acceleration":
+				gunInfo.acceleration = Float.parseFloat(type[1]);
+				break;
+			case "Induction_precision":
+				gunInfo.induction_precision = Float.parseFloat(type[1]);
+				break;
+			case "canBounce":
+				gunInfo.canbounce = Boolean.parseBoolean(type[1]);
+				break;
+			case "BounceRate":
+				gunInfo.bouncerate = Float.parseFloat(type[1]);
+				break;
+			case "BounceLimit":
+				gunInfo.bouncelimit = Float.parseFloat(type[1]);
+				break;
+			case "bulletFuse":
+				gunInfo.fuse = parseInt(type[1]);
+				break;
+			case "BlletSpread":
+				gunInfo.spread_setting = Float.parseFloat(type[1]);
+				break;
+			case "BulletSpread":
+				gunInfo.spread_setting = Float.parseFloat(type[1]);
+				break;
+			case "BlletSpreadDiffusion":
+				gunInfo.hasspreadDiffusionSettings = true;
+				gunInfo.spreadDiffusionMax = Float.parseFloat(type[1]);
+				gunInfo.spreadDiffusionmin = Float.parseFloat(type[2]);
+				gunInfo.spreadDiffusionRate = Float.parseFloat(type[3]);
+				gunInfo.spreadDiffusionHeadRate = Float.parseFloat(type[4]);
+				gunInfo.spreadDiffusionWalkRate = Float.parseFloat(type[5]);
+				gunInfo.spreadDiffusionReduceRate = Float.parseFloat(type[6]);
+				break;
+			case "BulletSpreadDiffusion":
+				gunInfo.hasspreadDiffusionSettings = true;
+				gunInfo.spreadDiffusionMax = Float.parseFloat(type[1]);
+				gunInfo.spreadDiffusionmin = Float.parseFloat(type[2]);
+				gunInfo.spreadDiffusionRate = Float.parseFloat(type[3]);
+				gunInfo.spreadDiffusionHeadRate = Float.parseFloat(type[4]);
+				gunInfo.spreadDiffusionWalkRate = Float.parseFloat(type[5]);
+				gunInfo.spreadDiffusionReduceRate = Float.parseFloat(type[6]);
+				break;
+			case "ADS_Spread_coefficient":
+				gunInfo.ads_spread_cof = Float.parseFloat(type[1]);
+				break;
+			case "Recoil":
+				gunInfo.recoil = parseDouble(type[1]);
+				gunInfo.recoil_sneak = parseDouble(type[1]) / 2;
+				break;
+			case "Recoil_sneaking":
+				gunInfo.recoil_sneak = parseDouble(type[1]);
+				break;
+			case "ReloadTime":
+				gunInfo.reloadTimes = new int[type.length-1];
+				for(int i = 1;i < type.length;i++){
+					gunInfo.reloadTimes[i-1] = parseInt(type[i]);
+				}
+				break;
+			case "RemainingBullet":
+				gunInfo.bulletRound = parseInt(type[1]);
+				break;
+			case "Attacking":
+				gunInfo.attackDamage = Float.parseFloat(type[1]);
+				break;
+			case "Motion":
+				gunInfo.motion = parseDouble(type[1]);
+				break;
+			case "Zoom":
+				gunInfo.scopezoombase = Float.parseFloat(type[1]);
+				gunInfo.scopezoomred = Float.parseFloat(type[2]);
+				gunInfo.scopezoomscope = Float.parseFloat(type[3]);
+				break;
+			case "ZoomRender":
+				gunInfo.zoomren = Boolean.parseBoolean(type[1]);
+				break;
+			case "ZoomRenderType":
+				gunInfo.zoomren = Boolean.parseBoolean(type[1]);
+				gunInfo.zoomrer = Boolean.parseBoolean(type[2]);
+				gunInfo.zoomres = Boolean.parseBoolean(type[3]);
+				break;
+			case "ZoomRenderTypeTxture":
+				gunInfo.zoomrent = Boolean.parseBoolean(type[1]);
+				gunInfo.zoomrert = Boolean.parseBoolean(type[2]);
+				gunInfo.zoomrest = Boolean.parseBoolean(type[3]);
+				break;
+			case "ScopeTexture":
+				gunInfo.adstexture =  "handmadeguns:textures/misc/" + type[1];
+				gunInfo.adstexturer = "handmadeguns:textures/misc/" + type[2];
+				gunInfo.adstextures = "handmadeguns:textures/misc/" + type[3];
+				break;
+			case "RenderCross":
+				gunInfo.renderMCcross = Boolean.parseBoolean(type[1]);
+				break;
+			case "RenderHMGCross":
+				gunInfo.renderHMGcross = Boolean.parseBoolean(type[1]);
+				break;
+			case "NightVision":
+				gunInfo.hasNightVision[0] = Boolean.parseBoolean(type[1]);
+				gunInfo.hasNightVision[1] = Boolean.parseBoolean(type[2]);
+				gunInfo.hasNightVision[2] = Boolean.parseBoolean(type[3]);
+				break;
+			case "Cycle":
+				gunInfo.cycle = parseInt(type[1]);
+				break;
+			case "Bursts":
+				gunInfo.burstcount.clear();
+				for (int i = 1; i < type.length; i++)
+					gunInfo.burstcount.add(parseInt(type[i]));
+				break;
+			case "Rates":
+				gunInfo.rates.clear();
+				for (int i = 1; i < type.length; i++)
+					gunInfo.rates.add(parseInt(type[i]));
+				break;
+			case "Texture":
+				gunInfo.texture = type[1];
+				break;
+			case "GunSound":
+				gunInfo.soundbase = "handmadeguns:" + type[1];
+				gunInfo.soundsu = "handmadeguns:" + type[2];
+				break;
+			case "GunSound_FullName":
+				gunInfo.soundbase = type[1];
+				gunInfo.soundsu = type[2];
+				break;
+			case "SoundSpeed":
+				gunInfo.soundspeed = Float.parseFloat(type[1]);
+				break;
+			case "GunSoundLV":
+				gunInfo.soundbaselevel = Float.parseFloat(type[1]);
+				gunInfo.soundsuplevel = Float.parseFloat(type[2]);
+				break;
+			case "GunSoundReload":
+				gunInfo.soundre = new String[type.length-1];
+				for (int i = 1; i < type.length; i++)
+					gunInfo.soundre[i-1] = "handmadeguns:" + type[1];
+				break;
+			case "GunSoundReloadLV":
+				gunInfo.soundrelevel = Float.parseFloat(type[1]);
+				break;
+			case "GunSoundCooking":
+				gunInfo.soundco = "handmadeguns:" + type[1];
+				break;
+			case "Magazine": {
+				int ii = parseInt(type[1]);
+				
+				if (ii == 0) {
+					gunInfo.magazine[0] = GameRegistry.findItem(type[2], type[3]);
+				} else {
+					gunInfo.magazine[0] = Item.getItemById(ii);
+				}
+				break;
+			}
+			case "MultiMagazine": {
+				gunInfo.magazine = new Item[type.length-1];
+				for(int i = 1;i < type.length;i++){
+					String[] parts = type[i].split(":");
+					String modId = parts[0];
+					String name = parts[1];
+					gunInfo.magazine[i-1] = GameRegistry.findItem(modId, name);
+				}
+				break;
+			}
+			case "ModelScala":
+				gunInfo.modelscale = Float.parseFloat(type[1]);
+				break;
+			case "InworldScale":
+				gunInfo.inworldScale = Float.parseFloat(type[1]);
+				break;
+			case "CockingTime":
+				gunInfo.cocktime = parseInt(type[1]);
+				gunInfo.needcock = true;
+				break;
+			case "ShotGun_Pellet":
+				gunInfo.pellet = parseInt(type[1]);
+				break;
+			case "PerFireRound":
+				gunInfo.pellet = parseInt(type[1]);
+				break;
+			case "Cartridge":
+				gunInfo.dropcart = Boolean.parseBoolean(type[1]);
+				break;
+			case "DropCartridgeEndCocked":
+				gunInfo.cart_cocked = Boolean.parseBoolean(type[1]);
+				break;
+			case "UnderGL_Sound":
+				gunInfo.use_internal_secondary = true;
+				gunInfo.soundunder_gl = type[1];
+				break;
+			case "UnderGL_Power":
+				gunInfo.use_internal_secondary = true;
+				gunInfo.under_gl_power = parseInt(type[1]);
+				break;
+			case "UnderGL_Canbounce":
+				gunInfo.use_internal_secondary = true;
+				gunInfo.under_gl_canbounce = Boolean.parseBoolean(type[1]);
+				break;
+			case "UnderGL_Fuse":
+				gunInfo.use_internal_secondary = true;
+				gunInfo.under_gl_fuse = parseInt(type[1]);
+				break;
+			case "UnderGL_Speed":
+				gunInfo.use_internal_secondary = true;
+				gunInfo.under_gl_speed = Float.parseFloat(type[1]);
+				break;
+			case "UnderGL_Spread":
+				gunInfo.use_internal_secondary = true;
+				gunInfo.under_gl_bure = Float.parseFloat(type[1]);
+				break;
+			case "UnderGL_Recoil":
+				gunInfo.use_internal_secondary = true;
+				gunInfo.under_gl_recoil = parseDouble(type[1]);
+				break;
+			case "UnderGL_Gravity":
+				gunInfo.use_internal_secondary = true;
+				gunInfo.under_gl_gra = Float.parseFloat(type[1]);
+				break;
+			case "UnderSG_Sound":
+				gunInfo.use_internal_secondary = true;
+				gunInfo.soundunder_sg = type[1];
+				break;
+			case "UnderSG_Power":
+				gunInfo.use_internal_secondary = true;
+				gunInfo.under_sg_power = parseInt(type[1]);
+				break;
+			case "UnderSG_Speed":
+				gunInfo.use_internal_secondary = true;
+				gunInfo.under_sg_speed = Float.parseFloat(type[1]);
+				break;
+			case "UnderSG_Spread":
+				gunInfo.use_internal_secondary = true;
+				gunInfo.under_sg_bure = Float.parseFloat(type[1]);
+				break;
+			case "UnderSG_Recoil":
+				gunInfo.use_internal_secondary = true;
+				gunInfo.under_sg_recoil = parseDouble(type[1]);
+				break;
+			case "UnderSG_Gravity":
+				gunInfo.use_internal_secondary = true;
+				gunInfo.under_sg_gra = Float.parseFloat(type[1]);
+				break;
+			case "CartridgeType":
+				gunInfo.cartType = parseInt(type[1]);
+				break;
+			case "MagType":
+				gunInfo.magType = parseInt(type[1]);
+				break;
+			case "MagCount":
+				gunInfo.magentityCnt = parseInt(type[1]);
+				break;
+			case "CartCount":
+				gunInfo.cartentityCnt = parseInt(type[1]);
+				break;
+			case "DropMagazine":
+				gunInfo.dropMagEntity = Boolean.parseBoolean(type[1]);
+				break;
+			case "setunderRestriction":
+				gunInfo.hasAttachRestriction = Boolean.parseBoolean(type[1]);
+				break;
+			case "attachRestriction":
+				gunInfo.hasAttachRestriction = Boolean.parseBoolean(type[1]);
+				break;
+			case "allowundername":
+				for (int i = 1; i < type.length; i++)
+					gunInfo.attachwhitelist.add(type[i]);
+				break;
+			case "allowattach":
+				for (int i = 1; i < type.length; i++)
+					gunInfo.attachwhitelist.add(type[i]);
+				break;
+			case "UseUnderGun'smodel":
+				gunInfo.useundergunsmodel = Boolean.parseBoolean(type[1]);
+//								System.out.println("useundergunsmodel" + useundergunsmodel);
+				break;
+			case "UnderGunOffset":
+				gunInfo.underoffsetpx = Float.parseFloat(type[1]);
+				gunInfo.underoffsetpy = Float.parseFloat(type[2]);
+				gunInfo.underoffsetpz = Float.parseFloat(type[3]);
+				break;
+			case "UnderGunRotation":
+				gunInfo.underrotationx = Float.parseFloat(type[1]);
+				gunInfo.underrotationy = Float.parseFloat(type[2]);
+				gunInfo.underrotationz = Float.parseFloat(type[3]);
+				break;
+			case "OnUnderGunOffset":
+				gunInfo.onunderoffsetpx = Float.parseFloat(type[1]);
+				gunInfo.onunderoffsetpy = Float.parseFloat(type[2]);
+				gunInfo.onunderoffsetpz = Float.parseFloat(type[3]);
+				break;
+			case "OnUnderGunRotation":
+				gunInfo.onunderrotationx = Float.parseFloat(type[1]);
+				gunInfo.onunderrotationy = Float.parseFloat(type[2]);
+				gunInfo.onunderrotationz = Float.parseFloat(type[3]);
+				break;
+			
+			case "BulletNameALL":
+				gunInfo.bulletmodelN =
+						gunInfo.bulletmodelAR =
+								gunInfo.bulletmodelAP =
+										gunInfo.bulletmodelAT =
+												gunInfo.bulletmodelFrag =
+														gunInfo.bulletmodelHE =
+																gunInfo.bulletmodelTE =
+																		gunInfo.bulletmodelCart =
+																				gunInfo.bulletmodelGL =
+																						gunInfo.bulletmodelRPG = type[1];
+				gunInfo.hascustombulletmodel = true;
+				break;
+			case "BulletNameNormal":
+				gunInfo.bulletmodelN = type[1];
+				gunInfo.hascustombulletmodel = true;
+				break;
+			case "BulletNameAR":
+				gunInfo.bulletmodelAR = type[1];
+				gunInfo.hascustombulletmodel = true;
+				break;
+			case "BulletNameAP":
+				gunInfo.bulletmodelAP = type[1];
+				gunInfo.hascustombulletmodel = true;
+				break;
+			case "BulletNameAT":
+				gunInfo.bulletmodelAT = type[1];
+				gunInfo.hascustombulletmodel = true;
+				break;
+			case "BulletNameFrag":
+				gunInfo.bulletmodelFrag = type[1];
+				gunInfo.hascustombulletmodel = true;
+				break;
+			case "BulletNameHE":
+				gunInfo.bulletmodelHE = type[1];gunInfo.hascustombulletmodel = true;
+				break;
+			case "BulletNameTE":
+				gunInfo.bulletmodelTE = type[1];
+				gunInfo.hascustombulletmodel = true;
+				break;
+			case "BulletNameGL":
+				gunInfo.bulletmodelGL = type[1];
+				gunInfo.hascustombulletmodel = true;
+				break;
+			case "BulletNameRPG":
+				gunInfo.bulletmodelRPG = type[1];
+				gunInfo.hascustombulletmodel = true;
+				break;
+			case "BulletNameCart":
+				gunInfo.bulletmodelCart = type[1];
+				gunInfo.hascustomcartridgemodel = true;
+				break;
+			case "BulletNameMAG":
+				gunInfo.bulletmodelMAG = type[1];
+				gunInfo.hascustommagemodel = true;
+				break;
+			case "KnockBack":
+				gunInfo.knockback = parseDouble(type[1]);
+				gunInfo.knockbackY = parseDouble(type[2]);
+				break;
+			case "isOneuse":
+				gunInfo.isOneuse = Boolean.parseBoolean(type[1]);
+				break;
+			
+			case "MuzzleFlash":
+				gunInfo.muzzleflash = Boolean.parseBoolean(type[1]);
+				break;
+			case "MagazineItemCount":
+				gunInfo.magazineItemCount = parseInt(type[1]);
+				break;
+			case "guerrila_cant_use_this":
+				gunInfo.guerrila_can_use = false;
+				break;
+			case "Dont_Be_Inside_Root_Chest":
+				gunInfo.isinRoot = false;
+				break;
+			case "soldier_cant_storage_this":
+				gunInfo.soldiercanstorage = false;
+				break;
+			case "Canlock":
+				gunInfo.canlock = gunInfo.canlockEntity = Boolean.parseBoolean(type[1]);
+				break;
+			case "canlockEntity":
+				gunInfo.canlockEntity = Boolean.parseBoolean(type[1]);
+				break;
+			case "CanlockBlock":
+				gunInfo.canlockBlock = Boolean.parseBoolean(type[1]);
+				break;
+			case "guntype":
+				gunInfo.guntype = parseInt(type[1]);
+				break;
+			case "Class":
+				gunInfo.canuseclass = parseInt(type[1]);
+				break;
+			case "CustomFlash":
+				gunInfo.flashname = type[1];
+				gunInfo.flashfuse = parseInt(type[2]);
+				if (type.length == 4) {
+					gunInfo.flashScale = Float.parseFloat(type[3]);
+				}
+				break;
+			case "Canfix":
+				gunInfo.canfix = Boolean.parseBoolean(type[1]);
+				break;
+			case "NeedFix":
+				gunInfo.needfix = Boolean.parseBoolean(type[1]);
+				break;
+			case "UserOnBarrel":
+				gunInfo.userOnBarrel = Boolean.parseBoolean(type[1]);
+				break;
+			case "FixAsEntity":
+				gunInfo.fixAsEntity = Boolean.parseBoolean(type[1]);
+				break;
+			case "OnEntity_RotationYawPoint":
+				gunInfo.posGetter.turretRotationYawPoint = new double[]{parseDouble(type[1]), parseDouble(type[2]), parseDouble(type[3])};
+				break;
+			case "OnEntity_RotationPitchPoint":
+				gunInfo.posGetter.turretRotationPitchPoint = new double[]{parseDouble(type[1]), parseDouble(type[2]), parseDouble(type[3])};
+				break;
+			case "OnEntity_BarrelPoint":
+				gunInfo.posGetter.barrelpos = new double[]{parseDouble(type[1]), parseDouble(type[2]), parseDouble(type[3])};
+				break;
+			case "OnEntity_multi_BarrelPoint":
+				gunInfo.posGetter.multi_barrelpos = new double[parseInt(type[1])][3];
+				int id = 0;
+				double[][] multi_barrelpos = gunInfo.posGetter.multi_barrelpos;
+				for (int i = 0; i < multi_barrelpos.length; i++) {
+					double[] aBarrelPos = multi_barrelpos[i];
+					aBarrelPos[0] = parseDouble(type[id * 3 + 2]);
+					aBarrelPos[1] = parseDouble(type[id * 3 + 3]);
+					aBarrelPos[2] = parseDouble(type[id * 3 + 4]);
+					id++;
+				}
+				break;
+			case "OnEntity_Yoffset":
+				gunInfo.yoffset = Float.parseFloat(type[1]);
+				break;
+			case "restrictTurretMoveSpeed":
+				gunInfo.restrictTurretMoveSpeed = true;
+				gunInfo.turretMoveSpeedY = Float.parseFloat(type[1]);
+				gunInfo.turretMoveSpeedP = Float.parseFloat(type[2]);
+				break;
+			case "Turretanglelimit":
+				gunInfo.restrictTurretAngle = true;
+				gunInfo.turretanglelimtMxP = Float.parseFloat(type[1]);
+				gunInfo.turretanglelimtmnP = Float.parseFloat(type[2]);
+				gunInfo.turretanglelimtMxY = Float.parseFloat(type[3]);
+				gunInfo.turretanglelimtmnY = Float.parseFloat(type[4]);
+				break;
+			case "TurretBoxSize":
+				gunInfo.turreboxW = Float.parseFloat(type[1]);
+				gunInfo.turreboxH = Float.parseFloat(type[2]);
+				break;
+			case "OnTurretScale":
+				gunInfo.onTurretScale = Float.parseFloat(type[1]);
+				break;
+			case "TurretHP":
+				gunInfo.turretMaxHP = parseInt(type[1]);
+				break;
+		}
+	}
+	
 	private static ScriptEngine doScript(FileReader s)
 	{
 		ScriptEngine se = (new ScriptEngineManager(null)).getEngineByName("js");//引数にnull入れないと20でぬるぽ

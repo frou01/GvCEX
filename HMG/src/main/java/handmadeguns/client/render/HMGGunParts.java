@@ -66,6 +66,7 @@ public class HMGGunParts {
     public boolean carryingHandle;
     public boolean underOnly;
     public boolean underOnly_not;
+    public boolean reticleAndPlate;
 
 
     private HMGGunParts_Motions oncockmotions;

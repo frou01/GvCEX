@@ -89,15 +89,13 @@ public class PlacedGunEntity extends Entity implements IEntityAdditionalSpawnDat
                     prevRiddenByEntityPosZ = riddenByEntity.posZ;
                 }
             }else {
-                if (!(riddenByEntity instanceof EntityPlayer)) {
-                    this.riddenByEntity.setPosition(
-                            this.posX + seatVec.xCoord,
-                            this.posY + this.gunyoffset + seatVec.yCoord - riddenByEntity.getEyeHeight(),
-                            this.posZ + seatVec.zCoord);
-                    prevRiddenByEntityPosX = riddenByEntity.posX;
-                    prevRiddenByEntityPosY = riddenByEntity.posY;
-                    prevRiddenByEntityPosZ = riddenByEntity.posZ;
-                }
+                this.riddenByEntity.setPosition(
+                        this.posX + seatVec.xCoord,
+                        this.posY + this.gunyoffset + seatVec.yCoord - riddenByEntity.getEyeHeight(),
+                        this.posZ + seatVec.zCoord);
+                prevRiddenByEntityPosX = riddenByEntity.posX;
+                prevRiddenByEntityPosY = riddenByEntity.posY;
+                prevRiddenByEntityPosZ = riddenByEntity.posZ;
             }
             /*if(ridingEntity == null) {
                 if (worldObj.isRemote) {
@@ -289,6 +287,7 @@ public class PlacedGunEntity extends Entity implements IEntityAdditionalSpawnDat
                 this.setDead();
                 return true;
             }
+            if(riddenByEntity != null)riddenByEntity.mountEntity(null);
         }
         return false;
     }
@@ -390,9 +389,11 @@ public class PlacedGunEntity extends Entity implements IEntityAdditionalSpawnDat
     public Vec3 seatVec(){
         double[] sightingpos = gunItem.getSeatpos(gunStack);
         Vec3 vec = Vec3.createVectorHelper(sightingpos[0],sightingpos[1],sightingpos[2]);
-        vec = vec.addVector( - gunItem.gunInfo.posGetter.turretRotationPitchPoint[0], - gunItem.gunInfo.posGetter.turretRotationPitchPoint[1], - gunItem.gunInfo.posGetter.turretRotationPitchPoint[2]);
-        vec.rotateAroundX(-(float) toRadians(rotationPitch));
-        vec = vec.addVector(   gunItem.gunInfo.posGetter.turretRotationPitchPoint[0],   gunItem.gunInfo.posGetter.turretRotationPitchPoint[1],   gunItem.gunInfo.posGetter.turretRotationPitchPoint[2]);
+        if(gunItem.gunInfo.userOnBarrel) {
+            vec = vec.addVector(-gunItem.gunInfo.posGetter.turretRotationPitchPoint[0], -gunItem.gunInfo.posGetter.turretRotationPitchPoint[1], -gunItem.gunInfo.posGetter.turretRotationPitchPoint[2]);
+            vec.rotateAroundX(-(float) toRadians(rotationPitch));
+            vec = vec.addVector(gunItem.gunInfo.posGetter.turretRotationPitchPoint[0], gunItem.gunInfo.posGetter.turretRotationPitchPoint[1], gunItem.gunInfo.posGetter.turretRotationPitchPoint[2]);
+        }
         vec = vec.addVector( - gunItem.gunInfo.posGetter.turretRotationYawPoint[0], - gunItem.gunInfo.posGetter.turretRotationYawPoint[1], - gunItem.gunInfo.posGetter.turretRotationYawPoint[2]);
         vec.rotateAroundY(-(float) toRadians(rotationYawGun - rotationYaw));
         vec = vec.addVector(   gunItem.gunInfo.posGetter.turretRotationYawPoint[0],   gunItem.gunInfo.posGetter.turretRotationYawPoint[1],   gunItem.gunInfo.posGetter.turretRotationYawPoint[2]);

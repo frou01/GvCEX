@@ -1,0 +1,32 @@
+Texture,GER_Certificate
+Name,GER Certificate
+cosume_onCraft,false
+Stack,64
+SimpleMaterial,GER_Certificate
+
+Texture,USSR_Certificate
+Name,USSR Certificate
+cosume_onCraft,false
+Stack,64
+SimpleMaterial,USSR_Certificate
+
+Texture,JPN_Certificate
+Name,JPN Certificate
+cosume_onCraft,false
+Stack,64
+SimpleMaterial,JPN_Certificate
+
+Texture,USA_Certificate
+Name,USA Certificate
+cosume_onCraft,false
+Stack,64
+SimpleMaterial,USA_Certificate
+
+
+//Recipe1,a  
+//Recipe2,c  
+//Recipe3,b  
+//ItemA,minecraft,iron_ingot
+//ItemB,minecraft,emerald
+//ItemC,minecraft,gunpowder
+//addNewRecipe,HandmadeGuns,WP_Certificate,1

@@ -3,12 +3,11 @@ package hmggvcmob.network;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import hmggvcmob.util.SpotObj;
 import hmggvcmob.util.SpotType;
-import hmvehicle.CMProxy;
 import io.netty.buffer.ByteBuf;
 
 import java.util.ArrayList;
 
-import static hmvehicle.HMVehicle.proxy_HMVehicle;
+import static handmadevehicle.HMVehicle.proxy_HMVehicle;
 
 public class GVCPacketSpawnSpotCircle implements IMessage {
 	ArrayList<SpotObj> recievedSpotobj = new ArrayList<>();

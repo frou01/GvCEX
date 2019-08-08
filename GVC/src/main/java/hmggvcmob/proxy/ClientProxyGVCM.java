@@ -7,12 +7,9 @@ import hmggvcmob.entity.guerrilla.*;
 import hmggvcmob.render.*;
 import hmggvcmob.tile.TileEntityFlag;
 import hmggvcmob.tile.TileEntityMobSpawner_Extend;
-import hmvehicle.entity.EntityChild;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderSnowball;
 //import net.java.games.input.Keyboard;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.world.World;
 import cpw.mods.fml.client.FMLClientHandler;

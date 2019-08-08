@@ -1,0 +1,10 @@
+Texture,RailAPFSDS
+Stack,64
+Name,RailGun_Ammo
+Magazine,RailAPFSDS
+Recipe1,caa
+Recipe2,caa
+Recipe3,aaa
+ItemA,minecraft,iron_block
+ItemC,minecraft,emerald
+addNewRecipe,HandmadeGuns,RailAPFSDS,1

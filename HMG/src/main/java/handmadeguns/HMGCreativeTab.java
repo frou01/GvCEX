@@ -27,7 +27,7 @@ public class HMGCreativeTab extends CreativeTabs
 	@SideOnly(Side.CLIENT)
 	public String getTranslatedTabLabel()
 	{
-		return "HandmadeGun's";
+		return "HandmadeGuns";
 	}
  
 }

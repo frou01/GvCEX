@@ -16,12 +16,12 @@ import hmggvcmob.entity.*;
 import hmggvcmob.entity.friend.EntitySoBases;
 import hmggvcmob.entity.guerrilla.EntityGBases;
 import hmgww2.Nation;
+import hmgww2.entity.planes.EntityBases_Plane;
 import hmgww2.items.ItemIFFArmor;
-import hmvehicle.entity.parts.HasBaseLogic;
-import hmvehicle.entity.parts.Hasmode;
-import hmvehicle.entity.parts.IVehicle;
-import hmvehicle.entity.parts.ImultiRidable;
-import hmvehicle.entity.parts.logics.TankBaseLogic;
+import handmadevehicle.entity.parts.HasBaseLogic;
+import handmadevehicle.entity.parts.Hasmode;
+import handmadevehicle.entity.parts.ImultiRidable;
+import handmadevehicle.entity.parts.logics.TankBaseLogic;
 import littleMaidMobX.LMM_EntityLittleMaid;
 import net.minecraft.block.Block;
 import net.minecraft.entity.*;
@@ -43,7 +43,7 @@ import java.util.List;
 
 import static handmadeguns.HandmadeGunsCore.islmmloaded;
 import static handmadeguns.Util.Utils.getmovingobjectPosition_forBlock;
-import static hmvehicle.Utils.*;
+import static handmadevehicle.Utils.*;
 import static hmgww2.mod_GVCWW2.cfg_candespawn;
 import static hmgww2.mod_GVCWW2.cfg_canusePlacedGun;
 import static java.lang.Math.*;
@@ -118,6 +118,9 @@ public abstract class EntityBases extends EntityCreature implements IFF,INpc,IGV
 	boolean canuseAlreadyPlacedGun = false;
 	boolean canPlacedGun = false;
 	private ModifiedPathNavigater modifiedPathNavigater;
+	public int mode = 0;
+	public boolean holdFire = false;
+	public boolean mode_Lock = false;
 	
 	
 	
@@ -126,23 +129,12 @@ public abstract class EntityBases extends EntityCreature implements IFF,INpc,IGV
 			return false;
 		} else if (!this.worldObj.isRemote && (this.riddenByEntity == null || this.riddenByEntity == p_70085_1_)) {
 			if(p_70085_1_.isSneaking()){
-				if (mode == 0) {
-					mode = 1;
-					homeposX = (int) posX;
-					homeposY = (int) posY;
-					homeposZ = (int) posZ;
-					p_70085_1_.addChatComponentMessage(new ChatComponentTranslation(
-							                                                               "Defense this position!"));
-				} else if (mode == 1) {
-					mode = 2;
-					homeposX = (int) p_70085_1_.posX;
-					homeposY = (int) p_70085_1_.posY;
-					homeposZ = (int) p_70085_1_.posZ;
-					master = p_70085_1_;
-					p_70085_1_.addChatComponentMessage(new ChatComponentTranslation(
-							                                                               "OK,I'll Follow Leader!"));
-				} else if (mode == 2){
-					mode = 0;
+				if (!mode_Lock) {
+					mode_Lock = true;
+					p_70085_1_.addChatComponentMessage(new ChatComponentTranslation("I'll continue to execute the current instruction."));
+				} else {
+					mode_Lock = false;
+					p_70085_1_.addChatComponentMessage(new ChatComponentTranslation("I'll wait instruction."));
 				}
 			}
 			return true;
@@ -370,7 +362,7 @@ public abstract class EntityBases extends EntityCreature implements IFF,INpc,IGV
 						if(distToWaypoint > 256) {
 							for (int cnt = 0; cnt < searchNearFrnd.size(); cnt++) {
 								Entity aEntity = (Entity) searchNearFrnd.get(cnt);
-								if (aEntity instanceof EntityBases && ((EntityBases) aEntity).getnation() == this.getnation() && ((EntityBases) aEntity).mode == this.mode &&
+								if (aEntity instanceof EntityBases && ((EntityBases) aEntity).getnation() == this.getnation() && ((EntityBases) aEntity).mode == this.mode && (this instanceof IVehicle == aEntity instanceof IVehicle) &&
 										    ((EntityBases) aEntity).homeposX == this.homeposX &&
 										    ((EntityBases) aEntity).homeposY == this.homeposY &&
 										    ((EntityBases) aEntity).homeposZ == this.homeposZ) {
@@ -440,7 +432,7 @@ public abstract class EntityBases extends EntityCreature implements IFF,INpc,IGV
 	
 	protected boolean canDespawn()
 	{
-		return this.getAttackTarget() == null && cfg_candespawn && (onGround ? getDistanceSq(homeposX,this.posY,homeposZ)>256 : getDistanceSq(homeposX,this.posY,homeposZ)>4096);
+		return master == null && this.getAttackTarget() == null && cfg_candespawn && (onGround ? getDistanceSq(homeposX,this.posY,homeposZ)>256 : getDistanceSq(homeposX,this.posY,homeposZ)>4096);
 	}
 	
 	protected void applyEntityAttributes() {
@@ -461,8 +453,6 @@ public abstract class EntityBases extends EntityCreature implements IFF,INpc,IGV
 	
 	
 	
-	public int mode = 0;
-	public boolean holdFire = false;
 	
 	protected void entityInit() {
 		super.entityInit();
@@ -568,76 +558,6 @@ public abstract class EntityBases extends EntityCreature implements IFF,INpc,IGV
 			return false;
 		}else {
 			return super.attackEntityFrom(source, par2);
-//				float temparomor = armor;
-//				TankBaseLogic temp;
-//				if (source instanceof EntityDamageSourceIndirect && source.getEntity() != null && this instanceof HasBaseLogic && ((HasBaseLogic) this).getBaseLogic() instanceof TankBaseLogic) {
-//					temp = (TankBaseLogic) ((HasBaseLogic) this).getBaseLogic();
-//					Vector3d frontArmorVec = new Vector3d(0, 0, -1);
-//					Vector3d leftsideArmorVec = new Vector3d(1, 0, 0);
-//					Vector3d rightsideArmorVec = new Vector3d(-1, 0, 0);
-//					Vector3d backArmorVec = new Vector3d(0, 0, 1);
-//					Vector3d topArmorVec = new Vector3d(0, 1, 0);
-//					RotateVectorAroundX(frontArmorVec, -armor_tilt);
-//					RotateVectorAroundZ(leftsideArmorVec, armor_tilt);
-//					RotateVectorAroundZ(rightsideArmorVec, -armor_tilt);
-//					RotateVectorAroundX(backArmorVec, armor_tilt);
-//					frontArmorVec = transformVecByQuat(frontArmorVec, ((TankBaseLogic) temp).bodyRot);
-//					leftsideArmorVec = transformVecByQuat(leftsideArmorVec, ((TankBaseLogic) temp).bodyRot);
-//					rightsideArmorVec = transformVecByQuat(rightsideArmorVec, ((TankBaseLogic) temp).bodyRot);
-//					backArmorVec = transformVecByQuat(backArmorVec, ((TankBaseLogic) temp).bodyRot);
-//					topArmorVec = transformVecByQuat(topArmorVec, ((TankBaseLogic) temp).bodyRot);
-//					frontArmorVec.z *= -1;
-//					backArmorVec.z *= -1;
-//					leftsideArmorVec.z *= -1;
-//					rightsideArmorVec.z *= -1;
-//					topArmorVec.z *= -1;
-//					Vector3d shooterMotionVec = new Vector3d(source.getSourceOfDamage().motionX, source.getSourceOfDamage().motionY, source.getSourceOfDamage().motionZ);
-//					Vector3d shooterPositionVec = new Vector3d(source.getSourceOfDamage().posX - this.posX
-//							                                          , source.getSourceOfDamage().posY - (this.posY + 1.5f)
-//							                                          , source.getSourceOfDamage().posZ - this.posZ
-//					);
-//					Vector3d TankFrontVec = new Vector3d(0, 0, -1);
-//					TankFrontVec = transformVecByQuat(TankFrontVec, ((TankBaseLogic) temp).bodyRot);
-//					TankFrontVec.z *= -1;
-//					double angle_position = abs(toDegrees(TankFrontVec.angle(shooterPositionVec)));
-//					Vector3d TankRighttVec = new Vector3d(-1, 0, 0);
-//					TankRighttVec = transformVecByQuat(TankRighttVec, ((TankBaseLogic) temp).bodyRot);
-//					TankRighttVec.z *= -1;
-//
-//					if ((angle_position) < 45) {//正面装甲にヒット
-//						shooterMotionVec.scale(-1);
-//						double angle_motion = abs(frontArmorVec.angle(shooterMotionVec));
-//						temparomor *= (sin(angle_motion)) + armor_Front_cof;
-//					} else if ((angle_position) >= 45 && (angle_position) <= 135) {//側面or天板にヒット
-//						shooterMotionVec.scale(-1);
-//						if (abs(toDegrees(topArmorVec.angle(shooterPositionVec))) < 45) {//天板or底面にヒット
-//							double angle_motion = abs(topArmorVec.angle(shooterMotionVec));
-//							temparomor *= (sin(angle_motion)) + armor_Top_cof;
-//						} else {
-//							if (abs(toDegrees(TankRighttVec.angle(shooterPositionVec))) > 90) {
-//								double angle_motion = abs(leftsideArmorVec.angle(shooterMotionVec));
-//								temparomor *= (sin(angle_motion)) + armor_Side_cof;
-//							} else {
-//								double angle_motion = abs(rightsideArmorVec.angle(shooterMotionVec));
-//								temparomor *= (sin(angle_motion)) + armor_Side_cof;
-//							}
-//						}
-//					} else if ((angle_position) > 135) {//背面にヒット
-//						shooterMotionVec.scale(-1);
-//						double angle_motion = abs(backArmorVec.angle(shooterMotionVec));
-//						temparomor *= (sin(angle_motion)) + armor_Back_cof;
-//					}
-//				}
-//				if (armor != 0 && par2 > temparomor / 2f) {
-//					armor -= 1;
-//				}
-//				if (par2 <= temparomor) {
-//					if (armor != 0) if (!source.getDamageType().equals("mob"))
-//						this.playSound("gvcmob:gvcmob.ArmorBounce", 0.5F, 2 - (par2 / temparomor));
-//					return false;
-//				}
-//				if (armor != 0) this.playSound("gvcmob:gvcmob.armorhit", 0.5F, 1F);
-//				return super.attackEntityFrom(source, par2 - temparomor);
 		}
 	}
 	public boolean attackEntityFrom_exceptArmor (DamageSource source, float par2){

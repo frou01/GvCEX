@@ -35,6 +35,7 @@ import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.IProjectile;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
@@ -50,7 +51,7 @@ import static handmadeguns.network.PacketShotBullet.fromObject;
 import static handmadeguns.network.PacketShotBullet.toObject;
 import static java.lang.Math.*;
 
-public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpawnData
+public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpawnData,IProjectile
 {
     private static final boolean isDebugMessage = false;
     public Entity thrower;
@@ -69,11 +70,13 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
     public float resistance = 0.9999f;
     public float resistanceinwater = 0.4f;
     public float acceleration = 0f;
-    public String flyingSound = "handmadeguns:handmadeguns.bulletflyby";
-    public float flyingSoundLV = 2f;
-    public float flyingSoundSP = 1f;
-    public float flyingSoundminspeed = 3f;
-    public float flyingSoundmaxdist = 3f;
+    public SoundInfo flyingSoundInfo = new SoundInfo("handmadeguns:handmadeguns.bulletflyby",
+                                                            2f,
+                                                            1f,
+                                                            3f,
+                                                            3f
+    );
+    public SoundInfo ricochetSoundInfo = new SoundInfo("handmadeguns:handmadeguns.Ricochet",1,1,1,4);
     public float firstSpeed;
     public int canPenerate_entity = 1;
     
@@ -329,7 +332,6 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
         this.lastTickPosX = this.posX;
         this.lastTickPosY = this.posY;
         this.lastTickPosZ = this.posZ;
-        this.setSize(0.25F, 0.25F);
         if(!inGround){
             float f = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionZ * this.motionZ);
             this.prevRotationYaw = this.rotationYaw = (float)(atan2(this.motionX, this.motionZ) * 180.0D / Math.PI);
@@ -337,7 +339,7 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
             //弾の向きを進行方向に合わせる。
             //横弾は考えない。
         }
-        if(!worldObj.isRemote && !this.inGround) {
+        if(!worldObj.isRemote && !this.inGround && worldObj.blockExists(this.xTile, this.yTile, this.zTile)) {
             Block block = this.worldObj.getBlock(this.xTile, this.yTile, this.zTile);
             if (block.getMaterial() != Material.air) {
                 block.setBlockBoundsBasedOnState(this.worldObj, this.xTile, this.yTile, this.zTile);
@@ -360,7 +362,7 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
         }
         if (this.inGround)
         {
-            if (this.worldObj.getBlock(this.xTile, this.yTile, this.zTile) == this.inBlock)
+            if (worldObj.blockExists(this.xTile, this.yTile, this.zTile) && this.worldObj.getBlock(this.xTile, this.yTile, this.zTile) == this.inBlock)
             {
                 ticksInAir = 0;
                 this.motionX=
@@ -390,20 +392,7 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
         this.func_145775_I();
         this.setPosition(this.posX, this.posY, this.posZ);
 //        System.out.println(" " + this + "  " + inGround);
-        if(!worldObj.isRemote){
-            int chunkxPosition = (int) (this.posX)/16;
-            int chunkzPosition = (int) (this.posZ)/16;
-            int chunkxPosition2 = (int) (this.posX)/16;
-            int chunkzPosition2 = (int) (this.posZ)/16;
-//            System.out.println("debug x" + (this.posX + motionX) + " , z" + (this.posZ + motionZ) + " , chunkx" + chunkxPosition + " , chunkz" + chunkzPosition);
-            if(!((WorldServer) worldObj).getChunkProvider().chunkExists(chunkxPosition,chunkzPosition)){
-//                System.out.println("debug : killed");
-                setDead();
-            }if(!((WorldServer) worldObj).getChunkProvider().chunkExists(chunkxPosition2,chunkzPosition2)){
-//                System.out.println("debug : killed");
-                setDead();
-            }
-        }else{
+        if(worldObj.isRemote){
             if(trail) {
                 PacketSpawnParticle packetSpawnParticle = new PacketSpawnParticle(lastTickPosX, lastTickPosY, lastTickPosZ,
                                                                                          posX - lastTickPosX,
@@ -428,8 +417,9 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
      */
     protected void onImpact(MovingObjectPosition var1)
     {
-        if(worldObj.isRemote && var1.hitVec.distanceTo(Vec3.createVectorHelper(proxy.getEntityPlayerInstance().posX,proxy.getEntityPlayerInstance().posY,proxy.getEntityPlayerInstance().posZ))<5 && var1.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK){
-            proxy.playsoundat("handmadeguns:handmadeguns.Ricochet",1,1,1,var1.hitVec.xCoord,var1.hitVec.yCoord,var1.hitVec.zCoord);
+        if(worldObj.isRemote && ticksInAir>0 && ricochetSoundInfo != null &&
+                   motionX * motionX + motionY * motionY + motionZ * motionZ > ricochetSoundInfo.MinBltSP * ricochetSoundInfo.MinBltSP && getDistanceSqToEntity(proxy.getEntityPlayerInstance()) < ricochetSoundInfo.MaxDist*ricochetSoundInfo.MaxDist){
+            worldObj.playSoundAtEntity(this,ricochetSoundInfo.sound,ricochetSoundInfo.LV,ricochetSoundInfo.SP);
         }
     }
     
@@ -593,11 +583,11 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
                 modelid = HMGAddBullets.indexlist.get(bulletTypeName);
                 SoundInfo tempsoundinfo = soundlist.get(modelid);
                 if(tempsoundinfo != null) {
-                    flyingSound = tempsoundinfo.sound;
-                    flyingSoundLV = tempsoundinfo.LV;
-                    flyingSoundSP = tempsoundinfo.SP;
-                    flyingSoundminspeed = tempsoundinfo.MinBltSP;
-                    flyingSoundmaxdist = tempsoundinfo.MaxDist;
+                    flyingSoundInfo = tempsoundinfo;
+                }
+                SoundInfo tempSoundRicochet = soundlist.get(modelid);
+                if(tempSoundRicochet != null) {
+                    ricochetSoundInfo = tempSoundRicochet;
                 }
                 TrailInfo temptrailinfo = HMGAddBullets.trailsettings.get(modelid);
                 if(temptrailinfo != null){
@@ -707,8 +697,8 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
                 proxy.spawnParticles(packet);
             }
         }
-        if(ticksInAir>0 && flyingSound != null && soundstoped && motionX * motionX + motionY * motionY + motionZ * motionZ > flyingSoundminspeed * flyingSoundminspeed && getDistanceSqToEntity(proxy.getEntityPlayerInstance()) < flyingSoundmaxdist*flyingSoundmaxdist){
-            proxy.playsoundatBullet(flyingSound,flyingSoundLV,flyingSoundSP,flyingSoundminspeed,flyingSoundmaxdist,this,true);
+        if(ticksInAir>0 && flyingSoundInfo != null && soundstoped && motionX * motionX + motionY * motionY + motionZ * motionZ > flyingSoundInfo.MinBltSP * flyingSoundInfo.MinBltSP && getDistanceSqToEntity(proxy.getEntityPlayerInstance()) < flyingSoundInfo.MaxDist*flyingSoundInfo.MaxDist){
+            proxy.playsoundatBullet(flyingSoundInfo.sound,flyingSoundInfo.LV,flyingSoundInfo.SP,flyingSoundInfo.MinBltSP,flyingSoundInfo.MaxDist,this,true);
             soundstoped = false;
         }
     }
@@ -737,12 +727,11 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
         Vec3 motionVec = Vec3.createVectorHelper(motionX,motionY,motionZ);
         boolean changemotionflag = false;
 //        int breakcnt = 0;
-        {
-            //反射・ヒット処理
-            Vec3 vec3 = Vec3.createVectorHelper(this.posX, this.posY, this.posZ);
-            Vec3 vec31 = Vec3.createVectorHelper(this.posX + motionVec.xCoord, this.posY + motionVec.yCoord, this.posZ + motionVec.zCoord);
-            MovingObjectPosition movingobjectposition = Utils.getmovingobjectPosition_forBlock(worldObj,vec3, vec31, false, true, false);//衝突するブロックを調べる
-            //これをやるときに除外判定があればここまでやる必要はなかったのだ、故に作った。
+        //反射・ヒット処理
+        Vec3 vec3 = Vec3.createVectorHelper(this.posX, this.posY, this.posZ);
+        Vec3 vec31 = Vec3.createVectorHelper(this.posX + motionVec.xCoord, this.posY + motionVec.yCoord, this.posZ + motionVec.zCoord);
+        MovingObjectPosition movingobjectposition = Utils.getmovingobjectPosition_forBlock(worldObj,vec3, vec31, false, true, false);//衝突するブロックを調べる
+        //これをやるときに除外判定があればここまでやる必要はなかったのだ、故に作った。
 //            while (movingobjectposition != null) {
 //                hitblock = this.worldObj.getBlock(movingobjectposition.blockX, movingobjectposition.blockY, movingobjectposition.blockZ);
 //                if ((hitblock.getMaterial() == Material.plants) || (hitblock.getMaterial() == Material.leaves) || ((
@@ -778,153 +767,153 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
 //                System.out.println("debug2" + lastpos);
 //                System.out.println("debug3" + motionVec);
 //            }
-            vec3 = Vec3.createVectorHelper(this.posX, this.posY, this.posZ);
-            vec31 = Vec3.createVectorHelper(this.posX + motionVec.xCoord, this.posY + motionVec.yCoord, this.posZ + motionVec.zCoord);
-            if (movingobjectposition != null) {
-                vec31 = Vec3.createVectorHelper(movingobjectposition.hitVec.xCoord, movingobjectposition.hitVec.yCoord, movingobjectposition.hitVec.zCoord);
+        vec3 = Vec3.createVectorHelper(this.posX, this.posY, this.posZ);
+        vec31 = Vec3.createVectorHelper(this.posX + motionVec.xCoord, this.posY + motionVec.yCoord, this.posZ + motionVec.zCoord);
+        if (movingobjectposition != null) {
+            vec31 = Vec3.createVectorHelper(movingobjectposition.hitVec.xCoord, movingobjectposition.hitVec.yCoord, movingobjectposition.hitVec.zCoord);
+        }
+        if(remainingMovelength > firstSpeed/10){
+            List entitylist = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox.addCoord(motionVec.xCoord, motionVec.yCoord, motionVec.zCoord).expand(1, 1, 1));
+            ArrayList<MovingObjectPosition_And_Entity> entities = new ArrayList<MovingObjectPosition_And_Entity>();
+            for (int j = 0; j < entitylist.size(); ++j) {
+                Entity entity1 = (Entity) entitylist.get(j);
+                if(entity1 == avoidEntity)continue;
+                if(entity1 instanceof IProjectile)continue;
+                if (entity1.canBeCollidedWith() && (ticksInAir > 8 ||
+                                                            (iscandamageentity(entity1)))) {
+                    entities.add(new MovingObjectPosition_And_Entity(entity1));
+                }
             }
-            if(remainingMovelength > firstSpeed/10){
-                List entitylist = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox.addCoord(motionVec.xCoord, motionVec.yCoord, motionVec.zCoord).expand(1, 1, 1));
-                ArrayList<MovingObjectPosition_And_Entity> entities = new ArrayList<MovingObjectPosition_And_Entity>();
-                for (int j = 0; j < entitylist.size(); ++j) {
-                    Entity entity1 = (Entity) entitylist.get(j);
-                    if(entity1 == avoidEntity)continue;
-                    if (entity1.canBeCollidedWith() && (ticksInAir > 8 ||
-                                                                (iscandamageentity(entity1)))) {
-                        entities.add(new MovingObjectPosition_And_Entity(entity1));
-                    }
-                }
-                double d0 = 0.0D;
-                double d1;
-                float f = 0.1F;
-                if(!entities.isEmpty()) {
-                    MovingObjectPosition_And_Entity backup = entities.get(0);//cnt - 1
-                    for (int cnt = 0; cnt < entities.size(); cnt++) {
-                        MovingObjectPosition_And_Entity movingObjectPosition_and_entity = entities.get(cnt);
-                        AxisAlignedBB axisalignedbb = movingObjectPosition_and_entity.entity.boundingBox.expand((double) f, (double) f, (double) f);
-                        MovingObjectPosition movingobjectposition1 = axisalignedbb.calculateIntercept(vec3, vec31);
-                        movingObjectPosition_and_entity.movingObjectPosition = movingobjectposition1;
-                        if (movingobjectposition1 != null) {
-                            d1 = vec3.distanceTo(movingobjectposition1.hitVec);
-                            if ((d1 < d0 || d0 == 0.0D) && cnt > 0) {
-                                entities.set(cnt, backup);
-                                entities.set(cnt-1, movingObjectPosition_and_entity);
-                            }else {
-                                d0 = d1;
-                                backup = movingObjectPosition_and_entity;
-                            }
-                        }else {
-                            entities.remove(cnt);
-                            cnt--;
-                        }
-                    }
-                }
-//                System.out.println("debug" + entities);
-                int hitedCNT = 0;
-                for(MovingObjectPosition_And_Entity current : entities){
-                    if(!canbounce && canPenerate_entity <= hitedCNT)break;
-                    hitedCNT++;
-                    MovingObjectPosition movingobjectposition1 = current.movingObjectPosition;
+            double d0 = 0.0D;
+            double d1;
+            float f = 0.1F;
+            if(!entities.isEmpty()) {
+                MovingObjectPosition_And_Entity backup = entities.get(0);//cnt - 1
+                for (int cnt = 0; cnt < entities.size(); cnt++) {
+                    MovingObjectPosition_And_Entity movingObjectPosition_and_entity = entities.get(cnt);
+                    AxisAlignedBB axisalignedbb = movingObjectPosition_and_entity.entity.boundingBox.expand((double) f, (double) f, (double) f);
+                    MovingObjectPosition movingobjectposition1 = axisalignedbb.calculateIntercept(vec3, vec31);
+                    movingObjectPosition_and_entity.movingObjectPosition = movingobjectposition1;
                     if (movingobjectposition1 != null) {
-                        vec3.xCoord = movingobjectposition1.hitVec.xCoord;
-                        vec3.yCoord = movingobjectposition1.hitVec.yCoord;
-                        vec3.zCoord = movingobjectposition1.hitVec.zCoord;
-    
-                        movingobjectposition = new MovingObjectPosition(current.entity);
-                        movingobjectposition.hitVec = vec3;
-                        movingobjectposition.sideHit = movingobjectposition1.sideHit;
-                        avoidEntity = current.entity;
-                        if (canbounce && !isDead) {
-                            this.onImpact(movingobjectposition);
-                            motionX *= 0.5;
-                            motionY *= 0.5;
-                            motionZ *= 0.5;
-                            changemotionflag = true;
-                        } else {
-                            this.onImpact(movingobjectposition);
+                        d1 = vec3.distanceTo(movingobjectposition1.hitVec);
+                        if ((d1 < d0 || d0 == 0.0D) && cnt > 0) {
+                            entities.set(cnt, backup);
+                            entities.set(cnt-1, movingObjectPosition_and_entity);
+                        }else {
+                            d0 = d1;
+                            backup = movingObjectPosition_and_entity;
                         }
+                    }else {
+                        entities.remove(cnt);
+                        cnt--;
                     }
                 }
-            }else {
-                killCNT++;
             }
-            if(killCNT>0)this.setDead();
-            int hitside = -1;
-            if (movingobjectposition != null) {
-                hitedpos = movingobjectposition.hitVec;
-                if (movingobjectposition.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY && movingobjectposition.entityHit != null &&  movingobjectposition.hitVec != null) {
-                } else if (movingobjectposition.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
-                    this.onImpact(movingobjectposition);
-                    this.xTile = movingobjectposition.blockX;
-                    this.yTile = movingobjectposition.blockY;
-                    this.zTile = movingobjectposition.blockZ;
-                    this.inBlock = this.worldObj.getBlock(this.xTile, this.yTile, this.zTile);
-                    hitside = movingobjectposition.sideHit;
-                    
-                    if(canbounce){
-                        switch (hitside) {//ヒットさせる処理
-                            case 0:
-                            case 1://Y面
-                                if (atan2(sqrt(motionY * motionY), sqrt(motionX * motionX + motionZ * motionZ)) > toRadians(bouncelimit))
-                                    canbounce = false;
-                                break;
-                            case 2:
-                            case 3://Z面
-                                if (atan2(sqrt(motionZ * motionZ), sqrt(motionX * motionX + motionY * motionY)) > toRadians(bouncelimit))
-                                    canbounce = false;
-                                break;
-                            case 4:
-                            case 5://X MAN
-                                if (atan2(sqrt(motionX * motionX), sqrt(motionY * motionY + motionZ * motionZ)) > toRadians(bouncelimit))
-                                    canbounce = false;
-                                break;
-                        }
-                    }
-                    float f2 = (float) motionVec.lengthVector();
-                    hitedpos.xCoord = hitedpos.xCoord - motionVec.xCoord / f2 * 0.26;
-                    hitedpos.yCoord = hitedpos.yCoord - motionVec.yCoord / f2 * 0.26;
-                    hitedpos.zCoord = hitedpos.zCoord - motionVec.zCoord / f2 * 0.26;
-                    if(!canbounce) {
-                        this.inGround = true;
-                        lockedpos = movingobjectposition.hitVec;
-                    }
-                    if (this.inBlock.getMaterial() != Material.air) {
-                        this.inBlock.onEntityCollidedWithBlock(this.worldObj, this.xTile, this.yTile, this.zTile, this);
+//                System.out.println("debug" + entities);
+            int hitedCNT = 0;
+            for(MovingObjectPosition_And_Entity current : entities){
+                if(!canbounce && canPenerate_entity <= hitedCNT)break;
+                hitedCNT++;
+                MovingObjectPosition movingobjectposition1 = current.movingObjectPosition;
+                if (movingobjectposition1 != null) {
+                    vec3.xCoord = movingobjectposition1.hitVec.xCoord;
+                    vec3.yCoord = movingobjectposition1.hitVec.yCoord;
+                    vec3.zCoord = movingobjectposition1.hitVec.zCoord;
+                
+                    movingobjectposition = new MovingObjectPosition(current.entity);
+                    movingobjectposition.hitVec = vec3;
+                    movingobjectposition.sideHit = movingobjectposition1.sideHit;
+                    avoidEntity = current.entity;
+                    if (canbounce && !isDead) {
+                        this.onImpact(movingobjectposition);
+                        motionX *= 0.5;
+                        motionY *= 0.5;
+                        motionZ *= 0.5;
+                        changemotionflag = true;
+                    } else {
+                        this.onImpact(movingobjectposition);
                     }
                 }
-                if (canbounce) {
-                    switch (hitside) {
+            }
+        }else {
+            killCNT++;
+        }
+        if(killCNT>0 && fuse < 0)this.setDead();
+        int hitside = -1;
+        if (movingobjectposition != null) {
+            hitedpos = movingobjectposition.hitVec;
+            if (movingobjectposition.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY && movingobjectposition.entityHit != null &&  movingobjectposition.hitVec != null) {
+            } else if (movingobjectposition.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
+                this.onImpact(movingobjectposition);
+                this.xTile = movingobjectposition.blockX;
+                this.yTile = movingobjectposition.blockY;
+                this.zTile = movingobjectposition.blockZ;
+                this.inBlock = this.worldObj.getBlock(this.xTile, this.yTile, this.zTile);
+                hitside = movingobjectposition.sideHit;
+            
+                if(canbounce){
+                    switch (hitside) {//ヒットさせる処理
                         case 0:
-                        case 1:
-                            if(motionY < 0)
-                                onGround = true;
-                            motionY = -motionY * bouncerate;
-                            changemotionflag = true;
+                        case 1://Y面
+                            if (atan2(sqrt(motionY * motionY), sqrt(motionX * motionX + motionZ * motionZ)) > toRadians(bouncelimit))
+                                canbounce = false;
                             break;
                         case 2:
-                        case 3:
-                            motionZ = -motionZ * bouncerate;
-                            changemotionflag = true;
+                        case 3://Z面
+                            if (atan2(sqrt(motionZ * motionZ), sqrt(motionX * motionX + motionY * motionY)) > toRadians(bouncelimit))
+                                canbounce = false;
                             break;
                         case 4:
-                        case 5:
-                            motionX = -motionX * bouncerate;
-                            changemotionflag = true;
+                        case 5://X MAN
+                            if (atan2(sqrt(motionX * motionX), sqrt(motionY * motionY + motionZ * motionZ)) > toRadians(bouncelimit))
+                                canbounce = false;
                             break;
                     }
-                    lockedpos = null;
-                    inGround = false;
+                }
+                float f2 = (float) motionVec.lengthVector();
+                hitedpos.xCoord = hitedpos.xCoord - motionVec.xCoord / f2 * 0.26;
+                hitedpos.yCoord = hitedpos.yCoord - motionVec.yCoord / f2 * 0.26;
+                hitedpos.zCoord = hitedpos.zCoord - motionVec.zCoord / f2 * 0.26;
+                if(!canbounce) {
+                    this.inGround = true;
+                    lockedpos = movingobjectposition.hitVec;
+                }
+                if (this.inBlock.getMaterial() != Material.air) {
+                    this.inBlock.onEntityCollidedWithBlock(this.worldObj, this.xTile, this.yTile, this.zTile, this);
                 }
             }
-            if(hitedpos != null) {
-                this.posX = hitedpos.xCoord;
-                this.posY = hitedpos.yCoord;
-                this.posZ = hitedpos.zCoord;
-            }else {
-                this.posX += this.motionX;
-                this.posY += this.motionY;
-                this.posZ += this.motionZ;
+            if (canbounce) {
+                switch (hitside) {
+                    case 0:
+                    case 1:
+                        if(motionY < 0)
+                            onGround = true;
+                        motionY = -motionY * bouncerate;
+                        changemotionflag = true;
+                        break;
+                    case 2:
+                    case 3:
+                        motionZ = -motionZ * bouncerate;
+                        changemotionflag = true;
+                        break;
+                    case 4:
+                    case 5:
+                        motionX = -motionX * bouncerate;
+                        changemotionflag = true;
+                        break;
+                }
+                lockedpos = null;
+                inGround = false;
             }
+        }
+        if(hitedpos != null) {
+            this.posX = hitedpos.xCoord;
+            this.posY = hitedpos.yCoord;
+            this.posZ = hitedpos.zCoord;
+        }else {
+            this.posX += this.motionX;
+            this.posY += this.motionY;
+            this.posZ += this.motionZ;
         }
 //            if(inGround && canbounce){
 //                this.motionX = backupmotion.xCoord;

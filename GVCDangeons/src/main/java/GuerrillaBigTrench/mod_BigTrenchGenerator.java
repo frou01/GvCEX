@@ -1,6 +1,6 @@
 package GuerrillaBigTrench;
 
-import DungeonGeneratorBase.DangeonData;
+import DungeonGeneratorBase.DungeonData;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import net.minecraft.world.gen.structure.MapGenStructureIO;
@@ -9,7 +9,7 @@ import net.minecraftforge.common.MinecraftForge;
 import java.io.*;
 import java.util.ArrayList;
 
-import static DungeonGeneratorBase.DangeonData.loadDangeon;
+import static DungeonGeneratorBase.DungeonData.loadDungeon;
 import static DungeonGeneratorBase.mod_DungeonGeneratorBase.datafile;
 
 @Mod(
@@ -47,10 +47,10 @@ public class mod_BigTrenchGenerator {
     int maxy = -1;
     int maxz = -1;
 
-    static ArrayList<DangeonData> dangeonData = new ArrayList<DangeonData>();
+    static ArrayList<DungeonData> dungeonData = new ArrayList<DungeonData>();
 
     public void loadDangeonData(BufferedReader file){
-        dangeonData.add(loadDangeon(file));
+        dungeonData.add(loadDungeon(file));
     }
 
     private static boolean checkBeforeReadfile(File file) {

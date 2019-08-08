@@ -3,13 +3,12 @@ package hmggvcmob.ai;
 import handmadeguns.entity.PlacedGunEntity;
 import handmadeguns.items.guns.HMGItem_Unified_Guns;
 import hmggvcutil.entity.GVCEntityBox;
-import hmggvcmob.IflagBattler;
 import hmggvcmob.SlowPathFinder.WorldForPathfind;
 import hmggvcmob.entity.IGVCmob;
 import hmggvcmob.entity.friend.EntitySoBases;
 import hmggvcmob.entity.guerrilla.EntityGBases;
-import hmvehicle.entity.parts.Hasmode;
-import hmvehicle.entity.parts.ITank;
+import handmadevehicle.entity.parts.Hasmode;
+import handmadevehicle.entity.parts.ITank;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
@@ -182,8 +181,8 @@ public class AIAttackGun extends EntityAIBase {
                     float f4;
                     f1 = MathHelper.cos(-(shooter.rotationYawHead + (searchdirY?8:-8)) * 0.017453292F - (float)Math.PI);
                     f2 = MathHelper.sin(-(shooter.rotationYawHead + (searchdirY?8:-8)) * 0.017453292F - (float)Math.PI);
-                    f3 = -MathHelper.cos(-(shooter.rotationPitch + (searchdirP?8:-8)) * 0.017453292F);
-                    f4 = MathHelper.sin(-(shooter.rotationPitch + (searchdirP?8:-8)) * 0.017453292F);
+                    f3 = -MathHelper.cos(-(shooter.rotationPitch + (searchdirP?0:-0)) * 0.017453292F);
+                    f4 = MathHelper.sin(-(shooter.rotationPitch + (searchdirP?0:-0)) * 0.017453292F);
                     Vec3 look = Vec3.createVectorHelper((double)(f2 * f3), (double)f4, (double)(f1 * f3));
                     shooter.getLookHelper().setLookPosition(shooter.posX + look.xCoord, shooter.posY + shooter.getEyeHeight() + look.yCoord, shooter.posZ + look.zCoord, 90F, 18000000);
                 }

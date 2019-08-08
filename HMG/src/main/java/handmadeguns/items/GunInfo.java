@@ -149,10 +149,18 @@ public class GunInfo {
 	public float  bouncelimit = 90;
 	public float  resistance = 0.99f;
 	public float  acceleration;
-	public float  gra = 0.029F;
+	public float gravity = 0.029F;
 	public boolean canbounce = false;
-	public ArrayList<Integer> burstcount = new ArrayList<Integer>();
-	public ArrayList<Integer> rates = new ArrayList<Integer>();
+	public ArrayList<Integer> burstcount = new ArrayList<Integer>(){
+		{
+			add(-1);
+		}
+	};
+	public ArrayList<Integer> rates = new ArrayList<Integer>(){
+		{
+			add(1);
+		}
+	};
 	public boolean userenderscript = false;
 	public ScriptEngine renderscript;
 	public ScriptEngine script;
@@ -167,12 +175,15 @@ public class GunInfo {
 	public boolean canlock = false;
 	public boolean canlockBlock = false;
 	public boolean canlockEntity = false;
+	public boolean semiActive = false;
+	public boolean lock_to_Vehicle = false;
 	public float induction_precision;
 	public String flashname = null;
 	public int flashfuse = 1;
 	public float flashScale = 1;
 	public boolean canfix;
 	public boolean needfix;
+	public boolean userOnBarrel = true;
 	public boolean fixAsEntity;
 	public float[] sightattachoffset = new float[3];
 	public PlaceGunShooterPosGetter posGetter = new PlaceGunShooterPosGetter();;
@@ -186,6 +197,9 @@ public class GunInfo {
 	public float turretanglelimtMxP = 0;
 	public float turretanglelimtmnP = 0;
 	public float turretanglelimtmnY = 0;
+	public double torpdraft;
+	public float damagerange;
+	public float resistanceinWater;
 	
 	public static Vec3 getLook(float p_70676_1_, Entity entity)
 	{

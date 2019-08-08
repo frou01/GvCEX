@@ -3,8 +3,8 @@ package hmgww2.entity;
 
 import hmggvcmob.ai.AITankAttack;
 import hmgww2.entity.ai.AITankBombEnemyFlag;
-import hmvehicle.entity.parts.logics.TankBaseLogic;
-import hmvehicle.entity.parts.turrets.TurretObj;
+import handmadevehicle.entity.parts.logics.TankBaseLogic;
+import handmadevehicle.entity.parts.turrets.TurretObj;
 import net.minecraft.world.World;
 
 import javax.vecmath.Vector3d;
@@ -20,7 +20,7 @@ public class EntityJPN_TankSPG extends EntityJPN_TankBase {
 		this.tasks.addTask(1,tankBombEnemyFlag);
 		aiTankAttack = new AITankAttack(this,6400,400,10,10);
 		aiTankAttack.setAlways_poit_to_target(true);
-		baseLogic.always_poit_to_target = true;
+		baseLogic.always_point_to_target = true;
 		this.tasks.addTask(2,aiTankAttack);
 		playerpos = new Vector3d(0.7,2.85,1.6);
 		seat_onTurret = false;

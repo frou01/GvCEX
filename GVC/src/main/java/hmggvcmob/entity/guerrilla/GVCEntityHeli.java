@@ -1,26 +1,14 @@
 package hmggvcmob.entity.guerrilla;
 
 
-import hmvehicle.entity.parts.IVehicle;
-import hmggvcutil.GVCUtils;
-import hmggvcmob.entity.GVCEx;
-import hmvehicle.entity.parts.Iplane;
-import hmvehicle.entity.parts.logics.IbaseLogic;
-import hmvehicle.entity.parts.logics.PlaneBaseLogic;
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
+import handmadeguns.items.guns.HMGItem_Unified_Guns;
+import handmadevehicle.entity.parts.logics.IbaseLogic;
+import handmadevehicle.entity.parts.logics.PlaneBaseLogic;
 import net.minecraft.entity.*;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
 import javax.vecmath.Quat4d;
-
-import static hmggvcutil.GVCUtils.fn_rpg7;
-import static hmggvcmob.GVCMobPlus.cfg_guerrillasrach;
 
 public class GVCEntityHeli extends EntityGBase implements Iplane {
 	public int homeposX;
@@ -33,20 +21,49 @@ public class GVCEntityHeli extends EntityGBase implements Iplane {
 		this.setSize(5f, 5f);
 //		nboundingbox = new ModifiedBoundingBox(-20,-20,-20,20,20,20,0,0,-6.27,2.5,5,19);
 //		nboundingbox.rot.set(this.bodyRot);
-//		proxy.replaceBoundingbox(this,nboundingbox);
+//		proxy_HMVehicle.replaceBoundingbox(this,nboundingbox);
 //		((ModifiedBoundingBox)this.boundingBox).update(this.posX,this.posY,this.posZ);
 		ignoreFrustumCheck = true;
 		baseLogic = new PlaneBaseLogic(worldObj, this);
-		baseLogic.speedfactor = 0.009f;
-		baseLogic.liftfactor = 0.05f;
-		baseLogic.flapliftfactor = 0.00005f;
-		baseLogic.flapdragfactor = 0.0000000001f;
-		baseLogic.geardragfactor = 0.000000001f;
-		baseLogic.dragfactor = 0.07f;
-		baseLogic.gravity = 0.049f;
-		baseLogic.stability = 600;
-		baseLogic.rotmotion_reduceSpeed = 0.1;
-//		baseLogic.slipresist = 4;
+		baseLogic.planeInfo.soundname = "gvcmob:gvcmob.heli";
+		baseLogic.planeInfo.soundpitch = 1.2f;
+		baseLogic.planeInfo.speedfactor = 0.012f;
+		baseLogic.planeInfo.yawspeed = 0.02f;
+		baseLogic.planeInfo.liftfactor = 0;
+		baseLogic.planeInfo.flapliftfactor = 0;
+		baseLogic.planeInfo.flapdragfactor = 0;
+		baseLogic.planeInfo.geardragfactor = 0;
+		baseLogic.planeInfo.dragfactor = 0.07f;
+		baseLogic.planeInfo.gravity = 0.049f;
+		baseLogic.planeInfo.stability2 = 0;
+		baseLogic.planeInfo.stability = 0;
+		baseLogic.planeInfo.rotmotion_reduceSpeed = 0;
+		baseLogic.planeInfo.forced_rudder_effect = 0.99f;
+		baseLogic.planeInfo.forced_rotmotion_reduceSpeed = 0.05f;
+		baseLogic.planeInfo.slipresist = 0;
+		baseLogic.planeInfo.throttle_Max = 5;
+		baseLogic.planeInfo.unitThrottle.set(0,-1,0);
+		baseLogic.planeInfo.brakedragfactor = 0;
+		baseLogic.planeInfo.maxClimb = 0;
+		baseLogic.planeInfo.maxDive = 5;
+		baseLogic.planeInfo.minALT = 5;
+		baseLogic.planeInfo.cruiseALT = 20;
+		baseLogic.planeInfo.changeWeaponCycleSetting = 50;
+		baseLogic.planeInfo.type_F_Plane_T_Heli = true;
+		baseLogic.planeInfo.displayModernHud = true;
+		baseLogic.seatInfos = new SeatInfo[1];
+		baseLogic.seatInfos_zoom = new SeatInfo[1];
+		baseLogic.riddenByEntities = new Entity[1];
+		baseLogic.seatInfos[0] = new SeatInfo();
+		baseLogic.seatInfos[0].pos[0] = 0;
+		baseLogic.seatInfos[0].pos[1] = 2.5;
+		baseLogic.seatInfos[0].pos[2] = 0;
+		ModifiedBoundingBox nboundingbox = new ModifiedBoundingBox(-1.5,0,-1.5,
+				                                                          1.5,5,1.5,
+				                                                          0,1.5,4,2.5,3,8);
+		nboundingbox.rot.set(baseLogic.bodyRot);
+		proxy_HMVehicle.replaceBoundingbox(this,nboundingbox);
+		((ModifiedBoundingBox)this.boundingBox).update(this.posX,this.posY,this.posZ);
 	
 	}
 	
@@ -58,7 +75,7 @@ public class GVCEntityHeli extends EntityGBase implements Iplane {
 	protected void applyEntityAttributes() {
 		super.applyEntityAttributes();
 		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0D);
-		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(maxHealth);
+		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(160);
 		this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(80.0D);
 		this.getEntityAttribute(SharedMonsterAttributes.knockbackResistance).setBaseValue(30.0D);
 	}
@@ -75,10 +92,44 @@ public class GVCEntityHeli extends EntityGBase implements Iplane {
 		this.motionX = motion[0];
 		this.motionY = motion[1];
 		this.motionZ = motion[2];
+		if (this.standalone()) {
+			if (!worldObj.isRemote && rand.nextInt(10) == 1) {
+				boolean flag = false;
+				for (int id = 0; id < (baseLogic).riddenByEntities.length; id++) {
+					if((baseLogic).riddenByEntities[id] == null)flag = true;
+				}
+				if(flag) {
+//					System.out.println("debug");
+					EntityGBase gvcEntityGuerrilla = new GVCEntityGuerrillaMG(worldObj);
+					gvcEntityGuerrilla.addRandomArmor();
+					gvcEntityGuerrilla.setLocationAndAngles(this.posX, this.posY, this.posZ, 0, 0);
+					worldObj.spawnEntityInWorld(gvcEntityGuerrilla);
+					if (!pickupEntity(gvcEntityGuerrilla, 0)) gvcEntityGuerrilla.setDead();
+					if(gvcEntityGuerrilla.getHeldItem() != null && gvcEntityGuerrilla.getHeldItem().getItem() instanceof HMGItem_Unified_Guns && ((HMGItem_Unified_Guns) gvcEntityGuerrilla.getHeldItem().getItem()).gunInfo.needfix)gvcEntityGuerrilla.setDead();
+				}
+				
+			}
+		}
 //		if (!this.standalone() && baseLogic.childEntities[0] != null && baseLogic.childEntities[0].riddenByEntity == null) {
 //			baseLogic.throttle--;
 //		}
 		baseLogic.onUpdate();
+	}
+	public boolean attackEntityFrom(DamageSource source, float par2) {
+		if(source.getDamageType().equals(DamageSource.fall.damageType) ||
+				   source.getDamageType().equals(DamageSource.outOfWorld.damageType) ||
+				   source.getDamageType().equals(DamageSource.inWall.damageType))return super.attackEntityFrom(source, par2);
+		par2 -= 4;
+		if(par2 < 0)par2 = 0;
+		if (this.riddenByEntity == source.getEntity()) {
+			return false;
+		} else if (this == source.getEntity()) {
+			return false;
+		} else if(this instanceof ImultiRidable && ((ImultiRidable)this).isRidingEntity(source.getEntity())) {
+			return false;
+		}else {
+			return super.attackEntityFrom(source, par2);
+		}
 	}
 	
 	public void setVelocity(double p_70016_1_, double p_70016_3_, double p_70016_5_) {
@@ -230,6 +281,23 @@ public class GVCEntityHeli extends EntityGBase implements Iplane {
 	}
 	public void setPosition(double x, double y, double z)
 	{
+		super.setPosition(x,y,z);
 		if(baseLogic != null)baseLogic.setPosition(x,y,z);
+	}
+	
+	
+	@Override
+	public void moveEntity(double x, double y, double z){
+		baseLogic.moveEntity(x,y,z);
+	}
+	
+	@Override
+	public void updateFallState_public(double stepHeight, boolean onground){
+		this.updateFallState(stepHeight,onground);
+	}
+	
+	@Override
+	public void func_145775_I_public() {
+		this.func_145775_I();
 	}
 }

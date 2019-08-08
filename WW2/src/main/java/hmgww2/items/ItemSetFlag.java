@@ -37,7 +37,7 @@ public class ItemSetFlag extends Item
         }
         else
         {
-        	p_77648_3_.setBlock(p_77648_4_, p_77648_5_+1, p_77648_6_, this.block, 2, 2);
+        	p_77648_3_.setBlock(p_77648_4_, p_77648_5_+1, p_77648_6_, this.block);
         	--p_77648_1_.stackSize;
             return true;
         }

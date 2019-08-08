@@ -1,9 +1,8 @@
 package hmggvcmob.ai;
 
 import hmggvcmob.SlowPathFinder.WorldForPathfind;
-import hmvehicle.entity.parts.ITank;
-import hmvehicle.entity.parts.IVehicle;
-import hmvehicle.entity.parts.logics.TankBaseLogic;
+import handmadevehicle.entity.parts.ITank;
+import handmadevehicle.entity.parts.logics.TankBaseLogic;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;

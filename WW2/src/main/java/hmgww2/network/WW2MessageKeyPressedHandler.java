@@ -4,11 +4,12 @@ import java.util.List;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import hmvehicle.entity.parts.ITank;
+import hmgww2.entity.planes.EntityBases_Plane;
 import hmgww2.Nation;
 import hmgww2.blocks.tile.TileEntityBase;
 import hmgww2.entity.*;
 import hmgww2.items.ItemIFFArmor;
+import handmadevehicle.entity.parts.logics.MultiRiderLogics;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentTranslation;
@@ -506,13 +507,14 @@ public class WW2MessageKeyPressedHandler implements IMessageHandler<WW2MessageKe
 					    }
 				    }
 				    List llist = entityplayer.worldObj.getEntitiesWithinAABBExcludingEntity(null,
-						    entityplayer.boundingBox.addCoord(entityplayer.motionX, entityplayer.motionY, entityplayer.motionZ).expand(40D, 30D, 40D));
+						    entityplayer.boundingBox.addCoord(entityplayer.motionX, entityplayer.motionY, entityplayer.motionZ).expand(40D, 40D, 40D));
+				    List llist2 = entityplayer.worldObj.getEntitiesWithinAABBExcludingEntity(null,
+						    entityplayer.boundingBox.addCoord(entityplayer.motionX, entityplayer.motionY, entityplayer.motionZ).expand(160D, 600D, 160D));
 				    if (llist != null) {
 					    for (int lj = 0; lj < llist.size(); lj++) {
 						    Entity entity1 = (Entity) llist.get(lj);
 						    if (entity1.canBeCollidedWith()) {
-							    if (entity1 instanceof EntityBases && playernation == ((EntityBases) entity1).getnation()) {
-							    	boolean holdfire = ((EntityBases) entity1).holdFire;
+							    if (entityplayer.ridingEntity != entity1 && entity1 instanceof EntityBases && playernation == ((EntityBases) entity1).getnation() && !((EntityBases) entity1).mode_Lock) {
 								    switch (set_to_this_mode){
 									    case 0://follow me
 										    ((EntityBases) entity1).mode = 2;
@@ -535,7 +537,56 @@ public class WW2MessageKeyPressedHandler implements IMessageHandler<WW2MessageKe
 										    continue;
 									    case 3://attack enemy flag
 										    if(targetflag != null) {
-											    ((EntityBases) entity1).mode = 3;
+											    ((EntityBases) entity1).mode = 1;
+											    ((EntityBases) entity1).homeposX = (int) targetflag.xCoord;
+											    ((EntityBases) entity1).homeposY = (int) targetflag.yCoord;
+											    ((EntityBases) entity1).homeposZ = (int) targetflag.zCoord;
+										    }else {
+											    ((EntityBases) entity1).mode = 1;
+											    ((EntityBases) entity1).homeposX = (int) entityplayer.posX;
+											    ((EntityBases) entity1).homeposY = (int) entityplayer.posY;
+											    ((EntityBases) entity1).homeposZ = (int) entityplayer.posZ;
+										    }
+										    continue;
+									    case 4:
+									    	((EntityBases) entity1).holdFire = false;
+										    continue;
+									    case 5:
+										    ((EntityBases) entity1).holdFire = true;
+										    continue;
+								    }
+							    }
+						    }
+					    }
+				    }
+				    if (llist2 != null) {
+					    for (int lj = 0; lj < llist2.size(); lj++) {
+						    Entity entity1 = (Entity) llist2.get(lj);
+						    if (entity1.canBeCollidedWith()) {
+							    if (entity1 instanceof EntityBases_Plane && !((MultiRiderLogics)((EntityBases_Plane) entity1).getBaseLogic()).ispilot(entityplayer) && playernation == ((EntityBases) entity1).getnation() && !((EntityBases) entity1).mode_Lock) {
+								    switch (set_to_this_mode){
+									    case 0://follow me
+										    ((EntityBases) entity1).mode = 2;
+										    ((EntityBases) entity1).homeposX = (int) entityplayer.posX;
+										    ((EntityBases) entity1).homeposY = (int) entityplayer.posY;
+										    ((EntityBases) entity1).homeposZ = (int) entityplayer.posZ;
+										    ((EntityBases) entity1).master = entityplayer;
+									    	continue;
+									    case 1://wait here
+										    ((EntityBases) entity1).mode = 1;
+										    ((EntityBases) entity1).homeposX = (int) entityplayer.posX;
+										    ((EntityBases) entity1).homeposY = (int) entityplayer.posY;
+										    ((EntityBases) entity1).homeposZ = (int) entityplayer.posZ;
+										    continue;
+									    case 2://free
+										    ((EntityBases) entity1).mode = 0;
+										    ((EntityBases) entity1).homeposX = (int) entityplayer.posX;
+										    ((EntityBases) entity1).homeposY = (int) entityplayer.posY;
+										    ((EntityBases) entity1).homeposZ = (int) entityplayer.posZ;
+										    continue;
+									    case 3://attack enemy flag
+										    if(targetflag != null) {
+											    ((EntityBases) entity1).mode = 1;
 											    ((EntityBases) entity1).homeposX = (int) targetflag.xCoord;
 											    ((EntityBases) entity1).homeposY = (int) targetflag.yCoord;
 											    ((EntityBases) entity1).homeposZ = (int) targetflag.zCoord;

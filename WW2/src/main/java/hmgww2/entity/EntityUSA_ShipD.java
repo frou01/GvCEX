@@ -3,12 +3,12 @@ package hmgww2.entity;
 
 import hmggvcmob.GVCMobPlus;
 import hmggvcmob.ai.AITankAttack;
-import hmvehicle.entity.parts.OBB;
-import hmvehicle.entity.parts.SeatInfo;
-import hmvehicle.entity.parts.turrets.FireRist;
-import hmvehicle.entity.parts.ModifiedBoundingBox;
-import hmvehicle.entity.parts.turrets.TurretObj;
-import hmvehicle.entity.parts.logics.VesselBaseLogic;
+import handmadevehicle.entity.parts.OBB;
+import handmadevehicle.entity.parts.SeatInfo;
+import handmadevehicle.entity.parts.turrets.FireRist;
+import handmadevehicle.entity.parts.ModifiedBoundingBox;
+import handmadevehicle.entity.parts.turrets.TurretObj;
+import handmadevehicle.entity.parts.logics.VesselBaseLogic;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
 
@@ -84,25 +84,25 @@ public class EntityUSA_ShipD  extends EntityUSA_ShipBase
 		
 		baseLogic = new VesselBaseLogic(this,0.01f,0.4f,false,"hmgww2:hmgww2.VesselTurbine");
 		baseLogic.canControlonWater = true;
-		baseLogic.always_poit_to_target = false;
+		baseLogic.always_point_to_target = false;
 		
 		((VesselBaseLogic)baseLogic).riddenByEntities = new Entity[4];
-		((VesselBaseLogic)baseLogic).riddenByEntitiesInfo = new SeatInfo[4];
-		((VesselBaseLogic)baseLogic).riddenByEntitiesInfo_zoom = new SeatInfo[4];
+		((VesselBaseLogic)baseLogic).seatInfos = new SeatInfo[4];
+		((VesselBaseLogic)baseLogic).seatInfos_zoom = new SeatInfo[4];
 		
-		((VesselBaseLogic)baseLogic).riddenByEntitiesInfo[0] = new SeatInfo();
-		((VesselBaseLogic)baseLogic).riddenByEntitiesInfo_zoom[0] = new SeatInfo();
-		((VesselBaseLogic)baseLogic).riddenByEntitiesInfo[0].pos = new double[]{playerpos.x,playerpos.y,playerpos.z};
-		((VesselBaseLogic)baseLogic).riddenByEntitiesInfo_zoom[0].pos = new double[]{zoomingplayerpos.x,zoomingplayerpos.y,zoomingplayerpos.z};
+		((VesselBaseLogic)baseLogic).seatInfos[0] = new SeatInfo();
+		((VesselBaseLogic)baseLogic).seatInfos_zoom[0] = new SeatInfo();
+		((VesselBaseLogic)baseLogic).seatInfos[0].pos = new double[]{playerpos.x,playerpos.y,playerpos.z};
+		((VesselBaseLogic)baseLogic).seatInfos_zoom[0].pos = new double[]{zoomingplayerpos.x,zoomingplayerpos.y,zoomingplayerpos.z};
 		
-		((VesselBaseLogic)baseLogic).riddenByEntitiesInfo[1] = ((VesselBaseLogic)baseLogic).riddenByEntitiesInfo_zoom[1] = new SeatInfo();
-		((VesselBaseLogic)baseLogic).riddenByEntitiesInfo[1].pos = ((VesselBaseLogic)baseLogic).riddenByEntitiesInfo_zoom[1].pos = new double[]{0,12.98,-15};
+		((VesselBaseLogic)baseLogic).seatInfos[1] = ((VesselBaseLogic)baseLogic).seatInfos_zoom[1] = new SeatInfo();
+		((VesselBaseLogic)baseLogic).seatInfos[1].pos = ((VesselBaseLogic)baseLogic).seatInfos_zoom[1].pos = new double[]{0,12.98,-15};
 		
-		((VesselBaseLogic)baseLogic).riddenByEntitiesInfo[2] = ((VesselBaseLogic)baseLogic).riddenByEntitiesInfo_zoom[2] = new SeatInfo();
-		((VesselBaseLogic)baseLogic).riddenByEntitiesInfo[2].pos = ((VesselBaseLogic)baseLogic).riddenByEntitiesInfo_zoom[2].pos = new double[]{0,8.6,-0.8};
+		((VesselBaseLogic)baseLogic).seatInfos[2] = ((VesselBaseLogic)baseLogic).seatInfos_zoom[2] = new SeatInfo();
+		((VesselBaseLogic)baseLogic).seatInfos[2].pos = ((VesselBaseLogic)baseLogic).seatInfos_zoom[2].pos = new double[]{0,8.6,-0.8};
 		
-		((VesselBaseLogic)baseLogic).riddenByEntitiesInfo[3] = ((VesselBaseLogic)baseLogic).riddenByEntitiesInfo_zoom[3] = new SeatInfo();
-		((VesselBaseLogic)baseLogic).riddenByEntitiesInfo[3].pos = ((VesselBaseLogic)baseLogic).riddenByEntitiesInfo_zoom[3].pos = new double[]{0,8.1,17.3};
+		((VesselBaseLogic)baseLogic).seatInfos[3] = ((VesselBaseLogic)baseLogic).seatInfos_zoom[3] = new SeatInfo();
+		((VesselBaseLogic)baseLogic).seatInfos[3].pos = ((VesselBaseLogic)baseLogic).seatInfos_zoom[3].pos = new double[]{0,8.1,17.3};
 		
 		aiTankAttack = new AITankAttack(this,3600,900,10,10);
 		aiTankAttack.setAlways_movearound(true);

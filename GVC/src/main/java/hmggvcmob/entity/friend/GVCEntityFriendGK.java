@@ -4,7 +4,7 @@ import handmadeguns.HandmadeGunsCore;
 import hmggvcmob.ai.AIGKFire;
 import hmggvcmob.ai.AIGKHighJump;
 import hmggvcmob.ai.AIGKkick;
-import hmggvcmob.entity.GVCEx;
+import handmadevehicle.entity.ExplodeEffect;
 import hmggvcmob.entity.IIRVING;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -19,7 +19,7 @@ import net.minecraft.world.World;
 import java.util.Random;
 
 import static hmggvcmob.GVCMobPlus.cfg_guerrillasrach;
-import static hmvehicle.Utils.CalculateGunElevationAngle;
+import static handmadevehicle.Utils.CalculateGunElevationAngle;
 
 public class GVCEntityFriendGK extends EntityPMCBase implements IIRVING
 {
@@ -230,7 +230,7 @@ public class GVCEntityFriendGK extends EntityPMCBase implements IIRVING
         ++this.deathTicks;
         if(this.deathTicks == 1){
             //this.worldObj.createExplosion(this, this.posX, this.posY, this.posZ, 0F, false);
-            GVCEx ex = new GVCEx(this, 3F);
+            ExplodeEffect ex = new ExplodeEffect(this, 3F);
             ex.Ex();
         }
         if (this.deathTicks == 150 && !this.worldObj.isRemote) {

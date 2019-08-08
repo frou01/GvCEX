@@ -54,6 +54,11 @@ public class Utils {
 	}
 	
 	public static MovingObjectPosition getmovingobjectPosition_forBlock(World worldObj, Vec3 start, Vec3 end, boolean p_147447_3_, boolean p_147447_4_, boolean p_147447_5_){
+		return getmovingobjectPosition_forBlock(worldObj, start, end, p_147447_3_, p_147447_4_, p_147447_5_,3);
+	}
+	static int penerateCnt;
+	public static MovingObjectPosition getmovingobjectPosition_forBlock(World worldObj, Vec3 start, Vec3 end, boolean p_147447_3_, boolean p_147447_4_, boolean p_147447_5_,int penerateCnt_in){
+		penerateCnt = penerateCnt_in;
 	    if (!Double.isNaN(start.xCoord) && !Double.isNaN(start.yCoord) && !Double.isNaN(start.zCoord))
 	    {
 	        if (!Double.isNaN(end.xCoord) && !Double.isNaN(end.yCoord) && !Double.isNaN(end.zCoord))
@@ -267,11 +272,10 @@ public class Utils {
 	}
 	
 	public static boolean isCollidableBlock(Block block){
-	    Random rand = new Random();
 	    return !((((block.getMaterial() == Material.plants) || (block.getMaterial() == Material.leaves) || ((
 	                                                                                                                block.getMaterial() == Material.glass ||
 	                                                                                                                        block instanceof BlockFence ||
 	                                                                                                                        block instanceof BlockFenceGate ||
-	                                                                                                                        block == Blocks.iron_bars) && rand.nextInt(5) < 2))));
+	                                                                                                                        block == Blocks.iron_bars) && --penerateCnt>0/*こっちは貫通回数減少*/))));
 	}
 }

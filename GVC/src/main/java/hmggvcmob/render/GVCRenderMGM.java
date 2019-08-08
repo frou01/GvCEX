@@ -7,14 +7,9 @@ import handmadeguns.client.render.HMGGunParts_Motion_PosAndRotation;
 import handmadeguns.client.render.HMGGunParts_Motions;
 import handmadeguns.client.render.HMGParts;
 import hmggvcmob.entity.EntityMGAX55;
-import hmvehicle.entity.parts.ModifiedBoundingBox;
-import hmvehicle.entity.parts.OBB;
-import net.minecraft.client.renderer.RenderGlobal;
-import net.minecraft.client.renderer.Tessellator;
+import handmadevehicle.entity.parts.ModifiedBoundingBox;
 import net.minecraft.client.renderer.entity.Render;
-import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
@@ -25,7 +20,7 @@ import javax.vecmath.Vector3d;
 
 import java.util.ArrayList;
 
-import static hmvehicle.CLProxy.drawOutlinedBoundingBox;
+import static handmadevehicle.CLProxy.drawOutlinedBoundingBox;
 import static java.lang.Math.abs;
 import static net.minecraft.client.renderer.entity.RenderManager.debugBoundingBox;
 

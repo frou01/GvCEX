@@ -3,11 +3,11 @@ package hmggvcmob.entity.guerrilla;
 
 import handmadeguns.entity.PlacedGunEntity;
 import hmggvcmob.ai.AITankAttack;
-import hmvehicle.entity.parts.ITank;
-import hmvehicle.entity.parts.ModifiedBoundingBox;
-import hmvehicle.entity.parts.logics.IbaseLogic;
-import hmvehicle.entity.parts.logics.TankBaseLogic;
-import hmvehicle.entity.parts.turrets.TurretObj;
+import handmadevehicle.entity.parts.ITank;
+import handmadevehicle.entity.parts.ModifiedBoundingBox;
+import handmadevehicle.entity.parts.logics.LogicsBase;
+import handmadevehicle.entity.parts.logics.TankBaseLogic;
+import handmadevehicle.entity.parts.turrets.TurretObj;
 import net.minecraft.block.Block;
 import net.minecraft.entity.*;
 import net.minecraft.init.Blocks;
@@ -25,10 +25,9 @@ import java.util.List;
 
 import static hmggvcmob.GVCMobPlus.Guns_HVG;
 import static hmggvcmob.GVCMobPlus.cfg_guerrillasrach;
-import static hmggvcmob.GVCMobPlus.proxy;
 import static hmggvcmob.event.GVCMXEntityEvent.soundedentity;
-import static hmvehicle.Utils.transformVecByQuat;
-import static hmvehicle.Utils.transformVecforMinecraft;
+import static handmadevehicle.Utils.transformVecByQuat;
+import static handmadevehicle.Utils.transformVecforMinecraft;
 
 public class GVCEntityJeep extends EntityGBase implements ITank
 {
@@ -50,7 +49,7 @@ public class GVCEntityJeep extends EntityGBase implements ITank
                                                       0,1.25,-1.5,
                                                       3,2.5,4);
         nboundingbox.rot.set(this.bodyRot);
-        proxy.replaceBoundingbox(this,nboundingbox);
+        proxy_HMVehicle.replaceBoundingbox(this,nboundingbox);
         aiTankAttack = new AITankAttack(this,1600,400);
         this.tasks.addTask(1,aiTankAttack);
         canuseAlreadyPlacedGun = false;
@@ -400,7 +399,7 @@ public class GVCEntityJeep extends EntityGBase implements ITank
     }
 
     @Override
-    public IbaseLogic getBaseLogic() {
+    public LogicsBase getBaseLogic() {
         return baseLogic;
     }
 
@@ -410,6 +409,7 @@ public class GVCEntityJeep extends EntityGBase implements ITank
     
     public void setPosition(double x, double y, double z)
     {
+        super.setPosition(x,y,z);
         if(baseLogic != null)baseLogic.setPosition(x,y,z);
     }
     
@@ -425,6 +425,22 @@ public class GVCEntityJeep extends EntityGBase implements ITank
     
     @Override
     public boolean standalone() {
-        return false;
+        return true;
+    }
+    
+    
+    @Override
+    public void moveEntity(double x, double y, double z){
+        baseLogic.moveEntity(x,y,z);
+    }
+    
+    @Override
+    public void updateFallState_public(double stepHeight, boolean onground){
+        this.updateFallState(stepHeight,onground);
+    }
+    
+    @Override
+    public void func_145775_I_public() {
+        this.func_145775_I();
     }
 }

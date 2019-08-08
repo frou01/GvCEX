@@ -2,8 +2,8 @@ package hmggvcmob.entity.guerrilla;
 
 import handmadeguns.entity.bullets.HMGEntityBulletExprode;
 import hmggvcmob.GVCMobPlus;
-import hmggvcmob.entity.GVCEx;
-import hmvehicle.Utils;
+import handmadevehicle.entity.ExplodeEffect;
+import handmadevehicle.Utils;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
@@ -18,7 +18,7 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
 import static handmadeguns.HandmadeGunsCore.cfg_defgravitycof;
-import static hmvehicle.Utils.CalculateGunElevationAngle;
+import static handmadevehicle.Utils.CalculateGunElevationAngle;
 import static java.lang.Math.*;
 import static java.lang.Math.abs;
 import static net.minecraft.util.MathHelper.wrapAngleTo180_float;
@@ -317,9 +317,6 @@ public class GVCEntityDrawn extends EntityGBase {
             this.rotationYawHead = this.bodyrotationYaw;
             this.rotationPitch = this.bodyrotationPitch;
             var3.setHeadingFromThrower(this, (float) movingspeed,10);
-            var3.flyingSound = "gvcmob:gvcmob.bombdrops";
-            var3.flyingSoundLV = 4;
-            var3.flyingSoundSP = 1;
             var3.bulletTypeName = "byfrou01_Bomb";
             if (!this.worldObj.isRemote) {
                 this.worldObj.spawnEntityInWorld(var3);
@@ -333,11 +330,11 @@ public class GVCEntityDrawn extends EntityGBase {
         ++this.deathTicks;
         if(this.deathTicks == 1){
             //this.worldObj.createExplosion(this, this.posX, this.posY, this.posZ, 0F, false);
-            GVCEx ex = new GVCEx(this, 3F);
+            ExplodeEffect ex = new ExplodeEffect(this, 3F);
             ex.Ex();
         }
         if(this.onGround && !this.worldObj.isRemote){
-            GVCEx ex = new GVCEx(this, 3F);
+            ExplodeEffect ex = new ExplodeEffect(this, 3F);
             ex.Ex();
             this.setDead();
             this.dropItem(new ItemStack(Blocks.gold_block, 0).getItem(), 1);
@@ -347,7 +344,7 @@ public class GVCEntityDrawn extends EntityGBase {
             this.dropItem(new ItemStack(Blocks.emerald_block, 0).getItem(),5);
         }
         if (this.deathTicks == 200 && !this.worldObj.isRemote) {
-            GVCEx ex = new GVCEx(this, 3F);
+            ExplodeEffect ex = new ExplodeEffect(this, 3F);
             ex.Ex();
             this.setDead();
             this.dropItem(new ItemStack(Blocks.gold_block, 0).getItem(), 1);

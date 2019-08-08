@@ -20,7 +20,7 @@ public class GVCEntityGuerrillaMG extends EntityGBase
     {
         super(par1World);
         this.setSize(0.6F, 1.8F);
-        this.tasks.addTask(1,aiAttackGun = new AIAttackGun(this,120,10,10,15,45,true));
+        this.tasks.addTask(1,aiAttackGun = new AIAttackGun(this,120,10,10,15,15,true));
         spread = 7;
     }
     protected void applyEntityAttributes()

@@ -11,8 +11,8 @@
 
 package hmggvcmob.render.model;
 
-import hmvehicle.entity.parts.ITank;
-import hmvehicle.entity.parts.logics.TankBaseLogic;
+import handmadevehicle.entity.parts.ITank;
+import handmadevehicle.entity.parts.logics.TankBaseLogic;
 import hmggvcmob.entity.friend.GVCEntityPMCT90Tank;
 import hmggvcmob.entity.guerrilla.GVCEntityTankT90;
 import net.minecraft.client.model.ModelBase;

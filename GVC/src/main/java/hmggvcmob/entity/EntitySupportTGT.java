@@ -320,9 +320,7 @@ public class EntitySupportTGT extends Entity {
                                     var3.fuse = 0;
                                     var3.gra = (float) (0.49 / cfg_defgravitycof);
                                     var3.canex = true;
-                                    var3.flyingSound = "gvcmob:gvcmob.bombdrops";
-                                    var3.flyingSoundLV = 16;
-                                    var3.flyingSoundSP = 1;
+                                    var3.bulletTypeName = "byfrou01_Bomb";
                                     var3.setLocationAndAngles(field_145791_d + rand.nextInt(20) * (this.rand.nextBoolean() ? -1 : 1) / 6, shootingEntity.posY + 255D, field_145789_f + rand.nextInt(20) * (this.rand.nextBoolean() ? -1 : 1) / 6,
                                             0, 90);
                                     var3.setHeadingFromThrower(0, 0, 0, 0, 0);

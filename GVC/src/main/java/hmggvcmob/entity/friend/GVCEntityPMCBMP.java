@@ -1,14 +1,13 @@
 package hmggvcmob.entity.friend;
 
 
-import handmadeguns.HandmadeGunsCore;
 import hmggvcmob.ai.AITankAttack;
-import hmggvcmob.entity.*;
-import hmvehicle.entity.EntityChild;
-import hmvehicle.entity.parts.*;
-import hmvehicle.entity.parts.logics.IbaseLogic;
-import hmvehicle.entity.parts.logics.TankBaseLogic;
-import hmvehicle.entity.parts.turrets.TurretObj;
+import handmadevehicle.entity.ExplodeEffect;
+import handmadevehicle.entity.parts.*;
+import handmadevehicle.entity.parts.logics.IbaseLogic;
+import handmadevehicle.entity.parts.logics.MultiRiderLogics;
+import handmadevehicle.entity.parts.logics.TankBaseLogic;
+import handmadevehicle.entity.parts.turrets.TurretObj;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -27,13 +26,11 @@ import net.minecraft.world.World;
 import javax.vecmath.Quat4d;
 import javax.vecmath.Vector3d;
 
-import static hmggvcmob.GVCMobPlus.proxy;
-import static hmggvcmob.event.GVCMXEntityEvent.soundedentity;
-import static hmvehicle.Utils.transformVecByQuat;
-import static hmvehicle.Utils.transformVecforMinecraft;
-import static hmvehicle.HMVehicle.proxy_HMVehicle;
+import static handmadevehicle.Utils.transformVecByQuat;
+import static handmadevehicle.Utils.transformVecforMinecraft;
+import static handmadevehicle.HMVehicle.proxy_HMVehicle;
 
-public class GVCEntityPMCBMP extends EntityPMCBase implements ITank
+public class GVCEntityPMCBMP extends EntityPMCBase implements ITank,IMultiTurretVehicle,ImultiRidable
 {
 	// public int type;
 	public TileEntity spawnedtile = null;
@@ -48,10 +45,6 @@ public class GVCEntityPMCBMP extends EntityPMCBase implements ITank
 	public float subturretrotationYaw;
 	public float subturretrotationPitch;
 
-	public EntityChild[] childEntities = new EntityChild[4];
-
-	boolean childinit = false;
-
 //	public float bodyrotationYaw;
 //	public float bodyrotationPitch;
 //	public float prevbodyrotationYaw;
@@ -63,9 +56,7 @@ public class GVCEntityPMCBMP extends EntityPMCBase implements ITank
 //	public float subturretrotationYaw;
 //	public float subturretrotationPitch;
 
-	public int mgMagazine;
-	public int mgReloadProgress;
-	public TankBaseLogic baseLogic = new TankBaseLogic(this,0.2f,0.8f,false,"gvcmob:gvcmob.BMPTrack");
+	public TankBaseLogic baseLogic = new TankBaseLogic(this,0.1f,0.4f,false,"gvcmob:gvcmob.BMPTrack");
 	ModifiedBoundingBox nboundingbox;
 
 	Vector3d playerpos = new Vector3d(-0.464f,2.2f,0.2948f);
@@ -89,11 +80,15 @@ public class GVCEntityPMCBMP extends EntityPMCBase implements ITank
 		super(par1World);
 		this.tasks.removeTask(aiSwimming);
 		this.setSize(3F, 3F);
-		baseLogic.canControlonWater = true;
+		baseLogic.tankinfo.canControlonWater = true;
+		baseLogic.riddenByEntities = new Entity[5];
+		baseLogic.seatInfos = new SeatInfo[]{new SeatInfo(new double[]{-0.5,2,0}),new SeatInfo(childposes[0]),new SeatInfo(childposes[1]),
+				new SeatInfo(childposes[2]),new SeatInfo(childposes[3])};
+		
 		nboundingbox = new ModifiedBoundingBox(boundingBox.minX,boundingBox.minY,boundingBox.minZ,boundingBox.maxX,boundingBox.maxY,boundingBox.maxZ,
 				0,1,0,3.4,2,6.5);
 		nboundingbox.rot.set(baseLogic.bodyRot);
-		proxy.replaceBoundingbox(this,nboundingbox);
+		proxy_HMVehicle.replaceBoundingbox(this,nboundingbox);
 		nboundingbox.centerRotX = 0;
 		nboundingbox.centerRotY = 0;
 		nboundingbox.centerRotZ = 0;
@@ -105,42 +100,43 @@ public class GVCEntityPMCBMP extends EntityPMCBase implements ITank
 		mainTurret = new TurretObj(worldObj);
 		{
 			mainTurret.onMotherPos = turretpos;
-			mainTurret.cannonPos = cannonpos;
+			mainTurret.prefab_turret.cannonPos = cannonpos;
 			mainTurret.currentEntity = this;
-			mainTurret.powor = 60;
-			mainTurret.ex = 5.0F;
-			mainTurret.canex = false;
-			mainTurret.guntype = 2;
-			mainTurret.firesound = "gvcmob:gvcmob.73mmLowPresureGunFire";
+			mainTurret.prefab_turret.gunInfo.power = 60;
+			mainTurret.prefab_turret.gunInfo.ex = 5.0F;
+			mainTurret.prefab_turret.gunInfo.destroyBlock = false;
+			mainTurret.prefab_turret.gunInfo.guntype = 2;
+			mainTurret.prefab_turret.gunInfo.soundbase = "gvcmob:gvcmob.73mmLowPresureGunFire";
 		}
 		missile = new TurretObj(worldObj);
 		{
 			missile.currentEntity = this;
-			missile.turretanglelimtPitchmin = -70;
-			missile.turretanglelimtPitchMax = 20;
-			missile.turretanglelimtYawmin = -10;
-			missile.turretanglelimtYawMax = 10;
-			missile.turretspeedY = 8;
-			missile.turretspeedP = 10;
-			missile.traverseSound = null;
+			missile.prefab_turret.turretanglelimtPitchmin = -70;
+			missile.prefab_turret.turretanglelimtPitchMax = 20;
+			missile.prefab_turret.turretanglelimtYawmin = -10;
+			missile.prefab_turret.turretanglelimtYawMax = 10;
+			missile.prefab_turret.turretspeedY = 8;
+			missile.prefab_turret.turretspeedP = 10;
+			missile.prefab_turret.traverseSound = null;
 
-			missile.turretYawCenterpos = missilepos;
-			missile.cannonPos = missilepos;
-			missile.cycle_setting = 200;
-			missile.spread = 5;
-			missile.speed = 8;
-			missile.canHoming = true;
-			missile.acceler = 1;
-			missile.firesound = "gvcmob:gvcmob.missile1";
-			missile.flashName = null;
+			missile.prefab_turret.turretYawCenterpos = missilepos;
+			missile.prefab_turret.cannonPos = missilepos;
+			missile.prefab_turret.gunInfo.rates.set(0,200);
+			missile.prefab_turret.gunInfo.spread_setting = 5;
+			missile.prefab_turret.gunInfo.speed = 8;
+			missile.prefab_turret.gunInfo.canlock = true;
+			missile.prefab_turret.gunInfo.acceleration = 1;
+			missile.prefab_turret.gunInfo.soundbase = "gvcmob:gvcmob.missile1";
+			missile.prefab_turret.gunInfo.flashname = null;
 
 
-			missile.powor =140;
-			missile.ex = 2.5f;
-			missile.canex = false;
-			missile.guntype = 3;
+			missile.prefab_turret.gunInfo.power =140;
+			missile.prefab_turret.gunInfo.ex = 2.5f;
+			missile.prefab_turret.gunInfo.destroyBlock = false;
+			missile.prefab_turret.gunInfo.guntype = 3;
+			missile.prefab_turret.linked_MotherTrigger = false;
 		}
-		mainTurret.addchild_triggerLinked(missile);
+		mainTurret.addbrother(missile);
 		subTurret = new TurretObj(worldObj);
 		{
 			subTurret.currentEntity = this;
@@ -170,9 +166,12 @@ public class GVCEntityPMCBMP extends EntityPMCBase implements ITank
 			subTurret.reloadSetting = 200;
 			subTurret.flashoffset = 0.5f;
 		}
-		mainTurret.addchild_triggerLinked(subTurret);
+		baseLogic.seatInfos[0].maingun = mainTurret;
+		baseLogic.seatInfos[0].hasGun = true;
+		baseLogic.seatInfos[0].hasParentGun = false;
+		mainTurret.addchild_NOTtriggerLinked(subTurret);
 
-		turrets = new TurretObj[]{mainTurret,subTurret};
+		turrets = new TurretObj[]{mainTurret,missile};
 	}
 	public boolean interact(EntityPlayer p_70085_1_) {
 		if (!this.worldObj.isRemote && (this.riddenByEntity == null || this.riddenByEntity == p_70085_1_)) {
@@ -219,7 +218,7 @@ public class GVCEntityPMCBMP extends EntityPMCBase implements ITank
 			}else if(!p_70085_1_.isRiding()){
 				mode = 0;
 				this.setMobMode(0);
-				p_70085_1_.mountEntity(this);
+				pickupEntity(p_70085_1_,0);
 			}
 			return true;
 		} else {
@@ -228,7 +227,7 @@ public class GVCEntityPMCBMP extends EntityPMCBase implements ITank
 	}
 	public void updateRiderPosition() {
 		if (this.riddenByEntity != null) {
-			mainTurret.setmotherpos(new Vector3d(this.posX,this.posY,-this.posZ),baseLogic.bodyRot);
+			mainTurret.calculatePos(new Vector3d(this.posX,this.posY,-this.posZ),baseLogic.bodyRot);
 			Vector3d temp = new Vector3d(mainTurret.pos);
 			Vector3d tempplayerPos = new Vector3d(proxy_HMVehicle.iszooming() ? zoomingplayerpos:playerpos);
 			Vector3d playeroffsetter = new Vector3d(0,((worldObj.isRemote && this.riddenByEntity == proxy_HMVehicle.getEntityPlayerInstance()) ? 0:(this.riddenByEntity.getEyeHeight() + this.riddenByEntity.yOffset)),0);
@@ -367,27 +366,9 @@ public class GVCEntityPMCBMP extends EntityPMCBase implements ITank
 
 	protected void entityInit() {
 		super.entityInit();
-		this.dataWatcher.addObject(2, Integer.valueOf(0));
-		this.dataWatcher.addObject(3, Integer.valueOf(0));
-		this.dataWatcher.addObject(24, Float.valueOf(0));
-		this.dataWatcher.addObject(25, Float.valueOf(0));
-		this.dataWatcher.addObject(26, Float.valueOf(0));
-		this.dataWatcher.addObject(27, Float.valueOf(0));
 		this.dataWatcher.addObject(28, Float.valueOf(0));
 		this.dataWatcher.addObject(29, Float.valueOf(0));
 		this.dataWatcher.addObject(30, Float.valueOf(0));
-	}
-	public void setSubTurretrotationYaw(float floats) {
-		this.dataWatcher.updateObject(24, Float.valueOf(floats));
-	}
-	public float getSubTurretrotationYaw() {
-		return this.dataWatcher.getWatchableObjectFloat(24);
-	}
-	public void setSubTurretrotationPitch(float floats) {
-		this.dataWatcher.updateObject(25, Float.valueOf(floats));
-	}
-	public float getSubTurretrotationPitch() {
-		return this.dataWatcher.getWatchableObjectFloat(25);
 	}
 
 
@@ -410,31 +391,6 @@ public class GVCEntityPMCBMP extends EntityPMCBase implements ITank
 		return this.dataWatcher.getWatchableObjectFloat(30);
 	}
 
-	public void setCanonnreloadcycle(int ints) {
-		this.dataWatcher.updateObject(2, Integer.valueOf(ints));
-	}
-	public int getCanonnreloadcycle() {
-		return this.dataWatcher.getWatchableObjectInt(2);
-	}
-	public void setremainMg(int ints) {
-		this.dataWatcher.updateObject(3, Integer.valueOf(ints));
-	}
-	public int getremainMg() {
-		return this.dataWatcher.getWatchableObjectInt(3);
-	}
-
-	public void setTurretrotationYaw(float floats) {
-		this.dataWatcher.updateObject(26, Float.valueOf(floats));
-	}
-	public float getTurretrotationYaw() {
-		return this.dataWatcher.getWatchableObjectFloat(26);
-	}
-	public void setTurretrotationPitch(float floats) {
-		this.dataWatcher.updateObject(27, Float.valueOf(floats));
-	}
-	public float getTurretrotationPitch() {
-		return this.dataWatcher.getWatchableObjectFloat(27);
-	}
 
 	public boolean attackEntityFrom(DamageSource source, float par2) {
 		if (this.riddenByEntity == source.getEntity()) {
@@ -458,74 +414,33 @@ public class GVCEntityPMCBMP extends EntityPMCBase implements ITank
 
 	public void onUpdate()
 	{
+		if(mainTurret.isreloading()){
+			weaponMode = 1;
+		}else {
+			weaponMode = 0;
+		}
+		nboundingbox.update(this.posX,this.posY,this.posZ);
 		super.onUpdate();
+		tankUpdate();
+		this.rotationYaw = this.renderYawOffset = baseLogic.bodyrotationYaw;
+		this.rotationPitch = baseLogic.bodyrotationPitch;
+		baseLogic.turretrotationYaw = (float) mainTurret.turretrotationYaw;
+		baseLogic.turretrotationPitch = (float) mainTurret.turretrotationPitch;
+	}
+	
+	public void tankUpdate(){
 		this.stepHeight = 1.5f;
 		if(!this.worldObj.isRemote){
 			baseLogic.updateServer();
-
-			if(riddenByEntity != null){
-				mgAim(riddenByEntity.getRotationYawHead(),riddenByEntity.rotationPitch);
-			}
-
-			if(!(this.getHealth()<=0)){
-				if(!(mgMagazine>0)){
-					mgReloadProgress++;
-				}
-				if(mgReloadProgress > 100){
-					mgMagazine = 100;
-				}
-				fireCycle1 = mainTurret.cycle_timer;
-				setremainMg(mgMagazine);
-				setCanonnreloadcycle(fireCycle1);
-				fireCycle1--;
-				fireCycle2--;
-			}
-			++this.soundtick;
-			if (this.soundtick > 10) {
-				this.playSound("gvcmob:gvcmob.tank", 1.20F, 1.0F);
-				if(this.getEntityData().getFloat("GunshotLevel")<0.1)
-					soundedentity.add(this);
-				this.getEntityData().setFloat("GunshotLevel",1);
-				this.soundtick = 0;
-			}
-			setSubTurretrotationYaw(subturretrotationYaw);
-			setSubTurretrotationPitch(subturretrotationPitch);
-
-			if(baseLogic.serverf){
-				weaponMode++;
-				if(weaponMode >=2)weaponMode = 0;
-			}
 		}else{
 			baseLogic.updateClient();
-
-
-
-
-
-
-			subturretrotationYaw = getSubTurretrotationYaw();
-			subturretrotationPitch = getSubTurretrotationPitch();
-			this.mgMagazine = getremainMg();
-			this.fireCycle1 = getCanonnreloadcycle();
-
-
-			this.renderYawOffset = rotationYaw;
-			this.prevRenderYawOffset = prevRotationYaw;
-			if(count_for_reset > 10000){
-				this.setAttackTarget(null);
-				count_for_reset = 0;
-			}
-			mainTurret.turretrotationYaw = baseLogic.turretrotationYaw;
-			mainTurret.turretrotationPitch = baseLogic.turretrotationPitch;
-			if(HandmadeGunsCore.proxy.Fclick()){
-				weaponMode++;
-				if(weaponMode >=2)weaponMode = 0;
-			}
+			mode = getMobMode();
 		}
-		updateSeat();
 		baseLogic.updateCommon();
-		mainTurret.update(baseLogic.bodyRot,new Vector3d(this.posX,this.posY,-this.posZ));
-		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.3D);
+	}
+	
+	public boolean pickupEntity(Entity p_70085_1_, int StartSeachSeatNum){
+		return ((MultiRiderLogics)((HasBaseLogic)this).getBaseLogic()).pickupEntity(p_70085_1_,StartSeachSeatNum);
 	}
 	public void mainFireToTarget(Entity target){
 		mainTurret.currentEntity = this;
@@ -577,7 +492,17 @@ public class GVCEntityPMCBMP extends EntityPMCBase implements ITank
 	public TurretObj getMainTurret() {
 		return mainTurret;
 	}
-
+	
+	@Override
+	public TurretObj[] getmainTurrets() {
+		return new TurretObj[]{mainTurret,missile};
+	}
+	
+	@Override
+	public TurretObj[] getsubTurrets() {
+		return new TurretObj[]{subTurret};
+	}
+	
 	@Override
 	public TurretObj[] getTurrets() {
 		return turrets;
@@ -593,6 +518,7 @@ public class GVCEntityPMCBMP extends EntityPMCBase implements ITank
 			case 0:
 				mainTurret.currentEntity = this.riddenByEntity;
 				mainTurret.fire();
+				missile.freezTrigger(5);
 				break;
 			case 1:
 				missile.currentEntity = this.riddenByEntity;
@@ -731,110 +657,11 @@ public class GVCEntityPMCBMP extends EntityPMCBase implements ITank
 		return mode != 0;
 	}
 
-	public void mgAim(float targetyaw,float targetpitch){
-		subTurret.currentEntity = riddenByEntity != null ? riddenByEntity : this;
-		subTurret.aimtoAngle(targetyaw,targetpitch);
-		subturretrotationYaw = (float) subTurret.turretrotationYaw;
-		subturretrotationPitch = (float) subTurret.turretrotationPitch;
-
-		missile.currentEntity = riddenByEntity != null ? riddenByEntity : this;
-		missile.aimtoAngle(targetyaw,targetpitch);
-//        Quat4d turretyawrot = new Quat4d(0,0,0,1);
-//
-//        Vector3d axisy = Utils.transformVecByQuat(new Vector3d(0,1,0), turretyawrot);
-//        AxisAngle4d axisyangled = new AxisAngle4d(axisy, toRadians(baseLogic.turretrotationYaw)/2);
-//        turretyawrot = Utils.quatRotateAxis(turretyawrot,axisyangled);
-//        Quat4d gunnerRot = new Quat4d(0, 0, 0, 1);
-//
-//
-//        Vector3d axisY = transformVecByQuat(baseLogic.unitY, gunnerRot);
-//        AxisAngle4d axisxangledY = new AxisAngle4d(axisY, toRadians(targetyaw) / 2);
-//        gunnerRot = quatRotateAxis(gunnerRot, axisxangledY);
-//
-//        Vector3d axisX = transformVecByQuat(baseLogic.unitX, gunnerRot);
-//        AxisAngle4d axisxangledX = new AxisAngle4d(axisX, toRadians(-targetpitch) / 2);
-//        gunnerRot = quatRotateAxis(gunnerRot, axisxangledX);
-//
-//
-//        Vector3d lookVec = new Vector3d(0, 0, -1);
-//
-//        lookVec = transformVecByQuat(lookVec, gunnerRot);
-//
-//        Quat4d temp = new Quat4d();
-//
-//        temp.inverse(baseLogic.bodyRot);
-//        lookVec = transformVecByQuat(lookVec, temp);
-//
-//        temp.inverse(turretyawrot);
-//        lookVec = transformVecByQuat(lookVec, temp);
-//
-//        subturretrotationYaw = (float) toDegrees(atan2(lookVec.x,lookVec.z));
-//        subturretrotationPitch = (float) toDegrees(asin(lookVec.y));
-//        if(subturretrotationPitch<-20){
-//            subturretrotationPitch = -20;
-//        }
-	}
-
-	public boolean aimToTarget(Entity target){
-		return baseLogic.aimMainTurret_toTarget(target);
-	}
-//    public void aimToTarget(){
-////        baseLogic.turretrotationYaw = wrapAngleTo180_float(baseLogic.turretrotationYaw);
-////        float targetrote = wrapAngleTo180_float(this.riddenByEntity.getRotationYawHead());
-////        boolean result1;
-////        if((baseLogic.turretrotationYaw - targetrote > 5&&baseLogic.turretrotationYaw - targetrote < 355 )||(baseLogic.turretrotationYaw - targetrote < -5&&baseLogic.turretrotationYaw - targetrote > -355)){
-////            if ((targetrote - baseLogic.turretrotationYaw > 0 && targetrote - baseLogic.turretrotationYaw < 180)|| (targetrote - baseLogic.turretrotationYaw <-180 )) {
-////                baseLogic.turretrotationYaw += 5;
-////                this.playSound("gvcguns:gvcguns.zye", 3.0F, 1F);
-////                if(this.getEntityData().getFloat("GunshotLevel")<0.1)
-////                    soundedentity.add(this);
-////                this.getEntityData().setFloat("GunshotLevel",3);
-////            } else {
-////                baseLogic.turretrotationYaw -= 5;
-////                this.playSound("gvcguns:gvcguns.zye", 3.0F, 1F);
-////                if(this.getEntityData().getFloat("GunshotLevel")<0.1)
-////                    soundedentity.add(this);
-////                this.getEntityData().setFloat("GunshotLevel",3);
-////            }
-////        }else{
-////            baseLogic.turretrotationYaw = targetrote;
-////        }
-////        baseLogic.turretrotationPitch = wrapAngleTo180_float(baseLogic.turretrotationPitch);
-////        float targetpitch = this.riddenByEntity.rotationPitch;
-////        if(targetpitch <-15){
-////            targetpitch =-15;
-////        }else if(targetpitch >15){
-////            targetpitch =15;
-////        }
-////        if((baseLogic.turretrotationPitch - targetpitch > 3&&baseLogic.turretrotationPitch - targetpitch < 357 )||(baseLogic.turretrotationPitch - targetpitch < -3&&baseLogic.turretrotationPitch - targetpitch > -357)){
-////            if ((targetpitch - baseLogic.turretrotationPitch > 0 && targetpitch - baseLogic.turretrotationPitch < 180)|| (targetpitch - baseLogic.turretrotationPitch <-180 )) {
-////                baseLogic.turretrotationPitch += 3;
-////                this.playSound("gvcguns:gvcguns.zye", 3.0F, 1F);
-////                if(this.getEntityData().getFloat("GunshotLevel")<0.1)
-////                    soundedentity.add(this);
-////                this.getEntityData().setFloat("GunshotLevel",3);
-////            } else {
-////                baseLogic.turretrotationPitch -= 3;
-////                this.playSound("gvcguns:gvcguns.zye", 3.0F, 1F);
-////                if(this.getEntityData().getFloat("GunshotLevel")<0.1)
-////                    soundedentity.add(this);
-////                this.getEntityData().setFloat("GunshotLevel",3);
-////            }
-////        }else{
-////            baseLogic.turretrotationPitch = targetpitch;
-////        }
-////        if(baseLogic.turretrotationPitch <-15){
-////            baseLogic.turretrotationPitch =-15;
-////        }else if(baseLogic.turretrotationPitch >15){
-////            baseLogic.turretrotationPitch =15;
-////        }
-//    }
-
 	protected void onDeathUpdate() {
 		++this.deathTicks;
 		if(this.deathTicks == 3){
 			//this.worldObj.createExplosion(this, this.posX, this.posY, this.posZ, 0F, false);
-			GVCEx ex = new GVCEx(this, 3F);
+			ExplodeEffect ex = new ExplodeEffect(this, 3F);
 			ex.offset[0] = (float) (rand.nextInt(30) - 15)/10;
 			ex.offset[1] = (float) (rand.nextInt(30) - 15)/10 + 1.5f;
 			ex.offset[2] = (float) (rand.nextInt(30) - 15)/10;
@@ -863,14 +690,14 @@ public class GVCEntityPMCBMP extends EntityPMCBase implements ITank
 			this.playSound("gvcguns:gvcguns.fireee", 1.20F, 0.8F);
 		}else
 		if (rand.nextInt(3) == 0) {
-			GVCEx ex = new GVCEx(this, 1F);
+			ExplodeEffect ex = new ExplodeEffect(this, 1F);
 			ex.offset[0] = (float) (rand.nextInt(30) - 15) / 10;
 			ex.offset[1] = (float) (rand.nextInt(30) - 15) / 10;
 			ex.offset[2] = (float) (rand.nextInt(30) - 15) / 10;
 			ex.Ex();
 		}
 		if (this.deathTicks >= 140) {
-			GVCEx ex = new GVCEx(this, 8F);
+			ExplodeEffect ex = new ExplodeEffect(this, 8F);
 			ex.Ex();
 			for (int i = 0; i < 15; i++) {
 				worldObj.spawnParticle("flame",
@@ -994,21 +821,6 @@ public class GVCEntityPMCBMP extends EntityPMCBase implements ITank
 		baseLogic.throttle = value;
 	}
 	
-	public void updateSeat(){
-		for(int i=0;i< childEntities.length;i++){
-			if(childEntities[i] != null) {
-				Vector3d tempplayerPos = new Vector3d(childposes[i]);
-				Vector3d temp2 = transformVecByQuat(tempplayerPos, this.baseLogic.bodyRot);
-				transformVecforMinecraft(temp2);
-				temp2.add(new Vector3d(posX, posY, posZ));
-				childEntities[i].master = this;
-				childEntities[i].setPosition(
-						temp2.x,
-						temp2.y,
-						temp2.z);
-			}
-		}
-	}
 
 	public void moveFlying(float p_70060_1_, float p_70060_2_, float p_70060_3_){
 		baseLogic.moveFlying(p_70060_1_,p_70060_2_,p_70060_3_);
@@ -1058,5 +870,20 @@ public class GVCEntityPMCBMP extends EntityPMCBase implements ITank
 				p_70108_1_.addVelocity(d0, 0.0D, d1);
 			}
 		}
+	}
+	
+	@Override
+	public void moveEntity(double x, double y, double z){
+		baseLogic.moveEntity(x,y,z);
+	}
+	
+	@Override
+	public void updateFallState_public(double stepHeight, boolean onground){
+		this.updateFallState(stepHeight,onground);
+	}
+	
+	@Override
+	public void func_145775_I_public() {
+		this.func_145775_I();
 	}
 }

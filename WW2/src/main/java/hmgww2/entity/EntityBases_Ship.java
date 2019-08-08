@@ -1,8 +1,7 @@
 package hmgww2.entity;
 
-import hmvehicle.entity.parts.*;
-import hmvehicle.entity.parts.logics.MultiRiderLogics;
-import hmvehicle.entity.parts.turrets.TurretObj;
+import handmadevehicle.entity.parts.logics.MultiRiderLogics;
+import handmadevehicle.entity.parts.turrets.TurretObj;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -15,7 +14,7 @@ import net.minecraft.world.World;
 import javax.vecmath.Vector3d;
 
 import static handmadeguns.Util.Utils.getmovingobjectPosition_forBlock;
-import static hmvehicle.HMVehicle.proxy_HMVehicle;
+import static handmadevehicle.HMVehicle.proxy_HMVehicle;
 
 public abstract class EntityBases_Ship extends EntityBases_Tank implements IShip , ITank , ImultiRidable
 {
@@ -138,6 +137,20 @@ public abstract class EntityBases_Ship extends EntityBases_Tank implements IShip
 		
 		return this.inWater;
 	}
+	public boolean ishittingWater()
+	{
+		boolean inWater = false;
+		if (this.worldObj.handleMaterialAcceleration(this.boundingBox.expand(0.0D, -0.4000000059604645D, 0.0D).contract(0.001D, 0.001D, 0.001D).offset(0,0,0), Material.water, this))
+		{
+			inWater = true;
+		}
+		else
+		{
+			inWater = false;
+		}
+		
+		return inWater;
+	}
 	protected void entityInit() {
 		super.entityInit();
 		this.dataWatcher.addObject(3, Integer.valueOf(0));//mode
@@ -155,20 +168,7 @@ public abstract class EntityBases_Ship extends EntityBases_Tank implements IShip
 	public float getDraft_dataWatcher() {
 		return this.dataWatcher.getWatchableObjectFloat(23);
 	}
-	public boolean ishittingWater()
-	{
-		boolean inWater = false;
-		if (this.worldObj.handleMaterialAcceleration(this.boundingBox.expand(0.0D, -0.4000000059604645D, 0.0D).contract(0.001D, 0.001D, 0.001D).offset(0,0,0), Material.water, this))
-		{
-			inWater = true;
-		}
-		else
-		{
-			inWater = false;
-		}
-		
-		return inWater;
-	}
+	
 	
 	public EntityBases_Ship(World par1World)
 	{
@@ -334,6 +334,7 @@ public abstract class EntityBases_Ship extends EntityBases_Tank implements IShip
 		if(Double.isInfinite(x))x = 0;
 		if(Double.isInfinite(y))y = 0;
 		if(Double.isInfinite(z))z = 0;
+		super.setPosition(x,y,z);
 		if(baseLogic != null)baseLogic.setPosition(x,y,z);
 	}
 	
@@ -344,4 +345,5 @@ public abstract class EntityBases_Ship extends EntityBases_Tank implements IShip
 	public float getDraft(){
 		return draft;
 	}
+	
 }

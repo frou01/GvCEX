@@ -1,7 +1,7 @@
 package hmggvcmob.ai;
 
 import handmadeguns.entity.IFF;
-import hmvehicle.entity.parts.ITank;
+import handmadevehicle.entity.parts.ITank;
 import hmggvcutil.entity.GVCEntityBox;
 import hmggvcmob.entity.IGVCmob;
 import hmggvcmob.entity.friend.EntitySoBases;

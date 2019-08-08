@@ -1,10 +1,10 @@
 package hmgww2.render;
 
 import cpw.mods.fml.client.FMLClientHandler;
-import hmvehicle.entity.parts.ITank;
-import hmvehicle.entity.parts.ModifiedBoundingBox;
-import hmvehicle.entity.parts.logics.TankBaseLogic;
-import hmvehicle.entity.parts.turrets.TurretObj;
+import handmadevehicle.entity.parts.ITank;
+import handmadevehicle.entity.parts.ModifiedBoundingBox;
+import handmadevehicle.entity.parts.logics.TankBaseLogic;
+import handmadevehicle.entity.parts.turrets.TurretObj;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.Render;
@@ -15,8 +15,9 @@ import net.minecraftforge.client.model.IModelCustom;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
-import static hmvehicle.CLProxy.drawOutlinedBoundingBox;
+import static handmadevehicle.CLProxy.drawOutlinedBoundingBox;
 import static net.minecraft.client.renderer.entity.RenderManager.debugBoundingBox;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
 
 public class RenderTank extends Render {
 	
@@ -134,13 +135,14 @@ public class RenderTank extends Render {
 					float lastBrightnessY = OpenGlHelper.lastBrightnessY;
 					OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
 					RenderHelper.disableStandardItemLighting();
-					GL11.glDepthMask(false);
+					GL11.glDepthMask(true);
+					GL11.glDisable(GL_DEPTH_TEST);
 					GL11.glDepthFunc(GL11.GL_ALWAYS);//強制描画
 					tankk.renderPart("sight");
-					GL11.glDepthMask(true);
 					GL11.glDepthFunc(GL11.GL_LEQUAL);
-					OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)lastBrightnessX, (float)lastBrightnessY);
+					GL11.glEnable(GL_DEPTH_TEST);
 					RenderHelper.enableStandardItemLighting();
+					OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)lastBrightnessX, (float)lastBrightnessY);
 				}
 			}
 			GL11.glPopMatrix();

@@ -46,7 +46,7 @@ public class EventEntityBases {
 			float lastBrightnessX = OpenGlHelper.lastBrightnessX;
 			float lastBrightnessY = OpenGlHelper.lastBrightnessY;
 			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
-			RenderHelper.disableStandardItemLighting();
+//			RenderHelper.disableStandardItemLighting();
 			if (entityplayer.getEquipmentInSlot(4) != null
 					    && entityplayer.getEquipmentInSlot(4).getItem() instanceof ItemIFFArmor) {
 				Nation playernation = ((ItemIFFArmor) entityplayer.getEquipmentInSlot(4).getItem()).nation;
@@ -80,7 +80,7 @@ public class EventEntityBases {
 				}
 			}
 			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)lastBrightnessX, (float)lastBrightnessY);
-			RenderHelper.enableStandardItemLighting();
+//			RenderHelper.enableStandardItemLighting();
 		}
 		GL11.glPopMatrix();
 	}

@@ -52,7 +52,7 @@ public class MQO_MetasequoiaObject implements IModelCustom
 		}
 		catch (IOException e)
 		{
-			throw new ModelFormatException("IO Exception reading model format:"+this.fileName, e);
+			e.printStackTrace();
 		}
 	}
 

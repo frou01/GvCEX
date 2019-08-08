@@ -44,7 +44,6 @@ public class EntityGBase extends EntityGBases implements IFF,IGVCmob,IMGGunner {
 	public int type = 0;
 	public float spread = 10;
 	public double movespeed = 0.3d;
-	public double rndpitch;
 	TileEntity spawnedtile = null;
 	int placing;
 	boolean canuseAlreadyPlacedGun = true;
@@ -151,9 +150,6 @@ public class EntityGBase extends EntityGBases implements IFF,IGVCmob,IMGGunner {
 	}
     public void onUpdate(){
 		super.onUpdate();
-	    if(this.width<1){
-		    width = 1;
-	    }
 		staningtime--;
 		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(movespeed);
 
@@ -172,12 +168,7 @@ public class EntityGBase extends EntityGBases implements IFF,IGVCmob,IMGGunner {
 		    }
 	    }
 		if(this.getHeldItem() != null && this.aiAttackGun != null){
-			this.rotationPitch+=rndpitch;
-			float backpitch = this.rotationPitch;
 			this.getHeldItem().getItem().onUpdate(this.getHeldItem(),worldObj,this,0,true);
-			float recoiled = this.rotationPitch - backpitch;
-			this.rotationPitch=backpitch;
-			rndpitch += recoiled;
 			if(!worldObj.isRemote && cfg_guerrillacanusePlacedGun && canusePlacedGun && ridingEntity == null && onGround &&this.getAttackTarget() != null && this.getHeldItem().getItem()instanceof HMGItem_Unified_Guns && ((HMGItem_Unified_Guns) this.getHeldItem().getItem()).gunInfo.fixAsEntity){
 				placing ++;
 				if(placing>30) {
@@ -236,7 +227,6 @@ public class EntityGBase extends EntityGBases implements IFF,IGVCmob,IMGGunner {
 				this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(movespeed);
 			}
 		}
-	    rndpitch *= 0.9;
 
 		if(!worldObj.isRemote &&
 				this.ridingEntity instanceof PlacedGunEntity &&
@@ -321,9 +311,11 @@ public class EntityGBase extends EntityGBases implements IFF,IGVCmob,IMGGunner {
 		for(int i = 0;i<worldObj.loadedTileEntityList.size();i++) {
 			TileEntity tileentity;
 			Object aLoadedTileEntityList = worldObj.loadedTileEntityList.get(i);
-			tileentity = (TileEntity) aLoadedTileEntityList;
-			flaginvensionmode = (tileentity.getBlockType() == GVCMobPlus.fn_Supplyflag);
-			if(flaginvensionmode)break;
+			if(aLoadedTileEntityList != null) {
+				tileentity = (TileEntity) aLoadedTileEntityList;
+				flaginvensionmode = (tileentity.getBlockType() == GVCMobPlus.fn_Supplyflag);
+				if (flaginvensionmode) break;
+			}
 		}
 		return super.getCanSpawnHere();
 	}
@@ -408,8 +400,5 @@ public class EntityGBase extends EntityGBases implements IFF,IGVCmob,IMGGunner {
 
 	@Override
 	public void extraprocessInMGFire() {
-		if(ridingEntity != null) {
-			ridingEntity.rotationPitch += this.rndpitch;
-		}
 	}
 }

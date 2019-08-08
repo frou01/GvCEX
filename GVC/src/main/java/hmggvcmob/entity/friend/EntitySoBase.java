@@ -196,6 +196,10 @@ public class EntitySoBase extends EntitySoBases implements IFF,IGVCmob {
 	public boolean isConverting() {
 		return false;
 	}
+	public int getVerticalFaceSpeed()
+	{
+		return 90;
+	}
 
 	public static float getMobScale() {
 		return 8;

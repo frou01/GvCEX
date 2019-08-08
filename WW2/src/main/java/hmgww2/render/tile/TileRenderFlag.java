@@ -24,42 +24,41 @@ public class TileRenderFlag extends TileEntitySpecialRenderer
             new ResourceLocation("hmgww2:textures/blocks/tile/flag_ger.png"),
             new ResourceLocation("hmgww2:textures/blocks/tile/flag_jpn.png"),};
     private static final String __OBFID = "CL_00000965";
-
+    
     public TileRenderFlag()
     {
     }
-
+    
     public void renderTileEntityAt(TileEntityBase tileEntity, double p_147500_2_, double p_147500_4_, double p_147500_6_, float p_147500_8_)
     {
         try {
-        Minecraft minecraft = Minecraft.getMinecraft();
-    	
-        GL11.glPushMatrix();
-        GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-        GL11.glTranslatef((float)p_147500_2_ + 0.5F, (float)p_147500_4_ + 0F, (float)p_147500_6_ + 0.5F);
-        int i = tileEntity.getWorldObj().getLightBrightnessForSkyBlocks(tileEntity.xCoord, tileEntity.yCoord+1, tileEntity.zCoord, 0);
+            
+            GL11.glPushMatrix();
+            GL11.glEnable(GL12.GL_RESCALE_NORMAL);
+            GL11.glTranslatef((float)p_147500_2_ + 0.5F, (float)p_147500_4_ + 0F, (float)p_147500_6_ + 0.5F);
+            int i = tileEntity.getWorldObj().getLightBrightnessForSkyBlocks(tileEntity.xCoord, tileEntity.yCoord+1, tileEntity.zCoord, 0);
             int j = i % 65536;
             int k = i / 65536;
             OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)j / 1.0F, (float)k / 1.0F);
-       // GL11.glScalef(1.0F, -1.0F, -1.0F);
-        //GL11.glRotatef(180.0F, 0.0F, 0.0F, 1.0F);
-        //GL11.glRotatef(180.0F, 1.0F, 0.0F, 0.0F);
-        this.bindTexture(texture[tileEntity.nation.ordinal()]);
-        tankk.renderPart("mat1");
-        if(tileEntity.spawn){
-        	tankk.renderPart("mat3");
-        }
-        GL11.glTranslatef(0, -(tileEntity.getInvasion()*0.005F), 0);
-        tankk.renderPart("mat2");
-        GL11.glDisable(GL12.GL_RESCALE_NORMAL);
-        GL11.glPopMatrix();
-    
-    
+            // GL11.glScalef(1.0F, -1.0F, -1.0F);
+            //GL11.glRotatef(180.0F, 0.0F, 0.0F, 1.0F);
+            //GL11.glRotatef(180.0F, 1.0F, 0.0F, 0.0F);
+            this.bindTexture(texture[tileEntity.nation.ordinal()]);
+            tankk.renderPart("mat1");
+            if(tileEntity.spawn){
+                tankk.renderPart("mat3");
+            }
+            GL11.glTranslatef(0, -(tileEntity.getInvasion()*0.005F), 0);
+            tankk.renderPart("mat2");
+            GL11.glDisable(GL12.GL_RESCALE_NORMAL);
+            GL11.glPopMatrix();
+            
+            
         }catch (Exception e){
             e.printStackTrace();
         }
     }
-
+    
     public void renderTileEntityAt(TileEntity p_147500_1_, double p_147500_2_, double p_147500_4_, double p_147500_6_, float p_147500_8_)
     {
         this.renderTileEntityAt((TileEntityBase)p_147500_1_, p_147500_2_, p_147500_4_, p_147500_6_, p_147500_8_);

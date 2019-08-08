@@ -3589,8 +3589,7 @@ public class CommonSideProxyGVC {
 				
 			}
 			{
-				fn_smaw = new GVCItemForTranslate().setUnlocalizedName("SMAW").setTextureName("gvcguns:smaw")
-						.setCreativeTab(tabgvc).setMaxStackSize(1);
+				fn_smaw = new GVCItemForTranslate().setUnlocalizedName("SMAW").setTextureName("gvcguns:smaw");
 //				{
 //					HMGItem_Unified_Guns gun = (HMGItem_Unified_Guns) fn_smaw;
 //                    gun.canuseclass = 4;

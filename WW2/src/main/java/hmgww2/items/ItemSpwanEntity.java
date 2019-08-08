@@ -1,6 +1,7 @@
 package hmgww2.items;
 
 import hmgww2.entity.*;
+import hmgww2.entity.planes.*;
 import hmgww2.mod_GVCWW2;
 import hmgww2.entity.EntityUSSR_TankSPG;
 import net.minecraft.block.Block;

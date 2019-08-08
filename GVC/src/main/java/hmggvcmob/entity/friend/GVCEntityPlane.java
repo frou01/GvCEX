@@ -1,12 +1,12 @@
 package hmggvcmob.entity.friend;
 
 
-import hmvehicle.entity.parts.IMultiTurretVehicle;
-import hmvehicle.entity.parts.Iplane;
-import hmvehicle.entity.parts.ModifiedBoundingBox;
-import hmvehicle.entity.parts.logics.IbaseLogic;
-import hmvehicle.entity.parts.logics.PlaneBaseLogic;
-import hmvehicle.entity.parts.turrets.TurretObj;
+import handmadevehicle.entity.parts.IMultiTurretVehicle;
+import handmadevehicle.entity.parts.IPlane;
+import handmadevehicle.entity.parts.ModifiedBoundingBox;
+import handmadevehicle.entity.parts.logics.LogicsBase;
+import handmadevehicle.entity.parts.logics.PlaneBaseLogic;
+import handmadevehicle.entity.parts.turrets.TurretObj;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -17,10 +17,9 @@ import javax.vecmath.Quat4d;
 import javax.vecmath.Vector3d;
 import java.util.ArrayList;
 
-import static hmggvcmob.GVCMobPlus.proxy;
-import static hmvehicle.Utils.addAllTurret;
+import static handmadevehicle.Utils.addAllTurret;
 
-public class GVCEntityPlane extends Entity implements Iplane,IMultiTurretVehicle
+public class GVCEntityPlane extends Entity implements IPlane,IMultiTurretVehicle
 {
 	PlaneBaseLogic baseLogic;
 	
@@ -42,34 +41,34 @@ public class GVCEntityPlane extends Entity implements Iplane,IMultiTurretVehicle
 		this.setSize(5f, 5f);
 //		nboundingbox = new ModifiedBoundingBox(-20,-20,-20,20,20,20,0,0,-6.27,2.5,5,19);
 //		nboundingbox.rot.set(this.bodyRot);
-//		proxy.replaceBoundingbox(this,nboundingbox);
+//		proxy_HMVehicle.replaceBoundingbox(this,nboundingbox);
 //		((ModifiedBoundingBox)this.boundingBox).update(this.posX,this.posY,this.posZ);
 		ignoreFrustumCheck = true;
 		this.fireCycle1 = 1;
 		baseLogic = new PlaneBaseLogic(worldObj,this);
 		
-		baseLogic.speedfactor =    0.0043f;
-		baseLogic.speedfactor_af = 0.002f;
-		baseLogic.liftfactor = 0.04f;
-		baseLogic.flapliftfactor = 0.00005f;
-		baseLogic.flapdragfactor = 0.0000000001f;
-		baseLogic.geardragfactor = 0.000000001f;
-		baseLogic.dragfactor = 0.01f;
-		baseLogic.gravity = 0.049f;
-		baseLogic.stability = 600;
-		baseLogic.stability2 = 0.5f;
-		baseLogic.rotmotion_reduceSpeed = 0.05;
+		baseLogic.planeInfo.speedfactor =    0.0043f;
+		baseLogic.planeInfo.speedfactor_af = 0.002f;
+		baseLogic.planeInfo.liftfactor = 0.04f;
+		baseLogic.planeInfo.flapliftfactor = 0.00005f;
+		baseLogic.planeInfo.flapdragfactor = 0.0000000001f;
+		baseLogic.planeInfo.geardragfactor = 0.000000001f;
+		baseLogic.planeInfo.dragfactor = 0.01f;
+		baseLogic.planeInfo.gravity = 0.049f;
+		baseLogic.planeInfo.stability = 600;
+		baseLogic.planeInfo.stability2 = 0.5f;
+		baseLogic.planeInfo.rotmotion_reduceSpeed = 0.05;
 		
 		
-		baseLogic.rollspeed = 0.12f;
-		baseLogic.pitchspeed = 0.15f;
-		baseLogic.yawspeed = 0.05f;
-		baseLogic.maxDive = 60;
-		baseLogic.startDive = 30;
-		baseLogic.maxClimb = -22;
-		baseLogic.maxbank = 60;
-		baseLogic.slipresist = 0.01f;
-		baseLogic.throttle_gearDown = 0.25f;
+		baseLogic.planeInfo.rollspeed = 0.12f;
+		baseLogic.planeInfo.pitchspeed = 0.15f;
+		baseLogic.planeInfo.yawspeed = 0.05f;
+		baseLogic.planeInfo.maxDive = 60;
+		baseLogic.planeInfo.startDive = 30;
+		baseLogic.planeInfo.maxClimb = -22;
+		baseLogic.planeInfo.maxbank = 60;
+		baseLogic.planeInfo.slipresist = 0.01f;
+		baseLogic.planeInfo.throttle_gearDown = 0.25f;
 		{
 			TurretObj gun1 = new TurretObj(worldObj);
 			gun1.onMotherPos = new Vector3d(0.04, 0.8659, 0);
@@ -86,7 +85,7 @@ public class GVCEntityPlane extends Entity implements Iplane,IMultiTurretVehicle
 			gun1.magazinerem = 500;
 			gun1.reloadTimer = 1200;
 			gun1.canex = false;
-			gun1.fireAll = false;
+			gun1.fireAll_child = false;
 			gun1.guntype = 0;
 			TurretObj gun2 = new TurretObj(worldObj);
 			gun2.onMotherPos = new Vector3d(-0.04, 0.8659, 0);
@@ -104,7 +103,7 @@ public class GVCEntityPlane extends Entity implements Iplane,IMultiTurretVehicle
 			gun2.magazinerem = 500;
 			gun2.reloadTimer = 1200;
 			gun2.canex = false;
-			gun2.fireAll = false;
+			gun2.fireAll_child = false;
 			gun2.guntype = 0;
 			gun1.addchild_triggerLinked(gun2);
 			
@@ -132,7 +131,7 @@ public class GVCEntityPlane extends Entity implements Iplane,IMultiTurretVehicle
 			missile1.magazinerem = 4;
 			missile1.reloadTimer = 1000000;
 			missile1.canex = true;
-			missile1.fireAll = false;
+			missile1.fireAll_child = false;
 			missile1.guntype = 3;
 			missile1.seekerSize = 30;
 			
@@ -157,7 +156,7 @@ public class GVCEntityPlane extends Entity implements Iplane,IMultiTurretVehicle
 			missile2.magazinerem = 4;
 			missile2.reloadTimer = 1000000;
 			missile2.canex = true;
-			missile2.fireAll = false;
+			missile2.fireAll_child = false;
 			missile2.guntype = 3;
 			missile2.seekerSize = 30;
 			
@@ -166,16 +165,16 @@ public class GVCEntityPlane extends Entity implements Iplane,IMultiTurretVehicle
 		}
 		
 		
-		baseLogic.mainTurret.motherRotCenter = new Vector3d(baseLogic.rotcenter);
-		baseLogic.subTurret.motherRotCenter = new Vector3d(baseLogic.rotcenter);
+		baseLogic.mainTurret.motherRotCenter = new Vector3d(baseLogic.planeInfo.rotcenter);
+		baseLogic.subTurret.motherRotCenter = new Vector3d(baseLogic.planeInfo.rotcenter);
 		
-		baseLogic.riddenByEntitiesInfo[0].pos[0] = 0;
-		baseLogic.riddenByEntitiesInfo[0].pos[1] = 1.1;
-		baseLogic.riddenByEntitiesInfo[0].pos[2] = 3;
-		baseLogic.displayModernHud = true;
+		baseLogic.seatInfos[0].pos[0] = 0;
+		baseLogic.seatInfos[0].pos[1] = 1.1;
+		baseLogic.seatInfos[0].pos[2] = 3;
+		baseLogic.planeInfo.displayModernHud = true;
 		ModifiedBoundingBox nboundingbox = new ModifiedBoundingBox(-1.5,0,-1.5,1.5,5,1.5,0,0,-6.27,2.5,5,19);
 		nboundingbox.rot.set(baseLogic.bodyRot);
-		proxy.replaceBoundingbox(this,nboundingbox);
+		proxy_HMVehicle.replaceBoundingbox(this,nboundingbox);
 		((ModifiedBoundingBox)this.boundingBox).update(this.posX,this.posY,this.posZ);
 	}
 
@@ -1014,12 +1013,13 @@ public class GVCEntityPlane extends Entity implements Iplane,IMultiTurretVehicle
 	}
 	
 	@Override
-	public IbaseLogic getBaseLogic() {
+	public LogicsBase getBaseLogic() {
 		return baseLogic;
 	}
 	
 	public void setPosition(double x, double y, double z)
 	{
+		super.setPosition(x,y,z);
 		if(baseLogic != null)baseLogic.setPosition(x,y,z);
 	}
 	
@@ -1067,5 +1067,21 @@ public class GVCEntityPlane extends Entity implements Iplane,IMultiTurretVehicle
 	@Override
 	public boolean standalone() {
 		return false;
+	}
+	
+	
+	@Override
+	public void moveEntity(double x, double y, double z){
+		baseLogic.moveEntity(x,y,z);
+	}
+	
+	@Override
+	public void updateFallState_public(double stepHeight, boolean onground){
+		this.updateFallState(stepHeight,onground);
+	}
+	
+	@Override
+	public void func_145775_I_public() {
+		this.func_145775_I();
 	}
 }

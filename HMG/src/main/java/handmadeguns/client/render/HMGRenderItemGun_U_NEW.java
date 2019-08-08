@@ -9,6 +9,7 @@ import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -266,279 +267,329 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 	float rotex;
 
 	Object[] datas;
+	int pass = 0;
 	@Override
 	public void renderItem(ItemRenderType type, ItemStack gunstack, Object... data) {
-		datas = data;
-		GL11.glEnable(GL_BLEND);
-		GL11.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		GL11.glColor4f(1, 1, 1, 1F);
-		float f2 = 1.0F;
-		f2 = 60.0F;
-//		glMaterialf(GL_FRONT_AND_BACK,GL_SHININESS,120);
-		float scala = this.modelscala;
-		HMGItem_Unified_Guns gunitem;
-		if (gunstack.getItem() instanceof HMGItem_Unified_Guns)
-			gunitem = (HMGItem_Unified_Guns) gunstack.getItem();
-		else {
-
-			GL11.glDepthMask(true);
-			GL11.glDisable(GL_BLEND);
-			return;
-		}
-		nbt = gunstack.getTagCompound();
-		if (nbt == null) gunitem.checkTags(gunstack);
-		this.gunitem = gunitem;
-		nbt = gunstack.getTagCompound();
-		items[0] = null;
-		items[1] = null;//�T�C�g
-		items[2] = null;//���[�U�[�T�C�g��
-		items[3] = null;//�}�Y���A�^�b�`�����g
-		items[4] = null;//�A���_�[�o����
-		items[5] = null;//�}�K�W��
-		NBTTagList tags = (NBTTagList)nbt.getTag("Items");
-		if(tags != null) {
-			for (int i = 0; i < tags.tagCount(); i++)//133
-			{
-				NBTTagCompound tagCompound = tags.getCompoundTagAt(i);
-				int slot = tagCompound.getByte("Slot");
-				if (slot >= 0 && slot < items.length) {
-					items[slot] = ItemStack.loadItemStackFromNBT(tagCompound);
-				}
+		GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
+		for(pass = 0;pass<2;pass++) {
+			if(pass == 1) {
+				glEnable(GL_BLEND);
+				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+				GL11.glDepthMask(false);
+				glAlphaFunc(GL_LESS, 1);
+			}else {
+				GL11.glDepthMask(true);
+				glAlphaFunc(GL_EQUAL, 1);
 			}
-		}
-		rotex = nbt.getFloat("rotex");
-		rotey = nbt.getFloat("rotey");
-		rotez = nbt.getFloat("rotez");
-		switch (type) {
-			case INVENTORY:
-				glMatrixForRenderInInventory();
-				break;
-			case EQUIPPED_FIRST_PERSON://first
-			{
-				isfirstperson =true;
-				EntityLivingBase entity = (EntityLivingBase) data[1];
-				boolean recoiled = this.getbooleanfromnbt("Recoiled");//���R�C�������ǂ����i�e������u���˂�l�ɕ`�悷�邽�߂̃t���O�j
-				boolean isreloading = this.getbooleanfromnbt("IsReloading");//�����[�h�����ǂ���
-				int remainbullets = gunitem.remain_Bullet(gunstack);//�����[�h�����ǂ���
-				Minecraft.getMinecraft().renderEngine.bindTexture(guntexture);
-				GL11.glPushMatrix();
-				ItemStack itemstackSight = items[1];
-				if (HandmadeGunsCore.Key_ADS(entity)) {
-					if(itemstackSight != null && itemstackSight.getItem() instanceof HMGItemSightBase) {
-						if(((HMGItemSightBase)itemstackSight.getItem()).scopeonly){
-							GL11.glPopMatrix();//glend1
-							break;
-						}else
-						if (itemstackSight.getItem() instanceof HMGItemAttachment_reddot){
-							if (!gunitem.gunInfo.zoomrer) {
-								GL11.glPopMatrix();//glend1
-								break;
-							}
-						} else
-						if (itemstackSight.getItem() instanceof HMGItemAttachment_scope) {
-							if (!gunitem.gunInfo.zoomres) {
-								GL11.glPopMatrix();//glend1
-								break;
-							}
-						}
-					}else {
-						if (!gunitem.gunInfo.zoomren) {
-							GL11.glPopMatrix();//glend1
-							break;
-						}
+			
+			GL11.glPushMatrix();
+			datas = data;
+			GL11.glEnable(GL_BLEND);
+			GL11.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			GL11.glColor4f(1, 1, 1, 1F);
+			float f2 = 1.0F;
+			f2 = 60.0F;
+//		glMaterialf(GL_FRONT_AND_BACK,GL_SHININESS,120);
+			float scala = this.modelscala;
+			HMGItem_Unified_Guns gunitem;
+			if (gunstack.getItem() instanceof HMGItem_Unified_Guns)
+				gunitem = (HMGItem_Unified_Guns) gunstack.getItem();
+			else {
+				
+				GL11.glDepthMask(true);
+				GL11.glDisable(GL_BLEND);
+				return;
+			}
+			nbt = gunstack.getTagCompound();
+			if (nbt == null) gunitem.checkTags(gunstack);
+			this.gunitem = gunitem;
+			nbt = gunstack.getTagCompound();
+			items[0] = null;
+			items[1] = null;//�T�C�g
+			items[2] = null;//���[�U�[�T�C�g��
+			items[3] = null;//�}�Y���A�^�b�`�����g
+			items[4] = null;//�A���_�[�o����
+			items[5] = null;//�}�K�W��
+			NBTTagList tags = (NBTTagList) nbt.getTag("Items");
+			if (tags != null) {
+				for (int i = 0; i < tags.tagCount(); i++)//133
+				{
+					NBTTagCompound tagCompound = tags.getCompoundTagAt(i);
+					int slot = tagCompound.getByte("Slot");
+					if (slot >= 0 && slot < items.length) {
+						items[slot] = ItemStack.loadItemStackFromNBT(tagCompound);
 					}
 				}
-				thirdmodelPosX = thirdmodelPosX_Normal;
-				thirdmodelPosY = thirdmodelPosY_Normal;
-				thirdmodelPosZ = thirdmodelPosZ_Normal;
-				if (itemstackSight == null) {
-					modelPosX = modelPosX_Normal;
-					modelPosY = modelPosY_Normal;
-					modelPosZ = modelPosZ_Normal;
-
-					modelRotationX = modelRotationX_Normal;
-					modelRotationY = modelRotationY_Normal;
-					modelRotationZ = modelRotationZ_Normal;
-
-					onads_modelPosX = onads_modelPosX_Normal;
-					onads_modelPosY = onads_modelPosY_Normal;
-					onads_modelPosZ = onads_modelPosZ_Normal;
-
-					onads_modelRotationX = onads_modelRotationX_Normal;
-					onads_modelRotationY = onads_modelRotationY_Normal;
-					onads_modelRotationZ = onads_modelRotationZ_Normal;
-				} else {
-					if(itemstackSight.getItem() instanceof HMGItemSightBase && ((HMGItemSightBase) itemstackSight.getItem()).needgunoffset){
-						modelPosX = modelPosX_Normal - ((HMGItemSightBase) itemstackSight.getItem()).gunoffset[0]*scala/2;
-						modelPosY = modelPosY_Normal - ((HMGItemSightBase) itemstackSight.getItem()).gunoffset[1]*scala/2;
-						modelPosZ = modelPosZ_Normal - ((HMGItemSightBase) itemstackSight.getItem()).gunoffset[2]*scala/2;
-
-						modelRotationX = modelRotationX_Normal + ((HMGItemSightBase) itemstackSight.getItem()).gunrotation[0];
-						modelRotationY = modelRotationY_Normal + ((HMGItemSightBase) itemstackSight.getItem()).gunrotation[1];
-						modelRotationZ = modelRotationZ_Normal + ((HMGItemSightBase) itemstackSight.getItem()).gunrotation[2];
+			}
+			rotex = nbt.getFloat("rotex");
+			rotey = nbt.getFloat("rotey");
+			rotez = nbt.getFloat("rotez");
+			switch (type) {
+				case INVENTORY:
+					glMatrixForRenderInInventory();
+					break;
+				case EQUIPPED_FIRST_PERSON://first
+				{
+					isfirstperson = true;
+					EntityLivingBase entity = (EntityLivingBase) data[1];
+					boolean recoiled = this.getbooleanfromnbt("Recoiled");//���R�C�������ǂ����i�e������u���˂�l�ɕ`�悷�邽�߂̃t���O�j
+					boolean isreloading = this.getbooleanfromnbt("IsReloading");//�����[�h�����ǂ���
+					int remainbullets = gunitem.remain_Bullet(gunstack);//�����[�h�����ǂ���
+					Minecraft.getMinecraft().renderEngine.bindTexture(guntexture);
+					GL11.glPushMatrix();
+					ItemStack itemstackSight = items[1];
+					if (HandmadeGunsCore.Key_ADS(entity)) {
+						if (itemstackSight != null && itemstackSight.getItem() instanceof HMGItemSightBase) {
+							if (((HMGItemSightBase) itemstackSight.getItem()).scopeonly) {
+								GL11.glPopMatrix();//glend1
+								break;
+							} else if (itemstackSight.getItem() instanceof HMGItemAttachment_reddot) {
+								if (!gunitem.gunInfo.zoomrer) {
+									GL11.glPopMatrix();//glend1
+									break;
+								}
+							} else if (itemstackSight.getItem() instanceof HMGItemAttachment_scope) {
+								if (!gunitem.gunInfo.zoomres) {
+									GL11.glPopMatrix();//glend1
+									break;
+								}
+							}
+						} else {
+							if (!gunitem.gunInfo.zoomren) {
+								GL11.glPopMatrix();//glend1
+								break;
+							}
+						}
+					}
+					thirdmodelPosX = thirdmodelPosX_Normal;
+					thirdmodelPosY = thirdmodelPosY_Normal;
+					thirdmodelPosZ = thirdmodelPosZ_Normal;
+					if (itemstackSight == null) {
+						modelPosX = modelPosX_Normal;
+						modelPosY = modelPosY_Normal;
+						modelPosZ = modelPosZ_Normal;
+						
+						modelRotationX = modelRotationX_Normal;
+						modelRotationY = modelRotationY_Normal;
+						modelRotationZ = modelRotationZ_Normal;
+						
+						onads_modelPosX = onads_modelPosX_Normal;
+						onads_modelPosY = onads_modelPosY_Normal;
+						onads_modelPosZ = onads_modelPosZ_Normal;
+						
+						onads_modelRotationX = onads_modelRotationX_Normal;
+						onads_modelRotationY = onads_modelRotationY_Normal;
+						onads_modelRotationZ = onads_modelRotationZ_Normal;
+					} else {
+						if (itemstackSight.getItem() instanceof HMGItemSightBase && ((HMGItemSightBase) itemstackSight.getItem()).needgunoffset) {
+							modelPosX = modelPosX_Normal - ((HMGItemSightBase) itemstackSight.getItem()).gunoffset[0] * scala / 2;
+							modelPosY = modelPosY_Normal - ((HMGItemSightBase) itemstackSight.getItem()).gunoffset[1] * scala / 2;
+							modelPosZ = modelPosZ_Normal - ((HMGItemSightBase) itemstackSight.getItem()).gunoffset[2] * scala / 2;
+							
+							modelRotationX = modelRotationX_Normal + ((HMGItemSightBase) itemstackSight.getItem()).gunrotation[0];
+							modelRotationY = modelRotationY_Normal + ((HMGItemSightBase) itemstackSight.getItem()).gunrotation[1];
+							modelRotationZ = modelRotationZ_Normal + ((HMGItemSightBase) itemstackSight.getItem()).gunrotation[2];
 //
 //						onads_modelPosX = onads_modelPosX_Normal - ((HMGItemSightBase) itemstackSight.getItem()).gunoffset[0]*scala/2;
 //						onads_modelPosY = onads_modelPosY_Normal - ((HMGItemSightBase) itemstackSight.getItem()).gunoffset[1]*scala/2;
 //						onads_modelPosZ = onads_modelPosZ_Normal - ((HMGItemSightBase) itemstackSight.getItem()).gunoffset[2]*scala/2;
-						onads_modelPosX =0.694f-(sightattachoffset[0] + ((HMGItemSightBase) itemstackSight.getItem()).gunoffset[0])*scala;
-						onads_modelPosY =1.8f-(sightattachoffset[1] + ((HMGItemSightBase) itemstackSight.getItem()).gunoffset[1])*scala;
-						onads_modelPosZ =-(sightattachoffset[2] + ((HMGItemSightBase) itemstackSight.getItem()).gunoffset[2])*scala;
-						onads_modelRotationX = onads_modelRotationX_Normal + ((HMGItemSightBase) itemstackSight.getItem()).gunrotation[0];
-						onads_modelRotationY = onads_modelRotationY_Normal + ((HMGItemSightBase) itemstackSight.getItem()).gunrotation[1];
-						onads_modelRotationZ = onads_modelRotationZ_Normal + ((HMGItemSightBase) itemstackSight.getItem()).gunrotation[2];
-					}else if ( itemstackSight.getItem() instanceof HMGItemAttachment_reddot) {
-						modelPosX = modelPosX_Red;
-						modelPosY = modelPosY_Red;
-						modelPosZ = modelPosZ_Red;
-
-						modelRotationX = modelRotationX_Red;
-						modelRotationY = modelRotationY_Red;
-						modelRotationZ = modelRotationZ_Red;
-
-						onads_modelPosX = onads_modelPosX_Red;
-						onads_modelPosY = onads_modelPosY_Red;
-						onads_modelPosZ = onads_modelPosZ_Red;
-
-						onads_modelRotationX = onads_modelRotationX_Red;
-						onads_modelRotationY = onads_modelRotationY_Red;
-						onads_modelRotationZ = onads_modelRotationZ_Red;
-					} else if ( itemstackSight.getItem() instanceof HMGItemAttachment_scope) {
-						modelPosX = modelPosX_Scope;
-						modelPosY = modelPosY_Scope;
-						modelPosZ = modelPosZ_Scope;
-
-						modelRotationX = modelRotationX_Scope;
-						modelRotationY = modelRotationY_Scope;
-						modelRotationZ = modelRotationZ_Scope;
-
-						onads_modelPosX = onads_modelPosX_Scope;
-						onads_modelPosY = onads_modelPosY_Scope;
-						onads_modelPosZ = onads_modelPosZ_Scope;
-
-						onads_modelRotationX = onads_modelRotationX_Scope;
-						onads_modelRotationY = onads_modelRotationY_Scope;
-						onads_modelRotationZ = onads_modelRotationZ_Scope;
-					}
-				}
-				if (isreloading){
-					//���[�h���ɌĂ΂�镔��
-					this.glMatrixForRenderInEquipped(-0.2f);
-					GL11.glScalef(scala,scala,scala);
-					int reloadprogress = this.getintfromnbt("RloadTime");
-					for(HMGGunParts parts:Partslist)
-						GunPartSidentification(parts,new GunState[]{GunState.Reload},reloadprogress,remainbullets);
-				}else if (HandmadeGunsCore.Key_ADS(entity)){
-					GunState[] state = new GunState[2];
-					state[1] = GunState.ADS;
-					int cockingtime = this.getintfromnbt("CockingTime");
-					if (cockingtime > 0){
-						float cockingprogress = cockingtime + this.getSmoothing() - 1;//�R�b�L���O�J�n����̎��ԁifloat�l�j
-						this.glMatrixForRenderInEquippedADS(-1.4f);
-						state[0] = GunState.Cock;
-						GL11.glScalef(scala,scala,scala);
-						for(HMGGunParts parts:Partslist)
-							GunPartSidentification(parts,state,cockingprogress,remainbullets);
-					}else if (!recoiled) {
-						this.glMatrixForRenderInEquippedADS(-1.4f);
-						GL11.glRotatef(jump * (1 - this.getSmoothing()), 1.0f, 0.0f, 0.0f);//�e�����ˏオ��B���̏�Ԃ��ƃ��f����0,0,0�𒆐S�ɉ�]�B
-						float recoileprogress = 10*((float)nbt.getByte("Bolt") + smoothing) / gunitem.gunInfo.cycle;
-						state[0] = GunState.Recoil;
-						GL11.glScalef(scala,scala,scala);
-						for(HMGGunParts parts:Partslist)
-							GunPartSidentification(parts,state,recoileprogress,remainbullets);
-					} else {
-						state[0] = GunState.ADS;
-						this.glMatrixForRenderInEquippedADS(-1.4f);
-						GL11.glScalef(scala,scala,scala);
-						for(HMGGunParts parts:Partslist)
-							GunPartSidentification(parts,state,0,remainbullets);
-					}
-				} else {
-					if (this.isentitysprinting(entity)) {
-						this.glMatrixForRenderInEquipped(0);
-						GL11.glRotatef(Sprintrotationx, 1.0f, 0.0f, 0.0f);
-						GL11.glRotatef(Sprintrotationy, 0.0f, 1.0f, 0.0f);
-						GL11.glRotatef(Sprintrotationz, 0.0f, 0.0f, 1.0f);
-						GL11.glTranslatef(Sprintoffsetx, Sprintoffsety, Sprintoffsetz);
-						GL11.glScalef(scala,scala,scala);
-						for(HMGGunParts parts:Partslist)
-							GunPartSidentification(parts,new GunState[]{GunState.Default},0,remainbullets);
-					}else{
-						int cockingtime = this.getintfromnbt("CockingTime");
-						if (cockingtime > 0){
-							float cockingprogress = cockingtime + this.getSmoothing() - 1;//�R�b�L���O�J�n����̎��ԁifloat�l�j
-							this.glMatrixForRenderInEquipped(-0.2f);
-							GL11.glScalef(scala,scala,scala);
-							for(HMGGunParts parts:Partslist)
-								GunPartSidentification(parts,new GunState[]{GunState.Cock},cockingprogress,remainbullets);
-						}else if (!recoiled) {
-							//�ˌ����1tick���̂݌Ă΂�܂�
-							this.glMatrixForRenderInEquipped(-0.2f);
-							GL11.glRotatef(jump * (1 - this.getSmoothing()), 1.0f, 0.0f, 0.0f);//�e�����ˏオ��B���̏�Ԃ��ƃ��f����0,0,0�𒆐S�ɉ�]�B
-							float recoileprogress = 10*(nbt.getByte("Bolt") + smoothing) / gunitem.gunInfo.cycle;
-							GL11.glScalef(scala,scala,scala);
-							for(HMGGunParts parts:Partslist)
-								GunPartSidentification(parts,new GunState[]{GunState.Recoil},recoileprogress,remainbullets);
-						} else {
-							//�ʏ���
-							this.glMatrixForRenderInEquipped(-0.2f);
-							GL11.glScalef(scala,scala,scala);
-							for(HMGGunParts parts:Partslist)
-								GunPartSidentification(parts,new GunState[]{GunState.Default},0,remainbullets);
+							onads_modelPosX = 0.694f - (sightattachoffset[0] + ((HMGItemSightBase) itemstackSight.getItem()).gunoffset[0]) * scala;
+							onads_modelPosY = 1.8f - (sightattachoffset[1] + ((HMGItemSightBase) itemstackSight.getItem()).gunoffset[1]) * scala;
+							onads_modelPosZ = -(sightattachoffset[2] + ((HMGItemSightBase) itemstackSight.getItem()).gunoffset[2]) * scala;
+							onads_modelRotationX = onads_modelRotationX_Normal + ((HMGItemSightBase) itemstackSight.getItem()).gunrotation[0];
+							onads_modelRotationY = onads_modelRotationY_Normal + ((HMGItemSightBase) itemstackSight.getItem()).gunrotation[1];
+							onads_modelRotationZ = onads_modelRotationZ_Normal + ((HMGItemSightBase) itemstackSight.getItem()).gunrotation[2];
+						} else if (itemstackSight.getItem() instanceof HMGItemAttachment_reddot) {
+							modelPosX = modelPosX_Red;
+							modelPosY = modelPosY_Red;
+							modelPosZ = modelPosZ_Red;
+							
+							modelRotationX = modelRotationX_Red;
+							modelRotationY = modelRotationY_Red;
+							modelRotationZ = modelRotationZ_Red;
+							
+							onads_modelPosX = onads_modelPosX_Red;
+							onads_modelPosY = onads_modelPosY_Red;
+							onads_modelPosZ = onads_modelPosZ_Red;
+							
+							onads_modelRotationX = onads_modelRotationX_Red;
+							onads_modelRotationY = onads_modelRotationY_Red;
+							onads_modelRotationZ = onads_modelRotationZ_Red;
+						} else if (itemstackSight.getItem() instanceof HMGItemAttachment_scope) {
+							modelPosX = modelPosX_Scope;
+							modelPosY = modelPosY_Scope;
+							modelPosZ = modelPosZ_Scope;
+							
+							modelRotationX = modelRotationX_Scope;
+							modelRotationY = modelRotationY_Scope;
+							modelRotationZ = modelRotationZ_Scope;
+							
+							onads_modelPosX = onads_modelPosX_Scope;
+							onads_modelPosY = onads_modelPosY_Scope;
+							onads_modelPosZ = onads_modelPosZ_Scope;
+							
+							onads_modelRotationX = onads_modelRotationX_Scope;
+							onads_modelRotationY = onads_modelRotationY_Scope;
+							onads_modelRotationZ = onads_modelRotationZ_Scope;
 						}
 					}
+					if (isreloading) {
+						//���[�h���ɌĂ΂�镔��
+						this.glMatrixForRenderInEquipped(-0.2f);
+						GL11.glScalef(scala, scala, scala);
+						int reloadprogress = this.getintfromnbt("RloadTime");
+						for (HMGGunParts parts : Partslist)
+							GunPartSidentification(parts, new GunState[]{GunState.Reload}, reloadprogress, remainbullets);
+					} else if (HandmadeGunsCore.Key_ADS(entity)) {
+						GunState[] state = new GunState[2];
+						state[1] = GunState.ADS;
+						int cockingtime = this.getintfromnbt("CockingTime");
+						if (cockingtime > 0) {
+							float cockingprogress = cockingtime + this.getSmoothing() - 1;//�R�b�L���O�J�n����̎��ԁifloat�l�j
+							this.glMatrixForRenderInEquippedADS(-1.4f);
+							state[0] = GunState.Cock;
+							GL11.glScalef(scala, scala, scala);
+							for (HMGGunParts parts : Partslist)
+								GunPartSidentification(parts, state, cockingprogress, remainbullets);
+						} else if (!recoiled) {
+							this.glMatrixForRenderInEquippedADS(-1.4f);
+							GL11.glRotatef(jump * (1 - this.getSmoothing()), 1.0f, 0.0f, 0.0f);//�e�����ˏオ��B���̏�Ԃ��ƃ��f����0,0,0�𒆐S�ɉ�]�B
+							float recoileprogress = 10 * ((float) nbt.getByte("Bolt") + smoothing) / gunitem.gunInfo.cycle;
+							state[0] = GunState.Recoil;
+							GL11.glScalef(scala, scala, scala);
+							for (HMGGunParts parts : Partslist)
+								GunPartSidentification(parts, state, recoileprogress, remainbullets);
+						} else {
+							state[0] = GunState.ADS;
+							this.glMatrixForRenderInEquippedADS(-1.4f);
+							GL11.glScalef(scala, scala, scala);
+							for (HMGGunParts parts : Partslist)
+								GunPartSidentification(parts, state, 0, remainbullets);
+						}
+					} else {
+						if (this.isentitysprinting(entity)) {
+							this.glMatrixForRenderInEquipped(0);
+							GL11.glRotatef(Sprintrotationx, 1.0f, 0.0f, 0.0f);
+							GL11.glRotatef(Sprintrotationy, 0.0f, 1.0f, 0.0f);
+							GL11.glRotatef(Sprintrotationz, 0.0f, 0.0f, 1.0f);
+							GL11.glTranslatef(Sprintoffsetx, Sprintoffsety, Sprintoffsetz);
+							GL11.glScalef(scala, scala, scala);
+							for (HMGGunParts parts : Partslist)
+								GunPartSidentification(parts, new GunState[]{GunState.Default}, 0, remainbullets);
+						} else {
+							int cockingtime = this.getintfromnbt("CockingTime");
+							if (cockingtime > 0) {
+								float cockingprogress = cockingtime + this.getSmoothing() - 1;//�R�b�L���O�J�n����̎��ԁifloat�l�j
+								this.glMatrixForRenderInEquipped(-0.2f);
+								GL11.glScalef(scala, scala, scala);
+								for (HMGGunParts parts : Partslist)
+									GunPartSidentification(parts, new GunState[]{GunState.Cock}, cockingprogress, remainbullets);
+							} else if (!recoiled) {
+								//�ˌ����1tick���̂݌Ă΂�܂�
+								this.glMatrixForRenderInEquipped(-0.2f);
+								GL11.glRotatef(jump * (1 - this.getSmoothing()), 1.0f, 0.0f, 0.0f);//�e�����ˏオ��B���̏�Ԃ��ƃ��f����0,0,0�𒆐S�ɉ�]�B
+								float recoileprogress = 10 * (nbt.getByte("Bolt") + smoothing) / gunitem.gunInfo.cycle;
+								GL11.glScalef(scala, scala, scala);
+								for (HMGGunParts parts : Partslist)
+									GunPartSidentification(parts, new GunState[]{GunState.Recoil}, recoileprogress, remainbullets);
+							} else {
+								//�ʏ���
+								this.glMatrixForRenderInEquipped(-0.2f);
+								GL11.glScalef(scala, scala, scala);
+								for (HMGGunParts parts : Partslist)
+									GunPartSidentification(parts, new GunState[]{GunState.Default}, 0, remainbullets);
+							}
+						}
 //						renderpartsNormal(this,gunitem,gunstack,model,entity,type,data);
-				}
-				GL11.glPopMatrix();//�I�����ɂ�����Ă�ōs����o�b�N�A�b�v����߂��܂��B
-				isfirstperson =false;
-
-				break;
-			}
-			case EQUIPPED: {//thrid
-				isfirstperson =false;
-				EntityLivingBase entity = (EntityLivingBase) data[1];
-				boolean recoiled = this.getbooleanfromnbt("Recoiled");//���R�C�������ǂ����i�e������u���˂�l�ɕ`�悷�邽�߂̃t���O�j
-				boolean isreloading = this.getbooleanfromnbt("IsReloading");//�����[�h�����ǂ���
-				int remainbullets = gunitem.getMaxDamage() - gunstack.getItemDamage();//�����[�h�����ǂ���
-				Minecraft.getMinecraft().renderEngine.bindTexture(guntexture);
-				GL11.glPushMatrix();
-				GL11.glScalef(1f/2f, 1f/2f, 1f/2f);
-				if (entity instanceof EntityPlayer) {
-					this.glMatrixForRenderInEntityPlayer(-0.75f);
-					GL11.glScalef(scala, scala, scala);
-				} else {
-					this.glMatrixForRenderInEntity(-0.2f);
-					GL11.glScalef(-scala * 0.6f, scala * 0.6f, scala * 0.6f);
-				}
-				GL11.glScalef(gunitem.gunInfo.inworldScale, gunitem.gunInfo.inworldScale, gunitem.gunInfo.inworldScale);
-				if (isreloading) {
-					//���[�h���ɌĂ΂�镔��
-					int reloadprogress = this.getintfromnbt("RloadTime");
-					for (HMGGunParts parts : Partslist)
-						GunPartSidentification(parts, new GunState[]{GunState.Reload}, reloadprogress, remainbullets);
-				} else if (HandmadeGunsCore.Key_ADS(entity)) {
-					//ADS���ɌĂ΂�镔��
-					int cockingtime = this.getintfromnbt("CockingTime");
-					if (cockingtime > 0) {
-						float cockingprogress = cockingtime + this.getSmoothing() - 1;//�R�b�L���O�J�n����̎��ԁifloat�l�j
-						for (HMGGunParts parts : Partslist)
-							GunPartSidentification(parts, new GunState[]{GunState.Cock}, cockingprogress, remainbullets);
-					} else if (!recoiled) {
-						GL11.glRotatef(jump * (1 - this.getSmoothing()), 1.0f, 0.0f, 0.0f);//�e�����ˏオ��B���̏�Ԃ��ƃ��f����0,0,0�𒆐S�ɉ�]�B
-						float recoileprogress = 10 * (nbt.getByte("Bolt") + smoothing) / gunitem.gunInfo.cycle;
-						for (HMGGunParts parts : Partslist)
-							GunPartSidentification(parts, new GunState[]{GunState.Recoil}, recoileprogress, remainbullets);
-					} else {
-						for (HMGGunParts parts : Partslist)
-							GunPartSidentification(parts, new GunState[]{GunState.ADS}, 0, remainbullets);
 					}
-				} else {
-					//�ʏ펞�ɌĂ΂�镔��
-					if (this.isentitysprinting(entity)) {
-						//�����Ă��違�ˌ����łȂ��Ƃ��ɌĂ΂��B
-						for (HMGGunParts parts : Partslist)
-							GunPartSidentification(parts, new GunState[]{GunState.Default}, 0, remainbullets);
+					GL11.glPopMatrix();//�I�����ɂ�����Ă�ōs����o�b�N�A�b�v����߂��܂��B
+					isfirstperson = false;
+					
+					break;
+				}
+				case EQUIPPED: {//thrid
+					isfirstperson = false;
+					EntityLivingBase entity = (EntityLivingBase) data[1];
+					boolean recoiled = this.getbooleanfromnbt("Recoiled");//���R�C�������ǂ����i�e������u���˂�l�ɕ`�悷�邽�߂̃t���O�j
+					boolean isreloading = this.getbooleanfromnbt("IsReloading");//�����[�h�����ǂ���
+					int remainbullets = gunitem.getMaxDamage() - gunstack.getItemDamage();//�����[�h�����ǂ���
+					Minecraft.getMinecraft().renderEngine.bindTexture(guntexture);
+					GL11.glPushMatrix();
+					GL11.glScalef(1f / 2f, 1f / 2f, 1f / 2f);
+					if (entity instanceof EntityPlayer) {
+						this.glMatrixForRenderInEntityPlayer(-0.75f);
+						GL11.glScalef(scala, scala, scala);
 					} else {
+						this.glMatrixForRenderInEntity(-0.2f);
+						GL11.glScalef(-scala * 0.6f, scala * 0.6f, scala * 0.6f);
+					}
+					GL11.glScalef(gunitem.gunInfo.inworldScale, gunitem.gunInfo.inworldScale, gunitem.gunInfo.inworldScale);
+					if (isreloading) {
+						//���[�h���ɌĂ΂�镔��
+						int reloadprogress = this.getintfromnbt("RloadTime");
+						for (HMGGunParts parts : Partslist)
+							GunPartSidentification(parts, new GunState[]{GunState.Reload}, reloadprogress, remainbullets);
+					} else if (HandmadeGunsCore.Key_ADS(entity)) {
+						//ADS���ɌĂ΂�镔��
+						int cockingtime = this.getintfromnbt("CockingTime");
+						if (cockingtime > 0) {
+							float cockingprogress = cockingtime + this.getSmoothing() - 1;//�R�b�L���O�J�n����̎��ԁifloat�l�j
+							for (HMGGunParts parts : Partslist)
+								GunPartSidentification(parts, new GunState[]{GunState.Cock}, cockingprogress, remainbullets);
+						} else if (!recoiled) {
+							GL11.glRotatef(jump * (1 - this.getSmoothing()), 1.0f, 0.0f, 0.0f);//�e�����ˏオ��B���̏�Ԃ��ƃ��f����0,0,0�𒆐S�ɉ�]�B
+							float recoileprogress = 10 * (nbt.getByte("Bolt") + smoothing) / gunitem.gunInfo.cycle;
+							for (HMGGunParts parts : Partslist)
+								GunPartSidentification(parts, new GunState[]{GunState.Recoil}, recoileprogress, remainbullets);
+						} else {
+							for (HMGGunParts parts : Partslist)
+								GunPartSidentification(parts, new GunState[]{GunState.ADS}, 0, remainbullets);
+						}
+					} else {
+						//�ʏ펞�ɌĂ΂�镔��
+						if (this.isentitysprinting(entity)) {
+							//�����Ă��違�ˌ����łȂ��Ƃ��ɌĂ΂��B
+							for (HMGGunParts parts : Partslist)
+								GunPartSidentification(parts, new GunState[]{GunState.Default}, 0, remainbullets);
+						} else {
+							int cockingtime = this.getintfromnbt("CockingTime");
+							if (cockingtime > 0) {
+								float cockingprogress = cockingtime + this.getSmoothing() - 1;//�R�b�L���O�J�n����̎��ԁifloat�l�j
+								for (HMGGunParts parts : Partslist)
+									GunPartSidentification(parts, new GunState[]{GunState.Cock}, cockingprogress, remainbullets);
+							} else if (!recoiled) {
+								//�ˌ����1tick���̂݌Ă΂�܂�
+								GL11.glRotatef(jump * (1 - this.getSmoothing()), 1.0f, 0.0f, 0.0f);//�e�����ˏオ��B���̏�Ԃ��ƃ��f����0,0,0�𒆐S�ɉ�]�B
+								float recoileprogress = 10 * (nbt.getByte("Bolt") + smoothing) / gunitem.gunInfo.cycle;
+								for (HMGGunParts parts : Partslist)
+									GunPartSidentification(parts, new GunState[]{GunState.Recoil}, recoileprogress, remainbullets);
+							} else {
+								//�ʏ���
+								for (HMGGunParts parts : Partslist)
+									GunPartSidentification(parts, new GunState[]{GunState.Default}, 0, remainbullets);
+							}
+						}
+//						renderpartsNormal(this,gunitem,gunstack,model,entity,type,data);
+					}
+					GL11.glPopMatrix();//�I�����ɂ�����Ă�ōs����o�b�N�A�b�v����߂��܂��B
+					break;
+				}
+				case ENTITY: {
+					isfirstperson = false;
+					boolean recoiled = this.getbooleanfromnbt("Recoiled");//���R�C�������ǂ����i�e������u���˂�l�ɕ`�悷�邽�߂̃t���O�j
+					boolean isreloading = this.getbooleanfromnbt("IsReloading");//�����[�h�����ǂ���
+					int remainbullets = gunitem.getMaxDamage() - gunstack.getItemDamage();//�����[�h�����ǂ���
+					smoothing = isPlacedGun ? RenderTickSmoothing.smooth : 0;
+					Minecraft.getMinecraft().renderEngine.bindTexture(guntexture);
+					GL11.glPushMatrix();
+					GL11.glScalef(0.4f * scala * gunitem.gunInfo.inworldScale * (isPlacedGun ? gunitem.gunInfo.onTurretScale : 1), 0.4f * scala * gunitem.gunInfo.inworldScale * (isPlacedGun ? gunitem.gunInfo.onTurretScale : 1), 0.4f * scala * gunitem.gunInfo.inworldScale * (isPlacedGun ? gunitem.gunInfo.onTurretScale : 1));
+					if (isreloading) {
+						//���[�h���ɌĂ΂�镔��
+						int reloadprogress = this.getintfromnbt("RloadTime");
+						for (HMGGunParts parts : Partslist)
+							GunPartSidentification(parts, new GunState[]{GunState.Reload}, reloadprogress, remainbullets);
+					} else {
+						//�ʏ펞�ɌĂ΂�镔��
 						int cockingtime = this.getintfromnbt("CockingTime");
 						if (cockingtime > 0) {
 							float cockingprogress = cockingtime + this.getSmoothing() - 1;//�R�b�L���O�J�n����̎��ԁifloat�l�j
@@ -555,57 +606,22 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 							for (HMGGunParts parts : Partslist)
 								GunPartSidentification(parts, new GunState[]{GunState.Default}, 0, remainbullets);
 						}
-					}
 //						renderpartsNormal(this,gunitem,gunstack,model,entity,type,data);
-				}
-				GL11.glPopMatrix();//�I�����ɂ�����Ă�ōs����o�b�N�A�b�v����߂��܂��B
-				break;
-			}
-			case ENTITY: {
-				isfirstperson =false;
-				boolean recoiled = this.getbooleanfromnbt("Recoiled");//���R�C�������ǂ����i�e������u���˂�l�ɕ`�悷�邽�߂̃t���O�j
-				boolean isreloading = this.getbooleanfromnbt("IsReloading");//�����[�h�����ǂ���
-				int remainbullets = gunitem.getMaxDamage() - gunstack.getItemDamage();//�����[�h�����ǂ���
-				smoothing = isPlacedGun ? RenderTickSmoothing.smooth : 0;
-				Minecraft.getMinecraft().renderEngine.bindTexture(guntexture);
-				GL11.glPushMatrix();
-				GL11.glScalef(0.4f * scala * gunitem.gunInfo.inworldScale * (isPlacedGun ? gunitem.gunInfo.onTurretScale:1),0.4f * scala * gunitem.gunInfo.inworldScale * (isPlacedGun ? gunitem.gunInfo.onTurretScale:1),0.4f * scala * gunitem.gunInfo.inworldScale * (isPlacedGun ? gunitem.gunInfo.onTurretScale:1));
-				if (isreloading) {
-					//���[�h���ɌĂ΂�镔��
-					int reloadprogress = this.getintfromnbt("RloadTime");
-					for (HMGGunParts parts : Partslist)
-						GunPartSidentification(parts, new GunState[]{GunState.Reload}, reloadprogress, remainbullets);
-				} else {
-					//�ʏ펞�ɌĂ΂�镔��
-					int cockingtime = this.getintfromnbt("CockingTime");
-					if (cockingtime > 0) {
-						float cockingprogress = cockingtime + this.getSmoothing() - 1;//�R�b�L���O�J�n����̎��ԁifloat�l�j
-						for (HMGGunParts parts : Partslist)
-							GunPartSidentification(parts, new GunState[]{GunState.Cock}, cockingprogress, remainbullets);
-					} else if (!recoiled) {
-						//�ˌ����1tick���̂݌Ă΂�܂�
-						GL11.glRotatef(jump * (1 - this.getSmoothing()), 1.0f, 0.0f, 0.0f);//�e�����ˏオ��B���̏�Ԃ��ƃ��f����0,0,0�𒆐S�ɉ�]�B
-						float recoileprogress = 10 * (nbt.getByte("Bolt") + smoothing) / gunitem.gunInfo.cycle;
-						for (HMGGunParts parts : Partslist)
-							GunPartSidentification(parts, new GunState[]{GunState.Recoil}, recoileprogress, remainbullets);
-					} else {
-						//�ʏ���
-						for (HMGGunParts parts : Partslist)
-							GunPartSidentification(parts, new GunState[]{GunState.Default}, 0, remainbullets);
 					}
-//						renderpartsNormal(this,gunitem,gunstack,model,entity,type,data);
+					GL11.glPopMatrix();//�I�����ɂ�����Ă�ōs����o�b�N�A�b�v����߂��܂��B
+					smoothing = RenderTickSmoothing.smooth;
+					break;
 				}
-				GL11.glPopMatrix();//�I�����ɂ�����Ă�ōs����o�b�N�A�b�v����߂��܂��B
-				smoothing = RenderTickSmoothing.smooth;
-				break;
+				case FIRST_PERSON_MAP:
+					break;
 			}
-			case FIRST_PERSON_MAP:
-				break;
+			
+			GL11.glDepthMask(true);
+			GL11.glDisable(GL_BLEND);
+			GL11.glShadeModel(GL11.GL_FLAT);
+			GL11.glPopMatrix();
 		}
-
-		GL11.glDepthMask(true);
-		GL11.glDisable(GL_BLEND);
-		GL11.glShadeModel(GL11.GL_FLAT);
+		GL11.glPopAttrib();
 	}
 
 
@@ -1045,6 +1061,74 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 			}else if(part.isRarm){
 				renderarmR();
 			}else if((part.underOnly && isUnder) || !(part.underOnly_not && isUnder)) {
+				if(part.reticleAndPlate){
+					glClear(GL_STENCIL_BUFFER_BIT);
+					glEnable(GL_STENCIL_TEST);
+					glStencilMask(1);
+					
+					glStencilFunc(
+							GL_ALWAYS,   // GLenum func
+							1,          // GLint ref
+							~0);// GLuint mask
+					glStencilOp(
+							GL_KEEP,
+							GL_KEEP,
+							GL_REPLACE);
+					if (pass != 1) {
+						GL11.glDepthMask(false);
+						glAlphaFunc(GL_ALWAYS, 1);
+						glColorMask(
+								false,   // GLboolean red
+								false,   // GLboolean green
+								false,   // GLboolean blue
+								false);
+					}
+					model.renderPart(part.partsname + "reticlePlate");
+					if (pass != 1) {
+						GL11.glDepthMask(true);
+						glAlphaFunc(GL_EQUAL, 1);
+						glColorMask(
+								true,   // GLboolean red
+								true,   // GLboolean green
+								true,   // GLboolean blue
+								true);
+					}
+					
+					GL11.glDisable(GL11.GL_LIGHTING);
+					float lastBrightnessX = OpenGlHelper.lastBrightnessX;
+					float lastBrightnessY = OpenGlHelper.lastBrightnessY;
+					OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
+					glDisable(GL_DEPTH_TEST);
+					
+					
+					glStencilFunc(
+							GL_EQUAL,   // GLenum func
+							1,          // GLint ref
+							~0);// GLuint mask
+					
+					glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+					glAlphaFunc(GL_ALWAYS, 1);
+					GL11.glDepthMask(false);
+					
+					GL11.glDepthFunc(GL11.GL_ALWAYS);//強制描画
+					model.renderPart(part.partsname + "reticle");
+					GL11.glDepthFunc(GL11.GL_LEQUAL);
+					GL11.glDepthMask(true);
+					glDisable(GL_STENCIL_TEST);
+					glEnable(GL_DEPTH_TEST);
+					GL11.glEnable(GL11.GL_LIGHTING);
+					OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)lastBrightnessX, (float)lastBrightnessY);
+					
+					if(pass == 1) {
+						glEnable(GL_BLEND);
+						glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+						GL11.glDepthMask(false);
+						glAlphaFunc(GL_LESS, 1);
+					}else {
+						GL11.glDepthMask(true);
+						glAlphaFunc(GL_EQUAL, 1);
+					}
+				}
 				model.renderPart(part.partsname);
 				float lastBrightnessX = OpenGlHelper.lastBrightnessX;
 				float lastBrightnessY = OpenGlHelper.lastBrightnessY;

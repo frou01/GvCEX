@@ -1,0 +1,21 @@
+Texture,usagacha
+BPItemStack,7
+BPItems,M1917,M1A1,M1911,Browning_Automatic_Rifle_M1918,M3 Submachine Gun,Bazooka,M1 Garand
+
+Name,アメリカ単発ガチャ
+BP,U.S.A_Gatcha
+
+Recipe1,   
+Recipe2,def
+Recipe3,ghi
+ItemA,null
+ItemB,null
+ItemC,null
+ItemD,HandmadeGuns,gunpyo
+ItemE,HandmadeGuns,gunpyo
+ItemF,HandmadeGuns,gunpyo
+ItemG,HandmadeGuns,gunpyo
+ItemH,HandmadeGuns,gunpyo
+
+ItemI,HandmadeGuns,gunpyo
+addNewRecipe,HandmadeGuns,U.S.A_Gatcha,1

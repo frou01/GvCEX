@@ -3,10 +3,10 @@ package hmgww2.entity;
 
 import hmggvcmob.GVCMobPlus;
 import hmggvcmob.ai.AITankAttack;
-import hmvehicle.entity.parts.ModifiedBoundingBox;
-import hmvehicle.entity.parts.OBB;
-import hmvehicle.entity.parts.turrets.TurretObj;
-import hmvehicle.entity.parts.logics.VesselBaseLogic;
+import handmadevehicle.entity.parts.ModifiedBoundingBox;
+import handmadevehicle.entity.parts.OBB;
+import handmadevehicle.entity.parts.turrets.TurretObj;
+import handmadevehicle.entity.parts.logics.VesselBaseLogic;
 import net.minecraft.world.World;
 
 import javax.vecmath.Vector3d;
@@ -75,12 +75,12 @@ public class EntityGER_ShipSUB extends EntityGER_ShipBase
 		
 		baseLogic = new VesselBaseLogic(this,0.025f,0.3f,false,"hmgww2:hmgww2.Uboat");
 		baseLogic.canControlonWater = true;
-		baseLogic.always_poit_to_target = true;
+		baseLogic.always_point_to_target = true;
 		aiTankAttack = new AITankAttack(this,100,4,10,10);
 		aiTankAttack.setAlways_poit_to_target(true);
 		this.tasks.addTask(1,aiTankAttack);
-		((VesselBaseLogic)baseLogic).riddenByEntitiesInfo[0].pos = new double[]{0,10.1280,-2.53};
-		((VesselBaseLogic)baseLogic).riddenByEntitiesInfo_zoom[0].pos = new double[]{0,15.1069,-0.6658};
+		((VesselBaseLogic)baseLogic).seatInfos[0].pos = new double[]{0,10.1280,-2.53};
+		((VesselBaseLogic)baseLogic).seatInfos_zoom[0].pos = new double[]{0,15.1069,-0.6658};
 		turretpos = new Vector3d(0,2.6440,-35.4535);
 		TurretObj torp1 = new TurretObj(worldObj);
 		{
@@ -143,9 +143,9 @@ public class EntityGER_ShipSUB extends EntityGER_ShipBase
 	public void onUpdate(){
 		super.onUpdate();
 		if(usingSP){
-			((VesselBaseLogic)baseLogic).riddenByEntitiesInfo_zoom[0].pos = new double[]{0,14.90,-0.6658};
+			((VesselBaseLogic)baseLogic).seatInfos_zoom[0].pos = new double[]{0,14.90,-0.6658};
 		}else {
-			((VesselBaseLogic)baseLogic).riddenByEntitiesInfo_zoom[0].pos = new double[]{0,11.16,-0.6658};
+			((VesselBaseLogic)baseLogic).seatInfos_zoom[0].pos = new double[]{0,11.16,-0.6658};
 		}
 		if(!worldObj.isRemote){
 			usingSP = draft > 8;

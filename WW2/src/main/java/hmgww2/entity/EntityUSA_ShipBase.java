@@ -3,7 +3,7 @@ package hmgww2.entity;
 import hmgww2.Nation;
 import net.minecraft.world.World;
 
-import static hmvehicle.Utils.transformVecByQuat;
+import static handmadevehicle.Utils.transformVecByQuat;
 
 public class EntityUSA_ShipBase extends EntityBases_Ship
 {

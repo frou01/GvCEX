@@ -12,7 +12,7 @@
 package hmggvcmob.render.model;
 
 import hmggvcmob.entity.guerrilla.GVCEntityWZ10AttackHeli;
-import hmvehicle.entity.parts.logics.PlaneBaseLogic;
+import handmadevehicle.entity.parts.logics.PlaneBaseLogic;
 import net.minecraft.client.model.*;
 import net.minecraft.entity.Entity;
 import net.minecraftforge.client.MinecraftForgeClient;
@@ -663,14 +663,14 @@ public class WZ10 extends ModelBase
 				{
 					GL11.glPushMatrix();
 					GL11.glTranslatef(0, 0, -80);
-					GL11.glRotatef( 180f - (float)entity.riddenByEntitiesInfo[1].gun.turretrotationYaw,0,1,0);
+					GL11.glRotatef( 180f - (float)entity.seatInfos[1].maingun.turretrotationYaw,0,1,0);
 					GL11.glTranslatef(0, 0, 80);
 					chaingun1.render(f5);
 					chaingun2.render(f5);
 					{
 						GL11.glPushMatrix();
 						GL11.glTranslatef(0, 15, -80);
-						GL11.glRotatef((float) entity.riddenByEntitiesInfo[1].gun.turretrotationPitch,1,0,0);
+						GL11.glRotatef((float) entity.seatInfos[1].maingun.turretrotationPitch,1,0,0);
 						GL11.glTranslatef(0, -15, 80);
 						chaingun3.render(f5);
 						chaingun4.render(f5);

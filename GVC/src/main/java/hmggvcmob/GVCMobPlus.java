@@ -34,7 +34,7 @@ import java.util.Map;
 
 import hmggvcmob.util.SpotObj;
 import hmggvcutil.GVCUtils;
-import hmvehicle.entity.EntityChild;
+import handmadevehicle.HMVehicle;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EnumCreatureType;
@@ -45,6 +45,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.stats.Achievement;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraftforge.common.AchievementPage;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 
@@ -71,8 +72,6 @@ public class GVCMobPlus
     public static float cfg_soldierspawntank;
     public static int cfg_flagspawnlevel;
     public static int cfg_flagspawninterval;
-    public static double cfgVehicleWheel_UpRange;
-    public static double cfgVehicleWheel_DownRange;
     public static boolean cfg_canspawnguerrilla;
     public static boolean cfg_canspawnsolider;
     public static boolean cfg_cansetIED;
@@ -206,8 +205,8 @@ public class GVCMobPlus
         }
         cfg_flagspawnlevel = lconf.get("Guerrilla", "cfg_FlagSpawnLevel", 180).getInt(180);
         cfg_flagspawninterval = lconf.get("Guerrilla", "cfg_Flagspawninterval", 24000).getInt(24000);
-        cfgVehicleWheel_UpRange = lconf.get("Vehicle", "cfgVehicleWheel_UpRange", 1).getDouble(1);
-        cfgVehicleWheel_DownRange = lconf.get("Vehicle", "cfgVehicleWheel_DownRange", 2).getDouble(2);
+        HMVehicle.cfgVehicleWheel_UpRange = lconf.get("Vehicle", "cfgVehicleWheel_UpRange", 1).getDouble(1);
+        HMVehicle.cfgVehicleWheel_DownRange = lconf.get("Vehicle", "cfgVehicleWheel_DownRange", 2).getDouble(2);
         cfg_cansetIED = lconf.get("world", "cfg_CansetIED", true).getBoolean(true);
         cfg_blockdestory = lconf.get("world", "cfg_BlockDestory", true).getBoolean(true);
         cfg_canEjectCartridge = lconf.get("Guerrilla", "cfg_canEjectCartridge", true).getBoolean(true);
@@ -357,31 +356,6 @@ public class GVCMobPlus
         GameRegistry.registerItem(defsetter, "defsetter");
 
         GVCMPacketHandler.init();
-    
-        No_place_to_HIDE = new Achievement(id_of_No_place_to_HIDE, "No_place_to_HIDE", 2, 3, new ItemStack(fn_guerrillaegg, 1, 15), null)
-                                   .initIndependentStat().registerStat();
-        killedGuerrilla = new Achievement(id_of_killedGuerrilla, "killedGuerrilla", 2, 3, new ItemStack(GVCUtils.fn_ak74, 1, 15), No_place_to_HIDE)
-                                  .initIndependentStat().registerStat();
-        Union_Army = new Achievement(id_of_union, "Union_Army", 2, 3, new ItemStack(GVCUtils.fn_ak74, 1, 15), No_place_to_HIDE)
-                             .initIndependentStat().registerStat();
-        Old_soldiers_never_fade = new Achievement(id_of_Old_soldiers_never_fade, "Old_soldiers_never_fade", 2, 3, new ItemStack(fn_tankegg, 1, 15), No_place_to_HIDE)
-                                          .initIndependentStat().registerStat();
-        power_of_number = new Achievement(id_of_power_of_number, "power_of_number", 2, 3, new ItemStack(GVCUtils.fn_ak74, 1, 15), No_place_to_HIDE)
-                                  .initIndependentStat().registerStat();
-        unmanned_Craft = new Achievement(id_of_unmanned_Craft, "unmanned_Craft", 2, 3, new ItemStack(fn_drawnegg, 1, 15), No_place_to_HIDE)
-                                 .initIndependentStat().registerStat();
-        war_has_changed = new Achievement(id_of_war_has_changed, "war_has_changed", 2, 3, new ItemStack(fn_gkegg, 1, 15), No_place_to_HIDE)
-                                  .initIndependentStat().registerStat();
-        unending_war = new Achievement(id_of_unending_war, "unending_war", 2, 3, new ItemStack(fn_skeletonegg, 1, 15), No_place_to_HIDE)
-                               .initIndependentStat().registerStat();
-        METAL_GEAR = new Achievement(id_of_METAL_GEAR, "METAL_GEAR", 2, 3, new ItemStack(fn_MGM, 1, 15), null)
-                             .initIndependentStat().registerStat();
-        spear_the_gungnir = new Achievement(id_of_spear_the_gungnir, "spear_the_gungnir", 2, 3, new ItemStack(GVCUtils.fn_ptrk, 1, 15), null)
-                                    .initIndependentStat().registerStat();
-        Gun_of_the_Lost_Country = new Achievement(id_of_Gun_of_the_Lost_Country, "Gun_of_the_Lost_Country", 2, 3, new ItemStack(GVCUtils.type38, 1, 15), null)
-                                          .initIndependentStat().registerStat();
-        beacon_defensive = new Achievement(id_of_beacon_defensive, "beacon_defensive", 2, 3, new ItemStack(GVCUtils.fn_boxegg, 1, 15), null)
-                                          .initIndependentStat().registerStat();
         
     }
 
@@ -457,12 +431,12 @@ public class GVCMobPlus
             {
                 if(biome!=null)
                 {
-                    if(biome.biomeName.equals("Hell")){
+                    if(biome == BiomeGenBase.hell){
                         if(cfg_canspawnhell){
                             this.addspawnHell(biome);
                         }
                     }else
-                    if(biome.biomeName.equals("Sky")){
+                    if(biome == BiomeGenBase.sky){
                         if(cfg_canspawnsky){
                             if (cfg_canspawnguerrilla) {
                                 EntityRegistry.addSpawn(GVCEntityGuerrilla_ender.class, cfg_guerrillaspawnnomal * 3, cfg_guerrillaspawnnomal * 3, cfg_guerrillaspawnnomal * 3, EnumCreatureType.monster, new BiomeGenBase[]{biome});
@@ -643,6 +617,34 @@ public class GVCMobPlus
                 }
             }
         }
+    
+    
+        No_place_to_HIDE = new Achievement(id_of_No_place_to_HIDE, "No_place_to_HIDE", 0, 0, new ItemStack(fn_guerrillaegg, 1, 15), null).initIndependentStat().registerStat();
+
+        killedGuerrilla = new Achievement(id_of_killedGuerrilla, "killedGuerrilla", 1, 1, new ItemStack(GVCUtils.fn_ak74, 1, 15), No_place_to_HIDE).initIndependentStat().registerStat();
+
+        Union_Army = new Achievement(id_of_union, "Union_Army", 1, 2, new ItemStack(fn_soldierbmpegg, 1, 15), No_place_to_HIDE).initIndependentStat().registerStat();
+
+        Old_soldiers_never_fade = new Achievement(id_of_Old_soldiers_never_fade, "Old_soldiers_never_fade", 1, 3, new ItemStack(fn_tankegg, 1, 15), No_place_to_HIDE).initIndependentStat().registerStat();
+
+        power_of_number = new Achievement(id_of_power_of_number, "power_of_number", 2, 0, new ItemStack(GVCUtils.fn_ak74, 1, 15), No_place_to_HIDE).initIndependentStat().registerStat();
+
+        unmanned_Craft = new Achievement(id_of_unmanned_Craft, "unmanned_Craft", 1, 4, new ItemStack(fn_drawnegg, 1, 15), No_place_to_HIDE).initIndependentStat().registerStat();
+
+        war_has_changed = new Achievement(id_of_war_has_changed, "war_has_changed", 1, 5, new ItemStack(fn_gkegg, 1, 15), No_place_to_HIDE).initIndependentStat().registerStat();
+
+        unending_war = new Achievement(id_of_unending_war, "unending_war", 1, 6, new ItemStack(fn_skeletonegg, 1, 15), No_place_to_HIDE).initIndependentStat().registerStat();
+
+        METAL_GEAR = new Achievement(id_of_METAL_GEAR, "METAL_GEAR", 3, 0 , new ItemStack(fn_MGM, 1, 15), null).initIndependentStat().registerStat();
+
+        spear_the_gungnir = new Achievement(id_of_spear_the_gungnir, "spear_the_gungnir", 4, 0, new ItemStack(GVCUtils.fn_ptrk, 1, 15), null).initIndependentStat().registerStat();
+
+        Gun_of_the_Lost_Country = new Achievement(id_of_Gun_of_the_Lost_Country, "Gun_of_the_Lost_Country", 4, 1, new ItemStack(GVCUtils.type38, 1, 15), null).initIndependentStat().registerStat();
+
+        beacon_defensive = new Achievement(id_of_beacon_defensive, "beacon_defensive", 5, 0, new ItemStack(GVCUtils.fn_boxegg, 1, 15), null).initIndependentStat().registerStat();
+        
+        Achievement[] achievements = new Achievement[] { No_place_to_HIDE, killedGuerrilla,Union_Army,Old_soldiers_never_fade,power_of_number,unmanned_Craft,war_has_changed,unending_war,METAL_GEAR,spear_the_gungnir,Gun_of_the_Lost_Country,beacon_defensive};
+        AchievementPage.registerAchievementPage(new AchievementPage("Guerrilla VS Command mod : HD Edition", achievements));
     }
     
     @Mod.EventHandler

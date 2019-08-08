@@ -1,15 +1,11 @@
 package hmgww2.entity;
 
 import hmggvcmob.ai.*;
-import hmggvcmob.entity.*;
-import hmvehicle.entity.parts.*;
-import hmvehicle.entity.parts.logics.IbaseLogic;
-import hmvehicle.entity.parts.logics.TankBaseLogic;
-import hmvehicle.entity.parts.turrets.TurretObj;
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
-import net.minecraft.crash.CrashReport;
-import net.minecraft.crash.CrashReportCategory;
+import handmadevehicle.entity.ExplodeEffect;
+import handmadevehicle.entity.parts.logics.IbaseLogic;
+import handmadevehicle.entity.parts.logics.MultiRiderLogics;
+import handmadevehicle.entity.parts.logics.TankBaseLogic;
+import handmadevehicle.entity.parts.turrets.TurretObj;
 import net.minecraft.entity.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -25,9 +21,9 @@ import javax.vecmath.Vector3d;
 import java.util.List;
 
 import static hmggvcmob.GVCMobPlus.proxy;
-import static hmvehicle.Utils.transformVecByQuat;
-import static hmvehicle.Utils.transformVecforMinecraft;
-import static hmvehicle.HMVehicle.proxy_HMVehicle;
+import static handmadevehicle.Utils.transformVecByQuat;
+import static handmadevehicle.Utils.transformVecforMinecraft;
+import static handmadevehicle.HMVehicle.proxy_HMVehicle;
 import static java.lang.Math.abs;
 
 public abstract class EntityBases_Tank extends EntityBases implements ITank, IControlable
@@ -35,18 +31,12 @@ public abstract class EntityBases_Tank extends EntityBases implements ITank, ICo
 	// public int type;
 	
 	int count_for_reset;
-	public double angletime;
-	public int fireCycle1;
-	public int fireCycle2;
 	
 	public boolean seat_onTurret = true;
 	
 	public boolean subturret_is_mainTurret_child = false;
 	public float subturretrotationYaw;
 	public float subturretrotationPitch;
-	
-	public int mgMagazine;
-	public int mgReloadProgress;
 	public TankBaseLogic baseLogic = new TankBaseLogic(this,0.5f,2.0f,false,"hmgww2:hmgww2.T34Track");
 	ModifiedBoundingBox nboundingbox;
 	
@@ -131,13 +121,6 @@ public abstract class EntityBases_Tank extends EntityBases implements ITank, ICo
 		return this.dataWatcher.getWatchableObjectFloat(30);
 	}
 	
-	public void setCanonnreloadcycle(int ints) {
-		this.dataWatcher.updateObject(2, Integer.valueOf(ints));
-	}
-	public int getCanonnreloadcycle() {
-		return this.dataWatcher.getWatchableObjectInt(2);
-	}
-	
 	public void setTurretrotationYaw(float floats) {
 		this.dataWatcher.updateObject(26, Float.valueOf(floats));
 	}
@@ -208,15 +191,20 @@ public abstract class EntityBases_Tank extends EntityBases implements ITank, ICo
 		}
 	}
 	public boolean pickupEntity(Entity p_70085_1_, int StartSeachSeatNum){
-		p_70085_1_.mountEntity(this);
-		return true;
+		if(!(this instanceof ImultiRidable)) {
+			p_70085_1_.mountEntity(this);
+			return true;
+		}else {
+			return ((MultiRiderLogics)((HasBaseLogic)this).getBaseLogic()).pickupEntity(p_70085_1_,StartSeachSeatNum);
+		}
 	}
 	public void updateRiderPosition() {
-		if (this.riddenByEntity != null) {
+		if (!(this instanceof ImultiRidable) && this.riddenByEntity != null) {
 			if(seat_onTurret) {
-				mainTurret.setmotherpos(new Vector3d(this.posX, this.posY, -this.posZ), baseLogic.bodyRot);
+				mainTurret.calculatePos(new Vector3d(this.posX, this.posY, -this.posZ), baseLogic.bodyRot);
 				Vector3d temp = new Vector3d(mainTurret.pos);
 				Vector3d tempplayerPos = new Vector3d(proxy_HMVehicle.iszooming() ? zoomingplayerpos : playerpos);
+				tempplayerPos.z *= -1;
 				Vector3d playeroffsetter = new Vector3d(0, ((worldObj.isRemote && this.riddenByEntity == proxy_HMVehicle.getEntityPlayerInstance()) ? 0 : (this.riddenByEntity.getEyeHeight() + this.riddenByEntity.yOffset)), 0);
 				tempplayerPos.sub(playeroffsetter);
 				Vector3d temp2 = mainTurret.getGlobalVector_fromLocalVector_onTurretPoint(tempplayerPos);
@@ -233,6 +221,7 @@ public abstract class EntityBases_Tank extends EntityBases implements ITank, ICo
 			}else {
 				Vector3d temp = new Vector3d(this.posX,this.posY,-this.posZ);
 				Vector3d tempplayerPos = new Vector3d(proxy_HMVehicle.iszooming() ? zoomingplayerpos : playerpos);
+				tempplayerPos.z *= -1;
 				Vector3d playeroffsetter = new Vector3d(0, ((worldObj.isRemote && this.riddenByEntity == proxy_HMVehicle.getEntityPlayerInstance()) ? 0 : (this.riddenByEntity.getEyeHeight() + this.riddenByEntity.yOffset)), 0);
 				tempplayerPos.sub(playeroffsetter);
 				tempplayerPos = transformVecByQuat(tempplayerPos,this.baseLogic.bodyRot);
@@ -321,10 +310,6 @@ public abstract class EntityBases_Tank extends EntityBases implements ITank, ICo
 				mgAim(riddenByEntity.getRotationYawHead(),riddenByEntity.rotationPitch);
 			}
 			
-			if(!(this.getHealth()<=0)){
-				if(mainTurret != null)fireCycle1 = mainTurret.cycle_timer;
-				setCanonnreloadcycle(fireCycle1);
-			}
 			setSubTurretrotationYaw(subturretrotationYaw);
 			setSubTurretrotationPitch(subturretrotationPitch);
 		}else{
@@ -332,7 +317,6 @@ public abstract class EntityBases_Tank extends EntityBases implements ITank, ICo
 			
 			subturretrotationYaw = getSubTurretrotationYaw();
 			subturretrotationPitch = getSubTurretrotationPitch();
-			this.fireCycle1 = getCanonnreloadcycle();
 			
 			
 			this.renderYawOffset = rotationYaw;
@@ -423,12 +407,12 @@ public abstract class EntityBases_Tank extends EntityBases implements ITank, ICo
 	
 	@Override
 	public int getfirecyclesettings1() {
-		return 100;
+		return getMainTurret() != null ? getMainTurret().cycle_setting:0;
 	}
 	
 	@Override
 	public int getfirecycleprogress1() {
-		return fireCycle1;
+		return getMainTurret() != null ? getMainTurret().cycle_timer:0;
 	}
 	
 	@Override
@@ -477,6 +461,7 @@ public abstract class EntityBases_Tank extends EntityBases implements ITank, ICo
 	
 	public void setPosition(double x, double y, double z)
 	{
+		super.setPosition(x,y,z);
 		if(baseLogic != null)baseLogic.setPosition(x,y,z);
 	}
 	@Override
@@ -580,7 +565,7 @@ public abstract class EntityBases_Tank extends EntityBases implements ITank, ICo
 		++this.deathTicks;
 		if(this.deathTicks == 3){
 			//this.worldObj.createExplosion(this, this.posX, this.posY, this.posZ, 0F, false);
-			GVCEx ex = new GVCEx(this, 3F);
+			ExplodeEffect ex = new ExplodeEffect(this, 3F);
 			ex.offset[0] = (float) (rand.nextInt(30) - 15)/10;
 			ex.offset[1] = (float) (rand.nextInt(30) - 15)/10 + 1.5f;
 			ex.offset[2] = (float) (rand.nextInt(30) - 15)/10;
@@ -609,14 +594,14 @@ public abstract class EntityBases_Tank extends EntityBases implements ITank, ICo
 			this.playSound("gvcguns:gvcguns.fireee", 1.20F, 0.8F);
 		}else
 		if (rand.nextInt(3) == 0) {
-			GVCEx ex = new GVCEx(this, 1F);
+			ExplodeEffect ex = new ExplodeEffect(this, 1F);
 			ex.offset[0] = (float) (rand.nextInt(30) - 15) / 10;
 			ex.offset[1] = (float) (rand.nextInt(30) - 15) / 10;
 			ex.offset[2] = (float) (rand.nextInt(30) - 15) / 10;
 			ex.Ex();
 		}
 		if (this.deathTicks >= 140) {
-			GVCEx ex = new GVCEx(this, 8F);
+			ExplodeEffect ex = new ExplodeEffect(this, 8F);
 			ex.Ex();
 			for (int i = 0; i < 15; i++) {
 				worldObj.spawnParticle("flame",
@@ -710,345 +695,19 @@ public abstract class EntityBases_Tank extends EntityBases implements ITank, ICo
 	}
 	
 	
-	public void moveEntity(double p_70091_1_, double p_70091_3_, double p_70091_5_)
-	{
-		if (this.noClip)
-		{
-			this.boundingBox.offset(p_70091_1_, p_70091_3_, p_70091_5_);
-			this.posX = (this.boundingBox.minX + this.boundingBox.maxX) / 2.0D;
-			this.posY = this.boundingBox.minY + (double)this.yOffset - (double)this.ySize;
-			this.posZ = (this.boundingBox.minZ + this.boundingBox.maxZ) / 2.0D;
-		}
-		else
-		{
-			this.worldObj.theProfiler.startSection("move");
-			this.ySize *= 0.4F;
-			double d3 = this.posX;
-			double d4 = this.posY;
-			double d5 = this.posZ;
-			
-			if (this.isInWeb)
-			{
-				this.isInWeb = false;
-				p_70091_1_ *= 0.25D;
-				p_70091_3_ *= 0.05000000074505806D;
-				p_70091_5_ *= 0.25D;
-				this.motionX = 0.0D;
-				this.motionY = 0.0D;
-				this.motionZ = 0.0D;
-			}
-			
-			double d6 = p_70091_1_;
-			double d7 = p_70091_3_;
-			double d8 = p_70091_5_;
-			AxisAlignedBB axisalignedbb = ((ModifiedBoundingBox)this.boundingBox).noMod_copy();
-			boolean flag = this.onGround && this.isSneaking();
-			
-			if (flag)
-			{
-				double d9;
-				
-				for (d9 = 0.05D; p_70091_1_ != 0.0D && this.worldObj.getCollidingBoundingBoxes(this, axisalignedbb.getOffsetBoundingBox(p_70091_1_, -1.0D, 0.0D)).isEmpty(); d6 = p_70091_1_)
-				{
-					if (p_70091_1_ < d9 && p_70091_1_ >= -d9)
-					{
-						p_70091_1_ = 0.0D;
-					}
-					else if (p_70091_1_ > 0.0D)
-					{
-						p_70091_1_ -= d9;
-					}
-					else
-					{
-						p_70091_1_ += d9;
-					}
-				}
-				
-				for (; p_70091_5_ != 0.0D && this.worldObj.getCollidingBoundingBoxes(this, axisalignedbb.getOffsetBoundingBox(0.0D, -1.0D, p_70091_5_)).isEmpty(); d8 = p_70091_5_)
-				{
-					if (p_70091_5_ < d9 && p_70091_5_ >= -d9)
-					{
-						p_70091_5_ = 0.0D;
-					}
-					else if (p_70091_5_ > 0.0D)
-					{
-						p_70091_5_ -= d9;
-					}
-					else
-					{
-						p_70091_5_ += d9;
-					}
-				}
-				
-				while (p_70091_1_ != 0.0D && p_70091_5_ != 0.0D && this.worldObj.getCollidingBoundingBoxes(this, axisalignedbb.getOffsetBoundingBox(p_70091_1_, -1.0D, p_70091_5_)).isEmpty())
-				{
-					if (p_70091_1_ < d9 && p_70091_1_ >= -d9)
-					{
-						p_70091_1_ = 0.0D;
-					}
-					else if (p_70091_1_ > 0.0D)
-					{
-						p_70091_1_ -= d9;
-					}
-					else
-					{
-						p_70091_1_ += d9;
-					}
-					
-					if (p_70091_5_ < d9 && p_70091_5_ >= -d9)
-					{
-						p_70091_5_ = 0.0D;
-					}
-					else if (p_70091_5_ > 0.0D)
-					{
-						p_70091_5_ -= d9;
-					}
-					else
-					{
-						p_70091_5_ += d9;
-					}
-					
-					d6 = p_70091_1_;
-					d8 = p_70091_5_;
-				}
-			}
-			
-			List list = this.worldObj.getCollidingBoundingBoxes(this, axisalignedbb.addCoord(p_70091_1_, p_70091_3_, p_70091_5_));
-			
-			for (int i = 0; i < list.size(); ++i)
-			{
-				p_70091_3_ = ((AxisAlignedBB)list.get(i)).calculateYOffset(this.boundingBox, p_70091_3_);
-			}
-			
-			this.boundingBox.offset(0.0D, p_70091_3_, 0.0D);
-			
-			if (!this.field_70135_K && d7 != p_70091_3_)
-			{
-				p_70091_5_ = 0.0D;
-				p_70091_3_ = 0.0D;
-				p_70091_1_ = 0.0D;
-			}
-			
-			boolean flag1 = this.onGround || d7 != p_70091_3_ && d7 < 0.0D;
-			int j;
-			
-			for (j = 0; j < list.size(); ++j)
-			{
-				p_70091_1_ = ((AxisAlignedBB)list.get(j)).calculateXOffset(this.boundingBox, p_70091_1_);
-			}
-			
-			this.boundingBox.offset(p_70091_1_, 0.0D, 0.0D);
-			
-			if (!this.field_70135_K && d6 != p_70091_1_)
-			{
-				p_70091_5_ = 0.0D;
-				p_70091_3_ = 0.0D;
-				p_70091_1_ = 0.0D;
-			}
-			
-			for (j = 0; j < list.size(); ++j)
-			{
-				p_70091_5_ = ((AxisAlignedBB)list.get(j)).calculateZOffset(this.boundingBox, p_70091_5_);
-			}
-			
-			this.boundingBox.offset(0.0D, 0.0D, p_70091_5_);
-			
-			if (!this.field_70135_K && d8 != p_70091_5_)
-			{
-				p_70091_5_ = 0.0D;
-				p_70091_3_ = 0.0D;
-				p_70091_1_ = 0.0D;
-			}
-			
-			double d10;
-			double d11;
-			int k;
-			double d12;
-			
-			if (this.stepHeight > 0.0F && flag1 && (flag || this.ySize < 0.05F) && (d6 != p_70091_1_ || d8 != p_70091_5_))
-			{
-				d12 = p_70091_1_;
-				d10 = p_70091_3_;
-				d11 = p_70091_5_;
-				p_70091_1_ = d6;
-				p_70091_3_ = (double)this.stepHeight;
-				p_70091_5_ = d8;
-				AxisAlignedBB axisalignedbb1 = ((ModifiedBoundingBox) this.boundingBox).noMod_copy();
-				this.boundingBox.setBB(axisalignedbb);
-				list = this.worldObj.getCollidingBoundingBoxes(this, axisalignedbb1.addCoord(d6, p_70091_3_, d8));
-				
-				for (k = 0; k < list.size(); ++k)
-				{
-					p_70091_3_ = ((AxisAlignedBB)list.get(k)).calculateYOffset(this.boundingBox, p_70091_3_);
-				}
-				
-				this.boundingBox.offset(0.0D, p_70091_3_, 0.0D);
-				
-				if (!this.field_70135_K && d7 != p_70091_3_)
-				{
-					p_70091_5_ = 0.0D;
-					p_70091_3_ = 0.0D;
-					p_70091_1_ = 0.0D;
-				}
-				
-				for (k = 0; k < list.size(); ++k)
-				{
-					p_70091_1_ = ((AxisAlignedBB)list.get(k)).calculateXOffset(this.boundingBox, p_70091_1_);
-				}
-				
-				this.boundingBox.offset(p_70091_1_, 0.0D, 0.0D);
-				
-				if (!this.field_70135_K && d6 != p_70091_1_)
-				{
-					p_70091_5_ = 0.0D;
-					p_70091_3_ = 0.0D;
-					p_70091_1_ = 0.0D;
-				}
-				
-				for (k = 0; k < list.size(); ++k)
-				{
-					p_70091_5_ = ((AxisAlignedBB)list.get(k)).calculateZOffset(this.boundingBox, p_70091_5_);
-				}
-				
-				this.boundingBox.offset(0.0D, 0.0D, p_70091_5_);
-				
-				if (!this.field_70135_K && d8 != p_70091_5_)
-				{
-					p_70091_5_ = 0.0D;
-					p_70091_3_ = 0.0D;
-					p_70091_1_ = 0.0D;
-				}
-				
-				if (!this.field_70135_K && d7 != p_70091_3_)
-				{
-					p_70091_5_ = 0.0D;
-					p_70091_3_ = 0.0D;
-					p_70091_1_ = 0.0D;
-				}
-				else
-				{
-					p_70091_3_ = (double)(-this.stepHeight);
-					
-					for (k = 0; k < list.size(); ++k)
-					{
-						p_70091_3_ = ((AxisAlignedBB)list.get(k)).calculateYOffset(this.boundingBox, p_70091_3_);
-					}
-					
-					this.boundingBox.offset(0.0D, p_70091_3_, 0.0D);
-				}
-				
-				if (d12 * d12 + d11 * d11 >= p_70091_1_ * p_70091_1_ + p_70091_5_ * p_70091_5_)
-				{
-					p_70091_1_ = d12;
-					p_70091_3_ = d10;
-					p_70091_5_ = d11;
-					this.boundingBox.setBB(axisalignedbb1);
-				}
-			}
-			
-			this.worldObj.theProfiler.endSection();
-			this.worldObj.theProfiler.startSection("rest");
-			this.posX = (this.boundingBox.minX + this.boundingBox.maxX) / 2.0D;
-			this.posY = this.boundingBox.minY + (double)this.yOffset - (double)this.ySize;
-			this.posZ = (this.boundingBox.minZ + this.boundingBox.maxZ) / 2.0D;
-			this.isCollidedHorizontally = d6 != p_70091_1_ || d8 != p_70091_5_;
-			this.isCollidedVertically = d7 != p_70091_3_;
-			this.onGround = d7 != p_70091_3_ && d7 < 0.0D;
-			this.isCollided = this.isCollidedHorizontally || this.isCollidedVertically;
-			this.updateFallState(p_70091_3_, this.onGround);
-			
-			if (d6 != p_70091_1_)
-			{
-				this.motionX = 0.0D;
-			}
-			
-			if (d7 != p_70091_3_)
-			{
-				this.motionY = 0.0D;
-			}
-			
-			if (d8 != p_70091_5_)
-			{
-				this.motionZ = 0.0D;
-			}
-			
-			d12 = this.posX - d3;
-			d10 = this.posY - d4;
-			d11 = this.posZ - d5;
-			
-			if (this.canTriggerWalking() && !flag && this.ridingEntity == null)
-			{
-				int j1 = MathHelper.floor_double(this.posX);
-				k = MathHelper.floor_double(this.posY - 0.20000000298023224D - (double)this.yOffset);
-				int l = MathHelper.floor_double(this.posZ);
-				Block block = this.worldObj.getBlock(j1, k, l);
-				int i1 = this.worldObj.getBlock(j1, k - 1, l).getRenderType();
-				
-				if (i1 == 11 || i1 == 32 || i1 == 21)
-				{
-					block = this.worldObj.getBlock(j1, k - 1, l);
-				}
-				
-				if (block != Blocks.ladder)
-				{
-					d10 = 0.0D;
-				}
-				
-				this.distanceWalkedModified = (float)((double)this.distanceWalkedModified + (double)MathHelper.sqrt_double(d12 * d12 + d11 * d11) * 0.6D);
-				this.distanceWalkedOnStepModified = (float)((double)this.distanceWalkedOnStepModified + (double)MathHelper.sqrt_double(d12 * d12 + d10 * d10 + d11 * d11) * 0.6D);
-				
-				if (this.distanceWalkedOnStepModified > (float)proxy.getNextstepdistance(this) && block.getMaterial() != Material.air)
-				{
-					proxy.setNextstepdistance(this,(int)this.distanceWalkedOnStepModified + 1);
-					
-					if (this.isInWater())
-					{
-						float f = MathHelper.sqrt_double(this.motionX * this.motionX * 0.20000000298023224D + this.motionY * this.motionY + this.motionZ * this.motionZ * 0.20000000298023224D) * 0.35F;
-						
-						if (f > 1.0F)
-						{
-							f = 1.0F;
-						}
-						
-						this.playSound(this.getSwimSound(), f, 1.0F + (this.rand.nextFloat() - this.rand.nextFloat()) * 0.4F);
-					}
-					
-					this.func_145780_a(j1, k, l, block);
-					block.onEntityWalking(this.worldObj, j1, k, l, this);
-				}
-			}
-			
-			try
-			{
-				this.func_145775_I();
-			}
-			catch (Throwable throwable)
-			{
-				CrashReport crashreport = CrashReport.makeCrashReport(throwable, "Checking entity block collision");
-				CrashReportCategory crashreportcategory = crashreport.makeCategory("Entity being checked for collision");
-				this.addEntityCrashInfo(crashreportcategory);
-				throw new ReportedException(crashreport);
-			}
-			
-			boolean flag2 = this.isWet();
-			extinguish();
-//
-//			if (this.worldObj.func_147470_e(this.boundingBox.contract(0.001D, 0.001D, 0.001D)))
-//			{
-//				this.dealFireDamage(1);
-//			}
-//			else if (this.fire <= 0)
-//			{
-//				this.fire = -this.fireResistance;
-//			}
-//
-//			if (flag2 && this.fire > 0)
-//			{
-//				this.playSound("random.fizz", 0.7F, 1.6F + (this.rand.nextFloat() - this.rand.nextFloat()) * 0.4F);
-//				this.fire = -this.fireResistance;
-//			}
-			
-			this.worldObj.theProfiler.endSection();
-		}
+	@Override
+	public void moveEntity(double x, double y, double z){
+		baseLogic.moveEntity(x,y,z);
 	}
+	
+	@Override
+	public void updateFallState_public(double stepHeight, boolean onground){
+		this.updateFallState(stepHeight,onground);
+	}
+	
+	@Override
+	public void func_145775_I_public() {
+		this.func_145775_I();
+	}
+	
 }

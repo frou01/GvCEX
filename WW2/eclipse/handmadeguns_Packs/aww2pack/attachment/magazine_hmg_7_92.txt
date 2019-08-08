@@ -1,0 +1,13 @@
+Texture,792bullet
+Stack,64
+BulletRound,10
+Name,7.92mm Rifle Magazine
+CustomMagazine,7_92mm_magazine
+
+Recipe1,aa 
+Recipe2,bbb
+Recipe3,c
+ItemA,minecraft,iron_ingot
+ItemB,minecraft,gunpowder
+ItemC,HandmadeGuns,GER_Certificate
+addNewRecipe,HandmadeGuns,7_92mm_magazine,3

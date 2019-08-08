@@ -2,8 +2,8 @@ package hmgww2.entity;
 
 
 import hmggvcmob.ai.AITankAttack;
-import hmvehicle.entity.parts.logics.TankBaseLogic;
-import hmvehicle.entity.parts.turrets.TurretObj;
+import handmadevehicle.entity.parts.logics.TankBaseLogic;
+import handmadevehicle.entity.parts.turrets.TurretObj;
 import net.minecraft.world.World;
 
 import javax.vecmath.Vector3d;
@@ -44,15 +44,15 @@ public class EntityGER_TankAA extends EntityGER_TankBase
             cannon1.canex = false;
             cannon1.cycle_setting = 1;
             cannon1.firesound = "hmgww2:hmgww2.20mmfire";
-            cannon1.spread = 10;
+            cannon1.spread = 15;
             cannon1.speed = 6;
             cannon1.magazinerem = 80;
             cannon1.magazineMax = 80;
-            cannon1.reloadSetting = 30;
+            cannon1.reloadSetting = 100;
             cannon1.guntype = 2;
             cannon1.flashoffset = 2;
             cannon1.syncTurretAngle = true;
-            cannon1.fireAll = false;
+            cannon1.fireAll_child = false;
             mainTurret = cannon1;
         }
 

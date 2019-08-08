@@ -2,12 +2,12 @@ package hmggvcmob.entity.guerrilla;
 
 
 import hmggvcmob.ai.AITankAttack;
-import hmggvcmob.entity.*;
-import hmvehicle.entity.parts.ITank;
-import hmvehicle.entity.parts.ModifiedBoundingBox;
-import hmvehicle.entity.parts.logics.IbaseLogic;
-import hmvehicle.entity.parts.logics.TankBaseLogic;
-import hmvehicle.entity.parts.turrets.TurretObj;
+import handmadevehicle.entity.ExplodeEffect;
+import handmadevehicle.entity.parts.ITank;
+import handmadevehicle.entity.parts.ModifiedBoundingBox;
+import handmadevehicle.entity.parts.logics.LogicsBase;
+import handmadevehicle.entity.parts.logics.TankBaseLogic;
+import handmadevehicle.entity.parts.turrets.TurretObj;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.Blocks;
@@ -20,11 +20,10 @@ import net.minecraft.world.World;
 import javax.vecmath.Quat4d;
 import javax.vecmath.Vector3d;
 
-import static hmggvcmob.GVCMobPlus.proxy;
 import static hmggvcmob.event.GVCMXEntityEvent.soundedentity;
-import static hmvehicle.Utils.CalculateGunElevationAngle;
-import static hmvehicle.Utils.transformVecforMinecraft;
-import static hmvehicle.HMVehicle.proxy_HMVehicle;
+import static handmadevehicle.Utils.CalculateGunElevationAngle;
+import static handmadevehicle.Utils.transformVecforMinecraft;
+import static handmadevehicle.HMVehicle.proxy_HMVehicle;
 import static java.lang.Math.abs;
 
 public class GVCEntityTank extends EntityGBase implements ITank
@@ -76,7 +75,7 @@ public class GVCEntityTank extends EntityGBase implements ITank
 		nboundingbox = new ModifiedBoundingBox(-20,0,-20,20,20,20,
 				0,1.1,0,3,2.2,9);
 		nboundingbox.rot.set(baseLogic.bodyRot);
-		proxy.replaceBoundingbox(this,nboundingbox);
+		proxy_HMVehicle.replaceBoundingbox(this,nboundingbox);
 		nboundingbox.centerRotX = 0;
 		nboundingbox.centerRotY = 0;
 		nboundingbox.centerRotZ = 0;
@@ -403,6 +402,7 @@ public class GVCEntityTank extends EntityGBase implements ITank
 	}
 	public void mainFireToTarget(Entity target){
 		mainTurret.currentEntity = this;
+		mainTurret.aimToEntity(target);
 		mainTurret.fire();
 //        Vector3d Vec_transformedbybody = baseLogic.getTransformedVector_onturret(cannonpos,turretYawCenterpos);
 //
@@ -468,7 +468,7 @@ public class GVCEntityTank extends EntityGBase implements ITank
 	}
 
 	@Override
-	public IbaseLogic getBaseLogic() {
+	public LogicsBase getBaseLogic() {
 		return baseLogic;
 	}
 
@@ -697,7 +697,7 @@ public class GVCEntityTank extends EntityGBase implements ITank
 		++this.deathTicks;
 		if(this.deathTicks == 3){
 			//this.worldObj.createExplosion(this, this.posX, this.posY, this.posZ, 0F, false);
-			GVCEx ex = new GVCEx(this, 3F);
+			ExplodeEffect ex = new ExplodeEffect(this, 3F);
 			ex.offset[0] = (float) (rand.nextInt(30) - 15)/10;
 			ex.offset[1] = (float) (rand.nextInt(30) - 15)/10 + 1.5f;
 			ex.offset[2] = (float) (rand.nextInt(30) - 15)/10;
@@ -726,7 +726,7 @@ public class GVCEntityTank extends EntityGBase implements ITank
 			this.playSound("gvcguns:gvcguns.fireee", 1.20F, 0.8F);
 		}else
 		if (rand.nextInt(3) == 0) {
-			GVCEx ex = new GVCEx(this, 1F);
+			ExplodeEffect ex = new ExplodeEffect(this, 1F);
 			ex.offset[0] = (float) (rand.nextInt(30) - 15) / 10;
 			ex.offset[1] = (float) (rand.nextInt(30) - 15) / 10;
 			ex.offset[2] = (float) (rand.nextInt(30) - 15) / 10;
@@ -736,7 +736,7 @@ public class GVCEntityTank extends EntityGBase implements ITank
 			this.setDead();
 		else
 		if (this.deathTicks >= 140) {
-			GVCEx ex = new GVCEx(this, 8F);
+			ExplodeEffect ex = new ExplodeEffect(this, 8F);
 			ex.Ex();
 			for (int i = 0; i < 15; i++) {
 				worldObj.spawnParticle("flame",
@@ -857,6 +857,7 @@ public class GVCEntityTank extends EntityGBase implements ITank
 	}
 	public void setPosition(double x, double y, double z)
 	{
+		super.setPosition(x,y,z);
 		if(baseLogic != null)baseLogic.setPosition(x,y,z);
 	}
 
@@ -879,5 +880,21 @@ public class GVCEntityTank extends EntityGBase implements ITank
 	@Override
 	public boolean standalone() {
 		return true;
+	}
+	
+	
+	@Override
+	public void moveEntity(double x, double y, double z){
+		baseLogic.moveEntity(x,y,z);
+	}
+	
+	@Override
+	public void updateFallState_public(double stepHeight, boolean onground){
+		this.updateFallState(stepHeight,onground);
+	}
+	
+	@Override
+	public void func_145775_I_public() {
+		this.func_145775_I();
 	}
 }

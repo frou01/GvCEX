@@ -66,5 +66,10 @@ public class BulletSoundHMG extends MovingSound
 			}
 		}
 		if(!this.repeat && attachedEntity instanceof HMGEntityBulletBase)((HMGEntityBulletBase) attachedEntity).soundstoped = true;
+		if(attachedEntity instanceof HMGEntityBulletBase && !(((HMGEntityBulletBase)attachedEntity).flyingSoundInfo != null && ((HMGEntityBulletBase)attachedEntity).motionX * ((HMGEntityBulletBase)attachedEntity).motionX + ((HMGEntityBulletBase)attachedEntity).motionY * ((HMGEntityBulletBase)attachedEntity).motionY + ((HMGEntityBulletBase)attachedEntity).motionZ * ((HMGEntityBulletBase)attachedEntity).motionZ > ((HMGEntityBulletBase)attachedEntity).flyingSoundInfo.MinBltSP * ((HMGEntityBulletBase)attachedEntity).flyingSoundInfo.MinBltSP && ((HMGEntityBulletBase)attachedEntity).getDistanceSqToEntity(proxy.getEntityPlayerInstance()) < ((HMGEntityBulletBase)attachedEntity).flyingSoundInfo.MaxDist*((HMGEntityBulletBase)attachedEntity).flyingSoundInfo.MaxDist)) {
+			this.donePlaying = true;
+			this.repeat = false;
+			((HMGEntityBulletBase) attachedEntity).soundstoped = true;
+		}
 	}
 }

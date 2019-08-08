@@ -1,15 +1,12 @@
 package hmggvcmob.entity.guerrilla;
 
-import hmvehicle.entity.parts.IMultiTurretVehicle;
-import hmvehicle.entity.parts.Iplane;
-import hmvehicle.entity.parts.ModifiedBoundingBox;
-import hmvehicle.entity.parts.SeatInfo;
-import hmvehicle.entity.parts.logics.IbaseLogic;
-import hmvehicle.entity.parts.logics.PlaneBaseLogic;
-import hmvehicle.entity.parts.turrets.TurretObj;
+import handmadevehicle.entity.parts.logics.IbaseLogic;
+import handmadevehicle.entity.parts.logics.PlaneBaseLogic;
+import handmadevehicle.entity.parts.turrets.TurretObj;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
@@ -18,9 +15,8 @@ import javax.vecmath.Vector3d;
 
 import java.util.ArrayList;
 
-import static hmggvcmob.GVCMobPlus.proxy;
-import static hmvehicle.Utils.CalculateGunElevationAngle;
-import static hmvehicle.Utils.addAllTurret;
+import static handmadevehicle.Utils.CalculateGunElevationAngle;
+import static handmadevehicle.Utils.addAllTurret;
 
 public class GVCEntityWZ10AttackHeli extends EntityGBase implements Iplane,IMultiTurretVehicle
 {
@@ -35,35 +31,35 @@ public class GVCEntityWZ10AttackHeli extends EntityGBase implements Iplane,IMult
         this.setSize(5f, 5f);
 //		nboundingbox = new ModifiedBoundingBox(-20,-20,-20,20,20,20,0,0,-6.27,2.5,5,19);
 //		nboundingbox.rot.set(this.bodyRot);
-//		proxy.replaceBoundingbox(this,nboundingbox);
+//		proxy_HMVehicle.replaceBoundingbox(this,nboundingbox);
 //		((ModifiedBoundingBox)this.boundingBox).update(this.posX,this.posY,this.posZ);
         ignoreFrustumCheck = true;
         baseLogic = new PlaneBaseLogic(worldObj, this);
-        baseLogic.soundname = "gvcmob:gvcmob.heli";
-        baseLogic.soundpitch = 1.2f;
-        baseLogic.speedfactor = 0.012f;
-        baseLogic.liftfactor = 0.01f;
-        baseLogic.flapliftfactor = 0;
-        baseLogic.flapdragfactor = 0;
-        baseLogic.geardragfactor = 0;
-        baseLogic.dragfactor = 0.07f;
-        baseLogic.gravity = 0.049f;
-        baseLogic.stability2 = 0;
-        baseLogic.stability = 0;
-        baseLogic.rotmotion_reduceSpeed = 0;
-        baseLogic.forced_rudder_effect = 0.99f;
-        baseLogic.forced_rotmotion_reduceSpeed = 0.05f;
-        baseLogic.slipresist = 0;
-        baseLogic.throttle_Max = 5;
-        baseLogic.unitThrottle.set(0,-1,0);
-        baseLogic.brakedragfactor = 0;
-        baseLogic.maxClimb = 0;
-        baseLogic.maxDive = 30;
-        baseLogic.minALT = 10;
-        baseLogic.cruiseALT = 25;
-        baseLogic.changeWeaponCycleSetting = 50;
-        baseLogic.type_F_Plane_T_Heli = true;
-        baseLogic.displayModernHud = true;
+        baseLogic.planeInfo.soundname = "gvcmob:gvcmob.heli";
+        baseLogic.planeInfo.soundpitch = 1.2f;
+        baseLogic.planeInfo.speedfactor = 0.012f;
+        baseLogic.planeInfo.liftfactor = 0.01f;
+        baseLogic.planeInfo.flapliftfactor = 0;
+        baseLogic.planeInfo.flapdragfactor = 0;
+        baseLogic.planeInfo.geardragfactor = 0;
+        baseLogic.planeInfo.dragfactor = 0.07f;
+        baseLogic.planeInfo.gravity = 0.049f;
+        baseLogic.planeInfo.stability2 = 0;
+        baseLogic.planeInfo.stability = 0;
+        baseLogic.planeInfo.rotmotion_reduceSpeed = 0;
+        baseLogic.planeInfo.forced_rudder_effect = 0.99f;
+        baseLogic.planeInfo.forced_rotmotion_reduceSpeed = 0.05f;
+        baseLogic.planeInfo.slipresist = 0;
+        baseLogic.planeInfo.throttle_Max = 5;
+        baseLogic.planeInfo.unitThrottle.set(0,-1,0);
+        baseLogic.planeInfo.brakedragfactor = 0;
+        baseLogic.planeInfo.maxClimb = 0;
+        baseLogic.planeInfo.maxDive = 30;
+        baseLogic.planeInfo.minALT = 10;
+        baseLogic.planeInfo.cruiseALT = 25;
+        baseLogic.planeInfo.changeWeaponCycleSetting = 50;
+        baseLogic.planeInfo.type_F_Plane_T_Heli = true;
+        baseLogic.planeInfo.displayModernHud = true;
         
         {
             TurretObj turret = new TurretObj(worldObj);
@@ -155,7 +151,7 @@ public class GVCEntityWZ10AttackHeli extends EntityGBase implements Iplane,IMult
             missile1.magazinerem = 4;
             missile1.reloadTimer = -1;
             missile1.canex = true;
-            missile1.fireAll = false;
+            missile1.fireAll_child = false;
             missile1.guntype = 3;
             missile1.seekerSize = 30;
     
@@ -179,7 +175,7 @@ public class GVCEntityWZ10AttackHeli extends EntityGBase implements Iplane,IMult
             missile2.magazinerem = 4;
             missile2.reloadTimer = -1;
             missile2.canex = true;
-            missile2.fireAll = false;
+            missile2.fireAll_child = false;
             missile2.guntype = 3;
             missile2.seekerSize = 30;
     
@@ -187,32 +183,33 @@ public class GVCEntityWZ10AttackHeli extends EntityGBase implements Iplane,IMult
             baseLogic.subTurret = missile1;
         }
         
-        baseLogic.riddenByEntitiesInfo = new SeatInfo[2];
-        baseLogic.riddenByEntitiesInfo_zoom = new SeatInfo[2];
+        baseLogic.seatInfos = new SeatInfo[2];
+        baseLogic.seatInfos_zoom = new SeatInfo[2];
         baseLogic.riddenByEntities = new Entity[2];
-        baseLogic.riddenByEntitiesInfo[0] = new SeatInfo();
-        baseLogic.riddenByEntitiesInfo[0].pos[0] = 0.1074;
-        baseLogic.riddenByEntitiesInfo[0].pos[1] = 2.584;
-        baseLogic.riddenByEntitiesInfo[0].pos[2] = -4.245;
+        baseLogic.seatInfos[0] = new SeatInfo();
+        baseLogic.seatInfos[0].pos[0] = 0.1074;
+        baseLogic.seatInfos[0].pos[1] = 2.584;
+        baseLogic.seatInfos[0].pos[2] = -4.245;
         
-        baseLogic.riddenByEntitiesInfo[1] = new SeatInfo();
-        baseLogic.riddenByEntitiesInfo[1].pos[0] = 0.1278;
-        baseLogic.riddenByEntitiesInfo[1].pos[1] = 1.726;
-        baseLogic.riddenByEntitiesInfo[1].pos[2] = -6.145;
-        baseLogic.riddenByEntitiesInfo[1].hasGun = true;
-        baseLogic.riddenByEntitiesInfo[1].gun = gunnerturret;
+        baseLogic.seatInfos[1] = new SeatInfo();
+        baseLogic.seatInfos[1].pos[0] = 0.1278;
+        baseLogic.seatInfos[1].pos[1] = 1.726;
+        baseLogic.seatInfos[1].pos[2] = -6.145;
+        baseLogic.seatInfos[1].hasGun = true;
+        baseLogic.seatInfos[1].maingun = gunnerturret;
         
-        baseLogic.riddenByEntitiesInfo_zoom[1] = new SeatInfo();
-        baseLogic.riddenByEntitiesInfo_zoom[1].pos[0] = 0.1278;
-        baseLogic.riddenByEntitiesInfo_zoom[1].pos[1] = -2 + 1.726;
-        baseLogic.riddenByEntitiesInfo_zoom[1].pos[2] = -6.145;
+        baseLogic.seatInfos_zoom[1] = new SeatInfo();
+        baseLogic.seatInfos_zoom[1].pos[0] = 0.1278;
+        baseLogic.seatInfos_zoom[1].pos[1] = -2 + 1.726;
+        baseLogic.seatInfos_zoom[1].pos[2] = -6.145;
 
 
 //		baseLogic.slipresist = 4;
-        
-        ModifiedBoundingBox nboundingbox = new ModifiedBoundingBox(-1.5,0,-1.5,1.5,5,1.5,0,0,-6.27,2.5,5,19);
+        ModifiedBoundingBox nboundingbox = new ModifiedBoundingBox(-1.5,0,-1.5,
+                                                                          1.5,5,1.5,
+                                                                          0,1.5,0,2.5,3,8);
         nboundingbox.rot.set(baseLogic.bodyRot);
-        proxy.replaceBoundingbox(this,nboundingbox);
+        proxy_HMVehicle.replaceBoundingbox(this,nboundingbox);
         ((ModifiedBoundingBox)this.boundingBox).update(this.posX,this.posY,this.posZ);
         
     }
@@ -240,6 +237,7 @@ public class GVCEntityWZ10AttackHeli extends EntityGBase implements Iplane,IMult
                 }
                 if(flag) {
                     EntityGBase gvcEntityGuerrilla = new GVCEntityGuerrillaMG(worldObj);
+                    gvcEntityGuerrilla.addRandomArmor();
                     gvcEntityGuerrilla.setLocationAndAngles(this.posX, this.posY, this.posZ, 0, 0);
                     worldObj.spawnEntityInWorld(gvcEntityGuerrilla);
                     if (!pickupEntity(gvcEntityGuerrilla, 0)) gvcEntityGuerrilla.setDead();
@@ -262,6 +260,22 @@ public class GVCEntityWZ10AttackHeli extends EntityGBase implements Iplane,IMult
 //			baseLogic.throttle--;
 //		}
         baseLogic.onUpdate();
+    }
+    public boolean attackEntityFrom(DamageSource source, float par2) {
+        if(source.getDamageType().equals(DamageSource.fall.damageType) ||
+                   source.getDamageType().equals(DamageSource.outOfWorld.damageType) ||
+                   source.getDamageType().equals(DamageSource.inWall.damageType))return super.attackEntityFrom(source, par2);
+        par2 -= 4;
+        if(par2 < 0)par2 = 0;
+        if (this.riddenByEntity == source.getEntity()) {
+            return false;
+        } else if (this == source.getEntity()) {
+            return false;
+        } else if(this instanceof ImultiRidable && ((ImultiRidable)this).isRidingEntity(source.getEntity())) {
+            return false;
+        }else {
+            return super.attackEntityFrom(source, par2);
+        }
     }
     
     public void setVelocity(double p_70016_1_, double p_70016_3_, double p_70016_5_) {
@@ -450,6 +464,7 @@ public class GVCEntityWZ10AttackHeli extends EntityGBase implements Iplane,IMult
     }
     public void setPosition(double x, double y, double z)
     {
+        super.setPosition(x,y,z);
         if(baseLogic != null)baseLogic.setPosition(x,y,z);
     }
     
@@ -482,5 +497,21 @@ public class GVCEntityWZ10AttackHeli extends EntityGBase implements Iplane,IMult
             baseLogic.turrets = turrets.toArray(new TurretObj[turrets.size()]);
         }
         return baseLogic.turrets;
+    }
+    
+    
+    @Override
+    public void moveEntity(double x, double y, double z){
+        baseLogic.moveEntity(x,y,z);
+    }
+    
+    @Override
+    public void updateFallState_public(double stepHeight, boolean onground){
+        this.updateFallState(stepHeight,onground);
+    }
+    
+    @Override
+    public void func_145775_I_public() {
+        this.func_145775_I();
     }
 }

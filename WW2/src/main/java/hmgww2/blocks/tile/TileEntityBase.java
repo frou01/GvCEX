@@ -7,6 +7,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import hmgww2.Nation;
 import hmgww2.entity.*;
+import hmgww2.entity.planes.*;
 import hmgww2.network.WW2PacketFlagSync;
 import hmgww2.network.WW2PacketHandler;
 import net.minecraft.block.Block;
@@ -268,7 +269,7 @@ public class TileEntityBase extends TileEntity
 							EntityBases entity_willSpawn = (EntityBases) classes[rnd.nextInt(classes.length)].getConstructor(World.class).newInstance(worldObj);
 							int ix = rnd.nextInt(10) - 5 + spawnoffset[0];
 							int iz = rnd.nextInt(10) - 5 + spawnoffset[1];
-							int iy = (entity_willSpawn instanceof EntityBases_Plane?60:0) + spawnoffset[2];
+							int iy = (entity_willSpawn instanceof EntityBases_Plane ?60:0) + spawnoffset[2];
 							entity_willSpawn.setLocationAndAngles(this.xCoord + ix, this.yCoord + iy, this.zCoord + 0.5 + iz, rnd.nextInt(360) - 180, 0.0F);
 							{//search flag
 								double disttoflag = -1;

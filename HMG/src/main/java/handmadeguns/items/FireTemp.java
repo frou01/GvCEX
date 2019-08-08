@@ -1,8 +1,5 @@
 package handmadeguns.items;
 
-import static handmadeguns.HandmadeGunsCore.cfg_defaultknockback;
-import static handmadeguns.HandmadeGunsCore.cfg_defaultknockbacky;
-
 public class FireTemp {
 	public int power;
 	public int fuse;
@@ -32,7 +29,7 @@ public class FireTemp {
 		this.bouncelimit = gunInfo.bouncelimit;
 		this.resistance = gunInfo.resistance;
 		this.acceleration = gunInfo.acceleration;
-		this.gra = gunInfo.gra;
+		this.gra = gunInfo.gravity;
 	}
 	public void applyMagOption(HMGItemCustomMagazine magazine){
 		this.power *= magazine.damagemodify;

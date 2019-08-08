@@ -118,10 +118,10 @@ public class BlockBaseBlock_GER extends Block
 	    		Chest.setInventorySlotContents(9, new ItemStack(mod_GVCWW2.gun_gew98,1,0));
 	    		Chest.setInventorySlotContents(10, new ItemStack(mod_GVCWW2.gun_gew98,1,0));
 	    		Chest.setInventorySlotContents(11, new ItemStack(mod_GVCWW2.gun_gew98,1,0));
+			    Chest.setInventorySlotContents(13, new ItemStack(mod_GVCWW2.gun_gew43,1,0));
+			    Chest.setInventorySlotContents(14, new ItemStack(mod_GVCWW2.gun_gew43,1,0));
 	    		Chest.setInventorySlotContents(12, new ItemStack(mod_GVCWW2.gun_mp40,1,0));
-	    		Chest.setInventorySlotContents(13, new ItemStack(mod_GVCWW2.gun_mp40,1,0));
-	    		Chest.setInventorySlotContents(14, new ItemStack(mod_GVCWW2.gun_gew43,1,0));
-	    		Chest.setInventorySlotContents(15, new ItemStack(mod_GVCWW2.gun_gew43,1,0));
+	    		Chest.setInventorySlotContents(15, new ItemStack(mod_GVCWW2.gun_mg34,1,0));
 	    		Chest.setInventorySlotContents(16, new ItemStack(mod_GVCWW2.gun_mg34,1,0));
 	    		Chest.setInventorySlotContents(17, new ItemStack(mod_GVCWW2.gun_rpzb54,1,0));
 	    		for (int i = 18; i < 27; ++i){
@@ -136,12 +136,26 @@ public class BlockBaseBlock_GER extends Block
     		TileEntityChest Chest;
 	    	Chest = (TileEntityChest) par1World.getTileEntity(par1, par2, par3);
 	    	{
-	    		for (int i = 0; i < 9; ++i){
-	    			Chest.setInventorySlotContents(i, new ItemStack(mod_GVCWW2.b_magazine,4,0));
-		        }
-	    		for (int i = 9; i < 18; ++i){
-		            Chest.setInventorySlotContents(i, new ItemStack(mod_GVCWW2.b_magazine,4,0));
-		        }
+			    Chest.setInventorySlotContents(0, new ItemStack(mod_GVCWW2.gun_gew98.gunInfo.magazine[0],1,0));
+			    Chest.setInventorySlotContents(1, new ItemStack(mod_GVCWW2.gun_gew98.gunInfo.magazine[0],1,0));
+			    Chest.setInventorySlotContents(3, new ItemStack(mod_GVCWW2.gun_gew98.gunInfo.magazine[0],1,0));
+			    Chest.setInventorySlotContents(4, new ItemStack(mod_GVCWW2.gun_gew43.gunInfo.magazine[0],1,0));
+			    Chest.setInventorySlotContents(2, new ItemStack(mod_GVCWW2.gun_gew43.gunInfo.magazine[0],1,0));
+			    Chest.setInventorySlotContents(5, new ItemStack(mod_GVCWW2.gun_mp40.gunInfo.magazine[0],1,0));
+			    Chest.setInventorySlotContents(6, new ItemStack(mod_GVCWW2.gun_mg34.gunInfo.magazine[0],1,0));
+			    Chest.setInventorySlotContents(7, new ItemStack(mod_GVCWW2.gun_mg34.gunInfo.magazine[0],1,0));
+			    Chest.setInventorySlotContents(8, new ItemStack(mod_GVCWW2.gun_rpzb54.gunInfo.magazine[0],1,0));
+			    
+			    Chest.setInventorySlotContents(9, new ItemStack(mod_GVCWW2.gun_gew98.gunInfo.magazine[0],1,0));
+			    Chest.setInventorySlotContents(10, new ItemStack(mod_GVCWW2.gun_gew98.gunInfo.magazine[0],1,0));
+			    Chest.setInventorySlotContents(11, new ItemStack(mod_GVCWW2.gun_gew98.gunInfo.magazine[0],1,0));
+			    Chest.setInventorySlotContents(13, new ItemStack(mod_GVCWW2.gun_gew43.gunInfo.magazine[0],1,0));
+			    Chest.setInventorySlotContents(14, new ItemStack(mod_GVCWW2.gun_gew43.gunInfo.magazine[0],1,0));
+			    Chest.setInventorySlotContents(12, new ItemStack(mod_GVCWW2.gun_mp40.gunInfo.magazine[0],1,0));
+			    Chest.setInventorySlotContents(15, new ItemStack(mod_GVCWW2.gun_mg34.gunInfo.magazine[0],1,0));
+			    Chest.setInventorySlotContents(16, new ItemStack(mod_GVCWW2.gun_mg34.gunInfo.magazine[0],1,0));
+			    Chest.setInventorySlotContents(17, new ItemStack(mod_GVCWW2.gun_rpzb54.gunInfo.magazine[0],1,0));
+			    
 	    		for (int i = 18; i < 27; ++i){
 		            Chest.setInventorySlotContents(i, new ItemStack(mod_GVCWW2.gun_grenade,4,0));
 		        }

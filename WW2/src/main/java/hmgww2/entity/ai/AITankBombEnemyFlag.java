@@ -2,8 +2,8 @@ package hmgww2.entity.ai;
 
 import hmgww2.Nation;
 import hmgww2.blocks.tile.TileEntityBase;
-import hmvehicle.entity.parts.ITank;
-import hmvehicle.entity.parts.logics.TankBaseLogic;
+import handmadevehicle.entity.parts.ITank;
+import handmadevehicle.entity.parts.logics.TankBaseLogic;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.tileentity.TileEntity;

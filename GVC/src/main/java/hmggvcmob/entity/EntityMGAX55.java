@@ -3,6 +3,7 @@ package hmggvcmob.entity;
 import cpw.mods.fml.client.FMLClientHandler;
 import handmadeguns.HMGPacketHandler;
 import handmadeguns.HandmadeGunsCore;
+import handmadeguns.entity.I_SPdamageHandle;
 import handmadeguns.entity.bullets.*;
 import handmadeguns.network.PacketSpawnParticle;
 import handmadeguns.client.render.HMGGunParts_Motion;
@@ -10,10 +11,11 @@ import handmadeguns.client.render.HMGGunParts_Motions;
 import hmggvcmob.SlowPathFinder.WorldForPathfind;
 import hmggvcmob.network.GVCMPacketHandler;
 import hmggvcmob.network.GVCPacketMGControl;
-import hmvehicle.Utils;
-import hmvehicle.entity.parts.ModifiedBoundingBox;
-import hmvehicle.entity.parts.OBB;
-import hmvehicle.entity.parts.SeatInfo;
+import handmadevehicle.Utils;
+import handmadevehicle.entity.parts.ImultiRidable;
+import handmadevehicle.entity.parts.ModifiedBoundingBox;
+import handmadevehicle.entity.parts.OBB;
+import handmadevehicle.entity.parts.SeatInfo;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
@@ -34,15 +36,14 @@ import java.util.List;
 import java.util.Random;
 
 import static hmggvcmob.GVCMobPlus.METAL_GEAR;
-import static hmggvcmob.GVCMobPlus.proxy;
-import static hmvehicle.Utils.quatRotateAxis;
-import static hmvehicle.Utils.transformVecByQuat;
-import static hmvehicle.HMVehicle.proxy_HMVehicle;
+import static handmadevehicle.HMVehicle.proxy_HMVehicle;
+import static handmadevehicle.Utils.*;
 import static java.lang.Math.*;
 import static net.minecraft.util.MathHelper.wrapAngleTo180_float;
 
-public class EntityMGAX55 extends Entity {
+public class EntityMGAX55 extends Entity implements I_SPdamageHandle {
     public float health = 1000;
+    public float armor = 30;
     public float maxhealth = 1000;
     public float bodyrotationYaw;
     public float bodyrotationRoll;
@@ -122,7 +123,7 @@ public class EntityMGAX55 extends Entity {
     public Vector3d xVector = new Vector3d();
     public Vector3d yVector = new Vector3d();
     public Vector3d zVector = new Vector3d();
-    public SeatInfo[] SeatInfo = new SeatInfo[6];
+    public SeatInfo[] seatInfo = new SeatInfo[6];
     private HMGGunParts_Motions onforwardmotions = new HMGGunParts_Motions();;
     public Entity pilot;
     Entity TGT;
@@ -163,7 +164,7 @@ public class EntityMGAX55 extends Entity {
         nboundingbox.boxes = new OBB[7];
         initseat(nboundingbox);
         nboundingbox.calculateMax_And_Min();
-        proxy.replaceBoundingbox(this,nboundingbox);
+        proxy_HMVehicle.replaceBoundingbox(this,nboundingbox);
         ((ModifiedBoundingBox)this.boundingBox).update(this.posX,this.posY,this.posZ);
         
         stepHeight = 5;
@@ -260,11 +261,11 @@ public class EntityMGAX55 extends Entity {
         onforwardmotions.addmotion(motion);
     }
     public void initseat(ModifiedBoundingBox motherBox){
-        motherBox.boxes[0] = new OBB(new Vector3d(0,7.325,-2.65),new Vector3d(1.5,1.5,1.5));
-        motherBox.boxes[1] = new OBB(new Vector3d(-1.23,1.5,0),new Vector3d(1.5,3,1.5));
-        motherBox.boxes[2] = new OBB(new Vector3d(1.23,1.5,0),new Vector3d(1.5,3,1.5));
-        motherBox.boxes[3] = new OBB(new Vector3d(0,6.5,0),new Vector3d(2.5,1.5,2.5));
-        motherBox.boxes[4] = new OBB(new Vector3d(0, 8.2, 4.6),new Vector3d(2.5,1.5,2.5));
+        motherBox.boxes[0] = new OBB(new Vector3d(0,7.325,-2.65),new Vector3d(3,3,3));
+        motherBox.boxes[1] = new OBB(new Vector3d(-1.23,1.5,0),new Vector3d(3,6,6));
+        motherBox.boxes[2] = new OBB(new Vector3d(1.23,1.5,0),new Vector3d(3,6,6));
+        motherBox.boxes[3] = new OBB(new Vector3d(0,6.5,0),new Vector3d(2.5,1.5,4));
+        motherBox.boxes[4] = new OBB(new Vector3d(0, 8.2, 4.6),new Vector3d(3,3,3));
         motherBox.boxes[5] = new OBB(new Vector3d(-5.5 ,10.2, 3.8),new Vector3d(1.5,1.5,1.5));
         motherBox.boxes[6] = new OBB(new Vector3d(5.5 ,10.2, 3.8),new Vector3d(1.5,1.5,4));
 //        for (int i = 0; i< childEntities.length; i++) {
@@ -320,25 +321,32 @@ public class EntityMGAX55 extends Entity {
 //            }
 //        }
     }
-
-    public boolean attackEntityFrom(DamageSource source, float par2)
-    {
-        if(source.getEntity() == this){
+    
+    
+    public boolean attackEntityFrom_with_Info(MovingObjectPosition movingObjectPosition, DamageSource source, float level){
+        float temparomor = armor;
+        
+        return this.attackEntityFrom_exceptArmor(source,level);
+    }
+    
+    public boolean attackEntityFrom(DamageSource source, float par2) {
+        if(source.getDamageType().equals(DamageSource.fall.damageType) ||
+                   source.getDamageType().equals(DamageSource.outOfWorld.damageType) ||
+                   source.getDamageType().equals(DamageSource.inWall.damageType))return attackEntityFrom_exceptArmor(source, par2);
+        par2 -= armor;
+        if(par2 < 0)par2 = 0;
+        if (this.riddenByEntity == source.getEntity()) {
             return false;
-        }
-        if(this.riddenByEntity == source.getEntity())return false;
-        if(par2 <= 50){
-            this.playSound("random.anvil_land", 0.5F, 1F);
+        } else if (this == source.getEntity()) {
             return false;
-        }else if(par2 < 75){
-            this.playSound("random.anvil_land", 0.5F, 1.5F);
-            par2 = par2 /2;
+        } else if(this instanceof ImultiRidable && ((ImultiRidable)this).isRidingEntity(source.getEntity())) {
+            return false;
         }else {
-            this.playSound("random.anvil_land", 0.5F, 1.5F);
+            return super.attackEntityFrom(source, par2);
         }
-        health -=par2;
+    }
+    public boolean attackEntityFrom_exceptArmor (DamageSource source, float par2){
         return super.attackEntityFrom(source, par2);
-
     }
     public void onUpdate() {
         nboundingbox.update(this.posX,this.posY,this.posZ);
@@ -423,7 +431,7 @@ public class EntityMGAX55 extends Entity {
             }
             if (pilot instanceof EntityLivingBase) {
                 if (pilot instanceof EntityLiving) {
-                    pilot.setLocationAndAngles(this.posX, this.posY + 6, this.posZ, ((EntityLiving) pilot).rotationYawHead, pilot.rotationPitch);
+                    pilot.setLocationAndAngles(this.posX, this.posY + 10, this.posZ, ((EntityLiving) pilot).rotationYawHead, pilot.rotationPitch);
     
                     if (((EntityLiving) pilot).getAttackTarget() != null)
                         ((EntityLiving) pilot).getLookHelper().setLookPositionWithEntity(((EntityLiving) pilot).getAttackTarget(), 360, 360);

@@ -2,9 +2,8 @@
 package hmggvcmob.render;
 
 import cpw.mods.fml.client.FMLClientHandler;
-import hmvehicle.entity.EntityChild;
 import hmggvcmob.entity.friend.GVCEntityPMCHeli;
-import hmvehicle.entity.parts.logics.PlaneBaseLogic;
+import handmadevehicle.entity.parts.logics.PlaneBaseLogic;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraftforge.client.MinecraftForgeClient;
 import org.lwjgl.opengl.GL11;
@@ -98,23 +97,58 @@ public class GVCRenderPMCHeliobj extends Render {
 				GL11.glEnable(GL11.GL_LIGHTING);
 				OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)lastBrightnessX, (float)lastBrightnessY);
 			}
-			if (planeBaseLogic.riddenByEntities[1] == FMLClientHandler.instance().getClientPlayerEntity() && FMLClientHandler.instance().getClient().gameSettings.thirdPersonView == 0) {
+//			if (planeBaseLogic.riddenByEntities[1] == FMLClientHandler.instance().getClientPlayerEntity() && FMLClientHandler.instance().getClient().gameSettings.thirdPersonView == 0) {
+//
+//			}
+			{
+				GL11.glPushMatrix();
+				GL11.glTranslatef(0.1095f,1.128f,6.517f);
+				GL11.glRotatef((float) -planeBaseLogic.seatInfos[1].maingun.turretrotationYaw,0,1,0);
+				GL11.glTranslatef(-0.1095f,-1.128f,-6.517f);
+				tankk.renderPart("GunnerHudBase");
+				GL11.glTranslatef(0.1117f,1.377f,6.517f);
+				GL11.glRotatef((float) planeBaseLogic.seatInfos[1].maingun.turretrotationPitch,1,0,0);
+				GL11.glTranslatef(-0.1117f,-1.377f,-6.517f);
+				tankk.renderPart("GunnerHudBase2");
+				
+				glClear(GL_STENCIL_BUFFER_BIT);
+				glEnable(GL_STENCIL_TEST);
+				glStencilMask(1);
+				
+				glStencilFunc(
+						GL_ALWAYS,   // GLenum func
+						1,          // GLint ref
+						~0);// GLuint mask
+				glStencilOp(
+						GL_KEEP,
+						GL_KEEP,
+						GL_REPLACE);
 				GL11.glDepthMask(false);
 				tankk.renderPart("GunnerHudPlate");
+				GL11.glPopMatrix();
+				
 				GL11.glDisable(GL11.GL_LIGHTING);
 				float lastBrightnessX = OpenGlHelper.lastBrightnessX;
 				float lastBrightnessY = OpenGlHelper.lastBrightnessY;
 				OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
 				glDisable(GL_DEPTH_TEST);
-
+				
 				GL11.glPushMatrix();
 				GL11.glTranslatef(0.1176f,0.4499f,6.443f);
-				GL11.glRotatef((float) -planeBaseLogic.riddenByEntitiesInfo[1].gun.turretrotationYaw,0,1,0);
+				GL11.glRotatef((float) -planeBaseLogic.seatInfos[1].maingun.turretrotationYaw,0,1,0);
 				GL11.glTranslatef(-0.1176f,-0.4499f,-6.443f);
 				GL11.glTranslatef(0,0.8190f,6.4489f);
-				GL11.glRotatef((float) planeBaseLogic.riddenByEntitiesInfo[1].gun.turretrotationPitch,1,0,0);
+				GL11.glRotatef((float) planeBaseLogic.seatInfos[1].maingun.turretrotationPitch,1,0,0);
 				GL11.glTranslatef(0,-0.8190f,-6.4489f);
+				
+				
+				glStencilFunc(
+						GL_EQUAL,   // GLenum func
+						1,          // GLint ref
+						~0);// GLuint mask
+				glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
 				tankk.renderPart("GunnerReticle");
+				glDisable(GL_STENCIL_TEST);
 				GL11.glPopMatrix();
 				glEnable(GL_DEPTH_TEST);
 				GL11.glEnable(GL11.GL_LIGHTING);
@@ -147,11 +181,11 @@ public class GVCRenderPMCHeliobj extends Render {
 			{
 				GL11.glPushMatrix();
 				GL11.glTranslatef(0.1176f,0.4499f,6.443f);
-				GL11.glRotatef((float) -planeBaseLogic.riddenByEntitiesInfo[1].gun.turretrotationYaw,0,1,0);
+				GL11.glRotatef((float) -planeBaseLogic.seatInfos[1].maingun.turretrotationYaw,0,1,0);
 				GL11.glTranslatef(-0.1176f,-0.4499f,-6.443f);
 				tankk.renderPart("FgunTurretY");
 				GL11.glTranslatef(0,0.8190f,6.4489f);
-				GL11.glRotatef((float) planeBaseLogic.riddenByEntitiesInfo[1].gun.turretrotationPitch,1,0,0);
+				GL11.glRotatef((float) planeBaseLogic.seatInfos[1].maingun.turretrotationPitch,1,0,0);
 				GL11.glTranslatef(0,-0.8190f,-6.4489f);
 				tankk.renderPart("FgunTurretP");
 				tankk.renderPart("Fgun");

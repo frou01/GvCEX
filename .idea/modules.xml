@@ -16,6 +16,10 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/GVCC_main.iml" filepath="$PROJECT_DIR$/.idea/modules/GVCC_main.iml" group="GVCC" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/GVCC_test.iml" filepath="$PROJECT_DIR$/.idea/modules/GVCC_test.iml" group="GVCC" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/GVCDangeons/GVCDangeons.iml" filepath="$PROJECT_DIR$/.idea/modules/GVCDangeons/GVCDangeons.iml" group="GVCDangeons" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/GVCDangeonsBase/GVCDangeonsBase.iml" filepath="$PROJECT_DIR$/.idea/modules/GVCDangeonsBase/GVCDangeonsBase.iml" group="GVCDangeonsBase" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/GVCDangeonsBase/GVCDangeonsBase_api.iml" filepath="$PROJECT_DIR$/.idea/modules/GVCDangeonsBase/GVCDangeonsBase_api.iml" group="GVCDangeonsBase" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/GVCDangeonsBase/GVCDangeonsBase_main.iml" filepath="$PROJECT_DIR$/.idea/modules/GVCDangeonsBase/GVCDangeonsBase_main.iml" group="GVCDangeonsBase" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/GVCDangeonsBase/GVCDangeonsBase_test.iml" filepath="$PROJECT_DIR$/.idea/modules/GVCDangeonsBase/GVCDangeonsBase_test.iml" group="GVCDangeonsBase" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/GVCDangeons/GVCDangeons_api.iml" filepath="$PROJECT_DIR$/.idea/modules/GVCDangeons/GVCDangeons_api.iml" group="GVCDangeons" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/GVCDangeons/GVCDangeons_main.iml" filepath="$PROJECT_DIR$/.idea/modules/GVCDangeons/GVCDangeons_main.iml" group="GVCDangeons" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/GVCDangeons/GVCDangeons_test.iml" filepath="$PROJECT_DIR$/.idea/modules/GVCDangeons/GVCDangeons_test.iml" group="GVCDangeons" />

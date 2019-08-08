@@ -1,10 +1,7 @@
 package hmggvcmob.ai;
 
-import hmvehicle.entity.parts.IVehicle;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.pathfinding.PathPoint;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 

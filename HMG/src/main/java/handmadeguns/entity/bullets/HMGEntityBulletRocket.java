@@ -15,8 +15,10 @@ public class HMGEntityBulletRocket extends HMGEntityBulletExprode implements IEn
 	}
 	public HMGEntityBulletRocket(World worldIn, Entity throwerIn, int damege, float bspeed, float bure) {
 		super(worldIn, throwerIn, damege, bspeed, bure);
+		this.bulletTypeName = "byfrou01_Rocket";
 		this.canbounce = false;
 		this.bouncerate = 0.1f;
+		
 	}
 	public HMGEntityBulletRocket(World worldIn, Entity throwerIn, int damege, float bspeed, float bure, float exl, boolean canex) {
 		this(worldIn, throwerIn, damege, bspeed, bure);

@@ -6,10 +6,10 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 import handmadeguns.HandmadeGunsCore;
 import handmadeguns.entity.bullets.HMGEntityBulletBase;
 import handmadeguns.event.GunSoundEvent;
+import handmadeguns.items.guns.HMGItem_Unified_Guns;
 import handmadeguns.network.PacketSpawnParticle;
-import hmvehicle.entity.EntityChild;
+import hmggvcutil.GVCUtils;
 import hmggvcmob.entity.TU95;
-import hmggvcmob.entity.friend.EntitySoBases;
 import hmggvcmob.entity.guerrilla.*;
 import hmggvcmob.network.GVCMPacketHandler;
 import hmggvcmob.network.GVCPacketSpawnSpotCircle;
@@ -17,12 +17,13 @@ import hmggvcmob.util.SpotObj;
 import hmggvcmob.util.SpotType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
+import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 
 import javax.vecmath.Vector3d;
 import java.util.ArrayList;
@@ -236,6 +237,18 @@ public class GVCMXEntityEvent {
 			if (killing instanceof EntityGBase) {
 				((EntityPlayer) dieing).addStat(killedGuerrilla,1);
 			}
+		}
+	}
+	
+	@SubscribeEvent
+	public void pickItemEvent(EntityItemPickupEvent event){
+		EntityLivingBase picking = event.entityPlayer;
+		EntityItem picked = event.item;
+		if(picking==null){
+			return;
+		}
+		if(picked.getEntityItem().getItem() instanceof HMGItem_Unified_Guns) {
+			if(picked.getEntityItem().getItem() == GVCUtils.type38) ((EntityPlayer) picking).addStat(Gun_of_the_Lost_Country,1);
 		}
 	}
 }

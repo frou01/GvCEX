@@ -2,9 +2,8 @@
 package hmggvcmob.render;
 
 import cpw.mods.fml.client.FMLClientHandler;
-import hmvehicle.entity.EntityChild;
 import hmggvcmob.entity.friend.GVCEntitySoldierHeli;
-import hmvehicle.entity.parts.logics.PlaneBaseLogic;
+import handmadevehicle.entity.parts.logics.PlaneBaseLogic;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraftforge.client.MinecraftForgeClient;
 import org.lwjgl.opengl.GL11;
@@ -111,10 +110,10 @@ public class GVCRenderSoldierHeliobj extends Render {
 				
 				GL11.glPushMatrix();
 				GL11.glTranslatef(0.1176f,0.4499f,6.443f);
-				GL11.glRotatef((float) -planeBaseLogic.riddenByEntitiesInfo[1].gun.turretrotationYaw,0,1,0);
+				GL11.glRotatef((float) -planeBaseLogic.seatInfos[1].maingun.turretrotationYaw,0,1,0);
 				GL11.glTranslatef(-0.1176f,-0.4499f,-6.443f);
 				GL11.glTranslatef(0,0.8190f,6.4489f);
-				GL11.glRotatef((float) planeBaseLogic.riddenByEntitiesInfo[1].gun.turretrotationPitch,1,0,0);
+				GL11.glRotatef((float) planeBaseLogic.seatInfos[1].maingun.turretrotationPitch,1,0,0);
 				GL11.glTranslatef(0,-0.8190f,-6.4489f);
 				tankk.renderPart("GunnerReticle");
 				GL11.glPopMatrix();
@@ -149,11 +148,11 @@ public class GVCRenderSoldierHeliobj extends Render {
 			{
 				GL11.glPushMatrix();
 				GL11.glTranslatef(0.1176f,0.4499f,6.443f);
-				GL11.glRotatef((float) -planeBaseLogic.riddenByEntitiesInfo[1].gun.turretrotationYaw,0,1,0);
+				GL11.glRotatef((float) -planeBaseLogic.seatInfos[1].maingun.turretrotationYaw,0,1,0);
 				GL11.glTranslatef(-0.1176f,-0.4499f,-6.443f);
 				tankk.renderPart("FgunTurretY");
 				GL11.glTranslatef(0,0.8190f,6.4489f);
-				GL11.glRotatef((float) planeBaseLogic.riddenByEntitiesInfo[1].gun.turretrotationPitch,1,0,0);
+				GL11.glRotatef((float) planeBaseLogic.seatInfos[1].maingun.turretrotationPitch,1,0,0);
 				GL11.glTranslatef(0,-0.8190f,-6.4489f);
 				tankk.renderPart("FgunTurretP");
 				tankk.renderPart("Fgun");

@@ -601,7 +601,7 @@ public class HMGItem_Unified_Guns extends Item {
             } catch (NoSuchMethodException e) {
                 e.printStackTrace();
             }
-            this.Flash(itemstack, world, entity);
+            this.Flash(itemstack, world, entity,nbt);
             entity.getEntityData().setFloat("GunshotLevel", guntemp.soundlevel);
             proxy.playerSounded(entity);
 //            world.playSoundEffect(entity.posX,entity.posY,entity.posZ, sound, soundlevel, soundspeed);
@@ -700,7 +700,7 @@ public class HMGItem_Unified_Guns extends Item {
                 for(HMGEntityBulletBase bulletBase :bullet) {
                     bulletBase.knockbackXZ = gunInfo.knockback;
                     bulletBase.knockbackY = gunInfo.knockbackY;
-                    bulletBase.gra = gunInfo.gra;
+                    bulletBase.gra = gunInfo.gravity;
                     bulletBase.bouncerate = gunInfo.bouncerate;
                     bulletBase.bouncelimit = gunInfo.bouncelimit;
                     bulletBase.fuse = firetemp.fuse;
@@ -717,22 +717,45 @@ public class HMGItem_Unified_Guns extends Item {
                         bulletBase.induction_precision = gunInfo.induction_precision;
                     }
                     if (entity instanceof PlacedGunEntity) {
-                        Vec3 vec = Vec3.createVectorHelper(gunInfo.posGetter.barrelpos[0], gunInfo.posGetter.barrelpos[1], gunInfo.posGetter.barrelpos[2]);
-                        vec = vec.addVector( - gunInfo.posGetter.turretRotationPitchPoint[0], - gunInfo.posGetter.turretRotationPitchPoint[1], - gunInfo.posGetter.turretRotationPitchPoint[2]);
-                        vec.rotateAroundX(-(float) toRadians(entity.rotationPitch));
-                        vec = vec.addVector(   gunInfo.posGetter.turretRotationPitchPoint[0],   gunInfo.posGetter.turretRotationPitchPoint[1],   gunInfo.posGetter.turretRotationPitchPoint[2]);
-                        vec = vec.addVector( - gunInfo.posGetter.turretRotationYawPoint[0], - gunInfo.posGetter.turretRotationYawPoint[1], - gunInfo.posGetter.turretRotationYawPoint[2]);
-                        vec.rotateAroundY(-(float) toRadians(((PlacedGunEntity)entity).rotationYawGun - ((PlacedGunEntity)entity).baserotationYaw));
-                        vec = vec.addVector(   gunInfo.posGetter.turretRotationYawPoint[0],   gunInfo.posGetter.turretRotationYawPoint[1],   gunInfo.posGetter.turretRotationYawPoint[2]);
-                        vec.rotateAroundY(-(float) toRadians(((PlacedGunEntity)entity).baserotationYaw));
-                        double ix = 0;
-                        double iy = 0;
-                        double iz = 0;
-                        ix = vec.xCoord;
-                        iy = vec.yCoord;
-                        iz = vec.zCoord;
-                        if(entity.riddenByEntity != null)bulletBase.thrower = entity.riddenByEntity;
-                        bulletBase.setLocationAndAngles(entity.posX + ix, entity.posY + entity.getEyeHeight() + iy, entity.posZ + iz, ((PlacedGunEntity) entity).rotationYawGun,entity.rotationPitch);
+                        if(gunInfo.posGetter.multi_barrelpos == null) {
+                            Vec3 vec = Vec3.createVectorHelper(gunInfo.posGetter.barrelpos[0], gunInfo.posGetter.barrelpos[1], gunInfo.posGetter.barrelpos[2]);
+                            vec = vec.addVector(-gunInfo.posGetter.turretRotationPitchPoint[0], -gunInfo.posGetter.turretRotationPitchPoint[1], -gunInfo.posGetter.turretRotationPitchPoint[2]);
+                            vec.rotateAroundX(-(float) toRadians(entity.rotationPitch));
+                            vec = vec.addVector(gunInfo.posGetter.turretRotationPitchPoint[0], gunInfo.posGetter.turretRotationPitchPoint[1], gunInfo.posGetter.turretRotationPitchPoint[2]);
+                            vec = vec.addVector(-gunInfo.posGetter.turretRotationYawPoint[0], -gunInfo.posGetter.turretRotationYawPoint[1], -gunInfo.posGetter.turretRotationYawPoint[2]);
+                            vec.rotateAroundY(-(float) toRadians(((PlacedGunEntity) entity).rotationYawGun - ((PlacedGunEntity) entity).baserotationYaw));
+                            vec = vec.addVector(gunInfo.posGetter.turretRotationYawPoint[0], gunInfo.posGetter.turretRotationYawPoint[1], gunInfo.posGetter.turretRotationYawPoint[2]);
+                            vec.rotateAroundY(-(float) toRadians(((PlacedGunEntity) entity).baserotationYaw));
+                            double ix = 0;
+                            double iy = 0;
+                            double iz = 0;
+                            ix = vec.xCoord;
+                            iy = vec.yCoord;
+                            iz = vec.zCoord;
+                            if (entity.riddenByEntity != null) bulletBase.thrower = entity.riddenByEntity;
+                            bulletBase.setLocationAndAngles(entity.posX + ix, entity.posY + entity.getEyeHeight() + iy, entity.posZ + iz, ((PlacedGunEntity) entity).rotationYawGun, entity.rotationPitch);
+                        }else {
+                            int barrelId = nbt.getInteger("barrelId");
+                            barrelId++;
+                            if(barrelId >= gunInfo.posGetter.multi_barrelpos.length)barrelId = 0;
+                            Vec3 vec = Vec3.createVectorHelper(gunInfo.posGetter.multi_barrelpos[barrelId][0], gunInfo.posGetter.multi_barrelpos[barrelId][1], gunInfo.posGetter.multi_barrelpos[barrelId][2]);
+                            vec = vec.addVector(-gunInfo.posGetter.turretRotationPitchPoint[0], -gunInfo.posGetter.turretRotationPitchPoint[1], -gunInfo.posGetter.turretRotationPitchPoint[2]);
+                            vec.rotateAroundX(-(float) toRadians(entity.rotationPitch));
+                            vec = vec.addVector(gunInfo.posGetter.turretRotationPitchPoint[0], gunInfo.posGetter.turretRotationPitchPoint[1], gunInfo.posGetter.turretRotationPitchPoint[2]);
+                            vec = vec.addVector(-gunInfo.posGetter.turretRotationYawPoint[0], -gunInfo.posGetter.turretRotationYawPoint[1], -gunInfo.posGetter.turretRotationYawPoint[2]);
+                            vec.rotateAroundY(-(float) toRadians(((PlacedGunEntity) entity).rotationYawGun - ((PlacedGunEntity) entity).baserotationYaw));
+                            vec = vec.addVector(gunInfo.posGetter.turretRotationYawPoint[0], gunInfo.posGetter.turretRotationYawPoint[1], gunInfo.posGetter.turretRotationYawPoint[2]);
+                            vec.rotateAroundY(-(float) toRadians(((PlacedGunEntity) entity).baserotationYaw));
+                            double ix = 0;
+                            double iy = 0;
+                            double iz = 0;
+                            ix = vec.xCoord;
+                            iy = vec.yCoord;
+                            iz = vec.zCoord;
+                            if (entity.riddenByEntity != null) bulletBase.thrower = entity.riddenByEntity;
+                            bulletBase.setLocationAndAngles(entity.posX + ix, entity.posY + entity.getEyeHeight() + iy, entity.posZ + iz, ((PlacedGunEntity) entity).rotationYawGun, entity.rotationPitch);
+                            nbt.setInteger("barrelId",barrelId);
+                        }
                     }
                     world.spawnEntityInWorld(bulletBase);
                 }
@@ -911,23 +934,39 @@ public class HMGItem_Unified_Guns extends Item {
 
 
 
-    public void Flash(ItemStack par1ItemStack, World par2World, Entity entity){
+    public void Flash(ItemStack par1ItemStack, World par2World, Entity entity,NBTTagCompound nbt){
 
         double ix = 0;
         double iy = 0;
         double iz = 0;
         if(entity instanceof PlacedGunEntity) {
-            Vec3 vec = Vec3.createVectorHelper(gunInfo.posGetter.barrelpos[0], gunInfo.posGetter.barrelpos[1], gunInfo.posGetter.barrelpos[2]);
-            vec = vec.addVector( - gunInfo.posGetter.turretRotationPitchPoint[0], - gunInfo.posGetter.turretRotationPitchPoint[1], - gunInfo.posGetter.turretRotationPitchPoint[2]);
-            vec.rotateAroundX(-(float) toRadians(entity.rotationPitch));
-            vec = vec.addVector(   gunInfo.posGetter.turretRotationPitchPoint[0],   gunInfo.posGetter.turretRotationPitchPoint[1],   gunInfo.posGetter.turretRotationPitchPoint[2]);
-            vec = vec.addVector( - gunInfo.posGetter.turretRotationYawPoint[0], - gunInfo.posGetter.turretRotationYawPoint[1], - gunInfo.posGetter.turretRotationYawPoint[2]);
-            vec.rotateAroundY(-(float) toRadians(((PlacedGunEntity)entity).rotationYawGun - ((PlacedGunEntity)entity).baserotationYaw));
-            vec = vec.addVector(   gunInfo.posGetter.turretRotationYawPoint[0],   gunInfo.posGetter.turretRotationYawPoint[1],   gunInfo.posGetter.turretRotationYawPoint[2]);
-            vec.rotateAroundY(-(float) toRadians(((PlacedGunEntity)entity).baserotationYaw));
-            ix = vec.xCoord;
-            iy = vec.yCoord + entity.getEyeHeight();
-            iz = vec.zCoord;
+            if(gunInfo.posGetter.multi_barrelpos == null) {
+                Vec3 vec = Vec3.createVectorHelper(gunInfo.posGetter.barrelpos[0], gunInfo.posGetter.barrelpos[1], gunInfo.posGetter.barrelpos[2]);
+                vec = vec.addVector(-gunInfo.posGetter.turretRotationPitchPoint[0], -gunInfo.posGetter.turretRotationPitchPoint[1], -gunInfo.posGetter.turretRotationPitchPoint[2]);
+                vec.rotateAroundX(-(float) toRadians(entity.rotationPitch));
+                vec = vec.addVector(gunInfo.posGetter.turretRotationPitchPoint[0], gunInfo.posGetter.turretRotationPitchPoint[1], gunInfo.posGetter.turretRotationPitchPoint[2]);
+                vec = vec.addVector(-gunInfo.posGetter.turretRotationYawPoint[0], -gunInfo.posGetter.turretRotationYawPoint[1], -gunInfo.posGetter.turretRotationYawPoint[2]);
+                vec.rotateAroundY(-(float) toRadians(((PlacedGunEntity) entity).rotationYawGun - ((PlacedGunEntity) entity).baserotationYaw));
+                vec = vec.addVector(gunInfo.posGetter.turretRotationYawPoint[0], gunInfo.posGetter.turretRotationYawPoint[1], gunInfo.posGetter.turretRotationYawPoint[2]);
+                vec.rotateAroundY(-(float) toRadians(((PlacedGunEntity) entity).baserotationYaw));
+                ix = vec.xCoord;
+                iy = vec.yCoord + entity.getEyeHeight();
+                iz = vec.zCoord;
+            }else {
+                int barrelId = nbt.getInteger("barrelId");
+                if(barrelId >= gunInfo.posGetter.multi_barrelpos.length)barrelId = 0;
+                Vec3 vec = Vec3.createVectorHelper(gunInfo.posGetter.multi_barrelpos[barrelId][0], gunInfo.posGetter.multi_barrelpos[barrelId][1], gunInfo.posGetter.multi_barrelpos[barrelId][2]);
+                vec = vec.addVector(-gunInfo.posGetter.turretRotationPitchPoint[0], -gunInfo.posGetter.turretRotationPitchPoint[1], -gunInfo.posGetter.turretRotationPitchPoint[2]);
+                vec.rotateAroundX(-(float) toRadians(entity.rotationPitch));
+                vec = vec.addVector(gunInfo.posGetter.turretRotationPitchPoint[0], gunInfo.posGetter.turretRotationPitchPoint[1], gunInfo.posGetter.turretRotationPitchPoint[2]);
+                vec = vec.addVector(-gunInfo.posGetter.turretRotationYawPoint[0], -gunInfo.posGetter.turretRotationYawPoint[1], -gunInfo.posGetter.turretRotationYawPoint[2]);
+                vec.rotateAroundY(-(float) toRadians(((PlacedGunEntity) entity).rotationYawGun - ((PlacedGunEntity) entity).baserotationYaw));
+                vec = vec.addVector(gunInfo.posGetter.turretRotationYawPoint[0], gunInfo.posGetter.turretRotationYawPoint[1], gunInfo.posGetter.turretRotationYawPoint[2]);
+                vec.rotateAroundY(-(float) toRadians(((PlacedGunEntity) entity).baserotationYaw));
+                ix = vec.xCoord;
+                iy = vec.yCoord + entity.getEyeHeight();
+                iz = vec.zCoord;
+            }
         }else {
             float f1 = (entity instanceof EntityLivingBase ? ((EntityLivingBase) entity).rotationYawHead : entity.rotationYaw) * (2 * (float) Math.PI / 360);
             float f2 = entity.rotationPitch * (2 * (float) Math.PI / 360);

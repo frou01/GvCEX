@@ -11,8 +11,8 @@
 
 package hmggvcmob.render.model;
 
-import hmvehicle.entity.parts.ITank;
-import hmvehicle.entity.parts.logics.TankBaseLogic;
+import handmadevehicle.entity.parts.ITank;
+import handmadevehicle.entity.parts.logics.TankBaseLogic;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
@@ -1209,7 +1209,7 @@ public class ModelBMP extends ModelBase
         if(entity instanceof ITank) {
             TankBaseLogic baseLogic = (TankBaseLogic) ((ITank) entity).getBaseLogic();
             setRotationAngles(f, f1, f2, f3, f4, f5, entity);
-            GL11.glTranslatef(0.0F, -(-24.0F * f5 - 0.0078125F), 0.0F);
+            GL11.glTranslatef(0.0F, 0.5f + (24.0F * f5), 0.0F);
             GL11.glRotatef(baseLogic.bodyrotationPitch, 1.0F, 0.0F, 0.0F);
             GL11.glRotatef(-baseLogic.bodyrotationRoll, 0.0F, 0.0F, 1.0F);
             GL11.glTranslatef(0.0F, -24.0F * f5 - 0.0078125F, 0.0F);
@@ -1324,17 +1324,19 @@ public class ModelBMP extends ModelBase
             cannon4.render(f5);
             GL11.glPopMatrix();
 
-            GL11.glPushMatrix();
-            GL11.glTranslatef(0, -0.5f, 0.1f);
-            GL11.glRotatef((float) ((ITank) entity).getTurrets()[1].turretrotationYaw, 1.0F, 0.0F, 0.0F);
-            GL11.glRotatef((float) ((ITank) entity).getTurrets()[1].turretrotationPitch, 1.0F, 0.0F, 0.0F);
-            GL11.glTranslatef(0, 0.5f, -0.1f);
-            missile1.render(f5);
-            missile2.render(f5);
-            missile3.render(f5);
-            missile4.render(f5);
-            missile5.render(f5);
-            GL11.glPopMatrix();
+            if(!((ITank) entity).getTurrets()[1].isreloading()) {
+                GL11.glPushMatrix();
+                GL11.glTranslatef(0, -0.5f, 0.1f);
+                GL11.glRotatef((float) ((ITank) entity).getTurrets()[1].turretrotationYaw, 1.0F, 0.0F, 0.0F);
+                GL11.glRotatef((float) ((ITank) entity).getTurrets()[1].turretrotationPitch, 1.0F, 0.0F, 0.0F);
+                GL11.glTranslatef(0, 0.5f, -0.1f);
+                missile1.render(f5);
+                missile2.render(f5);
+                missile3.render(f5);
+                missile4.render(f5);
+                missile5.render(f5);
+                GL11.glPopMatrix();
+            }
 
             headhatch.render(f5);
             headsensor1.render(f5);

@@ -14,9 +14,11 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
+import handmadeguns.items.guns.HMGItem_Unified_Guns;
 import hmgww2.blocks.*;
 import hmgww2.entity.*;
 import hmgww2.entity.EntityUSSR_TankSPG;
+import hmgww2.entity.planes.*;
 import hmgww2.event.EventEntityBases;
 import hmgww2.event.EventEntityPlayer;
 import hmgww2.event.EventOverlay;
@@ -171,37 +173,37 @@ public class mod_GVCWW2 {
 	public static Item b_magazinemg;
 	public static Item b_magazinerpg;
 	
-	public static Item gun_type38;
-	public static Item gun_type99lmg;
-	public static Item gun_type4Auto;
-	public static Item gun_type100;
-	public static Item gun_rota_cannon;
-	public static Item gun_type14;
+	public static HMGItem_Unified_Guns gun_type38;
+	public static HMGItem_Unified_Guns gun_type99lmg;
+	public static HMGItem_Unified_Guns gun_type4Auto;
+	public static HMGItem_Unified_Guns gun_type100;
+	public static HMGItem_Unified_Guns gun_rota_cannon;
+	public static HMGItem_Unified_Guns gun_type14;
 	
-	public static Item gun_m1g;
-	public static Item gun_m1t;
-	public static Item gun_bar;
-	public static Item gun_m1917;
-	public static Item gun_m1b;
-	public static Item gun_boys;
-	public static Item gun_m1911;
+	public static HMGItem_Unified_Guns gun_m1g;
+	public static HMGItem_Unified_Guns gun_m1t;
+	public static HMGItem_Unified_Guns gun_bar;
+	public static HMGItem_Unified_Guns gun_m1917;
+	public static HMGItem_Unified_Guns gun_m1b;
+	public static HMGItem_Unified_Guns gun_boys;
+	public static HMGItem_Unified_Guns gun_m1911;
 	
-	public static Item gun_grenade;
+	public static HMGItem_Unified_Guns gun_grenade;
 	
-	public static Item gun_gew98;
-	public static Item gun_gew43;
-	public static Item gun_mp40;
-	public static Item gun_mg34;
-	public static Item gun_rpzb54;
-	public static Item gun_p38;
+	public static HMGItem_Unified_Guns gun_gew98;
+	public static HMGItem_Unified_Guns gun_gew43;
+	public static HMGItem_Unified_Guns gun_mp40;
+	public static HMGItem_Unified_Guns gun_mg34;
+	public static HMGItem_Unified_Guns gun_rpzb54;
+	public static HMGItem_Unified_Guns gun_p38;
 	
-	public static Item gun_m1891;
-	public static Item gun_ppsh41;
-	public static Item gun_dp28;
-	public static Item gun_svt40;
-	public static Item gun_ptrd;
-	public static Item gun_ptrs;
-	public static Item gun_tt33;
+	public static HMGItem_Unified_Guns gun_m1891;
+	public static HMGItem_Unified_Guns gun_ppsh41;
+	public static HMGItem_Unified_Guns gun_dp28;
+	public static HMGItem_Unified_Guns gun_svt40;
+	public static HMGItem_Unified_Guns gun_ptrd;
+	public static HMGItem_Unified_Guns gun_ptrs;
+	public static HMGItem_Unified_Guns gun_tt33;
 	
 	public static boolean cfg_canspawn;
 	public static boolean cfg_canspawntank;
@@ -461,66 +463,66 @@ public class mod_GVCWW2 {
 				.setCreativeTab(tabgvc);
 		GameRegistry.registerItem(b_magazinerpg, "b_magazinerpg");
 		
-		gun_type38 = GameRegistry.findItem("HandmadeGuns","AType38");
+		gun_type38 = (HMGItem_Unified_Guns) GameRegistry.findItem("HandmadeGuns","AType38");
 		
-		gun_type99lmg = GameRegistry.findItem("HandmadeGuns","Type99LMG");
+		gun_type99lmg = (HMGItem_Unified_Guns)GameRegistry.findItem("HandmadeGuns","Type99LMG");
 		
-		gun_type4Auto = GameRegistry.findItem("HandmadeGuns","Type4Auto");
+		gun_type4Auto = (HMGItem_Unified_Guns)GameRegistry.findItem("HandmadeGuns","Type4Auto");
 		
-		gun_type100 = GameRegistry.findItem("HandmadeGuns","Type100MP");
+		gun_type100 = (HMGItem_Unified_Guns)GameRegistry.findItem("HandmadeGuns","Type100MP");
 		
-		gun_rota_cannon = GameRegistry.findItem("HandmadeGuns","ROTA_Cannon");
+		gun_rota_cannon = (HMGItem_Unified_Guns)GameRegistry.findItem("HandmadeGuns","ROTA_Cannon");
 		
-		gun_type14 = GameRegistry.findItem("HandmadeGuns","Type14");
-		
-		
-		
-		gun_m1g = GameRegistry.findItem("HandmadeGuns","M1Garand");
-		
-		gun_m1t = GameRegistry.findItem("HandmadeGuns","M1A1");
-		
-		gun_bar = GameRegistry.findItem("HandmadeGuns","Browning_Automatic_Rifle_M1918");
-		
-		gun_m1917 = GameRegistry.findItem("HandmadeGuns","M1917");
-		
-		gun_m1b = GameRegistry.findItem("HandmadeGuns","Bazooka");
-		
-		gun_boys = GameRegistry.findItem("HandmadeGuns","BoysMk1");
-		
-		gun_m1911 = GameRegistry.findItem("HandmadeGuns","WW2_M1911");
+		gun_type14 = (HMGItem_Unified_Guns)GameRegistry.findItem("HandmadeGuns","Type14");
 		
 		
 		
+		gun_m1g = (HMGItem_Unified_Guns)GameRegistry.findItem("HandmadeGuns","M1Garand");
+		
+		gun_m1t = (HMGItem_Unified_Guns)GameRegistry.findItem("HandmadeGuns","M1A1");
+		
+		gun_bar = (HMGItem_Unified_Guns)GameRegistry.findItem("HandmadeGuns","Browning_Automatic_Rifle_M1918");
+		
+		gun_m1917 = (HMGItem_Unified_Guns)GameRegistry.findItem("HandmadeGuns","M1917");
+		
+		gun_m1b = (HMGItem_Unified_Guns)GameRegistry.findItem("HandmadeGuns","Bazooka");
+		
+		gun_boys = (HMGItem_Unified_Guns)GameRegistry.findItem("HandmadeGuns","BoysMk1");
+		
+		gun_m1911 = (HMGItem_Unified_Guns)GameRegistry.findItem("HandmadeGuns","WW2_M1911");
 		
 		
-		gun_grenade = GameRegistry.findItem("HandmadeGuns","M26");
 		
 		
-		gun_gew98 = GameRegistry.findItem("HandmadeGuns","Gew98");
 		
-		gun_gew43 = GameRegistry.findItem("HandmadeGuns","Gewehr43");
+		gun_grenade = (HMGItem_Unified_Guns)GameRegistry.findItem("HandmadeGuns","M26");
 		
-		gun_mp40 = GameRegistry.findItem("HandmadeGuns","MP38");
 		
-		gun_mg34 = GameRegistry.findItem("HandmadeGuns","MG34");
+		gun_gew98 = (HMGItem_Unified_Guns)GameRegistry.findItem("HandmadeGuns","Gew98");
 		
-		gun_rpzb54 = GameRegistry.findItem("HandmadeGuns","Panzerschreck");
+		gun_gew43 = (HMGItem_Unified_Guns)GameRegistry.findItem("HandmadeGuns","Gewehr43");
 		
-		gun_p38 = GameRegistry.findItem("HandmadeGuns","WaltherP-38");
+		gun_mp40 = (HMGItem_Unified_Guns)GameRegistry.findItem("HandmadeGuns","MP38");
 		
-		gun_m1891 = GameRegistry.findItem("HandmadeGuns","Mosin");
+		gun_mg34 = (HMGItem_Unified_Guns)GameRegistry.findItem("HandmadeGuns","MG34");
 		
-		gun_ppsh41 = GameRegistry.findItem("HandmadeGuns","ppsh41");
+		gun_rpzb54 = (HMGItem_Unified_Guns)GameRegistry.findItem("HandmadeGuns","Panzerschreck");
 		
-		gun_dp28 = GameRegistry.findItem("HandmadeGuns","DP28LMG");
+		gun_p38 = (HMGItem_Unified_Guns)GameRegistry.findItem("HandmadeGuns","WaltherP-38");
 		
-		gun_svt40 = GameRegistry.findItem("HandmadeGuns","SVT-40");
+		gun_m1891 = (HMGItem_Unified_Guns)GameRegistry.findItem("HandmadeGuns","Mosin");
 		
-		gun_ptrd = GameRegistry.findItem("HandmadeGuns","PTRD1941");
+		gun_ppsh41 = (HMGItem_Unified_Guns)GameRegistry.findItem("HandmadeGuns","ppsh41");
 		
-		gun_ptrs = GameRegistry.findItem("HandmadeGuns","PTRS1941");
+		gun_dp28 = (HMGItem_Unified_Guns)GameRegistry.findItem("HandmadeGuns","DP28LMG");
 		
-		gun_tt33 = GameRegistry.findItem("HandmadeGuns","TT-33");
+		gun_svt40 = (HMGItem_Unified_Guns)GameRegistry.findItem("HandmadeGuns","SVT-40");
+		
+		gun_ptrd = (HMGItem_Unified_Guns)GameRegistry.findItem("HandmadeGuns","PTRD1941");
+		
+		gun_ptrs = (HMGItem_Unified_Guns)GameRegistry.findItem("HandmadeGuns","PTRS1941");
+		
+		gun_tt33 = (HMGItem_Unified_Guns)GameRegistry.findItem("HandmadeGuns","TT-33");
 		
 		
 		

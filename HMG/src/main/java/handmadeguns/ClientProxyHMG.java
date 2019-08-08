@@ -3,6 +3,7 @@ package handmadeguns;
 
 import java.io.File;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 
 import cpw.mods.fml.relauncher.ReflectionHelper;
 import handmadeguns.client.audio.BulletSoundHMG;
@@ -16,10 +17,14 @@ import handmadeguns.network.PacketSpawnParticle;
 import handmadeguns.client.render.*;
 import handmadeguns.tile.TileMounter;
 import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.settings.GameSettings;
+import net.minecraft.client.shader.Framebuffer;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.ForgeHooksClient;
+import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import org.lwjgl.input.Keyboard;
 
@@ -34,7 +39,6 @@ import cpw.mods.fml.client.registry.RenderingRegistry;
 
 import org.lwjgl.input.Mouse;
 
-import static cpw.mods.fml.relauncher.ReflectionHelper.setPrivateValue;
 import static handmadeguns.HandmadeGunsCore.proxy;
 
 public class ClientProxyHMG extends CommonSideProxyHMG {
@@ -70,6 +74,27 @@ public class ClientProxyHMG extends CommonSideProxyHMG {
 
 	@Override
 	public void setuprender(){
+		
+		try {
+			Field stencilBits_F = ReflectionHelper.findField(ForgeHooksClient.class, "stencilBits");
+			Field modifiersField = Field.class.getDeclaredField("modifiers");
+			modifiersField.setAccessible(true);
+			modifiersField.setInt(stencilBits_F,
+					stencilBits_F.getModifiers() & ~Modifier.PRIVATE); // 更新対象アクセス用のFieldオブジェクトのmodifiersからprivateとfinalを外す。
+			stencilBits_F.set(null, 8);
+			System.out.println("" + MinecraftForgeClient.getStencilBits());
+//			net.minecraftforge.client.ForgeHooksClient.createDisplay();
+			
+//			OpenGlHelper.initializeTextures();
+			
+//			Field framebufferMc_F = ReflectionHelper.findField(Minecraft.class, "framebufferMc");
+//			framebufferMc_F.set(proxy.getMCInstance(),new Framebuffer(proxy.getMCInstance().displayWidth, proxy.getMCInstance().displayHeight, true));
+//			proxy.getMCInstance().getFramebuffer().setFramebufferColor(0.0F, 0.0F, 0.0F, 0.0F);
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		
+		
 		AdvancedModelLoader.registerModelHandler(new MQO_ModelLoader());
 	}
 	@Override

@@ -99,26 +99,6 @@ public class EntityGBases extends EntityMob implements IflagBattler{
             }
         }
     }
-    public boolean isEntityInsideOpaqueBlock()
-    {
-        for (int i = 0; i < 8; ++i)
-        {
-            float width = (float) (boundingBox.maxX - boundingBox.maxZ);
-            float f = ((float)((i >> 0) % 2) - 0.5F) * width * 0.8F;
-            float f1 = ((float)((i >> 1) % 2) - 0.5F) * 0.1F;
-            float f2 = ((float)((i >> 2) % 2) - 0.5F) * width * 0.8F;
-            int j = MathHelper.floor_double(this.posX + (double)f);
-            int k = MathHelper.floor_double(this.posY + (double)this.getEyeHeight() + (double)f1);
-            int l = MathHelper.floor_double(this.posZ + (double)f2);
-            
-            if (this.worldObj.getBlock(j, k, l).isNormalCube())
-            {
-                return true;
-            }
-        }
-        
-        return false;
-    }
     
     
     

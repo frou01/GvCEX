@@ -1,0 +1,17 @@
+Texture,545bullet
+Stack,64
+BulletRound,30
+Name,5.45mm Rifle Magazine
+
+==!!!=====Disabled=====!!!==
+//BulletItemName,HandmadeGuns:5.45mmCart&Bullet
+//CartItemName,HandmadeGuns:5.45mmCart
+
+CustomMagazine,5.45mm magazine
+Recipe1,aa 
+Recipe2,bb 
+Recipe3,c  
+ItemA,minecraft,iron_ingot
+ItemB,minecraft,gunpowder
+ItemC,minecraft,emerald
+addNewRecipe,HandmadeGuns,5.45mm magazine,5

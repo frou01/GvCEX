@@ -1,11 +1,13 @@
 package hmgww2.render;
 
-import cpw.mods.fml.client.FMLClientHandler;
-import hmvehicle.entity.parts.*;
-import hmvehicle.entity.parts.logics.PlaneBaseLogic;
-import hmvehicle.entity.parts.turrets.TurretObj;
+import handmadevehicle.Utils;
+import handmadevehicle.entity.parts.Hasmode;
+import handmadevehicle.entity.parts.IMultiTurretVehicle;
+import handmadevehicle.entity.parts.IPlane;
+import handmadevehicle.entity.parts.ModifiedBoundingBox;
+import handmadevehicle.entity.parts.logics.PlaneBaseLogic;
+import handmadevehicle.entity.parts.turrets.TurretObj;
 import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
@@ -15,9 +17,12 @@ import net.minecraftforge.client.model.IModelCustom;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+import javax.vecmath.Quat4d;
+import javax.vecmath.Vector3d;
 import java.util.ArrayList;
 
-import static hmvehicle.CLProxy.drawOutlinedBoundingBox;
+import static handmadevehicle.CLProxy.drawOutlinedBoundingBox;
+import static java.lang.Math.toDegrees;
 import static net.minecraft.client.renderer.entity.RenderManager.debugBoundingBox;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL11.GL_EQUAL;
@@ -50,8 +55,35 @@ public class RenderPlane extends Render {
 	float xsxs;
 	public void doRender(Entity entity, double p_76986_2_, double p_76986_4_, double p_76986_6_,
 	                     float entityYaw, float partialTicks) {
-		if(entity instanceof Iplane){
+		if(entity instanceof IPlane){
+			PlaneBaseLogic baseLogic = (PlaneBaseLogic) ((IPlane) entity).getBaseLogic();
 			int pass = MinecraftForgeClient.getRenderPass();
+			this.bindEntityTexture(entity);
+			baseLogic.riderPosUpdate_forRender(new Vector3d(entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * partialTicks,
+					                                               entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * partialTicks,
+					                                               entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * partialTicks));
+			GL11.glPushMatrix();
+			GL11.glTranslatef((float) p_76986_2_, (float) p_76986_4_, (float) p_76986_6_);
+			GL11.glRotatef(180F, 0.0F, 1.0F, 0.0F);
+			GL11.glEnable(GL12.GL_RESCALE_NORMAL);
+			GL11.glTranslatef((float) baseLogic.planeInfo.rotcenter[0], (float) baseLogic.planeInfo.rotcenter[1], (float) baseLogic.planeInfo.rotcenter[2]);
+			
+			Quat4d tempquat = new Quat4d();
+			tempquat.interpolate(baseLogic.prevbodyRot,baseLogic.bodyRot, partialTicks);
+			double[] xyz = Utils.eulerfrommatrix(Utils.matrixfromQuat(tempquat));
+//			baseLogic.riderPosUpdate_forRender(new Vector3d(entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * partialTicks,
+//					                                               entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * partialTicks,
+//					                                               entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * partialTicks));
+			baseLogic.bodyrotationYaw = (float) toDegrees(xyz[1]);
+			baseLogic.bodyrotationPitch = (float) toDegrees(xyz[0]);
+			baseLogic.bodyrotationRoll = (float) toDegrees(xyz[2]);
+			
+			GL11.glRotatef(180.0F - (baseLogic.bodyrotationYaw), 0.0F, 1.0F, 0.0F);
+			GL11.glRotatef(baseLogic.bodyrotationPitch, 1.0F, 0.0F, 0.0F);
+			GL11.glRotatef(baseLogic.bodyrotationRoll, 0.0F, 0.0F, 1.0F);
+			GL11.glTranslatef((float) -baseLogic.planeInfo.rotcenter[0], (float) -baseLogic.planeInfo.rotcenter[1], (float) -baseLogic.planeInfo.rotcenter[2]);
+			GL11.glPushMatrix();
+			
 			if(pass == 1) {
 				glEnable(GL_BLEND);
 				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -61,20 +93,16 @@ public class RenderPlane extends Render {
 				GL11.glDepthMask(true);
 				glAlphaFunc(GL_EQUAL, 1);
 			}
-			this.bindEntityTexture(entity);
-			GL11.glPushMatrix();
-			GL11.glTranslatef((float) p_76986_2_, (float) p_76986_4_, (float) p_76986_6_);
-			GL11.glRotatef(180F, 0.0F, 1.0F, 0.0F);
-			GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-			PlaneBaseLogic baseLogic = (PlaneBaseLogic) ((Iplane) entity).getBaseLogic();
-			GL11.glTranslatef((float) baseLogic.rotcenter[0], (float) baseLogic.rotcenter[1], (float) baseLogic.rotcenter[2]);
-			GL11.glRotatef(180.0F - (baseLogic.bodyrotationYaw + (baseLogic.bodyrotationYaw - baseLogic.prevbodyrotationYaw) * partialTicks), 0.0F, 1.0F, 0.0F);
-			GL11.glRotatef(baseLogic.bodyrotationPitch, 1.0F, 0.0F, 0.0F);
-			GL11.glRotatef(baseLogic.bodyrotationRoll, 0.0F, 0.0F, 1.0F);
-			GL11.glTranslatef((float) -baseLogic.rotcenter[0], (float) -baseLogic.rotcenter[1], (float) -baseLogic.rotcenter[2]);
-			GL11.glPushMatrix();
+			
 			tankk.renderPart("obj1");
 			tankk.renderPart("mat1");
+			
+			if(baseLogic.serverx){
+				tankk.renderPart("AirBrake");
+			}else {
+				tankk.renderPart("AirBrakeFold");
+			}
+			
 			if(((Hasmode) entity).standalone()){
 				tankk.renderPart("obj30");
 				tankk.renderPart("mat30");
@@ -93,7 +121,7 @@ public class RenderPlane extends Render {
 			}
 			GL11.glPopMatrix();
 			GL11.glPushMatrix();
-			if(baseLogic.turrets != null){
+			if(baseLogic.turrets != null && entity instanceof IMultiTurretVehicle){
 				
 				TurretObj[] turretObjs = baseLogic.turrets;
 				
@@ -105,29 +133,157 @@ public class RenderPlane extends Render {
 					GL11.glTranslatef((float)-aturretobj.onMotherPos.x,(float)-aturretobj.onMotherPos.y,(float)aturretobj.onMotherPos.z);
 					tankk.renderPart("Turret" + i);
 					GL11.glTranslatef((float)aturretobj.onMotherPos.x,(float)aturretobj.onMotherPos.y,(float)-aturretobj.onMotherPos.z);
-					GL11.glTranslatef((float)aturretobj.turretPitchCenterpos.x,(float)aturretobj.turretPitchCenterpos.y,(float)-aturretobj.turretPitchCenterpos.z);
+					GL11.glTranslatef((float)aturretobj.prefab_turret.turretPitchCenterpos.x,(float)aturretobj.prefab_turret.turretPitchCenterpos.y,(float)aturretobj.prefab_turret.turretPitchCenterpos.z);
 					GL11.glRotatef((float) aturretobj.turretrotationPitch, 1.0F, 0.0F, 0.0F);
-					GL11.glTranslatef((float)-aturretobj.turretPitchCenterpos.x,(float)-aturretobj.turretPitchCenterpos.y,(float)aturretobj.turretPitchCenterpos.z);
+					GL11.glTranslatef((float)-aturretobj.prefab_turret.turretPitchCenterpos.x,(float)-aturretobj.prefab_turret.turretPitchCenterpos.y,(float)-aturretobj.prefab_turret.turretPitchCenterpos.z);
 					GL11.glTranslatef((float)-aturretobj.onMotherPos.x,(float)-aturretobj.onMotherPos.y,(float)aturretobj.onMotherPos.z);
 					tankk.renderPart("Turret" + i + "Cannon");
+					
+					if(aturretobj.readyload)tankk.renderPart("Turret" + i + "Mag");
+					
 					renderchild(aturretobj.getChilds(),"Turret" + i);
+					
+					if(aturretobj.prefab_turret.hasReflexSight) {
+						glClear(GL_STENCIL_BUFFER_BIT);
+						glEnable(GL_STENCIL_TEST);
+						glStencilMask(1);
+						
+						glStencilFunc(
+								GL_ALWAYS,   // GLenum func
+								1,          // GLint ref
+								~0);// GLuint mask
+						glStencilOp(
+								GL_KEEP,
+								GL_KEEP,
+								GL_REPLACE);
+						if (pass != 1) {
+							GL11.glDepthMask(false);
+							glAlphaFunc(GL_ALWAYS, 1);
+							glColorMask(
+									false,   // GLboolean red
+									false,   // GLboolean green
+									false,   // GLboolean blue
+									false);
+						}
+						tankk.renderPart("ReticlePlate" + i);
+						if (pass != 1) {
+							GL11.glDepthMask(true);
+							glAlphaFunc(GL_EQUAL, 1);
+							glColorMask(
+									true,   // GLboolean red
+									true,   // GLboolean green
+									true,   // GLboolean blue
+									true);
+						}
+						
+						GL11.glDisable(GL11.GL_LIGHTING);
+						float lastBrightnessX = OpenGlHelper.lastBrightnessX;
+						float lastBrightnessY = OpenGlHelper.lastBrightnessY;
+						OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
+						glDisable(GL_DEPTH_TEST);
+						
+						
+						glStencilFunc(
+								GL_EQUAL,   // GLenum func
+								1,          // GLint ref
+								~0);// GLuint mask
+						
+						glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+						glAlphaFunc(GL_ALWAYS, 1);
+						GL11.glDepthMask(false);
+						
+						GL11.glDepthFunc(GL11.GL_ALWAYS);//強制描画
+						tankk.renderPart("Reticle" + i);
+						GL11.glDepthFunc(GL11.GL_LEQUAL);
+						GL11.glDepthMask(true);
+						glDisable(GL_STENCIL_TEST);
+						glEnable(GL_DEPTH_TEST);
+						GL11.glEnable(GL11.GL_LIGHTING);
+						OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)lastBrightnessX, (float)lastBrightnessY);
+						if(pass == 1) {
+							glEnable(GL_BLEND);
+							glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+							GL11.glDepthMask(false);
+							glAlphaFunc(GL_LESS, 1);
+						}else {
+							GL11.glDepthMask(true);
+							glAlphaFunc(GL_EQUAL, 1);
+						}
+					}
 					GL11.glPopMatrix();
 				}
 			}
-			GL11.glPopMatrix();
-			if (baseLogic.ispilot(FMLClientHandler.instance().getClientPlayerEntity())&& FMLClientHandler.instance().getClient().gameSettings.thirdPersonView == 0) {
+			
+//			if (baseLogic.ispilot(FMLClientHandler.instance().getClientPlayerEntity())&& FMLClientHandler.instance().getClient().gameSettings.thirdPersonView == 0)
+			{
+				glClear(GL_STENCIL_BUFFER_BIT);
+				glEnable(GL_STENCIL_TEST);
+				glStencilMask(1);
+				
+				glStencilFunc(
+						GL_ALWAYS,   // GLenum func
+						1,          // GLint ref
+						~0);// GLuint mask
+				glStencilOp(
+						GL_KEEP,
+						GL_KEEP,
+						GL_REPLACE);
+				if (pass != 1) {
+					GL11.glDepthMask(false);
+					glAlphaFunc(GL_ALWAYS, 1);
+					glColorMask(
+							false,   // GLboolean red
+							false,   // GLboolean green
+							false,   // GLboolean blue
+							false);
+				}
+				tankk.renderPart("sightPlate");
+				if (pass != 1) {
+					GL11.glDepthMask(true);
+					glAlphaFunc(GL_EQUAL, 1);
+					glColorMask(
+							true,   // GLboolean red
+							true,   // GLboolean green
+							true,   // GLboolean blue
+							true);
+				}
+				
+				GL11.glDisable(GL11.GL_LIGHTING);
 				float lastBrightnessX = OpenGlHelper.lastBrightnessX;
 				float lastBrightnessY = OpenGlHelper.lastBrightnessY;
 				OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
-				RenderHelper.disableStandardItemLighting();
+				glDisable(GL_DEPTH_TEST);
+				
+				
+				glStencilFunc(
+						GL_EQUAL,   // GLenum func
+						1,          // GLint ref
+						~0);// GLuint mask
+				
+				glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+				glAlphaFunc(GL_ALWAYS, 1);
 				GL11.glDepthMask(false);
+				
 				GL11.glDepthFunc(GL11.GL_ALWAYS);//強制描画
 				tankk.renderPart("sight");
-				GL11.glDepthMask(true);
 				GL11.glDepthFunc(GL11.GL_LEQUAL);
+				GL11.glDepthMask(true);
+				glDisable(GL_STENCIL_TEST);
+				glEnable(GL_DEPTH_TEST);
+				GL11.glEnable(GL11.GL_LIGHTING);
 				OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)lastBrightnessX, (float)lastBrightnessY);
-				RenderHelper.enableStandardItemLighting();
+				if(pass == 1) {
+					glEnable(GL_BLEND);
+					glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+					GL11.glDepthMask(false);
+					glAlphaFunc(GL_LESS, 1);
+				}else {
+					GL11.glDepthMask(true);
+					glAlphaFunc(GL_EQUAL, 1);
+				}
 			}
+			
+			GL11.glPopMatrix();
 			GL11.glDepthMask(true);
 			GL11.glAlphaFunc(GL11.GL_GREATER, 0);
 			glDisable(GL_BLEND);
@@ -197,9 +353,9 @@ public class RenderPlane extends Render {
 			GL11.glTranslatef((float)-achild.onMotherPos.x,(float)-achild.onMotherPos.y,(float)achild.onMotherPos.z);
 			tankk.renderPart(motherID + "child" + ic);
 			GL11.glTranslatef((float)achild.onMotherPos.x,(float)achild.onMotherPos.y,(float)-achild.onMotherPos.z);
-			GL11.glTranslatef((float)achild.turretPitchCenterpos.x,(float)achild.turretPitchCenterpos.y,(float)-achild.turretPitchCenterpos.z);
+			GL11.glTranslatef((float)achild.prefab_turret.turretPitchCenterpos.x,(float)achild.prefab_turret.turretPitchCenterpos.y,(float)-achild.prefab_turret.turretPitchCenterpos.z);
 			GL11.glRotatef((float) achild.turretrotationYaw, 1.0F, 0.0F, 0.0F);
-			GL11.glTranslatef((float)-achild.turretPitchCenterpos.x,(float)-achild.turretPitchCenterpos.y,(float)achild.turretPitchCenterpos.z);
+			GL11.glTranslatef((float)-achild.prefab_turret.turretPitchCenterpos.x,(float)-achild.prefab_turret.turretPitchCenterpos.y,(float)achild.prefab_turret.turretPitchCenterpos.z);
 			GL11.glTranslatef((float)-achild.onMotherPos.x,(float)-achild.onMotherPos.y,(float)achild.onMotherPos.z);
 			tankk.renderPart(motherID + "child" + ic + "Cannon");
 			renderchild(achild.getChilds(),motherID + "child" + ic);

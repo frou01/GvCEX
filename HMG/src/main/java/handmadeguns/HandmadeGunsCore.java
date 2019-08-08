@@ -154,6 +154,8 @@ public class HandmadeGunsCore {
 	//@net.minecraftforge.fml.common.Mod.EventHandler
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent pEvent) {
+		
+		
 		configFile = pEvent.getSuggestedConfigurationFile();
 		Configuration lconf = new Configuration(configFile);
 		lconf.load();

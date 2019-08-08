@@ -12,7 +12,7 @@ import net.minecraft.world.World;
 //import net.minecraft.world.gen.structure.StructureStrongholdPieces;;
 
 
-public class BlockFlag4_RUS extends BlockJPNFlagBase
+public class BlockFlag4_RUS extends BlockRUSFlagBase
 {
     @SideOnly(Side.CLIENT)
     private IIcon TopIcon;

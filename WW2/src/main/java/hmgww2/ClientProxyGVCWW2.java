@@ -3,6 +3,7 @@ package hmgww2;
 
 import hmgww2.blocks.tile.TileEntityBase;
 import hmgww2.entity.*;
+import hmgww2.entity.planes.*;
 import hmgww2.render.*;
 import org.lwjgl.input.Keyboard;
 
@@ -55,12 +56,12 @@ public class ClientProxyGVCWW2 extends CommonSideProxyGVCWW2 {
     	RenderingRegistry.registerEntityRenderingHandler(EntityJPN_S.class, new RenderJPN_S());
     	RenderingRegistry.registerEntityRenderingHandler(EntityJPN_Tank.class, new RenderTank("hmgww2:textures/mob/jpn/type97.png","hmgww2:textures/mob/jpn/type97.obj",
 			                                                                                         true,true, new float[]{0.4f,2.8f,0.2f},new float[]{0.4f,2.8f,0.2f}));
-    	RenderingRegistry.registerEntityRenderingHandler(EntityJPN_Fighter.class, new RenderPlane("hmgww2:textures/mob/jpn/type0.png","hmgww2:textures/mob/jpn/type0.mqo",new double[]{0,1.0,0}));
+    	RenderingRegistry.registerEntityRenderingHandler(EntityJPN_Fighter.class, new RenderPlane("hmgww2:textures/mob/jpn/type0.png","hmgww2:textures/mob/jpn/type0.mqo",new double[]{0,1.4,0}));
     	RenderingRegistry.registerEntityRenderingHandler(EntityJPN_TankAA.class, new RenderTank("hmgww2:textures/mob/jpn/type97AA.png","hmgww2:textures/mob/jpn/type97AA.obj",
 			                                                                                           true));
     	RenderingRegistry.registerEntityRenderingHandler(EntityJPN_TankSPG.class, new RenderTank("hmgww2:textures/mob/jpn/type4_12cm.png","hmgww2:textures/mob/jpn/type4_12cm.obj",
 			                                                                                            true));
-    	RenderingRegistry.registerEntityRenderingHandler(EntityJPN_FighterA.class,new RenderPlane("hmgww2:textures/mob/jpn/B7A.png","hmgww2:textures/mob/jpn/B7A.mqo",new double[]{0,1.0,0}));
+    	RenderingRegistry.registerEntityRenderingHandler(EntityJPN_FighterA.class,new RenderPlane("hmgww2:textures/mob/jpn/D3A1.png","hmgww2:textures/mob/jpn/D3A1.mqo",new double[]{0,1.7,0}));
 //    	RenderingRegistry.registerEntityRenderingHandler(EntityJPN_ShipB.class, new RenderJPN_ShipB());
     	RenderingRegistry.registerEntityRenderingHandler(EntityJPN_ShipD.class, new RenderVessel("hmgww2:textures/mob/jpn/Destroyer.png","hmgww2:textures/mob/jpn/tidori.mqo"));
     	
@@ -68,7 +69,7 @@ public class ClientProxyGVCWW2 extends CommonSideProxyGVCWW2 {
     	RenderingRegistry.registerEntityRenderingHandler(EntityUSA_S.class, new RenderUSA_S());
     	RenderingRegistry.registerEntityRenderingHandler(EntityUSA_Tank.class, new RenderTank("hmgww2:textures/mob/usa/M4.png","hmgww2:textures/mob/usa/M4.mqo",
 			                                                                                         true,true, new float[]{0,0,-0.7f},new float[]{0F, 3.1588f, 0.495f}));
-    	RenderingRegistry.registerEntityRenderingHandler(EntityUSA_Fighter.class, new RenderPlane("hmgww2:textures/mob/usa/F4U.png","hmgww2:textures/mob/usa/F4U.mqo",new double[]{0,1.0,0}));
+    	RenderingRegistry.registerEntityRenderingHandler(EntityUSA_Fighter.class, new RenderPlane("hmgww2:textures/mob/usa/F4U.png","hmgww2:textures/mob/usa/F4U.mqo",new double[]{0,1.9,0}));
     	RenderingRegistry.registerEntityRenderingHandler(EntityUSA_TankAA.class, new RenderTank("hmgww2:textures/mob/usa/M16.png","hmgww2:textures/mob/usa/M16.obj",
 			                                                                                           true));
     	RenderingRegistry.registerEntityRenderingHandler(EntityUSA_TankSPG.class, new RenderTank("hmgww2:textures/mob/usa/M7.png","hmgww2:textures/mob/usa/M7.mqo",
@@ -81,12 +82,12 @@ public class ClientProxyGVCWW2 extends CommonSideProxyGVCWW2 {
     	RenderingRegistry.registerEntityRenderingHandler(EntityGER_S.class, new RenderGER_S());
     	RenderingRegistry.registerEntityRenderingHandler(EntityGER_Tank.class, new RenderTank("hmgww2:textures/mob/ger/PzIV.png","hmgww2:textures/mob/ger/PzIV.mqo",
 			                                                                                         true,true, new float[]{0,0,-0.7f},new float[]{0F, 3.1588f, 0.495f}));
-    	RenderingRegistry.registerEntityRenderingHandler(EntityGER_Fighter.class, new RenderPlane("hmgww2:textures/mob/ger/Bf109.png","hmgww2:textures/mob/ger/Bf109.mqo",new double[]{0,1.2,0}));
+    	RenderingRegistry.registerEntityRenderingHandler(EntityGER_Fighter.class, new RenderPlane("hmgww2:textures/mob/ger/Bf109.png","hmgww2:textures/mob/ger/Bf109.mqo",new double[]{0,1.1,0}));
     	RenderingRegistry.registerEntityRenderingHandler(EntityGER_TankAA.class, new RenderTank("hmgww2:textures/mob/ger/PzVI.png","hmgww2:textures/mob/ger/Sd.Kfz.10_FLAK38.mqo",
 			                                                                                           false));
     	RenderingRegistry.registerEntityRenderingHandler(EntityGER_TankSPG.class, new RenderTank("hmgww2:textures/mob/ger/PzIISPG.png","hmgww2:textures/mob/ger/PzIISPG.mqo",
 			                                                                                            true));
-    	RenderingRegistry.registerEntityRenderingHandler(EntityGER_FighterA.class, new RenderPlane("hmgww2:textures/mob/ger/Ju87.png","hmgww2:textures/mob/ger/Ju87D.mqo",new double[]{0,1.0,0}));
+    	RenderingRegistry.registerEntityRenderingHandler(EntityGER_FighterA.class, new RenderPlane("hmgww2:textures/mob/ger/Ju87.png","hmgww2:textures/mob/ger/Ju87.mqo",new double[]{0,1.6006,0}));
     	RenderingRegistry.registerEntityRenderingHandler(EntityGER_TankH.class, new RenderTank("hmgww2:textures/mob/ger/PzVI.png","hmgww2:textures/mob/ger/PzVI.mqo",
 			                                                                                           true));
     	RenderingRegistry.registerEntityRenderingHandler(EntityGER_ShipSUB.class, new RenderVessel("hmgww2:textures/mob/ger/Uboat.png","hmgww2:textures/mob/ger/UboatVIIc.mqo"));
@@ -99,7 +100,7 @@ public class ClientProxyGVCWW2 extends CommonSideProxyGVCWW2 {
 			                                                                                            true));
     	RenderingRegistry.registerEntityRenderingHandler(EntityUSSR_TankSPG.class, new RenderTank("hmgww2:textures/mob/rus/BM13.png","hmgww2:textures/mob/rus/BM13.obj",
 			                                                                                             false));
-	    RenderingRegistry.registerEntityRenderingHandler(EntityUSSR_FighterA.class, new RenderPlane("hmgww2:textures/mob/rus/IL2.png","hmgww2:textures/mob/rus/IL2.mqo",new double[]{0,1.6,0}));
+	    RenderingRegistry.registerEntityRenderingHandler(EntityUSSR_FighterA.class, new RenderPlane("hmgww2:textures/mob/rus/IL2.png","hmgww2:textures/mob/rus/IL2.mqo",new double[]{0,1.6006,0}));
     	RenderingRegistry.registerEntityRenderingHandler(EntityUSSR_TankH.class, new RenderTank("hmgww2:textures/mob/rus/KV2.png","hmgww2:textures/mob/rus/KV2.mqo",
 			                                                                                           true));
     	
