@@ -6,7 +6,6 @@ import hmggvcmob.IflagBattler;
 import hmggvcmob.SlowPathFinder.ModifiedPathNavigater;
 import hmggvcmob.tile.TileEntityFlag;
 import handmadevehicle.entity.parts.IhasprevRidingEntity;
-import handmadevehicle.entity.parts.ImultiRidable;
 import net.minecraft.block.Block;
 import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.*;

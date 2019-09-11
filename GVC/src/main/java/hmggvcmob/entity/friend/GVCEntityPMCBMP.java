@@ -1,12 +1,12 @@
 package hmggvcmob.entity.friend;
 
 
+import handmadevehicle.entity.parts.logics.TankBaseLogicLogic;
 import hmggvcmob.ai.AITankAttack;
 import handmadevehicle.entity.ExplodeEffect;
 import handmadevehicle.entity.parts.*;
 import handmadevehicle.entity.parts.logics.IbaseLogic;
 import handmadevehicle.entity.parts.logics.MultiRiderLogics;
-import handmadevehicle.entity.parts.logics.TankBaseLogic;
 import handmadevehicle.entity.parts.turrets.TurretObj;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
@@ -28,10 +28,9 @@ import javax.vecmath.Vector3d;
 
 import static handmadevehicle.Utils.transformVecByQuat;
 import static handmadevehicle.Utils.transformVecforMinecraft;
-import static handmadevehicle.HMVehicle.proxy_HMVehicle;
+import static handmadevehicle.HMVehicle.HMV_Proxy;
 
-public class GVCEntityPMCBMP extends EntityPMCBase implements ITank,IMultiTurretVehicle,ImultiRidable
-{
+public class GVCEntityPMCBMP extends EntityPMCBase implements ITank,IMultiTurretVehicle {
 	// public int type;
 	public TileEntity spawnedtile = null;
 	int count_for_reset;
@@ -56,7 +55,7 @@ public class GVCEntityPMCBMP extends EntityPMCBase implements ITank,IMultiTurret
 //	public float subturretrotationYaw;
 //	public float subturretrotationPitch;
 
-	public TankBaseLogic baseLogic = new TankBaseLogic(this,0.1f,0.4f,false,"gvcmob:gvcmob.BMPTrack");
+	public TankBaseLogicLogic baseLogic = new TankBaseLogicLogic(this,0.1f,0.4f,false,"gvcmob:gvcmob.BMPTrack");
 	ModifiedBoundingBox nboundingbox;
 
 	Vector3d playerpos = new Vector3d(-0.464f,2.2f,0.2948f);
@@ -88,7 +87,7 @@ public class GVCEntityPMCBMP extends EntityPMCBase implements ITank,IMultiTurret
 		nboundingbox = new ModifiedBoundingBox(boundingBox.minX,boundingBox.minY,boundingBox.minZ,boundingBox.maxX,boundingBox.maxY,boundingBox.maxZ,
 				0,1,0,3.4,2,6.5);
 		nboundingbox.rot.set(baseLogic.bodyRot);
-		proxy_HMVehicle.replaceBoundingbox(this,nboundingbox);
+		HMV_Proxy.replaceBoundingbox(this,nboundingbox);
 		nboundingbox.centerRotX = 0;
 		nboundingbox.centerRotY = 0;
 		nboundingbox.centerRotZ = 0;
@@ -229,8 +228,8 @@ public class GVCEntityPMCBMP extends EntityPMCBase implements ITank,IMultiTurret
 		if (this.riddenByEntity != null) {
 			mainTurret.calculatePos(new Vector3d(this.posX,this.posY,-this.posZ),baseLogic.bodyRot);
 			Vector3d temp = new Vector3d(mainTurret.pos);
-			Vector3d tempplayerPos = new Vector3d(proxy_HMVehicle.iszooming() ? zoomingplayerpos:playerpos);
-			Vector3d playeroffsetter = new Vector3d(0,((worldObj.isRemote && this.riddenByEntity == proxy_HMVehicle.getEntityPlayerInstance()) ? 0:(this.riddenByEntity.getEyeHeight() + this.riddenByEntity.yOffset)),0);
+			Vector3d tempplayerPos = new Vector3d(HMV_Proxy.iszooming() ? zoomingplayerpos:playerpos);
+			Vector3d playeroffsetter = new Vector3d(0,((worldObj.isRemote && this.riddenByEntity == HMV_Proxy.getEntityPlayerInstance()) ? 0:(this.riddenByEntity.getEyeHeight() + this.riddenByEntity.yOffset)),0);
 			tempplayerPos.sub(playeroffsetter);
 			Vector3d temp2 = mainTurret.getGlobalVector_fromLocalVector_onTurretPoint(tempplayerPos);
 			temp.add(temp2);

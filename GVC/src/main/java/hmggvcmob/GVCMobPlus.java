@@ -8,7 +8,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
-import handmadeguns.HMGAddGunsNew;
+import handmadeguns.HMGGunMaker;
 import handmadeguns.items.guns.HMGItem_Unified_Guns;
 import hmggvcmob.item.*;
 import hmggvcmob.item.GVCItemPMCEgg;
@@ -580,7 +580,7 @@ public class GVCMobPlus
         proxy.registerTileEntity();
 
         Object guns = new ArrayList();
-        ((List)guns).addAll(HMGAddGunsNew.Guns);
+        ((List)guns).addAll(HMGGunMaker.Guns);
         for (int i = 0; i < ((List)guns).size(); i++)
         {
             if ((((List)guns).get(i) instanceof HMGItem_Unified_Guns)) {

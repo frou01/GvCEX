@@ -7,7 +7,7 @@ import handmadeguns.network.PacketDamageHeldItemsAttach;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
 
-import static handmadeguns.HandmadeGunsCore.proxy;
+import static handmadeguns.HandmadeGunsCore.HMG_proxy;
 
 
 public class MessageCatcher_DamageHeldItemsAttach implements IMessageHandler<PacketDamageHeldItemsAttach, IMessage> {
@@ -23,7 +23,7 @@ public class MessageCatcher_DamageHeldItemsAttach implements IMessageHandler<Pac
         if(ctx.side.isServer()) {
             world = ctx.getServerHandler().playerEntity.worldObj;
         }else{
-            world = proxy.getCilentWorld();
+            world = HMG_proxy.getCilentWorld();
         }
         try {
             if(world != null){

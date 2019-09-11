@@ -2,7 +2,7 @@ package hmggvcmob.ai;
 
 import hmggvcmob.SlowPathFinder.WorldForPathfind;
 import handmadevehicle.entity.parts.ITank;
-import handmadevehicle.entity.parts.logics.TankBaseLogic;
+import handmadevehicle.entity.parts.logics.TankBaseLogicLogic;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
@@ -148,7 +148,7 @@ public class AITankAttack extends EntityAIBase {
 //            }
 //        }
 //        System.out.println("debug");
-        boolean aimed = Tank_body.getEntitySenses().canSee(target) ? ((TankBaseLogic)Tank_SPdata.getBaseLogic()).aimMainTurret_toTarget(target):((TankBaseLogic)Tank_SPdata.getBaseLogic()).aimMainTurret_toPos(lastTargetX,lastTargetY,lastTargetZ);
+        boolean aimed = Tank_body.getEntitySenses().canSee(target) ? ((TankBaseLogicLogic)Tank_SPdata.getBaseLogic()).aimMainTurret_toTarget(target):((TankBaseLogicLogic)Tank_SPdata.getBaseLogic()).aimMainTurret_toPos(lastTargetX,lastTargetY,lastTargetZ);
         if(mgBurstRoundCnt < mgBurstRound){
             if(Tank_body.getEntitySenses().canSee(target) || noLineCheck_subfire)Tank_SPdata.subFireToTarget(target);
             mgBurstRoundCnt++;

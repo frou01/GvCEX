@@ -4,9 +4,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
-import static handmadeguns.HandmadeGunsCore.proxy;
+import static handmadeguns.HandmadeGunsCore.HMG_proxy;
 import static java.lang.Math.atan2;
-import static java.lang.Math.sqrt;
 
 public class TU95 extends Entity {
     public int fuse;
@@ -28,7 +27,7 @@ public class TU95 extends Entity {
             setDead();
         }
         if(worldObj.isRemote && !soundstarted){
-            proxy.playsoundatBullet("gvcmob:gvcmob.Tu-95prop",1,1,4096*4096,4096*4096,this,true);
+            HMG_proxy.playsoundatBullet("gvcmob:gvcmob.Tu-95prop",1,1,4096*4096,4096*4096,this,true);
             soundstarted = true;
         }
         fuse--;

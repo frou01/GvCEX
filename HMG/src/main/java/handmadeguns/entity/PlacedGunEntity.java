@@ -19,7 +19,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
-import static handmadeguns.HandmadeGunsCore.proxy;
+import static handmadeguns.HandmadeGunsCore.HMG_proxy;
 import static java.lang.Math.abs;
 import static java.lang.StrictMath.max;
 import static java.lang.StrictMath.toRadians;
@@ -214,7 +214,7 @@ public class PlacedGunEntity extends Entity implements IEntityAdditionalSpawnDat
         }else {
             if(riddenByEntity == FMLClientHandler.instance().getClientPlayerEntity()){
                 firing = false;
-                if (proxy.rightclick()) {
+                if (HMG_proxy.rightclick()) {
                     if(!torideclick) firing = true;
                 }else {
                     torideclick = false;

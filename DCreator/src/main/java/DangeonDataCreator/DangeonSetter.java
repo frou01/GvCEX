@@ -22,7 +22,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import static DangeonDataCreator.mod_DungeonCreator.blankBlock;
-import static handmadeguns.HandmadeGunsCore.proxy;
+import static handmadeguns.HandmadeGunsCore.HMG_proxy;
 
 public class DangeonSetter extends Item {
     int minposx = 0;
@@ -65,7 +65,7 @@ public class DangeonSetter extends Item {
                 }
 
                 try {
-                    File test = new File(proxy.ProxyFile(), "mods" + File.separatorChar + "dungeonCreator" + File.separatorChar + "Test");
+                    File test = new File(HMG_proxy.ProxyFile(), "mods" + File.separatorChar + "dungeonCreator" + File.separatorChar + "Test");
                     FileWriter fw = new FileWriter(test);
                     for (int blocky = minposy; blocky <= MAXposy; blocky++) for (int blockx = minposx; blockx <= MAXposx; blockx++) for (int blockz = minposz; blockz <= MAXposz; blockz++) {
                         Block block =world.getBlock(blockx,blocky,blockz);

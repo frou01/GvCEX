@@ -9,7 +9,7 @@ public class HMGMessageKeyPressedHandlerC implements IMessageHandler<HMGMessageK
  
     @Override
     public IMessage onMessage(HMGMessageKeyPressedC message, MessageContext ctx) {
-    	EntityPlayer player = HandmadeGunsCore.proxy.getEntityPlayerInstance();
+    	EntityPlayer player = HandmadeGunsCore.HMG_proxy.getEntityPlayerInstance();
     	if(message.key == 10){
     		//Entity en = (Entity) player.worldObj.getEntityByID(message.key2);
     		//if(player == en)

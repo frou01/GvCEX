@@ -20,8 +20,8 @@ import net.minecraft.world.World;
 
 import java.util.Random;
 
-import static handmadeguns.HMGAddGunsNew.Guns;
-import static handmadeguns.HandmadeGunsCore.proxy;
+import static handmadeguns.HMGGunMaker.Guns;
+import static handmadeguns.HandmadeGunsCore.HMG_proxy;
 import static hmggvcmob.GVCMobPlus.Guns_AR;
 
 public class GVCEntityBoxSpawner extends EntityMob
@@ -91,7 +91,7 @@ public class GVCEntityBoxSpawner extends EntityMob
     public double getYOffset() {
         if(ridingEntity instanceof EntityPlayer) {
             if(worldObj.isRemote){
-                if(proxy.getEntityPlayerInstance() == ridingEntity) {
+                if(HMG_proxy.getEntityPlayerInstance() == ridingEntity) {
                     if (ridingEntity.isSneaking())
                         return (yOffset - 2.0F);
                     else

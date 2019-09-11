@@ -7,7 +7,7 @@ import handmadeguns.network.PacketPlaysound;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
 
-import static handmadeguns.HandmadeGunsCore.proxy;
+import static handmadeguns.HandmadeGunsCore.HMG_proxy;
 
 
 public class MessageCatcher_Playsound implements IMessageHandler<PacketPlaysound, IMessage> {
@@ -18,7 +18,7 @@ public class MessageCatcher_Playsound implements IMessageHandler<PacketPlaysound
         if(ctx.side.isServer()) {
             world = ctx.getServerHandler().playerEntity.worldObj;
         }else{
-            world = proxy.getCilentWorld();
+            world = HMG_proxy.getCilentWorld();
         }
         try {
             if(world != null){
@@ -28,11 +28,11 @@ public class MessageCatcher_Playsound implements IMessageHandler<PacketPlaysound
                         shooter.worldObj.playSoundEffect(shooter.posX,shooter.posY,shooter.posZ, message.sound, message.level, message.speed);
                     else {
                         if(message.isreload)
-                            proxy.playsoundatEntity_reload(message.sound, message.level, message.speed, shooter, false);
+                            HMG_proxy.playsoundatEntity_reload(message.sound, message.level, message.speed, shooter, false);
                         else if(message.time != -1)
-                            proxy.playsoundatEntity(message.sound, message.level, message.speed, shooter, false, message.time);
+                            HMG_proxy.playsoundatEntity(message.sound, message.level, message.speed, shooter, false, message.time);
                         else
-                            proxy.playsoundat(message.sound, message.level, message.speed, message.speed, shooter.posX, shooter.posY , shooter.posZ);
+                            HMG_proxy.playsoundat(message.sound, message.level, message.speed, message.speed, shooter.posX, shooter.posY , shooter.posZ);
                     }
                 }
             }

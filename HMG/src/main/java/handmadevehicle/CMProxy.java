@@ -1,10 +1,12 @@
 package handmadevehicle;
 
 import handmadeguns.client.render.ModelSetAndData;
+import handmadevehicle.command.HMV_CommandReloadparm;
 import handmadevehicle.entity.parts.HasLoopSound;
 import handmadevehicle.entity.parts.turrets.TurretObj;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.AxisAlignedBB;
 
 import java.io.File;
@@ -12,6 +14,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
 public class CMProxy {
+	static HMV_CommandReloadparm hmv_commandReloadparm = new HMV_CommandReloadparm();
 	Field boundingboxField = null;
 	Field modifiersField = null;
 	public EntityPlayer getEntityPlayerInstance() {return null;}
@@ -63,39 +66,45 @@ public class CMProxy {
 		return false;
 	}
 	
-	public boolean spaceKeyDown(){
+	public boolean throttle_BrakeKeyDown(){
 		return false;
 	}
 	
 	public boolean leftclick(){
 		return false;
 	}
-	public boolean leftclickreplacer(){
-		return false;
-	}
 	
 	public boolean rightclick(){
 		return false;
 	}
-	public boolean xclick(){
+	public boolean air_Brake_click(){
 		return false;
 	}
-	public boolean wclick(){
+	public boolean throttle_up_click(){
 		return false;
 	}
-	public boolean aclick(){
+	public boolean yaw_Left_click(){
 		return false;
 	}
-	public boolean sclick(){
+	public boolean throttle_down_click(){
 		return false;
 	}
-	public boolean dclick(){
+	public boolean yaw_Right_click(){
 		return false;
 	}
 	public boolean zoomclick(){
 		return false;
 	}
-	public boolean fclick(){
+	public boolean flap_click(){
+		return false;
+	}
+	public boolean flare_Smoke_click(){
+		return false;
+	}
+	public boolean gear_Down_Up_click(){
+		return false;
+	}
+	public boolean weapon_Mode_click(){
 		return false;
 	}
 	public boolean next_Seatclick(){
@@ -185,5 +194,8 @@ public class CMProxy {
 	
 	public ModelSetAndData loadResource_model(String resourceName_model,String resourceName_Texture,float scale){
 		return null;
+	}
+	
+	public void setPlayerSeatID(int id){
 	}
 }

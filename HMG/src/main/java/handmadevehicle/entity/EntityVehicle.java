@@ -7,14 +7,10 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import handmadeguns.entity.IFF;
 import handmadevehicle.AddNewVehicle;
-import handmadevehicle.entity.parts.HasBaseLogic;
-import handmadevehicle.entity.parts.IMultiTurretVehicle;
-import handmadevehicle.entity.parts.ImultiRidable;
-import handmadevehicle.entity.parts.logics.MultiRiderLogics;
-import handmadevehicle.entity.parts.logics.TankBaseLogic;
+import handmadevehicle.entity.parts.*;
+import handmadevehicle.entity.parts.logics.BaseLogic;
 import handmadevehicle.entity.parts.turrets.TurretObj;
 import handmadevehicle.entity.prefab.Prefab_Vehicle_Base;
-import handmadevehicle.entity.prefab.Prefab_Vehicle_LandVehicle;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.entity.*;
@@ -28,12 +24,13 @@ import net.minecraft.world.WorldServer;
 import javax.vecmath.Vector3d;
 
 import static handmadeguns.Util.Utils.getmovingobjectPosition_forBlock;
+import static handmadevehicle.HMVehicle.HMV_Proxy;
 import static handmadevehicle.Utils.*;
 import static handmadevehicle.Utils.transformVecByQuat;
 import static java.lang.Math.abs;
 import static java.lang.Math.sin;
 
-public abstract class EntityVehicle extends EntityCreature implements IFF,INpc,IVehicle,IMultiTurretVehicle,IEntityAdditionalSpawnData {
+public class EntityVehicle extends EntityCreature implements IFF,INpc,IVehicle,IMultiTurretVehicle,IEntityAdditionalSpawnData {
 	public String typename;
 	
 	public int deathTicks;
@@ -56,22 +53,11 @@ public abstract class EntityVehicle extends EntityCreature implements IFF,INpc,I
 	public EntityAIOpenDoor AIOpenDoor;
 	public Entity master;
 	
-	
+	BaseLogic baseLogic;
+	ModifiedBoundingBox nboundingbox;
 	public EntityVehicle(World par1World) {
 		super(par1World);
 		this.getNavigator().setBreakDoors(true);
-		aiSwimming = new EntityAISwimming(this);
-		AIOpenDoor           =new EntityAIOpenDoor(this, true);
-		this.tasks.addTask(0, aiSwimming);
-		this.tasks.addTask(4, new EntityAIRestrictOpenDoor(this));
-		this.tasks.addTask(5, AIOpenDoor);
-		this.tasks.addTask(6, new EntityAIMoveTowardsRestriction(this, this instanceof IVehicle ? 0: 1));
-		//こっから先は待機時（？）
-		this.tasks.addTask(7, new EntityAIWander(this, this instanceof IVehicle ? 0: 1));
-//		this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
-//		this.tasks.addTask(8, new EntityAILookIdle(this));
-		//ターゲティング
-		//パイロット依存
 		//AI入りはこのmodでは実装しない！良いな！
 		
 		renderDistanceWeight = 16384;
@@ -79,7 +65,85 @@ public abstract class EntityVehicle extends EntityCreature implements IFF,INpc,I
 			EntityTracker entitytracker = ((WorldServer) this.worldObj).getEntityTracker();
 			ObfuscationReflectionHelper.setPrivateValue(EntityTracker.class, entitytracker, 1024, "entityViewDistance", "E", "field_72792_d");
 		}
+		this.setSize(3f, 3f);
 	}
+	public EntityVehicle(World par1World,String typename) {
+		super(par1World);
+		this.init_2(typename);
+		this.setSize(3f, 3f);
+	}
+	public void init_2(String typename) {
+		this.typename = typename;
+		
+		ignoreFrustumCheck = true;
+		baseLogic = new BaseLogic(worldObj, this);
+		Prefab_Vehicle_Base infos = AddNewVehicle.seachInfo(typename);
+		baseLogic.setinfo(infos);
+		nboundingbox = new ModifiedBoundingBox(boundingBox.minX, boundingBox.minY, boundingBox.minZ, boundingBox.maxX, boundingBox.maxY, boundingBox.maxZ,
+				0, 1.5, 0,
+				3.4, 3, 6.5);
+		nboundingbox.calculateMax_And_Min();
+		nboundingbox.rot.set(baseLogic.bodyRot);
+		nboundingbox.centerRotX = baseLogic.info.rotcenter[0];
+		nboundingbox.centerRotY = baseLogic.info.rotcenter[1];
+		nboundingbox.centerRotZ = baseLogic.info.rotcenter[2];
+		nboundingbox.boxes = infos.boxes;
+		HMV_Proxy.replaceBoundingbox(this,nboundingbox);
+		this.applyEntityAttributes2();
+		this.setHealth(this.getMaxHealth());
+	}
+	
+	public double getMountedYOffset() {
+		return 0.6D;
+	}
+	
+	
+	public void onUpdate() {
+		boolean onground = this.onGround;
+		this.lastTickPosX = this.posX;
+		this.lastTickPosY = this.posY;
+		this.lastTickPosZ = this.posZ;
+		
+		
+		super.onUpdate();
+		this.onGround = onground;
+		baseLogic.onUpdate();
+	}
+	public void setLocationAndAngles(double p_70012_1_, double p_70012_3_, double p_70012_5_, float p_70012_7_, float p_70012_8_)
+	{
+		this.prevPosX = this.posX = p_70012_1_;
+		this.prevPosY = this.posY = p_70012_3_ + (double)this.yOffset;
+		this.prevPosZ = this.posZ = p_70012_5_;
+		this.rotationYaw = p_70012_7_;
+		this.rotationPitch = p_70012_8_;
+		this.setPosition(this.posX, this.posY, this.posZ);
+	}
+	
+	public void setVelocity(double p_70016_1_, double p_70016_3_, double p_70016_5_) {
+//		baseLogic.setVelocity(p_70016_1_,p_70016_3_,p_70016_5_);
+	}
+	
+	@Override
+	public BaseLogic getBaseLogic() {
+		return baseLogic;
+	}
+	
+	public boolean isConverting() {
+		return false;
+	}
+	
+	public boolean canBePushed() {
+		return true;
+	}
+	
+	public void moveFlying(float p_70060_1_, float p_70060_2_, float p_70060_3_) {
+	}
+	
+	public void jump() {
+	
+	}
+	
+	
 	
 	
 	
@@ -93,12 +157,6 @@ public abstract class EntityVehicle extends EntityCreature implements IFF,INpc,I
 	public boolean canAttackClass(Class par1Class) {
 		return EntityCreature.class != par1Class;
 	}
-	public void onUpdate()
-	{
-		super.onUpdate();
-//		System.out.println("" + typename);
-//		System.out.println("" + getBaseLogic().info.modelName);
-	}
 
 //	public void setAttackTarget(EntityLivingBase p_70624_1_)
 //	{
@@ -106,11 +164,6 @@ public abstract class EntityVehicle extends EntityCreature implements IFF,INpc,I
 //			super.setAttackTarget(null);
 //		}else super.setAttackTarget(p_70624_1_);
 //	}
-	
-	@Override
-	public float getthirdDist() {
-		return 8;
-	}
 	
 	public int getVerticalFaceSpeed()
 	{
@@ -139,10 +192,6 @@ public abstract class EntityVehicle extends EntityCreature implements IFF,INpc,I
 		super.addRandomArmor();
 	}
 	
-	public boolean isConverting() {
-		return false;
-	}
-	
 	
 	
 	
@@ -152,9 +201,9 @@ public abstract class EntityVehicle extends EntityCreature implements IFF,INpc,I
 	
 	public boolean attackEntityFrom_with_Info(MovingObjectPosition movingObjectPosition, DamageSource source, float level){
 		float temparomor = armor;
-		TankBaseLogic temp;
-		if (source instanceof EntityDamageSourceIndirect && source.getEntity() != null && this instanceof HasBaseLogic &&  ((HasBaseLogic) this).getBaseLogic() instanceof TankBaseLogic) {
-			temp = (TankBaseLogic) ((HasBaseLogic) this).getBaseLogic();
+		BaseLogic temp;
+		if (source instanceof EntityDamageSourceIndirect && source.getEntity() != null) {
+			temp = ((HasBaseLogic) this).getBaseLogic();
 			Vector3d frontArmorVec = new Vector3d(0, 0, -1);
 			Vector3d leftsideArmorVec = new Vector3d(1, 0, 0);
 			Vector3d rightsideArmorVec = new Vector3d(-1, 0, 0);
@@ -164,11 +213,11 @@ public abstract class EntityVehicle extends EntityCreature implements IFF,INpc,I
 			RotateVectorAroundZ(leftsideArmorVec, armor_tilt);
 			RotateVectorAroundZ(rightsideArmorVec, -armor_tilt);
 			RotateVectorAroundX(backArmorVec, armor_tilt);
-			frontArmorVec = transformVecByQuat(frontArmorVec, ((TankBaseLogic) temp).bodyRot);
-			leftsideArmorVec = transformVecByQuat(leftsideArmorVec, ((TankBaseLogic) temp).bodyRot);
-			rightsideArmorVec = transformVecByQuat(rightsideArmorVec, ((TankBaseLogic) temp).bodyRot);
-			backArmorVec = transformVecByQuat(backArmorVec, ((TankBaseLogic) temp).bodyRot);
-			topArmorVec = transformVecByQuat(topArmorVec, ((TankBaseLogic) temp).bodyRot);
+			frontArmorVec = transformVecByQuat(frontArmorVec, temp.bodyRot);
+			leftsideArmorVec = transformVecByQuat(leftsideArmorVec, temp.bodyRot);
+			rightsideArmorVec = transformVecByQuat(rightsideArmorVec, temp.bodyRot);
+			backArmorVec = transformVecByQuat(backArmorVec, temp.bodyRot);
+			topArmorVec = transformVecByQuat(topArmorVec, temp.bodyRot);
 			frontArmorVec.z *= -1;
 			backArmorVec.z *= -1;
 			leftsideArmorVec.z *= -1;
@@ -180,11 +229,11 @@ public abstract class EntityVehicle extends EntityCreature implements IFF,INpc,I
 //					                                          , source.getSourceOfDamage().posZ - this.posZ
 //			);
 			Vector3d TankFrontVec = new Vector3d(0, 0, -1);
-			TankFrontVec = transformVecByQuat(TankFrontVec, ((TankBaseLogic) temp).bodyRot);
+			TankFrontVec = transformVecByQuat(TankFrontVec, temp.bodyRot);
 			TankFrontVec.z *= -1;
 //			double angle_position = abs(toDegrees(TankFrontVec.angle(shooterPositionVec)));
 			Vector3d TankRighttVec = new Vector3d(-1, 0, 0);
-			TankRighttVec = transformVecByQuat(TankRighttVec, ((TankBaseLogic) temp).bodyRot);
+			TankRighttVec = transformVecByQuat(TankRighttVec, temp.bodyRot);
 			TankRighttVec.z *= -1;
 			
 			int hitside = movingObjectPosition.sideHit % 6;
@@ -227,7 +276,7 @@ public abstract class EntityVehicle extends EntityCreature implements IFF,INpc,I
 			return false;
 		} else if (this == source.getEntity()) {
 			return false;
-		} else if(this instanceof ImultiRidable && ((ImultiRidable)this).isRidingEntity(source.getEntity())) {
+		} else if(this instanceof IVehicle && ((IVehicle)this).isRidingEntity(source.getEntity())) {
 			return false;
 		}else {
 			return super.attackEntityFrom(source, par2);
@@ -290,7 +339,7 @@ public abstract class EntityVehicle extends EntityCreature implements IFF,INpc,I
 	}
 	
 	public boolean interact(EntityPlayer p_70085_1_) {
-		if (!this.worldObj.isRemote && (this.riddenByEntity == null || this.riddenByEntity == p_70085_1_)) {
+		if (!this.worldObj.isRemote && (this.riddenByEntity == null || this.riddenByEntity != p_70085_1_)) {
 			if(!p_70085_1_.isSneaking()&&!p_70085_1_.isRiding()){
 				pickupEntity(p_70085_1_,0);
 			}
@@ -300,12 +349,7 @@ public abstract class EntityVehicle extends EntityCreature implements IFF,INpc,I
 		}
 	}
 	public boolean pickupEntity(Entity p_70085_1_, int StartSeachSeatNum){
-		if(!(this instanceof ImultiRidable)) {
-			p_70085_1_.mountEntity(this);
-			return true;
-		}else {
-			return ((MultiRiderLogics)((HasBaseLogic)this).getBaseLogic()).pickupEntity(p_70085_1_,StartSeachSeatNum);
-		}
+		return this.getBaseLogic().pickupEntity(p_70085_1_,StartSeachSeatNum);
 	}
 	/**
 	 * interpolated look vector
@@ -336,28 +380,28 @@ public abstract class EntityVehicle extends EntityCreature implements IFF,INpc,I
 			return Vec3.createVectorHelper((double)(f4 * f5), (double)f6, (double)(f3 * f5));
 		}
 	}
-	public void moveFlying(float p_70060_1_, float p_70060_2_, float p_70060_3_)
-	{
-		float f3 = p_70060_1_ * p_70060_1_ + p_70060_2_ * p_70060_2_;
-		
-		if (f3 >= 1.0E-4F)
-		{
-			f3 = MathHelper.sqrt_float(f3);
-			
-			if (f3 < 1.0F)
-			{
-				f3 = 1.0F;
-			}
-			f3 = p_70060_3_ / f3;
-			f3 = abs(f3);
-			p_70060_1_ *= f3;
-			p_70060_2_ *= f3;
-			float f4 = MathHelper.sin(this.rotationYaw * (float)Math.PI / 180.0F);
-			float f5 = MathHelper.cos(this.rotationYaw * (float)Math.PI / 180.0F);
-			this.motionX += (double)(-p_70060_2_ * f4 + p_70060_1_ * f5);
-			this.motionZ += (double)( p_70060_2_ * f5 + p_70060_1_ * f4);
-		}
-	}
+//	public void moveFlying(float p_70060_1_, float p_70060_2_, float p_70060_3_)
+//	{
+//		float f3 = p_70060_1_ * p_70060_1_ + p_70060_2_ * p_70060_2_;
+//
+//		if (f3 >= 1.0E-4F)
+//		{
+//			f3 = MathHelper.sqrt_float(f3);
+//
+//			if (f3 < 1.0F)
+//			{
+//				f3 = 1.0F;
+//			}
+//			f3 = p_70060_3_ / f3;
+//			f3 = abs(f3);
+//			p_70060_1_ *= f3;
+//			p_70060_2_ *= f3;
+//			float f4 = MathHelper.sin(this.rotationYaw * (float)Math.PI / 180.0F);
+//			float f5 = MathHelper.cos(this.rotationYaw * (float)Math.PI / 180.0F);
+//			this.motionX += (double)(-p_70060_2_ * f4 + p_70060_1_ * f5);
+//			this.motionZ += (double)( p_70060_2_ * f5 + p_70060_1_ * f4);
+//		}
+//	}
 	
 	
 	public void onLivingUpdate()
@@ -378,9 +422,7 @@ public abstract class EntityVehicle extends EntityCreature implements IFF,INpc,I
 		super.readEntityFromNBT(p_70037_1_);
 		typename = p_70037_1_.getString("typename");
 		
-		Prefab_Vehicle_Base infos = AddNewVehicle.seachInfo(typename);
-		getBaseLogic().setinfo(infos);
-		applyEntityAttributes2();
+		init_2(typename);
 	}
 	/**
 	 * (abstract) Protected helper method to write subclass entity data to NBT.
@@ -391,6 +433,18 @@ public abstract class EntityVehicle extends EntityCreature implements IFF,INpc,I
 		p_70014_1_.setString("typename",typename);
 	}
 	
+	@Override
+	public void writeSpawnData(ByteBuf buffer){
+		ByteBufUtils.writeUTF8String(buffer,typename);
+	}
+	
+	@Override
+	public void readSpawnData(ByteBuf additionalData){
+		typename = ByteBufUtils.readUTF8String(additionalData);
+		
+		System.out.println("" + typename);
+		init_2(typename);
+	}
 	public boolean shouldDismountInWater(Entity entity){
 		return false;
 	}
@@ -457,19 +511,80 @@ public abstract class EntityVehicle extends EntityCreature implements IFF,INpc,I
 	{
 //		this.playSound("mob.irongolem.walk", 1.0F, 1.0F);
 	}
-	@Override
-	public void writeSpawnData(ByteBuf buffer){
-		ByteBufUtils.writeUTF8String(buffer,typename);
+	
+	public void setPosition(double x, double y, double z)
+	{
+		super.setPosition(x,y,z);
+		if(getBaseLogic() != null)getBaseLogic().setPosition(x,y,z);
 	}
 	
-	@Override
-	public void readSpawnData(ByteBuf additionalData){
-		typename = ByteBufUtils.readUTF8String(additionalData);
-		
-		System.out.println("" + typename);
-		Prefab_Vehicle_Base infos = AddNewVehicle.seachInfo(typename);
-		if(infos instanceof Prefab_Vehicle_LandVehicle) {
-			getBaseLogic().setinfo(infos);
+	protected void onDeathUpdate() {
+		++this.deathTicks;
+		if(this.deathTicks == 3){
+			//this.worldObj.createExplosion(this, this.posX, this.posY, this.posZ, 0F, false);
+			ExplodeEffect ex = new ExplodeEffect(this, 3F);
+			ex.offset[0] = (float) (rand.nextInt(30) - 15)/10;
+			ex.offset[1] = (float) (rand.nextInt(30) - 15)/10 + 1.5f;
+			ex.offset[2] = (float) (rand.nextInt(30) - 15)/10;
+			ex.Ex();
+		}
+		if(this.deathTicks > 40) {
+			if (worldObj.isRemote) {
+				for (int i = 0; i < 5; i++) {
+					worldObj.spawnParticle("flame",
+							this.posX + (float) (rand.nextInt(20) - 10) / 10,
+							this.posY + (float) (rand.nextInt(20) - 10) / 10 + 1.5f,
+							this.posZ + (float) (rand.nextInt(20) - 10) / 10,
+							0.0D, 0.5D, 0.0D);
+					worldObj.spawnParticle("smoke",
+							this.posX + (float) (rand.nextInt(30) - 15) / 10,
+							this.posY + (float) (rand.nextInt(30) - 15) / 10 + 1.5f,
+							this.posZ + (float) (rand.nextInt(30) - 15) / 10,
+							0.0D, 0.2D, 0.0D);
+					worldObj.spawnParticle("cloud",
+							this.posX + (float) (rand.nextInt(30) - 15) / 10,
+							this.posY + (float) (rand.nextInt(30) - 15) / 10 + 1.5f,
+							this.posZ + (float) (rand.nextInt(30) - 15) / 10,
+							0.0D, 0.3D, 0.0D);
+				}
+			}
+			this.playSound("gvcguns:gvcguns.fireee", 1.20F, 0.8F);
+		}else
+		if (rand.nextInt(3) == 0) {
+			ExplodeEffect ex = new ExplodeEffect(this, 1F);
+			ex.offset[0] = (float) (rand.nextInt(30) - 15) / 10;
+			ex.offset[1] = (float) (rand.nextInt(30) - 15) / 10;
+			ex.offset[2] = (float) (rand.nextInt(30) - 15) / 10;
+			ex.Ex();
+		}
+		if (this.deathTicks >= 140) {
+			ExplodeEffect ex = new ExplodeEffect(this, 8F);
+			ex.Ex();
+			for (int i = 0; i < 15; i++) {
+				worldObj.spawnParticle("flame",
+						this.posX + (float) (rand.nextInt(20) - 10) / 10,
+						this.posY + (float) (rand.nextInt(20) - 10) / 10,
+						this.posZ + (float) (rand.nextInt(20) - 10) / 10,
+						(rand.nextInt(20) - 10) / 100,
+						(rand.nextInt(20) - 10) / 100,
+						(rand.nextInt(20) - 10) / 100 );
+				worldObj.spawnParticle("smoke",
+						this.posX + (float) (rand.nextInt(30) - 15) / 10,
+						this.posY + (float) (rand.nextInt(30) - 15) / 10,
+						this.posZ + (float) (rand.nextInt(30) - 15) / 10,
+						(rand.nextInt(20) - 10) / 100,
+						(rand.nextInt(20) - 10) / 100,
+						(rand.nextInt(20) - 10) / 100 );
+				worldObj.spawnParticle("cloud",
+						this.posX + (float) (rand.nextInt(30) - 15) / 10,
+						this.posY + (float) (rand.nextInt(30) - 15) / 10,
+						this.posZ + (float) (rand.nextInt(30) - 15) / 10,
+						(rand.nextInt(20) - 10) / 100,
+						(rand.nextInt(20) - 10) / 100,
+						(rand.nextInt(20) - 10) / 100 );
+			}
+			if(this.deathTicks == 150)
+				this.setDead();
 		}
 	}
 	
@@ -486,5 +601,55 @@ public abstract class EntityVehicle extends EntityCreature implements IFF,INpc,I
 	@Override
 	public TurretObj[] getTurrets() {
 		return getBaseLogic().turrets;
+	}
+	
+	@Override
+	public void applyEntityCollision(Entity p_70108_1_)
+	{
+		getBaseLogic().applyEntityCollision(p_70108_1_);
+	}
+	
+	@Override
+	public void moveEntityWithHeading(float p_70612_1_, float p_70612_2_)
+	{
+		getBaseLogic().moveEntityWithHeading(p_70612_1_,p_70612_2_);
+	}
+	
+	@Override
+	public boolean handleWaterMovement(){
+		return getBaseLogic().handleWaterMovement();
+	}
+	
+	@Override
+	public void moveEntity(double x, double y, double z){
+		getBaseLogic().moveEntity(x,y,z);
+	}
+	
+	@Override
+	public void updateFallState_public(double stepHeight, boolean onground){
+		this.updateFallState(stepHeight,onground);
+	}
+	
+	@Override
+	public void func_145775_I_public() {
+		this.func_145775_I();
+	}
+	
+	@Override
+	public boolean getinWater() {
+		return inWater;
+	}
+	
+	@Override
+	public void setinWater(boolean value) {
+		inWater = value;
+	}
+	@Override
+	protected void collideWithNearbyEntities(){
+		getBaseLogic().collideWithNearbyEntities();
+	}
+	@Override
+	public void public_collideWithEntity(Entity entity) {
+		collideWithEntity(entity);
 	}
 }

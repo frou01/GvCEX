@@ -192,16 +192,16 @@ public class GVCEntityFriendGK extends EntityPMCBase implements IIRVING
                     onstopping = false;
                     int an = 8;
                     if(angletime == 20){
-                        HandmadeGunsCore.proxy.playsoundat("gvcguns:gvcguns.wark",1,3,1,(float) posX,(float)posY,(float)posZ);
+                        HandmadeGunsCore.HMG_proxy.playsoundat("gvcguns:gvcguns.wark",1,3,1,(float) posX,(float)posY,(float)posZ);
                     }
                     if(angletime == 100){
-                        HandmadeGunsCore.proxy.playsoundat("gvcguns:gvcguns.wark",1,3,1,(float) posX,(float)posY,(float)posZ);
+                        HandmadeGunsCore.HMG_proxy.playsoundat("gvcguns:gvcguns.wark",1,3,1,(float) posX,(float)posY,(float)posZ);
                     }
                     if(angletime == 80){
-                        HandmadeGunsCore.proxy.playsoundat("gvcguns:gvcguns.zye",1,3,1,(float) posX,(float)posY,(float)posZ);
+                        HandmadeGunsCore.HMG_proxy.playsoundat("gvcguns:gvcguns.zye",1,3,1,(float) posX,(float)posY,(float)posZ);
                     }
                     if(angletime == 160){
-                        HandmadeGunsCore.proxy.playsoundat("gvcguns:gvcguns.zye",1,3,1,(float) posX,(float)posY,(float)posZ);
+                        HandmadeGunsCore.HMG_proxy.playsoundat("gvcguns:gvcguns.zye",1,3,1,(float) posX,(float)posY,(float)posZ);
                     }
                     if (angletime < 160) {
                         angletime += an;

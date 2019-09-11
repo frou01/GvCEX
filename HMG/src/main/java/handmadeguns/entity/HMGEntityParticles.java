@@ -14,7 +14,7 @@ import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
-import static handmadeguns.HandmadeGunsCore.proxy;
+import static handmadeguns.HandmadeGunsCore.HMG_proxy;
 import static java.lang.Math.atan2;
 import static org.lwjgl.opengl.GL11.*;
 
@@ -191,13 +191,13 @@ public class HMGEntityParticles extends EntityFX
             GL11.glDisable(GL11.GL_CULL_FACE);
             if (fuse >= 0) {
                 if (is3d) {
-                    proxy.getMCInstance().getTextureManager().bindTexture(resourceLocation[fuse]);
+                    HMG_proxy.getMCInstance().getTextureManager().bindTexture(resourceLocation[fuse]);
                     float posx = (float) (this.prevPosX + (this.posX - this.prevPosX) * (double) p_70539_2_ - interpPosX);
                     float posy = (float) (this.prevPosY + (this.posY - this.prevPosY) * (double) p_70539_2_ - interpPosY);
                     float posz = (float) (this.prevPosZ + (this.posZ - this.prevPosZ) * (double) p_70539_2_ - interpPosZ);
                     GL11.glTranslatef(posx, posy, posz);
                     if (fixedsize) {
-                        float toplayerdist = (float) proxy.getEntityPlayerInstance().getDistance(posX, posY, posZ);
+                        float toplayerdist = (float) HMG_proxy.getEntityPlayerInstance().getDistance(posX, posY, posZ);
                         GL11.glScalef(toplayerdist, toplayerdist, toplayerdist);
                     }
                     GL11.glRotatef(-this.rotationYaw + 90, 0.0F, 1.0F, 0.0F);
@@ -274,13 +274,13 @@ public class HMGEntityParticles extends EntityFX
                     Vec3 crossrenderVec2 = crossrenderVec1.crossProduct(motionVec);
                     crossrenderVec1 = crossrenderVec1.normalize();
                     crossrenderVec2 = crossrenderVec2.normalize();
-                    proxy.getMCInstance().getTextureManager().bindTexture(resourceLocation[fuse]);
+                    HMG_proxy.getMCInstance().getTextureManager().bindTexture(resourceLocation[fuse]);
                     GL11.glTranslatef(
                             (float) (this.posX - interpPosX),
                             (float) (this.posY - interpPosY),
                             (float) (this.posZ - interpPosZ));
                     if (fixedsize) {
-                        float toplayerdist = (float) proxy.getEntityPlayerInstance().getDistance(posX, posY, posZ);
+                        float toplayerdist = (float) HMG_proxy.getEntityPlayerInstance().getDistance(posX, posY, posZ);
                         GL11.glScalef(toplayerdist, toplayerdist, toplayerdist);
                     }
                     GL11.glEnable(GL12.GL_RESCALE_NORMAL);
@@ -494,14 +494,14 @@ public class HMGEntityParticles extends EntityFX
                     GL11.glDisable(GL12.GL_RESCALE_NORMAL);
                 } else {
                     try {
-                        proxy.getMCInstance().getTextureManager().bindTexture(resourceLocation[fuse]);
+                        HMG_proxy.getMCInstance().getTextureManager().bindTexture(resourceLocation[fuse]);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                     float f10 = 0.1F * this.particleScale;
 
                     if (fixedsize) {
-                        f10 *= (float) proxy.getEntityPlayerInstance().getDistance(posX, posY, posZ);
+                        f10 *= (float) HMG_proxy.getEntityPlayerInstance().getDistance(posX, posY, posZ);
                     }
                     float f11 = (float) (this.prevPosX + (this.posX - this.prevPosX) * (double) p_70539_2_ - interpPosX);
                     float f12 = (float) (this.prevPosY + (this.posY - this.prevPosY) * (double) p_70539_2_ - interpPosY);

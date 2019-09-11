@@ -1,6 +1,7 @@
 package hmgww2.entity;
 
 
+import handmadevehicle.entity.parts.logics.VesselBaseLogicLogic;
 import hmggvcmob.GVCMobPlus;
 import hmggvcmob.ai.AITankAttack;
 import handmadevehicle.entity.parts.OBB;
@@ -8,7 +9,6 @@ import handmadevehicle.entity.parts.SeatInfo;
 import handmadevehicle.entity.parts.turrets.FireRist;
 import handmadevehicle.entity.parts.ModifiedBoundingBox;
 import handmadevehicle.entity.parts.turrets.TurretObj;
-import handmadevehicle.entity.parts.logics.VesselBaseLogic;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
 
@@ -82,27 +82,27 @@ public class EntityUSA_ShipD  extends EntityUSA_ShipBase
 						                        new Vector3d(4.05,9.63,8.6)
 				                        );
 		
-		baseLogic = new VesselBaseLogic(this,0.01f,0.4f,false,"hmgww2:hmgww2.VesselTurbine");
+		baseLogic = new VesselBaseLogicLogic(this,0.01f,0.4f,false,"hmgww2:hmgww2.VesselTurbine");
 		baseLogic.canControlonWater = true;
 		baseLogic.always_point_to_target = false;
 		
-		((VesselBaseLogic)baseLogic).riddenByEntities = new Entity[4];
-		((VesselBaseLogic)baseLogic).seatInfos = new SeatInfo[4];
-		((VesselBaseLogic)baseLogic).seatInfos_zoom = new SeatInfo[4];
+		((VesselBaseLogicLogic)baseLogic).riddenByEntities = new Entity[4];
+		((VesselBaseLogicLogic)baseLogic).seatInfos = new SeatInfo[4];
+		((VesselBaseLogicLogic)baseLogic).seatInfos_zoom = new SeatInfo[4];
 		
-		((VesselBaseLogic)baseLogic).seatInfos[0] = new SeatInfo();
-		((VesselBaseLogic)baseLogic).seatInfos_zoom[0] = new SeatInfo();
-		((VesselBaseLogic)baseLogic).seatInfos[0].pos = new double[]{playerpos.x,playerpos.y,playerpos.z};
-		((VesselBaseLogic)baseLogic).seatInfos_zoom[0].pos = new double[]{zoomingplayerpos.x,zoomingplayerpos.y,zoomingplayerpos.z};
+		((VesselBaseLogicLogic)baseLogic).seatInfos[0] = new SeatInfo();
+		((VesselBaseLogicLogic)baseLogic).seatInfos_zoom[0] = new SeatInfo();
+		((VesselBaseLogicLogic)baseLogic).seatInfos[0].pos = new double[]{playerpos.x,playerpos.y,playerpos.z};
+		((VesselBaseLogicLogic)baseLogic).seatInfos_zoom[0].pos = new double[]{zoomingplayerpos.x,zoomingplayerpos.y,zoomingplayerpos.z};
 		
-		((VesselBaseLogic)baseLogic).seatInfos[1] = ((VesselBaseLogic)baseLogic).seatInfos_zoom[1] = new SeatInfo();
-		((VesselBaseLogic)baseLogic).seatInfos[1].pos = ((VesselBaseLogic)baseLogic).seatInfos_zoom[1].pos = new double[]{0,12.98,-15};
+		((VesselBaseLogicLogic)baseLogic).seatInfos[1] = ((VesselBaseLogicLogic)baseLogic).seatInfos_zoom[1] = new SeatInfo();
+		((VesselBaseLogicLogic)baseLogic).seatInfos[1].pos = ((VesselBaseLogicLogic)baseLogic).seatInfos_zoom[1].pos = new double[]{0,12.98,-15};
 		
-		((VesselBaseLogic)baseLogic).seatInfos[2] = ((VesselBaseLogic)baseLogic).seatInfos_zoom[2] = new SeatInfo();
-		((VesselBaseLogic)baseLogic).seatInfos[2].pos = ((VesselBaseLogic)baseLogic).seatInfos_zoom[2].pos = new double[]{0,8.6,-0.8};
+		((VesselBaseLogicLogic)baseLogic).seatInfos[2] = ((VesselBaseLogicLogic)baseLogic).seatInfos_zoom[2] = new SeatInfo();
+		((VesselBaseLogicLogic)baseLogic).seatInfos[2].pos = ((VesselBaseLogicLogic)baseLogic).seatInfos_zoom[2].pos = new double[]{0,8.6,-0.8};
 		
-		((VesselBaseLogic)baseLogic).seatInfos[3] = ((VesselBaseLogic)baseLogic).seatInfos_zoom[3] = new SeatInfo();
-		((VesselBaseLogic)baseLogic).seatInfos[3].pos = ((VesselBaseLogic)baseLogic).seatInfos_zoom[3].pos = new double[]{0,8.1,17.3};
+		((VesselBaseLogicLogic)baseLogic).seatInfos[3] = ((VesselBaseLogicLogic)baseLogic).seatInfos_zoom[3] = new SeatInfo();
+		((VesselBaseLogicLogic)baseLogic).seatInfos[3].pos = ((VesselBaseLogicLogic)baseLogic).seatInfos_zoom[3].pos = new double[]{0,8.1,17.3};
 		
 		aiTankAttack = new AITankAttack(this,3600,900,10,10);
 		aiTankAttack.setAlways_movearound(true);
@@ -390,8 +390,8 @@ public class EntityUSA_ShipD  extends EntityUSA_ShipBase
 		if (this.standalone()) {
 			if (!worldObj.isRemote && rand.nextInt(100) == 1) {
 				boolean flag = false;
-				for (int id = 1; id < ((VesselBaseLogic)baseLogic).riddenByEntities.length; id++) {
-					if(((VesselBaseLogic)baseLogic).riddenByEntities[id] == null)flag = true;
+				for (int id = 1; id < ((VesselBaseLogicLogic)baseLogic).riddenByEntities.length; id++) {
+					if(((VesselBaseLogicLogic)baseLogic).riddenByEntities[id] == null)flag = true;
 				}
 				if(flag) {
 					EntityUSA_S entityUSA_s = new EntityUSA_S(worldObj);

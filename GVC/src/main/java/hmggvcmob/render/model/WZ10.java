@@ -11,8 +11,8 @@
 
 package hmggvcmob.render.model;
 
+import handmadevehicle.entity.parts.logics.PlaneBaseLogicLogic;
 import hmggvcmob.entity.guerrilla.GVCEntityWZ10AttackHeli;
-import handmadevehicle.entity.parts.logics.PlaneBaseLogic;
 import net.minecraft.client.model.*;
 import net.minecraft.entity.Entity;
 import net.minecraftforge.client.MinecraftForgeClient;
@@ -632,7 +632,7 @@ public class WZ10 extends ModelBase
 		int pass = MinecraftForgeClient.getRenderPass();
 		if(pass == 0) {
 			if (fentity instanceof GVCEntityWZ10AttackHeli) {
-				PlaneBaseLogic entity = (PlaneBaseLogic) ((GVCEntityWZ10AttackHeli) fentity).getBaseLogic();
+				PlaneBaseLogicLogic entity = (PlaneBaseLogicLogic) ((GVCEntityWZ10AttackHeli) fentity).getBaseLogic();
 				GL11.glRotatef(180.0F - (entity.bodyrotationYaw +(entity.bodyrotationYaw - entity.prevbodyrotationYaw) * partialTicks), 0.0F, 1.0F, 0.0F);
 				GL11.glRotatef(-(entity.bodyrotationPitch +(entity.bodyrotationPitch - entity.prevbodyrotationPitch) * partialTicks), 1.0F, 0.0F, 0.0F);
 				GL11.glRotatef(180 + (entity.bodyrotationRoll +(entity.bodyrotationRoll - entity.prevbodyrotationRoll) * partialTicks), 0.0F, 0.0F, 1.0F);

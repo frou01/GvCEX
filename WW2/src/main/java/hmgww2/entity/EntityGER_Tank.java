@@ -1,8 +1,8 @@
 package hmgww2.entity;
 
 
+import handmadevehicle.entity.parts.logics.TankBaseLogicLogic;
 import hmggvcmob.ai.AITankAttack;
-import handmadevehicle.entity.parts.logics.TankBaseLogic;
 import handmadevehicle.entity.parts.turrets.TurretObj;
 import net.minecraft.world.World;
 
@@ -16,7 +16,7 @@ public class EntityGER_Tank extends EntityGER_TankBase
     {
         super(par1World);
         this.setSize(4F, 2.5F);
-        baseLogic = new TankBaseLogic(this,0.27f,0.65f,false,"hmgww2:hmgww2.PzIVTrack");
+        baseLogic = new TankBaseLogicLogic(this,0.27f,0.65f,false,"hmgww2:hmgww2.PzIVTrack");
         aiTankAttack = new AITankAttack(this,6400,1600,200,200);
         this.tasks.addTask(1,aiTankAttack);
         aiTankAttack.setAlways_poit_to_target(true);

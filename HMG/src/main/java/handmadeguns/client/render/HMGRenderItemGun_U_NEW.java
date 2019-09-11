@@ -9,7 +9,6 @@ import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -26,7 +25,7 @@ import java.nio.FloatBuffer;
 import java.util.ArrayList;
 
 import static handmadeguns.event.RenderTickSmoothing.smooth;
-import static handmadeguns.HandmadeGunsCore.proxy;
+import static handmadeguns.HandmadeGunsCore.HMG_proxy;
 import static java.lang.Math.abs;
 import static org.lwjgl.opengl.GL11.*;
 
@@ -35,10 +34,9 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 	private IModelCustom model;
 	private ResourceLocation guntexture;
 	public static float smoothing;
-	private ModelBiped modelBipedMain;
 	public float modelscala;
-	public boolean isUnder;
-	private boolean isfirstperson;
+	public static boolean isUnder;
+	public static boolean isfirstperson;
 
 
 
@@ -157,58 +155,35 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 
 
 	private boolean armtrue;
-	private float armrotationxr;
-	private float armrotationyr;
-	private float armrotationzr;
-	private float armoffsetxr;
-	private float armoffsetyr;
-	private float armoffsetzr;
-
-	private float armrotationxl;
-	private float armrotationyl;
-	private float armrotationzl;
-	private float armoffsetxl;
-	private float armoffsetyl;
-	private float armoffsetzl;
-	private float armoffsetscale = 1;
-
-	public float muzzleattachoffset[] = new float[3];
-	public float muzzleattachrotation[] = new float[3];
-	public float sightattachoffset[] = new float[3];
-	public float sightattachrotation[] = new float[3];
-	public float gripattachoffset[] = new float[3];
-	public float gripattachrotation[] = new float[3];
-	public float overbarrelattachoffset[] = new float[3];
-	public float overbarrelattachrotation[] = new float[3];
-
-	public float turretBasepos[] = new float[3];
-
-	public ArrayList<HMGGunParts> Partslist = new ArrayList<HMGGunParts>();
-	private NBTTagCompound nbt;
-	ItemStack[] items = new ItemStack[6];
-	HMGItem_Unified_Guns gunitem;
 
 
 
-	public boolean isPlacedGun = false;
-	public float turretYaw = 0;
-	public float turretPitch = 0;
+	public static NBTTagCompound nbt;
+	public static ItemStack[] items = new ItemStack[6];
+	public static HMGItem_Unified_Guns gunitem;
 
+
+
+	public static boolean isPlacedGun = false;
+	public static float turretYaw = 0;
+	public static float turretPitch = 0;
+	
+	public PartsRender_Gun partsRender_gun;
 	public HMGRenderItemGun_U_NEW(IModelCustom modelgun, ResourceLocation texture, float scala) {
-		model = modelgun;
-		guntexture = texture;
-		this.modelBipedMain = new ModelBiped(0.5F);
-
-		this.modelscala = scala;
+		partsRender_gun = new PartsRender_Gun();
+		partsRender_gun.model = model = modelgun;
+		partsRender_gun.texture = guntexture = texture;
+		
+		partsRender_gun.modelscala = this.modelscala = scala;
 	}
 
 	public void setarmOffsetAndRotationR(float px,float py,float pz,float rx,float ry,float rz){
-		armoffsetxr = px;
-		armoffsetyr = py;
-		armoffsetzr = pz;
-		armrotationxr = rx;
-		armrotationyr = ry;
-		armrotationzr = rz;
+		partsRender_gun.armoffsetxr = px;
+		partsRender_gun.armoffsetyr = py;
+		partsRender_gun.armoffsetzr = pz;
+		partsRender_gun.armrotationxr = rx;
+		partsRender_gun.armrotationyr = ry;
+		partsRender_gun.armrotationzr = rz;
 	}
 	public void setSprintOffsetAndRotation(float px,float py,float pz,float rx,float ry,float rz){
 		Sprintrotationx = rx;
@@ -219,16 +194,12 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 		Sprintoffsetz = pz;
 	}
 	public void setarmOffsetAndRotationL(float px,float py,float pz,float rx,float ry,float rz){
-		armoffsetxl = px;
-		armoffsetyl = py;
-		armoffsetzl = pz;
-		armrotationxl = rx;
-		armrotationyl = ry;
-		armrotationzl = rz;
-	}
-
-	public void addParts(HMGGunParts part){
-		Partslist.add(part);
+		partsRender_gun.armoffsetxl = px;
+		partsRender_gun.armoffsetyl = py;
+		partsRender_gun.armoffsetzl = pz;
+		partsRender_gun.armrotationxl = rx;
+		partsRender_gun.armrotationyl = ry;
+		partsRender_gun.armrotationzl = rz;
 	}
 
 	@Override
@@ -266,7 +237,7 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 	float rotey;
 	float rotex;
 
-	Object[] datas;
+	static Object[] datas;
 	int pass = 0;
 	@Override
 	public void renderItem(ItemRenderType type, ItemStack gunstack, Object... data) {
@@ -281,7 +252,7 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 				GL11.glDepthMask(true);
 				glAlphaFunc(GL_EQUAL, 1);
 			}
-			
+			partsRender_gun.pass = pass;
 			GL11.glPushMatrix();
 			datas = data;
 			GL11.glEnable(GL_BLEND);
@@ -393,9 +364,9 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 //						onads_modelPosX = onads_modelPosX_Normal - ((HMGItemSightBase) itemstackSight.getItem()).gunoffset[0]*scala/2;
 //						onads_modelPosY = onads_modelPosY_Normal - ((HMGItemSightBase) itemstackSight.getItem()).gunoffset[1]*scala/2;
 //						onads_modelPosZ = onads_modelPosZ_Normal - ((HMGItemSightBase) itemstackSight.getItem()).gunoffset[2]*scala/2;
-							onads_modelPosX = 0.694f - (sightattachoffset[0] + ((HMGItemSightBase) itemstackSight.getItem()).gunoffset[0]) * scala;
-							onads_modelPosY = 1.8f - (sightattachoffset[1] + ((HMGItemSightBase) itemstackSight.getItem()).gunoffset[1]) * scala;
-							onads_modelPosZ = -(sightattachoffset[2] + ((HMGItemSightBase) itemstackSight.getItem()).gunoffset[2]) * scala;
+							onads_modelPosX = 0.694f - (partsRender_gun.sightattachoffset[0] + ((HMGItemSightBase) itemstackSight.getItem()).gunoffset[0]) * scala;
+							onads_modelPosY = 1.8f - (partsRender_gun.sightattachoffset[1] + ((HMGItemSightBase) itemstackSight.getItem()).gunoffset[1]) * scala;
+							onads_modelPosZ = -(partsRender_gun.sightattachoffset[2] + ((HMGItemSightBase) itemstackSight.getItem()).gunoffset[2]) * scala;
 							onads_modelRotationX = onads_modelRotationX_Normal + ((HMGItemSightBase) itemstackSight.getItem()).gunrotation[0];
 							onads_modelRotationY = onads_modelRotationY_Normal + ((HMGItemSightBase) itemstackSight.getItem()).gunrotation[1];
 							onads_modelRotationZ = onads_modelRotationZ_Normal + ((HMGItemSightBase) itemstackSight.getItem()).gunrotation[2];
@@ -434,12 +405,10 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 						}
 					}
 					if (isreloading) {
-						//���[�h���ɌĂ΂�镔��
 						this.glMatrixForRenderInEquipped(-0.2f);
 						GL11.glScalef(scala, scala, scala);
 						int reloadprogress = this.getintfromnbt("RloadTime");
-						for (HMGGunParts parts : Partslist)
-							GunPartSidentification(parts, new GunState[]{GunState.Reload}, reloadprogress, remainbullets);
+						partsRender_gun.partSidentification(new GunState[]{GunState.Reload}, (float)reloadprogress, remainbullets);
 					} else if (HandmadeGunsCore.Key_ADS(entity)) {
 						GunState[] state = new GunState[2];
 						state[1] = GunState.ADS;
@@ -449,22 +418,19 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 							this.glMatrixForRenderInEquippedADS(-1.4f);
 							state[0] = GunState.Cock;
 							GL11.glScalef(scala, scala, scala);
-							for (HMGGunParts parts : Partslist)
-								GunPartSidentification(parts, state, cockingprogress, remainbullets);
+							partsRender_gun.partSidentification(state, cockingprogress, remainbullets);
 						} else if (!recoiled) {
 							this.glMatrixForRenderInEquippedADS(-1.4f);
 							GL11.glRotatef(jump * (1 - this.getSmoothing()), 1.0f, 0.0f, 0.0f);//�e�����ˏオ��B���̏�Ԃ��ƃ��f����0,0,0�𒆐S�ɉ�]�B
 							float recoileprogress = 10 * ((float) nbt.getByte("Bolt") + smoothing) / gunitem.gunInfo.cycle;
 							state[0] = GunState.Recoil;
 							GL11.glScalef(scala, scala, scala);
-							for (HMGGunParts parts : Partslist)
-								GunPartSidentification(parts, state, recoileprogress, remainbullets);
+							partsRender_gun.partSidentification(state, recoileprogress, remainbullets);
 						} else {
 							state[0] = GunState.ADS;
 							this.glMatrixForRenderInEquippedADS(-1.4f);
 							GL11.glScalef(scala, scala, scala);
-							for (HMGGunParts parts : Partslist)
-								GunPartSidentification(parts, state, 0, remainbullets);
+							partsRender_gun.partSidentification(state, (float)0, remainbullets);
 						}
 					} else {
 						if (this.isentitysprinting(entity)) {
@@ -474,30 +440,26 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 							GL11.glRotatef(Sprintrotationz, 0.0f, 0.0f, 1.0f);
 							GL11.glTranslatef(Sprintoffsetx, Sprintoffsety, Sprintoffsetz);
 							GL11.glScalef(scala, scala, scala);
-							for (HMGGunParts parts : Partslist)
-								GunPartSidentification(parts, new GunState[]{GunState.Default}, 0, remainbullets);
+							partsRender_gun.partSidentification(new GunState[]{GunState.Default}, (float)0, remainbullets);
 						} else {
 							int cockingtime = this.getintfromnbt("CockingTime");
 							if (cockingtime > 0) {
 								float cockingprogress = cockingtime + this.getSmoothing() - 1;//�R�b�L���O�J�n����̎��ԁifloat�l�j
 								this.glMatrixForRenderInEquipped(-0.2f);
 								GL11.glScalef(scala, scala, scala);
-								for (HMGGunParts parts : Partslist)
-									GunPartSidentification(parts, new GunState[]{GunState.Cock}, cockingprogress, remainbullets);
+								partsRender_gun.partSidentification(new GunState[]{GunState.Cock}, cockingprogress, remainbullets);
 							} else if (!recoiled) {
 								//�ˌ����1tick���̂݌Ă΂�܂�
 								this.glMatrixForRenderInEquipped(-0.2f);
 								GL11.glRotatef(jump * (1 - this.getSmoothing()), 1.0f, 0.0f, 0.0f);//�e�����ˏオ��B���̏�Ԃ��ƃ��f����0,0,0�𒆐S�ɉ�]�B
 								float recoileprogress = 10 * (nbt.getByte("Bolt") + smoothing) / gunitem.gunInfo.cycle;
 								GL11.glScalef(scala, scala, scala);
-								for (HMGGunParts parts : Partslist)
-									GunPartSidentification(parts, new GunState[]{GunState.Recoil}, recoileprogress, remainbullets);
+								partsRender_gun.partSidentification(new GunState[]{GunState.Recoil}, recoileprogress, remainbullets);
 							} else {
 								//�ʏ���
 								this.glMatrixForRenderInEquipped(-0.2f);
 								GL11.glScalef(scala, scala, scala);
-								for (HMGGunParts parts : Partslist)
-									GunPartSidentification(parts, new GunState[]{GunState.Default}, 0, remainbullets);
+								partsRender_gun.partSidentification(new GunState[]{GunState.Default}, (float)0, remainbullets);
 							}
 						}
 //						renderpartsNormal(this,gunitem,gunstack,model,entity,type,data);
@@ -525,48 +487,35 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 					}
 					GL11.glScalef(gunitem.gunInfo.inworldScale, gunitem.gunInfo.inworldScale, gunitem.gunInfo.inworldScale);
 					if (isreloading) {
-						//���[�h���ɌĂ΂�镔��
 						int reloadprogress = this.getintfromnbt("RloadTime");
-						for (HMGGunParts parts : Partslist)
-							GunPartSidentification(parts, new GunState[]{GunState.Reload}, reloadprogress, remainbullets);
+						partsRender_gun.partSidentification(new GunState[]{GunState.Reload}, (float)reloadprogress, remainbullets);
 					} else if (HandmadeGunsCore.Key_ADS(entity)) {
-						//ADS���ɌĂ΂�镔��
 						int cockingtime = this.getintfromnbt("CockingTime");
 						if (cockingtime > 0) {
-							float cockingprogress = cockingtime + this.getSmoothing() - 1;//�R�b�L���O�J�n����̎��ԁifloat�l�j
-							for (HMGGunParts parts : Partslist)
-								GunPartSidentification(parts, new GunState[]{GunState.Cock}, cockingprogress, remainbullets);
+							float cockingprogress = cockingtime + this.getSmoothing() - 1;
+							partsRender_gun.partSidentification(new GunState[]{GunState.Cock}, cockingprogress, remainbullets);
 						} else if (!recoiled) {
-							GL11.glRotatef(jump * (1 - this.getSmoothing()), 1.0f, 0.0f, 0.0f);//�e�����ˏオ��B���̏�Ԃ��ƃ��f����0,0,0�𒆐S�ɉ�]�B
+							GL11.glRotatef(jump * (1 - this.getSmoothing()), 1.0f, 0.0f, 0.0f);
 							float recoileprogress = 10 * (nbt.getByte("Bolt") + smoothing) / gunitem.gunInfo.cycle;
-							for (HMGGunParts parts : Partslist)
-								GunPartSidentification(parts, new GunState[]{GunState.Recoil}, recoileprogress, remainbullets);
+							partsRender_gun.partSidentification(new GunState[]{GunState.Recoil}, recoileprogress, remainbullets);
 						} else {
-							for (HMGGunParts parts : Partslist)
-								GunPartSidentification(parts, new GunState[]{GunState.ADS}, 0, remainbullets);
+							partsRender_gun.partSidentification(new GunState[]{GunState.ADS}, (float)0, remainbullets);
 						}
 					} else {
-						//�ʏ펞�ɌĂ΂�镔��
 						if (this.isentitysprinting(entity)) {
-							//�����Ă��違�ˌ����łȂ��Ƃ��ɌĂ΂��B
-							for (HMGGunParts parts : Partslist)
-								GunPartSidentification(parts, new GunState[]{GunState.Default}, 0, remainbullets);
+							partsRender_gun.partSidentification(new GunState[]{GunState.Default}, (float)0, remainbullets);
 						} else {
 							int cockingtime = this.getintfromnbt("CockingTime");
 							if (cockingtime > 0) {
-								float cockingprogress = cockingtime + this.getSmoothing() - 1;//�R�b�L���O�J�n����̎��ԁifloat�l�j
-								for (HMGGunParts parts : Partslist)
-									GunPartSidentification(parts, new GunState[]{GunState.Cock}, cockingprogress, remainbullets);
+								float cockingprogress = cockingtime + this.getSmoothing() - 1;
+								partsRender_gun.partSidentification(new GunState[]{GunState.Cock}, cockingprogress, remainbullets);
 							} else if (!recoiled) {
 								//�ˌ����1tick���̂݌Ă΂�܂�
-								GL11.glRotatef(jump * (1 - this.getSmoothing()), 1.0f, 0.0f, 0.0f);//�e�����ˏオ��B���̏�Ԃ��ƃ��f����0,0,0�𒆐S�ɉ�]�B
+								GL11.glRotatef(jump * (1 - this.getSmoothing()), 1.0f, 0.0f, 0.0f);
 								float recoileprogress = 10 * (nbt.getByte("Bolt") + smoothing) / gunitem.gunInfo.cycle;
-								for (HMGGunParts parts : Partslist)
-									GunPartSidentification(parts, new GunState[]{GunState.Recoil}, recoileprogress, remainbullets);
+								partsRender_gun.partSidentification(new GunState[]{GunState.Recoil}, recoileprogress, remainbullets);
 							} else {
-								//�ʏ���
-								for (HMGGunParts parts : Partslist)
-									GunPartSidentification(parts, new GunState[]{GunState.Default}, 0, remainbullets);
+								partsRender_gun.partSidentification(new GunState[]{GunState.Default}, (float)0, remainbullets);
 							}
 						}
 //						renderpartsNormal(this,gunitem,gunstack,model,entity,type,data);
@@ -584,27 +533,20 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 					GL11.glPushMatrix();
 					GL11.glScalef(0.4f * scala * gunitem.gunInfo.inworldScale * (isPlacedGun ? gunitem.gunInfo.onTurretScale : 1), 0.4f * scala * gunitem.gunInfo.inworldScale * (isPlacedGun ? gunitem.gunInfo.onTurretScale : 1), 0.4f * scala * gunitem.gunInfo.inworldScale * (isPlacedGun ? gunitem.gunInfo.onTurretScale : 1));
 					if (isreloading) {
-						//���[�h���ɌĂ΂�镔��
 						int reloadprogress = this.getintfromnbt("RloadTime");
-						for (HMGGunParts parts : Partslist)
-							GunPartSidentification(parts, new GunState[]{GunState.Reload}, reloadprogress, remainbullets);
+						partsRender_gun.partSidentification(new GunState[]{GunState.Reload}, (float)reloadprogress, remainbullets);
 					} else {
-						//�ʏ펞�ɌĂ΂�镔��
 						int cockingtime = this.getintfromnbt("CockingTime");
 						if (cockingtime > 0) {
-							float cockingprogress = cockingtime + this.getSmoothing() - 1;//�R�b�L���O�J�n����̎��ԁifloat�l�j
-							for (HMGGunParts parts : Partslist)
-								GunPartSidentification(parts, new GunState[]{GunState.Cock}, cockingprogress, remainbullets);
+							float cockingprogress = cockingtime + this.getSmoothing() - 1;
+							partsRender_gun.partSidentification(new GunState[]{GunState.Cock}, cockingprogress, remainbullets);
 						} else if (!recoiled) {
 							//�ˌ����1tick���̂݌Ă΂�܂�
-							GL11.glRotatef(jump * (1 - this.getSmoothing()), 1.0f, 0.0f, 0.0f);//�e�����ˏオ��B���̏�Ԃ��ƃ��f����0,0,0�𒆐S�ɉ�]�B
+							GL11.glRotatef(jump * (1 - this.getSmoothing()), 1.0f, 0.0f, 0.0f);
 							float recoileprogress = 10 * (nbt.getByte("Bolt") + smoothing) / gunitem.gunInfo.cycle;
-							for (HMGGunParts parts : Partslist)
-								GunPartSidentification(parts, new GunState[]{GunState.Recoil}, recoileprogress, remainbullets);
+							partsRender_gun.partSidentification(new GunState[]{GunState.Recoil}, recoileprogress, remainbullets);
 						} else {
-							//�ʏ���
-							for (HMGGunParts parts : Partslist)
-								GunPartSidentification(parts, new GunState[]{GunState.Default}, 0, remainbullets);
+							partsRender_gun.partSidentification(new GunState[]{GunState.Default}, (float)0, remainbullets);
 						}
 //						renderpartsNormal(this,gunitem,gunstack,model,entity,type,data);
 					}
@@ -704,74 +646,76 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 			Minecraft.getMinecraft().renderEngine.bindTexture(resourcelocation);
 		}
 	}
-	public void renderarm(float armrotationxl,float armrotationyl,float armrotationzl,float armoffsetxl,float armoffsetyl,float armoffsetzl,
-						  float armrotationxr,float armrotationyr,float armrotationzr,float armoffsetxr,float armoffsetyr,float armoffsetzr){
-		GL11.glScalef(1/modelscala,1/modelscala,1/modelscala);
-		modelBipedMain.bipedLeftArm.rotateAngleX = armrotationxl;
-		modelBipedMain.bipedLeftArm.rotateAngleY = armrotationyl;
-		modelBipedMain.bipedLeftArm.rotateAngleZ = armrotationzl;
-		modelBipedMain.bipedLeftArm.offsetX = armoffsetxl*armoffsetscale;
-		modelBipedMain.bipedLeftArm.offsetY = armoffsetyl*armoffsetscale;
-		modelBipedMain.bipedLeftArm.offsetZ = armoffsetzl*armoffsetscale;
-
-
-		modelBipedMain.bipedRightArm.rotateAngleX = armrotationxr;
-		modelBipedMain.bipedRightArm.rotateAngleY = armrotationyr;
-		modelBipedMain.bipedRightArm.rotateAngleZ = armrotationzr;
-		modelBipedMain.bipedRightArm.offsetX = armoffsetxr*armoffsetscale;
-		modelBipedMain.bipedRightArm.offsetY = armoffsetyr*armoffsetscale;
-		modelBipedMain.bipedRightArm.offsetZ = armoffsetzr*armoffsetscale;
-		GL11.glPushMatrix();
-		modelBipedMain.bipedRightArm.render(0.0625f);
-		modelBipedMain.bipedLeftArm.render(0.0625f);
-		GL11.glPopMatrix();
-	}
-	public void renderarmL(){
-		if(isfirstperson) {
-			GL11.glPushMatrix();
-			ResourceLocation resourcelocation = this.getEntityTexture(proxy.getMCInstance().thePlayer);
-			if (resourcelocation == null) {
-				resourcelocation = AbstractClientPlayer.getLocationSkin("default");
-			}
-			Minecraft.getMinecraft().renderEngine.bindTexture(resourcelocation);
-			GL11.glScalef(1 / modelscala, 1 / modelscala, 1 / modelscala);
-			GL11.glRotatef(180F, 1.0F, 0.0F, 0.0F);
-			GL11.glTranslatef(0F, -0.5F, 0F);
-			modelBipedMain.bipedLeftArm.rotateAngleX = armrotationzl;
-			modelBipedMain.bipedLeftArm.rotateAngleY = armrotationyl;
-			modelBipedMain.bipedLeftArm.rotateAngleZ = 0;
-			modelBipedMain.bipedLeftArm.offsetX = armoffsetxl * armoffsetscale;
-			modelBipedMain.bipedLeftArm.offsetY = armoffsetyl * armoffsetscale;
-			modelBipedMain.bipedLeftArm.offsetZ = armoffsetzl * armoffsetscale;
-			modelBipedMain.bipedLeftArm.render(0.0625f);
-			Minecraft.getMinecraft().renderEngine.bindTexture(guntexture);
-			GL11.glScalef(modelscala, modelscala, modelscala);
-			GL11.glPopMatrix();
-		}
-	}
-	public void renderarmR(){
-		if(isfirstperson) {
-			GL11.glPushMatrix();
-			ResourceLocation resourcelocation = this.getEntityTexture(proxy.getMCInstance().thePlayer);
-			if (resourcelocation == null) {
-				resourcelocation = AbstractClientPlayer.getLocationSkin("default");
-			}
-			Minecraft.getMinecraft().renderEngine.bindTexture(resourcelocation);
-			GL11.glScalef(1 / modelscala, 1 / modelscala, 1 / modelscala);
-			GL11.glRotatef(180F, 1.0F, 0.0F, 0.0F);
-			GL11.glTranslatef(0F, -0.5F, 0F);
-			modelBipedMain.bipedRightArm.rotateAngleX = armrotationzr;
-			modelBipedMain.bipedRightArm.rotateAngleY = armrotationyr;
-			modelBipedMain.bipedRightArm.rotateAngleZ = 0;
-			modelBipedMain.bipedRightArm.offsetX = armoffsetxr * armoffsetscale;
-			modelBipedMain.bipedRightArm.offsetY = armoffsetyr * armoffsetscale;
-			modelBipedMain.bipedRightArm.offsetZ = armoffsetzr * armoffsetscale;
-			modelBipedMain.bipedRightArm.render(0.0625f);
-			Minecraft.getMinecraft().renderEngine.bindTexture(guntexture);
-			GL11.glScalef(modelscala, modelscala, modelscala);
-			GL11.glPopMatrix();
-		}
-	}
+	
+//	public void renderarm(float armrotationxl,float armrotationyl,float armrotationzl,float armoffsetxl,float armoffsetyl,float armoffsetzl,
+//						  float armrotationxr,float armrotationyr,float armrotationzr,float armoffsetxr,float armoffsetyr,float armoffsetzr){
+//		GL11.glScalef(1/modelscala,1/modelscala,1/modelscala);
+//		modelBipedMain.bipedLeftArm.rotateAngleX = armrotationxl;
+//		modelBipedMain.bipedLeftArm.rotateAngleY = armrotationyl;
+//		modelBipedMain.bipedLeftArm.rotateAngleZ = armrotationzl;
+//		modelBipedMain.bipedLeftArm.offsetX = armoffsetxl*armoffsetscale;
+//		modelBipedMain.bipedLeftArm.offsetY = armoffsetyl*armoffsetscale;
+//		modelBipedMain.bipedLeftArm.offsetZ = armoffsetzl*armoffsetscale;
+//
+//
+//		modelBipedMain.bipedRightArm.rotateAngleX = armrotationxr;
+//		modelBipedMain.bipedRightArm.rotateAngleY = armrotationyr;
+//		modelBipedMain.bipedRightArm.rotateAngleZ = armrotationzr;
+//		modelBipedMain.bipedRightArm.offsetX = armoffsetxr*armoffsetscale;
+//		modelBipedMain.bipedRightArm.offsetY = armoffsetyr*armoffsetscale;
+//		modelBipedMain.bipedRightArm.offsetZ = armoffsetzr*armoffsetscale;
+//		GL11.glPushMatrix();
+//		modelBipedMain.bipedRightArm.render(0.0625f);
+//		modelBipedMain.bipedLeftArm.render(0.0625f);
+//		GL11.glPopMatrix();
+//	}
+//
+//	public void renderarmL(){
+//		if(isfirstperson) {
+//			GL11.glPushMatrix();
+//			ResourceLocation resourcelocation = this.getEntityTexture(HMG_proxy.getMCInstance().thePlayer);
+//			if (resourcelocation == null) {
+//				resourcelocation = AbstractClientPlayer.getLocationSkin("default");
+//			}
+//			Minecraft.getMinecraft().renderEngine.bindTexture(resourcelocation);
+//			GL11.glScalef(1 / modelscala, 1 / modelscala, 1 / modelscala);
+//			GL11.glRotatef(180F, 1.0F, 0.0F, 0.0F);
+//			GL11.glTranslatef(0F, -0.5F, 0F);
+//			modelBipedMain.bipedLeftArm.rotateAngleX = armrotationzl;
+//			modelBipedMain.bipedLeftArm.rotateAngleY = armrotationyl;
+//			modelBipedMain.bipedLeftArm.rotateAngleZ = 0;
+//			modelBipedMain.bipedLeftArm.offsetX = armoffsetxl * armoffsetscale;
+//			modelBipedMain.bipedLeftArm.offsetY = armoffsetyl * armoffsetscale;
+//			modelBipedMain.bipedLeftArm.offsetZ = armoffsetzl * armoffsetscale;
+//			modelBipedMain.bipedLeftArm.render(0.0625f);
+//			Minecraft.getMinecraft().renderEngine.bindTexture(guntexture);
+//			GL11.glScalef(modelscala, modelscala, modelscala);
+//			GL11.glPopMatrix();
+//		}
+//	}
+//	public void renderarmR(){
+//		if(isfirstperson) {
+//			GL11.glPushMatrix();
+//			ResourceLocation resourcelocation = this.getEntityTexture(HMG_proxy.getMCInstance().thePlayer);
+//			if (resourcelocation == null) {
+//				resourcelocation = AbstractClientPlayer.getLocationSkin("default");
+//			}
+//			Minecraft.getMinecraft().renderEngine.bindTexture(resourcelocation);
+//			GL11.glScalef(1 / modelscala, 1 / modelscala, 1 / modelscala);
+//			GL11.glRotatef(180F, 1.0F, 0.0F, 0.0F);
+//			GL11.glTranslatef(0F, -0.5F, 0F);
+//			modelBipedMain.bipedRightArm.rotateAngleX = armrotationzr;
+//			modelBipedMain.bipedRightArm.rotateAngleY = armrotationyr;
+//			modelBipedMain.bipedRightArm.rotateAngleZ = 0;
+//			modelBipedMain.bipedRightArm.offsetX = armoffsetxr * armoffsetscale;
+//			modelBipedMain.bipedRightArm.offsetY = armoffsetyr * armoffsetscale;
+//			modelBipedMain.bipedRightArm.offsetZ = armoffsetzr * armoffsetscale;
+//			modelBipedMain.bipedRightArm.render(0.0625f);
+//			Minecraft.getMinecraft().renderEngine.bindTexture(guntexture);
+//			GL11.glScalef(modelscala, modelscala, modelscala);
+//			GL11.glPopMatrix();
+//		}
+//	}
 
 	public boolean isentitysprinting(Entity entity){
 		return entity.isSprinting() && !nbt.getBoolean("set_up");
@@ -784,363 +728,363 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 		return colorBuffer;
 	}
 
-	public void GunPartSidentification(HMGGunParts part, GunState[] states, float flame, int remainbullets){//��Ԃŏ�������
-		for(GunState state : states) {
-			switch (state) {
-				case Default:
-					if (part.rendering_Def) {
-						GunPartSidentification_Attach(part, state, flame, remainbullets, part.getRenderinfDefault_offset());
-						return;
-					}
-					break;
-				case ADS:
-					if (part.rendering_Ads) {
-						GunPartSidentification_Attach(part, state, flame, remainbullets, part.getRenderinfOfADS());
-						return;
-					}
-					break;
-				case Recoil:
-					if (part.rendering_Recoil) {
-						if (part.hasMotionRecoil) {
-							HMGGunParts_Motion_PosAndRotation OffsetAndRotation = part.getRecoilmotion(flame + smooth);
-							
-							GunPartSidentification_Attach(part, state, flame, remainbullets, OffsetAndRotation);
-						} else {
-							HMGGunParts_Motion_PosAndRotation OffsetAndRotation = part.getRenderinfOfRecoil();
-							
-							GunPartSidentification_Attach(part, state, flame, remainbullets, OffsetAndRotation);
-						}
-						return;
-					}
-					break;
-				case Cock:
-					if (part.rendering_Cock) {
-						if (part.hasMotionCock) {
-							HMGGunParts_Motion_PosAndRotation OffsetAndRotation = part.getcockmotion(flame + smooth);
-							
-							GunPartSidentification_Attach(part, state, flame, remainbullets, OffsetAndRotation);
-						} else {
-							HMGGunParts_Motion_PosAndRotation OffsetAndRotation = part.getRenderinfOfCock();
-							
-							GunPartSidentification_Attach(part, state, flame, remainbullets, OffsetAndRotation);
-						}
-						return;
-					}
-					break;
-				case Reload:
-					if (part.rendering_Reload) {
-						HMGGunParts_Motion_PosAndRotation rotationCenterAndRotation = part.getRenderinfOfDef();
-						if (part.hasMotionReload) {
-							HMGGunParts_Motion_PosAndRotation OffsetAndRotation = part.getReloadmotion(flame + smooth);
-							
-							GunPartSidentification_Attach(part, state, flame, remainbullets, OffsetAndRotation);
-						} else {
-							HMGGunParts_Motion_PosAndRotation OffsetAndRotation = part.getRenderinfOfReload();
-							
-							GunPartSidentification_Attach(part, state, flame, remainbullets, OffsetAndRotation);
-						}
-						return;
-					}
-					break;
-			}
-		}
-	}
-
-	public void GunPartSidentification_Attach(HMGGunParts part, GunState state, float flame, int remainbullets, HMGGunParts_Motion_PosAndRotation OffsetAndRotation){
-		if(gunitem.gunInfo.magazine.length >1) {
-			if (part.current_magazineType != null) {
-				int currentmagazineid = nbt.getInteger("getcurrentMagazine");
-				if (!part.current_magazineType.get(currentmagazineid)) return;
-			}
-			if (part.select_magazineType != null) {
-				int selectmagazineid = nbt.getInteger("get_selectingMagazine");
-				if (!part.select_magazineType.get(selectmagazineid)) return;
-			}
-		}
-		if(OffsetAndRotation != null)
-			if(part.isattachpart) {
-				if (items[1] != null) {//�T�C�g
-					if (part.issightbase && items[1].getItem() instanceof HMGItemSightBase) {
-						IItemRenderer attachrender = MinecraftForgeClient.getItemRenderer(items[1], ItemRenderType.EQUIPPED);
-						if (attachrender instanceof HMGRenderItemCustom) {
-							GunPart_Render_attach(part, state, flame, remainbullets, OffsetAndRotation,sightattachoffset,sightattachrotation,((HMGRenderItemCustom) attachrender));
-							return;
-						}
-					} else if (part.isscope && items[1].getItem() instanceof HMGItemAttachment_scope) {
-						GunPart_Render(part, state, flame, remainbullets, OffsetAndRotation);
-						return;
-					} else if (part.isdot && items[1].getItem() instanceof HMGItemAttachment_reddot) {
-						GunPart_Render(part, state, flame, remainbullets, OffsetAndRotation);
-						return;
-					}
-				} else if (part.issight) {
-					GunPart_Render(part, state, flame, remainbullets, OffsetAndRotation);
-					return;
-				}
-				if (items[2] != null) {//�I�[�o�[�o�����n
-					if (part.islight && items[2].getItem() instanceof HMGItemAttachment_light) {
-						GunPart_Render(part, state, flame, remainbullets, OffsetAndRotation);
-						return;
-					} else if (part.islasersight && items[2].getItem() instanceof HMGItemAttachment_laser) {
-						GunPart_Render(part, state, flame, remainbullets, OffsetAndRotation);
-						return;
-					} else if (part.isoverbarrelbase && items[2].getItem() instanceof HMGItemAttachmentBase) {
-						IItemRenderer attachrender = MinecraftForgeClient.getItemRenderer(items[2], ItemRenderType.EQUIPPED);
-						if (attachrender instanceof HMGRenderItemCustom) {
-							GunPart_Render_attach(part, state, flame, remainbullets, OffsetAndRotation,overbarrelattachoffset,overbarrelattachrotation,((HMGRenderItemCustom) attachrender));
-							return;
-						}
-					}
-				}
-				if (items[3] != null) {//�o�����n
-					if (part.ismuzzlepart && items[3].getItem() instanceof HMGItemAttachment_Suppressor) {
-						GunPart_Render(part, state, flame, remainbullets, OffsetAndRotation);
-						return;
-					} else if (part.ismuzzulebase && items[3].getItem() instanceof HMGItemAttachmentBase) {
-						IItemRenderer attachrender = MinecraftForgeClient.getItemRenderer(items[3], ItemRenderType.EQUIPPED);
-						if (attachrender instanceof HMGRenderItemCustom) {
-							GunPart_Render_attach(part, state, flame, remainbullets, OffsetAndRotation,muzzleattachoffset,muzzleattachrotation,((HMGRenderItemCustom) attachrender));
-							return;
-						}
-					} else if (part.issword && items[3].getItem() instanceof HMGItemSwordBase) {
-						GunPart_Render(part, state, flame, remainbullets, OffsetAndRotation);
-					} else if (part.isswordbase && items[3].getItem() instanceof HMGItemSwordBase) {
-						GunPart_Render(part, state, flame, remainbullets, OffsetAndRotation);
-						IItemRenderer attachrender = MinecraftForgeClient.getItemRenderer(items[3], ItemRenderType.EQUIPPED);
-						if (attachrender != null) {
-							GL11.glPushMatrix();
-							GunPart_Render(part, state, flame, remainbullets, OffsetAndRotation);
-							glTranslatef(gunitem.gunInfo.underoffsetpx, gunitem.gunInfo.underoffsetpy, gunitem.gunInfo.underoffsetpz);
-							GL11.glRotatef(gunitem.gunInfo.underrotationy, 0, 1, 0);
-							GL11.glRotatef(gunitem.gunInfo.underrotationx, 1, 0, 0);
-							GL11.glRotatef(gunitem.gunInfo.underrotationz, 0, 0, 1);
-							GL11.glScalef(1/modelscala,1/modelscala,1/modelscala);
-							GL11.glScalef(1/(0.4f),1/(0.4f),1/(0.4f));
-							attachrender.renderItem(ItemRenderType.ENTITY, items[3], datas);
-							Minecraft.getMinecraft().renderEngine.bindTexture(guntexture);
-							GL11.glPopMatrix();
-						}
-					}
-				}
-				if (items[4] != null) {//�A���_�[�o�����n
-					if (part.isgripBase && items[4].getItem() instanceof HMGItemAttachmentBase) {
-						IItemRenderer attachrender = MinecraftForgeClient.getItemRenderer(items[4], ItemRenderType.EQUIPPED);
-						if (attachrender instanceof HMGRenderItemCustom) {
-							GunPart_Render_attach(part, state, flame, remainbullets, OffsetAndRotation,gripattachoffset,gripattachrotation,((HMGRenderItemCustom) attachrender));
-						}
-					} else if (part.isgrip && items[4].getItem() instanceof HMGItemAttachment_grip) {
-						GunPart_Render(part, state, flame, remainbullets, OffsetAndRotation);
-					} else if (part.issword && items[4].getItem() instanceof HMGItemSwordBase) {
-						GunPart_Render(part, state, flame, remainbullets, OffsetAndRotation);
-					} else if (part.isswordbase && items[4].getItem() instanceof HMGItemSwordBase) {
-						GunPart_Render(part, state, flame, remainbullets, OffsetAndRotation);
-						IItemRenderer attachrender = MinecraftForgeClient.getItemRenderer(items[4], ItemRenderType.EQUIPPED);
-						if (attachrender != null) {
-							GL11.glPushMatrix();
-							GunPart_Render(part, state, flame, remainbullets, OffsetAndRotation);
-							glTranslatef(gunitem.gunInfo.underoffsetpx, gunitem.gunInfo.underoffsetpy, gunitem.gunInfo.underoffsetpz);
-							GL11.glRotatef(gunitem.gunInfo.underrotationy, 0, 1, 0);
-							GL11.glRotatef(gunitem.gunInfo.underrotationx, 1, 0, 0);
-							GL11.glRotatef(gunitem.gunInfo.underrotationz, 0, 0, 1);
-							GL11.glScalef(1/modelscala,1/modelscala,1/modelscala);
-							GL11.glScalef(1/(0.4f),1/(0.4f),1/(0.4f));
-							attachrender.renderItem(ItemRenderType.ENTITY, items[4], datas);
-							Minecraft.getMinecraft().renderEngine.bindTexture(guntexture);
-							GL11.glPopMatrix();
-						}
-					}else if (items[4].getItem() instanceof HMGItem_Unified_Guns) {
-						if (part.isunderGunbase) {
-							IItemRenderer attachrender = MinecraftForgeClient.getItemRenderer(items[4], ItemRenderType.EQUIPPED);
-							if (attachrender != null) {
-								GL11.glPushMatrix();
-								GunPart_Render(part, state, flame, remainbullets, OffsetAndRotation);
-								glTranslatef(gunitem.gunInfo.underoffsetpx, gunitem.gunInfo.underoffsetpy, gunitem.gunInfo.underoffsetpz);
-								GL11.glRotatef(gunitem.gunInfo.underrotationy, 0, 1, 0);
-								GL11.glRotatef(gunitem.gunInfo.underrotationx, 1, 0, 0);
-								GL11.glRotatef(gunitem.gunInfo.underrotationz, 0, 0, 1);
-								HMGItem_Unified_Guns undergun = (HMGItem_Unified_Guns) items[4].getItem();
-								glTranslatef(gunitem.gunInfo.onunderoffsetpx, gunitem.gunInfo.onunderoffsetpy, gunitem.gunInfo.onunderoffsetpz);
-								GL11.glRotatef(gunitem.gunInfo.onunderrotationy, 0, 1, 0);
-								GL11.glRotatef(gunitem.gunInfo.onunderrotationx, 1, 0, 0);
-								GL11.glRotatef(gunitem.gunInfo.onunderrotationz, 0, 0, 1);
-								if(attachrender instanceof HMGRenderItemGun_U_NEW){
-									((HMGRenderItemGun_U_NEW) attachrender).isUnder = true;
-								}
-								GL11.glScalef(1/(0.4f * modelscala * gunitem.gunInfo.inworldScale),1/(0.4f * modelscala * gunitem.gunInfo.inworldScale),1/(0.4f * modelscala * gunitem.gunInfo.inworldScale));
-
-								attachrender.renderItem(ItemRenderType.ENTITY, items[4], datas);
-								if(attachrender instanceof HMGRenderItemGun_U_NEW){
-									((HMGRenderItemGun_U_NEW) attachrender).isUnder = false;
-								}
-								Minecraft.getMinecraft().renderEngine.bindTexture(guntexture);
-								GL11.glPopMatrix();
-							}
-						} else if (part.isunderGL && gunitem.gunInfo.guntype == 2) {
-							GunPart_Render(part, state, flame, remainbullets, OffsetAndRotation);
-						} else if (part.isunderSG && gunitem.gunInfo.guntype == 1) {
-							GunPart_Render(part, state, flame, remainbullets, OffsetAndRotation);
-						}
-					}
-				}else{
-					if (part.isgripcover) {
-						GunPart_Render(part, state, flame, remainbullets, OffsetAndRotation);
-					}
-				}
-			}else {
-				GunPart_Render(part, state, flame, remainbullets, OffsetAndRotation);
-			}
-	}
-	public void GunPart_Render_attach(HMGGunParts part, GunState state, float flame, int remainbullets, HMGGunParts_Motion_PosAndRotation OffsetAndRotation,float[] attachoffset,float[] attachrotation,HMGRenderItemCustom attachrender){
-		GL11.glPushMatrix();
-		glTranslatef(attachoffset[0], attachoffset[1], attachoffset[2]);
-		GL11.glRotatef(attachrotation[0], 0, 1, 0);
-		GL11.glRotatef(attachrotation[1], 1, 0, 0);
-		GL11.glRotatef(attachrotation[2], 0, 0, 1);
-		((HMGRenderItemCustom) attachrender).renderaspart();
-		GL11.glPopMatrix();
-		proxy.getMCInstance().getTextureManager().bindTexture(guntexture);
-		GunPart_Render(part, state, flame, remainbullets, OffsetAndRotation);
-	}
-	public void GunPart_Render(HMGGunParts part, GunState state, float flame, int remainbullets, HMGGunParts_Motion_PosAndRotation OffsetAndRotation){
-		HMGGunParts_Motion_PosAndRotation rotationCenterAndRotation = part.getRenderinfOfDef();
-		GL11.glPushMatrix();
-		if(isPlacedGun && !part.base && part.carryingHandle){
-			GL11.glPopMatrix();
-			return;
-		}
-		if(!isPlacedGun && !part.carryingHandle && part.base){
-			GL11.glPopMatrix();
-			return;
-		}
-		if(OffsetAndRotation != null) {
-			GL11.glTranslatef(OffsetAndRotation.posX, OffsetAndRotation.posY, OffsetAndRotation.posZ);
-			GL11.glTranslatef(rotationCenterAndRotation.posX, rotationCenterAndRotation.posY, rotationCenterAndRotation.posZ);
-			GL11.glRotatef(OffsetAndRotation.rotationY, 0, 1, 0);
-			GL11.glRotatef(OffsetAndRotation.rotationX, 1, 0, 0);
-			GL11.glRotatef(OffsetAndRotation.rotationZ, 0, 0, 1);
-			GL11.glTranslatef(-rotationCenterAndRotation.posX, -rotationCenterAndRotation.posY, -rotationCenterAndRotation.posZ);
-		}else {
-			GL11.glTranslatef(rotationCenterAndRotation.posX,rotationCenterAndRotation.posY,rotationCenterAndRotation.posZ);
-			GL11.glRotatef(rotationCenterAndRotation.rotationY,0,1,0);
-			GL11.glRotatef(rotationCenterAndRotation.rotationX,1,0,0);
-			GL11.glRotatef(rotationCenterAndRotation.rotationZ,0,0,1);
-			GL11.glTranslatef(-rotationCenterAndRotation.posX,-rotationCenterAndRotation.posY,-rotationCenterAndRotation.posZ);
-		}
-		
-		if(isPlacedGun && part.hasbaseYawInfo) {
-			HMGGunParts_Motion_PosAndRotation baserotationCenterAndRotation = part.getYawInfo(turretYaw);
-			if (baserotationCenterAndRotation != null) {
-				GL11.glTranslatef(baserotationCenterAndRotation.posX, baserotationCenterAndRotation.posY, baserotationCenterAndRotation.posZ);
-				GL11.glTranslatef(rotationCenterAndRotation.posX, rotationCenterAndRotation.posY, rotationCenterAndRotation.posZ);
-				GL11.glRotatef(baserotationCenterAndRotation.rotationY, 0, 1, 0);
-				GL11.glRotatef(baserotationCenterAndRotation.rotationX, 1, 0, 0);
-				GL11.glRotatef(baserotationCenterAndRotation.rotationZ, 0, 0, 1);
-				GL11.glTranslatef(-rotationCenterAndRotation.posX, -rotationCenterAndRotation.posY, -rotationCenterAndRotation.posZ);
-			}
-		}
-		if(isPlacedGun && part.hasbasePitchInfo){
-			HMGGunParts_Motion_PosAndRotation baserotationCenterAndRotation = part.getPitchInfo(turretPitch);
-			if (baserotationCenterAndRotation != null) {
-				GL11.glTranslatef(baserotationCenterAndRotation.posX, baserotationCenterAndRotation.posY, baserotationCenterAndRotation.posZ);
-				GL11.glTranslatef(rotationCenterAndRotation.posX, rotationCenterAndRotation.posY, rotationCenterAndRotation.posZ);
-				GL11.glRotatef(baserotationCenterAndRotation.rotationY, 0, 1, 0);
-				GL11.glRotatef(baserotationCenterAndRotation.rotationX, 1, 0, 0);
-				GL11.glRotatef(baserotationCenterAndRotation.rotationZ, 0, 0, 1);
-				GL11.glTranslatef(-rotationCenterAndRotation.posX, -rotationCenterAndRotation.posY, -rotationCenterAndRotation.posZ);
-			}
-		}
-
-		if (part.isbullet){
-			if(state == GunState.Recoil)
-				renderParts_Bullet(part,flame/10,remainbullets,rotationCenterAndRotation);
-			else
-				renderParts_Bullet(part,flame,remainbullets,rotationCenterAndRotation);
-		}else {
-			if(part.isLarm){
-				renderarmL();
-			}else if(part.isRarm){
-				renderarmR();
-			}else if((part.underOnly && isUnder) || !(part.underOnly_not && isUnder)) {
-				if(part.reticleAndPlate){
-					glClear(GL_STENCIL_BUFFER_BIT);
-					glEnable(GL_STENCIL_TEST);
-					glStencilMask(1);
-					
-					glStencilFunc(
-							GL_ALWAYS,   // GLenum func
-							1,          // GLint ref
-							~0);// GLuint mask
-					glStencilOp(
-							GL_KEEP,
-							GL_KEEP,
-							GL_REPLACE);
-					if (pass != 1) {
-						GL11.glDepthMask(false);
-						glAlphaFunc(GL_ALWAYS, 1);
-						glColorMask(
-								false,   // GLboolean red
-								false,   // GLboolean green
-								false,   // GLboolean blue
-								false);
-					}
-					model.renderPart(part.partsname + "reticlePlate");
-					if (pass != 1) {
-						GL11.glDepthMask(true);
-						glAlphaFunc(GL_EQUAL, 1);
-						glColorMask(
-								true,   // GLboolean red
-								true,   // GLboolean green
-								true,   // GLboolean blue
-								true);
-					}
-					
-					GL11.glDisable(GL11.GL_LIGHTING);
-					float lastBrightnessX = OpenGlHelper.lastBrightnessX;
-					float lastBrightnessY = OpenGlHelper.lastBrightnessY;
-					OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
-					glDisable(GL_DEPTH_TEST);
-					
-					
-					glStencilFunc(
-							GL_EQUAL,   // GLenum func
-							1,          // GLint ref
-							~0);// GLuint mask
-					
-					glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
-					glAlphaFunc(GL_ALWAYS, 1);
-					GL11.glDepthMask(false);
-					
-					GL11.glDepthFunc(GL11.GL_ALWAYS);//強制描画
-					model.renderPart(part.partsname + "reticle");
-					GL11.glDepthFunc(GL11.GL_LEQUAL);
-					GL11.glDepthMask(true);
-					glDisable(GL_STENCIL_TEST);
-					glEnable(GL_DEPTH_TEST);
-					GL11.glEnable(GL11.GL_LIGHTING);
-					OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)lastBrightnessX, (float)lastBrightnessY);
-					
-					if(pass == 1) {
-						glEnable(GL_BLEND);
-						glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-						GL11.glDepthMask(false);
-						glAlphaFunc(GL_LESS, 1);
-					}else {
-						GL11.glDepthMask(true);
-						glAlphaFunc(GL_EQUAL, 1);
-					}
-				}
-				model.renderPart(part.partsname);
-				float lastBrightnessX = OpenGlHelper.lastBrightnessX;
-				float lastBrightnessY = OpenGlHelper.lastBrightnessY;
-				OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
-				model.renderPart(part.partsname + "light");
-				OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)lastBrightnessX, (float)lastBrightnessY);
-			}
-		}
-		for(HMGGunParts parts:part.childs)
-			GunPartSidentification(parts,new GunState[]{state},flame,remainbullets);
-		GL11.glPopMatrix();
-	}
+//	public void GunPartSidentification(HMGGunParts part, GunState[] states, float flame, int remainbullets){//��Ԃŏ�������
+//		for(GunState state : states) {
+//			switch (state) {
+//				case Recoil:
+//					if (part.rendering_Recoil) {
+//						if (part.hasMotionRecoil) {
+//							HMGGunParts_Motion_PosAndRotation OffsetAndRotation = part.getRecoilmotion(flame + smooth);
+//
+//							GunPartSidentification_Attach(part, state, flame, remainbullets, OffsetAndRotation);
+//						} else {
+//							HMGGunParts_Motion_PosAndRotation OffsetAndRotation = part.getRenderinfOfRecoil();
+//
+//							GunPartSidentification_Attach(part, state, flame, remainbullets, OffsetAndRotation);
+//						}
+//						return;
+//					}
+//					break;
+//				case ADS:
+//					if (part.rendering_Ads) {
+//						GunPartSidentification_Attach(part, state, flame, remainbullets, part.getRenderinfOfADS());
+//						return;
+//					}
+//					break;
+//				case Cock:
+//					if (part.rendering_Cock) {
+//						if (part.hasMotionCock) {
+//							HMGGunParts_Motion_PosAndRotation OffsetAndRotation = part.getcockmotion(flame + smooth);
+//
+//							GunPartSidentification_Attach(part, state, flame, remainbullets, OffsetAndRotation);
+//						} else {
+//							HMGGunParts_Motion_PosAndRotation OffsetAndRotation = part.getRenderinfOfCock();
+//
+//							GunPartSidentification_Attach(part, state, flame, remainbullets, OffsetAndRotation);
+//						}
+//						return;
+//					}
+//					break;
+//				case Reload:
+//					if (part.rendering_Reload) {
+//						HMGGunParts_Motion_PosAndRotation rotationCenterAndRotation = part.getRenderinfCenter();
+//						if (part.hasMotionReload) {
+//							HMGGunParts_Motion_PosAndRotation OffsetAndRotation = part.getReloadmotion(flame + smooth);
+//
+//							GunPartSidentification_Attach(part, state, flame, remainbullets, OffsetAndRotation);
+//						} else {
+//							HMGGunParts_Motion_PosAndRotation OffsetAndRotation = part.getRenderinfOfReload();
+//
+//							GunPartSidentification_Attach(part, state, flame, remainbullets, OffsetAndRotation);
+//						}
+//						return;
+//					}
+//					break;
+//				case Default:
+//					if (part.rendering_Def) {
+//						GunPartSidentification_Attach(part, state, flame, remainbullets, part.getRenderinfDefault_offset());
+//						return;
+//					}
+//					break;
+//			}
+//		}
+//	}
+//
+//	public void GunPartSidentification_Attach(HMGGunParts part, GunState state, float flame, int remainbullets, HMGGunParts_Motion_PosAndRotation OffsetAndRotation){
+//		if(gunitem.gunInfo.magazine.length >1) {
+//			if (part.current_magazineType != null) {
+//				int currentmagazineid = nbt.getInteger("getcurrentMagazine");
+//				if (!part.current_magazineType.get(currentmagazineid)) return;
+//			}
+//			if (part.select_magazineType != null) {
+//				int selectmagazineid = nbt.getInteger("get_selectingMagazine");
+//				if (!part.select_magazineType.get(selectmagazineid)) return;
+//			}
+//		}
+//		if(OffsetAndRotation != null)
+//			if(part.isattachpart) {
+//				if (items[1] != null) {//�T�C�g
+//					if (part.issightbase && items[1].getItem() instanceof HMGItemSightBase) {
+//						IItemRenderer attachrender = MinecraftForgeClient.getItemRenderer(items[1], ItemRenderType.EQUIPPED);
+//						if (attachrender instanceof HMGRenderItemCustom) {
+//							GunPart_Render_attach(part, state, flame, remainbullets, OffsetAndRotation,sightattachoffset,sightattachrotation,((HMGRenderItemCustom) attachrender));
+//							return;
+//						}
+//					} else if (part.isscope && items[1].getItem() instanceof HMGItemAttachment_scope) {
+//						GunPart_Render(part, state, flame, remainbullets, OffsetAndRotation);
+//						return;
+//					} else if (part.isdot && items[1].getItem() instanceof HMGItemAttachment_reddot) {
+//						GunPart_Render(part, state, flame, remainbullets, OffsetAndRotation);
+//						return;
+//					}
+//				} else if (part.issight) {
+//					GunPart_Render(part, state, flame, remainbullets, OffsetAndRotation);
+//					return;
+//				}
+//				if (items[2] != null) {//�I�[�o�[�o�����n
+//					if (part.islight && items[2].getItem() instanceof HMGItemAttachment_light) {
+//						GunPart_Render(part, state, flame, remainbullets, OffsetAndRotation);
+//						return;
+//					} else if (part.islasersight && items[2].getItem() instanceof HMGItemAttachment_laser) {
+//						GunPart_Render(part, state, flame, remainbullets, OffsetAndRotation);
+//						return;
+//					} else if (part.isoverbarrelbase && items[2].getItem() instanceof HMGItemAttachmentBase) {
+//						IItemRenderer attachrender = MinecraftForgeClient.getItemRenderer(items[2], ItemRenderType.EQUIPPED);
+//						if (attachrender instanceof HMGRenderItemCustom) {
+//							GunPart_Render_attach(part, state, flame, remainbullets, OffsetAndRotation,overbarrelattachoffset,overbarrelattachrotation,((HMGRenderItemCustom) attachrender));
+//							return;
+//						}
+//					}
+//				}
+//				if (items[3] != null) {//�o�����n
+//					if (part.ismuzzlepart && items[3].getItem() instanceof HMGItemAttachment_Suppressor) {
+//						GunPart_Render(part, state, flame, remainbullets, OffsetAndRotation);
+//						return;
+//					} else if (part.ismuzzulebase && items[3].getItem() instanceof HMGItemAttachmentBase) {
+//						IItemRenderer attachrender = MinecraftForgeClient.getItemRenderer(items[3], ItemRenderType.EQUIPPED);
+//						if (attachrender instanceof HMGRenderItemCustom) {
+//							GunPart_Render_attach(part, state, flame, remainbullets, OffsetAndRotation,muzzleattachoffset,muzzleattachrotation,((HMGRenderItemCustom) attachrender));
+//							return;
+//						}
+//					} else if (part.issword && items[3].getItem() instanceof HMGItemSwordBase) {
+//						GunPart_Render(part, state, flame, remainbullets, OffsetAndRotation);
+//					} else if (part.isswordbase && items[3].getItem() instanceof HMGItemSwordBase) {
+//						GunPart_Render(part, state, flame, remainbullets, OffsetAndRotation);
+//						IItemRenderer attachrender = MinecraftForgeClient.getItemRenderer(items[3], ItemRenderType.EQUIPPED);
+//						if (attachrender != null) {
+//							GL11.glPushMatrix();
+//							GunPart_Render(part, state, flame, remainbullets, OffsetAndRotation);
+//							glTranslatef(gunitem.gunInfo.underoffsetpx, gunitem.gunInfo.underoffsetpy, gunitem.gunInfo.underoffsetpz);
+//							GL11.glRotatef(gunitem.gunInfo.underrotationy, 0, 1, 0);
+//							GL11.glRotatef(gunitem.gunInfo.underrotationx, 1, 0, 0);
+//							GL11.glRotatef(gunitem.gunInfo.underrotationz, 0, 0, 1);
+//							GL11.glScalef(1/modelscala,1/modelscala,1/modelscala);
+//							GL11.glScalef(1/(0.4f),1/(0.4f),1/(0.4f));
+//							attachrender.renderItem(ItemRenderType.ENTITY, items[3], datas);
+//							Minecraft.getMinecraft().renderEngine.bindTexture(guntexture);
+//							GL11.glPopMatrix();
+//						}
+//					}
+//				}
+//				if (items[4] != null) {//�A���_�[�o�����n
+//					if (part.isgripBase && items[4].getItem() instanceof HMGItemAttachmentBase) {
+//						IItemRenderer attachrender = MinecraftForgeClient.getItemRenderer(items[4], ItemRenderType.EQUIPPED);
+//						if (attachrender instanceof HMGRenderItemCustom) {
+//							GunPart_Render_attach(part, state, flame, remainbullets, OffsetAndRotation,gripattachoffset,gripattachrotation,((HMGRenderItemCustom) attachrender));
+//						}
+//					} else if (part.isgrip && items[4].getItem() instanceof HMGItemAttachment_grip) {
+//						GunPart_Render(part, state, flame, remainbullets, OffsetAndRotation);
+//					} else if (part.issword && items[4].getItem() instanceof HMGItemSwordBase) {
+//						GunPart_Render(part, state, flame, remainbullets, OffsetAndRotation);
+//					} else if (part.isswordbase && items[4].getItem() instanceof HMGItemSwordBase) {
+//						GunPart_Render(part, state, flame, remainbullets, OffsetAndRotation);
+//						IItemRenderer attachrender = MinecraftForgeClient.getItemRenderer(items[4], ItemRenderType.EQUIPPED);
+//						if (attachrender != null) {
+//							GL11.glPushMatrix();
+//							GunPart_Render(part, state, flame, remainbullets, OffsetAndRotation);
+//							glTranslatef(gunitem.gunInfo.underoffsetpx, gunitem.gunInfo.underoffsetpy, gunitem.gunInfo.underoffsetpz);
+//							GL11.glRotatef(gunitem.gunInfo.underrotationy, 0, 1, 0);
+//							GL11.glRotatef(gunitem.gunInfo.underrotationx, 1, 0, 0);
+//							GL11.glRotatef(gunitem.gunInfo.underrotationz, 0, 0, 1);
+//							GL11.glScalef(1/modelscala,1/modelscala,1/modelscala);
+//							GL11.glScalef(1/(0.4f),1/(0.4f),1/(0.4f));
+//							attachrender.renderItem(ItemRenderType.ENTITY, items[4], datas);
+//							Minecraft.getMinecraft().renderEngine.bindTexture(guntexture);
+//							GL11.glPopMatrix();
+//						}
+//					}else if (items[4].getItem() instanceof HMGItem_Unified_Guns) {
+//						if (part.isunderGunbase) {
+//							IItemRenderer attachrender = MinecraftForgeClient.getItemRenderer(items[4], ItemRenderType.EQUIPPED);
+//							if (attachrender != null) {
+//								GL11.glPushMatrix();
+//								GunPart_Render(part, state, flame, remainbullets, OffsetAndRotation);
+//								glTranslatef(gunitem.gunInfo.underoffsetpx, gunitem.gunInfo.underoffsetpy, gunitem.gunInfo.underoffsetpz);
+//								GL11.glRotatef(gunitem.gunInfo.underrotationy, 0, 1, 0);
+//								GL11.glRotatef(gunitem.gunInfo.underrotationx, 1, 0, 0);
+//								GL11.glRotatef(gunitem.gunInfo.underrotationz, 0, 0, 1);
+//								HMGItem_Unified_Guns undergun = (HMGItem_Unified_Guns) items[4].getItem();
+//								glTranslatef(gunitem.gunInfo.onunderoffsetpx, gunitem.gunInfo.onunderoffsetpy, gunitem.gunInfo.onunderoffsetpz);
+//								GL11.glRotatef(gunitem.gunInfo.onunderrotationy, 0, 1, 0);
+//								GL11.glRotatef(gunitem.gunInfo.onunderrotationx, 1, 0, 0);
+//								GL11.glRotatef(gunitem.gunInfo.onunderrotationz, 0, 0, 1);
+//								if(attachrender instanceof HMGRenderItemGun_U_NEW){
+//									((HMGRenderItemGun_U_NEW) attachrender).isUnder = true;
+//								}
+//								GL11.glScalef(1/(0.4f * modelscala * gunitem.gunInfo.inworldScale),1/(0.4f * modelscala * gunitem.gunInfo.inworldScale),1/(0.4f * modelscala * gunitem.gunInfo.inworldScale));
+//
+//								attachrender.renderItem(ItemRenderType.ENTITY, items[4], datas);
+//								if(attachrender instanceof HMGRenderItemGun_U_NEW){
+//									((HMGRenderItemGun_U_NEW) attachrender).isUnder = false;
+//								}
+//								Minecraft.getMinecraft().renderEngine.bindTexture(guntexture);
+//								GL11.glPopMatrix();
+//							}
+//						} else if (part.isunderGL && gunitem.gunInfo.guntype == 2) {
+//							GunPart_Render(part, state, flame, remainbullets, OffsetAndRotation);
+//						} else if (part.isunderSG && gunitem.gunInfo.guntype == 1) {
+//							GunPart_Render(part, state, flame, remainbullets, OffsetAndRotation);
+//						}
+//					}
+//				}else{
+//					if (part.isgripcover) {
+//						GunPart_Render(part, state, flame, remainbullets, OffsetAndRotation);
+//					}
+//				}
+//			}else {
+//				GunPart_Render(part, state, flame, remainbullets, OffsetAndRotation);
+//			}
+//	}
+//	public void GunPart_Render_attach(HMGGunParts part, GunState state, float flame, int remainbullets, HMGGunParts_Motion_PosAndRotation OffsetAndRotation,float[] attachoffset,float[] attachrotation,HMGRenderItemCustom attachrender){
+//		GL11.glPushMatrix();
+//		glTranslatef(attachoffset[0], attachoffset[1], attachoffset[2]);
+//		GL11.glRotatef(attachrotation[0], 0, 1, 0);
+//		GL11.glRotatef(attachrotation[1], 1, 0, 0);
+//		GL11.glRotatef(attachrotation[2], 0, 0, 1);
+//		((HMGRenderItemCustom) attachrender).renderaspart();
+//		GL11.glPopMatrix();
+//		HMG_proxy.getMCInstance().getTextureManager().bindTexture(guntexture);
+//		GunPart_Render(part, state, flame, remainbullets, OffsetAndRotation);
+//	}
+//	public void GunPart_Render(HMGGunParts part, GunState state, float flame, int remainbullets, HMGGunParts_Motion_PosAndRotation OffsetAndRotation){
+//		HMGGunParts_Motion_PosAndRotation rotationCenterAndRotation = part.getRenderinfCenter();
+//		GL11.glPushMatrix();
+//		if(isPlacedGun && !part.base && part.carryingHandle){
+//			GL11.glPopMatrix();
+//			return;
+//		}
+//		if(!isPlacedGun && !part.carryingHandle && part.base){
+//			GL11.glPopMatrix();
+//			return;
+//		}
+//		if(OffsetAndRotation != null) {
+//			GL11.glTranslatef(OffsetAndRotation.posX, OffsetAndRotation.posY, OffsetAndRotation.posZ);
+//			GL11.glTranslatef(rotationCenterAndRotation.posX, rotationCenterAndRotation.posY, rotationCenterAndRotation.posZ);
+//			GL11.glRotatef(OffsetAndRotation.rotationY, 0, 1, 0);
+//			GL11.glRotatef(OffsetAndRotation.rotationX, 1, 0, 0);
+//			GL11.glRotatef(OffsetAndRotation.rotationZ, 0, 0, 1);
+//			GL11.glTranslatef(-rotationCenterAndRotation.posX, -rotationCenterAndRotation.posY, -rotationCenterAndRotation.posZ);
+//		}else {
+//			GL11.glTranslatef(rotationCenterAndRotation.posX,rotationCenterAndRotation.posY,rotationCenterAndRotation.posZ);
+//			GL11.glRotatef(rotationCenterAndRotation.rotationY,0,1,0);
+//			GL11.glRotatef(rotationCenterAndRotation.rotationX,1,0,0);
+//			GL11.glRotatef(rotationCenterAndRotation.rotationZ,0,0,1);
+//			GL11.glTranslatef(-rotationCenterAndRotation.posX,-rotationCenterAndRotation.posY,-rotationCenterAndRotation.posZ);
+//		}
+//
+//		if(isPlacedGun && part.hasbaseYawInfo) {
+//			HMGGunParts_Motion_PosAndRotation baserotationCenterAndRotation = part.getYawInfo(turretYaw);
+//			if (baserotationCenterAndRotation != null) {
+//				GL11.glTranslatef(baserotationCenterAndRotation.posX, baserotationCenterAndRotation.posY, baserotationCenterAndRotation.posZ);
+//				GL11.glTranslatef(rotationCenterAndRotation.posX, rotationCenterAndRotation.posY, rotationCenterAndRotation.posZ);
+//				GL11.glRotatef(baserotationCenterAndRotation.rotationY, 0, 1, 0);
+//				GL11.glRotatef(baserotationCenterAndRotation.rotationX, 1, 0, 0);
+//				GL11.glRotatef(baserotationCenterAndRotation.rotationZ, 0, 0, 1);
+//				GL11.glTranslatef(-rotationCenterAndRotation.posX, -rotationCenterAndRotation.posY, -rotationCenterAndRotation.posZ);
+//			}
+//		}
+//		if(isPlacedGun && part.hasbasePitchInfo){
+//			HMGGunParts_Motion_PosAndRotation baserotationCenterAndRotation = part.getPitchInfo(turretPitch);
+//			if (baserotationCenterAndRotation != null) {
+//				GL11.glTranslatef(baserotationCenterAndRotation.posX, baserotationCenterAndRotation.posY, baserotationCenterAndRotation.posZ);
+//				GL11.glTranslatef(rotationCenterAndRotation.posX, rotationCenterAndRotation.posY, rotationCenterAndRotation.posZ);
+//				GL11.glRotatef(baserotationCenterAndRotation.rotationY, 0, 1, 0);
+//				GL11.glRotatef(baserotationCenterAndRotation.rotationX, 1, 0, 0);
+//				GL11.glRotatef(baserotationCenterAndRotation.rotationZ, 0, 0, 1);
+//				GL11.glTranslatef(-rotationCenterAndRotation.posX, -rotationCenterAndRotation.posY, -rotationCenterAndRotation.posZ);
+//			}
+//		}
+//
+//		if (part.isbullet){
+//			if(state == GunState.Recoil)
+//				renderParts_Bullet(part,flame/10,remainbullets,rotationCenterAndRotation);
+//			else
+//				renderParts_Bullet(part,flame,remainbullets,rotationCenterAndRotation);
+//		}else {
+//			if(part.isLarm){
+//				renderarmL();
+//			}else if(part.isRarm){
+//				renderarmR();
+//			}else if((part.underOnly && isUnder) || !(part.underOnly_not && isUnder)) {
+//				if(part.reticleAndPlate){
+//					glClear(GL_STENCIL_BUFFER_BIT);
+//					glEnable(GL_STENCIL_TEST);
+//					glStencilMask(1);
+//
+//					glStencilFunc(
+//							GL_ALWAYS,   // GLenum func
+//							1,          // GLint ref
+//							~0);// GLuint mask
+//					glStencilOp(
+//							GL_KEEP,
+//							GL_KEEP,
+//							GL_REPLACE);
+//					if (pass != 1) {
+//						GL11.glDepthMask(false);
+//						glAlphaFunc(GL_ALWAYS, 1);
+//						glColorMask(
+//								false,   // GLboolean red
+//								false,   // GLboolean green
+//								false,   // GLboolean blue
+//								false);
+//					}
+//					model.renderPart(part.partsname + "reticlePlate");
+//					if (pass != 1) {
+//						GL11.glDepthMask(true);
+//						glAlphaFunc(GL_EQUAL, 1);
+//						glColorMask(
+//								true,   // GLboolean red
+//								true,   // GLboolean green
+//								true,   // GLboolean blue
+//								true);
+//					}
+//
+//					GL11.glDisable(GL11.GL_LIGHTING);
+//					float lastBrightnessX = OpenGlHelper.lastBrightnessX;
+//					float lastBrightnessY = OpenGlHelper.lastBrightnessY;
+//					OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
+//					glDisable(GL_DEPTH_TEST);
+//
+//
+//					glStencilFunc(
+//							GL_EQUAL,   // GLenum func
+//							1,          // GLint ref
+//							~0);// GLuint mask
+//
+//					glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+//					glAlphaFunc(GL_ALWAYS, 1);
+//					GL11.glDepthMask(false);
+//
+//					GL11.glDepthFunc(GL11.GL_ALWAYS);//強制描画
+//					model.renderPart(part.partsname + "reticle");
+//					GL11.glDepthFunc(GL11.GL_LEQUAL);
+//					GL11.glDepthMask(true);
+//					glDisable(GL_STENCIL_TEST);
+//					glEnable(GL_DEPTH_TEST);
+//					GL11.glEnable(GL11.GL_LIGHTING);
+//					OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)lastBrightnessX, (float)lastBrightnessY);
+//
+//					if(pass == 1) {
+//						glEnable(GL_BLEND);
+//						glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+//						GL11.glDepthMask(false);
+//						glAlphaFunc(GL_LESS, 1);
+//					}else {
+//						GL11.glDepthMask(true);
+//						glAlphaFunc(GL_EQUAL, 1);
+//					}
+//				}
+//				model.renderPart(part.partsname);
+//				float lastBrightnessX = OpenGlHelper.lastBrightnessX;
+//				float lastBrightnessY = OpenGlHelper.lastBrightnessY;
+//				OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
+//				model.renderPart(part.partsname + "light");
+//				OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)lastBrightnessX, (float)lastBrightnessY);
+//			}
+//		}
+//		for(HMGGunParts parts:part.childs)
+//			GunPartSidentification(parts,new GunState[]{state},flame,remainbullets);
+//		GL11.glPopMatrix();
+//	}
 
 
 	public void renderParts_Bullet(HMGGunParts part,float flame,int remainbullets,HMGGunParts_Motion_PosAndRotation rotationCenterAndRotation){
@@ -1242,6 +1186,7 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 			}
 		}
 	}
+	
 	public void setEqippedOffset_Normal(float x, float y, float z){
 		modelPosX = x;
 		modelPosY = y;
@@ -1330,6 +1275,6 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 		onads_modelRotationZ_Scope = rz;
 	}
 	public void setArmoffsetScale(float value){
-		armoffsetscale = value;
+		partsRender_gun.armoffsetscale = value;
 	}
 }

@@ -2,8 +2,8 @@
 package hmggvcmob.render;
 
 import cpw.mods.fml.client.FMLClientHandler;
+import handmadevehicle.entity.parts.logics.PlaneBaseLogicLogic;
 import hmggvcmob.entity.friend.GVCEntityPMCHeli;
-import handmadevehicle.entity.parts.logics.PlaneBaseLogic;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraftforge.client.MinecraftForgeClient;
 import org.lwjgl.opengl.GL11;
@@ -37,7 +37,7 @@ public class GVCRenderPMCHeliobj extends Render {
 	*/
 	public void doRender(GVCEntityPMCHeli entity, double p_76986_2_, double p_76986_4_, double p_76986_6_,
 			float entityYaw, float partialTicks) {
-		PlaneBaseLogic planeBaseLogic = (PlaneBaseLogic) entity.getBaseLogic();
+		PlaneBaseLogicLogic planeBaseLogic = (PlaneBaseLogicLogic) entity.getBaseLogic();
 		GL11.glPushMatrix();
 		GL11.glAlphaFunc(GL11.GL_GREATER, 0);
 		GL11.glEnable(GL_BLEND);

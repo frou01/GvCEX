@@ -12,7 +12,7 @@
 package hmggvcmob.render.model;
 
 import handmadevehicle.entity.parts.ITank;
-import handmadevehicle.entity.parts.logics.TankBaseLogic;
+import handmadevehicle.entity.parts.logics.TankBaseLogicLogic;
 import hmggvcmob.entity.friend.GVCEntityPMCT90Tank;
 import hmggvcmob.entity.guerrilla.GVCEntityTankT90;
 import net.minecraft.client.model.ModelBase;
@@ -1465,7 +1465,7 @@ public class T90A extends ModelBase
     {
 
         if(entity instanceof ITank) {
-            TankBaseLogic baseLogic = (TankBaseLogic) ((ITank) entity).getBaseLogic();
+            TankBaseLogicLogic baseLogic = (TankBaseLogicLogic) ((ITank) entity).getBaseLogic();
             GL11.glTranslatef(0.0F, -(-24.0F * f5 - 0.0078125F), 0.0F);
             GL11.glRotatef(baseLogic.bodyrotationPitch, 1.0F, 0.0F, 0.0F);
             GL11.glRotatef(-baseLogic.bodyrotationRoll, 0.0F, 0.0F, 1.0F);

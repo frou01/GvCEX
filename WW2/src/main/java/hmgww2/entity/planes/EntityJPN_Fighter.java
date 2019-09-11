@@ -16,32 +16,32 @@ public class EntityJPN_Fighter extends EntityJPN_FighterBase
 		this.setSize(5f, 3f);
 		armor = 4;
 		ignoreFrustumCheck = true;
-		baseLogic.planeInfo.throttle_Max = 3.0f;
-		baseLogic.planeInfo.rollspeed = 0.75f;
-		baseLogic.planeInfo.pitchspeed = 0.5f;
-		baseLogic.planeInfo.yawspeed = 0.2f;
-		baseLogic.planeInfo.dragfactor *= 0.99;
-		baseLogic.planeInfo.maxDive = 60;
-		baseLogic.planeInfo.startDive = 40;
-		baseLogic.planeInfo.maxClimb = -20;
-		baseLogic.planeInfo.maxbank = 60;
-		baseLogic.planeInfo.soundname = "hmgww2:hmgww2.sound_pera";
+		baseLogic.prefab_vehicle.throttle_Max = 3.0f;
+		baseLogic.prefab_vehicle.rollspeed = 0.75f;
+		baseLogic.prefab_vehicle.pitchspeed = 0.5f;
+		baseLogic.prefab_vehicle.yawspeed = 0.2f;
+		baseLogic.prefab_vehicle.dragfactor *= 0.99;
+		baseLogic.prefab_vehicle.maxDive = 60;
+		baseLogic.prefab_vehicle.startDive = 40;
+		baseLogic.prefab_vehicle.maxClimb = -20;
+		baseLogic.prefab_vehicle.maxbank = 60;
+		baseLogic.prefab_vehicle.soundname = "hmgww2:hmgww2.sound_pera";
 		
-		baseLogic.planeInfo.camerapos = new double[]{0,2.179,-0.6397};
-		baseLogic.planeInfo.rotcenter = new double[]{0,1.1,0};
+		baseLogic.prefab_vehicle.camerapos = new double[]{0,2.179,-0.6397};
+		baseLogic.prefab_vehicle.rotcenter = new double[]{0,1.1,0};
 		baseLogic.riddenByEntities = new Entity[1];
 		baseLogic.seatInfos = new SeatInfo[1];
 		baseLogic.seatInfos[0] = new SeatInfo();
 		baseLogic.seatInfos_zoom[0] = new SeatInfo();
-		baseLogic.seatInfos[0].pos = baseLogic.planeInfo.camerapos;
-		baseLogic.seatInfos_zoom[0].pos = baseLogic.planeInfo.camerapos;
+		baseLogic.seatInfos[0].pos = baseLogic.prefab_vehicle.camerapos;
+		baseLogic.seatInfos_zoom[0].pos = baseLogic.prefab_vehicle.camerapos;
 		
 		baseLogic.onground_pitch = -11.53f;
-		baseLogic.planeInfo.useMain_withSub = true;
+		baseLogic.prefab_vehicle.useMain_withSub = true;
 		{
 			TurretObj cannon3 = new TurretObj(worldObj);
 			{
-				cannon3.motherRotCenter = new Vector3d(baseLogic.planeInfo.rotcenter);
+				cannon3.motherRotCenter = new Vector3d(baseLogic.prefab_vehicle.rotcenter);
 				cannon3.cannonPos = new Vector3d(0.4,1.44,-2);
 				cannon3.turretspeedY = 5;
 				cannon3.turretspeedP = 8;
@@ -62,7 +62,7 @@ public class EntityJPN_Fighter extends EntityJPN_FighterBase
 			}
 			{
 				TurretObj cannon4 = new TurretObj(worldObj);
-				cannon4.motherRotCenter = new Vector3d(baseLogic.planeInfo.rotcenter);
+				cannon4.motherRotCenter = new Vector3d(baseLogic.prefab_vehicle.rotcenter);
 				cannon4.cannonPos = new Vector3d(-0.4,1.44,-2);
 				cannon4.turretspeedY = 5;
 				cannon4.turretspeedP = 8;
@@ -87,7 +87,7 @@ public class EntityJPN_Fighter extends EntityJPN_FighterBase
 		{
 			TurretObj cannon1 = new TurretObj(worldObj);
 			{
-				cannon1.motherRotCenter = new Vector3d(baseLogic.planeInfo.rotcenter);
+				cannon1.motherRotCenter = new Vector3d(baseLogic.prefab_vehicle.rotcenter);
 				cannon1.cannonPos = new Vector3d(-1.45, 0.72, -0.65);
 				cannon1.flashoffset = 0;
 				cannon1.turretspeedY = 5;
@@ -110,7 +110,7 @@ public class EntityJPN_Fighter extends EntityJPN_FighterBase
 			
 			{
 				TurretObj cannon2 = new TurretObj(worldObj);
-				cannon2.motherRotCenter = new Vector3d(baseLogic.planeInfo.rotcenter);
+				cannon2.motherRotCenter = new Vector3d(baseLogic.prefab_vehicle.rotcenter);
 				cannon2.cannonPos = new Vector3d(1.45, 0.72, -0.65);
 				cannon2.flashoffset = 0;
 				cannon2.turretspeedY = 5;

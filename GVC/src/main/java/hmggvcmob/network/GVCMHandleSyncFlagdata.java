@@ -7,7 +7,7 @@ import hmggvcmob.tile.TileEntityFlag;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
-import static handmadeguns.HandmadeGunsCore.proxy;
+import static handmadeguns.HandmadeGunsCore.HMG_proxy;
 
 public class GVCMHandleSyncFlagdata implements IMessageHandler<GVCMPacketSyncFlagdata, IMessage> {
     @Override
@@ -17,7 +17,7 @@ public class GVCMHandleSyncFlagdata implements IMessageHandler<GVCMPacketSyncFla
         if(messageContext.side.isServer()) {
             world = messageContext.getServerHandler().playerEntity.worldObj;
         }else{
-            world = proxy.getCilentWorld();
+            world = HMG_proxy.getCilentWorld();
         }
         if(world!=null){
             TileEntity tile = world.getTileEntity(gvcmPacketSyncFlagdata.x,gvcmPacketSyncFlagdata.y,gvcmPacketSyncFlagdata.z);

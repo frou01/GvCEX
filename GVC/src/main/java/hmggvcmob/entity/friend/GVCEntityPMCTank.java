@@ -4,7 +4,7 @@ package hmggvcmob.entity.friend;
 import hmggvcmob.ai.AITankAttack;
 import handmadevehicle.entity.ExplodeEffect;
 import handmadevehicle.entity.parts.logics.IbaseLogic;
-import handmadevehicle.entity.parts.logics.TankBaseLogic;
+import handmadevehicle.entity.parts.logics.TankBaseLogicLogic;
 import handmadevehicle.entity.parts.turrets.TurretObj;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -22,7 +22,7 @@ import javax.vecmath.Vector3d;
 
 import static hmggvcmob.event.GVCMXEntityEvent.soundedentity;
 import static handmadevehicle.Utils.*;
-import static handmadevehicle.HMVehicle.proxy_HMVehicle;
+import static handmadevehicle.HMVehicle.HMV_Proxy;
 
 public class GVCEntityPMCTank extends EntityPMCBase implements ITank
 {
@@ -49,7 +49,7 @@ public class GVCEntityPMCTank extends EntityPMCBase implements ITank
 
     public int mgMagazine;
     public int mgReloadProgress;
-    public TankBaseLogic baseLogic = new TankBaseLogic(this,0.15f,0.6f,false,"gvcmob:gvcmob.Leopard1Track");
+    public TankBaseLogicLogic baseLogic = new TankBaseLogicLogic(this,0.15f,0.6f,false,"gvcmob:gvcmob.Leopard1Track");
     ModifiedBoundingBox nboundingbox;
 
     Vector3d playerpos = new Vector3d(-0.514f,2.4f,-0.02124 + 0.2448);
@@ -72,7 +72,7 @@ public class GVCEntityPMCTank extends EntityPMCBase implements ITank
         nboundingbox = new ModifiedBoundingBox(-20,0,-20,20,20,20,
                 0,1.5,0,3.4,3,6.5);
         nboundingbox.rot.set(baseLogic.bodyRot);
-        proxy_HMVehicle.replaceBoundingbox(this,nboundingbox);
+        HMV_Proxy.replaceBoundingbox(this,nboundingbox);
         nboundingbox.centerRotX = 0;
         nboundingbox.centerRotY = 0;
         nboundingbox.centerRotZ = 0;
@@ -178,8 +178,8 @@ public class GVCEntityPMCTank extends EntityPMCBase implements ITank
         if (this.riddenByEntity != null) {
             mainTurret.calculatePos(new Vector3d(this.posX,this.posY,-this.posZ),baseLogic.bodyRot);
             Vector3d temp = new Vector3d(mainTurret.pos);
-            Vector3d tempplayerPos = new Vector3d(proxy_HMVehicle.iszooming() ? zoomingplayerpos:playerpos);
-            Vector3d playeroffsetter = new Vector3d(0,((worldObj.isRemote && this.riddenByEntity == proxy_HMVehicle.getEntityPlayerInstance()) ? 0:(this.riddenByEntity.getEyeHeight() + this.riddenByEntity.yOffset)),0);
+            Vector3d tempplayerPos = new Vector3d(HMV_Proxy.iszooming() ? zoomingplayerpos:playerpos);
+            Vector3d playeroffsetter = new Vector3d(0,((worldObj.isRemote && this.riddenByEntity == HMV_Proxy.getEntityPlayerInstance()) ? 0:(this.riddenByEntity.getEyeHeight() + this.riddenByEntity.yOffset)),0);
             tempplayerPos.sub(playeroffsetter);
             Vector3d temp2 = mainTurret.getGlobalVector_fromLocalVector_onTurretPoint(tempplayerPos);
             temp.add(temp2);

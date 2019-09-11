@@ -1,12 +1,12 @@
 package hmgww2.entity;
 
 
+import handmadevehicle.entity.parts.logics.VesselBaseLogicLogic;
 import hmggvcmob.GVCMobPlus;
 import hmggvcmob.ai.AITankAttack;
 import handmadevehicle.entity.parts.ModifiedBoundingBox;
 import handmadevehicle.entity.parts.OBB;
 import handmadevehicle.entity.parts.turrets.TurretObj;
-import handmadevehicle.entity.parts.logics.VesselBaseLogic;
 import net.minecraft.world.World;
 
 import javax.vecmath.Vector3d;
@@ -73,14 +73,14 @@ public class EntityGER_ShipSUB extends EntityGER_ShipBase
 						                        new Vector3d(2.3525,4.1400,10.4571)
 				                        );
 		
-		baseLogic = new VesselBaseLogic(this,0.025f,0.3f,false,"hmgww2:hmgww2.Uboat");
+		baseLogic = new VesselBaseLogicLogic(this,0.025f,0.3f,false,"hmgww2:hmgww2.Uboat");
 		baseLogic.canControlonWater = true;
 		baseLogic.always_point_to_target = true;
 		aiTankAttack = new AITankAttack(this,100,4,10,10);
 		aiTankAttack.setAlways_poit_to_target(true);
 		this.tasks.addTask(1,aiTankAttack);
-		((VesselBaseLogic)baseLogic).seatInfos[0].pos = new double[]{0,10.1280,-2.53};
-		((VesselBaseLogic)baseLogic).seatInfos_zoom[0].pos = new double[]{0,15.1069,-0.6658};
+		((VesselBaseLogicLogic)baseLogic).seatInfos[0].pos = new double[]{0,10.1280,-2.53};
+		((VesselBaseLogicLogic)baseLogic).seatInfos_zoom[0].pos = new double[]{0,15.1069,-0.6658};
 		turretpos = new Vector3d(0,2.6440,-35.4535);
 		TurretObj torp1 = new TurretObj(worldObj);
 		{
@@ -143,9 +143,9 @@ public class EntityGER_ShipSUB extends EntityGER_ShipBase
 	public void onUpdate(){
 		super.onUpdate();
 		if(usingSP){
-			((VesselBaseLogic)baseLogic).seatInfos_zoom[0].pos = new double[]{0,14.90,-0.6658};
+			((VesselBaseLogicLogic)baseLogic).seatInfos_zoom[0].pos = new double[]{0,14.90,-0.6658};
 		}else {
-			((VesselBaseLogic)baseLogic).seatInfos_zoom[0].pos = new double[]{0,11.16,-0.6658};
+			((VesselBaseLogicLogic)baseLogic).seatInfos_zoom[0].pos = new double[]{0,11.16,-0.6658};
 		}
 		if(!worldObj.isRemote){
 			usingSP = draft > 8;

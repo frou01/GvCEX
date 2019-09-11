@@ -42,7 +42,6 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.*;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 
 import static handmadeguns.HMGAddBullets.soundlist;
 import static handmadeguns.HandmadeGunsCore.*;
@@ -402,7 +401,7 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
                 packetSpawnParticle.name = trailtexture;
                 packetSpawnParticle.fuse = traillength;
                 if (trailglow) packetSpawnParticle.id += 100;
-                proxy.spawnParticles(packetSpawnParticle);
+                HMG_proxy.spawnParticles(packetSpawnParticle);
             }
         }
     }
@@ -418,7 +417,7 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
     protected void onImpact(MovingObjectPosition var1)
     {
         if(worldObj.isRemote && ticksInAir>0 && ricochetSoundInfo != null &&
-                   motionX * motionX + motionY * motionY + motionZ * motionZ > ricochetSoundInfo.MinBltSP * ricochetSoundInfo.MinBltSP && getDistanceSqToEntity(proxy.getEntityPlayerInstance()) < ricochetSoundInfo.MaxDist*ricochetSoundInfo.MaxDist){
+                   motionX * motionX + motionY * motionY + motionZ * motionZ > ricochetSoundInfo.MinBltSP * ricochetSoundInfo.MinBltSP && getDistanceSqToEntity(HMG_proxy.getEntityPlayerInstance()) < ricochetSoundInfo.MaxDist*ricochetSoundInfo.MaxDist){
             worldObj.playSoundAtEntity(this,ricochetSoundInfo.sound,ricochetSoundInfo.LV,ricochetSoundInfo.SP);
         }
     }
@@ -694,11 +693,11 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
                 packet.scale = smokeWidth;
                 packet.fuse = smoketime;
                 if (smokeglow) packet.id += 100;
-                proxy.spawnParticles(packet);
+                HMG_proxy.spawnParticles(packet);
             }
         }
-        if(ticksInAir>0 && flyingSoundInfo != null && soundstoped && motionX * motionX + motionY * motionY + motionZ * motionZ > flyingSoundInfo.MinBltSP * flyingSoundInfo.MinBltSP && getDistanceSqToEntity(proxy.getEntityPlayerInstance()) < flyingSoundInfo.MaxDist*flyingSoundInfo.MaxDist){
-            proxy.playsoundatBullet(flyingSoundInfo.sound,flyingSoundInfo.LV,flyingSoundInfo.SP,flyingSoundInfo.MinBltSP,flyingSoundInfo.MaxDist,this,true);
+        if(ticksInAir>0 && flyingSoundInfo != null && soundstoped && motionX * motionX + motionY * motionY + motionZ * motionZ > flyingSoundInfo.MinBltSP * flyingSoundInfo.MinBltSP && getDistanceSqToEntity(HMG_proxy.getEntityPlayerInstance()) < flyingSoundInfo.MaxDist*flyingSoundInfo.MaxDist){
+            HMG_proxy.playsoundatBullet(flyingSoundInfo.sound,flyingSoundInfo.LV,flyingSoundInfo.SP,flyingSoundInfo.MinBltSP,flyingSoundInfo.MaxDist,this,true);
             soundstoped = false;
         }
     }
@@ -1007,7 +1006,7 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
             this.motionY = backupmotion.yCoord * f2;
             this.motionZ = backupmotion.zCoord * f2;
             if(worldObj.isRemote && homingEntity == FMLClientHandler.instance().getClient().thePlayer && soundcool<0) {
-                proxy.playsoundat("handmadeguns:handmadeguns.warn",1,1,1,(float) homingEntity.posX,(float)homingEntity.posY,(float)homingEntity.posZ);
+                HMG_proxy.playsoundat("handmadeguns:handmadeguns.warn",1,1,1,(float) homingEntity.posX,(float)homingEntity.posY,(float)homingEntity.posZ);
                 worldObj.playSoundAtEntity(homingEntity,"handmadeguns:handmadeguns.warn", 1, 1);
                 soundcool = 4;
             }

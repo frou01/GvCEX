@@ -2,11 +2,11 @@ package hmggvcmob.entity.guerrilla;
 
 
 import handmadeguns.entity.PlacedGunEntity;
+import handmadevehicle.entity.parts.logics.BaseLogic;
+import handmadevehicle.entity.parts.logics.TankBaseLogicLogic;
 import hmggvcmob.ai.AITankAttack;
 import handmadevehicle.entity.parts.ITank;
 import handmadevehicle.entity.parts.ModifiedBoundingBox;
-import handmadevehicle.entity.parts.logics.LogicsBase;
-import handmadevehicle.entity.parts.logics.TankBaseLogic;
 import handmadevehicle.entity.parts.turrets.TurretObj;
 import net.minecraft.block.Block;
 import net.minecraft.entity.*;
@@ -33,7 +33,7 @@ public class GVCEntityJeep extends EntityGBase implements ITank
 {
     public float bodyrotationYaw;
     float rotationmotion;
-    TankBaseLogic baseLogic = new TankBaseLogic(this,0.24f,0.7f,false,"gvcmob:gvcmob.JeepWheel");
+    TankBaseLogicLogic baseLogic = new TankBaseLogicLogic(this,0.24f,0.7f,false,"gvcmob:gvcmob.JeepWheel");
     public Quat4d bodyRot = new Quat4d(0,0,0,1);
     private float throttle;
     ModifiedBoundingBox nboundingbox;
@@ -399,7 +399,7 @@ public class GVCEntityJeep extends EntityGBase implements ITank
     }
 
     @Override
-    public LogicsBase getBaseLogic() {
+    public BaseLogic getBaseLogic() {
         return baseLogic;
     }
 

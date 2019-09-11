@@ -1,6 +1,6 @@
 package hmggvcmob.entity;
 
-import handmadeguns.HMGAddGunsNew;
+import handmadeguns.HMGGunMaker;
 import handmadeguns.items.guns.HMGItem_Unified_Guns;
 import handmadeguns.items.guns.HMGXItemGun_Sword;
 import hmggvcutil.entity.GVCEntityBox;
@@ -25,7 +25,7 @@ import net.minecraft.world.World;
 import java.util.Random;
 
 import static handmadeguns.HMGAddAttachment.Magazines;
-import static handmadeguns.HandmadeGunsCore.proxy;
+import static handmadeguns.HandmadeGunsCore.HMG_proxy;
 import static hmggvcutil.GVCUtils.fn_cm;
 import static hmggvcutil.GVCUtils.fn_health;
 import static hmggvcmob.GVCMobPlus.fn_pmcegg;
@@ -96,7 +96,7 @@ public class EntitySupplyBox extends GVCEntityBox implements IGVCmob{
     public double getYOffset() {
         if(ridingEntity instanceof EntityPlayer) {
             if(worldObj.isRemote){
-                if(proxy.getEntityPlayerInstance() == ridingEntity) {
+                if(HMG_proxy.getEntityPlayerInstance() == ridingEntity) {
                     if (ridingEntity.isSneaking())
                         return (yOffset - 2.0F);
                     else
@@ -147,9 +147,9 @@ public class EntitySupplyBox extends GVCEntityBox implements IGVCmob{
             case 6:
             case 7:
             case 8:
-                Item gun = (Item) HMGAddGunsNew.Guns.get(new Random().nextInt(HMGAddGunsNew.Guns.size()));
+                Item gun = (Item) HMGGunMaker.Guns.get(new Random().nextInt(HMGGunMaker.Guns.size()));
                 while ((gun instanceof HMGItem_Unified_Guns && !((HMGItem_Unified_Guns) gun).gunInfo.isinRoot) || (gun instanceof HMGXItemGun_Sword && !((HMGXItemGun_Sword) gun).isinRoot)){
-                    gun = (Item) HMGAddGunsNew.Guns.get(new Random().nextInt(HMGAddGunsNew.Guns.size()));
+                    gun = (Item) HMGGunMaker.Guns.get(new Random().nextInt(HMGGunMaker.Guns.size()));
                 }
                 itemStack = new ItemStack(gun,1);
                 break;

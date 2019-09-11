@@ -4,7 +4,7 @@ import hmggvcmob.ai.*;
 import handmadevehicle.entity.ExplodeEffect;
 import handmadevehicle.entity.parts.logics.IbaseLogic;
 import handmadevehicle.entity.parts.logics.MultiRiderLogics;
-import handmadevehicle.entity.parts.logics.TankBaseLogic;
+import handmadevehicle.entity.parts.logics.TankBaseLogicLogic;
 import handmadevehicle.entity.parts.turrets.TurretObj;
 import net.minecraft.entity.*;
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,7 +23,7 @@ import java.util.List;
 import static hmggvcmob.GVCMobPlus.proxy;
 import static handmadevehicle.Utils.transformVecByQuat;
 import static handmadevehicle.Utils.transformVecforMinecraft;
-import static handmadevehicle.HMVehicle.proxy_HMVehicle;
+import static handmadevehicle.HMVehicle.HMV_Proxy;
 import static java.lang.Math.abs;
 
 public abstract class EntityBases_Tank extends EntityBases implements ITank, IControlable
@@ -37,7 +37,7 @@ public abstract class EntityBases_Tank extends EntityBases implements ITank, ICo
 	public boolean subturret_is_mainTurret_child = false;
 	public float subturretrotationYaw;
 	public float subturretrotationPitch;
-	public TankBaseLogic baseLogic = new TankBaseLogic(this,0.5f,2.0f,false,"hmgww2:hmgww2.T34Track");
+	public TankBaseLogicLogic baseLogic = new TankBaseLogicLogic(this,0.5f,2.0f,false,"hmgww2:hmgww2.T34Track");
 	ModifiedBoundingBox nboundingbox;
 	
 	Vector3d playerpos = new Vector3d(-0.525,2.1D,0.0);
@@ -203,9 +203,9 @@ public abstract class EntityBases_Tank extends EntityBases implements ITank, ICo
 			if(seat_onTurret) {
 				mainTurret.calculatePos(new Vector3d(this.posX, this.posY, -this.posZ), baseLogic.bodyRot);
 				Vector3d temp = new Vector3d(mainTurret.pos);
-				Vector3d tempplayerPos = new Vector3d(proxy_HMVehicle.iszooming() ? zoomingplayerpos : playerpos);
+				Vector3d tempplayerPos = new Vector3d(HMV_Proxy.iszooming() ? zoomingplayerpos : playerpos);
 				tempplayerPos.z *= -1;
-				Vector3d playeroffsetter = new Vector3d(0, ((worldObj.isRemote && this.riddenByEntity == proxy_HMVehicle.getEntityPlayerInstance()) ? 0 : (this.riddenByEntity.getEyeHeight() + this.riddenByEntity.yOffset)), 0);
+				Vector3d playeroffsetter = new Vector3d(0, ((worldObj.isRemote && this.riddenByEntity == HMV_Proxy.getEntityPlayerInstance()) ? 0 : (this.riddenByEntity.getEyeHeight() + this.riddenByEntity.yOffset)), 0);
 				tempplayerPos.sub(playeroffsetter);
 				Vector3d temp2 = mainTurret.getGlobalVector_fromLocalVector_onTurretPoint(tempplayerPos);
 				temp.add(temp2);
@@ -220,9 +220,9 @@ public abstract class EntityBases_Tank extends EntityBases implements ITank, ICo
 				this.riddenByEntity.posZ = temp.z;
 			}else {
 				Vector3d temp = new Vector3d(this.posX,this.posY,-this.posZ);
-				Vector3d tempplayerPos = new Vector3d(proxy_HMVehicle.iszooming() ? zoomingplayerpos : playerpos);
+				Vector3d tempplayerPos = new Vector3d(HMV_Proxy.iszooming() ? zoomingplayerpos : playerpos);
 				tempplayerPos.z *= -1;
-				Vector3d playeroffsetter = new Vector3d(0, ((worldObj.isRemote && this.riddenByEntity == proxy_HMVehicle.getEntityPlayerInstance()) ? 0 : (this.riddenByEntity.getEyeHeight() + this.riddenByEntity.yOffset)), 0);
+				Vector3d playeroffsetter = new Vector3d(0, ((worldObj.isRemote && this.riddenByEntity == HMV_Proxy.getEntityPlayerInstance()) ? 0 : (this.riddenByEntity.getEyeHeight() + this.riddenByEntity.yOffset)), 0);
 				tempplayerPos.sub(playeroffsetter);
 				tempplayerPos = transformVecByQuat(tempplayerPos,this.baseLogic.bodyRot);
 				temp.add(tempplayerPos);

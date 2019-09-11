@@ -4,6 +4,8 @@ package hmggvcmob.entity.guerrilla;
 import handmadeguns.entity.IFF;
 import handmadeguns.entity.bullets.HMGEntityBulletExprode;
 import handmadeguns.entity.bullets.HMGEntityBulletRocket;
+import handmadevehicle.entity.parts.logics.BaseLogic;
+import handmadevehicle.entity.parts.logics.TankBaseLogicLogic;
 import hmggvcmob.GVCMobPlus;
 import hmggvcmob.ai.AITankAttack;
 import hmggvcmob.entity.*;
@@ -11,8 +13,6 @@ import hmggvcmob.entity.friend.EntitySoBases;
 import handmadevehicle.entity.ExplodeEffect;
 import handmadevehicle.entity.parts.ITank;
 import handmadevehicle.entity.parts.ModifiedBoundingBox;
-import handmadevehicle.entity.parts.logics.LogicsBase;
-import handmadevehicle.entity.parts.logics.TankBaseLogic;
 import handmadevehicle.entity.parts.turrets.TurretObj;
 import net.minecraft.entity.*;
 import net.minecraft.entity.player.EntityPlayer;
@@ -31,7 +31,7 @@ import static hmggvcmob.GVCMobPlus.cfg_blockdestory;
 import static hmggvcmob.event.GVCMXEntityEvent.soundedentity;
 import static handmadevehicle.Utils.CalculateGunElevationAngle;
 import static handmadevehicle.Utils.transformVecforMinecraft;
-import static handmadevehicle.HMVehicle.proxy_HMVehicle;
+import static handmadevehicle.HMVehicle.HMV_Proxy;
 import static java.lang.Math.abs;
 
 public class GVCEntityTankT90 extends EntityGBase implements IFF,IGVCmob, ITank
@@ -59,7 +59,7 @@ public class GVCEntityTankT90 extends EntityGBase implements IFF,IGVCmob, ITank
 
     public int mgMagazine;
     public int mgReloadProgress;
-    public TankBaseLogic baseLogic = new TankBaseLogic(this,0.2f,0.6f,false,"gvcmob:gvcmob.T-90Track");
+    public TankBaseLogicLogic baseLogic = new TankBaseLogicLogic(this,0.2f,0.6f,false,"gvcmob:gvcmob.T-90Track");
     ModifiedBoundingBox nboundingbox;
 
     Vector3d playerpos = new Vector3d(-0.525,2.1D,0.0);
@@ -85,7 +85,7 @@ public class GVCEntityTankT90 extends EntityGBase implements IFF,IGVCmob, ITank
         nboundingbox = new ModifiedBoundingBox(-20,0,-20,20,20,20,
                 0,0.9,0,3,1.8,9);
         nboundingbox.rot.set(baseLogic.bodyRot);
-        proxy_HMVehicle.replaceBoundingbox(this,nboundingbox);
+        HMV_Proxy.replaceBoundingbox(this,nboundingbox);
         nboundingbox.centerRotX = 0;
         nboundingbox.centerRotY = 0;
         nboundingbox.centerRotZ = 0;
@@ -142,8 +142,8 @@ public class GVCEntityTankT90 extends EntityGBase implements IFF,IGVCmob, ITank
     public void updateRiderPosition() {
         if (this.riddenByEntity != null) {
             Vector3d temp = new Vector3d(mainTurret.pos);
-            Vector3d tempplayerPos = new Vector3d(proxy_HMVehicle.iszooming() ? zoomingplayerpos:playerpos);
-            Vector3d playeroffsetter = new Vector3d(0,((worldObj.isRemote && this.riddenByEntity == proxy_HMVehicle.getEntityPlayerInstance()) ? 0:(this.riddenByEntity.getEyeHeight() + this.riddenByEntity.yOffset)),0);
+            Vector3d tempplayerPos = new Vector3d(HMV_Proxy.iszooming() ? zoomingplayerpos:playerpos);
+            Vector3d playeroffsetter = new Vector3d(0,((worldObj.isRemote && this.riddenByEntity == HMV_Proxy.getEntityPlayerInstance()) ? 0:(this.riddenByEntity.getEyeHeight() + this.riddenByEntity.yOffset)),0);
             tempplayerPos.sub(playeroffsetter);
             Vector3d temp2 = mainTurret.getGlobalVector_fromLocalVector_onTurretPoint(tempplayerPos);
             temp.add(temp2);
@@ -505,7 +505,7 @@ public class GVCEntityTankT90 extends EntityGBase implements IFF,IGVCmob, ITank
     }
 
     @Override
-    public LogicsBase getBaseLogic() {
+    public BaseLogic getBaseLogic() {
         return baseLogic;
     }
 

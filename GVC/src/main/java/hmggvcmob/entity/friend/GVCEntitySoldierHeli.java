@@ -2,7 +2,7 @@ package hmggvcmob.entity.friend;
 
 
 import handmadevehicle.entity.parts.logics.IbaseLogic;
-import handmadevehicle.entity.parts.logics.PlaneBaseLogic;
+import handmadevehicle.entity.parts.logics.PlaneBaseLogicLogic;
 import handmadevehicle.entity.parts.turrets.TurretObj;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -24,7 +24,7 @@ public class GVCEntitySoldierHeli extends EntitySoBase implements Iplane,IMultiT
 	public int homeposX;
 	public int homeposY;
 	public int homeposZ;
-	PlaneBaseLogic baseLogic;
+	PlaneBaseLogicLogic baseLogic;
 	TurretObj gunnerturret;
 	float maxHealth = 150;
 	public GVCEntitySoldierHeli(World par1World) {
@@ -35,32 +35,32 @@ public class GVCEntitySoldierHeli extends EntitySoBase implements Iplane,IMultiT
 //		proxy_HMVehicle.replaceBoundingbox(this,nboundingbox);
 //		((ModifiedBoundingBox)this.boundingBox).update(this.posX,this.posY,this.posZ);
 		ignoreFrustumCheck = true;
-		baseLogic = new PlaneBaseLogic(worldObj, this);
-		baseLogic.planeInfo.soundname = "gvcmob:gvcmob.heli";
-		baseLogic.planeInfo.soundpitch = 1.2f;
-		baseLogic.planeInfo.speedfactor = 0.012f;
-		baseLogic.planeInfo.liftfactor = 0.01f;
-		baseLogic.planeInfo.flapliftfactor = 0;
-		baseLogic.planeInfo.flapdragfactor = 0;
-		baseLogic.planeInfo.geardragfactor = 0;
-		baseLogic.planeInfo.dragfactor = 0.07f;
-		baseLogic.planeInfo.gravity = 0.049f;
-		baseLogic.planeInfo.stability2 = 0;
-		baseLogic.planeInfo.stability = 0;
-		baseLogic.planeInfo.rotmotion_reduceSpeed = 0;
-		baseLogic.planeInfo.forced_rudder_effect = 0.99f;
-		baseLogic.planeInfo.forced_rotmotion_reduceSpeed = 0.05f;
-		baseLogic.planeInfo.slipresist = 0;
-		baseLogic.planeInfo.throttle_Max = 5;
-		baseLogic.planeInfo.unitThrottle.set(0,-1,0);
-		baseLogic.planeInfo.brakedragfactor = 0;
-		baseLogic.planeInfo.maxClimb = 0;
-		baseLogic.planeInfo.maxDive = 30;
-		baseLogic.planeInfo.minALT = 10;
-		baseLogic.planeInfo.cruiseALT = 25;
-		baseLogic.planeInfo.changeWeaponCycleSetting = 50;
-		baseLogic.planeInfo.type_F_Plane_T_Heli = true;
-		baseLogic.planeInfo.displayModernHud = true;
+		baseLogic = new PlaneBaseLogicLogic(worldObj, this);
+		baseLogic.prefab_vehicle.soundname = "gvcmob:gvcmob.heli";
+		baseLogic.prefab_vehicle.soundpitch = 1.2f;
+		baseLogic.prefab_vehicle.speedfactor = 0.012f;
+		baseLogic.prefab_vehicle.liftfactor = 0.01f;
+		baseLogic.prefab_vehicle.flapliftfactor = 0;
+		baseLogic.prefab_vehicle.flapdragfactor = 0;
+		baseLogic.prefab_vehicle.geardragfactor = 0;
+		baseLogic.prefab_vehicle.dragfactor = 0.07f;
+		baseLogic.prefab_vehicle.gravity = 0.049f;
+		baseLogic.prefab_vehicle.stability_motion = 0;
+		baseLogic.prefab_vehicle.stability_roll = 0;
+		baseLogic.prefab_vehicle.rotmotion_reduceSpeed = 0;
+		baseLogic.prefab_vehicle.forced_rudder_effect = 0.99f;
+		baseLogic.prefab_vehicle.forced_rotmotion_reduceSpeed = 0.05f;
+		baseLogic.prefab_vehicle.slipresist = 0;
+		baseLogic.prefab_vehicle.throttle_Max = 5;
+		baseLogic.prefab_vehicle.unitThrottle.set(0,-1,0);
+		baseLogic.prefab_vehicle.brakedragfactor = 0;
+		baseLogic.prefab_vehicle.maxClimb = 0;
+		baseLogic.prefab_vehicle.maxDive = 30;
+		baseLogic.prefab_vehicle.minALT = 10;
+		baseLogic.prefab_vehicle.cruiseALT = 25;
+		baseLogic.prefab_vehicle.changeWeaponCycleSetting = 50;
+		baseLogic.prefab_vehicle.type_F_Plane_T_Heli = true;
+		baseLogic.prefab_vehicle.displayModernHud = true;
 		
 		{
 			TurretObj turret = new TurretObj(worldObj);
@@ -215,7 +215,7 @@ public class GVCEntitySoldierHeli extends EntitySoBase implements Iplane,IMultiT
 		baseLogic.seatInfos[5].pos[0] = 0.0332 - 1;
 		baseLogic.seatInfos[5].pos[1] = 2.117;
 		baseLogic.seatInfos[5].pos[2] = -1.35 - 1;
-		baseLogic.planeInfo.camerapos = new double[]{0.1074,2.584,-4.245};
+		baseLogic.prefab_vehicle.camerapos = new double[]{0.1074,2.584,-4.245};
 
 
 //		baseLogic.slipresist = 4;

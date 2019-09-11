@@ -1,13 +1,13 @@
 package hmggvcmob.entity.guerrilla;
 
 
+import handmadevehicle.entity.parts.logics.BaseLogic;
+import handmadevehicle.entity.parts.logics.TankBaseLogicLogic;
 import hmggvcmob.ai.AITankAttack;
 import hmggvcutil.entity.GVCEntityBox;
 import handmadevehicle.entity.ExplodeEffect;
 import handmadevehicle.entity.parts.ITank;
 import handmadevehicle.entity.parts.ModifiedBoundingBox;
-import handmadevehicle.entity.parts.logics.LogicsBase;
-import handmadevehicle.entity.parts.logics.TankBaseLogic;
 import handmadevehicle.entity.parts.turrets.TurretObj;
 import net.minecraft.entity.*;
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,7 +23,7 @@ import javax.vecmath.Vector3d;
 
 import static hmggvcmob.event.GVCMXEntityEvent.soundedentity;
 import static handmadevehicle.Utils.transformVecforMinecraft;
-import static handmadevehicle.HMVehicle.proxy_HMVehicle;
+import static handmadevehicle.HMVehicle.HMV_Proxy;
 
 public class GVCEntityAPC extends EntityGBase implements ITank {
 	int count_for_reset;
@@ -45,7 +45,7 @@ public class GVCEntityAPC extends EntityGBase implements ITank {
 //	public float subturretrotationPitch;
 
 	public byte hatchprogress;
-	public TankBaseLogic baseLogic = new TankBaseLogic(this,0.3f,0.6f,false,"gvcmob:gvcmob.APCTrack");
+	public TankBaseLogicLogic baseLogic = new TankBaseLogicLogic(this,0.3f,0.6f,false,"gvcmob:gvcmob.APCTrack");
 	ModifiedBoundingBox nboundingbox;
 
 	Vector3d playerpos = new Vector3d(-0.764f,2.4f,0.02124 - 0.59742);
@@ -68,7 +68,7 @@ public class GVCEntityAPC extends EntityGBase implements ITank {
 		nboundingbox = new ModifiedBoundingBox(boundingBox.minX,boundingBox.minY,boundingBox.minZ,boundingBox.maxX,boundingBox.maxY,boundingBox.maxZ,
 				0,1.5,0,3.4,3,6.5);
 		nboundingbox.rot.set(baseLogic.bodyRot);
-		proxy_HMVehicle.replaceBoundingbox(this,nboundingbox);
+		HMV_Proxy.replaceBoundingbox(this,nboundingbox);
 		nboundingbox.centerRotX = 0;
 		nboundingbox.centerRotY = 0;
 		nboundingbox.centerRotZ = 0;
@@ -120,8 +120,8 @@ public class GVCEntityAPC extends EntityGBase implements ITank {
 	public void updateRiderPosition() {
 		if (this.riddenByEntity != null) {
 			Vector3d temp = new Vector3d(mainTurret.pos);
-			Vector3d tempplayerPos = new Vector3d(proxy_HMVehicle.iszooming() ? zoomingplayerpos:playerpos);
-			Vector3d playeroffsetter = new Vector3d(0,((worldObj.isRemote && this.riddenByEntity == proxy_HMVehicle.getEntityPlayerInstance()) ? 0:(this.riddenByEntity.getEyeHeight() + this.riddenByEntity.yOffset)),0);
+			Vector3d tempplayerPos = new Vector3d(HMV_Proxy.iszooming() ? zoomingplayerpos:playerpos);
+			Vector3d playeroffsetter = new Vector3d(0,((worldObj.isRemote && this.riddenByEntity == HMV_Proxy.getEntityPlayerInstance()) ? 0:(this.riddenByEntity.getEyeHeight() + this.riddenByEntity.yOffset)),0);
 			tempplayerPos.sub(playeroffsetter);
 			Vector3d temp2 = mainTurret.getGlobalVector_fromLocalVector_onTurretPoint(tempplayerPos);
 			temp.add(temp2);
@@ -393,7 +393,7 @@ public class GVCEntityAPC extends EntityGBase implements ITank {
 	}
 
 	@Override
-	public LogicsBase getBaseLogic() {
+	public BaseLogic getBaseLogic() {
 		return baseLogic;
 	}
 	

@@ -7,7 +7,7 @@ import hmggvcmob.entity.friend.GVCEntityPMCHeli;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
 
-import static handmadeguns.HandmadeGunsCore.proxy;
+import static handmadeguns.HandmadeGunsCore.HMG_proxy;
 
 public class GVCMHandleSyncHeliData implements IMessageHandler<GVCXMPacketSyncPMCHeliData, IMessage> {
     @Override
@@ -17,7 +17,7 @@ public class GVCMHandleSyncHeliData implements IMessageHandler<GVCXMPacketSyncPM
         if(messageContext.side.isServer()) {
             world = messageContext.getServerHandler().playerEntity.worldObj;
         }else{
-            world = proxy.getCilentWorld();
+            world = HMG_proxy.getCilentWorld();
         }
         Entity entity = world.getEntityByID(gvcmPacketSyncFlagdata.entityid);
         if(entity instanceof GVCEntityPMCHeli) {

@@ -21,7 +21,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
 import java.util.ArrayList;
 
-import static handmadevehicle.HMVehicle.proxy_HMVehicle;
+import static handmadevehicle.HMVehicle.HMV_Proxy;
 
 public class GVCMRenderSomeEvent {
 
@@ -111,7 +111,7 @@ public class GVCMRenderSomeEvent {
 			fontrenderer.drawStringWithShadow("Armor : " + gear.health, i - 300, j - 40 - 10, color);
 		}
 		minecraft.getTextureManager().bindTexture(Gui.icons);
-		boolean rc = proxy_HMVehicle.zoomclick();
+		boolean rc = HMV_Proxy.zoomclick();
 		if(rc) CLProxy.zooming = !CLProxy.zooming;
 	}
 }

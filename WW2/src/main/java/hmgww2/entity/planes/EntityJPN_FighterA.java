@@ -41,32 +41,32 @@ public class EntityJPN_FighterA extends EntityJPN_FighterBase implements IMultiT
 //		baseLogic.soundname = "hmgww2:hmgww2.sound_pera";
 		
 		ignoreFrustumCheck = true;
-		baseLogic.planeInfo.throttle_gearDown = 1.7f;
-		baseLogic.planeInfo.throttle_Max = 3.0f;
-		baseLogic.planeInfo.rollspeed = 0.25f;
-		baseLogic.planeInfo.pitchspeed = 0.45f;
-		baseLogic.planeInfo.yawspeed = 0.2f;
-		baseLogic.planeInfo.Dive_bombing = true;
-		baseLogic.planeInfo.sholdUseMain_ToG = true;
-		baseLogic.planeInfo.startDive = 50;
-		baseLogic.planeInfo.maxDive = 80;
-		baseLogic.planeInfo.cruiseALT = 80;
-		baseLogic.planeInfo.maxClimb = -25;
-		baseLogic.planeInfo.maxbank = 40;
-		baseLogic.planeInfo.minALT = 30;
-		baseLogic.planeInfo.soundname = "hmgww2:hmgww2.sound_pera";
-		baseLogic.planeInfo.pitchsighwidthmax = 5;
-		baseLogic.planeInfo.pitchsighwidthmin = -10;
-		baseLogic.planeInfo.yawsightwidthmax = 15;
-		baseLogic.planeInfo.yawsightwidthmin = -15;
+		baseLogic.prefab_vehicle.throttle_gearDown = 1.7f;
+		baseLogic.prefab_vehicle.throttle_Max = 3.0f;
+		baseLogic.prefab_vehicle.rollspeed = 0.25f;
+		baseLogic.prefab_vehicle.pitchspeed = 0.45f;
+		baseLogic.prefab_vehicle.yawspeed = 0.2f;
+		baseLogic.prefab_vehicle.Dive_bombing = true;
+		baseLogic.prefab_vehicle.sholdUseMain_ToG = true;
+		baseLogic.prefab_vehicle.startDive = 50;
+		baseLogic.prefab_vehicle.maxDive = 80;
+		baseLogic.prefab_vehicle.cruiseALT = 80;
+		baseLogic.prefab_vehicle.maxClimb = -25;
+		baseLogic.prefab_vehicle.maxbank = 40;
+		baseLogic.prefab_vehicle.minALT = 30;
+		baseLogic.prefab_vehicle.soundname = "hmgww2:hmgww2.sound_pera";
+		baseLogic.prefab_vehicle.pitchsighwidthmax = 5;
+		baseLogic.prefab_vehicle.pitchsighwidthmin = -10;
+		baseLogic.prefab_vehicle.yawsightwidthmax = 15;
+		baseLogic.prefab_vehicle.yawsightwidthmin = -15;
 		
-		baseLogic.planeInfo.camerapos = new double[]{-0.09919,2.528,-0.5840};
-		baseLogic.planeInfo.rotcenter = new double[]{0,1.5,0};
+		baseLogic.prefab_vehicle.camerapos = new double[]{-0.09919,2.528,-0.5840};
+		baseLogic.prefab_vehicle.rotcenter = new double[]{0,1.5,0};
 		baseLogic.riddenByEntities = new Entity[1];
 		baseLogic.seatInfos = new SeatInfo[1];
 		baseLogic.seatInfos[0] = new SeatInfo();
 		baseLogic.seatInfos_zoom[0] = new SeatInfo();
-		baseLogic.seatInfos[0].pos = baseLogic.planeInfo.camerapos;
+		baseLogic.seatInfos[0].pos = baseLogic.prefab_vehicle.camerapos;
 		baseLogic.seatInfos_zoom[0].pos = new double[]{0,2.528,-1.674};
 		
 		baseLogic.onground_pitch = -12;
@@ -103,7 +103,7 @@ public class EntityJPN_FighterA extends EntityJPN_FighterBase implements IMultiT
 		TurretObj bomb1 = new TurretObj(worldObj);
 		{
 			bomb1.onMotherPos = new Vector3d(0,0,0);
-			bomb1.motherRotCenter = new Vector3d(baseLogic.planeInfo.rotcenter);
+			bomb1.motherRotCenter = new Vector3d(baseLogic.prefab_vehicle.rotcenter);
 			bomb1.multicannonPos = new Vector3d[2];
 			bomb1.multicannonPos[0] = new Vector3d(5.420, 1.334, -0.7071);
 			bomb1.multicannonPos[1] = new Vector3d(-5.420, 1.334, -0.7071);
@@ -132,7 +132,7 @@ public class EntityJPN_FighterA extends EntityJPN_FighterBase implements IMultiT
 		{
 			bomb2.onMotherPos = new Vector3d(0,0,0);
 			bomb1.cannonPos = new Vector3d(0, 0.7028, -0.6236);
-			bomb2.motherRotCenter = new Vector3d(baseLogic.planeInfo.rotcenter);
+			bomb2.motherRotCenter = new Vector3d(baseLogic.prefab_vehicle.rotcenter);
 			bomb2.turretspeedY = 5;
 			bomb2.turretspeedP = 8;
 			bomb2.turretanglelimtPitchMax = 5;

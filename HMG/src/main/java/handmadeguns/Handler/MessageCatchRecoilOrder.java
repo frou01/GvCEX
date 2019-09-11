@@ -14,7 +14,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
 
-import static handmadeguns.HandmadeGunsCore.proxy;
+import static handmadeguns.HandmadeGunsCore.HMG_proxy;
 
 
 public class MessageCatchRecoilOrder implements IMessageHandler<PacketRecoil, IMessage> {
@@ -30,12 +30,12 @@ public class MessageCatchRecoilOrder implements IMessageHandler<PacketRecoil, IM
         if (ctx.side.isServer()) {
             world = ctx.getServerHandler().playerEntity.worldObj;
         } else {
-            world = proxy.getCilentWorld();
+            world = HMG_proxy.getCilentWorld();
         }
         if(ctx.side.isClient())
         try {
             if (world != null) {
-                EntityPlayer entityPlayer = proxy.getEntityPlayerInstance();
+                EntityPlayer entityPlayer = HMG_proxy.getEntityPlayerInstance();
                 ItemStack stack = entityPlayer.getHeldItem();
                 if(stack != null){
                     Item item = stack.getItem();

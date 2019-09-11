@@ -12,7 +12,6 @@ import hmggvcmob.SlowPathFinder.WorldForPathfind;
 import hmggvcmob.network.GVCMPacketHandler;
 import hmggvcmob.network.GVCPacketMGControl;
 import handmadevehicle.Utils;
-import handmadevehicle.entity.parts.ImultiRidable;
 import handmadevehicle.entity.parts.ModifiedBoundingBox;
 import handmadevehicle.entity.parts.OBB;
 import handmadevehicle.entity.parts.SeatInfo;
@@ -36,7 +35,7 @@ import java.util.List;
 import java.util.Random;
 
 import static hmggvcmob.GVCMobPlus.METAL_GEAR;
-import static handmadevehicle.HMVehicle.proxy_HMVehicle;
+import static handmadevehicle.HMVehicle.HMV_Proxy;
 import static handmadevehicle.Utils.*;
 import static java.lang.Math.*;
 import static net.minecraft.util.MathHelper.wrapAngleTo180_float;
@@ -164,7 +163,7 @@ public class EntityMGAX55 extends Entity implements I_SPdamageHandle {
         nboundingbox.boxes = new OBB[7];
         initseat(nboundingbox);
         nboundingbox.calculateMax_And_Min();
-        proxy_HMVehicle.replaceBoundingbox(this,nboundingbox);
+        HMV_Proxy.replaceBoundingbox(this,nboundingbox);
         ((ModifiedBoundingBox)this.boundingBox).update(this.posX,this.posY,this.posZ);
         
         stepHeight = 5;
@@ -655,11 +654,11 @@ public class EntityMGAX55 extends Entity implements I_SPdamageHandle {
 
     void control_Pilot(){
         GVCPacketMGControl packetMGControl = new GVCPacketMGControl();
-        packetMGControl.w = w =  proxy_HMVehicle.wclick();
-        packetMGControl.a = a =  proxy_HMVehicle.aclick();
-        packetMGControl.s = s =  proxy_HMVehicle.sclick();
-        packetMGControl.d = d =  proxy_HMVehicle.dclick();
-        if(proxy_HMVehicle.wclick()){
+        packetMGControl.w = w =  HMV_Proxy.throttle_up_click();
+        packetMGControl.a = a =  HMV_Proxy.yaw_Left_click();
+        packetMGControl.s = s =  HMV_Proxy.throttle_down_click();
+        packetMGControl.d = d =  HMV_Proxy.yaw_Right_click();
+        if(HMV_Proxy.throttle_up_click()){
             legmodeForward = true;
             legmodeBack = false;
             legStateBack = 0;
@@ -678,7 +677,7 @@ public class EntityMGAX55 extends Entity implements I_SPdamageHandle {
         }
 
 
-        if(proxy_HMVehicle.sclick()){
+        if(HMV_Proxy.throttle_down_click()){
             legmodeBack = true;
             legmodeForward = false;
             legStateFoward = 0;
@@ -698,7 +697,7 @@ public class EntityMGAX55 extends Entity implements I_SPdamageHandle {
 
 
 
-        if(proxy_HMVehicle.dclick()){
+        if(HMV_Proxy.yaw_Right_click()){
             legmodeRight = true;
             legmodeLeft = false;
             legmodeRightstop = false;
@@ -709,7 +708,7 @@ public class EntityMGAX55 extends Entity implements I_SPdamageHandle {
             legStateRight = 0;
             legmodeRight = false;
         }
-        if(proxy_HMVehicle.aclick()){
+        if(HMV_Proxy.yaw_Left_click()){
             legmodeLeft = true;
             legmodeRight = false;
             legmodeLeftstop = false;
@@ -720,7 +719,7 @@ public class EntityMGAX55 extends Entity implements I_SPdamageHandle {
             legStateLeft = 0;
             legmodeLeft = false;
         }
-        if(proxy_HMVehicle.zoomclick()){
+        if(HMV_Proxy.zoomclick()){
             legSneak_CTRL = !legSneak_CTRL;
         }
         if(!onGround){
@@ -782,40 +781,40 @@ public class EntityMGAX55 extends Entity implements I_SPdamageHandle {
         }
 
         packetMGControl.targetID = this.getEntityId();
-        if (proxy_HMVehicle.leftclick()) {
+        if (HMV_Proxy.leftclick()) {
             packetMGControl.trig1 = true;
         }
-        if (proxy_HMVehicle.rightclick()) {
+        if (HMV_Proxy.rightclick()) {
             packetMGControl.trig2 = true;
         }
-        packetMGControl.sp = sp = proxy_HMVehicle.spaceKeyDown();
+        packetMGControl.sp = sp = HMV_Proxy.throttle_BrakeKeyDown();
         packetMGControl.hold = legSneak_CTRL;
         if(legmodeForward){
-            if(legStateFoward == 25||legStateFoward == 37) HandmadeGunsCore.proxy.playsoundat("gvcmob:gvcmob.Gear_Moving",5,1,1,(float)this.posX,(float)this.posY,(float)this.posZ);
+            if(legStateFoward == 25||legStateFoward == 37) HandmadeGunsCore.HMG_proxy.playsoundat("gvcmob:gvcmob.Gear_Moving",5,1,1,(float)this.posX,(float)this.posY,(float)this.posZ);
             legStateFoward++;
         }
         if(legmodeBack){
-            if(legStateBack == 25||legStateBack == 37) HandmadeGunsCore.proxy.playsoundat("gvcmob:gvcmob.Gear_Moving",5,1,1,(float)this.posX,(float)this.posY,(float)this.posZ);
+            if(legStateBack == 25||legStateBack == 37) HandmadeGunsCore.HMG_proxy.playsoundat("gvcmob:gvcmob.Gear_Moving",5,1,1,(float)this.posX,(float)this.posY,(float)this.posZ);
             legStateBack++;
         }
         if(legmodeRight){
-            if(legStateRight == 0) HandmadeGunsCore.proxy.playsoundat("gvcmob:gvcmob.Gear_Moving",5,1,1,(float)this.posX,(float)this.posY,(float)this.posZ);
+            if(legStateRight == 0) HandmadeGunsCore.HMG_proxy.playsoundat("gvcmob:gvcmob.Gear_Moving",5,1,1,(float)this.posX,(float)this.posY,(float)this.posZ);
             legStateRight+=2;
         }
         if(legmodeLeft){
-            if(legStateLeft == 0) HandmadeGunsCore.proxy.playsoundat("gvcmob:gvcmob.Gear_Moving",5,1,1,(float)this.posX,(float)this.posY,(float)this.posZ);
+            if(legStateLeft == 0) HandmadeGunsCore.HMG_proxy.playsoundat("gvcmob:gvcmob.Gear_Moving",5,1,1,(float)this.posX,(float)this.posY,(float)this.posZ);
             legStateLeft+=2;
         }
         if(legmodeturnRight){
-            if(legStateTurnRight == 0) HandmadeGunsCore.proxy.playsoundat("gvcmob:gvcmob.Gear_Moving",5,1,1,(float)this.posX,(float)this.posY,(float)this.posZ);
+            if(legStateTurnRight == 0) HandmadeGunsCore.HMG_proxy.playsoundat("gvcmob:gvcmob.Gear_Moving",5,1,1,(float)this.posX,(float)this.posY,(float)this.posZ);
             legStateTurnRight+=2;
         }
         if(legmodeturnLeft){
-            if(legStateTurnLeft == 0) HandmadeGunsCore.proxy.playsoundat("gvcmob:gvcmob.Gear_Moving",5,1,1,(float)this.posX,(float)this.posY,(float)this.posZ);
+            if(legStateTurnLeft == 0) HandmadeGunsCore.HMG_proxy.playsoundat("gvcmob:gvcmob.Gear_Moving",5,1,1,(float)this.posX,(float)this.posY,(float)this.posZ);
             legStateTurnLeft+=2;
         }
 
-        if(proxy_HMVehicle.reload_Semi())weaponMode++;
+        if(HMV_Proxy.reload_Semi())weaponMode++;
         if(weaponMode > 2)weaponMode = 0;
         packetMGControl.weaponmode = weaponMode;
         GVCMPacketHandler.INSTANCE.sendToServer(packetMGControl);
@@ -942,27 +941,27 @@ public class EntityMGAX55 extends Entity implements I_SPdamageHandle {
         }
 
         if(legmodeForward){
-            if(legStateFoward == 25||legStateFoward == 37) HandmadeGunsCore.proxy.playsoundat("gvcmob:gvcmob.Gear_Moving",5,1,1,(float)this.posX,(float)this.posY,(float)this.posZ);
+            if(legStateFoward == 25||legStateFoward == 37) HandmadeGunsCore.HMG_proxy.playsoundat("gvcmob:gvcmob.Gear_Moving",5,1,1,(float)this.posX,(float)this.posY,(float)this.posZ);
             legStateFoward++;
         }
         if(legmodeBack){
-            if(legStateBack == 25||legStateBack == 37) HandmadeGunsCore.proxy.playsoundat("gvcmob:gvcmob.Gear_Moving",5,1,1,(float)this.posX,(float)this.posY,(float)this.posZ);
+            if(legStateBack == 25||legStateBack == 37) HandmadeGunsCore.HMG_proxy.playsoundat("gvcmob:gvcmob.Gear_Moving",5,1,1,(float)this.posX,(float)this.posY,(float)this.posZ);
             legStateBack++;
         }
         if(legmodeRight){
-            if(legStateRight == 0) HandmadeGunsCore.proxy.playsoundat("gvcmob:gvcmob.Gear_Moving",5,1,1,(float)this.posX,(float)this.posY,(float)this.posZ);
+            if(legStateRight == 0) HandmadeGunsCore.HMG_proxy.playsoundat("gvcmob:gvcmob.Gear_Moving",5,1,1,(float)this.posX,(float)this.posY,(float)this.posZ);
             legStateRight+=2;
         }
         if(legmodeLeft){
-            if(legStateLeft == 0) HandmadeGunsCore.proxy.playsoundat("gvcmob:gvcmob.Gear_Moving",5,1,1,(float)this.posX,(float)this.posY,(float)this.posZ);
+            if(legStateLeft == 0) HandmadeGunsCore.HMG_proxy.playsoundat("gvcmob:gvcmob.Gear_Moving",5,1,1,(float)this.posX,(float)this.posY,(float)this.posZ);
             legStateLeft+=2;
         }
         if(legmodeturnRight){
-            if(legStateTurnRight == 0) HandmadeGunsCore.proxy.playsoundat("gvcmob:gvcmob.Gear_Moving",5,1,1,(float)this.posX,(float)this.posY,(float)this.posZ);
+            if(legStateTurnRight == 0) HandmadeGunsCore.HMG_proxy.playsoundat("gvcmob:gvcmob.Gear_Moving",5,1,1,(float)this.posX,(float)this.posY,(float)this.posZ);
             legStateTurnRight+=2;
         }
         if(legmodeturnLeft){
-            if(legStateTurnLeft == 0) HandmadeGunsCore.proxy.playsoundat("gvcmob:gvcmob.Gear_Moving",5,1,1,(float)this.posX,(float)this.posY,(float)this.posZ);
+            if(legStateTurnLeft == 0) HandmadeGunsCore.HMG_proxy.playsoundat("gvcmob:gvcmob.Gear_Moving",5,1,1,(float)this.posX,(float)this.posY,(float)this.posZ);
             legStateTurnLeft+=2;
         }
     }
@@ -1189,7 +1188,7 @@ public class EntityMGAX55 extends Entity implements I_SPdamageHandle {
                         }
                     }
                 }else {
-                    if(pilot == proxy_HMVehicle.getEntityPlayerInstance()) {
+                    if(pilot == HMV_Proxy.getEntityPlayerInstance()) {
                         Vec3 vec3 = Vec3.createVectorHelper(
                                 this.posX + xVector.x * (gunpos[0][0]) + yVector.x * (gunpos[0][1]) + zVector.x * gunpos[0][2],
                                 this.posY + xVector.y * (gunpos[0][0]) + yVector.y * (gunpos[0][1]) + 4.12 + pilotseatoffsety + zVector.y * gunpos[0][2],
@@ -1247,7 +1246,7 @@ public class EntityMGAX55 extends Entity implements I_SPdamageHandle {
                             movingobjectposition.hitVec = vec3;
                         }
                         if (movingobjectposition != null && movingobjectposition.hitVec != null) {
-                            HandmadeGunsCore.proxy.spawnParticles(new PacketSpawnParticle(movingobjectposition.hitVec.xCoord, movingobjectposition.hitVec.yCoord, movingobjectposition.hitVec.zCoord, 2));
+                            HandmadeGunsCore.HMG_proxy.spawnParticles(new PacketSpawnParticle(movingobjectposition.hitVec.xCoord, movingobjectposition.hitVec.yCoord, movingobjectposition.hitVec.zCoord, 2));
                         }
                     }
                 }
@@ -1318,7 +1317,7 @@ public class EntityMGAX55 extends Entity implements I_SPdamageHandle {
                             FireMissile();
                         }
                     }
-                }else if(pilot == proxy_HMVehicle.getEntityPlayerInstance()){
+                }else if(pilot == HMV_Proxy.getEntityPlayerInstance()){
                     Vec3 vec3 = Vec3.createVectorHelper(this.posX, this.posY + 8.5, this.posZ);
                     Vec3 playerlook = ((EntityLivingBase) pilot).getLook(1.0f);
                     playerlook = Vec3.createVectorHelper(playerlook.xCoord * 256, playerlook.yCoord * 256, playerlook.zCoord * 256);
@@ -1365,7 +1364,7 @@ public class EntityMGAX55 extends Entity implements I_SPdamageHandle {
                     }
                     if (movingobjectposition != null && movingobjectposition.hitVec != null) {
 
-                        HandmadeGunsCore.proxy.spawnParticles(new PacketSpawnParticle(movingobjectposition.hitVec.xCoord, movingobjectposition.hitVec.yCoord, movingobjectposition.hitVec.zCoord, 2));
+                        HandmadeGunsCore.HMG_proxy.spawnParticles(new PacketSpawnParticle(movingobjectposition.hitVec.xCoord, movingobjectposition.hitVec.yCoord, movingobjectposition.hitVec.zCoord, 2));
                     }
                 }
             }

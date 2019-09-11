@@ -1,6 +1,7 @@
 package handmadevehicle.entity.parts;
 
 import handmadevehicle.entity.parts.turrets.TurretObj;
+import handmadevehicle.entity.prefab.Prefab_Seat;
 
 import javax.vecmath.Vector3d;
 
@@ -8,10 +9,9 @@ public class SeatInfo {
     public SeatInfo(){
     
     }
-    public SeatInfo(double[] pos,boolean hasGun,boolean aimGun,TurretObj maingun,TurretObj subgun){
+    public SeatInfo(double[] pos,Prefab_Seat prefab_seat,boolean hasGun,boolean aimGun,TurretObj maingun,TurretObj subgun){
         this(pos);
-        this.hasGun = hasGun;
-        this.aimGun = aimGun;
+        this.prefab_seat = prefab_seat;
         this.maingun = maingun;
         this.subgun = subgun;
     }
@@ -22,8 +22,7 @@ public class SeatInfo {
         this.pos = new double[]{pos.x,pos.y,pos.z};
     }
     public double[] pos = new double[]{0,1.5,0};
-    public boolean hasGun;
-    public boolean aimGun;
+    public Prefab_Seat prefab_seat;
     public boolean hasParentGun = false;
     public boolean gunTrigger1;
     public boolean gunTrigger2;

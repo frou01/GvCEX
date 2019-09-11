@@ -6,11 +6,10 @@ import handmadeguns.network.PacketSpawnParticle;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
 import static handmadeguns.HandmadeGunsCore.cfg_defgravitycof;
-import static handmadeguns.HandmadeGunsCore.proxy;
+import static handmadeguns.HandmadeGunsCore.HMG_proxy;
 
 public class HMGEntityBulletTorp extends HMGEntityBulletExprode implements IEntityAdditionalSpawnData
 {
@@ -52,7 +51,7 @@ public class HMGEntityBulletTorp extends HMGEntityBulletExprode implements IEnti
 				packet.scale = smokeWidth;
 				packet.fuse = smoketime;
 				if (smokeglow) packet.id += 100;
-				proxy.spawnParticles(packet);
+				HMG_proxy.spawnParticles(packet);
 			}
 		}
 		if(ishittingWater()) {

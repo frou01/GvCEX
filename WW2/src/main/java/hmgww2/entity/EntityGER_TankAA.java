@@ -1,8 +1,8 @@
 package hmgww2.entity;
 
 
+import handmadevehicle.entity.parts.logics.TankBaseLogicLogic;
 import hmggvcmob.ai.AITankAttack;
-import handmadevehicle.entity.parts.logics.TankBaseLogic;
 import handmadevehicle.entity.parts.turrets.TurretObj;
 import net.minecraft.world.World;
 
@@ -16,7 +16,7 @@ public class EntityGER_TankAA extends EntityGER_TankBase
         super(par1World);
         maxHealth = 150;
         this.setSize(4F, 2.5F);
-        baseLogic = new TankBaseLogic(this,0.16f,0.7f, false, "gvcmob:gvcmob.JeepWheel");
+        baseLogic = new TankBaseLogicLogic(this,0.16f,0.7f, false, "gvcmob:gvcmob.JeepWheel");
         aiTankAttack = new AITankAttack(this, 6400, 1600, 10, 10);
         this.tasks.addTask(1, aiTankAttack);
         playerpos = new Vector3d(0, 2.6521, 3.394-2.3059f);

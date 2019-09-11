@@ -3,7 +3,7 @@ package handmadeguns.Handler;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import handmadeguns.HMGAddGunsNew;
+import handmadeguns.HMGGunMaker;
 import handmadeguns.network.PacketReloadparm;
 import net.minecraftforge.client.model.ModelFormatException;
 
@@ -11,13 +11,13 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Comparator;
 
-import static handmadeguns.HandmadeGunsCore.proxy;
+import static handmadeguns.HandmadeGunsCore.HMG_proxy;
 
 public class MessageCatch_Reloadparm implements IMessageHandler<PacketReloadparm, IMessage> {
     @Override
     public IMessage onMessage(PacketReloadparm message, MessageContext ctx) {
         System.out.println("debug");
-        File packdir = new File(proxy.ProxyFile(), "handmadeguns_Packs");
+        File packdir = new File(HMG_proxy.ProxyFile(), "handmadeguns_Packs");
         packdir.mkdirs();
         File[] packlist = packdir.listFiles();
         Arrays.sort(packlist, new Comparator<File>() {
@@ -38,7 +38,7 @@ public class MessageCatch_Reloadparm implements IMessageHandler<PacketReloadparm
             for (int ii = 0; ii < filegun.length; ii++) {
                 if (filegun[ii].isFile()) {
                     try {
-                        HMGAddGunsNew.load(null,true, filegun[ii]);
+                        new HMGGunMaker().load(null,true, filegun[ii]);
                     } catch (ModelFormatException e) {
                         e.printStackTrace();
                     }

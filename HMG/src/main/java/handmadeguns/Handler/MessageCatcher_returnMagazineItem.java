@@ -7,13 +7,12 @@ import handmadeguns.items.guns.HMGItem_Unified_Guns;
 import handmadeguns.network.PacketreturnMgazineItem;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-import static handmadeguns.HandmadeGunsCore.proxy;
+import static handmadeguns.HandmadeGunsCore.HMG_proxy;
 
 public class MessageCatcher_returnMagazineItem implements IMessageHandler<PacketreturnMgazineItem, IMessage> {
     @Override
@@ -23,7 +22,7 @@ public class MessageCatcher_returnMagazineItem implements IMessageHandler<Packet
         if(ctx.side.isServer()) {
             world = ctx.getServerHandler().playerEntity.worldObj;
         }else{
-            world = proxy.getCilentWorld();
+            world = HMG_proxy.getCilentWorld();
         }
         try {
             if(world != null){

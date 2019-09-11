@@ -6,6 +6,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import handmadeguns.entity.IFF;
 import handmadeguns.entity.PlacedGunEntity;
 import handmadeguns.items.guns.HMGItem_Unified_Guns;
+import handmadevehicle.entity.parts.logics.TankBaseLogicLogic;
 import hmggvcmob.SlowPathFinder.ModifiedPathNavigater;
 import hmggvcmob.SlowPathFinder.WorldForPathfind;
 import hmggvcmob.ai.AIAttackGun;
@@ -20,8 +21,6 @@ import hmgww2.entity.planes.EntityBases_Plane;
 import hmgww2.items.ItemIFFArmor;
 import handmadevehicle.entity.parts.HasBaseLogic;
 import handmadevehicle.entity.parts.Hasmode;
-import handmadevehicle.entity.parts.ImultiRidable;
-import handmadevehicle.entity.parts.logics.TankBaseLogic;
 import littleMaidMobX.LMM_EntityLittleMaid;
 import net.minecraft.block.Block;
 import net.minecraft.entity.*;
@@ -479,9 +478,9 @@ public abstract class EntityBases extends EntityCreature implements IFF,INpc,IGV
 	
 	public boolean attackEntityFrom_with_Info(MovingObjectPosition movingObjectPosition, DamageSource source, float level){
 		float temparomor = armor;
-		TankBaseLogic temp;
-		if (source instanceof EntityDamageSourceIndirect && source.getEntity() != null && this instanceof HasBaseLogic &&  ((HasBaseLogic) this).getBaseLogic() instanceof TankBaseLogic) {
-			temp = (TankBaseLogic) ((HasBaseLogic) this).getBaseLogic();
+		TankBaseLogicLogic temp;
+		if (source instanceof EntityDamageSourceIndirect && source.getEntity() != null && this instanceof HasBaseLogic &&  ((HasBaseLogic) this).getBaseLogic() instanceof TankBaseLogicLogic) {
+			temp = (TankBaseLogicLogic) ((HasBaseLogic) this).getBaseLogic();
 			Vector3d frontArmorVec = new Vector3d(0, 0, -1);
 			Vector3d leftsideArmorVec = new Vector3d(1, 0, 0);
 			Vector3d rightsideArmorVec = new Vector3d(-1, 0, 0);
@@ -491,11 +490,11 @@ public abstract class EntityBases extends EntityCreature implements IFF,INpc,IGV
 			RotateVectorAroundZ(leftsideArmorVec, armor_tilt);
 			RotateVectorAroundZ(rightsideArmorVec, -armor_tilt);
 			RotateVectorAroundX(backArmorVec, armor_tilt);
-			frontArmorVec = transformVecByQuat(frontArmorVec, ((TankBaseLogic) temp).bodyRot);
-			leftsideArmorVec = transformVecByQuat(leftsideArmorVec, ((TankBaseLogic) temp).bodyRot);
-			rightsideArmorVec = transformVecByQuat(rightsideArmorVec, ((TankBaseLogic) temp).bodyRot);
-			backArmorVec = transformVecByQuat(backArmorVec, ((TankBaseLogic) temp).bodyRot);
-			topArmorVec = transformVecByQuat(topArmorVec, ((TankBaseLogic) temp).bodyRot);
+			frontArmorVec = transformVecByQuat(frontArmorVec, ((TankBaseLogicLogic) temp).bodyRot);
+			leftsideArmorVec = transformVecByQuat(leftsideArmorVec, ((TankBaseLogicLogic) temp).bodyRot);
+			rightsideArmorVec = transformVecByQuat(rightsideArmorVec, ((TankBaseLogicLogic) temp).bodyRot);
+			backArmorVec = transformVecByQuat(backArmorVec, ((TankBaseLogicLogic) temp).bodyRot);
+			topArmorVec = transformVecByQuat(topArmorVec, ((TankBaseLogicLogic) temp).bodyRot);
 			frontArmorVec.z *= -1;
 			backArmorVec.z *= -1;
 			leftsideArmorVec.z *= -1;
@@ -507,11 +506,11 @@ public abstract class EntityBases extends EntityCreature implements IFF,INpc,IGV
 //					                                          , source.getSourceOfDamage().posZ - this.posZ
 //			);
 			Vector3d TankFrontVec = new Vector3d(0, 0, -1);
-			TankFrontVec = transformVecByQuat(TankFrontVec, ((TankBaseLogic) temp).bodyRot);
+			TankFrontVec = transformVecByQuat(TankFrontVec, ((TankBaseLogicLogic) temp).bodyRot);
 			TankFrontVec.z *= -1;
 //			double angle_position = abs(toDegrees(TankFrontVec.angle(shooterPositionVec)));
 			Vector3d TankRighttVec = new Vector3d(-1, 0, 0);
-			TankRighttVec = transformVecByQuat(TankRighttVec, ((TankBaseLogic) temp).bodyRot);
+			TankRighttVec = transformVecByQuat(TankRighttVec, ((TankBaseLogicLogic) temp).bodyRot);
 			TankRighttVec.z *= -1;
 			
 			int hitside = movingObjectPosition.sideHit % 6;

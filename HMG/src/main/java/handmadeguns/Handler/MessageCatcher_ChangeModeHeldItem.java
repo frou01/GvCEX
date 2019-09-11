@@ -9,7 +9,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
-import static handmadeguns.HandmadeGunsCore.proxy;
+import static handmadeguns.HandmadeGunsCore.HMG_proxy;
 
 
 public class MessageCatcher_ChangeModeHeldItem implements IMessageHandler<PacketChangeModeHeldItem, IMessage> {
@@ -25,7 +25,7 @@ public class MessageCatcher_ChangeModeHeldItem implements IMessageHandler<Packet
         if(ctx.side.isServer()) {
             world = ctx.getServerHandler().playerEntity.worldObj;
         }else{
-            world = proxy.getCilentWorld();
+            world = HMG_proxy.getCilentWorld();
         }
         try {
             if(world != null){

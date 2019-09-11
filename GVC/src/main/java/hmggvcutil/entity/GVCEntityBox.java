@@ -11,7 +11,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
-import static handmadeguns.HandmadeGunsCore.proxy;
+import static handmadeguns.HandmadeGunsCore.HMG_proxy;
 
 public class GVCEntityBox extends EntityLiving
 {
@@ -83,7 +83,7 @@ public class GVCEntityBox extends EntityLiving
     public double getYOffset() {
         if(ridingEntity instanceof EntityPlayer) {
             if(worldObj.isRemote){
-                if(proxy.getEntityPlayerInstance() == ridingEntity) {
+                if(HMG_proxy.getEntityPlayerInstance() == ridingEntity) {
                     if (ridingEntity.isSneaking())
                         return (yOffset - 2.0F);
                     else

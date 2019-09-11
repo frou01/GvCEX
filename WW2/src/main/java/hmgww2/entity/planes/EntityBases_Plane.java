@@ -1,11 +1,11 @@
 package hmgww2.entity.planes;
 
+import handmadevehicle.entity.parts.logics.BaseLogic;
+import handmadevehicle.entity.parts.logics.PlaneBaseLogicLogic;
 import hmgww2.Nation;
 import hmgww2.entity.EntityBases;
 import handmadevehicle.entity.parts.IPlane;
 import handmadevehicle.entity.parts.ModifiedBoundingBox;
-import handmadevehicle.entity.parts.logics.LogicsBase;
-import handmadevehicle.entity.parts.logics.PlaneBaseLogic;
 import net.minecraft.entity.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -23,7 +23,7 @@ import static hmggvcmob.GVCMobPlus.proxy;
 import static java.lang.Math.abs;
 
 public abstract class EntityBases_Plane extends EntityBases implements IPlane {
-	PlaneBaseLogic baseLogic;
+	PlaneBaseLogicLogic baseLogic;
 	public String sightTex = null;
 	float maxHealth = 150;
 //	ModifiedBoundingBox nboundingbox;
@@ -31,17 +31,17 @@ public abstract class EntityBases_Plane extends EntityBases implements IPlane {
 		super(par1World);
 		this.setSize(5f, 5f);
 		ignoreFrustumCheck = true;
-		baseLogic = new PlaneBaseLogic(worldObj, this);
-		baseLogic.planeInfo.speedfactor = 0.009f;
-		baseLogic.planeInfo.liftfactor = 0.05f;
-		baseLogic.planeInfo.flapliftfactor = 0.00005f;
-		baseLogic.planeInfo.flapdragfactor = 0.0000000001f;
-		baseLogic.planeInfo.geardragfactor = 0.000000001f;
-		baseLogic.planeInfo.dragfactor = 0.07f;
-		baseLogic.planeInfo.gravity = 0.049f;
-		baseLogic.planeInfo.stability = 600;
-		baseLogic.planeInfo.rotmotion_reduceSpeed = 0.1;
-		baseLogic.planeInfo.slipresist = 0.05f;
+		baseLogic = new PlaneBaseLogicLogic(worldObj, this);
+		baseLogic.prefab_vehicle.speedfactor = 0.009f;
+		baseLogic.prefab_vehicle.liftfactor = 0.05f;
+		baseLogic.prefab_vehicle.flapliftfactor = 0.00005f;
+		baseLogic.prefab_vehicle.flapdragfactor = 0.0000000001f;
+		baseLogic.prefab_vehicle.geardragfactor = 0.000000001f;
+		baseLogic.prefab_vehicle.dragfactor = 0.07f;
+		baseLogic.prefab_vehicle.gravity = 0.049f;
+		baseLogic.prefab_vehicle.stability_roll = 600;
+		baseLogic.prefab_vehicle.rotmotion_reduceSpeed = 0.1;
+		baseLogic.prefab_vehicle.slipresist = 0.05f;
 //		baseLogic.slipresist = 4;
 		
 		ModifiedBoundingBox nboundingbox = new ModifiedBoundingBox(-1.5,0,-1.5,
@@ -194,7 +194,7 @@ public abstract class EntityBases_Plane extends EntityBases implements IPlane {
 	}
 	
 	@Override
-	public LogicsBase getBaseLogic() {
+	public BaseLogic getBaseLogic() {
 		return baseLogic;
 	}
 	

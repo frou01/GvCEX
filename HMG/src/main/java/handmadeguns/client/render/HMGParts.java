@@ -12,7 +12,7 @@ public class HMGParts {
     public int motherIndex;
 
     private HMGGunParts_Motion_PosAndRotation defaultPosAndRotation;
-    private HMGGunParts_Motion_PosAndRotation dummy = new HMGGunParts_Motion_PosAndRotation();
+    private HMGGunParts_Motion_PosAndRotation dummy = new HMGGunParts_Motion_PosAndRotation(0,0,0,0,0,0);
 
     public boolean rendering_Def;
 
@@ -92,76 +92,28 @@ public class HMGParts {
         return onsneakingmotions.getpartsMotion(flame);
     }
     public void AddRenderinfDef(float centerX,float centerY,float centerZ,float rotationX,float rotationY,float rotationZ){
-        defaultPosAndRotation = new HMGGunParts_Motion_PosAndRotation();
-        defaultPosAndRotation.posX      =centerX;
-        defaultPosAndRotation.posY      =centerY;
-        defaultPosAndRotation.posZ      =centerZ;
-        defaultPosAndRotation.rotationX =rotationX;
-        defaultPosAndRotation.rotationY =rotationY;
-        defaultPosAndRotation.rotationZ =rotationZ;
+        defaultPosAndRotation = new HMGGunParts_Motion_PosAndRotation(centerX,centerY,centerZ,rotationX,rotationY,rotationZ);
     }
     public void AddRenderinfSP(float centerX, float centerY, float centerZ, float rotationX, float rotationY, float rotationZ){
-        spPosAndRotation = new HMGGunParts_Motion_PosAndRotation();
-        spPosAndRotation.posX      =centerX;
-        spPosAndRotation.posY      =centerY;
-        spPosAndRotation.posZ      =centerZ;
-        spPosAndRotation.rotationX =rotationX;
-        spPosAndRotation.rotationY =rotationY;
-        spPosAndRotation.rotationZ =rotationZ;
+        spPosAndRotation = new HMGGunParts_Motion_PosAndRotation(centerX,centerY,centerZ,rotationX,rotationY,rotationZ);
     }
     public void AddRenderinfright(float centerX, float centerY, float centerZ, float rotationX, float rotationY, float rotationZ){
-        rightPosAndRotation = new HMGGunParts_Motion_PosAndRotation();
-        rightPosAndRotation.posX      =centerX;
-        rightPosAndRotation.posY      =centerY;
-        rightPosAndRotation.posZ      =centerZ;
-        rightPosAndRotation.rotationX =rotationX;
-        rightPosAndRotation.rotationY =rotationY;
-        rightPosAndRotation.rotationZ =rotationZ;
+        rightPosAndRotation = new HMGGunParts_Motion_PosAndRotation(centerX,centerY,centerZ,rotationX,rotationY,rotationZ);
     }
     public void AddRenderinfleft(float centerX, float centerY, float centerZ, float rotationX, float rotationY, float rotationZ){
-        leftPosAndRotation = new HMGGunParts_Motion_PosAndRotation();
-        leftPosAndRotation.posX      =centerX;
-        leftPosAndRotation.posY      =centerY;
-        leftPosAndRotation.posZ      =centerZ;
-        leftPosAndRotation.rotationX =rotationX;
-        leftPosAndRotation.rotationY =rotationY;
-        leftPosAndRotation.rotationZ =rotationZ;
+        leftPosAndRotation = new HMGGunParts_Motion_PosAndRotation(centerX,centerY,centerZ,rotationX,rotationY,rotationZ);
     }
     public void AddRenderinfforward(float centerX, float centerY, float centerZ, float rotationX, float rotationY, float rotationZ){
-        forwardPosAndRotation = new HMGGunParts_Motion_PosAndRotation();
-        forwardPosAndRotation.posX      =centerX;
-        forwardPosAndRotation.posY      =centerY;
-        forwardPosAndRotation.posZ      =centerZ;
-        forwardPosAndRotation.rotationX =rotationX;
-        forwardPosAndRotation.rotationY =rotationY;
-        forwardPosAndRotation.rotationZ =rotationZ;
+        forwardPosAndRotation = new HMGGunParts_Motion_PosAndRotation(centerX,centerY,centerZ,rotationX,rotationY,rotationZ);
     }
     public void AddRenderinfback(float centerX, float centerY, float centerZ, float rotationX, float rotationY, float rotationZ){
-        backPosAndRotation = new HMGGunParts_Motion_PosAndRotation();
-        backPosAndRotation.posX      =centerX;
-        backPosAndRotation.posY      =centerY;
-        backPosAndRotation.posZ      =centerZ;
-        backPosAndRotation.rotationX =rotationX;
-        backPosAndRotation.rotationY =rotationY;
-        backPosAndRotation.rotationZ =rotationZ;
+        backPosAndRotation = new HMGGunParts_Motion_PosAndRotation(centerX,centerY,centerZ,rotationX,rotationY,rotationZ);
     }
     public void AddRenderinfsneak(float centerX, float centerY, float centerZ, float rotationX, float rotationY, float rotationZ){
-        sneakPosAndRotation = new HMGGunParts_Motion_PosAndRotation();
-        sneakPosAndRotation.posX      =centerX;
-        sneakPosAndRotation.posY      =centerY;
-        sneakPosAndRotation.posZ      =centerZ;
-        sneakPosAndRotation.rotationX =rotationX;
-        sneakPosAndRotation.rotationY =rotationY;
-        sneakPosAndRotation.rotationZ =rotationZ;
+        sneakPosAndRotation = new HMGGunParts_Motion_PosAndRotation(centerX,centerY,centerZ,rotationX,rotationY,rotationZ);
     }
     public void AddRenderinfjump(float centerX, float centerY, float centerZ, float rotationX, float rotationY, float rotationZ){
-        jumpingPosAndRotation = new HMGGunParts_Motion_PosAndRotation();
-        jumpingPosAndRotation.posX      =centerX;
-        jumpingPosAndRotation.posY      =centerY;
-        jumpingPosAndRotation.posZ      =centerZ;
-        jumpingPosAndRotation.rotationX =rotationX;
-        jumpingPosAndRotation.rotationY =rotationY;
-        jumpingPosAndRotation.rotationZ =rotationZ;
+        jumpingPosAndRotation = new HMGGunParts_Motion_PosAndRotation(centerX,centerY,centerZ,rotationX,rotationY,rotationZ);
     }
     public void AddMotionKeyonRight(int   startflame,
                                     float startcenterX,

@@ -1,6 +1,6 @@
 invertYMouse:false
 mouseSensitivity:0.5
-fov:0.025
+fov:0.25
 gamma:1.0
 saturation:0.0
 renderDistance:6
@@ -9,7 +9,7 @@ particles:0
 bobView:true
 anaglyph3d:false
 advancedOpengl:false
-maxFps:60
+maxFps:20
 fboEnable:true
 difficulty:0
 fancyGraphics:false
@@ -90,10 +90,11 @@ key_throttle UP:17
 key_throttle Down:31
 key_Yaw Left:30
 key_Yaw Right:32
+key_Throttle Brake:57
 key_Fire1:-99
 key_Fire2:-100
-key_EXControl1 (Flap)(weaponMode):33
-key_EXControl2 (Brake):45
+key_Flap:33
+key_Air Brake:45
 key_Change to Next Seat:21
 key_Change to Previous Seat:35
 key_pitchUp:23
@@ -113,7 +114,7 @@ key_Fix Gun:35
 soundCategory_master:1.0
 soundCategory_music:0.0
 soundCategory_record:1.0
-soundCategory_weather:1.0
+soundCategory_weather:0.09859155
 soundCategory_block:1.0
 soundCategory_hostile:1.0
 soundCategory_neutral:1.0

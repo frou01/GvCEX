@@ -5,7 +5,7 @@ import handmadevehicle.entity.parts.Hasmode;
 import handmadevehicle.entity.parts.IMultiTurretVehicle;
 import handmadevehicle.entity.parts.IPlane;
 import handmadevehicle.entity.parts.ModifiedBoundingBox;
-import handmadevehicle.entity.parts.logics.PlaneBaseLogic;
+import handmadevehicle.entity.parts.logics.PlaneBaseLogicLogic;
 import handmadevehicle.entity.parts.turrets.TurretObj;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.entity.Render;
@@ -18,7 +18,6 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 import javax.vecmath.Quat4d;
-import javax.vecmath.Vector3d;
 import java.util.ArrayList;
 
 import static handmadevehicle.CLProxy.drawOutlinedBoundingBox;
@@ -56,17 +55,14 @@ public class RenderPlane extends Render {
 	public void doRender(Entity entity, double p_76986_2_, double p_76986_4_, double p_76986_6_,
 	                     float entityYaw, float partialTicks) {
 		if(entity instanceof IPlane){
-			PlaneBaseLogic baseLogic = (PlaneBaseLogic) ((IPlane) entity).getBaseLogic();
+			PlaneBaseLogicLogic baseLogic = (PlaneBaseLogicLogic) ((IPlane) entity).getBaseLogic();
 			int pass = MinecraftForgeClient.getRenderPass();
 			this.bindEntityTexture(entity);
-			baseLogic.riderPosUpdate_forRender(new Vector3d(entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * partialTicks,
-					                                               entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * partialTicks,
-					                                               entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * partialTicks));
 			GL11.glPushMatrix();
 			GL11.glTranslatef((float) p_76986_2_, (float) p_76986_4_, (float) p_76986_6_);
 			GL11.glRotatef(180F, 0.0F, 1.0F, 0.0F);
 			GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-			GL11.glTranslatef((float) baseLogic.planeInfo.rotcenter[0], (float) baseLogic.planeInfo.rotcenter[1], (float) baseLogic.planeInfo.rotcenter[2]);
+			GL11.glTranslatef((float) baseLogic.prefab_vehicle.rotcenter[0], (float) baseLogic.prefab_vehicle.rotcenter[1], (float) baseLogic.prefab_vehicle.rotcenter[2]);
 			
 			Quat4d tempquat = new Quat4d();
 			tempquat.interpolate(baseLogic.prevbodyRot,baseLogic.bodyRot, partialTicks);
@@ -81,7 +77,7 @@ public class RenderPlane extends Render {
 			GL11.glRotatef(180.0F - (baseLogic.bodyrotationYaw), 0.0F, 1.0F, 0.0F);
 			GL11.glRotatef(baseLogic.bodyrotationPitch, 1.0F, 0.0F, 0.0F);
 			GL11.glRotatef(baseLogic.bodyrotationRoll, 0.0F, 0.0F, 1.0F);
-			GL11.glTranslatef((float) -baseLogic.planeInfo.rotcenter[0], (float) -baseLogic.planeInfo.rotcenter[1], (float) -baseLogic.planeInfo.rotcenter[2]);
+			GL11.glTranslatef((float) -baseLogic.prefab_vehicle.rotcenter[0], (float) -baseLogic.prefab_vehicle.rotcenter[1], (float) -baseLogic.prefab_vehicle.rotcenter[2]);
 			GL11.glPushMatrix();
 			
 			if(pass == 1) {

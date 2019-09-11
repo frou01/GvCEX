@@ -8,7 +8,7 @@ import net.minecraft.world.World;
 
 import java.util.ArrayList;
 
-import static handmadeguns.HandmadeGunsCore.proxy;
+import static handmadeguns.HandmadeGunsCore.HMG_proxy;
 import static hmggvcmob.event.GVCMXEntityEvent.spots_needSpawn_Client;
 
 public class GVCHandleSpawnSpotCircle implements IMessageHandler<GVCPacketSpawnSpotCircle, IMessage> {
@@ -19,7 +19,7 @@ public class GVCHandleSpawnSpotCircle implements IMessageHandler<GVCPacketSpawnS
 		if(ctx.side.isServer()) {
 			world = ctx.getServerHandler().playerEntity.worldObj;
 		}else{
-			world = proxy.getCilentWorld();
+			world = HMG_proxy.getCilentWorld();
 		}
 		if(message != null && world != null && world.provider != null && message.dimid == world.provider.dimensionId) {
 			ArrayList<SpotObj> spotObjArrayList = spots_needSpawn_Client.get(world.provider.dimensionId);

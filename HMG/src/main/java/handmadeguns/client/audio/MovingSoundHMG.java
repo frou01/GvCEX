@@ -2,13 +2,11 @@ package handmadeguns.client.audio;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.client.audio.ISound;
 import net.minecraft.client.audio.MovingSound;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 
-import static handmadeguns.HandmadeGunsCore.proxy;
+import static handmadeguns.HandmadeGunsCore.HMG_proxy;
 import static java.lang.Math.sqrt;
 
 @SideOnly(Side.CLIENT)
@@ -50,7 +48,7 @@ public class MovingSoundHMG extends MovingSound
 		else
 		{
 			prevdisttoPlayer = disttoPlayer;
-			disttoPlayer = attachedEntity.getDistanceSqToEntity(proxy.getMCInstance().renderViewEntity);
+			disttoPlayer = attachedEntity.getDistanceSqToEntity(HMG_proxy.getMCInstance().renderViewEntity);
 			if(prevdisttoPlayer != -1) {
 				float doppler = (float) (sqrt(prevdisttoPlayer) - sqrt(disttoPlayer));
 				float tempsp =  (318.8f / (318.8f - doppler * 20f));

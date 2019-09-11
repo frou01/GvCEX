@@ -7,7 +7,7 @@ import io.netty.buffer.ByteBuf;
 
 import java.util.ArrayList;
 
-import static handmadevehicle.HMVehicle.proxy_HMVehicle;
+import static handmadevehicle.HMVehicle.HMV_Proxy;
 
 public class GVCPacketSpawnSpotCircle implements IMessage {
 	ArrayList<SpotObj> recievedSpotobj = new ArrayList<>();
@@ -34,7 +34,7 @@ public class GVCPacketSpawnSpotCircle implements IMessage {
 				addobj.pos[1] = buf.readFloat();
 				addobj.pos[2] = buf.readFloat();
 				addobj.remaintime = buf.readInt();
-				if(proxy_HMVehicle.getEntityPlayerInstance() != null && (proxy_HMVehicle.getEntityPlayerInstance().getTeam() == null || proxy_HMVehicle.getEntityPlayerInstance().getTeam().getRegisteredName().equals(addobj.teamname)))recievedSpotobj.add(addobj);
+				if(HMV_Proxy.getEntityPlayerInstance() != null && (HMV_Proxy.getEntityPlayerInstance().getTeam() == null || HMV_Proxy.getEntityPlayerInstance().getTeam().getRegisteredName().equals(addobj.teamname)))recievedSpotobj.add(addobj);
 			}
 		}
 		

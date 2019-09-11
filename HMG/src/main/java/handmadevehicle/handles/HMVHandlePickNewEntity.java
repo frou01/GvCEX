@@ -3,12 +3,12 @@ package handmadevehicle.handles;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import handmadevehicle.entity.parts.ImultiRidable;
+import handmadevehicle.entity.parts.IVehicle;
 import handmadevehicle.packets.HMVPacketPickNewEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
 
-import static handmadeguns.HandmadeGunsCore.proxy;
+import static handmadeguns.HandmadeGunsCore.HMG_proxy;
 
 public class HMVHandlePickNewEntity implements IMessageHandler<HMVPacketPickNewEntity, IMessage> {
 	@Override
@@ -19,10 +19,10 @@ public class HMVHandlePickNewEntity implements IMessageHandler<HMVPacketPickNewE
 		if(ctx.side.isServer()) {
 			world = ctx.getServerHandler().playerEntity.worldObj;
 			Entity picking;
-			if((picking= world.getEntityByID(message.pickingEntityID)) != null && picking instanceof ImultiRidable){
+			if((picking= world.getEntityByID(message.pickingEntityID)) != null && picking instanceof IVehicle){
 				{
-					int[] ids = new int[((ImultiRidable) picking).getRiddenEntityList().length];
-					Entity[] entitylist = ((ImultiRidable) picking).getRiddenEntityList();
+					int[] ids = new int[((IVehicle) picking).getRiddenEntityList().length];
+					Entity[] entitylist = ((IVehicle) picking).getRiddenEntityList();
 					int cnt = 0;
 					for (Entity picked : entitylist) {
 						if (picked != null) ids[cnt] = picked.getEntityId();
@@ -33,11 +33,11 @@ public class HMVHandlePickNewEntity implements IMessageHandler<HMVPacketPickNewE
 				}
 			}
 		}else{
-			world = proxy.getCilentWorld();
+			world = HMG_proxy.getCilentWorld();
 			Entity picking;
 			Entity picked;
-			if((picking= world.getEntityByID(message.pickingEntityID)) != null && picking instanceof ImultiRidable){
-				Entity[] entitylist = ((ImultiRidable) picking).getRiddenEntityList();
+			if((picking= world.getEntityByID(message.pickingEntityID)) != null && picking instanceof IVehicle){
+				Entity[] entitylist = ((IVehicle) picking).getRiddenEntityList();
 				int cnt = 0;
 				for (int a_id : message.pickedEntityIDs) {
 					picked = world.getEntityByID(a_id);

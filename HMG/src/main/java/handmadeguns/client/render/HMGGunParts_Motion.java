@@ -34,13 +34,12 @@ public class HMGGunParts_Motion {
     }
     public HMGGunParts_Motion_PosAndRotation posAndRotation(float flame){
         float flameforCompletion = flame-startflame;
-        HMGGunParts_Motion_PosAndRotation posAndRotation = new HMGGunParts_Motion_PosAndRotation();
-        posAndRotation.rotationX = startrotationX + size_rotationX * (flameforCompletion/size_flame);
-        posAndRotation.rotationY = startrotationY + size_rotationY * (flameforCompletion/size_flame);
-        posAndRotation.rotationZ = startrotationZ + size_rotationZ * (flameforCompletion/size_flame);
-        posAndRotation.posX = startposX + size_posX * (flameforCompletion/size_flame);
-        posAndRotation.posY = startposY + size_posY * (flameforCompletion/size_flame);
-        posAndRotation.posZ = startposZ + size_posZ * (flameforCompletion/size_flame);
+        HMGGunParts_Motion_PosAndRotation posAndRotation = new HMGGunParts_Motion_PosAndRotation(startposX + size_posX * (flameforCompletion/size_flame),
+                                                                                                        startposY + size_posY * (flameforCompletion/size_flame),
+                                                                                                        startposZ + size_posZ * (flameforCompletion/size_flame),
+                                                                                                        startrotationX + size_rotationX * (flameforCompletion/size_flame),
+                                                                                                        startrotationY + size_rotationY * (flameforCompletion/size_flame),
+                                                                                                        startrotationZ + size_rotationZ * (flameforCompletion/size_flame));
         return posAndRotation;
     }
 }

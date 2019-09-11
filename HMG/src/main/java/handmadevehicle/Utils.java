@@ -467,6 +467,12 @@ public class Utils {
     public static Vec3 getMinecraftVecObj(Vector3d invec){
         return invec == null ? null : Vec3.createVectorHelper(invec.x,invec.y,invec.z);
     }
+    public static Vec3 javaxLikeVec3SUM(Vec3 invec1,Vec3 invec2){
+        return invec1.addVector(invec2.xCoord,invec2.yCoord,invec2.zCoord);
+    }
+    public static Vector3d getjavaxVecObj(Vec3 invec){
+        return invec == null ? null : new Vector3d(invec.xCoord,invec.yCoord,invec.zCoord);
+    }
     public static double getDistanceSq(Vector3d a,Vector3d b){
         a = new Vector3d(a);
         b = new Vector3d(b);

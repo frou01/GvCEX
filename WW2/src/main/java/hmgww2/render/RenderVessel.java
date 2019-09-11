@@ -4,7 +4,7 @@ import hmgww2.entity.EntityBases_Ship;
 import handmadevehicle.entity.parts.IMultiTurretVehicle;
 import handmadevehicle.entity.parts.ITank;
 import handmadevehicle.entity.parts.ModifiedBoundingBox;
-import handmadevehicle.entity.parts.logics.TankBaseLogic;
+import handmadevehicle.entity.parts.logics.TankBaseLogicLogic;
 import handmadevehicle.entity.parts.turrets.TurretObj;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.Entity;
@@ -49,7 +49,7 @@ public class RenderVessel extends Render {
 			GL11.glTranslatef((float) p_76986_2_, (float) p_76986_4_, (float) p_76986_6_);
 			GL11.glRotatef(180F, 0.0F, 1.0F, 0.0F);
 			GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-			TankBaseLogic baseLogic = (TankBaseLogic) ((ITank) entity).getBaseLogic();
+			TankBaseLogicLogic baseLogic = (TankBaseLogicLogic) ((ITank) entity).getBaseLogic();
 			GL11.glRotatef(180.0F - (baseLogic.bodyrotationYaw + (baseLogic.bodyrotationYaw - baseLogic.prevbodyrotationYaw) * partialTicks), 0.0F, 1.0F, 0.0F);
 			GL11.glRotatef(baseLogic.bodyrotationPitch, 1.0F, 0.0F, 0.0F);
 			GL11.glRotatef(baseLogic.bodyrotationRoll, 0.0F, 0.0F, 1.0F);

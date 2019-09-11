@@ -6,7 +6,7 @@ import handmadeguns.network.PacketSpawnParticle;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
 
-import static handmadeguns.HandmadeGunsCore.proxy;
+import static handmadeguns.HandmadeGunsCore.HMG_proxy;
 
 public class HMGEntityBulletRocket extends HMGEntityBulletExprode implements IEntityAdditionalSpawnData
 {
@@ -47,7 +47,7 @@ public class HMGEntityBulletRocket extends HMGEntityBulletExprode implements IEn
 			packet.scale = smokeWidth;
 			packet.fuse = smoketime;
 			if (smokeglow) packet.id += 100;
-			proxy.spawnParticles(packet);
+			HMG_proxy.spawnParticles(packet);
 		}
 	}
 }

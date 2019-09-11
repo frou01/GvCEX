@@ -7,7 +7,7 @@ import hmggvcmob.entity.EntityMGAX55;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
 
-import static handmadeguns.HandmadeGunsCore.proxy;
+import static handmadeguns.HandmadeGunsCore.HMG_proxy;
 
 public class GVCHandleMGControl implements IMessageHandler<GVCPacketMGControl, IMessage> {
     @Override
@@ -18,8 +18,8 @@ public class GVCHandleMGControl implements IMessageHandler<GVCPacketMGControl, I
         if(ctx.side.isServer()) {
             world = ctx.getServerHandler().playerEntity.worldObj;
         }else{
-            clientplayer = proxy.getEntityPlayerInstance();
-            world = proxy.getCilentWorld();
+            clientplayer = HMG_proxy.getEntityPlayerInstance();
+            world = HMG_proxy.getCilentWorld();
         }
         if(world != null) {
             Entity entity = world.getEntityByID(message.targetID);

@@ -3,45 +3,45 @@ package handmadeguns.client.render;
 import java.util.ArrayList;
 
 public class HMGGunParts {
+    public boolean rotateTypeIsVector = false;
     public String partsname;
     public boolean isLarm;
     public boolean isRarm;
     public ArrayList<HMGGunParts> childs = new ArrayList<HMGGunParts>();
     public ArrayList<Boolean> current_magazineType = null;
     public ArrayList<Boolean> select_magazineType = null;
-    public boolean isfounder;
     public HMGGunParts mother;
     public int motherIndex;
 
-    private HMGGunParts_Motion_PosAndRotation defaultPosAndRotation;
-    private HMGGunParts_Motion_PosAndRotation defaultPosAndRotation_ForOffset = new HMGGunParts_Motion_PosAndRotation();
+    private HMGGunParts_Motion_PosAndRotation rotCenterAndRotation;
+    private HMGGunParts_Motion_PosAndRotation defaultPosAndRotation_ForOffset = new HMGGunParts_Motion_PosAndRotation(0,0,0,0,0,0);
 
     public boolean rendering_Def;
+    public boolean rendering_Ads;
+    public boolean rendering_Recoil;
+    public boolean rendering_Cock;
+    public boolean rendering_Reload;
 
     private HMGGunParts_Motion_PosAndRotation adsPosAndRotation;
 
-    boolean rendering_Ads;
 
     private HMGGunParts_Motion_PosAndRotation recoilPosAndRotation;
-
-    boolean rendering_Recoil;
+    
 
     private HMGGunParts_Motion_PosAndRotation cockPosAndRotation;
-
-    boolean rendering_Cock;
+    
 
     private HMGGunParts_Motion_PosAndRotation reloadPosAndRotation;
-
-    boolean rendering_Reload;
+    
 
     private HMGGunParts_Motion_PosAndRotation reloadPosAndRotation_Arm;
 
     private HMGGunParts_Motion_PosAndRotation bulletPosAndRotation;
-
-    int Maximum_number_of_bullets;//�ő僋�[�v��
+    
+    public int Maximum_number_of_bullets;//�ő僋�[�v��
     //�e���Ń��[�v�����邪1200���Ƃ���LMG�ł������������΂����ƂɂȂ�̂ő΍�
-    boolean isavatar;
-    boolean isbullet;
+    public boolean isavatar;
+    public boolean isbullet;
 
     public boolean isattachpart;
     public boolean isscope;
@@ -70,17 +70,17 @@ public class HMGGunParts {
 
 
     private HMGGunParts_Motions oncockmotions;
-    boolean                     hasMotionCock;
+    public boolean                     hasMotionCock;
     private HMGGunParts_Motions onrecoilmotions;
-    boolean                     hasMotionRecoil;
+    public boolean                     hasMotionRecoil;
     private HMGGunParts_Motions onreloadmotions;
-    boolean                     hasMotionReload;
+    public boolean                     hasMotionReload;
     private HMGGunParts_Motions baseYawInfo;
-    boolean                     hasbaseYawInfo;
+    public boolean                     hasbaseYawInfo;
     private HMGGunParts_Motions basePitchInfo;
-    boolean                     hasbasePitchInfo;
+    public boolean                     hasbasePitchInfo;
     private HMGGunParts_Motions bulletpositions;
-    boolean                     isbelt;
+    public boolean                     isbelt;
 
     public HMGGunParts(){
         oncockmotions = new HMGGunParts_Motions();
@@ -96,25 +96,32 @@ public class HMGGunParts {
         if(partsname.equals("Rarm"))isRarm=true;
         this.partsname = partsname;
     }
-    HMGGunParts_Motion_PosAndRotation getRenderinfDefault_offset(){
+    
+    public HMGGunParts(String string, int motherID, HMGGunParts mother) {
+        this(string);
+        this.mother = mother;
+        this.motherIndex = motherID;
+    }
+    
+    public HMGGunParts_Motion_PosAndRotation getRenderinfDefault_offset(){
         return defaultPosAndRotation_ForOffset;
     }
-    HMGGunParts_Motion_PosAndRotation getRenderinfOfDef(){
-        return defaultPosAndRotation;
+    public HMGGunParts_Motion_PosAndRotation getRenderinfCenter(){
+        return rotCenterAndRotation;
     }
     public HMGGunParts_Motion_PosAndRotation getRenderinfOfADS(){
         return adsPosAndRotation;
     }
-    HMGGunParts_Motion_PosAndRotation getRenderinfOfRecoil(){
+    public HMGGunParts_Motion_PosAndRotation getRenderinfOfRecoil(){
         return recoilPosAndRotation;
     }
-    HMGGunParts_Motion_PosAndRotation getRenderinfOfCock(){
+    public HMGGunParts_Motion_PosAndRotation getRenderinfOfCock(){
         return cockPosAndRotation;
     }
-    HMGGunParts_Motion_PosAndRotation getRenderinfOfReload(){
+    public HMGGunParts_Motion_PosAndRotation getRenderinfOfReload(){
         return reloadPosAndRotation;
     }
-    HMGGunParts_Motion_PosAndRotation getRenderinfOfBullet(){
+    public HMGGunParts_Motion_PosAndRotation getRenderinfOfBullet(){
         return bulletPosAndRotation;
     }
     public HMGGunParts_Motion_PosAndRotation getcockmotion(float flame){
@@ -136,72 +143,32 @@ public class HMGGunParts {
         return bulletpositions.getpartsMotion(flame);
     }
     public void AddRenderinfDef(float centerX,float centerY,float centerZ,float rotationX,float rotationY,float rotationZ){
-        defaultPosAndRotation = new HMGGunParts_Motion_PosAndRotation();
-        defaultPosAndRotation.posX      =centerX;
-        defaultPosAndRotation.posY      =centerY;
-        defaultPosAndRotation.posZ      =centerZ;
-        defaultPosAndRotation.rotationX =rotationX;
-        defaultPosAndRotation.rotationY =rotationY;
-        defaultPosAndRotation.rotationZ =rotationZ;
+        rotCenterAndRotation = new HMGGunParts_Motion_PosAndRotation(centerX,centerY,centerZ,rotationX,rotationY,rotationZ);
+    }
+    public void AddRenderinfDef(float centerX,float centerY,float centerZ,float VectorX,float VectorY,float VectorZ,float rotationAmount){
+        rotCenterAndRotation = new HMGGunParts_Motion_PosAndRotation(centerX,centerY,centerZ,VectorX,VectorY,VectorZ,rotationAmount);
     }
     public void AddRenderinfDefoffset(float offsetx,float offsety,float offsetz,float rotationX,float rotationY,float rotationZ){
-        defaultPosAndRotation_ForOffset = new HMGGunParts_Motion_PosAndRotation();
-        defaultPosAndRotation_ForOffset.posX      =offsetx;
-        defaultPosAndRotation_ForOffset.posY      =offsety;
-        defaultPosAndRotation_ForOffset.posZ      =offsetz;
-        defaultPosAndRotation_ForOffset.rotationX =rotationX;
-        defaultPosAndRotation_ForOffset.rotationY =rotationY;
-        defaultPosAndRotation_ForOffset.rotationZ =rotationZ;
+        defaultPosAndRotation_ForOffset = new HMGGunParts_Motion_PosAndRotation(offsetx,offsety,offsetz,rotationX,rotationY,rotationZ);
     }
     public void AddRenderinfADS(float offsetX,float offsetY,float offsetZ,float rotationX,float rotationY,float rotationZ){
-        adsPosAndRotation = new HMGGunParts_Motion_PosAndRotation();
-        adsPosAndRotation.posX      =offsetX;
-        adsPosAndRotation.posY      =offsetY;
-        adsPosAndRotation.posZ      =offsetZ;
-        adsPosAndRotation.rotationX =rotationX;
-        adsPosAndRotation.rotationY =rotationY;
-        adsPosAndRotation.rotationZ =rotationZ;
+        adsPosAndRotation = new HMGGunParts_Motion_PosAndRotation(offsetX,offsetY,offsetZ,rotationX,rotationY,rotationZ);
         rendering_Ads = true;
     }
     public void AddRenderinfCock(float offsetX,float offsetY,float offsetZ,float rotationX,float rotationY,float rotationZ){
-        cockPosAndRotation = new HMGGunParts_Motion_PosAndRotation();
-        cockPosAndRotation.posX      =offsetX;
-        cockPosAndRotation.posY      =offsetY;
-        cockPosAndRotation.posZ      =offsetZ;
-        cockPosAndRotation.rotationX =rotationX;
-        cockPosAndRotation.rotationY =rotationY;
-        cockPosAndRotation.rotationZ =rotationZ;
+        cockPosAndRotation = new HMGGunParts_Motion_PosAndRotation(offsetX,offsetY,offsetZ,rotationX,rotationY,rotationZ);
         rendering_Cock = true;
     }
     public void AddRenderinfReload(float offsetX,float offsetY,float offsetZ,float rotationX,float rotationY,float rotationZ){
-        reloadPosAndRotation = new HMGGunParts_Motion_PosAndRotation();
-        reloadPosAndRotation.posX      =offsetX;
-        reloadPosAndRotation.posY      =offsetY;
-        reloadPosAndRotation.posZ      =offsetZ;
-        reloadPosAndRotation.rotationX =rotationX;
-        reloadPosAndRotation.rotationY =rotationY;
-        reloadPosAndRotation.rotationZ =rotationZ;
+        reloadPosAndRotation = new HMGGunParts_Motion_PosAndRotation(offsetX,offsetY,offsetZ,rotationX,rotationY,rotationZ);
         rendering_Reload = true;
     }
     public void AddRenderinfRecoil(float offsetX,float offsetY,float offsetZ,float rotationX,float rotationY,float rotationZ){
-        recoilPosAndRotation = new HMGGunParts_Motion_PosAndRotation();
-        recoilPosAndRotation.posX      =offsetX;
-        recoilPosAndRotation.posY      =offsetY;
-        recoilPosAndRotation.posZ      =offsetZ;
-        recoilPosAndRotation.rotationX =rotationX;
-        recoilPosAndRotation.rotationY =rotationY;
-        recoilPosAndRotation.rotationZ =rotationZ;
+        recoilPosAndRotation = new HMGGunParts_Motion_PosAndRotation(offsetX,offsetY,offsetZ,rotationX,rotationY,rotationZ);
         rendering_Recoil = true;
     }
     public void AddRenderinfBullet(float offsetX,float offsetY,float offsetZ,float rotationX,float rotationY,float rotationZ){
-        //��Ɏc�e�����ݒ�l�ŉ�]�y�шړ����s���`�悷��B
-        bulletPosAndRotation = new HMGGunParts_Motion_PosAndRotation();
-        bulletPosAndRotation.posX      =offsetX;
-        bulletPosAndRotation.posY      =offsetY;
-        bulletPosAndRotation.posZ      =offsetZ;
-        bulletPosAndRotation.rotationX =rotationX;
-        bulletPosAndRotation.rotationY =rotationY;
-        bulletPosAndRotation.rotationZ =rotationZ;
+        bulletPosAndRotation = new HMGGunParts_Motion_PosAndRotation(offsetX,offsetY,offsetZ,rotationX,rotationY,rotationZ);
         isbullet = true;
     }
     public void AddMotionKeyRecoil(int   startflame,
@@ -459,7 +426,7 @@ public class HMGGunParts {
         bulletpositions.addmotion(motion);
         isbelt = true;
     }
-
+    
     public void setIsbullet(boolean isbullet,int number_of_bullets){
         this.isavatar = isbullet;
         this.Maximum_number_of_bullets = number_of_bullets;

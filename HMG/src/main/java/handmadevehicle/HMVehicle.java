@@ -11,9 +11,10 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
+import handmadeguns.command.HMG_CommandReloadparm;
 import handmadevehicle.Items.ItemWrench;
-import handmadevehicle.entity.EntityVehicle_Plane;
-import handmadevehicle.entity.EntityVehicle_Tank;
+import handmadevehicle.command.HMV_CommandReloadparm;
+import handmadevehicle.entity.EntityVehicle;
 import handmadevehicle.events.HMVRenderSomeEvent;
 import handmadevehicle.events.HMV_Event;
 import net.minecraft.client.Minecraft;
@@ -27,6 +28,8 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 
+import static handmadevehicle.CMProxy.hmv_commandReloadparm;
+
 
 @Mod(
 		modid	= "HMVehicle",
@@ -36,7 +39,7 @@ import java.util.HashMap;
 )
 public class HMVehicle {
 	@SidedProxy(clientSide = "handmadevehicle.CLProxy", serverSide = "handmadevehicle.CMProxy")
-	public static CMProxy proxy_HMVehicle;
+	public static CMProxy HMV_Proxy;
 	@Mod.Instance("HMVehicle")
 	public static HMVehicle INSTANCE;
 
@@ -60,7 +63,7 @@ public class HMVehicle {
 		lconf.load();
 		lconf.save();
 		HMVPacketHandler.init();
-		File packdir = new File(proxy_HMVehicle.ProxyFile(), "handmadeVehicles_Packs");
+		File packdir = new File(HMV_Proxy.ProxyFile(), "handmadeVehicles_Packs");
 		packdir.mkdirs();
 		{
 			
@@ -101,8 +104,7 @@ public class HMVehicle {
 	@EventHandler
 	public void init(FMLInitializationEvent pEvent) {
 		int id = 0;
-		EntityRegistry.registerModEntity(EntityVehicle_Plane.class , "HMVVehicle_Air" , id++ , this , 250, 3, true);
-		EntityRegistry.registerModEntity(EntityVehicle_Tank.class , "HMVVehicle_Land" , id++ , this , 250, 3, true);
+		EntityRegistry.registerModEntity(EntityVehicle.class , "HMVVehicle" , id++ , this , 250, 1, true);
 		itemWrench = new ItemWrench();
 		GameRegistry.registerItem(itemWrench,"Wrench");
 		itemWrench.setUnlocalizedName("Wrench");
@@ -113,7 +115,7 @@ public class HMVehicle {
 			FMLCommonHandler.instance().bus().register(event);
 		}
 		
-		File packdir = new File(proxy_HMVehicle.ProxyFile(), "handmadeVehicles_Packs");
+		File packdir = new File(HMV_Proxy.ProxyFile(), "handmadeVehicles_Packs");
 		packdir.mkdirs();
 		{
 			
@@ -154,7 +156,7 @@ public class HMVehicle {
 				for (int num = 0; num < fileVehicle.length; num++) {
 					if (fileVehicle[num].isFile()) {
 						try {
-							AddNewVehicle.load(pEvent.getSide().isClient(), fileVehicle[num]);
+							new AddNewVehicle().load(pEvent.getSide().isClient(), fileVehicle[num]);
 						} catch (ModelFormatException e) {
 							e.printStackTrace();
 						}
@@ -169,5 +171,9 @@ public class HMVehicle {
 		HMV_Event hmv_event = new HMV_Event();
 		FMLCommonHandler.instance().bus().register(hmv_event);
 		MinecraftForge.EVENT_BUS.register(hmv_event);
+	}
+	@EventHandler
+	public void serverStarting(FMLServerStartingEvent event){
+		event.registerServerCommand(hmv_commandReloadparm);
 	}
 }

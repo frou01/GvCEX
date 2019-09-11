@@ -17,9 +17,7 @@ import handmadeguns.network.PacketSpawnParticle;
 import handmadeguns.client.render.*;
 import handmadeguns.tile.TileMounter;
 import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.settings.GameSettings;
-import net.minecraft.client.shader.Framebuffer;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -39,7 +37,7 @@ import cpw.mods.fml.client.registry.RenderingRegistry;
 
 import org.lwjgl.input.Mouse;
 
-import static handmadeguns.HandmadeGunsCore.proxy;
+import static handmadeguns.HandmadeGunsCore.HMG_proxy;
 
 public class ClientProxyHMG extends CommonSideProxyHMG {
 	public static final KeyBinding Reload = new KeyBinding("Reload Magazine", Keyboard.KEY_R, "HandmadeGuns");
@@ -175,42 +173,42 @@ public class ClientProxyHMG extends CommonSideProxyHMG {
 				//RenderingRegistry.registerEntityRenderingHandler(EntityPlayer.class, new HMGRenderPlayer());
 			}
 			try {
-				equippedProgress = ReflectionHelper.findField(proxy.getMCInstance().entityRenderer.itemRenderer.getClass(), "field_78454_c");
+				equippedProgress = ReflectionHelper.findField(HMG_proxy.getMCInstance().entityRenderer.itemRenderer.getClass(), "field_78454_c");
 			} catch (Exception e) {
 				e.printStackTrace();
 				try {
-					equippedProgress = ReflectionHelper.findField(proxy.getMCInstance().entityRenderer.itemRenderer.getClass(), "equippedProgress");
+					equippedProgress = ReflectionHelper.findField(HMG_proxy.getMCInstance().entityRenderer.itemRenderer.getClass(), "equippedProgress");
 				} catch (Exception ea) {
 					ea.printStackTrace();
 				}
 			}
 
 			try {
-				prevEquippedProgress = ReflectionHelper.findField(proxy.getMCInstance().entityRenderer.itemRenderer.getClass(), "field_78451_d");
+				prevEquippedProgress = ReflectionHelper.findField(HMG_proxy.getMCInstance().entityRenderer.itemRenderer.getClass(), "field_78451_d");
 			} catch (Exception e) {
 				e.printStackTrace();
 				try {
-					prevEquippedProgress = ReflectionHelper.findField(proxy.getMCInstance().entityRenderer.itemRenderer.getClass(), "prevEquippedProgress");
+					prevEquippedProgress = ReflectionHelper.findField(HMG_proxy.getMCInstance().entityRenderer.itemRenderer.getClass(), "prevEquippedProgress");
 				} catch (Exception ea) {
 					ea.printStackTrace();
 				}
 			}
 			try {
-				itemToRender = ReflectionHelper.findField(proxy.getMCInstance().entityRenderer.itemRenderer.getClass(), "field_78453_b");
+				itemToRender = ReflectionHelper.findField(HMG_proxy.getMCInstance().entityRenderer.itemRenderer.getClass(), "field_78453_b");
 			} catch (Exception e) {
 				e.printStackTrace();
 				try {
-					itemToRender = ReflectionHelper.findField(proxy.getMCInstance().entityRenderer.itemRenderer.getClass(), "itemToRender");
+					itemToRender = ReflectionHelper.findField(HMG_proxy.getMCInstance().entityRenderer.itemRenderer.getClass(), "itemToRender");
 				} catch (Exception ea) {
 					ea.printStackTrace();
 				}
 			}
 			try {
-				rightClickDelayTimer = ReflectionHelper.findField(proxy.getMCInstance().getClass(), "field_71467_ac");
+				rightClickDelayTimer = ReflectionHelper.findField(HMG_proxy.getMCInstance().getClass(), "field_71467_ac");
 			} catch (Exception e) {
 				e.printStackTrace();
 				try {
-					rightClickDelayTimer = ReflectionHelper.findField(proxy.getMCInstance().getClass(), "rightClickDelayTimer");
+					rightClickDelayTimer = ReflectionHelper.findField(HMG_proxy.getMCInstance().getClass(), "rightClickDelayTimer");
 				} catch (Exception ea) {
 					ea.printStackTrace();
 				}
@@ -233,12 +231,12 @@ public class ClientProxyHMG extends CommonSideProxyHMG {
     @Override
 	public void force_render_item_position(ItemStack itemStack,int i){
 		try {
-			Object obj = itemToRender.get(proxy.getMCInstance().entityRenderer.itemRenderer);
+			Object obj = itemToRender.get(HMG_proxy.getMCInstance().entityRenderer.itemRenderer);
 			if(beforeSlot == i && obj != null && obj instanceof ItemStack && ((ItemStack)obj).getItem() instanceof HMGItem_Unified_Guns) {
-				equippedProgress.set(proxy.getMCInstance().entityRenderer.itemRenderer, 1);
-				prevEquippedProgress.set(proxy.getMCInstance().entityRenderer.itemRenderer, 1);
-				if (itemToRender.get(proxy.getMCInstance().entityRenderer.itemRenderer) != itemStack) {
-					itemToRender.set(proxy.getMCInstance().entityRenderer.itemRenderer, itemStack);
+				equippedProgress.set(HMG_proxy.getMCInstance().entityRenderer.itemRenderer, 1);
+				prevEquippedProgress.set(HMG_proxy.getMCInstance().entityRenderer.itemRenderer, 1);
+				if (itemToRender.get(HMG_proxy.getMCInstance().entityRenderer.itemRenderer) != itemStack) {
+					itemToRender.set(HMG_proxy.getMCInstance().entityRenderer.itemRenderer, itemStack);
 				}
 			}else {
 				beforeSlot = i;
@@ -253,7 +251,7 @@ public class ClientProxyHMG extends CommonSideProxyHMG {
 	@Override
 	public void resetRightclicktimer(){
 		try {
-			rightClickDelayTimer.set(proxy.getMCInstance(), 0);
+			rightClickDelayTimer.set(HMG_proxy.getMCInstance(), 0);
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		}

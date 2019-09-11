@@ -22,27 +22,27 @@ public class EntityUSSR_Fighter extends EntityUSSR_FighterBase
 //		((ModifiedBoundingBox)this.boundingBox).updateOBB(this.posX,this.posY,this.posZ);
 	    ignoreFrustumCheck = true;
 	    armor = 5;
-	    baseLogic.planeInfo.throttle_Max = 4.0f;
-	    baseLogic.planeInfo.rollspeed = 0.7f;
-	    baseLogic.planeInfo.pitchspeed = 0.4f;
-	    baseLogic.planeInfo.yawspeed = 0.1f;
-	    baseLogic.planeInfo.maxDive = 60;
-	    baseLogic.planeInfo.startDive = 30;
-	    baseLogic.planeInfo.maxClimb = -25;
-	    baseLogic.planeInfo.maxbank = 50;
-	    baseLogic.planeInfo.soundname = "hmgww2:hmgww2.sound_pera";
+	    baseLogic.prefab_vehicle.throttle_Max = 4.0f;
+	    baseLogic.prefab_vehicle.rollspeed = 0.7f;
+	    baseLogic.prefab_vehicle.pitchspeed = 0.4f;
+	    baseLogic.prefab_vehicle.yawspeed = 0.1f;
+	    baseLogic.prefab_vehicle.maxDive = 60;
+	    baseLogic.prefab_vehicle.startDive = 30;
+	    baseLogic.prefab_vehicle.maxClimb = -25;
+	    baseLogic.prefab_vehicle.maxbank = 50;
+	    baseLogic.prefab_vehicle.soundname = "hmgww2:hmgww2.sound_pera";
 	    
-	    baseLogic.planeInfo.camerapos = new double[]{0,1.711,-0.4223};
-	    baseLogic.planeInfo.rotcenter = new double[]{0,1.1,0};
+	    baseLogic.prefab_vehicle.camerapos = new double[]{0,1.711,-0.4223};
+	    baseLogic.prefab_vehicle.rotcenter = new double[]{0,1.1,0};
 	    baseLogic.riddenByEntities = new Entity[1];
 	    baseLogic.seatInfos = new SeatInfo[1];
 	    baseLogic.seatInfos[0] = new SeatInfo();
 	    baseLogic.seatInfos_zoom[0] = new SeatInfo();
-	    baseLogic.seatInfos[0].pos = baseLogic.planeInfo.camerapos;
-	    baseLogic.seatInfos_zoom[0].pos = baseLogic.planeInfo.camerapos;
+	    baseLogic.seatInfos[0].pos = baseLogic.prefab_vehicle.camerapos;
+	    baseLogic.seatInfos_zoom[0].pos = baseLogic.prefab_vehicle.camerapos;
 	
 	    baseLogic.onground_pitch = -12.08f;
-	    baseLogic.planeInfo.useMain_withSub = true;
+	    baseLogic.prefab_vehicle.useMain_withSub = true;
 	    baseLogic.mainTurret = new TurretObj(worldObj);
 	    {
 		    baseLogic.mainTurret.onMotherPos = new Vector3d(0,0,0);

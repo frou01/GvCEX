@@ -18,30 +18,30 @@ public class EntityUSA_FighterA extends EntityUSA_FighterBase
 //		proxy.replaceBoundingbox(this,nboundingbox);
 //		((ModifiedBoundingBox)this.boundingBox).updateOBB(this.posX,this.posY,this.posZ);
 		ignoreFrustumCheck = true;
-		baseLogic.planeInfo.throttle_gearDown = 1.7f;
-		baseLogic.planeInfo.throttle_Max = 3.0f;
-		baseLogic.planeInfo.rollspeed = 0.4f;
-		baseLogic.planeInfo.pitchspeed = 0.3f;
-		baseLogic.planeInfo.yawspeed = 0.15f;
-		baseLogic.planeInfo.maxDive = 80;
-		baseLogic.planeInfo.throttledown_onDive = true;
-		baseLogic.planeInfo.Dive_bombing = true;
-		baseLogic.planeInfo.startDive = 30;
-		baseLogic.planeInfo.cruiseALT = 45;
-		baseLogic.planeInfo.minALT = 30;
-		baseLogic.planeInfo.maxClimb = -25;
-		baseLogic.planeInfo.maxbank = 60;
-		baseLogic.planeInfo.soundname = "hmgww2:hmgww2.sound_pera";
+		baseLogic.prefab_vehicle.throttle_gearDown = 1.7f;
+		baseLogic.prefab_vehicle.throttle_Max = 3.0f;
+		baseLogic.prefab_vehicle.rollspeed = 0.4f;
+		baseLogic.prefab_vehicle.pitchspeed = 0.3f;
+		baseLogic.prefab_vehicle.yawspeed = 0.15f;
+		baseLogic.prefab_vehicle.maxDive = 80;
+		baseLogic.prefab_vehicle.throttledown_onDive = true;
+		baseLogic.prefab_vehicle.Dive_bombing = true;
+		baseLogic.prefab_vehicle.startDive = 30;
+		baseLogic.prefab_vehicle.cruiseALT = 45;
+		baseLogic.prefab_vehicle.minALT = 30;
+		baseLogic.prefab_vehicle.maxClimb = -25;
+		baseLogic.prefab_vehicle.maxbank = 60;
+		baseLogic.prefab_vehicle.soundname = "hmgww2:hmgww2.sound_pera";
 		
-		baseLogic.planeInfo.camerapos = new double[]{0,1.9,0};
-		baseLogic.planeInfo.rotcenter = new double[]{0,1.5,0};
+		baseLogic.prefab_vehicle.camerapos = new double[]{0,1.9,0};
+		baseLogic.prefab_vehicle.rotcenter = new double[]{0,1.5,0};
 		
 		baseLogic.onground_pitch = -10;
 		TurretObj cannon3 = new TurretObj(worldObj);
 		{
 			{
 				cannon3.onMotherPos = new Vector3d(0,0,0);
-				cannon3.motherRotCenter = new Vector3d(baseLogic.planeInfo.rotcenter);
+				cannon3.motherRotCenter = new Vector3d(baseLogic.prefab_vehicle.rotcenter);
 				cannon3.cannonPos = new Vector3d(1.4,0.6,-2);
 				cannon3.turretspeedY = 5;
 				cannon3.turretspeedP = 8;
@@ -66,7 +66,7 @@ public class EntityUSA_FighterA extends EntityUSA_FighterBase
 			{
 				TurretObj cannon4 = new TurretObj(worldObj);
 				cannon4.onMotherPos = new Vector3d(0,0,0);
-				cannon4.motherRotCenter = new Vector3d(baseLogic.planeInfo.rotcenter);
+				cannon4.motherRotCenter = new Vector3d(baseLogic.prefab_vehicle.rotcenter);
 				cannon4.cannonPos = new Vector3d(-1.4,0.6,-2);
 				cannon4.turretspeedY = 5;
 				cannon4.turretspeedP = 8;
@@ -94,7 +94,7 @@ public class EntityUSA_FighterA extends EntityUSA_FighterBase
 		baseLogic.mainTurret = new TurretObj(worldObj);
 		{
 			baseLogic.mainTurret.onMotherPos = new Vector3d(0,0,0);
-			baseLogic.mainTurret.motherRotCenter = new Vector3d(baseLogic.planeInfo.rotcenter);
+			baseLogic.mainTurret.motherRotCenter = new Vector3d(baseLogic.prefab_vehicle.rotcenter);
 			baseLogic.mainTurret.cannonPos = new Vector3d(0,-0.2,-2);
 			baseLogic.mainTurret.turretspeedY = 5;
 			baseLogic.mainTurret.turretspeedP = 8;

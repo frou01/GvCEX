@@ -2,7 +2,7 @@ package hmgww2.entity;
 
 
 import hmggvcmob.ai.AITankAttack;
-import handmadevehicle.entity.parts.logics.TankBaseLogic;
+import handmadevehicle.entity.parts.logics.TankBaseLogicLogic;
 import handmadevehicle.entity.parts.turrets.TurretObj;
 import net.minecraft.world.World;
 
@@ -17,7 +17,7 @@ public class EntityUSA_Tank extends EntityUSA_TankBase
 		super(par1World);
 		this.setSize(4F, 2.5F);
 		this.setSize(4F, 2.5F);
-		baseLogic = new TankBaseLogic(this,0.21f,0.4f,false,"hmgww2:hmgww2.M4Engine");
+		baseLogic = new TankBaseLogicLogic(this,0.21f,0.4f,false,"hmgww2:hmgww2.M4Engine");
 		aiTankAttack = new AITankAttack(this,2500,400,10,10);
 		this.tasks.addTask(1,aiTankAttack);
 		playerpos = new Vector3d(-0.5,3.800,0.0);

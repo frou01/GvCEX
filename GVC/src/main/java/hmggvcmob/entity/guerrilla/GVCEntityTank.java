@@ -1,12 +1,12 @@
 package hmggvcmob.entity.guerrilla;
 
 
+import handmadevehicle.entity.parts.logics.TankBaseLogicLogic;
 import hmggvcmob.ai.AITankAttack;
 import handmadevehicle.entity.ExplodeEffect;
 import handmadevehicle.entity.parts.ITank;
 import handmadevehicle.entity.parts.ModifiedBoundingBox;
-import handmadevehicle.entity.parts.logics.LogicsBase;
-import handmadevehicle.entity.parts.logics.TankBaseLogic;
+import handmadevehicle.entity.parts.logics.BaseLogic;
 import handmadevehicle.entity.parts.turrets.TurretObj;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -23,7 +23,7 @@ import javax.vecmath.Vector3d;
 import static hmggvcmob.event.GVCMXEntityEvent.soundedentity;
 import static handmadevehicle.Utils.CalculateGunElevationAngle;
 import static handmadevehicle.Utils.transformVecforMinecraft;
-import static handmadevehicle.HMVehicle.proxy_HMVehicle;
+import static handmadevehicle.HMVehicle.HMV_Proxy;
 import static java.lang.Math.abs;
 
 public class GVCEntityTank extends EntityGBase implements ITank
@@ -51,7 +51,7 @@ public class GVCEntityTank extends EntityGBase implements ITank
 
 	public int mgMagazine;
 	public int mgReloadProgress;
-	public TankBaseLogic baseLogic = new TankBaseLogic(this,0.2f,0.5f,false,"gvcmob:gvcmob.TankTrack");
+	public TankBaseLogicLogic baseLogic = new TankBaseLogicLogic(this,0.2f,0.5f,false,"gvcmob:gvcmob.TankTrack");
 	ModifiedBoundingBox nboundingbox;
 
 	Vector3d playerpos = new Vector3d(-0.525,2.1D,0.0);
@@ -75,7 +75,7 @@ public class GVCEntityTank extends EntityGBase implements ITank
 		nboundingbox = new ModifiedBoundingBox(-20,0,-20,20,20,20,
 				0,1.1,0,3,2.2,9);
 		nboundingbox.rot.set(baseLogic.bodyRot);
-		proxy_HMVehicle.replaceBoundingbox(this,nboundingbox);
+		HMV_Proxy.replaceBoundingbox(this,nboundingbox);
 		nboundingbox.centerRotX = 0;
 		nboundingbox.centerRotY = 0;
 		nboundingbox.centerRotZ = 0;
@@ -135,8 +135,8 @@ public class GVCEntityTank extends EntityGBase implements ITank
 	public void updateRiderPosition() {
 		if (this.riddenByEntity != null) {
 			Vector3d temp = new Vector3d(mainTurret.pos);
-			Vector3d tempplayerPos = new Vector3d(proxy_HMVehicle.iszooming() ? zoomingplayerpos:playerpos);
-			Vector3d playeroffsetter = new Vector3d(0,((worldObj.isRemote && this.riddenByEntity == proxy_HMVehicle.getEntityPlayerInstance()) ? 0:(this.riddenByEntity.getEyeHeight() + this.riddenByEntity.yOffset)),0);
+			Vector3d tempplayerPos = new Vector3d(HMV_Proxy.iszooming() ? zoomingplayerpos:playerpos);
+			Vector3d playeroffsetter = new Vector3d(0,((worldObj.isRemote && this.riddenByEntity == HMV_Proxy.getEntityPlayerInstance()) ? 0:(this.riddenByEntity.getEyeHeight() + this.riddenByEntity.yOffset)),0);
 			tempplayerPos.sub(playeroffsetter);
 			Vector3d temp2 = mainTurret.getGlobalVector_fromLocalVector_onTurretPoint(tempplayerPos);
 			temp.add(temp2);
@@ -468,7 +468,7 @@ public class GVCEntityTank extends EntityGBase implements ITank
 	}
 
 	@Override
-	public LogicsBase getBaseLogic() {
+	public BaseLogic getBaseLogic() {
 		return baseLogic;
 	}
 

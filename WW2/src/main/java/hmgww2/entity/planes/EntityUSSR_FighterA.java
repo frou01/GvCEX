@@ -23,32 +23,32 @@ public class EntityUSSR_FighterA extends EntityUSSR_FighterBase implements IMult
 	    this.setSize(5f, 3f);
 	    ignoreFrustumCheck = true;
 	    armor = 10;
-	    baseLogic.planeInfo.throttle_gearDown = 1.7f;
-	    baseLogic.planeInfo.throttle_Max = 3.0f;
-	    baseLogic.planeInfo.rollspeed = 0.1f;
-	    baseLogic.planeInfo.pitchspeed = 0.2f;
-	    baseLogic.planeInfo.yawspeed = 0.1f;
-	    baseLogic.planeInfo.maxDive = 65;
-	    baseLogic.planeInfo.startDive = 30;
-	    baseLogic.planeInfo.maxClimb = -17;
-	    baseLogic.planeInfo.maxbank = 30;
-	    baseLogic.planeInfo.cruiseALT = 75;
-	    baseLogic.planeInfo.minALT = 10;
-	    baseLogic.planeInfo.sholdUseMain_ToG = true;
-	    baseLogic.planeInfo.soundname = "hmgww2:hmgww2.sound_pera";
-	    baseLogic.planeInfo.pitchsighwidthmax = 20;
-	    baseLogic.planeInfo.pitchsighwidthmin = -20;
-	    baseLogic.planeInfo.yawsightwidthmax = 15;
-	    baseLogic.planeInfo.yawsightwidthmin = -15;
+	    baseLogic.prefab_vehicle.throttle_gearDown = 1.7f;
+	    baseLogic.prefab_vehicle.throttle_Max = 3.0f;
+	    baseLogic.prefab_vehicle.rollspeed = 0.1f;
+	    baseLogic.prefab_vehicle.pitchspeed = 0.2f;
+	    baseLogic.prefab_vehicle.yawspeed = 0.1f;
+	    baseLogic.prefab_vehicle.maxDive = 65;
+	    baseLogic.prefab_vehicle.startDive = 30;
+	    baseLogic.prefab_vehicle.maxClimb = -17;
+	    baseLogic.prefab_vehicle.maxbank = 30;
+	    baseLogic.prefab_vehicle.cruiseALT = 75;
+	    baseLogic.prefab_vehicle.minALT = 10;
+	    baseLogic.prefab_vehicle.sholdUseMain_ToG = true;
+	    baseLogic.prefab_vehicle.soundname = "hmgww2:hmgww2.sound_pera";
+	    baseLogic.prefab_vehicle.pitchsighwidthmax = 20;
+	    baseLogic.prefab_vehicle.pitchsighwidthmin = -20;
+	    baseLogic.prefab_vehicle.yawsightwidthmax = 15;
+	    baseLogic.prefab_vehicle.yawsightwidthmin = -15;
 	
-	    baseLogic.planeInfo.camerapos = new double[]{0,2.528,-0.2805};
-	    baseLogic.planeInfo.rotcenter = new double[]{0,1.5,0};
+	    baseLogic.prefab_vehicle.camerapos = new double[]{0,2.528,-0.2805};
+	    baseLogic.prefab_vehicle.rotcenter = new double[]{0,1.5,0};
 	    baseLogic.riddenByEntities = new Entity[2];
 	    baseLogic.seatInfos = new SeatInfo[2];
 	    baseLogic.seatInfos[0] = new SeatInfo();
 	    baseLogic.seatInfos_zoom[0] = new SeatInfo();
-	    baseLogic.seatInfos[0].pos = baseLogic.planeInfo.camerapos;
-	    baseLogic.seatInfos_zoom[0].pos = baseLogic.planeInfo.camerapos;
+	    baseLogic.seatInfos[0].pos = baseLogic.prefab_vehicle.camerapos;
+	    baseLogic.seatInfos_zoom[0].pos = baseLogic.prefab_vehicle.camerapos;
 	    
 	    
 	

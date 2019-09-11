@@ -3,7 +3,7 @@ package hmggvcmob.block;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import handmadeguns.HMGAddAttachment;
-import handmadeguns.HMGAddGunsNew;
+import handmadeguns.HMGGunMaker;
 import handmadeguns.items.guns.HMGItem_Unified_Guns;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -677,7 +677,7 @@ public class GVCXBlockFriendCamp extends Block{
             Chest2 = (TileEntityChest) world.getTileEntity(i + 9, j + 0, k + 11);
             for (int s = 0; s < 36; ++s){
                 int suro = s;
-                Item gun = (Item) HMGAddGunsNew.Guns.get(new Random().nextInt(HMGAddGunsNew.Guns.size()));
+                Item gun = (Item) HMGGunMaker.Guns.get(new Random().nextInt(HMGGunMaker.Guns.size()));
                 if(cfg_forceunifiedguns){
                     if(gun instanceof HMGItem_Unified_Guns && !((HMGItem_Unified_Guns) gun).gunInfo.isinRoot){
                         gun = null;
@@ -687,7 +687,7 @@ public class GVCXBlockFriendCamp extends Block{
             }
             for (int s = 0; s < 36; ++s){
                 int suro = s;
-                Item gun = (Item) HMGAddGunsNew.Guns.get(new Random().nextInt(HMGAddGunsNew.Guns.size()));
+                Item gun = (Item) HMGGunMaker.Guns.get(new Random().nextInt(HMGGunMaker.Guns.size()));
                 if(cfg_forceunifiedguns){
                     if(gun instanceof HMGItem_Unified_Guns && !((HMGItem_Unified_Guns) gun).gunInfo.isinRoot){
                         gun = null;

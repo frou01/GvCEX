@@ -9,7 +9,7 @@ import net.minecraft.item.Item;
 
 import java.io.File;
 
-import static handmadeguns.HandmadeGunsCore.proxy;
+import static handmadeguns.HandmadeGunsCore.HMG_proxy;
 
 @Mod(
         modid	= "DungeonCreator",
@@ -24,7 +24,7 @@ public class mod_DungeonCreator {
     public static File directory1;
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent pEvent) {
-        directory1 = new File(proxy.ProxyFile(),"mods" + File.separatorChar + "dungeonCreator");
+        directory1 = new File(HMG_proxy.ProxyFile(),"mods" + File.separatorChar + "dungeonCreator");
         directory1.mkdirs();
 
         dangeonSelector	    = new DangeonSetter().setUnlocalizedName("Setter").setTextureName("dungeonCreator:setter");

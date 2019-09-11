@@ -44,7 +44,7 @@ import java.util.List;
 import java.util.Random;
 
 import static handmadeguns.HandmadeGunsCore.islmmloaded;
-import static handmadeguns.HandmadeGunsCore.proxy;
+import static handmadeguns.HandmadeGunsCore.HMG_proxy;
 import static java.lang.Math.abs;
 import static java.lang.StrictMath.toRadians;
 import static net.minecraft.util.MathHelper.wrapAngleTo180_float;
@@ -112,10 +112,10 @@ public class HMGItem_Unified_Guns extends Item {
             par3List.add(EnumChatFormatting.WHITE + "ScopeZoom " + "x" + StatCollector.translateToLocal(scopezoom));
         }
         if(gunInfo.needfix){
-            par3List.add(EnumChatFormatting.WHITE + "cannot handhold Shot. Press " + proxy.getFixkey() + " while pointing block");
+            par3List.add(EnumChatFormatting.WHITE + "cannot handhold Shot. Press " + HMG_proxy.getFixkey() + " while pointing block");
         }else
         if(gunInfo.canfix){
-            par3List.add(EnumChatFormatting.WHITE + "can Fix. Press " + proxy.getFixkey() + " while pointing block");
+            par3List.add(EnumChatFormatting.WHITE + "can Fix. Press " + HMG_proxy.getFixkey() + " while pointing block");
         }
     }
     public void onUpdate(ItemStack itemstack, World world, Entity entity, int i, boolean flag){
@@ -217,20 +217,20 @@ public class HMGItem_Unified_Guns extends Item {
                         }
                         if (world.isRemote) {
                             if (i != -1) {
-                                proxy.force_render_item_position(itemstack, i);
+                                HMG_proxy.force_render_item_position(itemstack, i);
                             }
-                            if (proxy.Reloadkeyispressed()) {
+                            if (HMG_proxy.Reloadkeyispressed()) {
                                 HMGPacketHandler.INSTANCE.sendToServer(new PacketreturnMgazineItem(entity.getEntityId()));
                                 nbt.setInteger("RloadTime", 0);
                             }
-                            if (proxy.Attachmentkeyispressed()) {
+                            if (HMG_proxy.Attachmentkeyispressed()) {
                                 HMGPacketHandler.INSTANCE.sendToServer(new PacketOpenGui(0, entity.getEntityId()));
                             }
-                            if (proxy.lightkeydown()) {
+                            if (HMG_proxy.lightkeydown()) {
                                 nbt.setBoolean("SeekerOpened", !nbt.getBoolean("SeekerOpened"));
                                 HMGPacketHandler.INSTANCE.sendToServer(new PacketSeekerOpen(entity.getEntityId()));
                             }
-                            if (canFixflag && proxy.fixkeydown()) {
+                            if (canFixflag && HMG_proxy.fixkeydown()) {
                                 nbt.setBoolean("HMGfixed", !nbt.getBoolean("HMGfixed"));
                                 HMGPacketHandler.INSTANCE.sendToServer(new PacketFixGun(entity.getEntityId()));
                             }
@@ -238,16 +238,16 @@ public class HMGItem_Unified_Guns extends Item {
                                 if (guntemp.items != null && guntemp.items[4] != null && guntemp.items[4].getItem() instanceof HMGItem_Unified_Guns) {
                                     checkTags(guntemp.items[4]);
                                     if (((HMGItem_Unified_Guns) guntemp.items[4].getItem()).getburstCount(guntemp.items[4].getTagCompound().getInteger("HMGMode")) != -1) {
-                                        if (proxy.Fclick())
+                                        if (HMG_proxy.Fclick())
                                             HMGPacketHandler.INSTANCE.sendToServer(new PacketTriggerUnder(entity.getEntityId()));
-                                    } else if (proxy.Fclick_no_stopper()) {
+                                    } else if (HMG_proxy.Fclick_no_stopper()) {
                                         HMGPacketHandler.INSTANCE.sendToServer(new PacketTriggerUnder(entity.getEntityId()));
                                     }
                                 }
                             }catch (Exception e){
                                 e.printStackTrace();
                             }
-                            if (i != -1 && proxy.Modekeyispressed()) {
+                            if (i != -1 && HMG_proxy.Modekeyispressed()) {
                                 mode++;
                                 if (mode >= gunInfo.burstcount.size() || mode >= gunInfo.rates.size()) {
                                     mode = 0;
@@ -255,7 +255,7 @@ public class HMGItem_Unified_Guns extends Item {
                                 nbt.setInteger("HMGMode", mode);
                                 HMGPacketHandler.INSTANCE.sendToServer(new PacketChangeModeHeldItem(entity, mode));
                             }
-                            if (i != -1 && proxy.ChangeMagazineTypeclick()) {
+                            if (i != -1 && HMG_proxy.ChangeMagazineTypeclick()) {
                                 int selecting = nbt.getInteger("get_selectingMagazine");
                                 selecting++;
                                 if (selecting >= gunInfo.magazine.length) {
@@ -266,10 +266,10 @@ public class HMGItem_Unified_Guns extends Item {
                             }
                             if (gunInfo.canlock) {
                                 if (guntemp.islockingblock) {
-                                    proxy.spawnParticles(new PacketSpawnParticle(guntemp.LockedPosX + 0.5, guntemp.LockedPosY + 0.5, guntemp.LockedPosZ + 0.5, 2));
+                                    HMG_proxy.spawnParticles(new PacketSpawnParticle(guntemp.LockedPosX + 0.5, guntemp.LockedPosY + 0.5, guntemp.LockedPosZ + 0.5, 2));
                                 }
                                 if (guntemp.islockingentity && guntemp.TGT != null) {
-                                    proxy.spawnParticles(new PacketSpawnParticle(guntemp.TGT.posX, guntemp.TGT.posY + guntemp.TGT.height / 2, guntemp.TGT.posZ, 2));
+                                    HMG_proxy.spawnParticles(new PacketSpawnParticle(guntemp.TGT.posX, guntemp.TGT.posY + guntemp.TGT.height / 2, guntemp.TGT.posZ, 2));
                                 }
                             }
                         } else {
@@ -603,7 +603,7 @@ public class HMGItem_Unified_Guns extends Item {
             }
             this.Flash(itemstack, world, entity,nbt);
             entity.getEntityData().setFloat("GunshotLevel", guntemp.soundlevel);
-            proxy.playerSounded(entity);
+            HMG_proxy.playerSounded(entity);
 //            world.playSoundEffect(entity.posX,entity.posY,entity.posZ, sound, soundlevel, soundspeed);
             HMGPacketHandler.INSTANCE.sendToAll(new PacketPlaysound(entity, guntemp.sound, gunInfo.soundspeed, guntemp.soundlevel));
     
@@ -883,7 +883,7 @@ public class HMGItem_Unified_Guns extends Item {
     }
     public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
         if(!gunInfo.needfix||(par1ItemStack.getTagCompound() != null && par1ItemStack.getTagCompound().getBoolean("HMGfixed"))) {
-            proxy.resetRightclicktimer();
+            HMG_proxy.resetRightclicktimer();
             par1ItemStack.getTagCompound().setBoolean("IsTriggered", true);
             par1ItemStack.getTagCompound().setBoolean("set_up", true);
             par1ItemStack.getTagCompound().setInteger("set_up_cnt", 10);

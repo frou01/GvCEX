@@ -10,7 +10,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
-import static handmadeguns.HandmadeGunsCore.proxy;
+import static handmadeguns.HandmadeGunsCore.HMG_proxy;
 
 
 public class MessageCatcher_dropCartridge implements IMessageHandler<PacketDropCartridge, IMessage> {
@@ -27,7 +27,7 @@ public class MessageCatcher_dropCartridge implements IMessageHandler<PacketDropC
             if (ctx.side.isServer()) {
                 world = ctx.getServerHandler().playerEntity.worldObj;
             } else {
-                world = proxy.getCilentWorld();
+                world = HMG_proxy.getCilentWorld();
             }
             try {
                 if (world != null) {

@@ -11,7 +11,7 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 
-import static handmadeguns.HMGAddGunsNew.readFireInfo;
+import static handmadeguns.HMGGunMaker.readFireInfo;
 import static java.lang.Boolean.parseBoolean;
 import static java.lang.Float.parseFloat;
 import static java.lang.Double.parseDouble;
@@ -21,8 +21,6 @@ public class AddWeapon {
 	public static final HashMap<String,Prefab_Turret> prefab_turretHashMap = new HashMap<>();
 	public static void load( boolean isClient, File file){
 		try {
-			String dataName = null;
-			Prefab_Vehicle_Base data = null;
 			//File file = new File(configfile,"hmg_handmadeguns.txt");
 			if (checkBeforeReadfile(file))
 			{
@@ -35,10 +33,10 @@ public class AddWeapon {
 					
 					String[] type = str.split(",");
 					//todo 砲塔設定を読み込み保存しておく。車両追加側ではこのオブジェクトから持ってくる。
-					readFireInfo(prefab_turret.gunInfo,type);
 					switch (type[0]){
 						case "WeaponName":
 							name = type[1];
+							if(prefab_turretHashMap.containsKey(name))prefab_turret = prefab_turretHashMap.get(name);
 							break;
 						case "turretYawCenterpos":
 							prefab_turret.turretYawCenterpos = new Vector3d(parseDouble(type[1]),parseDouble(type[2]),parseDouble(type[3]));
@@ -119,6 +117,7 @@ public class AddWeapon {
 							prefab_turretHashMap.put(name,prefab_turret);
 							break;
 					}
+					readFireInfo(prefab_turret.gunInfo,type);
 					
 				}
 				br.close();  // ファイルを閉じる

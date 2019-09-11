@@ -4,13 +4,13 @@ import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import handmadevehicle.entity.parts.HasBaseLogic;
-import handmadevehicle.entity.parts.logics.LogicsBase;
+import handmadevehicle.entity.parts.logics.BaseLogic;
 import handmadevehicle.entity.parts.logics.MultiRiderLogics;
 import handmadevehicle.packets.HMVPacketChangeSeat;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
 
-import static handmadeguns.HandmadeGunsCore.proxy;
+import static handmadeguns.HandmadeGunsCore.HMG_proxy;
 
 public class HMVHandleChangeSeat implements IMessageHandler<HMVPacketChangeSeat, IMessage> {
 	@Override
@@ -20,12 +20,12 @@ public class HMVHandleChangeSeat implements IMessageHandler<HMVPacketChangeSeat,
 		if(ctx.side.isServer()) {
 			world = ctx.getServerHandler().playerEntity.worldObj;
 		}else{
-			world = proxy.getCilentWorld();
+			world = HMG_proxy.getCilentWorld();
 		}
 		try{
 			Entity targetEntity = world.getEntityByID(message.targetID);
 			if (targetEntity instanceof HasBaseLogic) {
-				LogicsBase ibaseLogic = ((HasBaseLogic) targetEntity).getBaseLogic();
+				BaseLogic ibaseLogic = ((HasBaseLogic) targetEntity).getBaseLogic();
 				if (ibaseLogic instanceof MultiRiderLogics) {
 					Entity[] entities = ((MultiRiderLogics) ibaseLogic).getRiddenEntityList();
 					Entity targetRider = entities[message.currentSeatID];

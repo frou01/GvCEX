@@ -19,13 +19,12 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import handmadeguns.blocks.HMGBlockMounter;
-import handmadeguns.command.CommandReloadparm;
+import handmadeguns.command.HMG_CommandReloadparm;
 import handmadeguns.entity.*;
 import handmadeguns.entity.bullets.*;
 import handmadeguns.event.HMGEventZoom;
 import handmadeguns.event.HMGLivingUpdateEvent;
 import handmadeguns.event.RenderTickSmoothing;
-import handmadeguns.items.GunInfo;
 import handmadeguns.items.HMGItemBullet;
 import handmadeguns.items.guns.HMGItem_Unified_Guns;
 import net.minecraft.block.Block;
@@ -73,7 +72,7 @@ public class HandmadeGunsCore {
 	static Field mcResourcePackRepository;
 	static Field repositoryEntries;
 	@SidedProxy(clientSide = "handmadeguns.ClientProxyHMG", serverSide = "handmadeguns.CommonSideProxyHMG")
-	public static CommonSideProxyHMG proxy;
+	public static CommonSideProxyHMG HMG_proxy;
 	public static final String MOD_ID = "HandmadeGuns";
 	@Mod.Instance("HandmadeGuns")
 	public static HandmadeGunsCore INSTANCE;
@@ -213,8 +212,8 @@ public class HandmadeGunsCore {
 	    }*/
 		// ResourceLocation aa = new ResourceLocation("handmadeguns").getResourceDomain();
 		FMLCommonHandler.instance().bus().register(this);
-		proxy.setuprender();
-		File packdir = new File(proxy.ProxyFile(), "handmadeguns_Packs");
+		HMG_proxy.setuprender();
+		File packdir = new File(HMG_proxy.ProxyFile(), "handmadeguns_Packs");
 		packdir.mkdirs();
 		{
 			File[] packlist = packdir.listFiles();
@@ -386,7 +385,7 @@ public class HandmadeGunsCore {
 					if (filejs != null) {
 						for (int ii = 0; ii < filejs.length; ii++) {
 							if (filejs[ii].isFile()) {
-								File directory111 = new File(proxy.ProxyFile(), "mods" + File.separatorChar + "handmadeguns"
+								File directory111 = new File(HMG_proxy.ProxyFile(), "mods" + File.separatorChar + "handmadeguns"
 										+ File.separatorChar + "assets" + File.separatorChar + "handmadeguns" + File.separatorChar +
 										"scripts" + File.separatorChar + filejs[ii].getName());
 //							File in = new File("C:\\temp\\in.txt");
@@ -409,7 +408,7 @@ public class HandmadeGunsCore {
 					for (int ii = 0; ii < filegun.length; ii++) {
 						if (filegun[ii].isFile()) {
 							try {
-								HMGAddGunsNew.load(direjs, pEvent.getSide().isClient(), filegun[ii]);
+								new HMGGunMaker().load(direjs, pEvent.getSide().isClient(), filegun[ii]);
 							} catch (ModelFormatException e) {
 								e.printStackTrace();
 							}
@@ -586,7 +585,7 @@ public class HandmadeGunsCore {
 		//TODO:INJECT_FUNCTION
 		//AddRecipe
 		String filepath = "mods/handmadeguns/addgun";
-		File packdir = new File(proxy.ProxyFile(), "handmadeguns_Packs");
+		File packdir = new File(HMG_proxy.ProxyFile(), "handmadeguns_Packs");
 		File[] packlist = packdir.listFiles();
 		Arrays.sort(packlist, new Comparator<File>() {
 			public int compare(File file1, File file2){
@@ -603,7 +602,7 @@ public class HandmadeGunsCore {
 						}
 					});
 					for(int count = 0 ; count < recipelist.length ; count++){
-						HMGAddGunsNew.addRecipe(recipelist[count]);
+						HMGGunMaker.addRecipe(recipelist[count]);
 					}
 				}
 
@@ -623,14 +622,14 @@ public class HandmadeGunsCore {
 		//TODO:END_INJECT_FUNCTION--------------------------------------------------------------------------------------------------------------------------------
 
 
-		proxy.reisterRenderers();
-		proxy.registerTileEntity();
-		proxy.InitRendering();
-		proxy.leftclick();
-		proxy.jumped();
-		proxy.Fclick();
-		proxy.ADSclick();
-		proxy.getEntityPlayerInstance();
+		HMG_proxy.reisterRenderers();
+		HMG_proxy.registerTileEntity();
+		HMG_proxy.InitRendering();
+		HMG_proxy.leftclick();
+		HMG_proxy.jumped();
+		HMG_proxy.Fclick();
+		HMG_proxy.ADSclick();
+		HMG_proxy.getEntityPlayerInstance();
 	}
 
 
@@ -681,11 +680,11 @@ public class HandmadeGunsCore {
 				return false;
 			}
 			if(cfg_ADS_Sneaking == 1){
-				return proxy.ADSclick();
+				return HMG_proxy.ADSclick();
 			}else if(cfg_ADS_Sneaking == 2) {
 				return entityplayer.isSneaking();
 			}else{
-				return proxy.ADSclick() || entityplayer.isSneaking();
+				return HMG_proxy.ADSclick() || entityplayer.isSneaking();
 			}
 		}else if(entityplayer instanceof PlacedGunEntity){
 			return true;
@@ -719,7 +718,7 @@ public class HandmadeGunsCore {
 		int knife = 0;
 		@SubscribeEvent
 		public void entitylving(TickEvent e){
-			EntityPlayer entityplayer = proxy.getEntityPlayerInstance();
+			EntityPlayer entityplayer = HMG_proxy.getEntityPlayerInstance();
 
 			knife = 0;
 		}
@@ -749,7 +748,9 @@ public class HandmadeGunsCore {
 
 	@EventHandler
 	public void serverStarting(FMLServerStartingEvent event){
-		event.registerServerCommand(new CommandReloadparm());
+		HMG_CommandReloadparm hmg_commandReloadparm = new HMG_CommandReloadparm();
+		event.registerServerCommand(hmg_commandReloadparm);
+		net.minecraftforge.client.ClientCommandHandler.instance.registerCommand(hmg_commandReloadparm);
 	}
 
 	//TODO:INJ
@@ -763,7 +764,7 @@ public class HandmadeGunsCore {
 		if(file0 != null){
 			for (int var1 = 0 ; var1 < file0.length ; var1++){
 				if (file0[var1].isFile()){
-					File copypath = new File(proxy.ProxyFile(), pathConverter(assetsfilepath + path1 + File.separatorChar + file0[var1].getName()));
+					File copypath = new File(HMG_proxy.ProxyFile(), pathConverter(assetsfilepath + path1 + File.separatorChar + file0[var1].getName()));
 					try {
 						FileUtils.copyFile(file0[var1], copypath);
 					} catch (IOException e) {

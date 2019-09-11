@@ -15,7 +15,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.world.World;
 
-import static handmadeguns.HandmadeGunsCore.proxy;
+import static handmadeguns.HandmadeGunsCore.HMG_proxy;
 
 public class WW2MessageKeyPressedHandler implements IMessageHandler<WW2MessageKeyPressed, IMessage> {
  
@@ -445,7 +445,7 @@ public class WW2MessageKeyPressedHandler implements IMessageHandler<WW2MessageKe
 	    if(ctx.side.isServer()) {
 		    worldObj = ctx.getServerHandler().playerEntity.worldObj;
 	    }else{
-		    worldObj = proxy.getCilentWorld();
+		    worldObj = HMG_proxy.getCilentWorld();
 	    }
 	    if(message.fre != -1) {
 		    Entity targetEntity = worldObj.getEntityByID(message.fre);

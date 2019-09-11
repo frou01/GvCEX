@@ -2,7 +2,6 @@ package DungeonGeneratorBase;
 
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import net.minecraft.item.Item;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.structure.MapGenStructureIO;
@@ -11,7 +10,7 @@ import net.minecraftforge.common.MinecraftForge;
 import java.io.*;
 import java.util.*;
 
-import static handmadeguns.HandmadeGunsCore.proxy;
+import static handmadeguns.HandmadeGunsCore.HMG_proxy;
 
 @Mod(
         modid	= "DungeonGeneratorBase",
@@ -30,7 +29,7 @@ public class mod_DungeonGeneratorBase {
     
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent pEvent) {
-        File packdir = new File(proxy.ProxyFile(), "GVCDungeons_Packs");
+        File packdir = new File(HMG_proxy.ProxyFile(), "GVCDungeons_Packs");
         packdir.mkdirs();
     
         File[] packlist = packdir.listFiles();

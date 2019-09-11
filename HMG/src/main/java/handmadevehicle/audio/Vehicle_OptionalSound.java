@@ -9,7 +9,7 @@ import net.minecraft.util.ResourceLocation;
 
 import javax.vecmath.Vector3d;
 
-import static handmadeguns.HandmadeGunsCore.proxy;
+import static handmadeguns.HandmadeGunsCore.HMG_proxy;
 import static java.lang.Math.sqrt;
 
 @SideOnly(Side.CLIENT)
@@ -49,7 +49,7 @@ public class Vehicle_OptionalSound extends MovingSound
 			this.yPosF = (float)this.attachedEntity.posY;
 			this.zPosF = (float)this.attachedEntity.posZ;
 			double prevdisttoPlayer = disttoPlayer;
-			disttoPlayer = attachedEntity.getDistanceSqToEntity(proxy.getMCInstance().renderViewEntity);
+			disttoPlayer = attachedEntity.getDistanceSqToEntity(HMG_proxy.getMCInstance().renderViewEntity);
 			hasLoopSound.yourSoundIsremain();
 			float soundpitch = 1;
 			this.field_147663_c = 0.0F;
@@ -59,7 +59,7 @@ public class Vehicle_OptionalSound extends MovingSound
 				
 				if(disttoPlayer > volume * volume)volume = (float) (sqrt(disttoPlayer));
 				
-				Vector3d playerPos = new Vector3d(proxy.getMCInstance().renderViewEntity.posX,proxy.getMCInstance().renderViewEntity.posY,proxy.getMCInstance().renderViewEntity.posZ);
+				Vector3d playerPos = new Vector3d(HMG_proxy.getMCInstance().renderViewEntity.posX, HMG_proxy.getMCInstance().renderViewEntity.posY, HMG_proxy.getMCInstance().renderViewEntity.posZ);
 				Vector3d thisPos = new Vector3d(xPosF,yPosF,zPosF);
 				Vector3d toPlayerVec = new Vector3d();
 				toPlayerVec.sub(playerPos,thisPos);

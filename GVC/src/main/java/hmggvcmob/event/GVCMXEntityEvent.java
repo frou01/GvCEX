@@ -182,7 +182,7 @@ public class GVCMXEntityEvent {
 					        pos[1] = aspotobj.pos[1];
 					        pos[2] = aspotobj.pos[2];
 				        }
-				        HandmadeGunsCore.proxy.spawnParticles(new PacketSpawnParticle(pos[0], pos[1], pos[2], 4));
+				        HandmadeGunsCore.HMG_proxy.spawnParticles(new PacketSpawnParticle(pos[0], pos[1], pos[2], 4));
 				        aspotobj.remaintime--;
 //				        System.out.println("debug" + aspotobj.remaintime);
 				        if (aspotobj.remaintime < 0) {

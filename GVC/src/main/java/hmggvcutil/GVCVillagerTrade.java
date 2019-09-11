@@ -10,7 +10,7 @@ import net.minecraft.village.MerchantRecipe;
 import net.minecraft.village.MerchantRecipeList;
 import cpw.mods.fml.common.registry.VillagerRegistry.IVillageTradeHandler;
 
-import static handmadeguns.HMGAddGunsNew.Guns;
+import static handmadeguns.HMGGunMaker.Guns;
 
 public class GVCVillagerTrade implements IVillageTradeHandler {
 

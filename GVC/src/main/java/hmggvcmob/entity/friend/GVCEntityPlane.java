@@ -4,8 +4,8 @@ package hmggvcmob.entity.friend;
 import handmadevehicle.entity.parts.IMultiTurretVehicle;
 import handmadevehicle.entity.parts.IPlane;
 import handmadevehicle.entity.parts.ModifiedBoundingBox;
-import handmadevehicle.entity.parts.logics.LogicsBase;
-import handmadevehicle.entity.parts.logics.PlaneBaseLogic;
+import handmadevehicle.entity.parts.logics.BaseLogic;
+import handmadevehicle.entity.parts.logics.PlaneBaseLogicLogic;
 import handmadevehicle.entity.parts.turrets.TurretObj;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -21,7 +21,7 @@ import static handmadevehicle.Utils.addAllTurret;
 
 public class GVCEntityPlane extends Entity implements IPlane,IMultiTurretVehicle
 {
-	PlaneBaseLogic baseLogic;
+	PlaneBaseLogicLogic baseLogic;
 	
 	
 	public int rocket = 2;
@@ -45,30 +45,31 @@ public class GVCEntityPlane extends Entity implements IPlane,IMultiTurretVehicle
 //		((ModifiedBoundingBox)this.boundingBox).update(this.posX,this.posY,this.posZ);
 		ignoreFrustumCheck = true;
 		this.fireCycle1 = 1;
-		baseLogic = new PlaneBaseLogic(worldObj,this);
+		baseLogic = new PlaneBaseLogicLogic(worldObj,this);
 		
-		baseLogic.planeInfo.speedfactor =    0.0043f;
-		baseLogic.planeInfo.speedfactor_af = 0.002f;
-		baseLogic.planeInfo.liftfactor = 0.04f;
-		baseLogic.planeInfo.flapliftfactor = 0.00005f;
-		baseLogic.planeInfo.flapdragfactor = 0.0000000001f;
-		baseLogic.planeInfo.geardragfactor = 0.000000001f;
-		baseLogic.planeInfo.dragfactor = 0.01f;
-		baseLogic.planeInfo.gravity = 0.049f;
-		baseLogic.planeInfo.stability = 600;
-		baseLogic.planeInfo.stability2 = 0.5f;
-		baseLogic.planeInfo.rotmotion_reduceSpeed = 0.05;
+		baseLogic.prefab_vehicle.speedfactor =    0.0043f;
+		baseLogic.prefab_vehicle.speedfactor_af = 0.002f;
+		baseLogic.prefab_vehicle.liftfactor = 0.04f;
+		baseLogic.prefab_vehicle.flapliftfactor = 0.00005f;
+		baseLogic.prefab_vehicle.flapdragfactor = 0.0000000001f;
+		baseLogic.prefab_vehicle.geardragfactor = 0.000000001f;
+		baseLogic.prefab_vehicle.dragfactor = 0.01f;
+		baseLogic.prefab_vehicle.gravity = 0.049f;
+		baseLogic.prefab_vehicle.stability_roll = 600;
+		baseLogic.prefab_vehicle.stability_motion = 0.5f;
+		baseLogic.prefab_vehicle.rotmotion_reduceSpeed = 0.05;
 		
 		
-		baseLogic.planeInfo.rollspeed = 0.12f;
-		baseLogic.planeInfo.pitchspeed = 0.15f;
-		baseLogic.planeInfo.yawspeed = 0.05f;
-		baseLogic.planeInfo.maxDive = 60;
-		baseLogic.planeInfo.startDive = 30;
-		baseLogic.planeInfo.maxClimb = -22;
-		baseLogic.planeInfo.maxbank = 60;
-		baseLogic.planeInfo.slipresist = 0.01f;
-		baseLogic.planeInfo.throttle_gearDown = 0.25f;
+		baseLogic.prefab_vehicle.rollspeed = 0.12f;
+		baseLogic.prefab_vehicle.pitchspeed = 0.15f;
+		baseLogic.prefab_vehicle.yawspeed = 0.05f;
+		
+		baseLogic.prefab_vehicle.maxDive = 60;
+		baseLogic.prefab_vehicle.startDive = 30;
+		baseLogic.prefab_vehicle.maxClimb = -22;
+		baseLogic.prefab_vehicle.maxbank = 60;
+		baseLogic.prefab_vehicle.slipresist = 0.01f;
+		baseLogic.prefab_vehicle.throttle_gearDown = 0.25f;
 		{
 			TurretObj gun1 = new TurretObj(worldObj);
 			gun1.onMotherPos = new Vector3d(0.04, 0.8659, 0);
@@ -165,13 +166,13 @@ public class GVCEntityPlane extends Entity implements IPlane,IMultiTurretVehicle
 		}
 		
 		
-		baseLogic.mainTurret.motherRotCenter = new Vector3d(baseLogic.planeInfo.rotcenter);
-		baseLogic.subTurret.motherRotCenter = new Vector3d(baseLogic.planeInfo.rotcenter);
+		baseLogic.mainTurret.motherRotCenter = new Vector3d(baseLogic.prefab_vehicle.rotcenter);
+		baseLogic.subTurret.motherRotCenter = new Vector3d(baseLogic.prefab_vehicle.rotcenter);
 		
 		baseLogic.seatInfos[0].pos[0] = 0;
 		baseLogic.seatInfos[0].pos[1] = 1.1;
 		baseLogic.seatInfos[0].pos[2] = 3;
-		baseLogic.planeInfo.displayModernHud = true;
+		baseLogic.prefab_vehicle.displayModernHud = true;
 		ModifiedBoundingBox nboundingbox = new ModifiedBoundingBox(-1.5,0,-1.5,1.5,5,1.5,0,0,-6.27,2.5,5,19);
 		nboundingbox.rot.set(baseLogic.bodyRot);
 		proxy_HMVehicle.replaceBoundingbox(this,nboundingbox);
@@ -368,16 +369,16 @@ public class GVCEntityPlane extends Entity implements IPlane,IMultiTurretVehicle
 //		missile = worldObj.getEntityByID(this.dataWatcher.getWatchableObjectInt(25)) instanceof HMGEntityBulletBase ? (HMGEntityBulletBase) worldObj.getEntityByID(this.dataWatcher.getWatchableObjectInt(25)) :null;
 //		rocket = this.dataWatcher.getWatchableObjectInt(26);
 //		health = this.dataWatcher.getWatchableObjectInt(27);
-//		if (proxy.wclick()) {
+//		if (proxy.throttle_up_click()) {
 //			throttle += 0.05;
 //		}
-//		if (proxy.aclick()) {
+//		if (proxy.yaw_Left_click()) {
 //			yawladder--;
 //		}
-//		if (proxy.sclick()) {
+//		if (proxy.throttle_down_click()) {
 //			throttle -= 0.05;
 //		}
-//		if (proxy.dclick()) {
+//		if (proxy.yaw_Right_click()) {
 //			yawladder++;
 //		}
 //		trigger1 = trigger2 = false;
@@ -441,29 +442,29 @@ public class GVCEntityPlane extends Entity implements IPlane,IMultiTurretVehicle
 ////				if(th<2.5){
 ////					th +=0.1;
 ////				}
-////				if (proxy.wclick()) {
+////				if (proxy.throttle_up_click()) {
 ////					th += 0.1;
 ////					GVCMPacketHandler.INSTANCE.sendToServer(new HMVMMessageKeyPressed(16, this.getEntityId()));
 ////				}
-////				if (proxy.aclick()) {
+////				if (proxy.yaw_Left_click()) {
 //////					GVCMPacketHandler.INSTANCE.sendToServer(new HMVMMessageKeyPressed(17, this.getEntityId()));
 ////					servera = true;
 ////				}
-////				if (proxy.sclick()) {
+////				if (proxy.throttle_down_click()) {
 ////					th -= 0.1;
 ////					GVCMPacketHandler.INSTANCE.sendToServer(new HMVMMessageKeyPressed(18, this.getEntityId()));
 ////				}
-////				if (proxy.dclick()) {
+////				if (proxy.yaw_Right_click()) {
 //////					GVCMPacketHandler.INSTANCE.sendToServer(new HMVMMessageKeyPressed(19, this.getEntityId()));
 ////					serverd = true;
 ////				}
 ////				if (proxy.leftclick()) {
 ////					GVCMPacketHandler.INSTANCE.sendToServer(new HMVMMessageKeyPressed(11, this.getEntityId()));
 ////				}
-////				if (proxy.spaceKeyDown()) {
+////				if (proxy.throttle_BrakeKeyDown()) {
 ////					GVCMPacketHandler.INSTANCE.sendToServer(new HMVMMessageKeyPressed(12, this.getEntityId()));
 ////				}
-////				if (proxy.fclick()) {
+////				if (proxy.flap_click()) {
 ////					GVCMPacketHandler.INSTANCE.sendToServer(new HMVMMessageKeyPressed(20, this.getEntityId()));
 ////				}
 ////
@@ -1013,7 +1014,7 @@ public class GVCEntityPlane extends Entity implements IPlane,IMultiTurretVehicle
 	}
 	
 	@Override
-	public LogicsBase getBaseLogic() {
+	public BaseLogic getBaseLogic() {
 		return baseLogic;
 	}
 	

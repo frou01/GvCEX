@@ -9,6 +9,7 @@ import handmadeguns.network.PacketPlaysound;
 import handmadeguns.network.PacketSpawnParticle;
 import handmadevehicle.Utils;
 import handmadevehicle.entity.parts.HasLoopSound;
+import handmadevehicle.entity.parts.IVehicle;
 import handmadevehicle.entity.prefab.Prefab_Turret;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -22,8 +23,8 @@ import javax.vecmath.Vector3d;
 import java.util.ArrayList;
 
 import static handmadeguns.HandmadeGunsCore.cfg_defgravitycof;
-import static handmadeguns.HandmadeGunsCore.proxy;
-import static handmadevehicle.HMVehicle.proxy_HMVehicle;
+import static handmadeguns.HandmadeGunsCore.HMG_proxy;
+import static handmadevehicle.HMVehicle.HMV_Proxy;
 import static java.lang.Math.*;
 import static handmadevehicle.Utils.*;
 import static net.minecraft.util.MathHelper.wrapAngleTo180_double;
@@ -74,7 +75,7 @@ public class TurretObj implements HasLoopSound{
     public Entity target;
     
     public boolean readyaim = false;
-    public boolean aimtoOut = false;
+    public boolean aimIn = false;
     public boolean readyload = false;
     
     
@@ -435,7 +436,7 @@ public class TurretObj implements HasLoopSound{
                 canfire|=temp;
             }
         }else canfire = true;
-        aimtoOut = inrange;
+        aimIn = inrange;
         
         while (this.turretrotationYaw - this.prevturretrotationYaw < -180.0F)
         {
@@ -468,7 +469,7 @@ public class TurretObj implements HasLoopSound{
             turretMoving += ((float) sqrt(deltaRotPitch * deltaRotPitch + deltaRotYaw * deltaRotYaw) - turretMoving) * 0.3f;
             if(turretMoving < min(prefab_turret.turretspeedY,prefab_turret.turretspeedP)/10)turretMoving = 0;
             if (!traverseSoundRemain && currentEntity != null && prefab_turret.traverseSound != null && (turretMoving > 0)) {
-                proxy_HMVehicle.playsoundasTurret(prefab_turret.traversesoundLV*4, this);
+                HMV_Proxy.playsoundasTurret(prefab_turret.traversesoundLV*4, this);
             }
             traverseSoundRemain = false;
         }
@@ -478,13 +479,13 @@ public class TurretObj implements HasLoopSound{
         this.motherPos = motherPos;
         turretRot = new Quat4d(0,0,0,1);
         triggerFreeze--;
-        if(prefab_turret.gunInfo.canlock){
+        if(!worldObj.isRemote && prefab_turret.gunInfo.canlock){
             lock();
         }
         if(prefab_turret.gunInfo.semiActive){
             if(missile != null && missile.isDead)missile =null;
         }
-        if(bursting)fire();
+        if(!worldObj.isRemote && bursting)fire();
         calculatePos(motherPos,motherRot);
         
         Vector3d axisY = transformVecByQuat(unitY, turretRot);
@@ -514,20 +515,29 @@ public class TurretObj implements HasLoopSound{
         for(TurretObj achild :childsOnBarrel){
             achild.update(temp, this.pos);
         }
-        cycle_timer--;
-        if(!worldObj.isRemote)readyload = ((max_Bullet() == -1 || magazinerem > 0));
-        if(magazinerem <= 0 && prefab_turret.gunInfo.reloadTimes[0] != -1){
-            if(reloadTimer == prefab_turret.gunInfo.reloadTimes[0])
-                if(currentEntity != null && prefab_turret.gunInfo.soundre != null)HMGPacketHandler.INSTANCE.sendToAll(new PacketPlaysound(currentEntity, prefab_turret.gunInfo.soundre[0], prefab_turret.gunInfo.soundrespeed, prefab_turret.gunInfo.soundrelevel,prefab_turret.gunInfo.reloadTimes[0]));
-            reloadTimer--;
-            if(reloadTimer <0){
-                magazinerem = max_Bullet();
-                reloadTimer = prefab_turret.gunInfo.reloadTimes[0];
+        if(!worldObj.isRemote) {
+            cycle_timer--;
+            if (!worldObj.isRemote) readyload = ((max_Bullet() == -1 || magazinerem > 0));
+            if (magazinerem <= 0 && prefab_turret.gunInfo.reloadTimes[0] != -1) {
+                if (reloadTimer == prefab_turret.gunInfo.reloadTimes[0])
+                    if (currentEntity != null && prefab_turret.gunInfo.soundre != null)
+                        HMGPacketHandler.INSTANCE.sendToAll(new PacketPlaysound(currentEntity, prefab_turret.gunInfo.soundre[0], prefab_turret.gunInfo.soundrespeed, prefab_turret.gunInfo.soundrelevel, prefab_turret.gunInfo.reloadTimes[0]));
+                reloadTimer--;
+                if (reloadTimer < 0) {
+                    magazinerem = max_Bullet();
+                    reloadTimer = prefab_turret.gunInfo.reloadTimes[0];
+                }
             }
         }
     }
     public boolean isreloading(){
         return  (max_Bullet() == -1 && cycle_timer > 0) || magazinerem <= 0;
+    }
+    public boolean isLoading(){
+        return  cycle_timer < 0;
+    }
+    public boolean readytoFire(){
+        return  !isreloading() && isLoading();
     }
     public boolean fire(){
         int loopNum = 1;
@@ -560,7 +570,7 @@ public class TurretObj implements HasLoopSound{
                     HMGPacketHandler.INSTANCE.sendToAll(new PacketPlaysound(currentEntity, prefab_turret.gunInfo.soundbase, prefab_turret.gunInfo.soundspeed, prefab_turret.gunInfo.soundbaselevel));
     
                 if (currentEntity.getEntityData().getFloat("GunshotLevel") < 0.1)
-                    proxy.playerSounded(currentEntity);
+                    HMG_proxy.playerSounded(currentEntity);
                 currentEntity.getEntityData().setFloat("GunshotLevel", prefab_turret.gunInfo.soundbaselevel);
                 HMGEntityBulletBase[] bullets = null;
                 switch (prefab_turret.gunInfo.guntype) {

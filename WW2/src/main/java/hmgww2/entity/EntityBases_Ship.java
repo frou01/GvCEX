@@ -14,7 +14,7 @@ import net.minecraft.world.World;
 import javax.vecmath.Vector3d;
 
 import static handmadeguns.Util.Utils.getmovingobjectPosition_forBlock;
-import static handmadevehicle.HMVehicle.proxy_HMVehicle;
+import static handmadevehicle.HMVehicle.HMV_Proxy;
 
 public abstract class EntityBases_Ship extends EntityBases_Tank implements IShip , ITank , ImultiRidable
 {
@@ -216,8 +216,8 @@ public abstract class EntityBases_Ship extends EntityBases_Tank implements IShip
 			usingSP = getWeaponMode() == 0;
 			if(prevusingSP != usingSP) {
 				if (!usingSP) {
-					if (modeBell_normal != null) proxy_HMVehicle.playsoundasVehicle_noRepeat(modeBell_normal, 2 * 2 * 16, this, this, 40);
-				}else if(modeBell_SP != null)proxy_HMVehicle.playsoundasVehicle_noRepeat(modeBell_SP, 2 * 2 * 16, this, this, 40);
+					if (modeBell_normal != null) HMV_Proxy.playsoundasVehicle_noRepeat(modeBell_normal, 2 * 2 * 16, this, this, 40);
+				}else if(modeBell_SP != null) HMV_Proxy.playsoundasVehicle_noRepeat(modeBell_SP, 2 * 2 * 16, this, this, 40);
 			}
 			prevusingSP = usingSP;
 			draft = getDraft_dataWatcher();

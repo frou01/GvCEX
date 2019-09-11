@@ -1,6 +1,7 @@
 package handmadevehicle.events;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import handmadevehicle.entity.parts.IVehicle;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;

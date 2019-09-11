@@ -1,7 +1,7 @@
 
 package hmggvcmob.render;
 
-import handmadevehicle.entity.parts.logics.PlaneBaseLogic;
+import handmadevehicle.entity.parts.logics.PlaneBaseLogicLogic;
 import hmggvcmob.entity.friend.GVCEntityPlane;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
@@ -36,7 +36,7 @@ public class GVCRenderPlane extends Render {
 	*/
 	public void doRender(GVCEntityPlane entity, double p_76986_2_, double p_76986_4_, double p_76986_6_,
 						 float entityYaw, float partialTicks) {
-		PlaneBaseLogic planeBaseLogic = (PlaneBaseLogic) entity.getBaseLogic();
+		PlaneBaseLogicLogic planeBaseLogic = (PlaneBaseLogicLogic) entity.getBaseLogic();
 		GL11.glPushMatrix();
 		GL11.glAlphaFunc(GL11.GL_GREATER, 0);
 		GL11.glEnable(GL_BLEND);

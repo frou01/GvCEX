@@ -7,7 +7,7 @@ import net.minecraft.client.audio.MovingSound;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 
-import static handmadeguns.HandmadeGunsCore.proxy;
+import static handmadeguns.HandmadeGunsCore.HMG_proxy;
 import static java.lang.Math.min;
 import static java.lang.Math.sqrt;
 
@@ -49,7 +49,7 @@ public class BulletSoundHMG extends MovingSound
 			this.yPosF = (float) this.attachedEntity.posY;
 			this.zPosF = (float) this.attachedEntity.posZ;
 			double prevdisttoPlayer = disttoPlayer;
-			disttoPlayer = attachedEntity.getDistanceSqToEntity(proxy.getMCInstance().renderViewEntity);
+			disttoPlayer = attachedEntity.getDistanceSqToEntity(HMG_proxy.getMCInstance().renderViewEntity);
 			if(attachedEntity.motionX * attachedEntity.motionX + attachedEntity.motionY * attachedEntity.motionY + attachedEntity.motionZ * attachedEntity.motionZ < minspeed)
 				this.repeat = false;
 			else {
@@ -66,7 +66,7 @@ public class BulletSoundHMG extends MovingSound
 			}
 		}
 		if(!this.repeat && attachedEntity instanceof HMGEntityBulletBase)((HMGEntityBulletBase) attachedEntity).soundstoped = true;
-		if(attachedEntity instanceof HMGEntityBulletBase && !(((HMGEntityBulletBase)attachedEntity).flyingSoundInfo != null && ((HMGEntityBulletBase)attachedEntity).motionX * ((HMGEntityBulletBase)attachedEntity).motionX + ((HMGEntityBulletBase)attachedEntity).motionY * ((HMGEntityBulletBase)attachedEntity).motionY + ((HMGEntityBulletBase)attachedEntity).motionZ * ((HMGEntityBulletBase)attachedEntity).motionZ > ((HMGEntityBulletBase)attachedEntity).flyingSoundInfo.MinBltSP * ((HMGEntityBulletBase)attachedEntity).flyingSoundInfo.MinBltSP && ((HMGEntityBulletBase)attachedEntity).getDistanceSqToEntity(proxy.getEntityPlayerInstance()) < ((HMGEntityBulletBase)attachedEntity).flyingSoundInfo.MaxDist*((HMGEntityBulletBase)attachedEntity).flyingSoundInfo.MaxDist)) {
+		if(attachedEntity instanceof HMGEntityBulletBase && !(((HMGEntityBulletBase)attachedEntity).flyingSoundInfo != null && ((HMGEntityBulletBase)attachedEntity).motionX * ((HMGEntityBulletBase)attachedEntity).motionX + ((HMGEntityBulletBase)attachedEntity).motionY * ((HMGEntityBulletBase)attachedEntity).motionY + ((HMGEntityBulletBase)attachedEntity).motionZ * ((HMGEntityBulletBase)attachedEntity).motionZ > ((HMGEntityBulletBase)attachedEntity).flyingSoundInfo.MinBltSP * ((HMGEntityBulletBase)attachedEntity).flyingSoundInfo.MinBltSP && ((HMGEntityBulletBase)attachedEntity).getDistanceSqToEntity(HMG_proxy.getEntityPlayerInstance()) < ((HMGEntityBulletBase)attachedEntity).flyingSoundInfo.MaxDist*((HMGEntityBulletBase)attachedEntity).flyingSoundInfo.MaxDist)) {
 			this.donePlaying = true;
 			this.repeat = false;
 			((HMGEntityBulletBase) attachedEntity).soundstoped = true;

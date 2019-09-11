@@ -1,7 +1,7 @@
 package DungeonGeneratorBase;
 
 import cpw.mods.fml.common.registry.GameRegistry;
-import handmadeguns.HMGAddGunsNew;
+import handmadeguns.HMGGunMaker;
 import handmadeguns.entity.PlacedGunEntity;
 import handmadeguns.items.guns.HMGItem_Unified_Guns;
 import hmggvcmob.GVCMobPlus;
@@ -16,7 +16,6 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
@@ -446,7 +445,7 @@ public class ComponentDungeonBase extends StructureComponent {
             }
         }else {
             for (int s = 0; s < 9; ++s) {
-                Item gun = (Item) HMGAddGunsNew.Guns.get(random.nextInt(HMGAddGunsNew.Guns.size()));
+                Item gun = (Item) HMGGunMaker.Guns.get(random.nextInt(HMGGunMaker.Guns.size()));
                 if (gun instanceof HMGItem_Unified_Guns) {
                     if (!((HMGItem_Unified_Guns) gun).gunInfo.isinRoot) gun = null;
                     if (gun != null) {

@@ -8,6 +8,7 @@ public class Prefab_Seat {
 	public double[] pos = new double[3];
 	public boolean hasGun;
 	public boolean aimGun;
+	public boolean seatOnTurret = true;
 	public int mainid;
 	public int subid;
 	public Prefab_Seat(){
@@ -21,6 +22,6 @@ public class Prefab_Seat {
 	}
 	
 	public SeatInfo getSeatOBJ(TurretObj[] turrets){
-		return new SeatInfo(pos,hasGun,aimGun, mainid != -1 ? turrets[mainid]:null, subid != -1 ? turrets[subid]:null);
+		return new SeatInfo(pos,this,hasGun,aimGun, mainid != -1 ? turrets[mainid]:null, subid != -1 ? turrets[subid]:null);
 	}
 }
