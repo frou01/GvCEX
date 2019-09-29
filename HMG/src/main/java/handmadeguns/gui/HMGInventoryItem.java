@@ -17,9 +17,8 @@ public class HMGInventoryItem implements IInventory
     public HMGInventoryItem(InventoryPlayer inventory, ItemStack stack)
     {
         inventoryPlayer = inventory;
-        EntityPlayer entityplayer = inventory.player;
         //currentItem = inventoryPlayer.getCurrentItem();
-        currentItem = (entityplayer).getCurrentEquippedItem();
+        currentItem = stack;
         //currentItem = stack;
  
         //InventorySize
@@ -157,12 +156,8 @@ public class HMGInventoryItem implements IInventory
                 tagList.appendTag(compound);
             }
         }
-        ItemStack result = new ItemStack(currentItem.getItem(), 1);
-        result.setTagCompound(currentItem.getTagCompound());
-        result.getTagCompound().setTag("Items", tagList);
-        result.setItemDamage(currentItem.getItemDamage());
-        //ItemStackをセットする。NBTは右クリック等のタイミングでしか保存されないため再セットで保存している。
-        inventoryPlayer.mainInventory[inventoryPlayer.currentItem] = result;
+        currentItem.getTagCompound().setTag("Items", tagList);
+        inventoryPlayer.mainInventory[inventoryPlayer.currentItem] = currentItem;
     }
     @Override
     public boolean isItemValidForSlot(int p_94041_1_, ItemStack p_94041_2_)

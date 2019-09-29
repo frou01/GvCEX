@@ -50,62 +50,71 @@ public class PartsRender_Gun extends PartsRender {
 		
 		for (HMGGunParts parts : partslist_temp) {
 			for (GunState state : states) {
-				switch (state) {
-					case Recoil:
-						if (parts.rendering_Recoil) {
-							if (parts.hasMotionRecoil) {
-								HMGGunParts_Motion_PosAndRotation OffsetAndRotation = parts.getRecoilmotion(flame + smooth);
-								
-								PartSidentification_Attach(parts, state, flame, remainbullets, OffsetAndRotation);
-							} else {
-								HMGGunParts_Motion_PosAndRotation OffsetAndRotation = parts.getRenderinfOfRecoil();
-								
-								PartSidentification_Attach(parts, state, flame, remainbullets, OffsetAndRotation);
-							}
-						}
-						break;
-					case ADS:
-						if (parts.rendering_Ads) {
-							PartSidentification_Attach(parts, state, flame, remainbullets, parts.getRenderinfOfADS());
-						}
-						break;
-					case Cock:
-						if (parts.rendering_Cock) {
-							if (parts.hasMotionCock) {
-								HMGGunParts_Motion_PosAndRotation OffsetAndRotation = parts.getcockmotion(flame + smooth);
-								
-								PartSidentification_Attach(parts, state, flame, remainbullets, OffsetAndRotation);
-							} else {
-								HMGGunParts_Motion_PosAndRotation OffsetAndRotation = parts.getRenderinfOfCock();
-								
-								PartSidentification_Attach(parts, state, flame, remainbullets, OffsetAndRotation);
-							}
-						}
-						break;
-					case Reload:
-						if (parts.rendering_Reload) {
-							HMGGunParts_Motion_PosAndRotation rotationCenterAndRotation = parts.getRenderinfCenter();
-							if (parts.hasMotionReload) {
-								HMGGunParts_Motion_PosAndRotation OffsetAndRotation = parts.getReloadmotion(flame + smooth);
-								
-								PartSidentification_Attach(parts, state, flame, remainbullets, OffsetAndRotation);
-							} else {
-								HMGGunParts_Motion_PosAndRotation OffsetAndRotation = parts.getRenderinfOfReload();
-								
-								PartSidentification_Attach(parts, state, flame, remainbullets, OffsetAndRotation);
-							}
-						}
-						break;
-					case Default:
-						if (parts.rendering_Def) {
-							PartSidentification_Attach(parts, state, flame, remainbullets, parts.getRenderinfDefault_offset());
-						}
-						break;
-				}
+				checkState2(state,parts,flame,remainbullets);
 			}
 		}
 	}
-	
+	private void checkState2(GunState state,HMGGunParts parts,float flame,int remainbullets){
+		switch (state) {
+			case ADS:
+				if (parts.rendering_Ads) {
+					PartSidentification_Attach(parts, state, flame, remainbullets, parts.getRenderinfOfADS());
+					return;
+				}
+				break;
+			case Default:
+				if (parts.rendering_Def) {
+					PartSidentification_Attach(parts, state, flame, remainbullets, parts.getRenderinfDefault_offset());
+					return;
+				}
+				break;
+			case Recoil:
+				if (parts.rendering_Recoil) {
+					if (parts.hasMotionRecoil) {
+						HMGGunParts_Motion_PosAndRotation OffsetAndRotation = parts.getRecoilmotion(flame + smooth);
+						
+						PartSidentification_Attach(parts, state, flame, remainbullets, OffsetAndRotation);
+						return;
+					} else {
+						HMGGunParts_Motion_PosAndRotation OffsetAndRotation = parts.getRenderinfOfRecoil();
+						
+						PartSidentification_Attach(parts, state, flame, remainbullets, OffsetAndRotation);
+						return;
+					}
+				}
+				break;
+			case Cock:
+				if (parts.rendering_Cock) {
+					if (parts.hasMotionCock) {
+						HMGGunParts_Motion_PosAndRotation OffsetAndRotation = parts.getcockmotion(flame + smooth);
+						
+						PartSidentification_Attach(parts, state, flame, remainbullets, OffsetAndRotation);
+						return;
+					} else {
+						HMGGunParts_Motion_PosAndRotation OffsetAndRotation = parts.getRenderinfOfCock();
+						
+						PartSidentification_Attach(parts, state, flame, remainbullets, OffsetAndRotation);
+						return;
+					}
+				}
+				break;
+			case Reload:
+				if (parts.rendering_Reload) {
+					if (parts.hasMotionReload) {
+						HMGGunParts_Motion_PosAndRotation OffsetAndRotation = parts.getReloadmotion(flame + smooth);
+						
+						PartSidentification_Attach(parts, state, flame, remainbullets, OffsetAndRotation);
+						return;
+					} else {
+						HMGGunParts_Motion_PosAndRotation OffsetAndRotation = parts.getRenderinfOfReload();
+						
+						PartSidentification_Attach(parts, state, flame, remainbullets, OffsetAndRotation);
+						return;
+					}
+				}
+				break;
+		}
+	}
 	public void PartSidentification_Attach(HMGGunParts parts, GunState state, float flame, int remainbullets, HMGGunParts_Motion_PosAndRotation OffsetAndRotation){
 		if(gunitem.gunInfo.magazine.length >1) {
 			if (parts.current_magazineType != null) {
@@ -128,7 +137,7 @@ public class PartsRender_Gun extends PartsRender {
 			}
 			if((parts.underOnly && isUnder) || !(parts.underOnly_not && isUnder))
 			if (parts.isattachpart) {
-				if (items[1] != null) {//�T�C�g
+				if (items[1] != null) {//sight
 					if (parts.issightbase && items[1].getItem() instanceof HMGItemSightBase) {
 						IItemRenderer attachrender = MinecraftForgeClient.getItemRenderer(items[1], IItemRenderer.ItemRenderType.EQUIPPED);
 						if (attachrender instanceof HMGRenderItemCustom) {
@@ -146,7 +155,7 @@ public class PartsRender_Gun extends PartsRender {
 					part_Render(parts, state, flame, remainbullets, OffsetAndRotation);
 					return;
 				}
-				if (items[2] != null) {//�I�[�o�[�o�����n
+				if (items[2] != null) {
 					if (parts.islight && items[2].getItem() instanceof HMGItemAttachment_light) {
 						part_Render(parts, state, flame, remainbullets, OffsetAndRotation);
 						return;
@@ -161,7 +170,7 @@ public class PartsRender_Gun extends PartsRender {
 						}
 					}
 				}
-				if (items[3] != null) {//�o�����n
+				if (items[3] != null) {
 					if (parts.ismuzzlepart && items[3].getItem() instanceof HMGItemAttachment_Suppressor) {
 						part_Render(parts, state, flame, remainbullets, OffsetAndRotation);
 						return;

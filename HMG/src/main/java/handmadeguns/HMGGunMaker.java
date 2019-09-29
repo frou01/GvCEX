@@ -15,6 +15,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
@@ -938,77 +939,152 @@ public class HMGGunMaker {
 									IModelCustom gunobj = AdvancedModelLoader.loadModel(new ResourceLocation("handmadeguns:textures/model/" + objmodel));
 									ResourceLocation guntexture = new ResourceLocation("handmadeguns:textures/model/" + objtexture);
 									if(partslist.isEmpty()) {
-										HMGRenderItemGun_U hmgRenderItemGun_u = new HMGRenderItemGun_U(gunobj, guntexture,
-												                                                              gunInfo.modelscale, modelhigh, modelhighr, modelhighs, modelwidthx, modelwidthxr, modelwidthxs, modelwidthz
-												, modelwidthzr, modelwidthzs, rotationx, rotationxr, rotationxs, rotationy, rotationyr, rotationys
-												, rotationz, rotationzr, rotationzs,
-												arm, armrotationxr, armrotationyr, armrotationzr, armoffsetxr, armoffsetyr, armoffsetzr
-												, armrotationxl, armrotationyl, armrotationzl, armoffsetxl, armoffsetyl, armoffsetzl,
-												nox, noy, noz, mat31posx, mat31posy, mat31posz, mat31rotex, mat31rotey, mat31rotez
-												, mat32posx, mat32posy, mat32posz, mat32rotex, mat32rotey, mat32rotez, armscale);
-										hmgRenderItemGun_u.barrelattachoffset = barrelattachoffset;
-										hmgRenderItemGun_u.barrelattachrotation = barrelattachrotation;
-										hmgRenderItemGun_u.sightattachoffset = sightattachoffset;
-										hmgRenderItemGun_u.sightattachrotation = sightattachrotation;
-										hmgRenderItemGun_u.lightattachoffset = lightattachoffset;
-										hmgRenderItemGun_u.lightattachrotation = lightattachrotation;
-										hmgRenderItemGun_u.gripattachoffset = gripattachoffset;
-										hmgRenderItemGun_u.gripattachrotation = gripattachrotation;mat22 = mat22;
-										hmgRenderItemGun_u.mat22offsetx = mat22posx;
-										hmgRenderItemGun_u.mat22offsety = mat22posy;
-										hmgRenderItemGun_u.mat22offsetz = mat22posz;
-										hmgRenderItemGun_u.mat22rotationx = mat22rotex;
-										hmgRenderItemGun_u.mat22rotationy = mat22rotey;
-										hmgRenderItemGun_u.mat22rotationz = mat22rotez;
-										hmgRenderItemGun_u.mat25offsetx = mat25posx;
-										hmgRenderItemGun_u.mat25offsety = mat25posy;
-										hmgRenderItemGun_u.mat25offsetz = mat25posz;
-										hmgRenderItemGun_u.mat25rotationx = mat25rotex;
-										hmgRenderItemGun_u.mat25rotationy = mat25rotey;
-										hmgRenderItemGun_u.mat25rotationz = mat25rotez;
-										hmgRenderItemGun_u.Sprintoffsetx = spposx;
-										hmgRenderItemGun_u.Sprintoffsety = spposy;
-										hmgRenderItemGun_u.Sprintoffsetz = spposz;
-										hmgRenderItemGun_u.Sprintrotationx = sprotex;
-										hmgRenderItemGun_u.Sprintrotationy = sprotey;
-										hmgRenderItemGun_u.Sprintrotationz = sprotez;
-										hmgRenderItemGun_u.jump = jump;
-										hmgRenderItemGun_u.cock_left = cockleft;
-										hmgRenderItemGun_u.all_jump = alljump;
-										hmgRenderItemGun_u.remat31 = remat31;
-										hmgRenderItemGun_u.reloadanim = reloadanim;
-										hmgRenderItemGun_u.reloadanimation = reloadanimation;
-										MinecraftForgeClient.registerItemRenderer(newgun, hmgRenderItemGun_u);
+										IItemRenderer gunrender = MinecraftForgeClient.getItemRenderer(new ItemStack(newgun), IItemRenderer.ItemRenderType.EQUIPPED);
+										if(gunrender instanceof HMGRenderItemGun_U){
+											((HMGRenderItemGun_U)gunrender).setSomeParam(gunobj, guntexture,
+													gunInfo.modelscale, modelhigh, modelhighr, modelhighs, modelwidthx, modelwidthxr, modelwidthxs, modelwidthz
+													, modelwidthzr, modelwidthzs, rotationx, rotationxr, rotationxs, rotationy, rotationyr, rotationys
+													, rotationz, rotationzr, rotationzs,
+													arm, armrotationxr, armrotationyr, armrotationzr, armoffsetxr, armoffsetyr, armoffsetzr
+													, armrotationxl, armrotationyl, armrotationzl, armoffsetxl, armoffsetyl, armoffsetzl,
+													nox, noy, noz, mat31posx, mat31posy, mat31posz, mat31rotex, mat31rotey, mat31rotez
+													, mat32posx, mat32posy, mat32posz, mat32rotex, mat32rotey, mat32rotez, armscale);
+											((HMGRenderItemGun_U)gunrender).barrelattachoffset = barrelattachoffset;
+											((HMGRenderItemGun_U)gunrender).barrelattachrotation = barrelattachrotation;
+											((HMGRenderItemGun_U)gunrender).sightattachoffset = sightattachoffset;
+											((HMGRenderItemGun_U)gunrender).sightattachrotation = sightattachrotation;
+											((HMGRenderItemGun_U)gunrender).lightattachoffset = lightattachoffset;
+											((HMGRenderItemGun_U)gunrender).lightattachrotation = lightattachrotation;
+											((HMGRenderItemGun_U)gunrender).gripattachoffset = gripattachoffset;
+											((HMGRenderItemGun_U)gunrender).gripattachrotation = gripattachrotation;
+											((HMGRenderItemGun_U)gunrender).mat22offsetx = mat22posx;
+											((HMGRenderItemGun_U)gunrender).mat22offsety = mat22posy;
+											((HMGRenderItemGun_U)gunrender).mat22offsetz = mat22posz;
+											((HMGRenderItemGun_U)gunrender).mat22rotationx = mat22rotex;
+											((HMGRenderItemGun_U)gunrender).mat22rotationy = mat22rotey;
+											((HMGRenderItemGun_U)gunrender).mat22rotationz = mat22rotez;
+											((HMGRenderItemGun_U)gunrender).mat25offsetx = mat25posx;
+											((HMGRenderItemGun_U)gunrender).mat25offsety = mat25posy;
+											((HMGRenderItemGun_U)gunrender).mat25offsetz = mat25posz;
+											((HMGRenderItemGun_U)gunrender).mat25rotationx = mat25rotex;
+											((HMGRenderItemGun_U)gunrender).mat25rotationy = mat25rotey;
+											((HMGRenderItemGun_U)gunrender).mat25rotationz = mat25rotez;
+											((HMGRenderItemGun_U)gunrender).Sprintoffsetx = spposx;
+											((HMGRenderItemGun_U)gunrender).Sprintoffsety = spposy;
+											((HMGRenderItemGun_U)gunrender).Sprintoffsetz = spposz;
+											((HMGRenderItemGun_U)gunrender).Sprintrotationx = sprotex;
+											((HMGRenderItemGun_U)gunrender).Sprintrotationy = sprotey;
+											((HMGRenderItemGun_U)gunrender).Sprintrotationz = sprotez;
+											((HMGRenderItemGun_U)gunrender).jump = jump;
+											((HMGRenderItemGun_U)gunrender).cock_left = cockleft;
+											((HMGRenderItemGun_U)gunrender).all_jump = alljump;
+											((HMGRenderItemGun_U)gunrender).remat31 = remat31;
+											((HMGRenderItemGun_U)gunrender).reloadanim = reloadanim;
+											((HMGRenderItemGun_U)gunrender).reloadanimation = reloadanimation;
+										}else {
+											HMGRenderItemGun_U hmgRenderItemGun_u = new HMGRenderItemGun_U(gunobj, guntexture,
+													gunInfo.modelscale, modelhigh, modelhighr, modelhighs, modelwidthx, modelwidthxr, modelwidthxs, modelwidthz
+													, modelwidthzr, modelwidthzs, rotationx, rotationxr, rotationxs, rotationy, rotationyr, rotationys
+													, rotationz, rotationzr, rotationzs,
+													arm, armrotationxr, armrotationyr, armrotationzr, armoffsetxr, armoffsetyr, armoffsetzr
+													, armrotationxl, armrotationyl, armrotationzl, armoffsetxl, armoffsetyl, armoffsetzl,
+													nox, noy, noz, mat31posx, mat31posy, mat31posz, mat31rotex, mat31rotey, mat31rotez
+													, mat32posx, mat32posy, mat32posz, mat32rotex, mat32rotey, mat32rotez, armscale);
+											hmgRenderItemGun_u.barrelattachoffset = barrelattachoffset;
+											hmgRenderItemGun_u.barrelattachrotation = barrelattachrotation;
+											hmgRenderItemGun_u.sightattachoffset = sightattachoffset;
+											hmgRenderItemGun_u.sightattachrotation = sightattachrotation;
+											hmgRenderItemGun_u.lightattachoffset = lightattachoffset;
+											hmgRenderItemGun_u.lightattachrotation = lightattachrotation;
+											hmgRenderItemGun_u.gripattachoffset = gripattachoffset;
+											hmgRenderItemGun_u.gripattachrotation = gripattachrotation;
+											mat22 = mat22;
+											hmgRenderItemGun_u.mat22offsetx = mat22posx;
+											hmgRenderItemGun_u.mat22offsety = mat22posy;
+											hmgRenderItemGun_u.mat22offsetz = mat22posz;
+											hmgRenderItemGun_u.mat22rotationx = mat22rotex;
+											hmgRenderItemGun_u.mat22rotationy = mat22rotey;
+											hmgRenderItemGun_u.mat22rotationz = mat22rotez;
+											hmgRenderItemGun_u.mat25offsetx = mat25posx;
+											hmgRenderItemGun_u.mat25offsety = mat25posy;
+											hmgRenderItemGun_u.mat25offsetz = mat25posz;
+											hmgRenderItemGun_u.mat25rotationx = mat25rotex;
+											hmgRenderItemGun_u.mat25rotationy = mat25rotey;
+											hmgRenderItemGun_u.mat25rotationz = mat25rotez;
+											hmgRenderItemGun_u.Sprintoffsetx = spposx;
+											hmgRenderItemGun_u.Sprintoffsety = spposy;
+											hmgRenderItemGun_u.Sprintoffsetz = spposz;
+											hmgRenderItemGun_u.Sprintrotationx = sprotex;
+											hmgRenderItemGun_u.Sprintrotationy = sprotey;
+											hmgRenderItemGun_u.Sprintrotationz = sprotez;
+											hmgRenderItemGun_u.jump = jump;
+											hmgRenderItemGun_u.cock_left = cockleft;
+											hmgRenderItemGun_u.all_jump = alljump;
+											hmgRenderItemGun_u.remat31 = remat31;
+											hmgRenderItemGun_u.reloadanim = reloadanim;
+											hmgRenderItemGun_u.reloadanimation = reloadanimation;
+											MinecraftForgeClient.registerItemRenderer(newgun, hmgRenderItemGun_u);
+										}
 									}else {
-
-										HMGRenderItemGun_U_NEW renderItemGun_u_new = new HMGRenderItemGun_U_NEW(gunobj,guntexture,gunInfo.modelscale);
-										renderItemGun_u_new.setEqippedOffset_Normal(nox,noy,noz);
-										renderItemGun_u_new.setEqippedOffset_Third(thirdGunOffset[0],thirdGunOffset[1],thirdGunOffset[2]);
-										renderItemGun_u_new.setEqippedRotation_Normal(eqrotax,eqrotay,eqrotaz);
-
-										renderItemGun_u_new.setmodelADSPosAndRotation(modelwidthx,modelhigh,modelwidthz,rotationx,rotationy,rotationz);
-										renderItemGun_u_new.setADSoffsetRed(modelwidthxr,modelhighr,modelwidthzr);
-										renderItemGun_u_new.setADSoffsetScope(modelwidthxs,modelhighs,modelwidthzs);
-
-										renderItemGun_u_new.setADSrotationRed(rotationxr,rotationyr,rotationzr);
-										renderItemGun_u_new.setADSrotationScope(rotationxs,rotationys,rotationzs);
-
-										renderItemGun_u_new.setarmOffsetAndRotationL(armoffsetxl,armoffsetyl,armoffsetzl,armrotationxl,armrotationyl,armrotationzl);
-										renderItemGun_u_new.setarmOffsetAndRotationR(armoffsetxr,armoffsetyr,armoffsetzr,armrotationxr,armrotationyr,armrotationzr);
-										renderItemGun_u_new.setArmoffsetScale(armscale);
-										renderItemGun_u_new.setSprintOffsetAndRotation(spposx,spposy,spposz,sprotex,sprotey,sprotez);
-
-										renderItemGun_u_new.partsRender_gun.partslist = partslist;
-										renderItemGun_u_new.partsRender_gun.muzzleattachoffset = barrelattachoffset;
-										renderItemGun_u_new.partsRender_gun.muzzleattachrotation = barrelattachrotation;
-										renderItemGun_u_new.partsRender_gun.sightattachoffset = sightattachoffset;
-										renderItemGun_u_new.partsRender_gun.sightattachrotation = sightattachrotation;
-										renderItemGun_u_new.partsRender_gun.overbarrelattachoffset = lightattachoffset;
-										renderItemGun_u_new.partsRender_gun.overbarrelattachrotation = lightattachrotation;
-										renderItemGun_u_new.partsRender_gun.gripattachoffset = gripattachoffset;
-										renderItemGun_u_new.partsRender_gun.gripattachrotation = gripattachrotation;
-										renderItemGun_u_new.jump = jump;
-										MinecraftForgeClient.registerItemRenderer(newgun, renderItemGun_u_new);
+										IItemRenderer gunrender = MinecraftForgeClient.getItemRenderer(new ItemStack(newgun), IItemRenderer.ItemRenderType.EQUIPPED);
+										if(gunrender instanceof HMGRenderItemGun_U_NEW){
+											((HMGRenderItemGun_U_NEW)gunrender).reloadConstructor(gunobj, guntexture, gunInfo.modelscale);
+											((HMGRenderItemGun_U_NEW)gunrender).setEqippedOffset_Normal(nox, noy, noz);
+											((HMGRenderItemGun_U_NEW)gunrender).setEqippedOffset_Third(thirdGunOffset[0], thirdGunOffset[1], thirdGunOffset[2]);
+											((HMGRenderItemGun_U_NEW)gunrender).setEqippedRotation_Normal(eqrotax, eqrotay, eqrotaz);
+											
+											((HMGRenderItemGun_U_NEW)gunrender).setmodelADSPosAndRotation(modelwidthx, modelhigh, modelwidthz, rotationx, rotationy, rotationz);
+											((HMGRenderItemGun_U_NEW)gunrender).setADSoffsetRed(modelwidthxr, modelhighr, modelwidthzr);
+											((HMGRenderItemGun_U_NEW)gunrender).setADSoffsetScope(modelwidthxs, modelhighs, modelwidthzs);
+											
+											((HMGRenderItemGun_U_NEW)gunrender).setADSrotationRed(rotationxr, rotationyr, rotationzr);
+											((HMGRenderItemGun_U_NEW)gunrender).setADSrotationScope(rotationxs, rotationys, rotationzs);
+											
+											((HMGRenderItemGun_U_NEW)gunrender).setarmOffsetAndRotationL(armoffsetxl, armoffsetyl, armoffsetzl, armrotationxl, armrotationyl, armrotationzl);
+											((HMGRenderItemGun_U_NEW)gunrender).setarmOffsetAndRotationR(armoffsetxr, armoffsetyr, armoffsetzr, armrotationxr, armrotationyr, armrotationzr);
+											((HMGRenderItemGun_U_NEW)gunrender).setArmoffsetScale(armscale);
+											((HMGRenderItemGun_U_NEW)gunrender).setSprintOffsetAndRotation(spposx, spposy, spposz, sprotex, sprotey, sprotez);
+											
+											((HMGRenderItemGun_U_NEW)gunrender).partsRender_gun.partslist = partslist;
+											((HMGRenderItemGun_U_NEW)gunrender).partsRender_gun.muzzleattachoffset = barrelattachoffset;
+											((HMGRenderItemGun_U_NEW)gunrender).partsRender_gun.muzzleattachrotation = barrelattachrotation;
+											((HMGRenderItemGun_U_NEW)gunrender).partsRender_gun.sightattachoffset = sightattachoffset;
+											((HMGRenderItemGun_U_NEW)gunrender).partsRender_gun.sightattachrotation = sightattachrotation;
+											((HMGRenderItemGun_U_NEW)gunrender).partsRender_gun.overbarrelattachoffset = lightattachoffset;
+											((HMGRenderItemGun_U_NEW)gunrender).partsRender_gun.overbarrelattachrotation = lightattachrotation;
+											((HMGRenderItemGun_U_NEW)gunrender).partsRender_gun.gripattachoffset = gripattachoffset;
+											((HMGRenderItemGun_U_NEW)gunrender).partsRender_gun.gripattachrotation = gripattachrotation;
+											((HMGRenderItemGun_U_NEW)gunrender).jump = jump;
+										}else {
+											HMGRenderItemGun_U_NEW renderItemGun_u_new = new HMGRenderItemGun_U_NEW(gunobj, guntexture, gunInfo.modelscale);
+											renderItemGun_u_new.setEqippedOffset_Normal(nox, noy, noz);
+											renderItemGun_u_new.setEqippedOffset_Third(thirdGunOffset[0], thirdGunOffset[1], thirdGunOffset[2]);
+											renderItemGun_u_new.setEqippedRotation_Normal(eqrotax, eqrotay, eqrotaz);
+											
+											renderItemGun_u_new.setmodelADSPosAndRotation(modelwidthx, modelhigh, modelwidthz, rotationx, rotationy, rotationz);
+											renderItemGun_u_new.setADSoffsetRed(modelwidthxr, modelhighr, modelwidthzr);
+											renderItemGun_u_new.setADSoffsetScope(modelwidthxs, modelhighs, modelwidthzs);
+											
+											renderItemGun_u_new.setADSrotationRed(rotationxr, rotationyr, rotationzr);
+											renderItemGun_u_new.setADSrotationScope(rotationxs, rotationys, rotationzs);
+											
+											renderItemGun_u_new.setarmOffsetAndRotationL(armoffsetxl, armoffsetyl, armoffsetzl, armrotationxl, armrotationyl, armrotationzl);
+											renderItemGun_u_new.setarmOffsetAndRotationR(armoffsetxr, armoffsetyr, armoffsetzr, armrotationxr, armrotationyr, armrotationzr);
+											renderItemGun_u_new.setArmoffsetScale(armscale);
+											renderItemGun_u_new.setSprintOffsetAndRotation(spposx, spposy, spposz, sprotex, sprotey, sprotez);
+											
+											renderItemGun_u_new.partsRender_gun.partslist = partslist;
+											renderItemGun_u_new.partsRender_gun.muzzleattachoffset = barrelattachoffset;
+											renderItemGun_u_new.partsRender_gun.muzzleattachrotation = barrelattachrotation;
+											renderItemGun_u_new.partsRender_gun.sightattachoffset = sightattachoffset;
+											renderItemGun_u_new.partsRender_gun.sightattachrotation = sightattachrotation;
+											renderItemGun_u_new.partsRender_gun.overbarrelattachoffset = lightattachoffset;
+											renderItemGun_u_new.partsRender_gun.overbarrelattachrotation = lightattachrotation;
+											renderItemGun_u_new.partsRender_gun.gripattachoffset = gripattachoffset;
+											renderItemGun_u_new.partsRender_gun.gripattachrotation = gripattachrotation;
+											renderItemGun_u_new.jump = jump;
+											MinecraftForgeClient.registerItemRenderer(newgun, renderItemGun_u_new);
+										}
 									}
 								}
 								newgun.gunInfo = gunInfo;
@@ -1525,6 +1601,17 @@ public class HMGGunMaker {
 			case "AddParts":
 				currentIndex = partslist.size();
 				partslist.add(currentParts = createGunPart(type));
+				break;
+			case "SetAsNormalParts":
+				currentParts.rendering_Def = true;
+				currentParts.AddRenderinfDef(0, 0, 0, 0, 0, 0);
+				currentParts.AddRenderinfDefoffset(0, 0, 0, 0, 0, 0);
+				currentParts.AddRenderinfADS(0, 0, 0, 0, 0, 0);
+				currentParts.AddRenderinfRecoil(0, 0, 0, 0, 0, 0);
+				currentParts.AddRenderinfCock(0, 0, 0, 0, 0, 0);
+				currentParts.AddRenderinfReload(0, 0, 0, 0, 0, 0);
+				
+				
 				break;
 			case "AddPartsRotationCenterAndRotationAmount":
 				currentParts.AddRenderinfDef(Float.parseFloat(type[1]), Float.parseFloat(type[2]), Float.parseFloat(type[3]), Float.parseFloat(type[4]), Float.parseFloat(type[5]), Float.parseFloat(type[6]));
@@ -2086,6 +2173,9 @@ public class HMGGunMaker {
 				break;
 			case "CanlockBlock":
 				gunInfo.canlockBlock = Boolean.parseBoolean(type[1]);
+				break;
+			case "lock_to_Vehicle":
+				gunInfo.lock_to_Vehicle = Boolean.parseBoolean(type[1]);
 				break;
 			case "guntype":
 				gunInfo.guntype = parseInt(type[1]);

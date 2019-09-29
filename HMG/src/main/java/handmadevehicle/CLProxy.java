@@ -7,7 +7,6 @@ import handmadeguns.client.render.ModelSetAndData;
 import handmadevehicle.audio.TurretSound;
 import handmadevehicle.audio.VehicleSound;
 import handmadevehicle.audio.Vehicle_OptionalSound;
-import handmadevehicle.command.HMV_CommandReloadparm;
 import handmadevehicle.entity.EntityVehicle;
 import handmadevehicle.entity.parts.HasLoopSound;
 import handmadevehicle.entity.parts.ModifiedBoundingBox;
@@ -28,6 +27,7 @@ import org.lwjgl.input.Controllers;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
+import static handmadevehicle.HMVehicle.*;
 import static org.lwjgl.input.Keyboard.isKeyDown;
 
 public class CLProxy extends CMProxy {
@@ -42,7 +42,7 @@ public class CLProxy extends CMProxy {
 	
 	public static final KeyBinding Flap = new KeyBinding("Flap", Keyboard.KEY_F, "HMVehicle");
 	public static final KeyBinding Air_Brake = new KeyBinding("Air Brake", Keyboard.KEY_X, "HMVehicle");
-	public static final KeyBinding Flare_Smoke = new KeyBinding("Flare/Smoke", Keyboard.KEY_V, "HMVehicle");
+	public static final KeyBinding Flare_Smoke = new KeyBinding("Flare/Smoke", Keyboard.KEY_COLON, "HMVehicle");
 	public static final KeyBinding Gear_Down_Up = new KeyBinding("Gear Down/Up", Keyboard.KEY_G, "HMVehicle");
 	public static final KeyBinding Weapon_Mode = new KeyBinding("Weapon Mode", Keyboard.KEY_ADD, "HMVehicle");
 	
@@ -54,6 +54,10 @@ public class CLProxy extends CMProxy {
 	public static boolean ChangeControl_stopper = false;
 	public static final KeyBinding resetCamrot = new KeyBinding("Reset camera Rotation", Keyboard.KEY_V, "HMVehicle");
 	public static boolean resetCamrot_stopper = false;
+	public static final KeyBinding reloadConfig = new KeyBinding("Reload Config Settings", Keyboard.KEY_NONE, "HMVehicle");
+	public static boolean reloadConfig_stopper = false;
+	public static final KeyBinding openGUI = new KeyBinding("Open Vehicle Gui", Keyboard.KEY_NONE, "HMVehicle");
+	public static boolean openGUI_stopper = false;
 	
 	public static final KeyBinding pitchUp = new KeyBinding("pitchUp", Keyboard.KEY_I, "HMVehicle");
 	public static final KeyBinding pitchDown = new KeyBinding("pitchDown", Keyboard.KEY_K, "HMVehicle");
@@ -93,6 +97,8 @@ public class CLProxy extends CMProxy {
 			ClientRegistry.registerKeyBinding(RollLeft);
 			ClientRegistry.registerKeyBinding(ChangeControl);
 			ClientRegistry.registerKeyBinding(resetCamrot);
+			ClientRegistry.registerKeyBinding(reloadConfig);
+			ClientRegistry.registerKeyBinding(openGUI);
 			inited = true;
 			
 			RenderingRegistry.registerEntityRenderingHandler(EntityVehicle.class,new RenderVehicle());
@@ -128,21 +134,28 @@ public class CLProxy extends CMProxy {
 	public float getXaxis(){
 		if(Controllers.getControllerCount() > 0){
 			Controller stick = Controllers.getController(0);
-			if(stick != null)return stick.getXAxisValue();
+			if(stick != null)return stick.getAxisValue(cfgControl_axisXID);
 		}
 		return 0;
 	}
 	public float getYaxis(){
 		if(Controllers.getControllerCount() > 0){
 			Controller stick = Controllers.getController(0);
-			if(stick != null)return stick.getYAxisValue();
+			if(stick != null)return stick.getAxisValue(cfgControl_axisYID);
 		}
 		return 0;
 	}
 	public float getZaxis(){
 		if(Controllers.getControllerCount() > 0){
 			Controller stick = Controllers.getController(0);
-			if(stick != null)return stick.getZAxisValue();
+			if(stick != null)return stick.getAxisValue(cfgControl_axisZID);
+		}
+		return 0;
+	}
+	public float getZaxis2(){
+		if(Controllers.getControllerCount() > 0){
+			Controller stick = Controllers.getController(0);
+			if(stick != null)return stick.getAxisValue(cfgControl_axisZ2ID);
 		}
 		return 0;
 	}
@@ -304,6 +317,31 @@ public class CLProxy extends CMProxy {
 		}else return false;
 		//return false;
 	}
+	@Override
+	public boolean reloadConfigclick(){
+		boolean flag = isKeyDown(reloadConfig.getKeyCode());
+		if(!flag) reloadConfig_stopper = false;
+		if(reloadConfig_stopper){
+			return false;
+		}else if(flag){
+			reloadConfig_stopper = true;
+			return true;
+		}else return false;
+		//return false;
+	}
+	@Override
+	public boolean openGUIKeyDown(){
+		boolean flag = isKeyDown(openGUI.getKeyCode());
+		if(!flag) openGUI_stopper = false;
+		if(openGUI_stopper){
+			return false;
+		}else if(flag){
+			openGUI_stopper = true;
+			return true;
+		}else return false;
+		
+		//return false;
+	}
 	
 	public boolean iszooming(){
 		return zooming;
@@ -320,7 +358,7 @@ public class CLProxy extends CMProxy {
 		
 		GL11.glPushMatrix();
 		for(OBB aobb : p_147590_0_.boxes){
-			drawOutlinedOBB(aobb,p_147590_1_);
+			if(aobb != null)drawOutlinedOBB(aobb,p_147590_1_);
 		}
 		GL11.glPopMatrix();
 	}

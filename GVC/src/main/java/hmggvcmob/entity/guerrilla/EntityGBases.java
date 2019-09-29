@@ -1,7 +1,7 @@
 package hmggvcmob.entity.guerrilla;
 
 import hmggvcmob.IflagBattler;
-import hmggvcmob.SlowPathFinder.ModifiedPathNavigater;
+import handmadevehicle.SlowPathFinder.ModifiedPathNavigater;
 import hmggvcmob.tile.TileEntityFlag;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;

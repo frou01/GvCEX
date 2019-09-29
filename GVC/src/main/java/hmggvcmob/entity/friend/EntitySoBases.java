@@ -3,7 +3,7 @@ package hmggvcmob.entity.friend;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import hmggvcmob.IflagBattler;
-import hmggvcmob.SlowPathFinder.ModifiedPathNavigater;
+import handmadevehicle.SlowPathFinder.ModifiedPathNavigater;
 import hmggvcmob.tile.TileEntityFlag;
 import handmadevehicle.entity.parts.IhasprevRidingEntity;
 import net.minecraft.block.Block;

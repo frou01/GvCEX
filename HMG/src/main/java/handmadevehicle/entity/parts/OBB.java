@@ -25,8 +25,10 @@ public class OBB {
 
     public OBB(Vector3d pos,Vector3d directs){
         this.pos = pos;
-        size = directs;
-        size.scale(0.5);
+        this.size = directs;
+    }
+    public OBB getCopy(){
+        return new OBB(pos,size);
     }
     public void updateColChecker(ModifiedBoundingBox modifiedBoundingBox){
         maxvertex = new Vector3d();

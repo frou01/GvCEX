@@ -296,7 +296,80 @@ public class HMGRenderItemGun_U implements IItemRenderer {
 
 		this.armoffsetscale = armoffsetscalein;
 	}
-
+	
+	public void setSomeParam(IModelCustom modelgun, ResourceLocation texture, float scala, float high, float high1,
+	                          float high2, float widthx0, float widthx1, float widthx2, float widthz0, float widthz1, float widthz2, float rotax0
+			, float rotax1, float rotax2, float rotay0, float rotay1, float rotay2, float rotaz0, float rotaz1, float rotaz2,
+			                  boolean arm, float armrxr, float armryr, float armrzr, float offxr, float offyr, float offzr
+			, float armrxl, float armryl, float armrzl, float offxl, float offyl, float offzl, float nx, float ny, float nz,
+			                  float m31px, float m31py, float m31pz, float m31rx, float m31ry, float m31rz
+			, float m32px, float m32py, float m32pz, float m32rx, float m32ry, float m32rz , float armoffsetscalein) {
+		guntexture = texture;
+		modeling = modelgun;
+		this.modelBipedMain = new ModelBiped(0.5F);
+		
+		this.modelscala = scala;
+		this.modely = high;
+		this.modely0 = high;
+		this.modely1 = high1;
+		this.modely2 = high2;
+		
+		this.modelx = widthx0;
+		this.modelx0 = widthx0;
+		this.modelx1 = widthx1;
+		this.modelx2 = widthx2;
+		this.modelz = widthz0;
+		this.modelz0 = widthz0;
+		this.modelz1 = widthz1;
+		this.modelz2 = widthz2;
+		
+		this.rotationx = rotax0;
+		this.rotationx0 = rotax0;
+		this.rotationx1 = rotax1;
+		this.rotationx2 = rotax2;
+		this.rotationy = rotay0;
+		this.rotationy0 = rotay0;
+		this.rotationy1 = rotay1;
+		this.rotationy2 = rotay2;
+		this.rotationz = rotaz0;
+		this.rotationz0 = rotaz0;
+		this.rotationz1 = rotaz1;
+		this.rotationz2 = rotaz2;
+		
+		this.armtrue = arm;
+		this.armrotationxr = armrxr;
+		this.armrotationyr = armryr;
+		this.armrotationxr = armrzr;
+		this.armoffsetxr = offxr;
+		this.armoffsetyr = offyr;
+		this.armoffsetzr = offzr;
+		this.armrotationxl = armrxl;
+		this.armrotationyl = armryl;
+		this.armrotationxl = armrzl;
+		this.armoffsetxl = offxl;
+		this.armoffsetyl = offyl;
+		this.armoffsetzl = offzl;
+		
+		this.nox = nx;
+		this.noy = ny;
+		this.noz = nz;
+		
+		this.mat31posx = m31px;
+		this.mat31posy = m31py;
+		this.mat31posz = m31pz;
+		this.mat31rotex = m31rx;
+		this.mat31rotez = m31rz;
+		this.mat31rotey = m31ry;
+		
+		this.mat32posx = m32px;
+		this.mat32posy = m32py;
+		this.mat32posz = m32pz;
+		this.mat32rotex = m32rx;
+		this.mat32rotez = m32ry;
+		this.mat32rotey = m32rz;
+		
+		this.armoffsetscale = armoffsetscalein;
+	}
 	@Override
 	public boolean handleRenderType(ItemStack item, ItemRenderType type) {
 

@@ -173,10 +173,10 @@ public class HMGEventZoom {
 			if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
 				if (gunstack != null && gunstack.getItem() instanceof HMGItem_Unified_Guns) {
 					// this.modelArmor.aimedBow = true;
-					HMGItem_Unified_Guns gunbase = (HMGItem_Unified_Guns) gunstack.getItem();
-					String ads = gunbase.gunInfo.adstexture;
-					String adsr = gunbase.gunInfo.adstexturer;
-					String adss = gunbase.gunInfo.adstextures;
+					HMGItem_Unified_Guns gunItem = (HMGItem_Unified_Guns) gunstack.getItem();
+					String ads = gunItem.gunInfo.adstexture;
+					String adsr = gunItem.gunInfo.adstexturer;
+					String adss = gunItem.gunInfo.adstextures;
 					((HMGItem_Unified_Guns) gunstack.getItem()).checkTags(gunstack);
 					NBTTagCompound nbt = gunstack.getTagCompound();
 					//String ads = nbt.getString("adstexture");
@@ -189,9 +189,9 @@ public class HMGEventZoom {
 						targetEntityID = nbt.getInteger("TGT");
 					}
 					float spreadDiffusion = nbt.getFloat("Diffusion");
-					float bure = gunbase.gunInfo.spread_setting;
-					bure *= HandmadeGunsCore.Key_ADS(entityplayer) ? gunbase.gunInfo.ads_spread_cof:1;
-					bure  += gunbase.gunInfo.spread_setting * spreadDiffusion;
+					float bure = gunItem.gunInfo.spread_setting;
+					bure *= HandmadeGunsCore.Key_ADS(entityplayer) ? gunItem.gunInfo.ads_spread_cof:1;
+					bure  += gunItem.gunInfo.spread_setting * spreadDiffusion;
 					((HMGItem_Unified_Guns) gunstack.getItem()).checkTags(gunstack);
 					ItemStack[] items = new ItemStack[6];
 					ItemStack itemstackSight = null;
@@ -214,25 +214,25 @@ public class HMGEventZoom {
 					if (HandmadeGunsCore.Key_ADS(entityplayer)) {
 						if (itemstackSight != null) {
 							if (itemstackSight.getItem() instanceof HMGItemAttachment_reddot) {
-								if (!gunbase.gunInfo.canobj || !gunbase.gunInfo.zoomrer) {
+								if (!gunItem.gunInfo.canobj || !gunItem.gunInfo.zoomrer) {
 									ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer,
-											gunbase.gunInfo.scopezoomred, "cameraZoom", "field_78503_V");
+											gunItem.gunInfo.scopezoomred, "cameraZoom", "field_78503_V");
 									needreset = true;
 								}
-								if (gunbase.gunInfo.zoomrert) {
+								if (gunItem.gunInfo.zoomrert) {
 									this.renderPumpkinBlur(minecraft, screenposX, screenposY, screenWidth, screenHeight, adsr);
 								}
 							} else if (itemstackSight.getItem() instanceof HMGItemAttachment_scope) {
-								if (!gunbase.gunInfo.canobj || !gunbase.gunInfo.zoomres) {
+								if (!gunItem.gunInfo.canobj || !gunItem.gunInfo.zoomres) {
 									ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer,
-											gunbase.gunInfo.scopezoomscope, "cameraZoom", "field_78503_V");
+											gunItem.gunInfo.scopezoomscope, "cameraZoom", "field_78503_V");
 									needreset = true;
 								}
-								if (gunbase.gunInfo.zoomrest) {
+								if (gunItem.gunInfo.zoomrest) {
 									this.renderPumpkinBlur(minecraft, screenposX, screenposY, screenWidth, screenHeight, adss);
 								}
 							} else if (itemstackSight.getItem() instanceof HMGItemSightBase) {
-								if (!gunbase.gunInfo.canobj || ((HMGItemSightBase) itemstackSight.getItem()).scopeonly) {
+								if (!gunItem.gunInfo.canobj || ((HMGItemSightBase) itemstackSight.getItem()).scopeonly) {
 									ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer,
 											((HMGItemSightBase) itemstackSight.getItem()).zoomlevel, "cameraZoom", "field_78503_V");
 									needreset = true;
@@ -242,50 +242,50 @@ public class HMGEventZoom {
 								}
 							}
 						} else {
-							if (!gunbase.gunInfo.canobj || !gunbase.gunInfo.zoomren) {
+							if (!gunItem.gunInfo.canobj || !gunItem.gunInfo.zoomren) {
 								ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer,
-										gunbase.gunInfo.scopezoombase, "cameraZoom", "field_78503_V");
+										gunItem.gunInfo.scopezoombase, "cameraZoom", "field_78503_V");
 								needreset = true;
 							}
-							if (gunbase.gunInfo.zoomrent) {
+							if (gunItem.gunInfo.zoomrent) {
 								this.renderPumpkinBlur(minecraft, screenposX, screenposY, screenWidth, screenHeight, ads);
 							}
 						}
-						if (gunbase.gunInfo.renderMCcross) {
+						if (gunItem.gunInfo.renderMCcross) {
 							GuiIngameForge.renderCrosshairs = true;
 						} else {
 							GuiIngameForge.renderCrosshairs = false;
 							GL11.glEnable(GL11.GL_BLEND);
 						}
-						if(gunbase.gunInfo.renderHMGcross && spreadDiffusion > gunbase.gunInfo.spreadDiffusionmin)this.renderCrossHair(minecraft, scaledresolution.getScaledWidth(), scaledresolution.getScaledHeight(), bure);
+						if(gunItem.gunInfo.renderHMGcross && spreadDiffusion > gunItem.gunInfo.spreadDiffusionmin)this.renderCrossHair(minecraft, scaledresolution.getScaledWidth(), scaledresolution.getScaledHeight(), bure);
 					} else {
 						// GuiIngameForge.renderCrosshairs = true;
-						if (gunbase.gunInfo.renderMCcross) {
+						if (gunItem.gunInfo.renderMCcross) {
 							GuiIngameForge.renderCrosshairs = true;
 						} else {
 							GuiIngameForge.renderCrosshairs = false;
 							GL11.glEnable(GL11.GL_BLEND);
 						}
-						if(gunbase.gunInfo.renderHMGcross)this.renderCrossHair(minecraft, scaledresolution.getScaledWidth(), scaledresolution.getScaledHeight(), bure);
+						if(gunItem.gunInfo.renderHMGcross)this.renderCrossHair(minecraft, scaledresolution.getScaledWidth(), scaledresolution.getScaledHeight(), bure);
 						if (itemstackSight != null) {
 							if (itemstackSight.getItem() instanceof HMGItemAttachment_reddot) {
-								if (!gunbase.gunInfo.canobj || !gunbase.gunInfo.zoomrer) {
+								if (!gunItem.gunInfo.canobj || !gunItem.gunInfo.zoomrer) {
 									ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer,
 											1.0d, "cameraZoom", "field_78503_V");
 								}
 							} else if (itemstackSight.getItem() instanceof HMGItemAttachment_scope) {
-								if (!gunbase.gunInfo.canobj || !gunbase.gunInfo.zoomres) {
+								if (!gunItem.gunInfo.canobj || !gunItem.gunInfo.zoomres) {
 									ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer,
 											1.0d, "cameraZoom", "field_78503_V");
 								}
 							} else if (itemstackSight.getItem() instanceof HMGItemSightBase) {
-								if (!gunbase.gunInfo.canobj || ((HMGItemSightBase) itemstackSight.getItem()).scopeonly) {
+								if (!gunItem.gunInfo.canobj || ((HMGItemSightBase) itemstackSight.getItem()).scopeonly) {
 									ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer,
 											1.0d, "cameraZoom", "field_78503_V");
 								}
 							}
 						} else {
-							if (!gunbase.gunInfo.canobj || !gunbase.gunInfo.zoomren) {
+							if (!gunItem.gunInfo.canobj || !gunItem.gunInfo.zoomren) {
 								ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer,
 										1.0d, "cameraZoom", "field_78503_V");
 							}
@@ -313,20 +313,20 @@ public class HMGEventZoom {
 					GL11.glEnable(GL11.GL_BLEND);
 					GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-					String d = String.format("%1$3d", gunbase.remain_Bullet(gunstack));
-					String d1 = String.format("%1$3d", gunbase.max_Bullet(gunstack));
+					String d = String.format("%1$3d", gunItem.remain_Bullet(gunstack));
+					String d1 = String.format("%1$3d", gunItem.max_Bullet(gunstack));
 					fontrenderer.drawStringWithShadow(d + " /" + d1, (int)screenWidth - 70, (int)screenHeight - fontrenderer.FONT_HEIGHT * 4, 0xFFFFFF);
 
 					GuiIngame g = minecraft.ingameGUI;
-					//g.drawTexturedModelRectFromIcon(screenWidth-40, screenHeight-33, gunbase.magazine.getIconFromDamage(0), 16, 16);
-					if (gunbase.getcurrentMagazine(gunstack) != null) {
+					//g.drawTexturedModelRectFromIcon(screenWidth-40, screenHeight-33, gunItem.magazine.getIconFromDamage(0), 16, 16);
+					if (gunItem.getcurrentMagazine(gunstack) != null) {
 						int stacksize = 0;
 						minecraft.getTextureManager().bindTexture(TextureMap.locationItemsTexture);
-						g.drawTexturedModelRectFromIcon((int)screenWidth - 70, (int)screenHeight - 53, gunbase.getcurrentMagazine(gunstack).getIconFromDamage(0), 16, 16);
+						g.drawTexturedModelRectFromIcon((int)screenWidth - 70, (int)screenHeight - 53, gunItem.getcurrentMagazine(gunstack).getIconFromDamage(0), 16, 16);
 						for (int is = 0; is < 36; ++is) {
 							InventoryPlayer playerInv = entityplayer.inventory;
 							ItemStack itemi = playerInv.getStackInSlot(is);
-							if (itemi != null && itemi.getItem() == gunbase.getcurrentMagazine(gunstack)) {
+							if (itemi != null && itemi.getItem() == gunItem.getcurrentMagazine(gunstack)) {
 								stacksize += itemi.stackSize;
 							}
 						}
@@ -334,14 +334,14 @@ public class HMGEventZoom {
 						fontrenderer.drawStringWithShadow("x" + d2, (int)screenWidth - 50, (int)screenHeight - fontrenderer.FONT_HEIGHT * 5, 0xFFFFFF);
 					}
 					
-					if (gunbase.get_selectingMagazine(gunstack) != null && gunbase.getcurrentMagazine(gunstack) != gunbase.get_selectingMagazine(gunstack)) {
+					if (gunItem.get_selectingMagazine(gunstack) != null && gunItem.getcurrentMagazine(gunstack) != gunItem.get_selectingMagazine(gunstack)) {
 						int stacksize = 0;
 						minecraft.getTextureManager().bindTexture(TextureMap.locationItemsTexture);
-						g.drawTexturedModelRectFromIcon((int)screenWidth - 120, (int)screenHeight - 53, gunbase.get_selectingMagazine(gunstack).getIconFromDamage(0), 16, 16);
+						g.drawTexturedModelRectFromIcon((int)screenWidth - 120, (int)screenHeight - 53, gunItem.get_selectingMagazine(gunstack).getIconFromDamage(0), 16, 16);
 						for (int is = 0; is < 36; ++is) {
 							InventoryPlayer playerInv = entityplayer.inventory;
 							ItemStack itemi = playerInv.getStackInSlot(is);
-							if (itemi != null && itemi.getItem() == gunbase.get_selectingMagazine(gunstack)) {
+							if (itemi != null && itemi.getItem() == gunItem.get_selectingMagazine(gunstack)) {
 								stacksize += itemi.stackSize;
 							}
 						}
@@ -350,7 +350,7 @@ public class HMGEventZoom {
 						fontrenderer.drawStringWithShadow("next", (int)screenWidth - 120, (int)screenHeight - fontrenderer.FONT_HEIGHT * 5 - 16, 0xFFFFFF);
 					}
 					this.renderBullet(fontrenderer, (int)screenWidth, (int)screenHeight, gunstack);
-					if (gunbase.gunInfo.canlock) {
+					if (gunItem.gunInfo.canlock) {
 						if (nbt.getBoolean("SeekerOpened"))
 							fontrenderer.drawStringWithShadow("Seekeropen", (int)screenWidth - 60, (int)screenHeight - fontrenderer.FONT_HEIGHT * 2, 0xFFFFFF);
 					}

@@ -491,7 +491,6 @@ public class ModifiedBoundingBox extends AxisAlignedBB {
     public MovingObjectPosition calculateIntercept(Vec3 start, Vec3 end)
     {
 
-
         Vector3d startVec = new Vector3d(start.xCoord,start.yCoord,start.zCoord);
         Vector3d endVec = new Vector3d(end.xCoord,end.yCoord,end.zCoord);
 
@@ -516,6 +515,8 @@ public class ModifiedBoundingBox extends AxisAlignedBB {
 
         startVec.add(rotcenterVec);
         endVec.add(rotcenterVec);
+//        System.out.println("start" + startVec);
+//        System.out.println("end" + endVec);
 //
 //        System.out.println("1"+startVec);
 //        System.out.println("2"+endVec);

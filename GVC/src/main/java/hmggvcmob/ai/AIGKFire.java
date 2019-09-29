@@ -5,7 +5,7 @@ import handmadeguns.entity.IFF;
 import handmadeguns.entity.bullets.HMGEntityBullet;
 import handmadeguns.entity.bullets.HMGEntityBulletExprode;
 import handmadeguns.network.PacketSpawnParticle;
-import hmggvcmob.SlowPathFinder.WorldForPathfind;
+import handmadevehicle.SlowPathFinder.WorldForPathfind;
 import hmggvcmob.entity.IIRVING;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;

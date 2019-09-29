@@ -176,6 +176,13 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 		
 		partsRender_gun.modelscala = this.modelscala = scala;
 	}
+	public void reloadConstructor(IModelCustom modelgun, ResourceLocation texture, float scala) {
+		partsRender_gun = new PartsRender_Gun();
+		partsRender_gun.model = model = modelgun;
+		partsRender_gun.texture = guntexture = texture;
+		
+		partsRender_gun.modelscala = this.modelscala = scala;
+	}
 
 	public void setarmOffsetAndRotationR(float px,float py,float pz,float rx,float ry,float rz){
 		partsRender_gun.armoffsetxr = px;
@@ -242,6 +249,7 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 	@Override
 	public void renderItem(ItemRenderType type, ItemStack gunstack, Object... data) {
 		GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
+		GL11.glShadeModel(GL11.GL_SMOOTH);
 		for(pass = 0;pass<2;pass++) {
 			if(pass == 1) {
 				glEnable(GL_BLEND);
@@ -276,11 +284,11 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 			this.gunitem = gunitem;
 			nbt = gunstack.getTagCompound();
 			items[0] = null;
-			items[1] = null;//�T�C�g
-			items[2] = null;//���[�U�[�T�C�g��
-			items[3] = null;//�}�Y���A�^�b�`�����g
-			items[4] = null;//�A���_�[�o����
-			items[5] = null;//�}�K�W��
+			items[1] = null;
+			items[2] = null;
+			items[3] = null;
+			items[4] = null;
+			items[5] = null;
 			NBTTagList tags = (NBTTagList) nbt.getTag("Items");
 			if (tags != null) {
 				for (int i = 0; i < tags.tagCount(); i++)//133
@@ -497,7 +505,7 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 						} else if (!recoiled) {
 							GL11.glRotatef(jump * (1 - this.getSmoothing()), 1.0f, 0.0f, 0.0f);
 							float recoileprogress = 10 * (nbt.getByte("Bolt") + smoothing) / gunitem.gunInfo.cycle;
-							partsRender_gun.partSidentification(new GunState[]{GunState.Recoil}, recoileprogress, remainbullets);
+							partsRender_gun.partSidentification(new GunState[]{GunState.ADS,GunState.Recoil}, recoileprogress, remainbullets);
 						} else {
 							partsRender_gun.partSidentification(new GunState[]{GunState.ADS}, (float)0, remainbullets);
 						}
@@ -560,7 +568,6 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 			
 			GL11.glDepthMask(true);
 			GL11.glDisable(GL_BLEND);
-			GL11.glShadeModel(GL11.GL_FLAT);
 			GL11.glPopMatrix();
 		}
 		GL11.glPopAttrib();

@@ -1,0 +1,83 @@
+guerrila_cant_use_this
+Dont_Be_Inside_Root_Chest
+BulletPower,2000
+BulletSpeed,1000.0f
+BlletSpread,4.0f
+BulletGravity,0.49f
+Recoil,0
+ReloadTime,200
+RemainingBullet,1
+Attacking,0.0f
+Zoom,4.0f,4.0f,4.0f
+ZoomRender,true
+ZoomRenderType,true,true,false
+ZoomRenderTypeTxture,false,false,true
+Cycle,2
+Texture,2A115
+GunSound,handmadeguns.railCannon,handmadeguns.railCannon
+CustomFlash,RailMuzzleFlash,4,100
+SoundSpeed,0.8f
+GunSoundReload,handmadeguns.reload
+CanObj,true
+ObjModel,RailGun.mqo
+ObjTexture,RailGun.png
+ModelScala,1
+InworldScale,1
+OnTurretScale,5
+ModelHigh,-28,0,0.35
+ModelWidthZ,32,5,5
+ModelWidthX,8,0,0
+ModelEquipped,-0.7F,0.35,2.5
+ScopeTexture,ironsight.png,reddot.png,scope.png
+RenderCross,false
+UnderBarrelWeapon,0
+RightType,0
+Canfix,true
+NeedFix,true
+FixAsEntity,true
+Magazine,0,HandmadeGuns,RailAPFSDS
+DropMagazine,false
+Cartridge,false
+ModelArm,false
+OnEntity_BarrelPoint,0,4.2255,50.1852
+OnEntity_PlayerPosOffset,0,0,0
+OnEntity_RotationPitchPoint,0,2.7498,-0.5578
+Turretanglelimit,5,-60,360,-360
+attachRestriction,true
+
+OnEntity_Yoffset,0
+
+AddParts,Base
+    AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+    RenderOnNormal
+    AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+    AddYawInfoKey,-360,0,0,0,0,-360,0        ,360,0,0,0,0,360,0
+        AddChildParts,Cover
+        AddPartsRotationCenterAndRotationAmount,0,2.7498,-0.5578,0,0,0
+        RenderOnNormal
+        AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+        AddPitchInfoKey,-360,0,0,0,-360,0,0        ,360,0,0,0,360,0,0
+            AddChildParts,Barrel
+            AddPartsRotationCenterAndRotationAmount,0,2.7498,-0.5578,0,0,0
+            RenderOnNormal
+            AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+            AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+            AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+            AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+            AddReloadMotionKey,0,0,0,0,0,0,0,           3,0,0,-1,0,0,0
+            AddReloadMotionKey,3,0,0,-1,0,0,0,          190,0,0,0,0,0,0
+            AddReloadMotionKey,190,0,0,0,0,0,0,          200,0,0,0,0,0,0
+
+
+BulletNameALL,byfrou01_RailBullet
+//BulletNameMAG,RailGunCart
+restrictTurretMoveSpeed,0.5,0.5
+TurretBoxSize,5,5
+TurretHP,1200
+GL,2A115

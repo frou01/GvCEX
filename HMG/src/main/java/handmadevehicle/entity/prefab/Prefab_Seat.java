@@ -13,10 +13,11 @@ public class Prefab_Seat {
 	public int subid;
 	public Prefab_Seat(){
 	}
-	public Prefab_Seat(double[] pos,boolean hasGun,boolean aimGun,int mainid,int subid){
+	public Prefab_Seat(double[] pos,boolean hasGun,boolean aimGun,boolean seatOnTurret,int mainid,int subid){
 		this.pos = pos;
 		this.hasGun = hasGun;
 		this.aimGun = aimGun;
+		this.seatOnTurret = seatOnTurret;
 		this.mainid = mainid;
 		this.subid = subid;
 	}

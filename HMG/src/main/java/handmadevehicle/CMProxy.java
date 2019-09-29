@@ -45,6 +45,9 @@ public class CMProxy {
 	public float getZaxis(){
 		return 0;
 	}
+	public float getZaxis2(){
+		return 0;
+	}
 	
 	public boolean pitchUp(){
 		return false;
@@ -117,6 +120,12 @@ public class CMProxy {
 		return false;
 	}
 	public boolean resetCamrotclick(){
+		return false;
+	}
+	public boolean reloadConfigclick(){
+		return false;
+	}
+	public boolean openGUIKeyDown(){
 		return false;
 	}
 	public boolean iszooming(){

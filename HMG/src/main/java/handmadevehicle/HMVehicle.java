@@ -9,14 +9,15 @@ import cpw.mods.fml.common.discovery.ModCandidate;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
-import handmadeguns.command.HMG_CommandReloadparm;
 import handmadevehicle.Items.ItemWrench;
-import handmadevehicle.command.HMV_CommandReloadparm;
 import handmadevehicle.entity.EntityVehicle;
 import handmadevehicle.events.HMVRenderSomeEvent;
 import handmadevehicle.events.HMV_Event;
+import handmadevehicle.gui.HMVGuiHancler;
+import handmadevehicle.network.HMVPacketHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraftforge.client.model.ModelFormatException;
@@ -48,7 +49,11 @@ public class HMVehicle {
 	public static final CreativeTabs tabHMV = new HMVDefaultTab("HMV");
 	public static double cfgVehicleWheel_UpRange = 1;
 	public static double cfgVehicleWheel_DownRange = 2;
-	
+	public static int cfgControl_axisXID = 0;
+	public static int cfgControl_axisYID = 1;
+	public static int cfgControl_axisZID = 2;
+	public static int cfgControl_axisZ2ID = 3;
+	public static Configuration lconf;
 	
 	public static void Debug(String pText, Object... pData) {
 		if (isDebugMessage) {
@@ -59,10 +64,10 @@ public class HMVehicle {
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent pEvent) {
 		File configFile = pEvent.getSuggestedConfigurationFile();
-		Configuration lconf = new Configuration(configFile);
-		lconf.load();
-		lconf.save();
+		lconf = new Configuration(configFile);
+		loadConfig();
 		HMVPacketHandler.init();
+		NetworkRegistry.INSTANCE.registerGuiHandler(this, new HMVGuiHancler());
 		File packdir = new File(HMV_Proxy.ProxyFile(), "handmadeVehicles_Packs");
 		packdir.mkdirs();
 		{
@@ -101,6 +106,16 @@ public class HMVehicle {
 		}
 	}
 
+	public static void loadConfig(){
+		lconf.load();
+		cfgVehicleWheel_UpRange = lconf.getFloat("cfgVehicleWheel_UpRange","Wheel",1,0,50,null);
+		cfgVehicleWheel_DownRange = lconf.getFloat("cfgVehicleWheel_DownRange","Wheel",2,0,50,null);
+		cfgControl_axisXID = lconf.getInt("cfgControl_axisXID","Control",0,0,128,null);
+		cfgControl_axisYID = lconf.getInt("cfgControl_axisYID","Control",1,0,128,null);
+		cfgControl_axisZID = lconf.getInt("cfgControl_axisZID","Control",2,0,128,null);
+		cfgControl_axisZ2ID = lconf.getInt("cfgControl_axisZ2ID","Control",3,0,128,null);
+		lconf.save();
+	}
 	@EventHandler
 	public void init(FMLInitializationEvent pEvent) {
 		int id = 0;
@@ -176,4 +191,6 @@ public class HMVehicle {
 	public void serverStarting(FMLServerStartingEvent event){
 		event.registerServerCommand(hmv_commandReloadparm);
 	}
+	
+	
 }

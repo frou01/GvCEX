@@ -3,7 +3,7 @@ package hmggvcmob.ai;
 import handmadeguns.entity.PlacedGunEntity;
 import handmadeguns.items.guns.HMGItem_Unified_Guns;
 import hmggvcutil.entity.GVCEntityBox;
-import hmggvcmob.SlowPathFinder.WorldForPathfind;
+import handmadevehicle.SlowPathFinder.WorldForPathfind;
 import hmggvcmob.entity.IGVCmob;
 import hmggvcmob.entity.friend.EntitySoBases;
 import hmggvcmob.entity.guerrilla.EntityGBases;

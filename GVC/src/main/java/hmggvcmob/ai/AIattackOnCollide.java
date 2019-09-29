@@ -1,16 +1,14 @@
 package hmggvcmob.ai;
 
-import hmggvcmob.SlowPathFinder.WorldForPathfind;
+import handmadevehicle.SlowPathFinder.WorldForPathfind;
 import hmggvcmob.entity.IGVCmob;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.pathfinding.PathPoint;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.MathHelper;
-import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
 public class AIattackOnCollide extends EntityAIBase

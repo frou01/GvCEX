@@ -32,6 +32,7 @@ public class Prefab_Turret {
 	public float traversesoundLV = 1;
 	public float traversesoundPitch = 1;
 	public boolean hasReflexSight;
+	public boolean useVehicleInventory;
 	
 	public FireRist[] fireRists;
 	
@@ -44,6 +45,8 @@ public class Prefab_Turret {
 	public TurretObj getnewTurret(World world){
 		TurretObj turretObj = new TurretObj(world);
 		turretObj.prefab_turret = this;
+		turretObj.dummyGunItem.gunInfo = this.gunInfo;
+		turretObj.dummyGunItem.setMaxDamage(gunInfo.bulletRound);
 		return turretObj;
 	}
 }

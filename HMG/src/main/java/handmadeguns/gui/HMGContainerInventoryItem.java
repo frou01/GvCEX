@@ -10,7 +10,7 @@ import net.minecraft.item.ItemStack;
 
 public class HMGContainerInventoryItem extends Container
 {
-    private HMGInventoryItem inventory;
+    public HMGInventoryItem inventory;
 
     public HMGContainerInventoryItem(InventoryPlayer inventoryPlayer, ItemStack itemstack)
     {
@@ -35,12 +35,11 @@ public class HMGContainerInventoryItem extends Container
             //for (int k = 0; k < 9; ++k)
             {
                 //this.addSlotToContainer(new Slot(inventory, k + j * 9, 8 + k * 18, 18 + j * 18));
-                this.addSlotToContainer(new HMGSlotInventoryItem(inventory, 1, 8 + 5 * 18, 18 + 1 * 18,inventoryPlayer.getCurrentItem()));
-                this.addSlotToContainer(new HMGSlotInventoryItem(inventory, 2, 8 + 2 * 18, 18 + 1 * 18,inventoryPlayer.getCurrentItem()));
-                this.addSlotToContainer(new HMGSlotInventoryItem(inventory, 3, 8 + 0 * 18, 18 + 4 * 18,inventoryPlayer.getCurrentItem()));
-                this.addSlotToContainer(new HMGSlotInventoryItem(inventory, 4, 8 + 2 * 18, 18 + 5 * 18,inventoryPlayer.getCurrentItem()));
-
-                this.addSlotToContainer(new HMGSlotInventoryItem(inventory, 5, 8 + 7 * 18, 18 + 5 * 18,inventoryPlayer.getCurrentItem()));
+                this.addSlotToContainer(new HMGSlotInventoryItem(inventory, 1, 8 + 0 * 18, 36,inventoryPlayer.getCurrentItem()));
+                this.addSlotToContainer(new HMGSlotInventoryItem(inventory, 2, 8 + 2 * 18, 36,inventoryPlayer.getCurrentItem()));
+                this.addSlotToContainer(new HMGSlotInventoryItem(inventory, 3, 8 + 4 * 18, 36,inventoryPlayer.getCurrentItem()));
+                this.addSlotToContainer(new HMGSlotInventoryItem(inventory, 4, 8 + 6 * 18, 36,inventoryPlayer.getCurrentItem()));
+                this.addSlotToContainer(new HMGSlotInventoryItem(inventory, 5, 8 + 8 * 18, 36,inventoryPlayer.getCurrentItem()));//銃側インベントリ
             }
         }
 

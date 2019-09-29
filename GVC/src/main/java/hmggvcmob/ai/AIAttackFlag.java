@@ -1,7 +1,7 @@
 package hmggvcmob.ai;
 
 import hmggvcmob.IflagBattler;
-import hmggvcmob.SlowPathFinder.WorldForPathfind;
+import handmadevehicle.SlowPathFinder.WorldForPathfind;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.util.Vec3;

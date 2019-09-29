@@ -1,0 +1,30 @@
+Name,MiG-21;
+modelName,MiG-21.mqo;
+modelName_texture,MiG-21.png;
+health,150;
+camerapos,0,2.3382,-4;
+soundname,handmadevehicle:handmadevehicle.jetplane;
+//ïêëïí«â¡;
+ParentWeapons_NUM,2;
+AllWeapons_NUM,5;
+addParentWeapon,0,Gsh-23_GP-9,0,0.8659,-2.3092,0;
+addParentWeapon,1,R-3S,-2.0408,	1.0591,1.3290,3;
+
+addChildWeapon,	0,R-3S,2.0408,	1.0591,1.3290,0;
+Set_CurrentTurret_to_Mother;
+addChildWeapon,	1,R-3S,-2.7220,	1.0367,2.5441,0;
+Set_CurrentTurret_to_Mother;
+addChildWeapon,	2,R-3S,2.7220,	1.0367,2.5441,0;
+//ç¿ê»í«â¡;
+SetUpSeat1_NUM,1;
+SetUpSeat2_AddSeat_Normal,0,0,2.3382,-3.8,true,false,false,0,1;
+
+AddParts,body;
+	AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0;
+	RenderOnNormal;
+	AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0;
+	AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0;
+	AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0;
+	AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0;
+
+End;

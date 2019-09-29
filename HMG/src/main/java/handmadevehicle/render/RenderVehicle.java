@@ -31,7 +31,7 @@ public class RenderVehicle extends Render {
 	private IModelCustom vehicleModel;
 	private float partialTicks;
 	public static BaseLogic currentBaseLogic;
-	public static EntityLivingBase currentEntity;
+	public static Entity currentEntity;
 	public PartsRender_Vehicle partsRender_vehicle = new PartsRender_Vehicle();
 	private TurretObj[] allTurrets;
 	
@@ -53,15 +53,18 @@ public class RenderVehicle extends Render {
 	public void doRender(Entity entity, double p_76986_2_, double p_76986_4_, double p_76986_6_,
 	                     float entityYaw, float in_partialTicks) {
 		
-		if(entity instanceof EntityLivingBase && entity instanceof IMultiTurretVehicle && entity instanceof IVehicle && ((IVehicle) entity).getBaseLogic().info.modelSetAndData != null){
+		if(entity instanceof IMultiTurretVehicle && entity instanceof IVehicle && ((IVehicle) entity).getBaseLogic().info.modelSetAndData != null){
+			GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
 			skeletonTexturesz = ((IVehicle) entity).getBaseLogic().info.modelSetAndData.texture;
 			vehicleModel = ((IVehicle) entity).getBaseLogic().info.modelSetAndData.model;
 			pass = MinecraftForgeClient.getRenderPass();
 			currentBaseLogic = ((IVehicle) entity).getBaseLogic();
-			currentEntity = (EntityLivingBase) entity;
+			currentEntity = entity;
 			allTurrets = currentBaseLogic.allturrets;
 			partialTicks = in_partialTicks;
 			TurretObj[] turretObjs = currentBaseLogic.turrets;
+			
+			GL11.glShadeModel(GL11.GL_SMOOTH);
 			if (pass == 1) {
 				glEnable(GL_BLEND);
 				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -92,6 +95,7 @@ public class RenderVehicle extends Render {
 			GL11.glTranslatef(-(float) currentBaseLogic.info.rotcenter[0], -(float) currentBaseLogic.info.rotcenter[1], -(float) currentBaseLogic.info.rotcenter[2]);
 			
 			GL11.glPushMatrix();
+			GL11.glScalef((float) currentBaseLogic.info.scale, (float) currentBaseLogic.info.scale, (float) currentBaseLogic.info.scale);
 			if(currentBaseLogic.info.partslist != null){
 				partsRender_vehicle.model = this.vehicleModel;
 				partsRender_vehicle.partSidentification(currentBaseLogic.info.partslist);
@@ -140,6 +144,8 @@ public class RenderVehicle extends Render {
 			}
 			GL11.glPopMatrix();
 			GL11.glPopMatrix();
+			GL11.glShadeModel(GL_FLAT);
+			GL11.glPopAttrib();
 		}
 
 //		GL11.glDisable(GL12.GL_RESCALE_NORMAL);

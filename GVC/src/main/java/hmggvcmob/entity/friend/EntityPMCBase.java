@@ -1,7 +1,7 @@
 package hmggvcmob.entity.friend;
 
 import handmadeguns.items.guns.HMGItem_Unified_Guns;
-import hmggvcmob.SlowPathFinder.WorldForPathfind;
+import handmadevehicle.SlowPathFinder.WorldForPathfind;
 import hmggvcmob.ai.AIAttackGun;
 import hmggvcmob.ai.AINearestAttackableTarget;
 import hmggvcmob.ai.AIattackOnCollide;

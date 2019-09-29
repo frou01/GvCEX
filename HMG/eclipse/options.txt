@@ -1,6 +1,6 @@
 invertYMouse:false
 mouseSensitivity:0.5
-fov:0.25
+fov:0.0
 gamma:1.0
 saturation:0.0
 renderDistance:6
@@ -9,11 +9,11 @@ particles:0
 bobView:true
 anaglyph3d:false
 advancedOpengl:false
-maxFps:20
+maxFps:40
 fboEnable:true
 difficulty:0
-fancyGraphics:false
-ao:0
+fancyGraphics:true
+ao:2
 clouds:true
 resourcePacks:[]
 lastServer:
@@ -27,7 +27,7 @@ snooperEnabled:true
 fullscreen:false
 enableVsync:true
 hideServerAddress:false
-advancedItemTooltips:true
+advancedItemTooltips:false
 pauseOnLostFocus:true
 showCape:true
 touchscreen:false
@@ -39,7 +39,7 @@ chatHeightUnfocused:0.44366196
 chatScale:1.0
 chatWidth:1.0
 showInventoryAchievementHint:false
-mipmapLevels:0
+mipmapLevels:4
 anisotropicFiltering:1
 streamBytesPerPixel:0.5
 streamMicVolume:1.0
@@ -103,6 +103,8 @@ key_rollRight:38
 key_rollLeft:36
 key_Change Control:49
 key_Reset camera Rotation:47
+key_Reload Config Settings:52
+key_Open Vehicle Gui:51
 key_Reload Magazine:19
 key_Change Magazine Type:48
 key_Seeker Open/Close:46
@@ -114,7 +116,7 @@ key_Fix Gun:35
 soundCategory_master:1.0
 soundCategory_music:0.0
 soundCategory_record:1.0
-soundCategory_weather:0.09859155
+soundCategory_weather:1.0
 soundCategory_block:1.0
 soundCategory_hostile:1.0
 soundCategory_neutral:1.0

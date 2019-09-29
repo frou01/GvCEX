@@ -3,9 +3,11 @@ package handmadevehicle;
 import cpw.mods.fml.common.registry.GameRegistry;
 import handmadeguns.HMGGunMaker;
 import handmadeguns.client.render.HMGGunParts;
+import handmadeguns.items.guns.HMGItem_Unified_Guns;
 import handmadevehicle.Items.ItemVehicle;
 import handmadevehicle.entity.prefab.*;
 import handmadevehicle.render.HMVVehicleParts;
+import net.minecraft.item.Item;
 
 import javax.vecmath.Vector3d;
 import java.io.*;
@@ -58,6 +60,9 @@ public class AddNewVehicle extends HMGGunMaker {
 									break;
 								case "modelName_texture":
 									data.modelName_texture = type[1];
+									break;
+								case "scale":
+									data.scale = parseFloat(type[1]);
 									break;
 								case "health":
 									data.maxhealth = parseFloat(type[1]);
@@ -115,7 +120,10 @@ public class AddNewVehicle extends HMGGunMaker {
 									current.prefab_Childturrets[parseInt(type[1])].turretsPos = new Vector3d(parseDouble(type[3]), parseDouble(type[4]), parseDouble(type[5]));
 									current.prefab_Childturrets[parseInt(type[1])].prefab_Childturrets = new Prefab_AttachedWeapon[parseInt(type[6])];
 									current.prefab_Childturrets[parseInt(type[1])].motherTurret = current;
-									current = data.prefab_attachedWeapons[parseInt(type[1])];
+									current = current.prefab_Childturrets[parseInt(type[1])];
+									break;
+								case "Set_CurrentTurret_to_Mother":
+									current = current.motherTurret;
 									break;
 								
 								case "SetUpSeat1_NUM":
@@ -123,10 +131,10 @@ public class AddNewVehicle extends HMGGunMaker {
 									data.prefab_seats_zoom = new Prefab_Seat[parseInt(type[1])];
 									break;
 								case "SetUpSeat2_AddSeat_Normal":
-									data.prefab_seats_zoom[parseInt(type[1])] = data.prefab_seats[parseInt(type[1])] = new Prefab_Seat(new double[]{parseDouble(type[2]), parseDouble(type[3]), parseDouble(type[4])}, parseBoolean(type[5]), parseBoolean(type[6]), parseInt(type[7]), parseInt(type[8]));
+									data.prefab_seats_zoom[parseInt(type[1])] = data.prefab_seats[parseInt(type[1])] = new Prefab_Seat(new double[]{parseDouble(type[2]), parseDouble(type[3]), parseDouble(type[4])}, parseBoolean(type[5]), parseBoolean(type[6]), parseBoolean(type[7]), parseInt(type[8]), parseInt(type[9]));
 									break;
 								case "SetUpSeat3_AddSeat_Zoom":
-									data.prefab_seats_zoom[parseInt(type[1])] = new Prefab_Seat(new double[]{parseDouble(type[2]), parseDouble(type[3]), parseDouble(type[4])}, parseBoolean(type[5]), parseBoolean(type[6]), parseInt(type[7]), parseInt(type[8]));
+									data.prefab_seats_zoom[parseInt(type[1])] = new Prefab_Seat(new double[]{parseDouble(type[2]), parseDouble(type[3]), parseDouble(type[4])}, parseBoolean(type[5]), parseBoolean(type[6]), parseBoolean(type[7]), parseInt(type[8]), parseInt(type[9]));
 									break;
 								case "back":
 									current = current.motherTurret;
@@ -137,7 +145,9 @@ public class AddNewVehicle extends HMGGunMaker {
 										if (!partslist.isEmpty()) data.partslist = partslist;
 									}
 									prefabBaseHashMap.put(dataName, data);
-									GameRegistry.registerItem(new ItemVehicle(dataName).setUnlocalizedName(dataName), dataName);
+									Item check = GameRegistry.findItem("HMVehicle",dataName);
+									if(check == null)
+										GameRegistry.registerItem(new ItemVehicle(dataName).setUnlocalizedName(dataName), dataName);
 									break;
 							}
 							data.readSettings(type);

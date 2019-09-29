@@ -1,5 +1,6 @@
 package handmadeguns.items;
 
+import handmadevehicle.entity.parts.turrets.TurretObj;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 
@@ -26,4 +27,6 @@ public class GunTemp {
 	
 	public int selectingMagazine;
 	public int currentMgazine;
+	
+	public static TurretObj currentConnectedTurret;
 }

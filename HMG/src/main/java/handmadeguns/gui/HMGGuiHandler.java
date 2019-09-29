@@ -6,6 +6,7 @@ import cpw.mods.fml.common.network.IGuiHandler;
 import handmadeguns.entity.HMGEntityItemMount;
 import handmadeguns.entity.HMGEntityItemMount2;
 import handmadeguns.inventory.ContainerHolder;
+import handmadeguns.items.guns.HMGItem_Unified_Guns;
 import handmadeguns.tile.TileMounter;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -89,7 +90,7 @@ public class HMGGuiHandler implements IGuiHandler
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 	{
 		ItemStack itemstack = player.getCurrentEquippedItem();
-		if(ID == 0){
+		if(ID == 0 && itemstack != null && itemstack.getItem() instanceof HMGItem_Unified_Guns){
 			return new HMGGuiInventoryItem(player.inventory, itemstack);
 		}
 		if(ID == 1){

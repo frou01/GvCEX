@@ -8,7 +8,7 @@ import handmadeguns.entity.bullets.*;
 import handmadeguns.network.PacketSpawnParticle;
 import handmadeguns.client.render.HMGGunParts_Motion;
 import handmadeguns.client.render.HMGGunParts_Motions;
-import hmggvcmob.SlowPathFinder.WorldForPathfind;
+import handmadevehicle.SlowPathFinder.WorldForPathfind;
 import hmggvcmob.network.GVCMPacketHandler;
 import hmggvcmob.network.GVCPacketMGControl;
 import handmadevehicle.Utils;

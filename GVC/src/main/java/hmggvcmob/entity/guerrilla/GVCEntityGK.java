@@ -1,7 +1,7 @@
 package hmggvcmob.entity.guerrilla;
 
 import handmadeguns.HandmadeGunsCore;
-import hmggvcmob.SlowPathFinder.WorldForPathfind;
+import handmadevehicle.SlowPathFinder.WorldForPathfind;
 import hmggvcmob.ai.AIGKFire;
 import hmggvcmob.ai.AIGKkick;
 import handmadevehicle.entity.ExplodeEffect;

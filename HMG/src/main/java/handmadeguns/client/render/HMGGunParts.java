@@ -16,11 +16,11 @@ public class HMGGunParts {
     private HMGGunParts_Motion_PosAndRotation rotCenterAndRotation;
     private HMGGunParts_Motion_PosAndRotation defaultPosAndRotation_ForOffset = new HMGGunParts_Motion_PosAndRotation(0,0,0,0,0,0);
 
-    public boolean rendering_Def;
-    public boolean rendering_Ads;
-    public boolean rendering_Recoil;
-    public boolean rendering_Cock;
-    public boolean rendering_Reload;
+    public boolean rendering_Def = false;
+    public boolean rendering_Ads = false;
+    public boolean rendering_Recoil = false;
+    public boolean rendering_Cock = false;
+    public boolean rendering_Reload = false;
 
     private HMGGunParts_Motion_PosAndRotation adsPosAndRotation;
 

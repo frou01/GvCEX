@@ -1,0 +1,13 @@
+Texture,1270bullet
+Stack,64
+Name,12.7mm Rifle Magazine
+BulletRound,10
+CustomMagazine,12.7mm Magazine
+
+Recipe1,a  
+Recipe2,b  
+Recipe3,c  
+ItemA,minecraft,iron_block
+ItemB,minecraft,gunpowder
+ItemC,minecraft,emerald
+addNewRecipe,HandmadeGuns,12.7mm Magazine,3

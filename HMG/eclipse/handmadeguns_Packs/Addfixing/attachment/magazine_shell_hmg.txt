@@ -1,0 +1,5 @@
+Texture,bullet_shell
+Stack,64
+Name,Shot Shell
+Magazine,bullet_shell_hmg
+addRecipe,bullet_shell_hmg,2,ab0,de0,000,265,339,289,339,289,289,289,289,289

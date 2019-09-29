@@ -25,6 +25,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.FOVUpdateEvent;
+import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.client.model.AdvancedModelLoader;
@@ -145,7 +146,7 @@ public class HMVRenderSomeEvent {
 						needrest = true;
 						BaseLogic logic = ((IVehicle) entityplayer.ridingEntity).getBaseLogic();
 						Entity vehicleBody = entityplayer.ridingEntity;
-						if (entityplayer.ridingEntity instanceof IVehicle) {
+						{
 							Vector3d nowPos = new Vector3d();
 							nowPos.interpolate(new Vector3d(vehicleBody.lastTickPosX ,
 									vehicleBody.lastTickPosY,
@@ -248,6 +249,36 @@ public class HMVRenderSomeEvent {
 				break;
 		}
 	}
+	
+	@SideOnly(Side.CLIENT)
+	@SubscribeEvent
+	public void drawScreenEvent(GuiScreenEvent.DrawScreenEvent.Pre event) {
+		
+		Minecraft minecraft = FMLClientHandler.instance().getClient();
+		EntityPlayer entityplayer = minecraft.thePlayer;
+		
+		if(entityplayer.ridingEntity instanceof IVehicle) {
+			BaseLogic logic = ((IVehicle) entityplayer.ridingEntity).getBaseLogic();
+			if (logic.ispilot(entityplayer)) {
+				if (!logic.mouseStickMode) {
+					float f1 = HMG_proxy.getMCInstance().gameSettings.mouseSensitivity * 0.6F + 0.2F;
+					float f2 = f1 * f1 * f1 * 8.0F;
+					float f3 = (float) HMG_proxy.getMCInstance().mouseHelper.deltaX * f2;
+					float f4 = (float) HMG_proxy.getMCInstance().mouseHelper.deltaY * f2;
+					logic.cameraYaw += f3 * 0.015F;
+					logic.cameraPitch += f4 * 0.015F;
+					if (logic.cameraPitch > 90) logic.cameraPitch = 90;
+					if (logic.cameraPitch < -90) logic.cameraPitch = -90;
+				}
+				
+				Quat4d Headrot = new Quat4d(0, 0, 0, 1);
+				Headrot = quatRotateAxis(Headrot, new AxisAngle4d(unitX, toRadians(logic.cameraPitch) / 2));
+				Headrot = quatRotateAxis(Headrot, new AxisAngle4d(unitY, toRadians(logic.cameraYaw) / 2));
+				logic.camerarot.set(Headrot);
+				logic.camerarot_current.set(logic.camerarot);
+			}
+		}
+	}
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
 	public void renderover(RenderGameOverlayEvent.Post event) {
@@ -260,7 +291,7 @@ public class HMVRenderSomeEvent {
 		
 		if(entityplayer.ridingEntity instanceof IVehicle) {
 			BaseLogic logic = ((IVehicle) entityplayer.ridingEntity).getBaseLogic();
-			EntityLiving vehicleBody = (EntityLiving) entityplayer.ridingEntity;
+			Entity vehicleBody = entityplayer.ridingEntity;
 			ScaledResolution scaledresolution = new ScaledResolution(minecraft, minecraft.displayWidth,
 					                                                        minecraft.displayHeight);
 			int i = scaledresolution.getScaledWidth();
@@ -350,22 +381,6 @@ public class HMVRenderSomeEvent {
 
 //				fontrenderer.drawStringWithShadow("Missile : " + logic.rocket + " : " + (logic.missile != null ? "Continue radar irradiation" : logic.illuminated != null?"LOCK":""), i - 300, j - 20 - 10, color);
 				}
-				if (!logic.mouseStickMode) {
-					float f1 = HMG_proxy.getMCInstance().gameSettings.mouseSensitivity * 0.6F + 0.2F;
-					float f2 = f1 * f1 * f1 * 8.0F;
-					float f3 = (float) HMG_proxy.getMCInstance().mouseHelper.deltaX * f2;
-					float f4 = (float) HMG_proxy.getMCInstance().mouseHelper.deltaY * f2;
-					logic.cameraYaw += f3 * 0.015F;
-					logic.cameraPitch += f4 * 0.015F;
-					if (logic.cameraPitch > 90) logic.cameraPitch = 90;
-					if (logic.cameraPitch < -90) logic.cameraPitch = -90;
-				}
-				
-				Quat4d Headrot = new Quat4d(0, 0, 0, 1);
-				Headrot = quatRotateAxis(Headrot, new AxisAngle4d(unitX, toRadians(logic.cameraPitch) / 2));
-				Headrot = quatRotateAxis(Headrot, new AxisAngle4d(unitY, toRadians(logic.cameraYaw) / 2));
-				logic.camerarot.set(Headrot);
-				logic.camerarot_current.set(logic.camerarot);
 			}
 			{//1
 				IVehicle vehicle = (IVehicle) entityplayer.ridingEntity;
@@ -374,44 +389,18 @@ public class HMVRenderSomeEvent {
 				{
 					GL11.glPushMatrix();
 					{
-						String hp = String.format("%1$3d", (int) vehicleBody.getHealth());
-						String mhp = String.format("%1$3d", (int) vehicleBody.getMaxHealth());
+						String hp = String.format("%1$3d", (int) logic.health);
+						String mhp = String.format("%1$3d", (int) logic.health);
 						String th = String.valueOf(vehicle.getBaseLogic().throttle);
 						
 						SeatInfo playerSeatInfo = vehicle.getBaseLogic().seatInfos[playerSeatID];
 						if (playerSeatInfo.maingun != null) {
 							TurretObj turretObj = playerSeatInfo.maingun;
-							if (turretObj.readytoFire()) {
-								fontrenderer.drawStringWithShadow("MAIN Ready magazine:" + turretObj.magazinerem + "/" + turretObj.max_Bullet(),
-										i - 240, j - 30, 0xFFFFFF);
-							} else if (turretObj.magazinerem <= 0) {
-								fontrenderer.drawStringWithShadow("MAIN       Reloading" + turretObj.reloadTimer + "/" + turretObj.prefab_turret.gunInfo.reloadTimes[0],
-										i - 240, j - 30, 0xFFFFFF);
-							} else if (turretObj.cycle_timer < turretObj.prefab_turret.gunInfo.rates.get(0)) {
-								if (turretObj.prefab_turret.gunInfo.rates.get(0) > 5)
-									fontrenderer.drawStringWithShadow("MAIN         Loading" + turretObj.cycle_timer + "/" + turretObj.prefab_turret.gunInfo.rates.get(0),
-											i - 240, j - 30, 0xFFFFFF);
-								else
-									fontrenderer.drawStringWithShadow("MAIN Loading magazine:" + turretObj.magazinerem + "/" + turretObj.max_Bullet(),
-											i - 240, j - 30, 0xFFFFFF);
-							}
+							displayGunState(turretObj,fontrenderer,i,j,240,60,"MAIN");
 						}
 						if (playerSeatInfo.subgun != null) {
 							TurretObj turretObj = playerSeatInfo.subgun;
-							if (turretObj.readytoFire()) {
-								fontrenderer.drawStringWithShadow("SUB  Ready magazine:" + turretObj.magazinerem + "/" + turretObj.max_Bullet(),
-										i - 240, j - 30, 0xFFFFFF);
-							} else if (turretObj.magazinerem <= 0) {
-								fontrenderer.drawStringWithShadow("SUB        Reloading" + turretObj.reloadTimer + "/" + turretObj.prefab_turret.gunInfo.reloadTimes[0],
-										i - 240, j - 30, 0xFFFFFF);
-							} else if (turretObj.cycle_timer < turretObj.prefab_turret.gunInfo.rates.get(0)) {
-								if (turretObj.prefab_turret.gunInfo.rates.get(0) > 5)
-									fontrenderer.drawStringWithShadow("SUB          Loading" + turretObj.cycle_timer + "/" + turretObj.prefab_turret.gunInfo.rates.get(0),
-											i - 240, j - 30, 0xFFFFFF);
-								else
-									fontrenderer.drawStringWithShadow("SUB  Loading magazine:" + turretObj.magazinerem + "/" + turretObj.max_Bullet(),
-											i - 240, j - 30, 0xFFFFFF);
-							}
+							displayGunState(turretObj,fontrenderer,i,j,240,40,"SUB ");
 						}
 						
 						fontrenderer.drawStringWithShadow("HP " + hp + "/" + mhp + " : throttle " + th, i - 240, j - 20, 0xFFFFFF);
@@ -475,6 +464,23 @@ public class HMVRenderSomeEvent {
 		minecraft.getTextureManager().bindTexture(Gui.icons);
 		boolean rc = HMV_Proxy.zoomclick();
 		if(rc) zooming = !zooming;
+	}
+	public void displayGunState(TurretObj turretObj,FontRenderer fontrenderer,int i,int j,int posx,int posy,String name){
+		
+		if (turretObj.readytoFire()) {
+			fontrenderer.drawStringWithShadow(name + "Ready magazine:" + turretObj.dummyGunItem.remain_Bullet(turretObj.dummyGunStack) + "/" + turretObj.max_Bullet(),
+					i - posx, j - posy, 0xFFFFFF);
+		} else if (turretObj.isreloading()) {
+			fontrenderer.drawStringWithShadow(name + "       Reloading" + turretObj.getDummyStackTag().getInteger("RloadTime") + "/" + turretObj.dummyGunItem.reloadTime(turretObj.dummyGunStack),
+					i - posx, j - posy, 0xFFFFFF);
+		} else if (turretObj.isLoading()) {
+			if (turretObj.prefab_turret.gunInfo.cycle > 5)
+				fontrenderer.drawStringWithShadow(name + "         Loading" + turretObj.getDummyStackTag().getByte("Bolt") + "/" + turretObj.prefab_turret.gunInfo.cycle,
+						i - posx, j - posy, 0xFFFFFF);
+			else
+				fontrenderer.drawStringWithShadow(name + " Loading magazine:" + turretObj.dummyGunItem.remain_Bullet(turretObj.dummyGunStack)+ "/" + turretObj.max_Bullet(),
+						i - posx, j - posy, 0xFFFFFF);
+		}
 	}
 	public void displayFlyersHUD(Quat4d prevbodyRot, Quat4d bodyRot, Entity plane, Vector3d prevmotionVec, RenderGameOverlayEvent.Post event){
 		GL11.glColor4f(1,1,1,1);

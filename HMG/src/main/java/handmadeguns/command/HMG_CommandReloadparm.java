@@ -79,7 +79,7 @@ public class HMG_CommandReloadparm extends CommandBase implements ICommand{
             for (int ii = 0; ii < filegun.length; ii++) {
                 if (filegun[ii].isFile()) {
                     try {
-                        new HMGGunMaker().load(null,false, filegun[ii]);
+                        new HMGGunMaker().load(null,true, filegun[ii]);
                     } catch (ModelFormatException e) {
                         e.printStackTrace();
                     }

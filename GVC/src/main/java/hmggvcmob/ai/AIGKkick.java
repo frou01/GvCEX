@@ -1,16 +1,12 @@
 package hmggvcmob.ai;
 
-import handmadeguns.entity.IFF;
-import hmggvcmob.SlowPathFinder.WorldForPathfind;
+import handmadevehicle.SlowPathFinder.WorldForPathfind;
 import hmggvcmob.entity.IIRVING;
-import hmggvcmob.entity.guerrilla.EntityGBases;
-import hmggvcmob.entity.guerrilla.GVCEntityGK;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Vec3;
-import org.lwjgl.Sys;
 
 import java.util.Random;
 

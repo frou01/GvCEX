@@ -18,7 +18,7 @@ public class PartsRender_Vehicle extends PartsRender {
 	
 	public void partSidentification(Object... data){
 		float flame;
-		int remainbullets = (int) currentEntity.getHealth();
+		int remainbullets = (int) currentBaseLogic.health;
 		ArrayList<HMGGunParts> partslist_temp = partslist = (ArrayList<HMGGunParts>) data[0];
 		//todo 履帯他のために車両弾薬の設定を持ってくる。
 		for (HMGGunParts parts : partslist_temp) {
@@ -26,13 +26,13 @@ public class PartsRender_Vehicle extends PartsRender {
 			if(parts instanceof HMVVehicleParts && ((HMVVehicleParts) parts).isTurretParts){
 				states = new GunState[2];
 				TurretObj linkedTurret = currentBaseLogic.allturrets[((HMVVehicleParts) parts).linkedTurretID];
-				remainbullets = linkedTurret.magazinerem;
+				remainbullets = linkedTurret.dummyGunItem.remain_Bullet(linkedTurret.dummyGunStack);
 				if(linkedTurret.isreloading()){
 					states[0] = GunState.Reload;
-					flame = linkedTurret.reloadTimer - smooth;
+					flame = linkedTurret.getDummyStackTag().getInteger("RloadTime") - smooth;
 				}else if(linkedTurret.isLoading()){
 					states[0] = GunState.Recoil;
-					flame = (linkedTurret.cycle_timer - smooth) * 10;
+					flame = (linkedTurret.getDummyStackTag().getByte("Bolt") - smooth) * 10;
  				}else {
 					states[0] = GunState.Default;
 					flame = 0;

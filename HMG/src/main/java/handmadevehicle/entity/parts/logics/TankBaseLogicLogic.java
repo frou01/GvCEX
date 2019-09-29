@@ -1,11 +1,11 @@
 //package handmadevehicle.entity.parts.logics;
 //
 //import handmadevehicle.Utils;
-//import handmadevehicle.HMVPacketHandler;
+//import handmadevehicle.network.HMVPacketHandler;
 //import handmadevehicle.entity.parts.*;
 //import handmadevehicle.entity.prefab.Prefab_Vehicle_Base;
 //import handmadevehicle.entity.prefab.Prefab_Vehicle_LandVehicle;
-//import handmadevehicle.packets.*;
+//import handmadevehicle.network.packets.*;
 //import net.minecraft.entity.Entity;
 //import net.minecraft.entity.EntityLiving;
 //import net.minecraft.entity.EntityLivingBase;

@@ -1,0 +1,87 @@
+---- Minecraft Crash Report ----
+// There are four lights!
+
+Time: 19/09/24 22:32
+Description: Ticking memory connection
+
+java.lang.ArrayIndexOutOfBoundsException: 4
+	at net.minecraft.entity.player.InventoryPlayer.getStackInSlot(InventoryPlayer.java:646)
+	at net.minecraft.inventory.Slot.getStack(Slot.java:88)
+	at net.minecraft.inventory.Container.detectAndSendChanges(Container.java:89)
+	at net.minecraft.entity.player.EntityPlayerMP.onUpdate(EntityPlayerMP.java:247)
+	at net.minecraft.entity.Entity.updateRidden(Entity.java:1810)
+	at net.minecraft.entity.EntityLivingBase.updateRidden(EntityLivingBase.java:2065)
+	at net.minecraft.entity.player.EntityPlayer.updateRidden(EntityPlayer.java:560)
+	at net.minecraft.world.World.updateEntityWithOptionalForce(World.java:2294)
+	at net.minecraft.world.WorldServer.updateEntityWithOptionalForce(WorldServer.java:684)
+	at net.minecraft.world.World.updateEntity(World.java:2258)
+	at net.minecraft.network.NetHandlerPlayServer.processPlayer(NetHandlerPlayServer.java:273)
+	at net.minecraft.network.play.client.C03PacketPlayer.processPacket(C03PacketPlayer.java:37)
+	at net.minecraft.network.play.client.C03PacketPlayer.processPacket(C03PacketPlayer.java:111)
+	at net.minecraft.network.NetworkManager.processReceivedPackets(NetworkManager.java:241)
+	at net.minecraft.network.NetworkSystem.networkTick(NetworkSystem.java:182)
+	at net.minecraft.server.MinecraftServer.updateTimeLightAndEntities(MinecraftServer.java:726)
+	at net.minecraft.server.MinecraftServer.tick(MinecraftServer.java:614)
+	at net.minecraft.server.integrated.IntegratedServer.tick(IntegratedServer.java:118)
+	at net.minecraft.server.MinecraftServer.run(MinecraftServer.java:485)
+	at net.minecraft.server.MinecraftServer$2.run(MinecraftServer.java:752)
+
+
+A detailed walkthrough of the error, its code path and all known details is as follows:
+---------------------------------------------------------------------------------------
+
+-- Head --
+Stacktrace:
+	at net.minecraft.entity.player.InventoryPlayer.getStackInSlot(InventoryPlayer.java:646)
+	at net.minecraft.inventory.Slot.getStack(Slot.java:88)
+	at net.minecraft.inventory.Container.detectAndSendChanges(Container.java:89)
+	at net.minecraft.entity.player.EntityPlayerMP.onUpdate(EntityPlayerMP.java:247)
+	at net.minecraft.entity.Entity.updateRidden(Entity.java:1810)
+	at net.minecraft.entity.EntityLivingBase.updateRidden(EntityLivingBase.java:2065)
+	at net.minecraft.entity.player.EntityPlayer.updateRidden(EntityPlayer.java:560)
+	at net.minecraft.world.World.updateEntityWithOptionalForce(World.java:2294)
+	at net.minecraft.world.WorldServer.updateEntityWithOptionalForce(WorldServer.java:684)
+	at net.minecraft.world.World.updateEntity(World.java:2258)
+	at net.minecraft.network.NetHandlerPlayServer.processPlayer(NetHandlerPlayServer.java:273)
+	at net.minecraft.network.play.client.C03PacketPlayer.processPacket(C03PacketPlayer.java:37)
+	at net.minecraft.network.play.client.C03PacketPlayer.processPacket(C03PacketPlayer.java:111)
+	at net.minecraft.network.NetworkManager.processReceivedPackets(NetworkManager.java:241)
+
+-- Ticking connection --
+Details:
+	Connection: net.minecraft.network.NetworkManager@3cccd003
+Stacktrace:
+	at net.minecraft.network.NetworkSystem.networkTick(NetworkSystem.java:182)
+	at net.minecraft.server.MinecraftServer.updateTimeLightAndEntities(MinecraftServer.java:726)
+	at net.minecraft.server.MinecraftServer.tick(MinecraftServer.java:614)
+	at net.minecraft.server.integrated.IntegratedServer.tick(IntegratedServer.java:118)
+	at net.minecraft.server.MinecraftServer.run(MinecraftServer.java:485)
+	at net.minecraft.server.MinecraftServer$2.run(MinecraftServer.java:752)
+
+-- System Details --
+Details:
+	Minecraft Version: 1.7.10
+	Operating System: Windows 8.1 (amd64) version 6.3
+	Java Version: 1.8.0_91, Oracle Corporation
+	Java VM Version: Java HotSpot(TM) 64-Bit Server VM (mixed mode), Oracle Corporation
+	Memory: 279001168 bytes (266 MB) / 1194328064 bytes (1139 MB) up to 3799515136 bytes (3623 MB)
+	JVM Flags: 0 total; 
+	AABB Pool Size: 0 (0 bytes; 0 MB) allocated, 0 (0 bytes; 0 MB) used
+	IntCache: cache: 0, tcache: 0, allocated: 0, tallocated: 0
+	FML: MCP v9.05 FML v7.10.99.99 Minecraft Forge 10.13.4.1614 9 mods loaded, 9 mods active
+	States: 'U' = Unloaded 'L' = Loaded 'C' = Constructed 'H' = Pre-initialized 'I' = Initialized 'J' = Post-initialized 'A' = Available 'D' = Disabled 'E' = Errored
+	UCHIJAAAA	mcp{9.05} [Minecraft Coder Pack] (minecraft.jar) 
+	UCHIJAAAA	FML{7.10.99.99} [Forge Mod Loader] (forgeSrc-1.7.10-10.13.4.1614-1.7.10.jar) 
+	UCHIJAAAA	Forge{10.13.4.1614} [Minecraft Forge] (forgeSrc-1.7.10-10.13.4.1614-1.7.10.jar) 
+	UCHIJAAAA	lmmx{1.0} [lmmx] (Depend-1.0.jar) 
+	UCHIJAAAA	MMMLibX{1.7.x-srg-1} [MMMLibX] (Depend-1.0.jar) 
+	UCHIJAAAA	Sokoniyatugairuzo{1.7.x} [Sokoniyatugairuzo] (Depend-1.0.jar) 
+	UCHIJAAAA	zabuton{1.0} [zabuton] (Depend-1.0.jar) 
+	UCHIJAAAA	HandmadeGuns{1.7.x-srg-1} [HandMadeGunsModEX] (HMG-EX12.322.jar) 
+	UCHIJAAAA	HMVehicle{1.7.x-srg-1} [HMVehicle] (HMG-EX12.322.jar) 
+	GL info: ~~ERROR~~ RuntimeException: No OpenGL context found in the current thread.
+	Profiler Position: N/A (disabled)
+	Vec3 Pool Size: 0 (0 bytes; 0 MB) allocated, 0 (0 bytes; 0 MB) used
+	Player Count: 1 / 8; [EntityPlayerMP['Player220'/30, l='New World', x=548.16, y=64.77, z=-243.67]]
+	Type: Integrated Server (map_client.txt)
+	Is Modded: Definitely; Client brand changed to 'fml,forge'

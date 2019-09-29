@@ -10,6 +10,7 @@ import handmadeguns.entity.PlacedGunEntity;
 import handmadeguns.entity.bullets.*;
 import handmadeguns.items.*;
 import handmadeguns.network.*;
+import handmadevehicle.entity.parts.turrets.TurretObj;
 import littleMaidMobX.LMM_EntityLittleMaid;
 import littleMaidMobX.LMM_IEntityLittleMaidAvatarBase;
 import net.minecraft.block.Block;
@@ -118,6 +119,12 @@ public class HMGItem_Unified_Guns extends Item {
             par3List.add(EnumChatFormatting.WHITE + "can Fix. Press " + HMG_proxy.getFixkey() + " while pointing block");
         }
     }
+    public void onUpdate_fromTurret(ItemStack itemstack, World world, Entity entity, int i, boolean flag, TurretObj turretObj){
+        guntemp = new GunTemp();
+        guntemp.currentConnectedTurret = turretObj;
+        onUpdate(itemstack , world , entity , i , flag);
+        guntemp.currentConnectedTurret = null;
+    }
     public void onUpdate(ItemStack itemstack, World world, Entity entity, int i, boolean flag){
         guntemp = new GunTemp();
         guntemp.invocable = (Invocable) gunInfo.script;
@@ -138,14 +145,14 @@ public class HMGItem_Unified_Guns extends Item {
             if(guntemp.tempspreadDiffusion < gunInfo.spreadDiffusionmin)
                 guntemp.tempspreadDiffusion = gunInfo.spreadDiffusionmin;
             guntemp.tempspread += gunInfo.spread_setting * guntemp.tempspreadDiffusion;
-    
-    
+            
+            
             guntemp.sound = gunInfo.soundbase;
             guntemp.soundlevel = gunInfo.soundbaselevel;
             guntemp.muzzle = gunInfo.muzzleflash;
             guntemp.selectingMagazine = nbt.getInteger("get_selectingMagazine");
             guntemp.currentMgazine = nbt.getInteger("getcurrentMagazine");
-    
+            
             gunInfo.posGetter.sightPos = gunInfo.sightPosN;
             
             if(HandmadeGunsCore.cfg_Flash){
@@ -168,7 +175,7 @@ public class HMGItem_Unified_Guns extends Item {
                 guntemp.LockedPosY = nbt.getInteger("LockedPosY");
                 guntemp.LockedPosZ = nbt.getInteger("LockedPosZ");
                 int mode = nbt.getInteger("HMGMode");
-
+                
                 bindattaches(itemstack, world, entity);
                 boolean canFixflag = gunInfo.canfix;
                 try {
@@ -178,7 +185,7 @@ public class HMGItem_Unified_Guns extends Item {
                 }catch (Exception e){
                     e.printStackTrace();
                 }
-                if(!world.isRemote) {
+                if(!world.isRemote && GunTemp.currentConnectedTurret == null) {
                     float walkedDist = entity.distanceWalkedModified - nbt.getFloat("prevdistanceWalkedModified");
                     float headShakeDist;
                     if(entity instanceof EntityLivingBase){
@@ -215,8 +222,8 @@ public class HMGItem_Unified_Guns extends Item {
                             nbt.setBoolean("set_up", true);
                             nbt.setInteger("set_up_cnt", 3);
                         }
-                        if (world.isRemote) {
-                            if (i != -1) {
+                        if (world.isRemote && (i != -1)) {
+                            {
                                 HMG_proxy.force_render_item_position(itemstack, i);
                             }
                             if (HMG_proxy.Reloadkeyispressed()) {
@@ -263,14 +270,6 @@ public class HMGItem_Unified_Guns extends Item {
                                 }
                                 nbt.setInteger("get_selectingMagazine", selecting);
                                 HMGPacketHandler.INSTANCE.sendToServer(new PacketChangeMagazineType(entity, selecting));
-                            }
-                            if (gunInfo.canlock) {
-                                if (guntemp.islockingblock) {
-                                    HMG_proxy.spawnParticles(new PacketSpawnParticle(guntemp.LockedPosX + 0.5, guntemp.LockedPosY + 0.5, guntemp.LockedPosZ + 0.5, 2));
-                                }
-                                if (guntemp.islockingentity && guntemp.TGT != null) {
-                                    HMG_proxy.spawnParticles(new PacketSpawnParticle(guntemp.TGT.posX, guntemp.TGT.posY + guntemp.TGT.height / 2, guntemp.TGT.posZ, 2));
-                                }
                             }
                         } else {
                             if (gunInfo.canlock && nbt.getBoolean("SeekerOpened")) {
@@ -511,267 +510,283 @@ public class HMGItem_Unified_Guns extends Item {
         }
     }
     public void lockon(ItemStack itemstack, World world, Entity entity, NBTTagCompound nbt){
-        Vec3 vec3 = Vec3.createVectorHelper(entity.posX, entity.posY + entity.getEyeHeight(), entity.posZ);
-        Vec3 playerlook = entity instanceof EntityLivingBase?((EntityLivingBase)entity).getLook(1.0f):entity instanceof PlacedGunEntity?((PlacedGunEntity)entity).getLook(1.0f):null;
-        playerlook = Vec3.createVectorHelper(playerlook.xCoord * 256, playerlook.yCoord * 256, playerlook.zCoord * 256);
-        Vec3 vec31 = Vec3.createVectorHelper(entity.posX + playerlook.xCoord, entity.posY + entity.getEyeHeight() + playerlook.yCoord, entity.posZ + playerlook.zCoord);
-        MovingObjectPosition movingobjectposition = entity.worldObj.func_147447_a(vec3, vec31, false, true, false);
-        Block hitblock;
-        Random rand = new Random();
-        while (movingobjectposition != null) {
-            hitblock = entity.worldObj.getBlock(movingobjectposition.blockX, movingobjectposition.blockY, movingobjectposition.blockZ);
-            if ((hitblock.getMaterial() == Material.plants) || ((
-                                                                        hitblock.getMaterial() == Material.glass ||
-                                                                                hitblock instanceof BlockFence ||
-                                                                                hitblock instanceof BlockFenceGate ||
-                                                                                hitblock == Blocks.iron_bars) && rand.nextInt(5) <= 1)) {
-                Vec3 penerater = movingobjectposition.hitVec.normalize();
-                vec3 = Vec3.createVectorHelper(movingobjectposition.hitVec.xCoord + penerater.xCoord, movingobjectposition.hitVec.yCoord + penerater.yCoord, movingobjectposition.hitVec.zCoord + penerater.zCoord);
-                vec31 = Vec3.createVectorHelper(entity.posX + playerlook.xCoord, entity.posY + entity.getEyeHeight() + playerlook.yCoord, entity.posZ + playerlook.zCoord);
-                movingobjectposition = entity.worldObj.func_147447_a(vec3, vec31, false, true, false);
-            } else {
-                break;
+        if(GunTemp.currentConnectedTurret != null){
+            guntemp.TGT = GunTemp.currentConnectedTurret.target;
+            if(guntemp.TGT != null)
+                guntemp.islockingentity = true;
+        }else {
+            Vec3 vec3 = Vec3.createVectorHelper(entity.posX, entity.posY + entity.getEyeHeight(), entity.posZ);
+            Vec3 playerlook = entity instanceof EntityLivingBase ? ((EntityLivingBase) entity).getLook(1.0f) : entity instanceof PlacedGunEntity ? ((PlacedGunEntity) entity).getLook(1.0f) : null;
+            playerlook = Vec3.createVectorHelper(playerlook.xCoord * 256, playerlook.yCoord * 256, playerlook.zCoord * 256);
+            Vec3 vec31 = Vec3.createVectorHelper(entity.posX + playerlook.xCoord, entity.posY + entity.getEyeHeight() + playerlook.yCoord, entity.posZ + playerlook.zCoord);
+            MovingObjectPosition movingobjectposition = entity.worldObj.func_147447_a(vec3, vec31, false, true, false);
+            Block hitblock;
+            Random rand = new Random();
+            while (movingobjectposition != null) {
+                hitblock = entity.worldObj.getBlock(movingobjectposition.blockX, movingobjectposition.blockY, movingobjectposition.blockZ);
+                if ((hitblock.getMaterial() == Material.plants) || ((
+                        hitblock.getMaterial() == Material.glass ||
+                                hitblock instanceof BlockFence ||
+                                hitblock instanceof BlockFenceGate ||
+                                hitblock == Blocks.iron_bars) && rand.nextInt(5) <= 1)) {
+                    Vec3 penerater = movingobjectposition.hitVec.normalize();
+                    vec3 = Vec3.createVectorHelper(movingobjectposition.hitVec.xCoord + penerater.xCoord, movingobjectposition.hitVec.yCoord + penerater.yCoord, movingobjectposition.hitVec.zCoord + penerater.zCoord);
+                    vec31 = Vec3.createVectorHelper(entity.posX + playerlook.xCoord, entity.posY + entity.getEyeHeight() + playerlook.yCoord, entity.posZ + playerlook.zCoord);
+                    movingobjectposition = entity.worldObj.func_147447_a(vec3, vec31, false, true, false);
+                } else {
+                    break;
+                }
             }
-        }
-        vec3 = Vec3.createVectorHelper(entity.posX, entity.posY + entity.getEyeHeight(), entity.posZ);
-        vec31 = Vec3.createVectorHelper(entity.posX + playerlook.xCoord, entity.posY + entity.getEyeHeight() + playerlook.yCoord, entity.posZ + playerlook.zCoord);
-        if (movingobjectposition != null) {
-            vec31 = Vec3.createVectorHelper(movingobjectposition.hitVec.xCoord, movingobjectposition.hitVec.yCoord, movingobjectposition.hitVec.zCoord);
-        }
-        Entity rentity = null;
-        List list = entity.worldObj.getEntitiesWithinAABBExcludingEntity(entity, entity.boundingBox.addCoord(playerlook.xCoord, playerlook.yCoord, playerlook.zCoord).expand(1.0D, 1.0D, 1.0D));
-        double d0 = 0.0D;
-        double d1 = 0;
-        for (int i1 = 0; i1 < list.size(); ++i1) {
-            Entity entity1 = (Entity) list.get(i1);
-            if (entity1.canBeCollidedWith() && (entity1 != entity)) {
-                float f = 0.5F;
-                AxisAlignedBB axisalignedbb = entity1.boundingBox.expand((double) f, (double) f, (double) f);
-                MovingObjectPosition movingobjectposition1 = axisalignedbb.calculateIntercept(vec3, vec31);
+            vec3 = Vec3.createVectorHelper(entity.posX, entity.posY + entity.getEyeHeight(), entity.posZ);
+            vec31 = Vec3.createVectorHelper(entity.posX + playerlook.xCoord, entity.posY + entity.getEyeHeight() + playerlook.yCoord, entity.posZ + playerlook.zCoord);
+            if (movingobjectposition != null) {
+                vec31 = Vec3.createVectorHelper(movingobjectposition.hitVec.xCoord, movingobjectposition.hitVec.yCoord, movingobjectposition.hitVec.zCoord);
+            }
+            Entity rentity = null;
+            List list = entity.worldObj.getEntitiesWithinAABBExcludingEntity(entity, entity.boundingBox.addCoord(playerlook.xCoord, playerlook.yCoord, playerlook.zCoord).expand(1.0D, 1.0D, 1.0D));
+            double d0 = 0.0D;
+            double d1 = 0;
+            for (int i1 = 0; i1 < list.size(); ++i1) {
+                Entity entity1 = (Entity) list.get(i1);
+                if (entity1.canBeCollidedWith() && (entity1 != entity)) {
+                    float f = 0.5F;
+                    AxisAlignedBB axisalignedbb = entity1.boundingBox.expand((double) f, (double) f, (double) f);
+                    MovingObjectPosition movingobjectposition1 = axisalignedbb.calculateIntercept(vec3, vec31);
             
-                if (movingobjectposition1 != null) {
-                    d1 = vec3.distanceTo(movingobjectposition1.hitVec);
+                    if (movingobjectposition1 != null) {
+                        d1 = vec3.distanceTo(movingobjectposition1.hitVec);
                 
-                    if (d1 < d0 || d0 == 0.0D) {
-                        rentity = entity1;
-                        d0 = d1;
+                        if (d1 < d0 || d0 == 0.0D) {
+                            rentity = entity1;
+                            d0 = d1;
+                        }
                     }
                 }
             }
-        }
     
-        if (rentity != null) {
-            d1 = vec3.distanceTo(vec31);
-            vec3.xCoord = vec3.xCoord + (vec31.xCoord - vec3.xCoord) * d0 / d1;
-            vec3.yCoord = vec3.yCoord + (vec31.yCoord - vec3.yCoord) * d0 / d1;
-            vec3.zCoord = vec3.zCoord + (vec31.zCoord - vec3.zCoord) * d0 / d1;
+            if (rentity != null) {
+                d1 = vec3.distanceTo(vec31);
+                vec3.xCoord = vec3.xCoord + (vec31.xCoord - vec3.xCoord) * d0 / d1;
+                vec3.yCoord = vec3.yCoord + (vec31.yCoord - vec3.yCoord) * d0 / d1;
+                vec3.zCoord = vec3.zCoord + (vec31.zCoord - vec3.zCoord) * d0 / d1;
         
-            movingobjectposition = new MovingObjectPosition(rentity);
-            movingobjectposition.hitVec = vec3;
-        }
-        if (movingobjectposition != null) {
-            if (gunInfo.canlockEntity && movingobjectposition.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY && movingobjectposition.entityHit != null) {
-                if (!guntemp.islockingentity || (entity.ridingEntity == null || entity.ridingEntity != movingobjectposition.entityHit) && guntemp.TGT != movingobjectposition.entityHit) {
-                    entity.worldObj.playSoundAtEntity(entity, gunInfo.lockSound_entity, 1f, gunInfo.lockpitch_entity);
-                    guntemp.TGT = movingobjectposition.entityHit;
-                    guntemp.islockingentity = true;
-                    guntemp.islockingblock = false;
+                movingobjectposition = new MovingObjectPosition(rentity);
+                movingobjectposition.hitVec = vec3;
+            }
+            if (movingobjectposition != null) {
+                if (gunInfo.canlockEntity && movingobjectposition.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY && movingobjectposition.entityHit != null) {
+                    if (!guntemp.islockingentity || (entity.ridingEntity == null || entity.ridingEntity != movingobjectposition.entityHit) && guntemp.TGT != movingobjectposition.entityHit) {
+                        entity.worldObj.playSoundAtEntity(entity, gunInfo.lockSound_entity, 1f, gunInfo.lockpitch_entity);
+                        guntemp.TGT = movingobjectposition.entityHit;
+                        guntemp.islockingentity = true;
+                        guntemp.islockingblock = false;
+                    }
+                } else if (gunInfo.canlockBlock && movingobjectposition.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK && (
+                        guntemp.LockedPosX != movingobjectposition.blockX || guntemp.LockedPosY != movingobjectposition.blockY || guntemp.LockedPosZ != movingobjectposition.blockZ)) {
+                    entity.worldObj.playSoundAtEntity(entity, gunInfo.lockSound_block, 1f, gunInfo.lockpitch_block);
+                    guntemp.LockedPosX = movingobjectposition.blockX;
+                    guntemp.LockedPosY = movingobjectposition.blockY;
+                    guntemp.LockedPosZ = movingobjectposition.blockZ;
+                    guntemp.islockingblock = true;
+                    guntemp.islockingentity = false;
+                    guntemp.TGT = null;
                 }
-            } else  if (gunInfo.canlockBlock && movingobjectposition.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK && (
-                    guntemp.LockedPosX != movingobjectposition.blockX || guntemp.LockedPosY != movingobjectposition.blockY || guntemp.LockedPosZ != movingobjectposition.blockZ)) {
-                entity.worldObj.playSoundAtEntity(entity, gunInfo.lockSound_block, 1f, gunInfo.lockpitch_block);
-                guntemp.LockedPosX = movingobjectposition.blockX;
-                guntemp.LockedPosY = movingobjectposition.blockY;
-                guntemp.LockedPosZ = movingobjectposition.blockZ;
-                guntemp.islockingblock = true;
-                guntemp.islockingentity = false;
-                guntemp.TGT = null;
+            }
+    
+            if (gunInfo.canlock) {
+                if (guntemp.islockingblock) {
+                    HMG_proxy.spawnParticles(new PacketSpawnParticle(guntemp.LockedPosX + 0.5, guntemp.LockedPosY + 0.5, guntemp.LockedPosZ + 0.5, 2));
+                }
+                if (guntemp.islockingentity && guntemp.TGT != null) {
+                    HMG_proxy.spawnParticles(new PacketSpawnParticle(guntemp.TGT.posX, guntemp.TGT.posY + guntemp.TGT.height / 2, guntemp.TGT.posZ, 2));
+                }
             }
         }
     }
     public void fireProcess(ItemStack itemstack, World world, Entity entity, NBTTagCompound nbt){
-
-        if(!world.isRemote) {
-            guntemp.tempspreadDiffusion+= gunInfo.spreadDiffusionRate;
-            try {
-                if(guntemp.invocable!= null)
-                    guntemp.invocable.invokeFunction("prefire",this,itemstack,nbt,entity);
-            } catch (ScriptException e) {
-                e.printStackTrace();
-            } catch (NoSuchMethodException e) {
-                e.printStackTrace();
-            }
-            this.Flash(itemstack, world, entity,nbt);
-            entity.getEntityData().setFloat("GunshotLevel", guntemp.soundlevel);
-            HMG_proxy.playerSounded(entity);
+    	int fireLoop = 1;
+    	if(GunTemp.currentConnectedTurret != null){
+		    fireLoop = GunTemp.currentConnectedTurret.getSyncroFireNum();
+	    }
+    	for(int fired = 0;fired < fireLoop;fired ++) {
+		    if (!world.isRemote) {
+			    guntemp.tempspreadDiffusion += gunInfo.spreadDiffusionRate;
+			    try {
+				    if (guntemp.invocable != null)
+					    guntemp.invocable.invokeFunction("prefire", this, itemstack, nbt, entity);
+			    } catch (ScriptException e) {
+				    e.printStackTrace();
+			    } catch (NoSuchMethodException e) {
+				    e.printStackTrace();
+			    }
+			    entity.getEntityData().setFloat("GunshotLevel", guntemp.soundlevel);
+			    HMG_proxy.playerSounded(entity);
 //            world.playSoundEffect(entity.posX,entity.posY,entity.posZ, sound, soundlevel, soundspeed);
-            HMGPacketHandler.INSTANCE.sendToAll(new PacketPlaysound(entity, guntemp.sound, gunInfo.soundspeed, guntemp.soundlevel));
-    
-    
-            damageMagazine(itemstack,entity);
-            if (HandmadeGunsCore.cfg_canEjectCartridge && gunInfo.dropcart) {
-                dropCartridge(world,entity,itemstack);
-            }
-            HMGEntityBulletBase[] bullet = null;
-            //メソッド一個追加して、弾種類で分けながらfor回したほうが絶対効率良さそう<-んな訳あるか
-            int currentBulletType = gunInfo.guntype;
-            if (gunInfo.guntype < 5 && guntemp.items != null && guntemp.items[5] != null) {
-                try {
-                    switch (gunInfo.guntype) {
-                        case 0:
-                            if (guntemp.items[5].getItem() instanceof HMGItemBullet_AP){
-                                currentBulletType = 6;
-                            }else if (guntemp.items[5].getItem() instanceof HMGItemBullet_Frag){
-                                currentBulletType = 7;
-                            }else if (guntemp.items[5].getItem() instanceof HMGItemBullet_AT){
-                                currentBulletType = 8;
-                            }
-                            break;
-                        case 1:
-                            if (guntemp.items[5].getItem() instanceof HMGItemBullet_AP){
-                                currentBulletType = 6;
-                            }else if (guntemp.items[5].getItem() instanceof HMGItemBullet_Frag){
-                                currentBulletType = 7;
-                            }else if (guntemp.items[5].getItem() instanceof HMGItemBullet_AT){
-                                currentBulletType = 8;
-                            }
-                            break;
-                        case 2:
-                            if (guntemp.items[5].getItem() instanceof HMGItemBullet_TE){
-                                currentBulletType = 9;
-                            }
-                            break;
-                        case 3:
-                            if (guntemp.items[5].getItem() instanceof HMGItemBullet_TE){
-                                currentBulletType = 9;
-                            }
-                            break;
-                        case 4:
-                            if (guntemp.items[5].getItem() instanceof HMGItemBullet_AP){
-                                currentBulletType = 6;
-                            }else if (guntemp.items[5].getItem() instanceof HMGItemBullet_Frag){
-                                currentBulletType = 10;
-                            }
-                            break;
-                    }
-                } catch (NullPointerException e) {
-                    e.printStackTrace();
-                }
-            }
-            firetemp = new FireTemp(gunInfo);
-            int magazineBulletOption = get_Type_Option_of_currentMagzine_and_apply_magazine_Option(itemstack);
-            if(magazineBulletOption != -1)currentBulletType = magazineBulletOption;
-            switch (currentBulletType) {
-                case 0:
-                case 1:
-                case 4:
-                    bullet = getBullet(world, entity);
-                    break;
-                case 2:
-                    bullet = FireBulletGL(world, entity);
-                    break;
-                case 3:
-                    bullet = FireBulletRPG(world, entity);
-                    break;
-                case 5:
-                    bullet = FireBulletFrame(world, entity);
-                    break;
-                case 6:
-                    bullet = getBulletAP(world, entity);
-                    break;
-                case 7:
-                    bullet = FireBulletFrag(world, entity);
-                    break;
-                case 8:
-                    bullet = FireBulletAT(world, entity);
-                    break;
-                case 9:
-                    bullet = FireBulletTE(world, entity);
-                    break;
-                case 10:
-                    bullet = FireBulletHE(world, entity);
-                    break;
-                case 11:
-                    bullet = FireBulletTorp(world, entity);
-                    break;
-            }
-
-            if(bullet !=null){
-                for(HMGEntityBulletBase bulletBase :bullet) {
-                    bulletBase.knockbackXZ = gunInfo.knockback;
-                    bulletBase.knockbackY = gunInfo.knockbackY;
-                    bulletBase.gra = gunInfo.gravity;
-                    bulletBase.bouncerate = gunInfo.bouncerate;
-                    bulletBase.bouncelimit = gunInfo.bouncelimit;
-                    bulletBase.fuse = firetemp.fuse;
-                    bulletBase.canbounce = gunInfo.canbounce;
-                    bulletBase.resistance = gunInfo.resistance;
-                    bulletBase.acceleration = gunInfo.acceleration;
-                    bulletBase.canex = firetemp.destroyBlock;
+			    HMGPacketHandler.INSTANCE.sendToAll(new PacketPlaysound(entity, guntemp.sound, gunInfo.soundspeed, guntemp.soundlevel));
+			
+			
+			    damageMagazine(itemstack, entity);
+			    if (HandmadeGunsCore.cfg_canEjectCartridge && gunInfo.dropcart) {
+				    dropCartridge(world, entity, itemstack);
+			    }
+			    HMGEntityBulletBase[] bullet = null;
+			    //メソッド一個追加して、弾種類で分けながらfor回したほうが絶対効率良さそう<-んな訳あるか
+			    int currentBulletType = gunInfo.guntype;
+			    if (gunInfo.guntype < 5 && guntemp.items != null && guntemp.items[5] != null) {
+				    try {
+					    switch (gunInfo.guntype) {
+						    case 0:
+						    case 1:
+							    if (guntemp.items[5].getItem() instanceof HMGItemBullet_AP) {
+								    currentBulletType = 6;
+							    } else if (guntemp.items[5].getItem() instanceof HMGItemBullet_Frag) {
+								    currentBulletType = 7;
+							    } else if (guntemp.items[5].getItem() instanceof HMGItemBullet_AT) {
+								    currentBulletType = 8;
+							    }
+							    break;
+						    case 2:
+						    case 3:
+							    if (guntemp.items[5].getItem() instanceof HMGItemBullet_TE) {
+								    currentBulletType = 9;
+							    }
+							    break;
+						    case 4:
+							    if (guntemp.items[5].getItem() instanceof HMGItemBullet_AP) {
+								    currentBulletType = 6;
+							    } else if (guntemp.items[5].getItem() instanceof HMGItemBullet_Frag) {
+								    currentBulletType = 10;
+							    }
+							    break;
+					    }
+				    } catch (NullPointerException e) {
+					    e.printStackTrace();
+				    }
+			    }
+			    firetemp = new FireTemp(gunInfo);
+			    int magazineBulletOption = get_Type_Option_of_currentMagzine_and_apply_magazine_Option(itemstack);
+			    if (magazineBulletOption != -1) currentBulletType = magazineBulletOption;
+			    switch (currentBulletType) {
+				    case 0:
+				    case 1:
+				    case 4:
+					    bullet = getBullet(world, entity);
+					    break;
+				    case 2:
+					    bullet = FireBulletGL(world, entity);
+					    break;
+				    case 3:
+					    bullet = FireBulletRPG(world, entity);
+					    break;
+				    case 5:
+					    bullet = FireBulletFrame(world, entity);
+					    break;
+				    case 6:
+					    bullet = getBulletAP(world, entity);
+					    break;
+				    case 7:
+					    bullet = FireBulletFrag(world, entity);
+					    break;
+				    case 8:
+					    bullet = FireBulletAT(world, entity);
+					    break;
+				    case 9:
+					    bullet = FireBulletTE(world, entity);
+					    break;
+				    case 10:
+					    bullet = FireBulletHE(world, entity);
+					    break;
+				    case 11:
+					    bullet = FireBulletTorp(world, entity);
+					    break;
+			    }
+			
+			    if (bullet != null) {
+                    if (GunTemp.currentConnectedTurret != null) {
+                        GunTemp.currentConnectedTurret.setBulletsPos(bullet);
+                    }else this.Flash(itemstack, world, entity, nbt);
+				    for (HMGEntityBulletBase bulletBase : bullet) {
+					    bulletBase.knockbackXZ = gunInfo.knockback;
+					    bulletBase.knockbackY = gunInfo.knockbackY;
+					    bulletBase.gra = gunInfo.gravity;
+					    bulletBase.bouncerate = gunInfo.bouncerate;
+					    bulletBase.bouncelimit = gunInfo.bouncelimit;
+					    bulletBase.fuse = firetemp.fuse;
+					    bulletBase.canbounce = gunInfo.canbounce;
+					    bulletBase.resistance = gunInfo.resistance;
+					    bulletBase.acceleration = gunInfo.acceleration;
+					    bulletBase.canex = firetemp.destroyBlock;
                     
-                    if (guntemp.islockingentity) {
-                        bulletBase.homingEntity = guntemp.TGT;
-                        bulletBase.induction_precision = gunInfo.induction_precision;
-                    } else if (guntemp.islockingblock) {
-                        bulletBase.lockedBlockPos = Vec3.createVectorHelper(guntemp.LockedPosX, guntemp.LockedPosY, guntemp.LockedPosZ);
-                        bulletBase.induction_precision = gunInfo.induction_precision;
-                    }
-                    if (entity instanceof PlacedGunEntity) {
-                        if(gunInfo.posGetter.multi_barrelpos == null) {
-                            Vec3 vec = Vec3.createVectorHelper(gunInfo.posGetter.barrelpos[0], gunInfo.posGetter.barrelpos[1], gunInfo.posGetter.barrelpos[2]);
-                            vec = vec.addVector(-gunInfo.posGetter.turretRotationPitchPoint[0], -gunInfo.posGetter.turretRotationPitchPoint[1], -gunInfo.posGetter.turretRotationPitchPoint[2]);
-                            vec.rotateAroundX(-(float) toRadians(entity.rotationPitch));
-                            vec = vec.addVector(gunInfo.posGetter.turretRotationPitchPoint[0], gunInfo.posGetter.turretRotationPitchPoint[1], gunInfo.posGetter.turretRotationPitchPoint[2]);
-                            vec = vec.addVector(-gunInfo.posGetter.turretRotationYawPoint[0], -gunInfo.posGetter.turretRotationYawPoint[1], -gunInfo.posGetter.turretRotationYawPoint[2]);
-                            vec.rotateAroundY(-(float) toRadians(((PlacedGunEntity) entity).rotationYawGun - ((PlacedGunEntity) entity).baserotationYaw));
-                            vec = vec.addVector(gunInfo.posGetter.turretRotationYawPoint[0], gunInfo.posGetter.turretRotationYawPoint[1], gunInfo.posGetter.turretRotationYawPoint[2]);
-                            vec.rotateAroundY(-(float) toRadians(((PlacedGunEntity) entity).baserotationYaw));
-                            double ix = 0;
-                            double iy = 0;
-                            double iz = 0;
-                            ix = vec.xCoord;
-                            iy = vec.yCoord;
-                            iz = vec.zCoord;
-                            if (entity.riddenByEntity != null) bulletBase.thrower = entity.riddenByEntity;
-                            bulletBase.setLocationAndAngles(entity.posX + ix, entity.posY + entity.getEyeHeight() + iy, entity.posZ + iz, ((PlacedGunEntity) entity).rotationYawGun, entity.rotationPitch);
-                        }else {
-                            int barrelId = nbt.getInteger("barrelId");
-                            barrelId++;
-                            if(barrelId >= gunInfo.posGetter.multi_barrelpos.length)barrelId = 0;
-                            Vec3 vec = Vec3.createVectorHelper(gunInfo.posGetter.multi_barrelpos[barrelId][0], gunInfo.posGetter.multi_barrelpos[barrelId][1], gunInfo.posGetter.multi_barrelpos[barrelId][2]);
-                            vec = vec.addVector(-gunInfo.posGetter.turretRotationPitchPoint[0], -gunInfo.posGetter.turretRotationPitchPoint[1], -gunInfo.posGetter.turretRotationPitchPoint[2]);
-                            vec.rotateAroundX(-(float) toRadians(entity.rotationPitch));
-                            vec = vec.addVector(gunInfo.posGetter.turretRotationPitchPoint[0], gunInfo.posGetter.turretRotationPitchPoint[1], gunInfo.posGetter.turretRotationPitchPoint[2]);
-                            vec = vec.addVector(-gunInfo.posGetter.turretRotationYawPoint[0], -gunInfo.posGetter.turretRotationYawPoint[1], -gunInfo.posGetter.turretRotationYawPoint[2]);
-                            vec.rotateAroundY(-(float) toRadians(((PlacedGunEntity) entity).rotationYawGun - ((PlacedGunEntity) entity).baserotationYaw));
-                            vec = vec.addVector(gunInfo.posGetter.turretRotationYawPoint[0], gunInfo.posGetter.turretRotationYawPoint[1], gunInfo.posGetter.turretRotationYawPoint[2]);
-                            vec.rotateAroundY(-(float) toRadians(((PlacedGunEntity) entity).baserotationYaw));
-                            double ix = 0;
-                            double iy = 0;
-                            double iz = 0;
-                            ix = vec.xCoord;
-                            iy = vec.yCoord;
-                            iz = vec.zCoord;
-                            if (entity.riddenByEntity != null) bulletBase.thrower = entity.riddenByEntity;
-                            bulletBase.setLocationAndAngles(entity.posX + ix, entity.posY + entity.getEyeHeight() + iy, entity.posZ + iz, ((PlacedGunEntity) entity).rotationYawGun, entity.rotationPitch);
-                            nbt.setInteger("barrelId",barrelId);
+                        if (GunTemp.currentConnectedTurret == null) {
+                            if (guntemp.islockingentity) {
+                                bulletBase.homingEntity = guntemp.TGT;
+                                bulletBase.induction_precision = gunInfo.induction_precision;
+                            } else if (guntemp.islockingblock) {
+                                bulletBase.lockedBlockPos = Vec3.createVectorHelper(guntemp.LockedPosX, guntemp.LockedPosY, guntemp.LockedPosZ);
+                                bulletBase.induction_precision = gunInfo.induction_precision;
+                            }
+                            if (entity instanceof PlacedGunEntity) {
+                                setBulletPos_PlacedGun(entity, bulletBase, nbt);
+                            }
                         }
-                    }
-                    world.spawnEntityInWorld(bulletBase);
-                }
-            }
-        }
-
-        if(!nbt.getBoolean("HMGfixed"))
-            if(entity instanceof EntityPlayerMP) HMGPacketHandler.INSTANCE.sendTo(new PacketRecoil(), (EntityPlayerMP) entity);
-        try {
-            if(guntemp.invocable!= null)
-                guntemp.invocable.invokeFunction("fireout",this,itemstack,nbt,entity);
-        } catch (ScriptException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        }
+					    world.spawnEntityInWorld(bulletBase);
+				    }
+			    }
+		    }
+		
+		    if (!nbt.getBoolean("HMGfixed"))
+			    if (entity instanceof EntityPlayerMP)
+				    HMGPacketHandler.INSTANCE.sendTo(new PacketRecoil(), (EntityPlayerMP) entity);
+		    try {
+			    if (guntemp.invocable != null)
+				    guntemp.invocable.invokeFunction("fireout", this, itemstack, nbt, entity);
+		    } catch (ScriptException e) {
+			    e.printStackTrace();
+		    } catch (NoSuchMethodException e) {
+			    e.printStackTrace();
+		    }
+	    }
+    }
+    public void setBulletPos_PlacedGun(Entity entity,HMGEntityBulletBase bulletBase,NBTTagCompound nbt){
+	    if (gunInfo.posGetter.multi_barrelpos == null) {
+		    Vec3 vec = Vec3.createVectorHelper(gunInfo.posGetter.barrelpos[0], gunInfo.posGetter.barrelpos[1], gunInfo.posGetter.barrelpos[2]);
+		    vec = vec.addVector(-gunInfo.posGetter.turretRotationPitchPoint[0], -gunInfo.posGetter.turretRotationPitchPoint[1], -gunInfo.posGetter.turretRotationPitchPoint[2]);
+		    vec.rotateAroundX(-(float) toRadians(entity.rotationPitch));
+		    vec = vec.addVector(gunInfo.posGetter.turretRotationPitchPoint[0], gunInfo.posGetter.turretRotationPitchPoint[1], gunInfo.posGetter.turretRotationPitchPoint[2]);
+		    vec = vec.addVector(-gunInfo.posGetter.turretRotationYawPoint[0], -gunInfo.posGetter.turretRotationYawPoint[1], -gunInfo.posGetter.turretRotationYawPoint[2]);
+		    vec.rotateAroundY(-(float) toRadians(((PlacedGunEntity) entity).rotationYawGun - ((PlacedGunEntity) entity).baserotationYaw));
+		    vec = vec.addVector(gunInfo.posGetter.turretRotationYawPoint[0], gunInfo.posGetter.turretRotationYawPoint[1], gunInfo.posGetter.turretRotationYawPoint[2]);
+		    vec.rotateAroundY(-(float) toRadians(((PlacedGunEntity) entity).baserotationYaw));
+		    double ix = 0;
+		    double iy = 0;
+		    double iz = 0;
+		    ix = vec.xCoord;
+		    iy = vec.yCoord;
+		    iz = vec.zCoord;
+		    if (entity.riddenByEntity != null) bulletBase.thrower = entity.riddenByEntity;
+		    bulletBase.setLocationAndAngles(entity.posX + ix, entity.posY + entity.getEyeHeight() + iy, entity.posZ + iz, ((PlacedGunEntity) entity).rotationYawGun, entity.rotationPitch);
+	    } else {
+		    int barrelId = nbt.getInteger("barrelId");
+		    barrelId++;
+		    if (barrelId >= gunInfo.posGetter.multi_barrelpos.length) barrelId = 0;
+		    Vec3 vec = Vec3.createVectorHelper(gunInfo.posGetter.multi_barrelpos[barrelId][0], gunInfo.posGetter.multi_barrelpos[barrelId][1], gunInfo.posGetter.multi_barrelpos[barrelId][2]);
+		    vec = vec.addVector(-gunInfo.posGetter.turretRotationPitchPoint[0], -gunInfo.posGetter.turretRotationPitchPoint[1], -gunInfo.posGetter.turretRotationPitchPoint[2]);
+		    vec.rotateAroundX(-(float) toRadians(entity.rotationPitch));
+		    vec = vec.addVector(gunInfo.posGetter.turretRotationPitchPoint[0], gunInfo.posGetter.turretRotationPitchPoint[1], gunInfo.posGetter.turretRotationPitchPoint[2]);
+		    vec = vec.addVector(-gunInfo.posGetter.turretRotationYawPoint[0], -gunInfo.posGetter.turretRotationYawPoint[1], -gunInfo.posGetter.turretRotationYawPoint[2]);
+		    vec.rotateAroundY(-(float) toRadians(((PlacedGunEntity) entity).rotationYawGun - ((PlacedGunEntity) entity).baserotationYaw));
+		    vec = vec.addVector(gunInfo.posGetter.turretRotationYawPoint[0], gunInfo.posGetter.turretRotationYawPoint[1], gunInfo.posGetter.turretRotationYawPoint[2]);
+		    vec.rotateAroundY(-(float) toRadians(((PlacedGunEntity) entity).baserotationYaw));
+		    double ix = 0;
+		    double iy = 0;
+		    double iz = 0;
+		    ix = vec.xCoord;
+		    iy = vec.yCoord;
+		    iz = vec.zCoord;
+		    if (entity.riddenByEntity != null) bulletBase.thrower = entity.riddenByEntity;
+		    bulletBase.setLocationAndAngles(entity.posX + ix, entity.posY + entity.getEyeHeight() + iy, entity.posZ + iz, ((PlacedGunEntity) entity).rotationYawGun, entity.rotationPitch);
+		    nbt.setInteger("barrelId", barrelId);
+	    }
     }
     public void dropCartridge(World world,Entity entity,ItemStack itemStack){
         HMGEntityBulletCartridge var8;
@@ -882,7 +897,8 @@ public class HMGItem_Unified_Guns extends Item {
         return bulletinstances;
     }
     public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
-        if(!gunInfo.needfix||(par1ItemStack.getTagCompound() != null && par1ItemStack.getTagCompound().getBoolean("HMGfixed"))) {
+    	checkTags(par1ItemStack);
+        if(!gunInfo.needfix||(par1ItemStack.getTagCompound().getBoolean("HMGfixed"))) {
             HMG_proxy.resetRightclicktimer();
             par1ItemStack.getTagCompound().setBoolean("IsTriggered", true);
             par1ItemStack.getTagCompound().setBoolean("set_up", true);
@@ -988,7 +1004,9 @@ public class HMGItem_Unified_Guns extends Item {
                     packet = new PacketSpawnParticle(entity.posX + ix, entity.posY + iy, entity.posZ + iz, (entity instanceof EntityLivingBase ? ((EntityLivingBase)entity).rotationYawHead : entity.rotationYaw),entity.rotationPitch,0, gunInfo.flashname,true);
                     packet.id = 100;
                 }else {
-                    packet = new PacketSpawnParticle(entity.posX + ix, entity.posY + iy, entity.posZ + iz, (entity instanceof EntityLivingBase ? ((EntityLivingBase)entity).rotationYawHead : entity.rotationYaw),entity.rotationPitch,0, 100);
+                    packet = new PacketSpawnParticle(entity.posX + ix, entity.posY + iy, entity.posZ + iz,
+		                    (entity instanceof EntityLivingBase ? ((EntityLivingBase)entity).rotationYawHead : entity.rotationYaw),
+		                    entity.rotationPitch,0, 100);
                 }
                 packet.scale = gunInfo.flashScale;
                 packet.fuse = gunInfo.flashfuse;
@@ -1077,20 +1095,9 @@ public class HMGItem_Unified_Guns extends Item {
     }
     public void resetReload(ItemStack par1ItemStack, World par2World, Entity entity, int i) {
         if(gunInfo.isOneuse) {
-            if (entity instanceof EntityPlayer) {
-                par1ItemStack.stackSize--;
-                if (i != -1 && par1ItemStack.stackSize == 0) {
-                    ((EntityPlayer) entity).inventory.setInventorySlotContents(i, null);
-                    return;
-                }
-            } else if (entity.riddenByEntity instanceof EntityPlayer){
-                par1ItemStack.stackSize--;
-                if (i != -1 && par1ItemStack.stackSize == 0) {
-                    ((EntityPlayer) entity.riddenByEntity).inventory.setInventorySlotContents(i, null);
-                    return;
-                }
-            }
+            consumeInventoryItem(this,getuserInventory(entity));
         }
+        guntemp.items[5] = null;//撃ち終わりに特殊弾を消去
         reloadBullets(par1ItemStack,par2World,entity);
 //        int l;
 //        for(l = 0; l< gunInfo.magazineItemCount; l++) {
@@ -1111,6 +1118,50 @@ public class HMGItem_Unified_Guns extends Item {
 //            }
 //        }
     
+    }
+    public IInventory getuserInventory(Entity entity){
+        if(GunTemp.currentConnectedTurret != null && GunTemp.currentConnectedTurret.connectedInventory != null){
+           return GunTemp.currentConnectedTurret.connectedInventory;
+        }
+        if (entity instanceof EntityPlayer) {
+            return ((EntityPlayer) entity).inventory;
+        } else if (entity.riddenByEntity instanceof EntityPlayer){
+            return ((EntityPlayer) entity.riddenByEntity).inventory;
+        } else if(islmmloaded && entity instanceof LMM_EntityLittleMaid){
+            return ((LMM_EntityLittleMaid) entity.riddenByEntity).maidInventory;
+        }
+        return null;
+    }
+    
+    public boolean consumeInventoryItem(Item p_146026_1_,IInventory iInventory)
+    {
+        int i = this.func_146029_c(p_146026_1_,iInventory);
+        
+        if (i < 0)
+        {
+            return false;
+        }
+        else
+        {
+            if (--iInventory.getStackInSlot(i).stackSize <= 0)
+            {
+                iInventory.setInventorySlotContents(i,null);
+            }
+            
+            return true;
+        }
+    }
+    private int func_146029_c(Item p_146029_1_,IInventory iInventory)
+    {
+        for (int i = 0; i < iInventory.getSizeInventory(); ++i)
+        {
+            if (iInventory.getStackInSlot(i) != null && iInventory.getStackInSlot(i).getItem() == p_146029_1_)
+            {
+                return i;
+            }
+        }
+        
+        return -1;
     }
     public int remain_Bullet(ItemStack gunStack){
         if(!currentMagzine_has_roundOption(gunStack)){

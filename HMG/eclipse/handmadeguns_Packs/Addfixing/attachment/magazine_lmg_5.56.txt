@@ -1,0 +1,13 @@
+Texture,bullet_lmg5.56mm
+Stack,64
+Name,5.56mm Bullet box
+BulletRound,200
+CustomMagazine,bullet_lmg_hmg_5_56
+Recipe1,aaa
+Recipe2,ccc
+Recipe3,bd 
+ItemA,minecraft,iron_block
+ItemB,minecraft,emerald
+ItemC,minecraft,gunpowder
+ItemD,HandmadeGuns,NATO_Certificate
+addNewRecipe,HandmadeGuns,bullet_lmg_hmg_5_56,1
