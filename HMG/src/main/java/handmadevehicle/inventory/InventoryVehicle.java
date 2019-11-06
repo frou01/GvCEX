@@ -2,14 +2,14 @@ package handmadevehicle.inventory;
 
 import handmadevehicle.entity.parts.logics.BaseLogic;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 
 public class InventoryVehicle implements IInventory {
 	public ItemStack[] items;
-	BaseLogic baseLogic;
-	//todo 車両側にインベントリをもたせておく。同期処理については、putstack時点でinventoryにアクセスするようなので考慮する必要は無し。
+	public BaseLogic baseLogic;
+
+
 	public InventoryVehicle(BaseLogic baseLogic)
 	{
 		this.baseLogic = baseLogic;
@@ -79,11 +79,10 @@ public class InventoryVehicle implements IInventory {
 	public void setInventorySlotContents(int p_70299_1_, ItemStack p_70299_2_)
 	{
 		this.items[p_70299_1_] = p_70299_2_;
-		if (p_70299_2_ != null && p_70299_2_.stackSize > this.getInventoryStackLimit())
-		{
+		if (p_70299_2_ != null && p_70299_2_.stackSize > this.getInventoryStackLimit()) {
 			p_70299_2_.stackSize = this.getInventoryStackLimit();
 		}
-		
+
 		this.markDirty();
 	}
 	
@@ -126,8 +125,18 @@ public class InventoryVehicle implements IInventory {
 	
 	}
 	@Override
-	public boolean isItemValidForSlot(int p_94041_1_, ItemStack p_94041_2_)
+	public boolean isItemValidForSlot(int slotID, ItemStack checkingStack)
 	{
+		if(slotID<baseLogic.prefab_vehicle.weaponSlotNum && checkingStack != null){
+			String itemName = checkingStack.getUnlocalizedName();
+			if(baseLogic.prefab_vehicle.weaponSlot_linkedTurret_StackWhiteList.get(slotID).length == 0)return true;
+			for(String whiteList: baseLogic.prefab_vehicle.weaponSlot_linkedTurret_StackWhiteList.get(slotID)) {
+				if("item.".concat(whiteList).equals(itemName)){
+					return true;
+				}
+			}
+			return false;
+		}
 		return true;
 	}
 }

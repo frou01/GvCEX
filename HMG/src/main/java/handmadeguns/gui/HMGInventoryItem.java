@@ -156,8 +156,10 @@ public class HMGInventoryItem implements IInventory
                 tagList.appendTag(compound);
             }
         }
-        currentItem.getTagCompound().setTag("Items", tagList);
-        inventoryPlayer.mainInventory[inventoryPlayer.currentItem] = currentItem;
+        if(currentItem != null && currentItem.getTagCompound() != null) {
+            currentItem.getTagCompound().setTag("Items", tagList);
+            inventoryPlayer.mainInventory[inventoryPlayer.currentItem] = currentItem;
+        }
     }
     @Override
     public boolean isItemValidForSlot(int p_94041_1_, ItemStack p_94041_2_)

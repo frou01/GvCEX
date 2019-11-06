@@ -77,36 +77,10 @@ public class GVCItemPMCEgg extends Item
                 --par1ItemStack.stackSize;
                 return true;
             }else
-            if(this.mob == 4){
-                ++par5;
-                int var12 = MathHelper.floor_double((double)(par2EntityPlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-                GVCEntityPMCTank entityskeleton = new GVCEntityPMCTank(par3World);
-                entityskeleton.setLocationAndAngles(par4+0.5, par5, par6+0.5, par2EntityPlayer.rotationYaw, 0.0F);
-                entityskeleton.setMobMode(0);
-                par3World.spawnEntityInWorld(entityskeleton);
-                --par1ItemStack.stackSize;
-                return true;
-            }else
-            if(this.mob == 5){
-                ++par5;
-                int var12 = MathHelper.floor_double((double)(par2EntityPlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-                GVCEntityPMCHeli entityskeleton = new GVCEntityPMCHeli(par3World);
-                entityskeleton.setLocationAndAngles(par4+0.5, par5, par6+0.5, par2EntityPlayer.rotationYaw, 0.0F);
-                par3World.spawnEntityInWorld(entityskeleton);
-                --par1ItemStack.stackSize;
-                return true;
-            }else if(this.mob == 6){
+            if(this.mob == 6){
                 ++par5;
                 int var12 = MathHelper.floor_double((double)(par2EntityPlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
                 GVCEntityFriendGK entityskeleton = new GVCEntityFriendGK(par3World);
-                entityskeleton.setLocationAndAngles(par4+0.5, par5, par6+0.5, par2EntityPlayer.rotationYaw, 0.0F);
-                par3World.spawnEntityInWorld(entityskeleton);
-                --par1ItemStack.stackSize;
-                return true;
-            }else if(this.mob == 7){
-                ++par5;
-                int var12 = MathHelper.floor_double((double)(par2EntityPlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-                GVCEntityPMCT90Tank entityskeleton = new GVCEntityPMCT90Tank(par3World);
                 entityskeleton.setLocationAndAngles(par4+0.5, par5, par6+0.5, par2EntityPlayer.rotationYaw, 0.0F);
                 par3World.spawnEntityInWorld(entityskeleton);
                 --par1ItemStack.stackSize;
@@ -119,21 +93,7 @@ public class GVCItemPMCEgg extends Item
                 par3World.spawnEntityInWorld(entityskeleton);
                 --par1ItemStack.stackSize;
                 return true;
-            }else if(this.mob == 9){
-                ++par5;
-                GVCEntityPlane entityskeleton = new GVCEntityPlane(par3World);
-                entityskeleton.setLocationAndAngles(par4+0.5, par5, par6+0.5, par2EntityPlayer.rotationYaw, 0.0F);
-                par3World.spawnEntityInWorld(entityskeleton);
-                --par1ItemStack.stackSize;
-                return true;
-            }else if(this.mob == 10){
-                ++par5;
-                GVCEntityPMCBMP entityskeleton = new GVCEntityPMCBMP(par3World);
-                entityskeleton.setLocationAndAngles(par4+0.5, par5, par6+0.5, par2EntityPlayer.rotationYaw, 0.0F);
-                par3World.spawnEntityInWorld(entityskeleton);
-                --par1ItemStack.stackSize;
-                return true;
-            }else{
+            }else {
                 return false;
             }
         }

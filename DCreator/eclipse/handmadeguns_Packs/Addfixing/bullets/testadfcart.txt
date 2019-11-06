@@ -1,3 +1,0 @@
-ObjModel,cartridge_long.mqo
-ObjTexture,cartridge_long.png
-Name,longcart

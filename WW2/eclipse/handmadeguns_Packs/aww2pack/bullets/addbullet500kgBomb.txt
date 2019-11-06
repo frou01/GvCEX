@@ -1,9 +1,0 @@
-ObjModel,500kgBomb.mqo
-ObjTexture,bombpalet.png
-Objscale,10
-FlyingSoundName,bombdrops
-FlyingSoundLV,4
-FlyingSoundSP,1
-FlyingSoundmaxdist,1024
-FlyingSound_BulletMinSpeed,0.5
-Name,500kgBomb

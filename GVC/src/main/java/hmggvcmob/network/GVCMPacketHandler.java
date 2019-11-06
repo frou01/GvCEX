@@ -15,11 +15,10 @@ public class GVCMPacketHandler {
         int id=0;
         INSTANCE.registerMessage(GVCXMMessageGKdata.class, GVCXMPacketSyncGKdata.class, ++id, Side.CLIENT);
         INSTANCE.registerMessage(GVCMHandleSyncFlagdata.class, GVCMPacketSyncFlagdata.class, ++id, Side.CLIENT);
-        INSTANCE.registerMessage(GVCMHandleSyncHeliData.class, GVCXMPacketSyncPMCHeliData.class, ++id, Side.SERVER);
-        INSTANCE.registerMessage(GVCMHandleHeliGunnerTriger.class, GVCPakcetHeliGunnerTrigger.class, ++id, Side.SERVER);
+//        INSTANCE.registerMessage(GVCMHandleSyncHeliData.class, GVCXMPacketSyncPMCHeliData.class, ++id, Side.SERVER);
+//        INSTANCE.registerMessage(GVCMHandleHeliGunnerTriger.class, GVCPakcetHeliGunnerTrigger.class, ++id, Side.SERVER);
         INSTANCE.registerMessage(GVCHandleMGControl.class, GVCPacketMGControl.class, ++id, Side.SERVER);
         INSTANCE.registerMessage(GVCHandleMGControl.class, GVCPacketMGControl.class, ++id, Side.CLIENT);
-        INSTANCE.registerMessage(GVCHandleSpawnSpotCircle.class, GVCPacketSpawnSpotCircle.class, ++id, Side.CLIENT);
         
         
     	

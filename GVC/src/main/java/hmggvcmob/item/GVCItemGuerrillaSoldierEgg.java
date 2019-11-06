@@ -70,37 +70,13 @@ public class GVCItemGuerrillaSoldierEgg extends Item
                 GVCEntitySoldierRPG entityskeleton = new GVCEntitySoldierRPG(par3World);
                 entityskeleton.setLocationAndAngles(par4+0.5, par5, par6+0.5, par2EntityPlayer.rotationYaw, 0.0F);
                 entityskeleton.setCurrentItemOrArmor(0, new ItemStack(GVCUtils.fn_smaw));
-                par3World.spawnEntityInWorld(entityskeleton);
                 --par1ItemStack.stackSize;
-                return true;
-            }else
-            if(this.mob == 4){
-                ++par5;
-                int var12 = MathHelper.floor_double((double)(par2EntityPlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-                GVCEntitySoldierTank entityskeleton = new GVCEntitySoldierTank(par3World);
-                entityskeleton.setLocationAndAngles(par4+0.5, par5, par6+0.5, par2EntityPlayer.rotationYaw, 0.0F);
+                if(par1ItemStack.hasDisplayName()){
+                    entityskeleton.summoningVehicle = par1ItemStack.getDisplayName();
+                }
+                entityskeleton.onSpawnWithEgg(null);
                 par3World.spawnEntityInWorld(entityskeleton);
-                --par1ItemStack.stackSize;
                 return true;
-            }else
-            if(this.mob == 5){
-                ++par5;
-                int var12 = MathHelper.floor_double((double)(par2EntityPlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-                GVCEntitySoldierHeli entityskeleton = new GVCEntitySoldierHeli(par3World);
-                entityskeleton.setLocationAndAngles(par4+0.5, par5, par6+0.5, par2EntityPlayer.rotationYaw, 0.0F);
-                par3World.spawnEntityInWorld(entityskeleton);
-                --par1ItemStack.stackSize;
-                return true;
-
-            }else if(this.mob == 6){
-                ++par5;
-                int var12 = MathHelper.floor_double((double)(par2EntityPlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-                GVCEntitySoldierBMP entityskeleton = new GVCEntitySoldierBMP(par3World);
-                entityskeleton.setLocationAndAngles(par4+0.5, par5, par6+0.5, par2EntityPlayer.rotationYaw, 0.0F);
-                par3World.spawnEntityInWorld(entityskeleton);
-                --par1ItemStack.stackSize;
-                return true;
-
             }else{
                 return false;
             }

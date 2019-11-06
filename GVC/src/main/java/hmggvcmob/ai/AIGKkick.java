@@ -14,7 +14,6 @@ public class AIGKkick extends EntityAIBase {
     private EntityLiving IRVING_body;//月光
     private handmadeguns.entity.IFF IFF;//月光
     private IIRVING IRVING_SPdata;
-    public WorldForPathfind worldForPathfind;
     private EntityLivingBase target;//ターゲット
     private float range;//射程
     private int forget = 0;//忘れるまで
@@ -29,7 +28,6 @@ public class AIGKkick extends EntityAIBase {
         this.IRVING_SPdata = iirving;
         this.range = range;
         rnd = new Random();
-        worldForPathfind = new WorldForPathfind(guerrilla.worldObj);
     }
     public boolean shouldExecute() {//LMMから借りてきた
         EntityLivingBase entityliving = IRVING_body.getAttackTarget();

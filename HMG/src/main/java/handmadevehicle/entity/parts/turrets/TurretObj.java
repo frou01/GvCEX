@@ -10,9 +10,13 @@ import handmadeguns.items.guns.HMGItem_Unified_Guns;
 import handmadeguns.network.PacketPlaysound;
 import handmadeguns.network.PacketSpawnParticle;
 import handmadevehicle.Utils;
+import handmadevehicle.entity.parts.HasBaseLogic;
 import handmadevehicle.entity.parts.HasLoopSound;
 import handmadevehicle.entity.parts.IVehicle;
 import handmadevehicle.entity.prefab.Prefab_Turret;
+import handmadevehicle.inventory.InventoryVehicle;
+import handmadevehicle.network.HMVPacketHandler;
+import handmadevehicle.network.packets.HMVPacketMissileAndLockMarker;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -20,6 +24,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
 import javax.vecmath.AxisAngle4d;
@@ -55,10 +60,11 @@ public class TurretObj implements HasLoopSound{
     public Quat4d motherRot = new Quat4d();
     public Vector3d motherRotCenter = new Vector3d();
     public Quat4d turretRot = new Quat4d();
+    public Quat4d turretRotYaw = new Quat4d();
     public Vector3d onMotherPos = new Vector3d();
     public Vector3d motherPos = new Vector3d();
     public Vector3d pos = new Vector3d();
-    
+
     
     public float turretMoving = 0;
     
@@ -80,15 +86,18 @@ public class TurretObj implements HasLoopSound{
     
     
     private int triggerFreeze = 10;
-    
-    public ArrayList<HMGEntityBulletBase> missile;
+    private int childFireBlank = 10;
+
+    public ArrayList<HMGEntityBulletBase> missile = new ArrayList<HMGEntityBulletBase>();
     public Entity target;
+    public Vec3 lockedBlockPos;
     
     public boolean readyaim = false;
     public boolean aimIn = false;
     
     
     public Prefab_Turret prefab_turret;
+    public int linkedGunStackID;
 //    private int burstedRound;
     
     public TurretObj(World worldObj){
@@ -156,8 +165,9 @@ public class TurretObj implements HasLoopSound{
         global.sub(prefab_turret.turretYawCenterpos);
         global = transformVecByQuat(global, turretyawrot);
         global.add(prefab_turret.turretYawCenterpos);
+        global.sub(motherRotCenter);
         global = transformVecByQuat(global, motherRot);
-        
+        global.add(motherRotCenter);
 //        Vector3d transformedVecYawCenter;
 //        Vector3d transformedVecPitchCenter;
 //        {
@@ -189,15 +199,15 @@ public class TurretObj implements HasLoopSound{
     public Vector3d getGlobalVector_fromLocalVector_onMother(Vector3d local){
         
         local = new Vector3d(local);
-        local.sub(this.motherRotCenter);
-        if(this.mother != null)local.sub(this.mother.onMotherPos);
-        local = transformVecByQuat(new Vector3d(local),motherRot);
-        if(this.mother != null){
-            local.add(transformVecByQuat(new Vector3d(this.motherRotCenter),this.mother.motherRot));
+        if(mother != null){
+            local = mother.getGlobalVector_fromLocalVector_onTurretPoint(local);
+            local.add(this.motherPos);
         }else {
+            local.sub(this.motherRotCenter);
+            local = transformVecByQuat(new Vector3d(local), motherRot);
             local.add(this.motherRotCenter);
+            local.add(this.motherPos);
         }
-        local.add(this.motherPos);
         return local;
     }
     public Vector3d getLocalVector_fromGlobalVector(Vector3d global){
@@ -238,14 +248,6 @@ public class TurretObj implements HasLoopSound{
         lookVec = transformVecByQuat(lookVec,motherRot);
         
         return lookVec;
-    }
-    public Vector3d getCannonPos(){
-        Vector3d Vec_transformedbybody = getGlobalVector_fromLocalVector(prefab_turret.cannonPos);
-    
-        transformVecforMinecraft(Vec_transformedbybody);
-        return new Vector3d(pos.x + Vec_transformedbybody.x,
-                                   pos.y + Vec_transformedbybody.y,
-                                   -pos.z + Vec_transformedbybody.z);
     }
     public boolean aimtoAngle(double targetyaw,double targetpitch){
         for(TurretObj achild : childs){
@@ -304,11 +306,10 @@ public class TurretObj implements HasLoopSound{
             if(currentEntity instanceof EntityPlayerMP && prefab_turret.gunInfo.semiActive && missile != null) {
                 for (HMGEntityBulletBase amissile:missile) {
                     amissile.homingEntity = target;
-                    HMGPacketHandler.INSTANCE.sendTo(new PacketSpawnParticle(amissile.posX, amissile.posY + amissile.height / 2, amissile.posZ, 2), (EntityPlayerMP) currentEntity);
                 }
             }
-            if(currentEntity instanceof EntityPlayerMP && target != null){
-                HMGPacketHandler.INSTANCE.sendTo(new PacketSpawnParticle(target.posX, target.posY + target.height/2,target.posZ, 2), (EntityPlayerMP) currentEntity);
+            if(currentEntity instanceof EntityPlayerMP && target != null && missile != null){
+                HMVPacketHandler.INSTANCE.sendTo(new HMVPacketMissileAndLockMarker(missile, target), (EntityPlayerMP) currentEntity);
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -469,7 +470,6 @@ public class TurretObj implements HasLoopSound{
         return readyaim = result1 && result2 && inrange && canfire;
     }
     public void calculatePos(){
-        
         Vector3d temppos = getGlobalVector_fromLocalVector_onMother(onMotherPos);
         
         
@@ -477,6 +477,19 @@ public class TurretObj implements HasLoopSound{
         this.pos = temppos;
     }
     public void update(Quat4d motherRot,Vector3d motherPos){
+        if(!prefab_turret.needGunStack) {
+            if (dummyGunItem == null) dummyGunItem = new HMGItem_Unified_Guns();
+            if (dummyGunStack == null) dummyGunStack = new ItemStack(dummyGunItem);
+        }else if(motherEntity instanceof HasBaseLogic){
+            InventoryVehicle inventoryVehicle = ((HasBaseLogic) motherEntity).getBaseLogic().inventoryVehicle;
+            dummyGunStack = inventoryVehicle.getStackInSlot(linkedGunStackID);
+            if(dummyGunStack != null){
+                dummyGunItem = (HMGItem_Unified_Guns) dummyGunStack.getItem();
+                prefab_turret.gunInfo = dummyGunItem.gunInfo;
+            }
+        }
+        if(currentEntity == null)
+            triggerFreeze = 10;
         if(worldObj.isRemote) {
             double deltaRotYaw = prevturretrotationYaw - turretrotationYaw;
             double deltaRotPitch = prevturretrotationPitch - turretrotationPitch;
@@ -492,6 +505,8 @@ public class TurretObj implements HasLoopSound{
         this.motherRot = motherRot;
         this.motherPos = motherPos;
         triggerFreeze--;
+        if(readytoFire())childFireBlank=prefab_turret.childFireBlank;
+        else childFireBlank--;
         if(!worldObj.isRemote && prefab_turret.gunInfo.canlock){
             lock();
         }
@@ -510,17 +525,27 @@ public class TurretObj implements HasLoopSound{
         Vector3d axisY = transformVecByQuat(unitY, turretRot);
         AxisAngle4d axisxangledY = new AxisAngle4d(axisY, toRadians(turretrotationYaw)/2);
         turretRot = quatRotateAxis(turretRot,axisxangledY);
-    
+        turretRotYaw.set(turretRot);
     
         Quat4d temp = new Quat4d(this.motherRot);
         temp.mul(turretRot);
+        Vector3d pos_selected = this.motherPos;
+        Quat4d rot_selected = this.motherRot;
+        if(prefab_turret.positionLinked){
+            pos_selected = this.pos;
+            rot_selected = temp;
+        }
         for(TurretObj achild :childs){
-            achild.update(temp, this.pos);
+            achild.currentEntity = this.currentEntity;
+            achild.motherEntity = this.motherEntity;
+            achild.mother = this;
+            achild.update(rot_selected, pos_selected);
         }
         for(TurretObj abrother :brothers){
             if(prefab_turret.syncTurretAngle){
                 abrother.turretrotationYaw   = this.turretrotationYaw;
                 abrother.turretrotationPitch = this.turretrotationPitch;
+                abrother.mother = this;
             }
             abrother.update(this.motherRot, this.motherPos);
         }
@@ -532,12 +557,20 @@ public class TurretObj implements HasLoopSound{
         temp = new Quat4d(this.motherRot);
         temp.mul(turretRot);
         for(TurretObj achild :childsOnBarrel){
+            achild.currentEntity = this.currentEntity;
+            achild.motherEntity = this.motherEntity;
+            achild.mother = this;
             achild.update(temp, this.pos);
         }
     
         GunTemp.currentConnectedTurret = this;
-        dummyGunItem.onUpdate_fromTurret(dummyGunStack,worldObj,currentEntity,-1,true,this);
+        if(dummyGunStack != null) {
+            getDummyStackTag().setBoolean("IsTurretStack", true);
+            dummyGunItem.onUpdate_fromTurret(dummyGunStack, worldObj, currentEntity, -10, true, this);
+            getDummyStackTag().setBoolean("IsTurretStack", false);
+        }
         GunTemp.currentConnectedTurret = null;
+        this.currentEntity = null;
 //        if(!worldObj.isRemote) {
 //            cycle_timer--;
 //            if (!worldObj.isRemote) readyload = ((max_Bullet() == -1 || magazinerem > 0));
@@ -554,14 +587,15 @@ public class TurretObj implements HasLoopSound{
 //        }
     }
     public NBTTagCompound getDummyStackTag(){
+        if(dummyGunStack == null)return null;
     	if(dummyGunStack.getTagCompound() == null)dummyGunItem.checkTags(dummyGunStack);
 	    return dummyGunStack.getTagCompound();
     }
     public boolean isreloading(){
-        return getDummyStackTag().getBoolean("IsReloading");
+        return getDummyStackTag() == null || getDummyStackTag().getBoolean("IsReloading");
     }
     public boolean isLoading(){
-        return  !getDummyStackTag().getBoolean("Recoiled");
+        return getDummyStackTag() == null || !getDummyStackTag().getBoolean("Recoiled");
     }
     public boolean readytoFire(){
         return  !isreloading() && !isLoading();
@@ -574,7 +608,8 @@ public class TurretObj implements HasLoopSound{
 	    return 1;
     }
     public boolean fire(){
-	    getDummyStackTag().setBoolean("IsTriggered", true);
+        if(triggerFreeze>0)return false;
+	    if(getDummyStackTag() != null)getDummyStackTag().setBoolean("IsTriggered", true);
 //        int loopNum = 1;
 //        if(prefab_turret.multicannonPos != null && prefab_turret.fireAll_cannon){
 //            currentCannonID = 0;
@@ -659,18 +694,6 @@ public class TurretObj implements HasLoopSound{
 ////                        System.out.println("currentEntity  " + currentEntity);
 //                    this.worldObj.spawnEntityInWorld(abullet);
 //                }
-//                if (prefab_turret.gunInfo.flashname!= null) {
-//                    PacketSpawnParticle flash = new PacketSpawnParticle(
-//                                                                               pos.x + Vec_transformedbybody.x + lookVec.x * prefab_turret.flashoffset,
-//                                                                               pos.y + Vec_transformedbybody.y + lookVec.y * prefab_turret.flashoffset,
-//                                                                               -pos.z + Vec_transformedbybody.z + lookVec.z * prefab_turret.flashoffset,
-//                                                                               toDegrees(-atan2(lookVec.x, lookVec.z)),
-//                                                                               toDegrees(-asin(lookVec.y)), 100, prefab_turret.gunInfo.flashname, true);
-//                    flash.fuse = prefab_turret.gunInfo.flashfuse;
-//                    flash.scale = prefab_turret.gunInfo.flashScale;
-//                    flash.id = 100;
-//                    HMGPacketHandler.INSTANCE.sendToAll(flash);
-//                }
 //                shot =  true;
 //            }
 //        }
@@ -734,21 +757,31 @@ public class TurretObj implements HasLoopSound{
     
     public boolean fireall(){
         boolean flag = this.fire();
-        if(prefab_turret.fireAll_child || !flag) {
+        breakpoint:if(childFireBlank < 0 && (prefab_turret.fireAll_child || !flag)) {
             for (TurretObj achild : childs) {
                 achild.currentEntity = this.currentEntity;
-                if(achild.prefab_turret.linked_MotherTrigger)achild.fireall();
+                if(achild.prefab_turret.linked_MotherTrigger && achild.fireall()){
+                    flag = true;
+                    if(!prefab_turret.fireAll_child)break breakpoint;
+                }
             }
             for (TurretObj achild : childsOnBarrel) {
                 achild.currentEntity = this.currentEntity;
-                if(achild.prefab_turret.linked_MotherTrigger)achild.fireall();
+                if(achild.prefab_turret.linked_MotherTrigger && achild.fireall()){
+                    flag = true;
+                    if(!prefab_turret.fireAll_child)break breakpoint;
+                }
             }
             for (TurretObj abrothers : brothers) {
                 abrothers.currentEntity = this.currentEntity;
-                if(abrothers.prefab_turret.linked_MotherTrigger)abrothers.fireall();
+                if(abrothers.prefab_turret.linked_MotherTrigger && abrothers.fireall()){
+                    flag = true;
+                    if(!prefab_turret.fireAll_child)break breakpoint;
+                }
             }
         }
-        return flag && !prefab_turret.fireAll_child;
+        if(flag)childFireBlank = prefab_turret.childFireBlank;
+        return flag;
     }
     public void addchild_triggerLinked(TurretObj child){
         child.motherRotCenter = new Vector3d(this.prefab_turret.turretYawCenterpos);
@@ -941,23 +974,19 @@ public class TurretObj implements HasLoopSound{
         NBTTagCompound temp = new NBTTagCompound();
         temp.setDouble("turretrotationYaw",turretrotationYaw);
         temp.setDouble("turretrotationPitch",turretrotationPitch);
-        temp.setTag("DummysTag",getDummyStackTag());
-        temp.setInteger("DummysDamage",dummyGunStack.getItemDamage());
-        int childId = 0;
-        for(TurretObj aturret:childs){
-            aturret.saveToTag(temp,childId++);
+        if(dummyGunStack != null) {
+            if (getDummyStackTag() != null) temp.setTag("DummysTag", getDummyStackTag());
+            temp.setInteger("DummysDamage", dummyGunStack.getItemDamage());
         }
         tagCompound.setTag("turret" + id,temp);
     }
     public void readFromTag(NBTTagCompound tagCompound,int id){
         NBTTagCompound temp = tagCompound.getCompoundTag("turret" + id);
-        turretrotationYaw = tagCompound.getDouble("turretrotationYaw");
-        turretrotationPitch = tagCompound.getDouble("turretrotationPitch");
-        dummyGunStack.setTagCompound((NBTTagCompound) temp.getTag("DummysTag"));
-        dummyGunStack.setItemDamage(tagCompound.getInteger("DummysDamage"));
-        int childId = 0;
-        for(TurretObj aturret:childs){
-            aturret.readFromTag(temp,childId++);
+        turretrotationYaw = temp.getDouble("turretrotationYaw");
+        turretrotationPitch = temp.getDouble("turretrotationPitch");
+        if(dummyGunStack != null) {
+            dummyGunStack.setTagCompound(temp.getCompoundTag("DummysTag"));
+            dummyGunStack.setItemDamage(temp.getInteger("DummysDamage"));
         }
     }
 }

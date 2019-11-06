@@ -63,7 +63,7 @@ public class GVCEntityGK extends EntityGBase implements IIRVING
 		this.tasks.removeTask(AIMoveTowardsRestriction);
 		this.tasks.removeTask(AIMoveThroughVillage);
 		this.tasks.addTask(1,new AIGKkick(this,this,3.5f));
-		this.tasks.addTask(2,new AIGKFire(this));
+		this.tasks.addTask(2,new AIGKFire(this,new WorldForPathfind(worldObj)));
 		this.tasks.addTask(3,new EntityAIWander(this,1));
 		this.targetTasks.removeTask(AIattackOncollidetoPlayer);
 		this.targetTasks.removeTask(AIattackOncollidetoVillager);

@@ -21,6 +21,7 @@ import javax.vecmath.Vector3d;
 import java.util.ArrayList;
 
 import static handmadevehicle.CLProxy.drawOutlinedBoundingBox;
+import static handmadevehicle.HMVehicle.HMV_Proxy;
 import static java.lang.Math.toDegrees;
 import static net.minecraft.client.renderer.entity.RenderManager.debugBoundingBox;
 import static org.lwjgl.opengl.GL11.*;
@@ -60,6 +61,13 @@ public class RenderVehicle extends Render {
 			pass = MinecraftForgeClient.getRenderPass();
 			currentBaseLogic = ((IVehicle) entity).getBaseLogic();
 			currentEntity = entity;
+			if(!currentBaseLogic.isRidingEntity(HMV_Proxy.getEntityPlayerInstance())){
+				Vector3d nowPos = new Vector3d();
+				nowPos.interpolate(new Vector3d(currentEntity.lastTickPosX ,
+						currentEntity.lastTickPosY,
+						currentEntity.lastTickPosZ),new Vector3d(currentEntity.posX,currentEntity.posY,currentEntity.posZ),in_partialTicks);
+				currentBaseLogic.riderPosUpdate_forRender(nowPos);
+			}
 			allTurrets = currentBaseLogic.allturrets;
 			partialTicks = in_partialTicks;
 			TurretObj[] turretObjs = currentBaseLogic.turrets;

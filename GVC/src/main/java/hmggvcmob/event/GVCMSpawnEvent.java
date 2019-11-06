@@ -2,9 +2,18 @@ package hmggvcmob.event;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
+import handmadeguns.entity.IFF;
+import hmggvcmob.IflagBattler;
+import hmggvcmob.entity.IHasVehicleGacha;
+import hmggvcmob.entity.VehicleSpawnGachaOBJ;
 import hmggvcmob.entity.friend.EntitySoBase;
+import hmggvcmob.tile.TileEntityFlag;
 import net.minecraft.entity.Entity;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.living.LivingSpawnEvent;
+
+import java.util.Random;
 
 public class GVCMSpawnEvent {
 
@@ -48,6 +57,32 @@ public class GVCMSpawnEvent {
             for(Object te : event.entity.worldObj.loadedEntityList){
                 if(te instanceof EntitySoBase)
                     EntitySoBase.spawnedcount++;
+            }
+        }
+    }
+    @SubscribeEvent
+    public void specialSpawnevent(LivingSpawnEvent.SpecialSpawn event) {
+        if(event.entityLiving instanceof IflagBattler) {
+            Chunk spawningChunk = event.world.getChunkFromBlockCoords((int) event.x, (int) event.z);
+            for (Object o : spawningChunk.chunkTileEntityMap.values()) {
+                if (o instanceof TileEntityFlag) {
+                    //todo “Gƒtƒ‰ƒbƒO‚©‚Ç‚¤‚©”»’è
+                    //ŽüˆÍ‚Ìƒ`ƒƒƒ“ƒN‚àˆê‚És‚¤‚±‚Æ‚ÅLˆæ˜e‚Â‚Ô‚µ‚ð‚Å‚«‚é‚æ‚¤‚É‚·‚é
+                }
+            }
+        }
+        if(event.entityLiving instanceof IHasVehicleGacha){//ŽÔ—¼ƒKƒ`ƒƒ‚Ì‚¨ŽžŠÔ
+            Random rand = new Random();
+            if(((IHasVehicleGacha) event.entityLiving).getVehicleGacha_rate_sum() >0) {
+                int currentRate = rand.nextInt(((IHasVehicleGacha) event.entityLiving).getVehicleGacha_rate_sum());
+                for (VehicleSpawnGachaOBJ gachaOBJ : ((IHasVehicleGacha) event.entityLiving).getVehicleGacha()) {
+                    System.out.println(currentRate);
+                    if (currentRate < gachaOBJ.rate) {
+                        if(gachaOBJ.vehicleName != null)((IHasVehicleGacha) event.entityLiving).setVehicleName(gachaOBJ.vehicleName);
+                        break;
+                    }
+                    currentRate -= gachaOBJ.rate;
+                }
             }
         }
     }

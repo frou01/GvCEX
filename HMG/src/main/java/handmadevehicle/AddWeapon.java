@@ -32,7 +32,6 @@ public class AddWeapon {
 				while((str = br.readLine()) != null) {
 					
 					String[] type = str.split(",");
-					//todo 砲塔設定を読み込み保存しておく。車両追加側ではこのオブジェクトから持ってくる。
 					switch (type[0]){
 						case "WeaponName":
 							name = type[1];
@@ -61,6 +60,9 @@ public class AddWeapon {
 							break;
 						case "fireAll_cannon":
 							prefab_turret.fireAll_cannon = parseBoolean(type[1]);
+							break;
+						case "positionLinked":
+							prefab_turret.positionLinked = parseBoolean(type[1]);
 							break;
 						case "syncTurretAngle":
 							prefab_turret.syncTurretAngle = parseBoolean(type[1]);
@@ -112,6 +114,23 @@ public class AddWeapon {
 							break;
 						case "flashoffset":
 							prefab_turret.flashoffset = parseDouble(type[1]);
+							break;
+						case "childFireBlank":
+							prefab_turret.childFireBlank = parseInt(type[1]);
+							break;
+						case "needGunStack":
+							prefab_turret.needGunStack = parseBoolean(type[1]);
+							break;
+						case "gunStackwhitelist":
+							prefab_turret.gunStackwhitelist = new String[type.length-1];
+						    {
+						    	for(int i = 1;i < type.length;i++){
+									prefab_turret.gunStackwhitelist[i-1] = type[i];
+								}
+						    }
+							break;
+						case "noStackRestriction":
+							prefab_turret.gunStackwhitelist = new String[0];
 							break;
 						case "End":
 							prefab_turretHashMap.put(name,prefab_turret);

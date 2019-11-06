@@ -16,8 +16,10 @@ public class TurretSyncData {
 	public TurretSyncData(TurretObj turretObj){
 		yaw = (float) turretObj.turretrotationYaw;
 		pitch = (float) turretObj.turretrotationPitch;
-		gunState = turretObj.getDummyStackTag();
-		gunDamaged = turretObj.dummyGunStack.getItemDamage();
+		if(turretObj.dummyGunStack != null) {
+			gunState = turretObj.getDummyStackTag();
+			gunDamaged = turretObj.dummyGunStack.getItemDamage();
+		}
 		childData = new TurretSyncData[turretObj.getChilds().size() + turretObj.getChildsOnBarrel().size() + turretObj.getBrothers().size()];
 		int id = 0;
 		for(TurretObj aturretObj : turretObj.getChilds()){
@@ -39,8 +41,10 @@ public class TurretSyncData {
 		target.prevturretrotationPitch = target.turretrotationPitch;
 		target.turretrotationYaw = yaw;
 		target.turretrotationPitch = pitch;
-		target.dummyGunStack.setTagCompound(gunState);
-		target.dummyGunStack.setItemDamage(gunDamaged);
+		if(target.dummyGunStack != null) {
+			target.dummyGunStack.setTagCompound(gunState);
+			target.dummyGunStack.setItemDamage(gunDamaged);
+		}
 		int id = 0;
 		for(TurretObj aturretObj : target.getChilds()){
 			childData[id].setTurretData(aturretObj);

@@ -3,7 +3,6 @@ package hmggvcmob.render;
 
 
 import hmggvcmob.entity.EntityParachute;
-import hmggvcmob.render.model.GVCModelAPC;
 import hmggvcmob.render.model.ModelParachute;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.entity.Entity;

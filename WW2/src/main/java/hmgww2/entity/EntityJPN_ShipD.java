@@ -3,7 +3,6 @@ package hmgww2.entity;
 
 import handmadevehicle.entity.parts.logics.VesselBaseLogicLogic;
 import hmggvcmob.GVCMobPlus;
-import hmggvcmob.ai.AITankAttack;
 import handmadevehicle.entity.parts.OBB;
 import handmadevehicle.entity.parts.SeatInfo;
 import handmadevehicle.entity.parts.turrets.FireRist;

@@ -28,6 +28,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import static handmadevehicle.HMVehicle.*;
+import static java.lang.Math.toDegrees;
 import static org.lwjgl.input.Keyboard.isKeyDown;
 
 public class CLProxy extends CMProxy {
@@ -134,28 +135,28 @@ public class CLProxy extends CMProxy {
 	public float getXaxis(){
 		if(Controllers.getControllerCount() > 0){
 			Controller stick = Controllers.getController(0);
-			if(stick != null)return stick.getAxisValue(cfgControl_axisXID);
+			if(stick != null && stick.getAxisCount() > cfgControl_axisXID)return stick.getAxisValue(cfgControl_axisXID);
 		}
 		return 0;
 	}
 	public float getYaxis(){
 		if(Controllers.getControllerCount() > 0){
 			Controller stick = Controllers.getController(0);
-			if(stick != null)return stick.getAxisValue(cfgControl_axisYID);
+			if(stick != null && stick.getAxisCount() > cfgControl_axisYID)return stick.getAxisValue(cfgControl_axisYID);
 		}
 		return 0;
 	}
 	public float getZaxis(){
 		if(Controllers.getControllerCount() > 0){
 			Controller stick = Controllers.getController(0);
-			if(stick != null)return stick.getAxisValue(cfgControl_axisZID);
+			if(stick != null && stick.getAxisCount() > cfgControl_axisZID)return stick.getAxisValue(cfgControl_axisZID);
 		}
 		return 0;
 	}
 	public float getZaxis2(){
 		if(Controllers.getControllerCount() > 0){
 			Controller stick = Controllers.getController(0);
-			if(stick != null)return stick.getAxisValue(cfgControl_axisZ2ID);
+			if(stick != null && stick.getAxisCount() > cfgControl_axisZ2ID)return stick.getAxisValue(cfgControl_axisZ2ID);
 		}
 		return 0;
 	}
@@ -370,6 +371,35 @@ public class CLProxy extends CMProxy {
 	public static void drawOutlinedOBB(OBB p_147590_0_, int p_147590_1_)
 	{
 		GL11.glPushMatrix();
+
+		{
+			double[] xyz = Utils.eulerfrommatrix(Utils.matrixfromQuat(p_147590_0_.turretRotation));
+			xyz[0] = toDegrees(xyz[0]);
+			xyz[1] = toDegrees(xyz[1]);
+			xyz[2] = toDegrees(xyz[2]);
+			GL11.glTranslatef((float) p_147590_0_.turretRotCenter.x, (float) p_147590_0_.turretRotCenter.y, (float) -p_147590_0_.turretRotCenter.z);
+
+			GL11.glRotatef(-(float) xyz[1], 0.0F, 1.0F, 0.0F);
+			GL11.glRotatef((float) xyz[0], 1.0F, 0.0F, 0.0F);
+			GL11.glRotatef((float) xyz[2], 0.0F, 0.0F, 1.0F);
+
+			GL11.glTranslatef(-(float) p_147590_0_.turretRotCenter.x, -(float) p_147590_0_.turretRotCenter.y, (float) p_147590_0_.turretRotCenter.z);
+		}
+
+		{
+			double[] xyz = Utils.eulerfrommatrix(Utils.matrixfromQuat(p_147590_0_.boxRotation));
+			xyz[0] = toDegrees(xyz[0]);
+			xyz[1] = toDegrees(xyz[1]);
+			xyz[2] = toDegrees(xyz[2]);
+			GL11.glTranslatef((float) p_147590_0_.boxRotCenter.x, (float) p_147590_0_.boxRotCenter.y, (float) -p_147590_0_.boxRotCenter.z);
+
+			GL11.glRotatef(180 - (float) xyz[1], 0.0F, 1.0F, 0.0F);
+			GL11.glRotatef((float) xyz[0], 1.0F, 0.0F, 0.0F);
+			GL11.glRotatef((float) xyz[2], 0.0F, 0.0F, 1.0F);
+
+			GL11.glTranslatef(-(float) p_147590_0_.boxRotCenter.x, -(float) p_147590_0_.boxRotCenter.y, (float) p_147590_0_.boxRotCenter.z);
+		}
+
 		Tessellator tessellator = Tessellator.instance;
 		tessellator.startDrawing(3);
 		

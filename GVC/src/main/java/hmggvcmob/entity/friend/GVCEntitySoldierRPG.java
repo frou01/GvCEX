@@ -1,6 +1,9 @@
 package hmggvcmob.entity.friend;
 
 
+import handmadevehicle.SlowPathFinder.WorldForPathfind;
+import hmggvcmob.entity.IHasVehicleGacha;
+import hmggvcmob.entity.VehicleSpawnGachaOBJ;
 import hmggvcutil.GVCUtils;
 import hmggvcmob.ai.AIAttackGun;
 import net.minecraft.block.Block;
@@ -8,13 +11,16 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-public class GVCEntitySoldierRPG extends EntitySoBase
+public class GVCEntitySoldierRPG extends EntitySoBase implements IHasVehicleGacha
 {
+    public static VehicleSpawnGachaOBJ[] vehicleSpawnGachaOBJ;
+    public static int vehilceGacha_rate_sum = 0;
+
     public GVCEntitySoldierRPG(World par1World)
     {
         super(par1World);
         this.setSize(0.6F, 1.8F);
-		this.tasks.addTask(2, aiAttackGun = new AIAttackGun(this, 120,20, 10, 5, false,false));
+		this.tasks.addTask(2, aiAttackGun = new AIAttackGun(this, 120,20, 10, 5, true,true,new WorldForPathfind(worldObj)));
     }
     protected void applyEntityAttributes()
     {
@@ -62,5 +68,13 @@ public class GVCEntitySoldierRPG extends EntitySoBase
     protected void func_145780_a(int p_145780_1_, int p_145780_2_, int p_145780_3_, Block p_145780_4_)
     {
         this.playSound("mob.skeleton.step", 0.15F, 1.0F);
+    }
+    @Override
+    public VehicleSpawnGachaOBJ[] getVehicleGacha() {
+        return vehicleSpawnGachaOBJ;
+    }
+    @Override
+    public int getVehicleGacha_rate_sum() {
+        return vehilceGacha_rate_sum;
     }
 }

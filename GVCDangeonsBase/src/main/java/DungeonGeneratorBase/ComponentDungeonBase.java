@@ -5,7 +5,6 @@ import handmadeguns.HMGGunMaker;
 import handmadeguns.entity.PlacedGunEntity;
 import handmadeguns.items.guns.HMGItem_Unified_Guns;
 import hmggvcmob.GVCMobPlus;
-import hmggvcmob.entity.friend.GVCEntityPMCTank;
 import hmggvcmob.entity.guerrilla.EntityGBase;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLadder;

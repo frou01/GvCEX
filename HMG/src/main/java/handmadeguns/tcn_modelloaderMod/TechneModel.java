@@ -268,7 +268,7 @@ public class TechneModel extends ModelBase implements IModelCustom {
     }
     private void bindTexture()
     {
-        /* TODO: Update to 1.6
+        /*
         if (texture != null)
         {
             if (!textureNameSet)
@@ -314,8 +314,8 @@ public class TechneModel extends ModelBase implements IModelCustom {
     public void renderAll()
     {
         GL11.glPushMatrix();
+		GL11.glRotatef(180,0,1,0);
         GL11.glRotatef(180,0,0,1);
-//	    GL11.glRotatef(180,0,1,0);
         for (List<ModelRenderer> part : parts.values())
         {
             for (ModelRenderer onepart : part)
@@ -330,7 +330,8 @@ public class TechneModel extends ModelBase implements IModelCustom {
     public void renderPart(String partName)
     {
         GL11.glPushMatrix();
-        GL11.glRotatef(180,0,0,1);
+		GL11.glRotatef(180,0,1,0);
+		GL11.glRotatef(180,0,0,1);
         List<ModelRenderer> part = parts.get(partName);
         if (part != null)
         {

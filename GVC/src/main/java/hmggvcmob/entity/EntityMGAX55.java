@@ -4,6 +4,7 @@ import cpw.mods.fml.client.FMLClientHandler;
 import handmadeguns.HMGPacketHandler;
 import handmadeguns.HandmadeGunsCore;
 import handmadeguns.entity.I_SPdamageHandle;
+import handmadeguns.entity.SpHitCheckEntity;
 import handmadeguns.entity.bullets.*;
 import handmadeguns.network.PacketSpawnParticle;
 import handmadeguns.client.render.HMGGunParts_Motion;
@@ -45,18 +46,12 @@ public class EntityMGAX55 extends Entity implements I_SPdamageHandle {
     public float armor = 30;
     public float maxhealth = 1000;
     public float bodyrotationYaw;
-    public float bodyrotationRoll;
     public float headrotationYaw;
     public float RailGUNrotationYaw;
     public float headrotationPitch;
     public float RailGUNrotationPitch;
-    public float headrotationRoll;
     public float prevbodyrotationYaw;
-    public float prevbodyrotationPitch;
-    public float prevbodyrotationRoll;
     private GearPathNavigate navigator;
-
-    private boolean isinit = false;
 
 
 
@@ -338,7 +333,7 @@ public class EntityMGAX55 extends Entity implements I_SPdamageHandle {
             return false;
         } else if (this == source.getEntity()) {
             return false;
-        } else if(this instanceof ImultiRidable && ((ImultiRidable)this).isRidingEntity(source.getEntity())) {
+        } else if(this instanceof SpHitCheckEntity && ((SpHitCheckEntity)this).isRidingEntity(source.getEntity())) {
             return false;
         }else {
             return super.attackEntityFrom(source, par2);
@@ -361,7 +356,6 @@ public class EntityMGAX55 extends Entity implements I_SPdamageHandle {
         Utils.RotateVectorAroundY(zVector, -bodyrotationYaw);
         if (worldObj.isRemote) {
             prevbodyrotationYaw = bodyrotationYaw;
-            prevbodyrotationRoll = bodyrotationRoll;
             prevbodyrotationYaw = wrapAngleTo180_float(prevbodyrotationYaw);
             bodyrotationYaw = wrapAngleTo180_float(bodyrotationYaw);
             if (this.health <= this.maxhealth / 2) {

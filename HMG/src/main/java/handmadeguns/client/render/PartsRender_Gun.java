@@ -50,22 +50,22 @@ public class PartsRender_Gun extends PartsRender {
 		
 		for (HMGGunParts parts : partslist_temp) {
 			for (GunState state : states) {
-				checkState2(state,parts,flame,remainbullets);
+				if(checkState2(state,parts,flame,remainbullets))break;
 			}
 		}
 	}
-	private void checkState2(GunState state,HMGGunParts parts,float flame,int remainbullets){
+	private boolean checkState2(GunState state,HMGGunParts parts,float flame,int remainbullets){
 		switch (state) {
 			case ADS:
 				if (parts.rendering_Ads) {
 					PartSidentification_Attach(parts, state, flame, remainbullets, parts.getRenderinfOfADS());
-					return;
+					return true;
 				}
 				break;
 			case Default:
 				if (parts.rendering_Def) {
 					PartSidentification_Attach(parts, state, flame, remainbullets, parts.getRenderinfDefault_offset());
-					return;
+					return true;
 				}
 				break;
 			case Recoil:
@@ -74,12 +74,12 @@ public class PartsRender_Gun extends PartsRender {
 						HMGGunParts_Motion_PosAndRotation OffsetAndRotation = parts.getRecoilmotion(flame + smooth);
 						
 						PartSidentification_Attach(parts, state, flame, remainbullets, OffsetAndRotation);
-						return;
+						return true;
 					} else {
 						HMGGunParts_Motion_PosAndRotation OffsetAndRotation = parts.getRenderinfOfRecoil();
 						
 						PartSidentification_Attach(parts, state, flame, remainbullets, OffsetAndRotation);
-						return;
+						return true;
 					}
 				}
 				break;
@@ -89,12 +89,12 @@ public class PartsRender_Gun extends PartsRender {
 						HMGGunParts_Motion_PosAndRotation OffsetAndRotation = parts.getcockmotion(flame + smooth);
 						
 						PartSidentification_Attach(parts, state, flame, remainbullets, OffsetAndRotation);
-						return;
+						return true;
 					} else {
 						HMGGunParts_Motion_PosAndRotation OffsetAndRotation = parts.getRenderinfOfCock();
 						
 						PartSidentification_Attach(parts, state, flame, remainbullets, OffsetAndRotation);
-						return;
+						return true;
 					}
 				}
 				break;
@@ -104,16 +104,17 @@ public class PartsRender_Gun extends PartsRender {
 						HMGGunParts_Motion_PosAndRotation OffsetAndRotation = parts.getReloadmotion(flame + smooth);
 						
 						PartSidentification_Attach(parts, state, flame, remainbullets, OffsetAndRotation);
-						return;
+						return true;
 					} else {
 						HMGGunParts_Motion_PosAndRotation OffsetAndRotation = parts.getRenderinfOfReload();
 						
 						PartSidentification_Attach(parts, state, flame, remainbullets, OffsetAndRotation);
-						return;
+						return true;
 					}
 				}
 				break;
 		}
+		return false;
 	}
 	public void PartSidentification_Attach(HMGGunParts parts, GunState state, float flame, int remainbullets, HMGGunParts_Motion_PosAndRotation OffsetAndRotation){
 		if(gunitem.gunInfo.magazine.length >1) {
@@ -291,23 +292,13 @@ public class PartsRender_Gun extends PartsRender {
 		if(isPlacedGun && parts.hasbaseYawInfo) {
 			HMGGunParts_Motion_PosAndRotation baserotationCenterAndRotation = parts.getYawInfo(turretYaw);
 			if (baserotationCenterAndRotation != null) {
-				GL11.glTranslatef(baserotationCenterAndRotation.posX, baserotationCenterAndRotation.posY, baserotationCenterAndRotation.posZ);
-				GL11.glTranslatef(rotationCenterAndRotation.posX, rotationCenterAndRotation.posY, rotationCenterAndRotation.posZ);
-				GL11.glRotatef(baserotationCenterAndRotation.rotationY, 0, 1, 0);
-				GL11.glRotatef(baserotationCenterAndRotation.rotationX, 1, 0, 0);
-				GL11.glRotatef(baserotationCenterAndRotation.rotationZ, 0, 0, 1);
-				GL11.glTranslatef(-rotationCenterAndRotation.posX, -rotationCenterAndRotation.posY, -rotationCenterAndRotation.posZ);
+				transformParts(rotationCenterAndRotation,baserotationCenterAndRotation,parts);
 			}
 		}
 		if(isPlacedGun && parts.hasbasePitchInfo){
 			HMGGunParts_Motion_PosAndRotation baserotationCenterAndRotation = parts.getPitchInfo(turretPitch);
 			if (baserotationCenterAndRotation != null) {
-				GL11.glTranslatef(baserotationCenterAndRotation.posX, baserotationCenterAndRotation.posY, baserotationCenterAndRotation.posZ);
-				GL11.glTranslatef(rotationCenterAndRotation.posX, rotationCenterAndRotation.posY, rotationCenterAndRotation.posZ);
-				GL11.glRotatef(baserotationCenterAndRotation.rotationY, 0, 1, 0);
-				GL11.glRotatef(baserotationCenterAndRotation.rotationX, 1, 0, 0);
-				GL11.glRotatef(baserotationCenterAndRotation.rotationZ, 0, 0, 1);
-				GL11.glTranslatef(-rotationCenterAndRotation.posX, -rotationCenterAndRotation.posY, -rotationCenterAndRotation.posZ);
+				transformParts(rotationCenterAndRotation,baserotationCenterAndRotation,parts);
 			}
 		}
 		super.partModel_render(parts, state, flame, remainbullets, OffsetAndRotation);

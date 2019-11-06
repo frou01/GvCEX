@@ -1,8 +1,0 @@
-{
-"handmadevehicle.120mmFire": {"category": "neutral","sounds": ["120mmFire"]},
-"handmadevehicle.jetplane": {"category": "neutral","sounds": ["jetplane"]},
-"handmadevehicle.Leopard1Track": {"category": "neutral","sounds": ["Leopard1Track"]},
-"handmadevehicle.traverseSound": {"category": "neutral","sounds": ["traverseSound"]},
-"handmadevehicle.Tu-95prop": {"category": "neutral","sounds": ["Tu-95prop"]},
-"handmadevehicle.nulls": {"category": "neutral","sounds": ["nulls"]}
-}

@@ -1596,6 +1596,7 @@ public class HMGGunMaker {
 			throw new RuntimeException("Script exec error", e);
 		}
 	}
+	public static int readerCnt = 0;
 	public void readParts(String[] type,ArrayList<HMGGunParts> partslist){
 		switch (type[0]) {
 			case "AddParts":
@@ -1617,7 +1618,6 @@ public class HMGGunMaker {
 				currentParts.AddRenderinfDef(Float.parseFloat(type[1]), Float.parseFloat(type[2]), Float.parseFloat(type[3]), Float.parseFloat(type[4]), Float.parseFloat(type[5]), Float.parseFloat(type[6]));
 				break;
 			case "AddPartsRotationCenterAndRotationAmount_TypeVector":
-				currentParts.rotateTypeIsVector = true;
 				currentParts.AddRenderinfDef(Float.parseFloat(type[1]), Float.parseFloat(type[2]), Float.parseFloat(type[3]), Float.parseFloat(type[4]),Float.parseFloat(type[5]),Float.parseFloat(type[6]),Float.parseFloat(type[7]));
 				break;
 			case "AddPartsRotationDefOffset":
@@ -1642,28 +1642,28 @@ public class HMGGunMaker {
 				currentParts.AddRenderinfBullet(Float.parseFloat(type[1]), Float.parseFloat(type[2]), Float.parseFloat(type[3]), Float.parseFloat(type[4]), Float.parseFloat(type[5]), Float.parseFloat(type[6]));
 				break;
 			case "AddRecoilMotionKey":
-				if (type.length > 3) {
+				if (type.length > 4) {
 					currentParts.AddMotionKeyRecoil(parseInt(type[1]), Float.parseFloat(type[2]), Float.parseFloat(type[3]), Float.parseFloat(type[4]), Float.parseFloat(type[5]), Float.parseFloat(type[6]), Float.parseFloat(type[7]), parseInt(type[8]), Float.parseFloat(type[9]), Float.parseFloat(type[10]), Float.parseFloat(type[11]), Float.parseFloat(type[12]), Float.parseFloat(type[13]), Float.parseFloat(type[14]));
 				} else {
 					currentParts.AddMotionKeyRecoil(parseInt(type[1]), Boolean.parseBoolean(type[2]), parseInt(type[3]));
 				}
 				break;
 			case "AddYawInfoKey":
-				if (type.length > 3) {
+				if (type.length > 4) {
 					currentParts.AddInfoKeyTurretYaw(parseInt(type[1]), Float.parseFloat(type[2]), Float.parseFloat(type[3]), Float.parseFloat(type[4]), Float.parseFloat(type[5]), Float.parseFloat(type[6]), Float.parseFloat(type[7]), parseInt(type[8]), Float.parseFloat(type[9]), Float.parseFloat(type[10]), Float.parseFloat(type[11]), Float.parseFloat(type[12]), Float.parseFloat(type[13]), Float.parseFloat(type[14]));
 				} else {
 					currentParts.AddInfoKeyTurretYaw(parseInt(type[1]), Boolean.parseBoolean(type[2]), parseInt(type[3]));
 				}
 				break;
 			case "AddPitchInfoKey":
-				if (type.length > 3) {
+				if (type.length > 4) {
 					currentParts.AddInfoKeyTurretPitch(parseInt(type[1]), Float.parseFloat(type[2]), Float.parseFloat(type[3]), Float.parseFloat(type[4]), Float.parseFloat(type[5]), Float.parseFloat(type[6]), Float.parseFloat(type[7]), parseInt(type[8]), Float.parseFloat(type[9]), Float.parseFloat(type[10]), Float.parseFloat(type[11]), Float.parseFloat(type[12]), Float.parseFloat(type[13]), Float.parseFloat(type[14]));
 				} else {
 					currentParts.AddInfoKeyTurretPitch(parseInt(type[1]), Boolean.parseBoolean(type[2]), parseInt(type[3]));
 				}
 				break;
 			case "AddCockMotionKey":
-				if (type.length > 3) {
+				if (type.length > 4) {
 					currentParts.AddMotionKeyCock(parseInt(type[1]), Float.parseFloat(type[2]), Float.parseFloat(type[3]), Float.parseFloat(type[4]), Float.parseFloat(type[5]), Float.parseFloat(type[6]), Float.parseFloat(type[7]), parseInt(type[8]), Float.parseFloat(type[9]), Float.parseFloat(type[10]), Float.parseFloat(type[11]), Float.parseFloat(type[12]), Float.parseFloat(type[13]), Float.parseFloat(type[14]));
 				} else {
 					currentParts.AddMotionKeyCock(parseInt(type[1]), Boolean.parseBoolean(type[2]), parseInt(type[3]));

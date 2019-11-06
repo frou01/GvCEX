@@ -1,5 +1,0 @@
-ObjModel,torpedo.mqo
-ObjTexture,torpedo.png
-Objscale,10
-SmokeGlow,true
-Name,byfrou01_torpedo

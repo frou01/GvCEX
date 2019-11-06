@@ -75,6 +75,9 @@ public class GVCItemGuerrillaEgg extends Item
                 int var12 = MathHelper.floor_double((double)(par2EntityPlayer.rotationYaw));
                 GVCEntityGuerrillaRPG entityskeleton = new GVCEntityGuerrillaRPG(par3World);
                 entityskeleton.setLocationAndAngles(par4+0.5, par5, par6+0.5, var12, 0.0F);
+                if(par1ItemStack.hasDisplayName()){
+                    entityskeleton.summoningVehicle = par1ItemStack.getDisplayName();
+                }
                 if(new Random().nextInt(10)!=-0) {
                     entityskeleton.setCurrentItemOrArmor(0, new ItemStack((Item) Guns_RR.get(new Random().nextInt(Guns_RR.size()))));
                 }
@@ -116,44 +119,7 @@ public class GVCItemGuerrillaEgg extends Item
                 //entityskeleton.mountEntity(entityskeleton1);
                 --par1ItemStack.stackSize;
                 return true;
-            }else if(this.mob == 7){
-                ++par5;
-                int var12 = MathHelper.floor_double((double)(par2EntityPlayer.rotationYaw));
-                GVCEntityTank entityskeleton = new GVCEntityTank(par3World);
-                entityskeleton.setLocationAndAngles(par4+0.5, par5, par6+0.5, var12, 0.0F);
-                par3World.spawnEntityInWorld(entityskeleton);
-                --par1ItemStack.stackSize;
-                return true;
-            }else if(this.mob == 8){
-                ++par5;
-                int var12 = MathHelper.floor_double((double)(par2EntityPlayer.rotationYaw));
-                GVCEntityAPC entityskeleton = new GVCEntityAPC(par3World);
-                entityskeleton.setLocationAndAngles(par4+0.5, par5, par6+0.5, var12, 0.0F);
-                par3World.spawnEntityInWorld(entityskeleton);
-                entityskeleton.addRandomArmor();
-                //if(!par3World.isRemote)
-                --par1ItemStack.stackSize;
-                return true;
-            }else if(this.mob == 9){
-                ++par5;
-                int var12 = MathHelper.floor_double((double)(par2EntityPlayer.rotationYaw));
-                GVCEntityHeli entityskeleton = new GVCEntityHeli(par3World);
-                entityskeleton.setLocationAndAngles(par4+0.5, par5, par6+0.5, var12, 0.0F);
-                entityskeleton.addRandomArmor();
-                par3World.spawnEntityInWorld(entityskeleton);
-                --par1ItemStack.stackSize;
-                return true;
-            }else if(this.mob == 10){
-                ++par5;
-                int var12 = MathHelper.floor_double((double)(par2EntityPlayer.rotationYaw));
-                GVCEntityJeep entityskeleton = new GVCEntityJeep(par3World);
-                entityskeleton.setLocationAndAngles(par4+0.5, par5, par6+0.5, var12, 0.0F);
-                par3World.spawnEntityInWorld(entityskeleton);
-                entityskeleton.addRandomArmor();
-                //if(!par3World.isRemote)
-                --par1ItemStack.stackSize;
-                return true;
-            }else if(this.mob == 11){
+            }else  if(this.mob == 11){
                 ++par5;
                 int var12 = MathHelper.floor_double((double)(par2EntityPlayer.rotationYaw));
                 GVCEntityAAG entityskeleton = new GVCEntityAAG(par3World);
@@ -180,14 +146,6 @@ public class GVCItemGuerrillaEgg extends Item
                 --par1ItemStack.stackSize;
                 return true;
 
-            }else if(this.mob == 14){
-                ++par5;
-                int var12 = MathHelper.floor_double((double)(par2EntityPlayer.rotationYaw));
-                GVCEntityTankT90 entityskeleton = new GVCEntityTankT90(par3World);
-                entityskeleton.setLocationAndAngles(par4+0.5, par5, par6+0.5, var12, 0.0F);
-                par3World.spawnEntityInWorld(entityskeleton);
-                --par1ItemStack.stackSize;
-                return true;
             }else if(this.mob == 15){
                 ++par5;
                 int var12 = MathHelper.floor_double((double)(par2EntityPlayer.rotationYaw));
@@ -210,14 +168,6 @@ public class GVCItemGuerrillaEgg extends Item
                 int var12 = MathHelper.floor_double((double)(par2EntityPlayer.rotationYaw));
                 GVCEntityGuerrillaSkeleton entityskeleton = new GVCEntityGuerrillaSkeleton(par3World);
                 entityskeleton.addRandomArmor();
-                entityskeleton.setLocationAndAngles(par4+0.5, par5, par6+0.5, var12, 0.0F);
-                par3World.spawnEntityInWorld(entityskeleton);
-                --par1ItemStack.stackSize;
-                return true;
-            }else if(this.mob == 18){
-                ++par5;
-                int var12 = MathHelper.floor_double((double)(par2EntityPlayer.rotationYaw));
-                GVCEntityWZ10AttackHeli entityskeleton = new GVCEntityWZ10AttackHeli(par3World);
                 entityskeleton.setLocationAndAngles(par4+0.5, par5, par6+0.5, var12, 0.0F);
                 par3World.spawnEntityInWorld(entityskeleton);
                 --par1ItemStack.stackSize;

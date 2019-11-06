@@ -20,6 +20,7 @@ import net.minecraft.world.World;
 public class ModifiedPathNavigater extends PathNavigate{
 	private Entity theEntity;
 	private World worldObj;
+	private WorldForPathfind worldForPathfind;
 	/** The PathEntity being followed. */
 	private PathEntity currentPath;
 	private double speed;
@@ -45,7 +46,7 @@ public class ModifiedPathNavigater extends PathNavigate{
 	private boolean canSwim;
 	private static final String __OBFID = "CL_00001627";
 	
-	public ModifiedPathNavigater(Entity p_i1671_1_, World p_i1671_2_)
+	public ModifiedPathNavigater(Entity p_i1671_1_, World p_i1671_2_,WorldForPathfind worldForPathfind)
 	{
 		super(p_i1671_1_ instanceof EntityLiving ? (EntityLiving)p_i1671_1_ :(new EntityLiving(p_i1671_2_) {
 			@Override
@@ -56,6 +57,7 @@ public class ModifiedPathNavigater extends PathNavigate{
 		}), p_i1671_2_);
 		this.theEntity = p_i1671_1_;
 		this.worldObj = p_i1671_2_;
+		this.worldForPathfind = worldForPathfind;
 	}
 	
 	public void setAvoidsWater(boolean p_75491_1_)
@@ -104,7 +106,11 @@ public class ModifiedPathNavigater extends PathNavigate{
 	{
 		this.speed = p_75489_1_;
 	}
-	
+	public double getSpeed()
+	{
+		return speed;
+	}
+
 	/**
 	 * Sets if the entity can swim
 	 */
@@ -126,7 +132,7 @@ public class ModifiedPathNavigater extends PathNavigate{
 	 */
 	public PathEntity getPathToXYZ(double p_75488_1_, double p_75488_3_, double p_75488_5_)
 	{
-		return !this.canNavigate() ? null : this.worldObj.getEntityPathToXYZ(this.theEntity, MathHelper.floor_double(p_75488_1_), (int)p_75488_3_, MathHelper.floor_double(p_75488_5_), this.getPathSearchRange(), this.canPassOpenWoodenDoors, this.canPassClosedWoodenDoors, this.avoidsWater, this.canSwim);
+		return !this.canNavigate() ? null : this.worldForPathfind.getEntityPathToXYZ(this.theEntity, MathHelper.floor_double(p_75488_1_), (int)p_75488_3_, MathHelper.floor_double(p_75488_5_), this.getPathSearchRange(), this.canPassOpenWoodenDoors, this.canPassClosedWoodenDoors, this.avoidsWater, this.canSwim);
 	}
 	
 	/**
@@ -225,7 +231,7 @@ public class ModifiedPathNavigater extends PathNavigate{
 			}
 		}
 	}
-	
+
 	private void pathFollow()
 	{
 		Vec3 vec3 = this.getEntityPosition();
@@ -241,8 +247,8 @@ public class ModifiedPathNavigater extends PathNavigate{
 		}
 		
 		float f = this.theEntity.width * this.theEntity.width;
-		if(this.theEntity.width < 1){
-			f = 1;
+		if(this.theEntity.width < 2){
+			f = 4f;
 		}
 		int k;
 		

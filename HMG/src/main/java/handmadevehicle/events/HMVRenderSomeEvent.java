@@ -6,6 +6,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import handmadeguns.Util.EntityLinkedPos_Motion;
 import handmadevehicle.Utils;
 import handmadevehicle.entity.EntityCameraDummy;
 import handmadevehicle.entity.parts.IVehicle;
@@ -20,7 +21,6 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.GuiIngameForge;
@@ -36,8 +36,10 @@ import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Quat4d;
 import javax.vecmath.Vector3d;
 
+import java.util.ArrayList;
+
 import static handmadeguns.HandmadeGunsCore.HMG_proxy;
-import static handmadeguns.event.HMGEventZoom.renderPumpkinBlur;
+import static handmadeguns.event.HMGEventZoom.*;
 import static handmadevehicle.CLProxy.zooming;
 import static handmadevehicle.HMVehicle.HMV_Proxy;
 import static handmadevehicle.Utils.*;
@@ -49,6 +51,8 @@ import static org.lwjgl.opengl.GL11.*;
 public class HMVRenderSomeEvent {
 
 	public static int playerSeatID;
+	public static ArrayList<EntityLinkedPos_Motion> missile_Pos_Motion = new ArrayList<EntityLinkedPos_Motion>();
+	public static ArrayList<EntityLinkedPos_Motion>  target_Pos_Motion = new ArrayList<EntityLinkedPos_Motion>();
 	static boolean needrest = true;
 	static boolean needrestcursor = true;
 	private double zLevel = 0;
@@ -73,7 +77,13 @@ public class HMVRenderSomeEvent {
 				if(rc) zooming = !zooming;
 
 				if(zooming) {
-					event.newfov = event.fov / ((IVehicle) entityplayer.ridingEntity).getBaseLogic().info.zoomLevel;
+
+					TurretObj turretObj = getPlayerUsingTurret(entityplayer);
+					if(turretObj.dummyGunItem != null) {
+						event.newfov = event.fov / turretObj.dummyGunItem.gunInfo.scopezoombase;
+					}else {
+						event.newfov = event.fov / ((IVehicle) entityplayer.ridingEntity).getBaseLogic().info.zoomLevel;
+					}
 				}
 			}
 		}else {
@@ -157,6 +167,23 @@ public class HMVRenderSomeEvent {
 							Vector3d tailwingvector = Utils.transformVecByQuat(new Vector3d(0, 1, 0), logic.bodyRot);
 							Vector3d mainwingvector = Utils.transformVecByQuat(new Vector3d(1, 0, 0), logic.bodyRot);
 							if (logic.ispilot(entityplayer)) {
+								if (!logic.mouseStickMode || logic.prefab_vehicle.T_Land_F_Plane) {
+									float f1 = HMG_proxy.getMCInstance().gameSettings.mouseSensitivity * 0.6F + 0.2F;
+									float f2 = f1 * f1 * f1 * 8.0F;
+									float f3 = (float) HMG_proxy.getMCInstance().mouseHelper.deltaX * f2 * 2;
+									float f4 = (float) HMG_proxy.getMCInstance().mouseHelper.deltaY * f2 * 2;
+									logic.cameraYaw += f3 * 0.15D;
+									logic.cameraPitch += f4 * 0.15D;
+									if (logic.cameraPitch > 90) logic.cameraPitch = 90;
+									if (logic.cameraPitch < -90) logic.cameraPitch = -90;
+								}
+
+								Quat4d Headrot = new Quat4d(0, 0, 0, 1);
+								Headrot = quatRotateAxis(Headrot, new AxisAngle4d(unitX, toRadians(logic.cameraPitch) / 2));
+								Headrot = quatRotateAxis(Headrot, new AxisAngle4d(unitY, toRadians(logic.cameraYaw) / 2));
+								logic.camerarot.set(Headrot);
+								logic.camerarot_current.set(logic.camerarot);
+
 								Quat4d currentquat = new Quat4d();
 								currentquat.interpolate(logic.prevbodyRot,logic.bodyRot, (double) renderTickTime);
 //									if (abs(logic.pitchladder) > 0.001) {
@@ -213,6 +240,9 @@ public class HMVRenderSomeEvent {
 									logic.camera.prevRotationYaw = (float) cameraxyz[1];
 									logic.camera.rotationYawHead = (float) cameraxyz[1];
 									logic.camera.prevRotationYawHead = (float) cameraxyz[1];
+									if(Double.isNaN(cameraxyz[0])){
+										cameraxyz[0] = 0;
+									}
 									logic.camera.rotationPitch = (float) cameraxyz[0];
 									logic.camera.prevRotationPitch = (float) cameraxyz[0];
 									ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer, (float) cameraxyz[2], "camRoll", "R", "field_78495_O");
@@ -253,35 +283,25 @@ public class HMVRenderSomeEvent {
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
 	public void drawScreenEvent(GuiScreenEvent.DrawScreenEvent.Pre event) {
-		
-		Minecraft minecraft = FMLClientHandler.instance().getClient();
-		EntityPlayer entityplayer = minecraft.thePlayer;
-		
-		if(entityplayer.ridingEntity instanceof IVehicle) {
-			BaseLogic logic = ((IVehicle) entityplayer.ridingEntity).getBaseLogic();
-			if (logic.ispilot(entityplayer)) {
-				if (!logic.mouseStickMode) {
-					float f1 = HMG_proxy.getMCInstance().gameSettings.mouseSensitivity * 0.6F + 0.2F;
-					float f2 = f1 * f1 * f1 * 8.0F;
-					float f3 = (float) HMG_proxy.getMCInstance().mouseHelper.deltaX * f2;
-					float f4 = (float) HMG_proxy.getMCInstance().mouseHelper.deltaY * f2;
-					logic.cameraYaw += f3 * 0.015F;
-					logic.cameraPitch += f4 * 0.015F;
-					if (logic.cameraPitch > 90) logic.cameraPitch = 90;
-					if (logic.cameraPitch < -90) logic.cameraPitch = -90;
-				}
-				
-				Quat4d Headrot = new Quat4d(0, 0, 0, 1);
-				Headrot = quatRotateAxis(Headrot, new AxisAngle4d(unitX, toRadians(logic.cameraPitch) / 2));
-				Headrot = quatRotateAxis(Headrot, new AxisAngle4d(unitY, toRadians(logic.cameraYaw) / 2));
-				logic.camerarot.set(Headrot);
-				logic.camerarot_current.set(logic.camerarot);
-			}
-		}
 	}
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
 	public void renderover(RenderGameOverlayEvent.Post event) {
+		ArrayList<EntityLinkedPos_Motion> tempDel = new ArrayList<>();
+		for(EntityLinkedPos_Motion a_target_pos_motion:target_Pos_Motion) {
+			if(a_target_pos_motion.for_aliveCnt > event.partialTicks)a_target_pos_motion.livingTime++;
+			if(a_target_pos_motion.livingTime > 20)tempDel.add(a_target_pos_motion);
+			a_target_pos_motion.for_aliveCnt = event.partialTicks;
+		}
+		target_Pos_Motion.removeAll(tempDel);
+		tempDel = new ArrayList<>();
+		for(EntityLinkedPos_Motion a_missile_pos_motion:missile_Pos_Motion) {
+			if(a_missile_pos_motion.for_aliveCnt > event.partialTicks)a_missile_pos_motion.livingTime++;
+			if(a_missile_pos_motion.livingTime > 20)tempDel.add(a_missile_pos_motion);
+			a_missile_pos_motion.for_aliveCnt = event.partialTicks;
+		}
+		missile_Pos_Motion.removeAll(tempDel);
+
 		if(needrestcursor){
 			GuiIngameForge.renderCrosshairs = true;
 			needrestcursor = false;
@@ -390,7 +410,7 @@ public class HMVRenderSomeEvent {
 					GL11.glPushMatrix();
 					{
 						String hp = String.format("%1$3d", (int) logic.health);
-						String mhp = String.format("%1$3d", (int) logic.health);
+						String mhp = String.format("%1$3d", (int) logic.prefab_vehicle.maxhealth);
 						String th = String.valueOf(vehicle.getBaseLogic().throttle);
 						
 						SeatInfo playerSeatInfo = vehicle.getBaseLogic().seatInfos[playerSeatID];
@@ -400,10 +420,10 @@ public class HMVRenderSomeEvent {
 						}
 						if (playerSeatInfo.subgun != null) {
 							TurretObj turretObj = playerSeatInfo.subgun;
-							displayGunState(turretObj,fontrenderer,i,j,240,40,"SUB ");
+							displayGunState(turretObj,fontrenderer,i,j,240,50,"SUB ");
 						}
 						
-						fontrenderer.drawStringWithShadow("HP " + hp + "/" + mhp + " : throttle " + th, i - 240, j - 20, 0xFFFFFF);
+						fontrenderer.drawStringWithShadow("HP " + hp + "/" + mhp + " : throttle " + th, i - 240, j - 90, 0xFFFFFF);
 						//fontrenderer.drawStringWithShadow("TH" + th, (i/2) - 80, j/2 + 0, 0xFFFFFF);
 						//fontrenderer.drawStringWithShadow("Speed"+ speed, (i/2) - 80, j/2 +20, 0xFFFFFF);
 						GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -437,28 +457,37 @@ public class HMVRenderSomeEvent {
 					}
 					GL11.glPopMatrix();
 				}
-				
-				
+
+				setUp3DView(minecraft,event);
+				GL11.glPushMatrix();
+				GL11.glRotatef(0, 1.0F, 0.0F, 0.0F);
+				GL11.glRotatef(180, 0.0F, 1.0F, 0.0F);
+
+				for(EntityLinkedPos_Motion a_pos_motion:target_Pos_Motion) {
+					TurretObj turretObj = getPlayerUsingTurret(entityplayer);
+					if(turretObj != null && turretObj.dummyGunItem != null) {
+						Vector3d vecToLockonPos = new Vector3d(a_pos_motion.posX - minecraft.renderViewEntity.posX
+								, a_pos_motion.posY - minecraft.renderViewEntity.posY - minecraft.renderViewEntity.getEyeHeight()
+								, a_pos_motion.posZ - minecraft.renderViewEntity.posZ
+						);
+						vecToLockonPos.normalize();
+						RotateVectorAroundY(vecToLockonPos, entityplayer.rotationYawHead);
+						RotateVectorAroundX(vecToLockonPos, entityplayer.rotationPitch);
+						renderLockOnMarker(minecraft, turretObj.dummyGunItem.gunInfo.lockOnMarker, vecToLockonPos);
+					}
+				}
+
 				if (vehicle.getBaseLogic().info.sightTex != null) {
 					
 					if (zooming) {
-						float screenposX = 0;
-						float screenposY = 0;
-						float screenWidth = scaledresolution.getScaledWidth();
-						float screenHeight = scaledresolution.getScaledHeight();
-						if (screenWidth / screenHeight < 2) {
-							screenWidth = screenHeight * 2;
-							screenposX = scaledresolution.getScaledWidth() - screenWidth;
-							screenposX /= 2;
-						} else {
-							screenHeight = screenWidth / 2;
-							screenposY = (scaledresolution.getScaledHeight() - screenHeight) / 2;
-						}
-						renderPumpkinBlur(minecraft, screenposX, screenposY, screenWidth, screenHeight, new ResourceLocation(vehicle.getBaseLogic().info.sightTex));
+						renderPumpkinBlur(minecraft, new ResourceLocation(vehicle.getBaseLogic().info.sightTex));
 						GuiIngameForge.renderCrosshairs = false;
 						needrestcursor = true;
 					}
 				}
+
+				GL11.glPopMatrix();
+				setUp2DView(minecraft,event);
 			}
 		}
 		minecraft.getTextureManager().bindTexture(Gui.icons);
@@ -466,20 +495,21 @@ public class HMVRenderSomeEvent {
 		if(rc) zooming = !zooming;
 	}
 	public void displayGunState(TurretObj turretObj,FontRenderer fontrenderer,int i,int j,int posx,int posy,String name){
-		
-		if (turretObj.readytoFire()) {
-			fontrenderer.drawStringWithShadow(name + "Ready magazine:" + turretObj.dummyGunItem.remain_Bullet(turretObj.dummyGunStack) + "/" + turretObj.max_Bullet(),
-					i - posx, j - posy, 0xFFFFFF);
-		} else if (turretObj.isreloading()) {
-			fontrenderer.drawStringWithShadow(name + "       Reloading" + turretObj.getDummyStackTag().getInteger("RloadTime") + "/" + turretObj.dummyGunItem.reloadTime(turretObj.dummyGunStack),
-					i - posx, j - posy, 0xFFFFFF);
-		} else if (turretObj.isLoading()) {
-			if (turretObj.prefab_turret.gunInfo.cycle > 5)
-				fontrenderer.drawStringWithShadow(name + "         Loading" + turretObj.getDummyStackTag().getByte("Bolt") + "/" + turretObj.prefab_turret.gunInfo.cycle,
+		if(turretObj.dummyGunStack != null) {
+			if (turretObj.readytoFire()) {
+				fontrenderer.drawStringWithShadow(name + "Ready magazine:" + turretObj.dummyGunItem.remain_Bullet(turretObj.dummyGunStack) + "/" + turretObj.max_Bullet(),
 						i - posx, j - posy, 0xFFFFFF);
-			else
-				fontrenderer.drawStringWithShadow(name + " Loading magazine:" + turretObj.dummyGunItem.remain_Bullet(turretObj.dummyGunStack)+ "/" + turretObj.max_Bullet(),
+			} else if (turretObj.isreloading()) {
+				fontrenderer.drawStringWithShadow(name + "       Reloading" + turretObj.getDummyStackTag().getInteger("RloadTime") + "/" + turretObj.dummyGunItem.reloadTime(turretObj.dummyGunStack),
 						i - posx, j - posy, 0xFFFFFF);
+			} else if (turretObj.isLoading()) {
+				if (turretObj.prefab_turret.gunInfo.cycle > 5)
+					fontrenderer.drawStringWithShadow(name + "         Loading" + turretObj.getDummyStackTag().getByte("Bolt") + "/" + turretObj.prefab_turret.gunInfo.cycle,
+							i - posx, j - posy, 0xFFFFFF);
+				else
+					fontrenderer.drawStringWithShadow(name + " Loading magazine:" + turretObj.dummyGunItem.remain_Bullet(turretObj.dummyGunStack) + "/" + turretObj.max_Bullet(),
+							i - posx, j - posy, 0xFFFFFF);
+			}
 		}
 	}
 	public void displayFlyersHUD(Quat4d prevbodyRot, Quat4d bodyRot, Entity plane, Vector3d prevmotionVec, RenderGameOverlayEvent.Post event){
@@ -597,9 +627,9 @@ public class HMVRenderSomeEvent {
 //		drawTexturedModalRect(0,height/2 - 325 * scale - (xyz[0] - toDegrees(asin(motionvecE.y))) * 1.8 * scale,sizeW,sizeH);
 //		System.out.println(xyz[0]);
 		double offset = -xyz[0] % 5;
-		int currentLineNum = (int) (xyz[0]/5);
-		if(offset<0)offset+=5;
-		if(xyz[0]>0)currentLineNum +=1;
+		int currentLineNum = (int) ((xyz[0])/5);
+//		if(offset<0)offset+=5;
+//		if(xyz[0]>0)currentLineNum +=1;
 		float lineWidh = 0.5f;
 		float lineLength = (float) (sizeW/6);
 		float midBlankLength = (float) (sizeW/24);
@@ -627,37 +657,41 @@ public class HMVRenderSomeEvent {
 //					(int)(height/2 + offset * 3.6 * scale + num * 5 * 3.6 * scale + (num + currentLineNum) * scale/2),
 //					0xFAFF9E);
 //		}
-		int num = -4;
+		int num = -3;
 		if(num + currentLineNum < -18){
 			num = currentLineNum - 18;
 		}
 		for(;num + currentLineNum < 18 && num < 4;num ++){
+			double lineupperPosY = height / 2 + offset * 3.6 * scale + num * 5 * 3.6 * scale;
+			double lineunderPosY = height / 2 + offset * 3.6 * scale + num * 5 * 3.6 * scale + lineWidh * scale;
 			drawHudLine(
 					sizeW/2 + midBlankLength/2,
-					height/2 + offset * 3.6 * scale + num * 5 * 3.6 * scale,
+					lineupperPosY,
 					sizeW/2 + lineLength/2,
-					height/2 + offset * 3.6 * scale + num * 5 * 3.6 * scale + lineWidh * scale);
+					lineunderPosY);
+			double lineunderPosY2 = lineupperPosY - (currentLineNum + num) * lineLength2 * scale;
 			drawHudLine(
 					sizeW/2 + lineLength/2,
-					height/2 + offset * 3.6 * scale + num * 5 * 3.6 * scale,
+					lineupperPosY,
 					sizeW/2 + lineLength/2 - lineWidh * scale,
-					height/2 + offset * 3.6 * scale + num * 5 * 3.6 * scale - (currentLineNum + num) * lineLength2 * scale);
+					lineunderPosY2);
 			
 			
 			drawHudLine(
 					sizeW/2 - lineLength/2,
-					height/2 + offset * 3.6 * scale + num * 5 * 3.6 * scale,
+					lineupperPosY,
 					sizeW/2 - midBlankLength/2,
-					height/2 + offset * 3.6 * scale + num * 5 * 3.6 * scale + lineWidh * scale);
+					lineunderPosY);
 			drawHudLine(
 					sizeW/2 - lineLength/2,
-					height/2 + offset * 3.6 * scale + num * 5 * 3.6 * scale,
+					lineupperPosY,
 					sizeW/2 - lineLength/2 + lineWidh * scale,
-					height/2 + offset * 3.6 * scale + num * 5 * 3.6 * scale - (currentLineNum + num) * lineLength2 * scale);
-			
+					lineunderPosY2);
+
+			double numberPosY = height / 2 + offset * 3.6 * scale + num * 5 * 3.6 * scale + (num + currentLineNum) * scale / 2;
 			fontrenderer.drawString(String.valueOf((num + currentLineNum) * 5),
 					(int)(sizeW/2 + lineLength + lineWidh * scale/2),
-					(int)(height/2 + offset * 3.6 * scale + num * 5 * 3.6 * scale + (num + currentLineNum) * scale/2),
+					(int) numberPosY,
 					0xFAFF9E);
 			
 //			drawHudLine(sizeW/2 - lineLength + lineWidh * scale/2,
@@ -667,7 +701,7 @@ public class HMVRenderSomeEvent {
 			
 			fontrenderer.drawString(String.valueOf((num + currentLineNum) * 5),
 					(int)(sizeW/2 - lineLength + lineWidh * scale/2),
-					(int)(height/2 + offset * 3.6 * scale + num * 5 * 3.6 * scale + (num + currentLineNum) * scale/2),
+					(int) numberPosY,
 					0xFAFF9E);
 		}
 //		drawTexturedModalRect(0,height/2 - 325 * scale - xyz[0] * 3.6 * scale,sizeW,sizeH);
@@ -722,5 +756,16 @@ public class HMVRenderSomeEvent {
 		tessellator.addVertex((double)(p_73729_1_), (double)(p_73729_2_), (double)this.zLevel);
 		tessellator.draw();
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
+	}
+	private TurretObj getPlayerUsingTurret(EntityPlayer entityplayer){
+		SeatInfo playerSeatInfo = ((IVehicle) entityplayer.ridingEntity).getBaseLogic().seatInfos[playerSeatID];
+		TurretObj turretObj = null;
+		if (playerSeatInfo.subgun != null) {
+			turretObj = playerSeatInfo.subgun;
+		}
+		if (playerSeatInfo.maingun != null) {
+			turretObj = playerSeatInfo.maingun;
+		}
+		return turretObj;
 	}
 }

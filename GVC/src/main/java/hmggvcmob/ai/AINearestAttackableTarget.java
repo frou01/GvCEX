@@ -68,7 +68,7 @@ public class AINearestAttackableTarget extends EntityAITarget {
      */
     public boolean shouldExecute()
     {
-        if (((taskOwner instanceof ITank) && !((ITank) taskOwner).standalone()) || this.targetChance > 0 && taskOwner.getRNG().nextInt(this.targetChance) != 0 && this.taskOwner.getAttackTarget() != null)
+        if (this.targetChance > 0 && taskOwner.getRNG().nextInt(this.targetChance) != 0 && this.taskOwner.getAttackTarget() != null)
         {
             return false;
         }

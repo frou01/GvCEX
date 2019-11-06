@@ -85,6 +85,12 @@ public class AddNewVehicle extends HMGGunMaker {
 								case "draft":
 									data.draft = parseFloat(type[1]);
 									break;
+								case "molded_depth":
+									data.molded_depth = parseFloat(type[1]);
+									break;
+								case "floatOnWater":
+									data.floatOnWater = parseBoolean(type[1]);
+									break;
 								case "thirdDist":
 									data.thirdDist = parseFloat(type[1]);
 									break;
@@ -108,7 +114,19 @@ public class AddNewVehicle extends HMGGunMaker {
 								case "addParentWeapon":
 									data.prefab_attachedWeapons_all[turretId_current] = data.prefab_attachedWeapons[parseInt(type[1])] = new Prefab_AttachedWeapon();
 									turretId_current++;
-									data.prefab_attachedWeapons[parseInt(type[1])].prefab_turret = prefab_turretHashMap.get(type[2]);
+									if(prefab_turretHashMap.containsKey(type[2]))data.prefab_attachedWeapons[parseInt(type[1])].prefab_turret = prefab_turretHashMap.get(type[2]);
+									else {
+										Item check = GameRegistry.findItem("HandmadeGuns",type[2]);
+										if(check instanceof HMGItem_Unified_Guns){
+											data.prefab_attachedWeapons[parseInt(type[1])].prefab_turret = new Prefab_Turret(((HMGItem_Unified_Guns) check));
+										}
+									}
+									if(data.prefab_attachedWeapons[parseInt(type[1])].prefab_turret.needGunStack){
+										data.prefab_attachedWeapons[parseInt(type[1])].linkedGunStackID = data.weaponSlotNum++;
+										data.weaponSlot_linkedTurret_StackWhiteList.add(data.prefab_attachedWeapons[parseInt(type[1])].prefab_turret.gunStackwhitelist);
+									}
+
+
 									data.prefab_attachedWeapons[parseInt(type[1])].turretsPos = new Vector3d(parseDouble(type[3]), parseDouble(type[4]), parseDouble(type[5]));
 									data.prefab_attachedWeapons[parseInt(type[1])].prefab_Childturrets = new Prefab_AttachedWeapon[parseInt(type[6])];
 									current = data.prefab_attachedWeapons[parseInt(type[1])];
@@ -116,7 +134,18 @@ public class AddNewVehicle extends HMGGunMaker {
 								case "addChildWeapon":
 									data.prefab_attachedWeapons_all[turretId_current] = current.prefab_Childturrets[parseInt(type[1])] = new Prefab_AttachedWeapon();
 									turretId_current++;
-									current.prefab_Childturrets[parseInt(type[1])].prefab_turret = prefab_turretHashMap.get(type[2]);
+									if(prefab_turretHashMap.containsKey(type[2]))current.prefab_Childturrets[parseInt(type[1])].prefab_turret = prefab_turretHashMap.get(type[2]);
+									else {
+										Item check = GameRegistry.findItem("HandmadeGuns",type[2]);
+										if(check instanceof HMGItem_Unified_Guns){
+											current.prefab_Childturrets[parseInt(type[1])].prefab_turret = new Prefab_Turret(((HMGItem_Unified_Guns) check));
+										}
+									}
+									if(current.prefab_Childturrets[parseInt(type[1])].prefab_turret.needGunStack){
+										current.prefab_Childturrets[parseInt(type[1])].linkedGunStackID = data.weaponSlotNum++;
+										data.weaponSlot_linkedTurret_StackWhiteList.add(current.prefab_Childturrets[parseInt(type[1])].prefab_turret.gunStackwhitelist);
+									}
+
 									current.prefab_Childturrets[parseInt(type[1])].turretsPos = new Vector3d(parseDouble(type[3]), parseDouble(type[4]), parseDouble(type[5]));
 									current.prefab_Childturrets[parseInt(type[1])].prefab_Childturrets = new Prefab_AttachedWeapon[parseInt(type[6])];
 									current.prefab_Childturrets[parseInt(type[1])].motherTurret = current;
@@ -183,24 +212,30 @@ public class AddNewVehicle extends HMGGunMaker {
 	
 	
 	public void readParts_vehicle(String[] type,ArrayList<HMGGunParts> partslist){
+		readerCnt = 0;
 		readParts(type,partslist);
-		
-		switch (type[0]) {
+		switch (type[readerCnt++]) {
 			case "AddPartsRenderAsTrackInf":
-				((HMVVehicleParts)currentParts).AddRenderinfTrack(Float.parseFloat(type[1]), Float.parseFloat(type[2]), Float.parseFloat(type[3]), Float.parseFloat(type[4]), Float.parseFloat(type[5]), Float.parseFloat(type[6]));
+				((HMVVehicleParts)currentParts).AddRenderinfTrack(Float.parseFloat(type[readerCnt++]), Float.parseFloat(type[readerCnt++]), Float.parseFloat(type[readerCnt++]), Float.parseFloat(type[readerCnt++]), Float.parseFloat(type[readerCnt++]), Float.parseFloat(type[readerCnt++]));
 				break;
 			case "AddTrackPos":
-				((HMVVehicleParts)currentParts).AddTrackPositions(parseInt(type[1]), Float.parseFloat(type[2]), Float.parseFloat(type[3]), Float.parseFloat(type[4]), Float.parseFloat(type[5]), Float.parseFloat(type[6]), Float.parseFloat(type[7]), parseInt(type[8]), Float.parseFloat(type[9]), Float.parseFloat(type[10]), Float.parseFloat(type[11]), Float.parseFloat(type[12]), Float.parseFloat(type[13]), Float.parseFloat(type[14]));
+				((HMVVehicleParts)currentParts).AddTrackPositions(type);
 				break;
 			case "IsTrack":
-				((HMVVehicleParts)currentParts).setIsTrack(Boolean.parseBoolean(type[1]), parseInt(type[2]));
+				((HMVVehicleParts)currentParts).setIsTrack(Boolean.parseBoolean(type[readerCnt++]), parseInt(type[readerCnt++]));
 				break;
 			case "IsCloningTrack":
-				((HMVVehicleParts)currentParts).setIsTrack_Cloning(Boolean.parseBoolean(type[1]), parseInt(type[2]));
+				((HMVVehicleParts)currentParts).setIsTrack_Cloning(Boolean.parseBoolean(type[readerCnt++]), parseInt(type[readerCnt++]));
 				break;
 			case "TurretParts":
 				((HMVVehicleParts)currentParts).isTurretParts = true;
-				((HMVVehicleParts)currentParts).linkedTurretID = parseInt(type[1]);
+				((HMVVehicleParts)currentParts).linkedTurretID = parseInt(type[readerCnt++]);
+				break;
+			case "AddSomeMotion":
+				((HMVVehicleParts)currentParts).AddSomethingMotionKey(type);
+				break;
+			case "AddSomeInfo":
+				((HMVVehicleParts)currentParts).AddRenderinfSomething(Float.parseFloat(type[readerCnt++]), Float.parseFloat(type[readerCnt++]), Float.parseFloat(type[readerCnt++]), Float.parseFloat(type[readerCnt++]), Float.parseFloat(type[readerCnt++]), Float.parseFloat(type[readerCnt++]),parseInt(type[readerCnt]));
 				break;
 		}
 	}

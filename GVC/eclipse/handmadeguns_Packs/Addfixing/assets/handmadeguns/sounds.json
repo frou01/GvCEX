@@ -24,5 +24,6 @@
 "handmadeguns.rocketFlying": {"category": "neutral","sounds": ["rocketFlying"]},
 "handmadeguns.spg": {"category": "neutral","sounds": ["spg"]},
 "handmadeguns.supu": {"category": "neutral","sounds": ["supu"]},
+"handmadeguns.fire_30mm": {"category": "neutral","sounds": ["fire_30mm"]},
 "handmadeguns.nulls": {"category": "neutral","sounds": ["nulls"]}
 }

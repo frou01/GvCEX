@@ -1,6 +1,7 @@
 package hmggvcmob.entity.friend;
 
 
+import handmadevehicle.SlowPathFinder.WorldForPathfind;
 import hmggvcutil.GVCUtils;
 import hmggvcmob.ai.AIAttackGun;
 import net.minecraft.block.Block;
@@ -14,7 +15,7 @@ public class GVCEntityPMC extends EntityPMCBase
     {
         super(par1World);
         this.setSize(0.6F, 1.8F);
-        this.tasks.addTask(1,aiAttackGun = new AIAttackGun(this,80,20,10,15,20,true));
+        this.tasks.addTask(1,aiAttackGun = new AIAttackGun(this,80,20,10,10,true,true,new WorldForPathfind(worldObj)));
     }
     protected void applyEntityAttributes()
     {

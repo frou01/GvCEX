@@ -162,7 +162,14 @@ public class HMGEntityBulletExprode extends HMGEntityBulletBase implements IEnti
 				double moXback = var1.entityHit.motionX;//ノックバック無効化用
 				double moYback = var1.entityHit.motionY;//跳ね上がり無効化用
 				double moZback = var1.entityHit.motionZ;//ノックバック無効化用
-				if(var1.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()), (float)var2)){
+
+				boolean flag;
+				if(var1.entityHit instanceof I_SPdamageHandle){
+					flag = ((I_SPdamageHandle)var1.entityHit).attackEntityFrom_with_Info(var1,(new EntityDamageSourceIndirect("arrow", this, this.getThrower())).setProjectile(),var2);
+				}else {
+					flag = var1.entityHit.attackEntityFrom((new EntityDamageSourceIndirect("arrow", this, this.getThrower())).setProjectile(),var2);
+				}
+				if(flag){
 					var1.entityHit.motionX = moXback;
 					var1.entityHit.motionY = moYback;
 					var1.entityHit.motionZ = moZback;

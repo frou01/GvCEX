@@ -15,19 +15,14 @@ public class AIAttackFlag extends EntityAIBase{
     int repathcnt = 0;
     int repathcntcool = 0;
     Random rnd = new Random();
-
-    public AIAttackFlag(IflagBattler flagBattler,EntityLiving entityLiving){
-        this.flagBattler = flagBattler;
-        this.flagBattlerBody = entityLiving;
-    }
     @Override
     public boolean shouldExecute() {
         return flagBattler.istargetingflag() && ((EntityLiving) flagBattler).getAttackTarget() == null;
     }
-    public AIAttackFlag(EntityLiving guerrilla,IflagBattler flagBattler){
-        this.flagBattlerBody = guerrilla;
+    public AIAttackFlag(EntityLiving entityLiving,IflagBattler flagBattler,WorldForPathfind worldForPathfind){
+        this.flagBattlerBody = entityLiving;
         this.flagBattler = flagBattler;
-        worldForPathfind = new WorldForPathfind(guerrilla.worldObj);
+        this.worldForPathfind = worldForPathfind;
     }
     @Override
     public void updateTask(){

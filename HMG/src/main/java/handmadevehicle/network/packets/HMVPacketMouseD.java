@@ -33,10 +33,7 @@ public class HMVPacketMouseD implements IMessage {
         this.x = buf.readFloat();
         this.y = buf.readFloat();
         this.yaw = buf.readFloat();
-        this.sendThrottleLevel = buf.readBoolean();
-        if(sendThrottleLevel) {
-            this.throttle = buf.readFloat();
-        }
+        this.throttle = buf.readFloat();
         this.cam_p = buf.readFloat();
         this.cam_y = buf.readFloat();
         this.fre = buf.readInt();
@@ -47,8 +44,7 @@ public class HMVPacketMouseD implements IMessage {
         buf.writeFloat(this.x);
         buf.writeFloat(this.y);
         buf.writeFloat(this.yaw);
-        buf.writeBoolean(sendThrottleLevel);
-        if(sendThrottleLevel)buf.writeFloat(this.throttle);
+        buf.writeFloat(this.throttle);
         buf.writeFloat(this.cam_p);
         buf.writeFloat(this.cam_y);
         buf.writeInt(this.fre);

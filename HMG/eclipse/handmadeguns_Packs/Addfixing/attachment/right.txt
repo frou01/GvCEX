@@ -1,5 +1,0 @@
-Texture,right
-Name,Light
-Light,right
-addRecipe,right,1,ab0,de0,000,348,265,0,348,265,0,0,0,0
-

@@ -1,25 +1,43 @@
 package handmadevehicle.entity.parts;
 
 import handmadevehicle.Utils;
+import handmadevehicle.entity.parts.logics.BaseLogic;
+import handmadevehicle.entity.parts.turrets.TurretObj;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.Vec3;
 
+import javax.vecmath.Quat4d;
 import javax.vecmath.Vector3d;
 
 import static handmadevehicle.Utils.*;
 import static handmadevehicle.Utils.getDistanceSq;
 
 public class OBB {
-    Vector3d pos;
-    Vector3d size;
-    public Vector3d maxvertex;
-    public Vector3d minvertex;
-    public double minXforColCheck;
-    public double minYforColCheck;
-    public double minZforColCheck;
-    public double maxXforColCheck;
-    public double maxYforColCheck;
-    public double maxZforColCheck;
+    public Vector3d pos;
+    public Vector3d size;
+    public Vector3d maxvertex = new Vector3d();
+    public float armor_Top = 0;
+    public float armor_Bottom = 0;
+    public float armor_Front = 0;
+    public float armor_Back = 0;
+    public float armor_SideLeft = 0;
+    public float armor_SideRight = 0;
+    public int linkedTurret=-1;
+
+    public Vector3d boxRotCenter = new Vector3d(0,0,0);
+    public Quat4d boxRotation = new Quat4d(0,0,0,1);
+
+    public Vector3d turretRotCenter = new Vector3d(0,0,0);
+    public Quat4d turretRotation = new Quat4d(0,0,0,1);
+
+
+    public Vector3d minvertex = new Vector3d();
+    private double minXforColCheck;
+    private double minYforColCheck;
+    private double minZforColCheck;
+    private double maxXforColCheck;
+    private double maxYforColCheck;
+    private double maxZforColCheck;
     
     
 
@@ -27,10 +45,63 @@ public class OBB {
         this.pos = pos;
         this.size = directs;
     }
-    public OBB getCopy(){
-        return new OBB(pos,size);
+    public OBB(Vector3d pos, Vector3d boxRotCenter, Vector3d directs, Quat4d boxRotation,
+               float armor_Top,
+               float armor_Bottom,
+               float armor_Front,
+               float armor_Back,
+               float armor_SideLeft,
+               float armor_SideRight,
+               int linkedTurret){
+        this.pos = pos;
+        this.boxRotCenter = boxRotCenter;
+        this.size = directs;
+        this.boxRotation = boxRotation;
+
+        this.armor_Top = armor_Top;
+        this.armor_Bottom = armor_Bottom;
+        this.armor_Front = armor_Front;
+        this.armor_Back = armor_Back;
+        this.armor_SideLeft = armor_SideLeft;
+        this.armor_SideRight = armor_SideRight;
+
+        this.linkedTurret = linkedTurret;
     }
-    public void updateColChecker(ModifiedBoundingBox modifiedBoundingBox){
+    public void set(Vector3d pos, Vector3d boxRotCenter, Vector3d directs, Quat4d boxRotation,
+               float armor_Top,
+               float armor_Bottom,
+               float armor_Front,
+               float armor_Back,
+               float armor_SideLeft,
+               float armor_SideRight,
+               int linkedTurret){
+        this.pos = pos;
+        this.boxRotCenter = boxRotCenter;
+        this.size = directs;
+        this.boxRotation = boxRotation;
+
+        this.armor_Top = armor_Top;
+        this.armor_Bottom = armor_Bottom;
+        this.armor_Front = armor_Front;
+        this.armor_Back = armor_Back;
+        this.armor_SideLeft = armor_SideLeft;
+        this.armor_SideRight = armor_SideRight;
+
+        this.linkedTurret = linkedTurret;
+    }
+    public OBB getCopy(){
+        return new OBB(pos, boxRotCenter,size,boxRotation,armor_Top,armor_Bottom,armor_Front,armor_Back,armor_SideLeft,armor_SideRight,linkedTurret);
+    }
+
+    public void update(ModifiedBoundingBox modifiedBoundingBox, BaseLogic baseLogic){
+        if(linkedTurret != -1){
+            TurretObj linkedTurretObj = baseLogic.allturrets[linkedTurret];
+            turretRotation = linkedTurretObj.turretRotYaw;
+            turretRotCenter = linkedTurretObj.prefab_turret.turretYawCenterpos;
+        }
+        update(modifiedBoundingBox);
+    }
+    public void update(ModifiedBoundingBox modifiedBoundingBox){
         maxvertex = new Vector3d();
         maxvertex.add(pos,size);
         minvertex = new Vector3d();
@@ -47,6 +118,17 @@ public class OBB {
         Vector3d rotcenterVec = new Vector3d(modifiedBoundingBox.centerRotX,modifiedBoundingBox.centerRotY,modifiedBoundingBox.centerRotZ);
         for(int i =0;i<points.length;i++){
             Vector3d temp = points[i];
+
+            temp.sub(boxRotCenter);
+            temp.set(Utils.transformVecByQuat(temp,boxRotation));
+            transformVecforMinecraft(temp);
+            temp.add(boxRotCenter);
+
+            temp.sub(turretRotCenter);
+            temp.set(Utils.transformVecByQuat(temp,turretRotation));
+            transformVecforMinecraft(temp);
+            temp.add(turretRotCenter);
+
             temp.sub(rotcenterVec);
             temp.set(Utils.transformVecByQuat(temp,modifiedBoundingBox.rot));
             transformVecforMinecraft(temp);
@@ -62,6 +144,35 @@ public class OBB {
     }
     
     public VectorAndHitSide getIntercept(ModifiedBoundingBox modifiedBoundingBox,Vector3d startVec,Vector3d endVec,Vector3d posVec,Vector3d rotcenterVec){
+        {
+            Quat4d temp = new Quat4d(turretRotation);
+            temp.inverse();
+
+            startVec.sub(turretRotCenter);
+            endVec.sub(turretRotCenter);
+
+
+
+            startVec = Utils.transformVecByQuat(startVec, temp);
+            endVec = Utils.transformVecByQuat(endVec, temp);
+
+            startVec.add(turretRotCenter);
+            endVec.add(turretRotCenter);
+        }
+        {
+            Quat4d temp = new Quat4d(boxRotation);
+            temp.inverse();
+
+            startVec.sub(boxRotCenter);
+            endVec.sub(boxRotCenter);
+
+
+            startVec = Utils.transformVecByQuat(startVec, temp);
+            endVec = Utils.transformVecByQuat(endVec, temp);
+
+            startVec.add(boxRotCenter);
+            endVec.add(boxRotCenter);
+        }
         Vector3d vec32 = getIntermediateWithXValue(startVec, endVec, minvertex.x);
         Vector3d vec33 = getIntermediateWithXValue(startVec, endVec, maxvertex.x);
     
@@ -123,7 +234,7 @@ public class OBB {
         }
     
         if (vec38 == null) {
-                return new VectorAndHitSide(null,-1);
+                return null;
         } else {
             byte b0 = -1;
         
@@ -150,16 +261,26 @@ public class OBB {
             if (vec38 == vec37) {
                 b0 = 3;
             }
-        
+
+            Vector3d relative =  new Vector3d();
+            relative.sub(endVec,startVec);
+            vec38.sub(boxRotCenter);
+            vec38 = Utils.transformVecByQuat(vec38, boxRotation);
+            vec38.add(boxRotCenter);
+
+            vec38.sub(turretRotCenter);
+            vec38 = Utils.transformVecByQuat(vec38, turretRotation);
+            vec38.add(turretRotCenter);
+
             vec38.sub(rotcenterVec);
             vec38 = Utils.transformVecByQuat(vec38, modifiedBoundingBox.rot);
-            transformVecforMinecraft(vec38);
             vec38.add(rotcenterVec);
+            transformVecforMinecraft(vec38);
 //            System.out.println("3"+vec38);
         
             vec38.add(posVec);
 //                return new MovingObjectPosition(0, 0, 0, b0, getMinecraftVecObj(vec38));
-            return new VectorAndHitSide(vec38,b0);
+            return new VectorAndHitSide(vec38,relative,b0);
 //            tempHitSide[cnt] = b0;
         }
     }

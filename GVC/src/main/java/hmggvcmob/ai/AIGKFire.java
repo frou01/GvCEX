@@ -36,16 +36,16 @@ public class AIGKFire extends EntityAIBase{
     private int attackTime = 0;
 
     private float inaccuracy = 40f;
-    public AIGKFire(EntityLiving guerrilla){
+    public AIGKFire(EntityLiving guerrilla,WorldForPathfind worldForPathfind){
         this.IRVING_body = guerrilla;
         IFF = (handmadeguns.entity.IFF) guerrilla;
         if(guerrilla instanceof IIRVING)
             this.IRVING_SPdata = (IIRVING) guerrilla;
         rnd = new Random();
-        worldForPathfind = new WorldForPathfind(guerrilla.worldObj);
+        this.worldForPathfind = worldForPathfind;
     }
-    public AIGKFire(EntityLiving guerrilla,float inaccuracy){
-        this(guerrilla);
+    public AIGKFire(EntityLiving guerrilla,float inaccuracy,WorldForPathfind worldForPathfind){
+        this(guerrilla,worldForPathfind);
         this.inaccuracy = inaccuracy;
     }
     public boolean shouldExecute() {

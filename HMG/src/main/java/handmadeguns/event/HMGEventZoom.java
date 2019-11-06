@@ -1,13 +1,19 @@
 package handmadeguns.event;
 
 import handmadeguns.HandmadeGunsCore;
+import handmadeguns.Util.EntityLinkedPos_Motion;
 import handmadeguns.entity.PlacedGunEntity;
 import handmadeguns.items.*;
 import handmadeguns.items.guns.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.*;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.potion.Potion;
 import net.minecraft.util.*;
 import org.lwjgl.opengl.GL11;
 
@@ -17,10 +23,6 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiIngame;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.EntityRenderer;
-import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -36,10 +38,20 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
+import org.lwjgl.util.glu.Project;
 
+import javax.vecmath.Vector3d;
+
+import java.util.ArrayList;
+
+import static handmadeguns.HandmadeGunsCore.HMG_proxy;
+import static handmadevehicle.Utils.RotateVectorAroundX;
+import static handmadevehicle.Utils.RotateVectorAroundY;
+import static java.lang.Math.sin;
 import static net.minecraft.client.gui.Gui.icons;
 
 public class HMGEventZoom {
+	static boolean updated = false;
 
 	// public HMGItemGunBase gunbase;
 
@@ -138,21 +150,15 @@ public class HMGEventZoom {
 			Minecraft minecraft = FMLClientHandler.instance().getClient();
 			ScaledResolution scaledresolution = new ScaledResolution(minecraft, minecraft.displayWidth,
 					minecraft.displayHeight);
-			float screenposX = 0;
-			float screenposY = 0;
 			float screenWidth = scaledresolution.getScaledWidth();
 			float screenHeight = scaledresolution.getScaledHeight();
-			if (screenWidth / screenHeight < 2) {
-				screenWidth = screenHeight * 2;
-				screenposX = scaledresolution.getScaledWidth() - screenWidth;
-				screenposX /= 2;
-			} else {
-				screenHeight = screenWidth / 2;
-				screenposY = (scaledresolution.getScaledHeight() - screenHeight)/2;
-			}
 			// Entity entity = minecraft.pointedEntity;
 			EntityPlayer entityplayer = minecraft.thePlayer;
 			// EntityPlayer entityplayer = event.player;
+
+
+
+
 			ItemStack gunstack = ((entityplayer)).getCurrentEquippedItem();
 
 			Entity ridingEntity = entityplayer.ridingEntity;
@@ -172,7 +178,6 @@ public class HMGEventZoom {
 			GL11.glEnable(GL11.GL_BLEND);
 			if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
 				if (gunstack != null && gunstack.getItem() instanceof HMGItem_Unified_Guns) {
-					// this.modelArmor.aimedBow = true;
 					HMGItem_Unified_Guns gunItem = (HMGItem_Unified_Guns) gunstack.getItem();
 					String ads = gunItem.gunInfo.adstexture;
 					String adsr = gunItem.gunInfo.adstexturer;
@@ -190,8 +195,8 @@ public class HMGEventZoom {
 					}
 					float spreadDiffusion = nbt.getFloat("Diffusion");
 					float bure = gunItem.gunInfo.spread_setting;
-					bure *= HandmadeGunsCore.Key_ADS(entityplayer) ? gunItem.gunInfo.ads_spread_cof:1;
-					bure  += gunItem.gunInfo.spread_setting * spreadDiffusion;
+					bure *= HandmadeGunsCore.Key_ADS(entityplayer) ? gunItem.gunInfo.ads_spread_cof : 1;
+					bure += gunItem.gunInfo.spread_setting * spreadDiffusion;
 					((HMGItem_Unified_Guns) gunstack.getItem()).checkTags(gunstack);
 					ItemStack[] items = new ItemStack[6];
 					ItemStack itemstackSight = null;
@@ -210,92 +215,142 @@ public class HMGEventZoom {
 						}
 					}
 					itemstackSight = items[1];
-					//if (entityplayer.isSneaking())
-					if (HandmadeGunsCore.Key_ADS(entityplayer)) {
-						if (itemstackSight != null) {
-							if (itemstackSight.getItem() instanceof HMGItemAttachment_reddot) {
-								if (!gunItem.gunInfo.canobj || !gunItem.gunInfo.zoomrer) {
+
+
+					setUp3DView(minecraft,event);
+					GL11.glPushMatrix();
+					{
+						GL11.glRotatef(0, 1.0F, 0.0F, 0.0F);
+						GL11.glRotatef(180, 0.0F, 1.0F, 0.0F);
+						// this.modelArmor.aimedBow = true;
+
+						//if (entityplayer.isSneaking())
+
+						if (HandmadeGunsCore.Key_ADS(entityplayer)) {
+							if (itemstackSight != null) {
+								if (itemstackSight.getItem() instanceof HMGItemAttachment_reddot) {
+									if (!gunItem.gunInfo.canobj || !gunItem.gunInfo.zoomrer) {
+										ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer,
+												gunItem.gunInfo.scopezoomred, "cameraZoom", "field_78503_V");
+										needreset = true;
+									}
+									if (gunItem.gunInfo.zoomrert) {
+										renderPumpkinBlur(minecraft, adsr);
+									}
+								} else if (itemstackSight.getItem() instanceof HMGItemAttachment_scope) {
+									if (!gunItem.gunInfo.canobj || !gunItem.gunInfo.zoomres) {
+										ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer,
+												gunItem.gunInfo.scopezoomscope, "cameraZoom", "field_78503_V");
+										needreset = true;
+									}
+									if (gunItem.gunInfo.zoomrest) {
+										renderPumpkinBlur(minecraft, adss);
+									}
+								} else if (itemstackSight.getItem() instanceof HMGItemSightBase) {
+									if (!gunItem.gunInfo.canobj || ((HMGItemSightBase) itemstackSight.getItem()).scopeonly) {
+										ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer,
+												((HMGItemSightBase) itemstackSight.getItem()).zoomlevel, "cameraZoom", "field_78503_V");
+										needreset = true;
+									}
+									if (((HMGItemSightBase) itemstackSight.getItem()).scopetexture != null) {
+										renderPumpkinBlur(minecraft, ((HMGItemSightBase) itemstackSight.getItem()).scopetexture);
+									}
+								}
+							} else {
+								if (!gunItem.gunInfo.canobj || !gunItem.gunInfo.zoomren) {
 									ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer,
-											gunItem.gunInfo.scopezoomred, "cameraZoom", "field_78503_V");
+											gunItem.gunInfo.scopezoombase, "cameraZoom", "field_78503_V");
 									needreset = true;
 								}
-								if (gunItem.gunInfo.zoomrert) {
-									this.renderPumpkinBlur(minecraft, screenposX, screenposY, screenWidth, screenHeight, adsr);
-								}
-							} else if (itemstackSight.getItem() instanceof HMGItemAttachment_scope) {
-								if (!gunItem.gunInfo.canobj || !gunItem.gunInfo.zoomres) {
-									ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer,
-											gunItem.gunInfo.scopezoomscope, "cameraZoom", "field_78503_V");
-									needreset = true;
-								}
-								if (gunItem.gunInfo.zoomrest) {
-									this.renderPumpkinBlur(minecraft, screenposX, screenposY, screenWidth, screenHeight, adss);
-								}
-							} else if (itemstackSight.getItem() instanceof HMGItemSightBase) {
-								if (!gunItem.gunInfo.canobj || ((HMGItemSightBase) itemstackSight.getItem()).scopeonly) {
-									ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer,
-											((HMGItemSightBase) itemstackSight.getItem()).zoomlevel, "cameraZoom", "field_78503_V");
-									needreset = true;
-								}
-								if (((HMGItemSightBase) itemstackSight.getItem()).scopetexture != null) {
-									this.renderPumpkinBlur(minecraft, screenposX, screenposY, screenWidth, screenHeight, ((HMGItemSightBase) itemstackSight.getItem()).scopetexture);
+								if (gunItem.gunInfo.zoomrent) {
+									renderPumpkinBlur(minecraft, ads);
 								}
 							}
-						} else {
-							if (!gunItem.gunInfo.canobj || !gunItem.gunInfo.zoomren) {
-								ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer,
-										gunItem.gunInfo.scopezoombase, "cameraZoom", "field_78503_V");
-								needreset = true;
+							if (gunItem.gunInfo.renderMCcross) {
+								GuiIngameForge.renderCrosshairs = true;
+							} else {
+								GuiIngameForge.renderCrosshairs = false;
+								GL11.glEnable(GL11.GL_BLEND);
 							}
-							if (gunItem.gunInfo.zoomrent) {
-								this.renderPumpkinBlur(minecraft, screenposX, screenposY, screenWidth, screenHeight, ads);
+							if (gunItem.gunInfo.renderHMGcross && spreadDiffusion > gunItem.gunInfo.spreadDiffusionmin)
+								this.renderCrossHair(minecraft, scaledresolution.getScaledWidth(), scaledresolution.getScaledHeight(), bure);
+						}
+						else {
+							// GuiIngameForge.renderCrosshairs = true;
+							if (gunItem.gunInfo.renderMCcross) {
+								GuiIngameForge.renderCrosshairs = true;
+							} else {
+								GuiIngameForge.renderCrosshairs = false;
+								GL11.glEnable(GL11.GL_BLEND);
+							}
+							if (gunItem.gunInfo.renderHMGcross)
+								this.renderCrossHair(minecraft, scaledresolution.getScaledWidth(), scaledresolution.getScaledHeight(), bure);
+							if (itemstackSight != null) {
+								if (itemstackSight.getItem() instanceof HMGItemAttachment_reddot) {
+									if (!gunItem.gunInfo.canobj || !gunItem.gunInfo.zoomrer) {
+										ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer,
+												1.0d, "cameraZoom", "field_78503_V");
+									}
+								} else if (itemstackSight.getItem() instanceof HMGItemAttachment_scope) {
+									if (!gunItem.gunInfo.canobj || !gunItem.gunInfo.zoomres) {
+										ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer,
+												1.0d, "cameraZoom", "field_78503_V");
+									}
+								} else if (itemstackSight.getItem() instanceof HMGItemSightBase) {
+									if (!gunItem.gunInfo.canobj || ((HMGItemSightBase) itemstackSight.getItem()).scopeonly) {
+										ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer,
+												1.0d, "cameraZoom", "field_78503_V");
+									}
+								}
+							} else {
+								if (!gunItem.gunInfo.canobj || !gunItem.gunInfo.zoomren) {
+									ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer,
+											1.0d, "cameraZoom", "field_78503_V");
+								}
+							}
+							// minecraft.gameSettings.fovSetting = 70.0F;
+
+						}
+						if (gunItem.gunInfo.canlock && nbt != null) {
+							//todo 3Dにしたので根本から作り直し
+							Vector3d vecToLockonPos = null;
+							if (nbt.getBoolean("islockedentity")) {
+								Entity TGT = entityplayer.worldObj.getEntityByID(nbt.getInteger("TGT"));
+								if (TGT != null) {
+									vecToLockonPos = new Vector3d();
+									vecToLockonPos.set(TGT.posX, TGT.posY + TGT.height / 2, TGT.posZ);
+									vecToLockonPos.sub(new Vector3d(new double[]{entityplayer.posX, entityplayer.posY, entityplayer.posZ}));
+									vecToLockonPos.normalize();
+								}
+							} else if (nbt.getBoolean("islockedblock")) {
+								vecToLockonPos = new Vector3d();
+								vecToLockonPos.set(nbt.getDouble("LockedPosX"), nbt.getDouble("LockedPosY"), nbt.getDouble("LockedPosZ"));
+								vecToLockonPos.sub(new Vector3d(new double[]{entityplayer.posX, entityplayer.posY, entityplayer.posZ}));
+								vecToLockonPos.normalize();
+							}
+							if (vecToLockonPos != null) {
+								RotateVectorAroundY(vecToLockonPos, entityplayer.rotationYawHead);
+								RotateVectorAroundX(vecToLockonPos, entityplayer.rotationPitch);
+								renderLockOnMarker(minecraft, gunItem.gunInfo.lockOnMarker, vecToLockonPos);
 							}
 						}
-						if (gunItem.gunInfo.renderMCcross) {
-							GuiIngameForge.renderCrosshairs = true;
-						} else {
-							GuiIngameForge.renderCrosshairs = false;
-							GL11.glEnable(GL11.GL_BLEND);
-						}
-						if(gunItem.gunInfo.renderHMGcross && spreadDiffusion > gunItem.gunInfo.spreadDiffusionmin)this.renderCrossHair(minecraft, scaledresolution.getScaledWidth(), scaledresolution.getScaledHeight(), bure);
-					} else {
+
+
 						// GuiIngameForge.renderCrosshairs = true;
-						if (gunItem.gunInfo.renderMCcross) {
-							GuiIngameForge.renderCrosshairs = true;
-						} else {
-							GuiIngameForge.renderCrosshairs = false;
-							GL11.glEnable(GL11.GL_BLEND);
-						}
-						if(gunItem.gunInfo.renderHMGcross)this.renderCrossHair(minecraft, scaledresolution.getScaledWidth(), scaledresolution.getScaledHeight(), bure);
-						if (itemstackSight != null) {
-							if (itemstackSight.getItem() instanceof HMGItemAttachment_reddot) {
-								if (!gunItem.gunInfo.canobj || !gunItem.gunInfo.zoomrer) {
-									ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer,
-											1.0d, "cameraZoom", "field_78503_V");
-								}
-							} else if (itemstackSight.getItem() instanceof HMGItemAttachment_scope) {
-								if (!gunItem.gunInfo.canobj || !gunItem.gunInfo.zoomres) {
-									ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer,
-											1.0d, "cameraZoom", "field_78503_V");
-								}
-							} else if (itemstackSight.getItem() instanceof HMGItemSightBase) {
-								if (!gunItem.gunInfo.canobj || ((HMGItemSightBase) itemstackSight.getItem()).scopeonly) {
-									ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer,
-											1.0d, "cameraZoom", "field_78503_V");
-								}
-							}
-						} else {
-							if (!gunItem.gunInfo.canobj || !gunItem.gunInfo.zoomren) {
-								ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer,
-										1.0d, "cameraZoom", "field_78503_V");
-							}
-						}
-						// minecraft.gameSettings.fovSetting = 70.0F;
+
+						this.zoomtype = true;
+
+
+						//event.
+						//EntityRenderer.
+						//minecraft.entityRenderer.
+						//	entityplayer.eyeHeight = 10F;
+						//minecraft.entityRenderer.
+
+						//	GL11.glEnable(GL11.GL_BLEND);
 					}
-					// GuiIngameForge.renderCrosshairs = true;
-
-					this.zoomtype = true;
-
+					GL11.glPopMatrix();
+					setUp2DView(minecraft,event);
 
 					screenWidth = scaledresolution.getScaledWidth();
 					screenHeight = scaledresolution.getScaledHeight();
@@ -333,7 +388,7 @@ public class HMGEventZoom {
 						String d2 = String.format("%1$3d", stacksize);
 						fontrenderer.drawStringWithShadow("x" + d2, (int)screenWidth - 50, (int)screenHeight - fontrenderer.FONT_HEIGHT * 5, 0xFFFFFF);
 					}
-					
+
 					if (gunItem.get_selectingMagazine(gunstack) != null && gunItem.getcurrentMagazine(gunstack) != gunItem.get_selectingMagazine(gunstack)) {
 						int stacksize = 0;
 						minecraft.getTextureManager().bindTexture(TextureMap.locationItemsTexture);
@@ -354,17 +409,8 @@ public class HMGEventZoom {
 						if (nbt.getBoolean("SeekerOpened"))
 							fontrenderer.drawStringWithShadow("Seekeropen", (int)screenWidth - 60, (int)screenHeight - fontrenderer.FONT_HEIGHT * 2, 0xFFFFFF);
 					}
-
-					//event.
-					//EntityRenderer.
-					//minecraft.entityRenderer.
-					//	entityplayer.eyeHeight = 10F;
-					//minecraft.entityRenderer.
-
-					//	GL11.glEnable(GL11.GL_BLEND);
 					GL11.glPopMatrix();
 					GL11.glPopAttrib();
-
 
 				} else {
 					if (needreset) {
@@ -372,7 +418,7 @@ public class HMGEventZoom {
 								1.0d, "cameraZoom", "field_78503_V");
 						needreset = false;
 					}
-					if (this.zoomtype == true) {
+					if (this.zoomtype) {
 						GuiIngameForge.renderCrosshairs = true;
 					/*if (HandmadeGunsCore.cfg_ZoomRender == true) {
 						minecraft.gameSettings.fovSetting = HandmadeGunsCore.cfg_FOV;
@@ -390,27 +436,30 @@ public class HMGEventZoom {
 
 			GL11.glPushMatrix();
 			GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
-			GL11.glEnable(GL11.GL_BLEND);
-			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-			NBTTagCompound nbts = entityplayer.getEntityData();
-			int nb = nbts.getInteger("hitentity");
-			if (nb >= 1) {
-				GuiIngame g = minecraft.ingameGUI;
-				minecraft.renderEngine.bindTexture(new ResourceLocation("handmadeguns:textures/items/hit.png"));
-				GL11.glTranslatef(0.5F, 0F, 0F);
-				GL11.glScalef(0.0625f, 0.0625f, 1);
-				g.drawTexturedModalRect((scaledresolution.getScaledWidth() / 2 - 8) * 16,
-						(scaledresolution.getScaledHeight() / 2 - 8) * 16, 0, 0, 256, 256);
-				nbts.setInteger("hitentity", nb - 1);
+			{
+				GL11.glEnable(GL11.GL_BLEND);
+				GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+				NBTTagCompound nbts = entityplayer.getEntityData();
+				int nb = nbts.getInteger("hitentity");
+				if (nb >= 1) {
+					GuiIngame g = minecraft.ingameGUI;
+					minecraft.renderEngine.bindTexture(new ResourceLocation("handmadeguns:textures/items/hit.png"));
+					GL11.glTranslatef(0.5F, 0F, 0F);
+					GL11.glScalef(0.0625f, 0.0625f, 1);
+					g.drawTexturedModalRect((scaledresolution.getScaledWidth() / 2 - 8) * 16,
+							(scaledresolution.getScaledHeight() / 2 - 8) * 16, 0, 0, 256, 256);
+					nbts.setInteger("hitentity", nb - 1);
+				}
 			}
-			GL11.glPopMatrix();
 			GL11.glPopAttrib();
+			GL11.glPopMatrix();
 			previtemstack = gunstack;
 		}
 
 		Minecraft.getMinecraft().renderEngine.bindTexture(icons);
 	}
 
+	
 	@SideOnly(Side.CLIENT)
 	protected void renderBullet(FontRenderer fontrenderer, int i, int j, ItemStack itemstack) {
 		String sss = "null";
@@ -542,14 +591,7 @@ public class HMGEventZoom {
 	}
 
 
-	@SideOnly(Side.CLIENT)
-	protected void renderPumpkinBlur(Minecraft minecraft, float x, float y, float width, float height, String adss)
-	{
-		this.renderPumpkinBlur(minecraft,x,y,width,height,new ResourceLocation(adss));
-	}
-
-	@SideOnly(Side.CLIENT)
-	public static void renderPumpkinBlur(Minecraft minecraft, float x, float y, float width, float height, ResourceLocation adsr)
+	public static void renderPumpkinBlur(Minecraft minecraft,ResourceLocation adsr)
 	{
 		GL11.glPushMatrix();
 		GL11.glDisable(2929);
@@ -557,68 +599,86 @@ public class HMGEventZoom {
 		GL11.glEnable(3042);
 		GL11.glBlendFunc(770, 771);
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		ScaledResolution scaledresolution = new ScaledResolution(minecraft, minecraft.displayWidth, minecraft.displayHeight);
 
-		GL11.glTranslatef((float)scaledresolution.getScaledWidth() / 2, (float)scaledresolution.getScaledHeight() / 2, 0.0F);
-		IAttributeInstance iattributeinstance = minecraft.thePlayer.getEntityAttribute(SharedMonsterAttributes.movementSpeed);
-		double f = ((iattributeinstance.getAttributeValue() / (double)minecraft.thePlayer.capabilities.getWalkSpeed() + 1.0D) / 2.0D);
-		GL11.glScalef((float)(0.81915204428D / Math.sin(Math.toRadians(minecraft.gameSettings.fovSetting * f / 2.0F))), (float)(0.81915204428D / Math.sin(Math.toRadians(minecraft.gameSettings.fovSetting * f / 2.0F))), (float)(0.81915204428D / Math.sin(Math.toRadians(minecraft.gameSettings.fovSetting * f / 2.0F))));
-		GL11.glScalef((float)(0.81915204428D / Math.sin(Math.toRadians(minecraft.gameSettings.fovSetting * f / 2.0F))), (float)(0.81915204428D / Math.sin(Math.toRadians(minecraft.gameSettings.fovSetting * f / 2.0F))), (float)(0.81915204428D / Math.sin(Math.toRadians(minecraft.gameSettings.fovSetting * f / 2.0F))));
-		GL11.glTranslatef(-(float)scaledresolution.getScaledWidth() / 2, -(float)scaledresolution.getScaledHeight() / 2, 0.0F);
+//		GL11.glTranslatef((float)scaledresolution.getScaledWidth() / 2, (float)scaledresolution.getScaledHeight() / 2, 0.0F);
+//		IAttributeInstance iattributeinstance = minecraft.thePlayer.getEntityAttribute(SharedMonsterAttributes.movementSpeed);
+//		double f = ((iattributeinstance.getAttributeValue() / (double)minecraft.thePlayer.capabilities.getWalkSpeed() + 1.0D) / 2.0D);
+//		double anti_fov = (0.81915204428D/*sin(55)*/ / sin(Math.toRadians(minecraft.gameSettings.fovSetting * f / 2.0F)));
+//		anti_fov = anti_fov*anti_fov;
+//		GL11.glScalef((float)anti_fov, (float)anti_fov, 1);
+//		GL11.glTranslatef(-(float)scaledresolution.getScaledWidth() / 2, -(float)scaledresolution.getScaledHeight() / 2, 0.0F);
 		minecraft.getTextureManager().bindTexture(adsr);
 		Tessellator tessellator = Tessellator.instance;
 		tessellator.startDrawingQuads();
-		float xoffset = 0;
-		float yoffset = 0;
-		tessellator.addVertexWithUV(x + xoffset, y + yoffset + height			, -90.0D, 0.0D, 1.0D);
-		tessellator.addVertexWithUV(x + xoffset + width, y + yoffset + height	, -90.0D, 1.0D, 1.0D);
-		tessellator.addVertexWithUV(x + xoffset + width, y + yoffset			, -90.0D, 1.0D, 0.0D);
-		tessellator.addVertexWithUV(x + xoffset, y + yoffset					, -90.0D, 0.0D, 0.0D);
+		float width = 256;
+		float height = 128;
+		float xoffset = -width/2f;
+		float yoffset = -height/2f;
 
-		tessellator.addVertexWithUV(x + xoffset, y + yoffset + height*2			, -90.0D, 0.0D, 1.0D);
-		tessellator.addVertexWithUV(x + xoffset + width, y + yoffset + height*2	, -90.0D, 1.0D, 1.0D);
-		tessellator.addVertexWithUV(x + xoffset + width, y + yoffset + height		, -90.0D, 1.0D, 0.0D);
-		tessellator.addVertexWithUV(x + xoffset, y + yoffset + height				, -90.0D, 0.0D, 0.0D);
-
-		tessellator.addVertexWithUV(x + xoffset, y + yoffset						, -90.0D, 0.0D, 1.0D);
-		tessellator.addVertexWithUV(x + xoffset + width, y + yoffset				, -90.0D, 1.0D, 1.0D);
-		tessellator.addVertexWithUV(x + xoffset + width, y + yoffset - height		, -90.0D, 1.0D, 0.0D);
-		tessellator.addVertexWithUV(x + xoffset, y + yoffset - height				, -90.0D, 0.0D, 0.0D);
+		for(int x = -1; x < 2 ;x++) for(int y = -1; y < 2 ;y++) {
+			tessellator.addVertexWithUV(xoffset + width * x, yoffset + height * (y + 1)			, 40.0D, 1.0D, 0.0D);
+			tessellator.addVertexWithUV(xoffset + width * (x + 1), yoffset + height * (y + 1)	, 40.0D, 0.0D, 0.0D);
+			tessellator.addVertexWithUV(xoffset + width * (x + 1), yoffset + height * y			, 40.0D, 0.0D, 1.0D);
+			tessellator.addVertexWithUV(xoffset + width * x, yoffset + height * y				, 40.0D, 1.0D, 1.0D);
+		}
+//		tessellator.addVertexWithUV(x + xoffset, y + yoffset + height*2			, 0.0D, 0.0D, 1.0D);
+//		tessellator.addVertexWithUV(x + xoffset + width, y + yoffset + height*2	, 0.0D, 1.0D, 1.0D);
+//		tessellator.addVertexWithUV(x + xoffset + width, y + yoffset + height		, 0.0D, 1.0D, 0.0D);
+//		tessellator.addVertexWithUV(x + xoffset, y + yoffset + height				, 0.0D, 0.0D, 0.0D);
+//
+//		tessellator.addVertexWithUV(x + xoffset, y + yoffset						, 0.0D, 0.0D, 1.0D);
+//		tessellator.addVertexWithUV(x + xoffset + width, y + yoffset				, 0.0D, 1.0D, 1.0D);
+//		tessellator.addVertexWithUV(x + xoffset + width, y + yoffset - height		, 0.0D, 1.0D, 0.0D);
+//		tessellator.addVertexWithUV(x + xoffset, y + yoffset - height				, 0.0D, 0.0D, 0.0D);
 
 		tessellator.draw();
-		GL11.glScalef((float)Math.sin(Math.toRadians(minecraft.gameSettings.fovSetting * f / 2.0F)) / 0.81915206F, (float)Math.sin(Math.toRadians(minecraft.gameSettings.fovSetting * f / 2.0F)) / 0.81915206F, (float)Math.sin(Math.toRadians(minecraft.gameSettings.fovSetting * f / 2.0F)) / 0.81915206F);
-		GL11.glScalef((float)Math.sin(Math.toRadians(minecraft.gameSettings.fovSetting * f / 2.0F)) / 0.81915206F, (float)Math.sin(Math.toRadians(minecraft.gameSettings.fovSetting * f / 2.0F)) / 0.81915206F, (float)Math.sin(Math.toRadians(minecraft.gameSettings.fovSetting * f / 2.0F)) / 0.81915206F);
+//		GL11.glScalef((float)(1/anti_fov), (float)(1/anti_fov), 1);
 		GL11.glPopMatrix();
 		GL11.glEnable(2929);
 		GL11.glEnable(3008);
+	}
+	public static void renderPumpkinBlur(Minecraft minecraft, String adss)
+	{
+		renderPumpkinBlur(minecraft,new ResourceLocation(adss));
+	}
 
-//		GL11.glPushMatrix();
-//		GL11.glDisable(2929);
-//		GL11.glDisable(3008);
-//		GL11.glEnable(3042);
-//		GL11.glBlendFunc(770, 771);
-//		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-//		ScaledResolution scaledresolution = new ScaledResolution(minecraft, minecraft.displayWidth, minecraft.displayHeight);
-//
+	@SideOnly(Side.CLIENT)
+	public static void renderLockOnMarker(Minecraft minecraft, ResourceLocation adsr,Vector3d markerPos)
+	{
+		GL11.glPushMatrix();
+		GL11.glDisable(2929);
+		GL11.glDisable(3008);
+		GL11.glEnable(3042);
+		GL11.glBlendFunc(770, 771);
+		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		double cameraZoom = ObfuscationReflectionHelper.getPrivateValue(EntityRenderer.class, minecraft.entityRenderer,
+				"cameraZoom", "field_78503_V");
+		GL11.glScaled(cameraZoom,cameraZoom, 1.0D);
+
 //		GL11.glTranslatef((float)scaledresolution.getScaledWidth() / 2, (float)scaledresolution.getScaledHeight() / 2, 0.0F);
-//		GL11.glScalef((float)(0.81915204428D / Math.sin(Math.toRadians(minecraft.gameSettings.fovSetting / 2.0F))), (float)(0.81915204428D / Math.sin(Math.toRadians(minecraft.gameSettings.fovSetting / 2.0F))), (float)(0.81915204428D / Math.sin(Math.toRadians(minecraft.gameSettings.fovSetting / 2.0F))));
-//		GL11.glScalef((float)(0.81915204428D / Math.sin(Math.toRadians(minecraft.gameSettings.fovSetting / 2.0F))), (float)(0.81915204428D / Math.sin(Math.toRadians(minecraft.gameSettings.fovSetting / 2.0F))), (float)(0.81915204428D / Math.sin(Math.toRadians(minecraft.gameSettings.fovSetting / 2.0F))));
-//		GL11.glTranslatef(-(float)scaledresolution.getScaledWidth() / 2, -(float)scaledresolution.getScaledHeight() / 2, 0.0F);
-//		minecraft.getTextureManager().bindTexture(adsr);
-//		Tessellator tessellator = Tessellator.instance;
-//		tessellator.startDrawingQuads();
-//		float xoffset = 0;
-//		float yoffset = 0;
-//		tessellator.addVertexWithUV(x + xoffset, y + yoffset + height			, -90.0D, 0.0D, 1.0D);
-//		tessellator.addVertexWithUV(x + xoffset + width, y + yoffset + height	, -90.0D, 1.0D, 1.0D);
-//		tessellator.addVertexWithUV(x + xoffset + width, y + yoffset			, -90.0D, 1.0D, 0.0D);
-//		tessellator.addVertexWithUV(x + xoffset, y + yoffset					, -90.0D, 0.0D, 0.0D);
-//		tessellator.draw();
-//		GL11.glScalef((float)Math.sin(Math.toRadians(minecraft.gameSettings.fovSetting / 2.0F)) / 0.81915206F, (float)Math.sin(Math.toRadians(minecraft.gameSettings.fovSetting / 2.0F)) / 0.81915206F, (float)Math.sin(Math.toRadians(minecraft.gameSettings.fovSetting / 2.0F)) / 0.81915206F);
-//		GL11.glScalef((float)Math.sin(Math.toRadians(minecraft.gameSettings.fovSetting / 2.0F)) / 0.81915206F, (float)Math.sin(Math.toRadians(minecraft.gameSettings.fovSetting / 2.0F)) / 0.81915206F, (float)Math.sin(Math.toRadians(minecraft.gameSettings.fovSetting / 2.0F)) / 0.81915206F);
-//		GL11.glPopMatrix();
-//		GL11.glEnable(2929);
-//		GL11.glEnable(3008);
+//		IAttributeInstance iattributeinstance = minecraft.thePlayer.getEntityAttribute(SharedMonsterAttributes.movementSpeed);
+//		double currentFov = minecraft.gameSettings.fovSetting * ((iattributeinstance.getAttributeValue() / (double)minecraft.thePlayer.capabilities.getWalkSpeed() + 1.0D) / 2.0D);
+//		double anti_fov = (0.81915204428/*sin(55)*/ / sin(Math.toRadians(currentFov / 2.0F)));
+//		anti_fov *= anti_fov;
+//		GL11.glScalef((float)anti_fov, (float)anti_fov, 1);
+//		GL11.glTranslatef(-(float)scaledresolution.getScaledWidth() / 2, -(float)scaledresolution.getScaledHeight() / 2, 0.0F);//左上に戻す
+		//中央のままにしておく
+		GL11.glRotatef(-(float)ObfuscationReflectionHelper.getPrivateValue(EntityRenderer.class, minecraft.entityRenderer, "camRoll", "R", "field_78495_O"),0,0,1);
+		GL11.glTranslatef((float)markerPos.x,(float)markerPos.y,(float)markerPos.z);
+		GL11.glRotatef((float)ObfuscationReflectionHelper.getPrivateValue(EntityRenderer.class, minecraft.entityRenderer, "camRoll", "R", "field_78495_O"),0,0,1);
+		minecraft.getTextureManager().bindTexture(adsr);
+		Tessellator tessellator = Tessellator.instance;
+		tessellator.startDrawingQuads();
+		tessellator.addVertexWithUV(-0.05/cameraZoom, 0.05 /cameraZoom, 0.0D, 1.0D, 0.0D);
+		tessellator.addVertexWithUV(0.05 /cameraZoom, 0.05 /cameraZoom, 0.0D, 0.0D, 0.0D);
+		tessellator.addVertexWithUV(0.05 /cameraZoom, -0.05/cameraZoom, 0.0D, 0.0D, 1.0D);
+		tessellator.addVertexWithUV(-0.05/cameraZoom, -0.05/cameraZoom, 0.0D, 1.0D, 1.0D);
+
+		tessellator.draw();
+//		GL11.glScalef((float)(1/anti_fov), (float)(1/anti_fov), 1);
+		GL11.glPopMatrix();
+		GL11.glEnable(2929);
+		GL11.glEnable(3008);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -632,40 +692,41 @@ public class HMGEventZoom {
 		GL11.glDisable(GL11.GL_ALPHA_TEST);
 		OpenGlHelper.glBlendFunc(GL11.GL_ONE_MINUS_DST_COLOR, GL11.GL_ONE_MINUS_SRC_COLOR, 1, 0);
 		minecraft.getTextureManager().bindTexture(crosstex);
-		Tessellator tessellator = Tessellator.instance;
-		GL11.glTranslatef(i/2, j/2,0);
-		double x =bure*2;
-		double y =-1;
-		double widthx = 16;
-		double widthy = 2;
-		tessellator.startDrawingQuads();
-		tessellator.addVertexWithUV(x + 0   ,y+widthy, -90.0D, 0.0D, 1.0D);
-		tessellator.addVertexWithUV(x+widthx,y+widthy, -90.0D, 1.0D, 1.0D);
-		tessellator.addVertexWithUV(x+widthx,y + 0, -90.0D, 1.0D, 0.0D);
-		tessellator.addVertexWithUV(x + 0   ,y + 0, -90.0D, 0.0D, 0.0D);
-		tessellator.draw();
-		tessellator = Tessellator.instance;
-		GL11.glRotatef(90,0,0,1);
-		tessellator.startDrawingQuads();
-		tessellator.addVertexWithUV(x + 0   ,y+widthy, -90.0D, 0.0D, 1.0D);
-		tessellator.addVertexWithUV(x+widthx,y +widthy, -90.0D, 1.0D, 1.0D);
-		tessellator.addVertexWithUV(x+widthx,y + 0, -90.0D, 1.0D, 0.0D);
-		tessellator.addVertexWithUV(x + 0   ,y + 0, -90.0D, 0.0D, 0.0D);
-		tessellator.draw();
-		GL11.glRotatef(90,0,0,1);
-		tessellator.startDrawingQuads();
-		tessellator.addVertexWithUV(x + 0   ,y+widthy, -90.0D, 0.0D, 1.0D);
-		tessellator.addVertexWithUV(x+widthx,y +widthy, -90.0D, 1.0D, 1.0D);
-		tessellator.addVertexWithUV(x+widthx,y + 0, -90.0D, 1.0D, 0.0D);
-		tessellator.addVertexWithUV(x + 0   ,y + 0, -90.0D, 0.0D, 0.0D);
-		tessellator.draw();
-		GL11.glRotatef(90,0,0,1);
-		tessellator.startDrawingQuads();
-		tessellator.addVertexWithUV(x + 0   ,y+widthy, -90.0D, 0.0D, 1.0D);
-		tessellator.addVertexWithUV(x+widthx,y +widthy, -90.0D, 1.0D, 1.0D);
-		tessellator.addVertexWithUV(x+widthx,y + 0, -90.0D, 1.0D, 0.0D);
-		tessellator.addVertexWithUV(x + 0   ,y + 0, -90.0D, 0.0D, 0.0D);
-		tessellator.draw();
+//		GL11.glTranslatef(i/2f, j/2f,0);
+		double x =bure*2d/10d;
+		double y =-1d/10d;
+		double widthx = 16d/10d;
+		double widthy = 2d/10d;
+		for(int cnt = 0;cnt < 4;cnt ++ ) {
+			Tessellator tessellator = Tessellator.instance;
+			tessellator.startDrawingQuads();
+			tessellator.addVertexWithUV(x + 0		, y + widthy	, 20.0D, 0.0D, 1.0D);
+			tessellator.addVertexWithUV(x + widthx	, y + widthy	, 20.0D, 1.0D, 1.0D);
+			tessellator.addVertexWithUV(x + widthx	, y + 0			, 20.0D, 1.0D, 0.0D);
+			tessellator.addVertexWithUV(x + 0		, y + 0			, 20.0D, 0.0D, 0.0D);
+			tessellator.draw();
+			GL11.glRotatef(90, 0, 0, 1);
+		}
+//		tessellator.startDrawingQuads();
+//		tessellator.addVertexWithUV(x + 0   ,y +widthy, 10.0D, 0.0D, 1.0D);
+//		tessellator.addVertexWithUV(x+widthx,y +widthy, 10.0D, 1.0D, 1.0D);
+//		tessellator.addVertexWithUV(x+widthx,y + 0, 10.0D, 1.0D, 0.0D);
+//		tessellator.addVertexWithUV(x + 0   ,y + 0, 10.0D, 0.0D, 0.0D);
+//		tessellator.draw();
+//		GL11.glRotatef(90,0,0,1);
+//		tessellator.startDrawingQuads();
+//		tessellator.addVertexWithUV(x + 0   ,y +widthy, 10.0D, 0.0D, 1.0D);
+//		tessellator.addVertexWithUV(x+widthx,y +widthy, 10.0D, 1.0D, 1.0D);
+//		tessellator.addVertexWithUV(x+widthx,y + 0, 10.0D, 1.0D, 0.0D);
+//		tessellator.addVertexWithUV(x + 0   ,y + 0, 10.0D, 0.0D, 0.0D);
+//		tessellator.draw();
+//		GL11.glRotatef(90,0,0,1);
+//		tessellator.startDrawingQuads();
+//		tessellator.addVertexWithUV(x + 0   ,y+widthy, 10.0D, 0.0D, 1.0D);
+//		tessellator.addVertexWithUV(x+widthx,y +widthy, 10.0D, 1.0D, 1.0D);
+//		tessellator.addVertexWithUV(x+widthx,y + 0, 10.0D, 1.0D, 0.0D);
+//		tessellator.addVertexWithUV(x + 0   ,y + 0, 10.0D, 0.0D, 0.0D);
+//		tessellator.draw();
 
 		GL11.glPopMatrix();
 		GL11.glPopAttrib();
@@ -679,5 +740,26 @@ public class HMGEventZoom {
 	private void bind(ResourceLocation res)
 	{
 		Minecraft.getMinecraft().getTextureManager().bindTexture(res);
+	}
+
+	public static void setUp3DView(Minecraft minecraft,RenderGameOverlayEvent.Post event){
+
+		GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
+		GL11.glMatrixMode(GL11.GL_PROJECTION);
+		GL11.glLoadIdentity();
+		Project.gluPerspective(HMG_proxy.getFOVModifier(minecraft,event.partialTicks,true), (float)minecraft.displayWidth / (float)minecraft.displayHeight, 0.05F, 300.0f);
+		GL11.glMatrixMode(GL11.GL_MODELVIEW);
+		GL11.glLoadIdentity();
+	}
+	public static void setUp2DView(Minecraft minecraft,RenderGameOverlayEvent.Post event){
+		GL11.glViewport(0, 0, minecraft.displayWidth, minecraft.displayHeight);
+		ScaledResolution scaledresolution = new ScaledResolution(minecraft, minecraft.displayWidth, minecraft.displayHeight);
+		GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
+		GL11.glMatrixMode(GL11.GL_PROJECTION);
+		GL11.glLoadIdentity();
+		GL11.glOrtho(0.0D, scaledresolution.getScaledWidth_double(), scaledresolution.getScaledHeight_double(), 0.0D, 1000.0D, 3000.0D);
+		GL11.glMatrixMode(GL11.GL_MODELVIEW);
+		GL11.glLoadIdentity();
+		GL11.glTranslatef(0.0F, 0.0F, -2000.0F);
 	}
 }

@@ -1,8 +1,0 @@
-{
-  "handmadeguns.a_br": {"category": "neutral","sounds": ["a_br"]},
-  "handmadeguns.a_clip": {"category": "neutral","sounds": ["a_clip"]},
-  "handmadeguns.f_reload_enfield": {"category": "neutral","sounds": ["f_reload_enfield"]},
-  "handmadeguns.f_reload_SVT": {"category": "neutral","sounds": ["f_reload_SVT"]},
-  "handmadeguns.a_cock": {"category": "neutral","sounds": ["a_cock"]},
-  "handmadeguns.MG34": {"category": "neutral","sounds": ["MG34"]}
-}

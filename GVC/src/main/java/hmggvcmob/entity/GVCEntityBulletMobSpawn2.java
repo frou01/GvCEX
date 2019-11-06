@@ -99,31 +99,17 @@ public class GVCEntityBulletMobSpawn2 extends EntityThrowable
     	   if(this.worldObj.rand.nextInt(pa) == 0
     			   ||this.worldObj.rand.nextInt(pa) == 1
     			   ||this.worldObj.rand.nextInt(pa) == 2){
-    		   GVCEntityJeep entityskeleton = new GVCEntityJeep(worldObj);
-           entityskeleton.setLocationAndAngles(this.posX+i+x-5, this.posY+y, this.posZ+j+z-5, this.rotationYaw, 0.0F);
-           worldObj.spawnEntityInWorld(entityskeleton);
-           GVCEntityGuerrillaMG entityskeleton1 = new GVCEntityGuerrillaMG(worldObj);
-           entityskeleton1.setLocationAndAngles(this.posX+i+x-5, this.posY+y, this.posZ+j+z-5, this.rotationYaw, 0.0F);
-           entityskeleton1.setCurrentItemOrArmor(0, new ItemStack(GVCUtils.fn_pkm));
-           entityskeleton1.onSpawnWithEgg((IEntityLivingData)null);
-           worldObj.spawnEntityInWorld(entityskeleton1);
-           entityskeleton1.mountEntity(entityskeleton);
+    	   	
                }
     	   if(this.worldObj.rand.nextInt(pa) == 4){
-    		   GVCEntityTank entityskeleton = new GVCEntityTank(worldObj);
-               entityskeleton.setLocationAndAngles(this.posX+i+x-5, this.posY+y, this.posZ+j+z-5, this.rotationYaw, 0.0F);
-               worldObj.spawnEntityInWorld(entityskeleton);
-               }
+    	   
+	       }
     	   if(this.worldObj.rand.nextInt(pa) == 5){
-    		   GVCEntityAPC entityskeleton = new GVCEntityAPC(worldObj);
-               entityskeleton.setLocationAndAngles(this.posX+i+x-5, this.posY+y-5, this.posZ+j+z-5, this.rotationYaw, 0.0F);
-               worldObj.spawnEntityInWorld(entityskeleton);
-               }
+    	   
+	       }
     	   if(this.worldObj.rand.nextInt(pa) == 6){
-    		   GVCEntityHeli entityskeleton = new GVCEntityHeli(worldObj);
-               entityskeleton.setLocationAndAngles(this.posX+i+x-5, this.posY+y-5, this.posZ+j+z-5, this.rotationYaw, 0.0F);
-               worldObj.spawnEntityInWorld(entityskeleton);
-               }
+    	   
+    	   }
     }
     
     /**

@@ -1,6 +1,7 @@
 package hmggvcmob.entity.friend;
 
 import handmadeguns.HandmadeGunsCore;
+import handmadevehicle.SlowPathFinder.WorldForPathfind;
 import hmggvcmob.ai.AIGKFire;
 import hmggvcmob.ai.AIGKHighJump;
 import hmggvcmob.ai.AIGKkick;
@@ -23,6 +24,11 @@ import static handmadevehicle.Utils.CalculateGunElevationAngle;
 
 public class GVCEntityFriendGK extends EntityPMCBase implements IIRVING
 {
+    public boolean combattask_2 = false;
+    public boolean combattask_4 = false;
+    public boolean onstarting = false;
+    public boolean onstopping = false;
+    public boolean isstanding = false;
     Random rnd = new Random();
     private int forget;
     private int TGThealth;
@@ -58,8 +64,8 @@ public class GVCEntityFriendGK extends EntityPMCBase implements IIRVING
         this.targetTasks.removeTask(aiSwimming);
         this.targetTasks.removeTask(AIOpenDoor);
         this.tasks.addTask(1,new AIGKkick(this,this,3.5f));
-        this.tasks.addTask(2,new AIGKHighJump(this,this,3.5f));
-        this.tasks.addTask(3,new AIGKFire(this,10f));
+        this.tasks.addTask(2,new AIGKHighJump(this,this,3.5f,new WorldForPathfind(worldObj)));
+        this.tasks.addTask(3,new AIGKFire(this,10f,new WorldForPathfind(worldObj)));
         this.tasks.addTask(4,new EntityAIWander(this,1));
         this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true));
     }

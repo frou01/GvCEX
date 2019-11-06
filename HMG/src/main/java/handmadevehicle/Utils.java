@@ -311,7 +311,12 @@ public class Utils {
     }
     public static double[] eulerfrommatrix(Matrix3d matrix3d){
         double[] xyz = new double[3];
+        if(matrix3d.m21>1)matrix3d.m21 = 1;
+        if(matrix3d.m21<-1)matrix3d.m21 = -1;
         xyz[0] = asin(matrix3d.m21);
+        if(Double.isNaN(xyz[0])){
+            System.out.println("debug matrix " + matrix3d);
+        }
         if(cos(xyz[0]) == 0){
             xyz[1] = 0;
             xyz[2] = atan2(matrix3d.m10, matrix3d.m00);

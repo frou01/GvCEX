@@ -146,6 +146,7 @@ public class HMGGunParts {
         rotCenterAndRotation = new HMGGunParts_Motion_PosAndRotation(centerX,centerY,centerZ,rotationX,rotationY,rotationZ);
     }
     public void AddRenderinfDef(float centerX,float centerY,float centerZ,float VectorX,float VectorY,float VectorZ,float rotationAmount){
+        this.rotateTypeIsVector = true;
         rotCenterAndRotation = new HMGGunParts_Motion_PosAndRotation(centerX,centerY,centerZ,VectorX,VectorY,VectorZ,rotationAmount);
     }
     public void AddRenderinfDefoffset(float offsetx,float offsety,float offsetz,float rotationX,float rotationY,float rotationZ){

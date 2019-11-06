@@ -16,12 +16,13 @@ public class HMVPakcetVehicleState implements IMessage {
 
     public HMVPakcetVehicleState(){
     }
-    public HMVPakcetVehicleState(int tgtid , Quat4d tgtrot , Quat4d tgtrotmotion , Vector3d tgtmotion , float t){
+    public HMVPakcetVehicleState(int tgtid , Quat4d tgtrot , Quat4d tgtrotmotion , Vector3d tgtmotion , float t , float health){
         this.targetID = tgtid;
         this.rot = tgtrot;
         this.rotmotion = tgtrotmotion;
         this.motionVec = tgtmotion;
         this.th = t;
+        this.health = health;
     }
 
     @Override

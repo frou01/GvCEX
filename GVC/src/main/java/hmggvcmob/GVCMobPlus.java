@@ -203,6 +203,32 @@ public class GVCMobPlus
         for (int i = 0; i < ignoretgtmob.length; i++) {
             ignoreSoTargetEntity.put(ignoretgtmob[i], Integer.valueOf(i));
         }
+        {
+            int typenum = lconf.get("Vehicle", "cfg_Soldier_VehicleType_num", 2).getInt();
+            if(typenum>0) {
+                GVCEntitySoldierRPG.vehicleSpawnGachaOBJ = new VehicleSpawnGachaOBJ[typenum];
+                String[] types = lconf.get("Vehicle", "cfg_Soldier_VehicleType",new String[]{"50","KPZ-70:10"}).getStringList();
+                int cnt = 0;
+                for(String atype:types){
+                    GVCEntitySoldierRPG.vehicleSpawnGachaOBJ[cnt] = new VehicleSpawnGachaOBJ(atype);
+                    GVCEntitySoldierRPG.vehilceGacha_rate_sum+=GVCEntitySoldierRPG.vehicleSpawnGachaOBJ[cnt].rate;
+                    cnt++;
+                }
+            }
+        }
+        {
+            int typenum = lconf.get("Vehicle", "cfg_Guerrilla_VehicleType_num", 2).getInt();
+            if(typenum>0) {
+                GVCEntityGuerrillaRPG.vehicleSpawnGachaOBJ = new VehicleSpawnGachaOBJ[typenum];
+                String[] types = lconf.get("Vehicle", "cfg_Guerrilla_VehicleType",new String[]{"50","T-34-85_mod:10"}).getStringList();
+                int cnt = 0;
+                for(String atype:types){
+                    GVCEntityGuerrillaRPG.vehicleSpawnGachaOBJ[cnt] = new VehicleSpawnGachaOBJ(atype);
+                    GVCEntityGuerrillaRPG.vehilceGacha_rate_sum+=GVCEntityGuerrillaRPG.vehicleSpawnGachaOBJ[cnt].rate;
+                    cnt++;
+                }
+            }
+        }
         cfg_flagspawnlevel = lconf.get("Guerrilla", "cfg_FlagSpawnLevel", 180).getInt(180);
         cfg_flagspawninterval = lconf.get("Guerrilla", "cfg_Flagspawninterval", 24000).getInt(24000);
         HMVehicle.cfgVehicleWheel_UpRange = lconf.get("Vehicle", "cfgVehicleWheel_UpRange", 1).getDouble(1);
@@ -243,7 +269,7 @@ public class GVCMobPlus
         APCspawner.setBlockName("MobSpawnerKai_APC").setBlockTextureName("gvcmob:mobspawner");
         APCspawner.mobname = "GVCMob.APC";
         GameRegistry.registerBlock(APCspawner, "MobSpawnerKai_APC");
-        Class[] PTeamEntityclass = { GVCEntitySoldier.class,GVCEntitySoldier.class,GVCEntitySoldier.class,GVCEntitySoldier.class, GVCEntitySoldierMG.class, GVCEntitySoldierBMP.class, GVCEntitySoldierRPG.class, GVCEntitySoldierSP.class };
+        Class[] PTeamEntityclass = { GVCEntitySoldier.class,GVCEntitySoldier.class,GVCEntitySoldier.class,GVCEntitySoldier.class, GVCEntitySoldierMG.class, GVCEntitySoldierRPG.class, GVCEntitySoldierSP.class };
         fn_PMCflag = new GVCBlockFlag(PTeamEntityclass, new ResourceLocation("gvcmob:textures/model/pflagtexture.png"));
         fn_PMCflag.setBlockName("BaseFlagBlock").setBlockTextureName("gvcmob:mobspawner");
         fn_PMCflag.withPlane = true;
@@ -274,7 +300,7 @@ public class GVCMobPlus
         fn_guerrillaattackheliegg = new GVCItemGuerrillaEgg(18).setUnlocalizedName("WZ10Egg").setTextureName("gvcmob:wz10egg");
         GameRegistry.registerItem(fn_guerrillaattackheliegg, "WZ10Egg");
 
-        GameRegistry.registerItem(new ItemSpoter(),"test");
+//        GameRegistry.registerItem(new ItemSpoter(),"test");
         
         fn_gkegg = new GVCItemGuerrillaEgg(6).setUnlocalizedName("GKEgg").setTextureName("gvcmob:gkegg");
         GameRegistry.registerItem(fn_gkegg, "GKEgg");
@@ -380,11 +406,11 @@ public class GVCMobPlus
         EntityRegistry.registerModEntity(GVCEntityGuerrillaSkeleton.class, "GuerrillaSkeleton", ++id, this, 250, 3, true);
         EntityRegistry.registerModEntity(GVCEntityGuerrilla_ender.class, "GuerrillaEnder", ++id, this, 250, 3, true);
         EntityRegistry.registerModEntity(GVCEntityGK.class, "IRVING", ++id, this, 250, 3, true);
-        EntityRegistry.registerModEntity(GVCEntityTank.class, "Tank", ++id, this, 250, 3, true);
-        EntityRegistry.registerModEntity(GVCEntityAPC.class, "APC", ++id, this, 250, 3, true);
-        EntityRegistry.registerModEntity(GVCEntityHeli.class, "Heli", ++id, this, 250, 3, true);
-        EntityRegistry.registerModEntity(GVCEntityWZ10AttackHeli.class, "WZ10Attackheli", ++id, this, 250, 3, true);
-        EntityRegistry.registerModEntity(GVCEntityJeep.class, "Jeep", ++id, this, 250, 3, true);
+//        EntityRegistry.registerModEntity(GVCEntityTank.class, "Tank", ++id, this, 250, 3, true);
+//        EntityRegistry.registerModEntity(GVCEntityAPC.class, "APC", ++id, this, 250, 3, true);
+//        EntityRegistry.registerModEntity(GVCEntityHeli.class, "Heli", ++id, this, 250, 3, true);
+//        EntityRegistry.registerModEntity(GVCEntityWZ10AttackHeli.class, "WZ10Attackheli", ++id, this, 250, 3, true);
+//        EntityRegistry.registerModEntity(GVCEntityJeep.class, "Jeep", ++id, this, 250, 3, true);
         EntityRegistry.registerModEntity(GVCEntityAAG.class, "AAG", ++id, this, 250, 3, true);
 
         EntityRegistry.registerModEntity(GVCEntityAA.class, "AA", ++id, this, 250, 3, true);
@@ -400,20 +426,20 @@ public class GVCMobPlus
         EntityRegistry.registerModEntity(GVCEntitySoldierSP.class, "SoliderSP", ++id, this, 250, 3, true);
         EntityRegistry.registerModEntity(GVCEntitySoldierMG.class, "SoliderMG", ++id, this, 250, 3, true);
         EntityRegistry.registerModEntity(GVCEntitySoldierRPG.class, "SoliderRPG", ++id, this, 250, 3, true);
-        EntityRegistry.registerModEntity(GVCEntitySoldierTank.class, "SoliderTank", ++id, this, 250, 3, true);
-        EntityRegistry.registerModEntity(GVCEntitySoldierHeli.class, "SoliderHeli", ++id, this, 250, 3, true);
-        EntityRegistry.registerModEntity(GVCEntityPMCTank.class, "PMCTank", ++id, this, 250, 3, true);
+//        EntityRegistry.registerModEntity(GVCEntitySoldierTank.class, "SoliderTank", ++id, this, 250, 3, true);
+//        EntityRegistry.registerModEntity(GVCEntitySoldierHeli.class, "SoliderHeli", ++id, this, 250, 3, true);
+//        EntityRegistry.registerModEntity(GVCEntityPMCTank.class, "PMCTank", ++id, this, 250, 3, true);
         EntityRegistry.registerModEntity(GVCEntityFriendGK.class, "PMCFriendIRVING", ++id, this, 250, 3, true);
-        EntityRegistry.registerModEntity(GVCEntityPMCHeli.class, "PMCHeli", ++id, this, 250, 3, true);
-        EntityRegistry.registerModEntity(GVCEntityPlane.class, "Plane", ++id, this, 250, 3, true);
+//        EntityRegistry.registerModEntity(GVCEntityPMCHeli.class, "PMCHeli", ++id, this, 250, 3, true);
+//        EntityRegistry.registerModEntity(GVCEntityPlane.class, "Plane", ++id, this, 250, 3, true);
         EntityRegistry.registerModEntity(GVCXEntitySoldierSpawn.class, "SysSpawnSoldier", ++id, this, 50, 3, false);
 
         EntityRegistry.registerModEntity(GVCEntityGuerrillaM.class, "GuerrillaM", ++id, this, 250, 3, false);
-        EntityRegistry.registerModEntity(GVCEntityTankT90.class, "T-90A(Guerrilla)", ++id, this, 250, 3, true);
-        EntityRegistry.registerModEntity(GVCEntityPMCT90Tank.class, "T-90A(PMC)", ++id, this, 250, 3, true);
-        EntityRegistry.registerModEntity(GVCEntitySoldierBMP.class, "BMP-1", ++id, this, 250, 3, true);
-        EntityRegistry.registerModEntity(GVCEntityPMCBMP.class, "PMC_BMP-1", ++id, this, 250, 3, true);
-        EntityRegistry.registerModEntity(EntityChild.class, "GVCSeat", ++id, this, 50, 3, false);
+//        EntityRegistry.registerModEntity(GVCEntityTankT90.class, "T-90A(Guerrilla)", ++id, this, 250, 3, true);
+//        EntityRegistry.registerModEntity(GVCEntityPMCT90Tank.class, "T-90A(PMC)", ++id, this, 250, 3, true);
+//        EntityRegistry.registerModEntity(GVCEntitySoldierBMP.class, "BMP-1", ++id, this, 250, 3, true);
+//        EntityRegistry.registerModEntity(GVCEntityPMCBMP.class, "PMC_BMP-1", ++id, this, 250, 3, true);
+//        EntityRegistry.registerModEntity(EntityChild.class, "GVCSeat", ++id, this, 50, 3, false);
         EntityRegistry.registerModEntity(GVCdummyhitbox.class, "GVCDummybox", ++id, this, 50, 3, true);
         EntityRegistry.registerModEntity(EntitySupportTGT.class, "SysSummonsupportEntity", ++id, this, 128, 3, false);
         EntityRegistry.registerModEntity(GVCEntityAPCSpawn.class, "GVC_Spawner_Throw", ++id, this, 250, 3, false);
@@ -674,19 +700,19 @@ public class GVCMobPlus
 
             EntityRegistry.addSpawn(GVCEntityGK.class, cfg_guerrillaspawntank * 6, cfg_guerrillaspawntank * 2, cfg_guerrillaspawntank * 3, EnumCreatureType.monster, new BiomeGenBase[] { biome });
 
-            EntityRegistry.addSpawn(GVCEntityTank.class, cfg_guerrillaspawntank * 4, cfg_guerrillaspawntank, cfg_guerrillaspawntank, EnumCreatureType.monster, new BiomeGenBase[] { biome });
+//            EntityRegistry.addSpawn(GVCEntityTank.class, cfg_guerrillaspawntank * 4, cfg_guerrillaspawntank, cfg_guerrillaspawntank, EnumCreatureType.monster, new BiomeGenBase[] { biome });
 
-            EntityRegistry.addSpawn(GVCEntityJeep.class, cfg_guerrillaspawntank * 6, cfg_guerrillaspawntank * 2, cfg_guerrillaspawntank * 6, EnumCreatureType.monster, new BiomeGenBase[] { biome });
+//            EntityRegistry.addSpawn(GVCEntityJeep.class, cfg_guerrillaspawntank * 6, cfg_guerrillaspawntank * 2, cfg_guerrillaspawntank * 6, EnumCreatureType.monster, new BiomeGenBase[] { biome });
 
-            EntityRegistry.addSpawn(GVCEntityAPC.class, cfg_guerrillaspawntank * 6, cfg_guerrillaspawntank, cfg_guerrillaspawntank * 4, EnumCreatureType.monster, new BiomeGenBase[] { biome });
+//            EntityRegistry.addSpawn(GVCEntityAPC.class, cfg_guerrillaspawntank * 6, cfg_guerrillaspawntank, cfg_guerrillaspawntank * 4, EnumCreatureType.monster, new BiomeGenBase[] { biome });
             if (biome != BiomeGenBase.hell) {
-                EntityRegistry.addSpawn(GVCEntityHeli.class, cfg_guerrillaspawntank * 4, cfg_guerrillaspawntank * 2, cfg_guerrillaspawntank * 5, EnumCreatureType.monster, new BiomeGenBase[] { biome });
+//                EntityRegistry.addSpawn(GVCEntityHeli.class, cfg_guerrillaspawntank * 4, cfg_guerrillaspawntank * 2, cfg_guerrillaspawntank * 5, EnumCreatureType.monster, new BiomeGenBase[] { biome });
             }
             if ((cfg_guerrillaspawndrawn) && (biome != BiomeGenBase.hell)) {
                 EntityRegistry.addSpawn(GVCEntityDrawn.class, cfg_guerrillaspawntank * 5, 1, 1, EnumCreatureType.monster, new BiomeGenBase[] { biome });
-                EntityRegistry.addSpawn(GVCEntityWZ10AttackHeli.class, cfg_guerrillaspawntank * 1, cfg_guerrillaspawntank, cfg_guerrillaspawntank, EnumCreatureType.monster, new BiomeGenBase[] { biome });
+//                EntityRegistry.addSpawn(GVCEntityWZ10AttackHeli.class, cfg_guerrillaspawntank * 1, cfg_guerrillaspawntank, cfg_guerrillaspawntank, EnumCreatureType.monster, new BiomeGenBase[] { biome });
             }
-            EntityRegistry.addSpawn(GVCEntityTankT90.class, cfg_guerrillaspawntank * 1, cfg_guerrillaspawntank, cfg_guerrillaspawntank, EnumCreatureType.monster, new BiomeGenBase[] { biome });
+//            EntityRegistry.addSpawn(GVCEntityTankT90.class, cfg_guerrillaspawntank * 1, cfg_guerrillaspawntank, cfg_guerrillaspawntank, EnumCreatureType.monster, new BiomeGenBase[] { biome });
             
         }
         if (cfg_canspawnsolider)
@@ -699,11 +725,11 @@ public class GVCMobPlus
 
             EntityRegistry.addSpawn(GVCEntitySoldierRPG.class, (int)(cfg_soldierspawnnormal * 6.0F), 1, 1, EnumCreatureType.monster, new BiomeGenBase[] { biome });
 
-            EntityRegistry.addSpawn(GVCEntitySoldierTank.class, (int)(cfg_soldierspawntank * 4.0F), 1, 1, EnumCreatureType.monster, new BiomeGenBase[] { biome });
+//            EntityRegistry.addSpawn(GVCEntitySoldierTank.class, (int)(cfg_soldierspawntank * 4.0F), 1, 1, EnumCreatureType.monster, new BiomeGenBase[] { biome });
 
-            EntityRegistry.addSpawn(GVCEntitySoldierBMP.class, (int)(cfg_soldierspawntank * 6.0F), 1, 1, EnumCreatureType.monster, new BiomeGenBase[] { biome });
+//            EntityRegistry.addSpawn(GVCEntitySoldierBMP.class, (int)(cfg_soldierspawntank * 6.0F), 1, 1, EnumCreatureType.monster, new BiomeGenBase[] { biome });
 
-            EntityRegistry.addSpawn(GVCEntitySoldierHeli.class, (int)(cfg_soldierspawntank * 2.0F), 1, 1, EnumCreatureType.monster, new BiomeGenBase[] { biome });
+//            EntityRegistry.addSpawn(GVCEntitySoldierHeli.class, (int)(cfg_soldierspawntank * 2.0F), 1, 1, EnumCreatureType.monster, new BiomeGenBase[] { biome });
         }
     }
     public void addspawnHell(BiomeGenBase biome)

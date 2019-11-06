@@ -121,4 +121,8 @@ public class CommonSideProxyHMG {
 	public String getFixkey(){
 		return null;
 	}
+
+	public float getFOVModifier(Minecraft mc,float p_78481_1_, boolean p_78481_2_) {
+		return 0;
+	}
 }

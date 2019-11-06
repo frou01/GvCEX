@@ -17,9 +17,14 @@ import handmadeguns.network.PacketSpawnParticle;
 import handmadeguns.client.render.*;
 import handmadeguns.tcn_modelloaderMod.TechneModelLoader;
 import handmadeguns.tile.TileMounter;
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.renderer.ActiveRenderInfo;
+import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.ForgeHooksClient;
@@ -60,12 +65,18 @@ public class ClientProxyHMG extends CommonSideProxyHMG {
 	static Field prevEquippedProgress;
 	static Field itemToRender;
 	static Field rightClickDelayTimer = null;
+
+	static Field fovModifierHandPrev;
+	static Field fovModifierHand;
+	static Field prevDebugCamFOV;
+	static Field debugCamFOV;
+
 	static int beforeSlot = -1;
 //	public static final KeyBinding Fire2 = new KeyBinding("ADS_Key",-100 , "HandmadeGuns");
 	//public static final KeyBinding Jump = new KeyBinding("Jump", Keyboard.KEY_X, "HandmadeGuns");
 
 	//public static ModelBiped PlayerRender = new HMGPlayer();
-    
+
 	@Override
 	public File ProxyFile(){
 		return Minecraft.getMinecraft().mcDataDir;
@@ -73,7 +84,7 @@ public class ClientProxyHMG extends CommonSideProxyHMG {
 
 	@Override
 	public void setuprender(){
-		
+
 		try {
 			Field stencilBits_F = ReflectionHelper.findField(ForgeHooksClient.class, "stencilBits");
 			Field modifiersField = Field.class.getDeclaredField("modifiers");
@@ -83,17 +94,17 @@ public class ClientProxyHMG extends CommonSideProxyHMG {
 			stencilBits_F.set(null, 8);
 			System.out.println("" + MinecraftForgeClient.getStencilBits());
 //			net.minecraftforge.client.ForgeHooksClient.createDisplay();
-			
+
 //			OpenGlHelper.initializeTextures();
-			
+
 //			Field framebufferMc_F = ReflectionHelper.findField(Minecraft.class, "framebufferMc");
 //			framebufferMc_F.set(proxy.getMCInstance(),new Framebuffer(proxy.getMCInstance().displayWidth, proxy.getMCInstance().displayHeight, true));
 //			proxy.getMCInstance().getFramebuffer().setFramebufferColor(0.0F, 0.0F, 0.0F, 0.0F);
 		}catch (Exception e){
 			e.printStackTrace();
 		}
-		
-		
+
+
 		AdvancedModelLoader.registerModelHandler(new MQO_ModelLoader());
 		AdvancedModelLoader.registerModelHandler(new TechneModelLoader());
 	}
@@ -125,18 +136,18 @@ public class ClientProxyHMG extends CommonSideProxyHMG {
 	public World getCilentWorld(){
 		return FMLClientHandler.instance().getClient().theWorld;
 		}
-    
+
     @Override
     public void registerClientInfo() {
         //ClientRegistry.registerKeyBinding(Speedreload);
     }
-    
+
     @Override
 	public void reisterRenderers(){
     	Minecraft mc = FMLClientHandler.instance().getClient();
     	//RenderManager rendermanager = new RenderManager(mc.renderEngine, mc.getRenderItem());
     	//RenderItem renderitem = mc.getRenderItem();
-    	
+
     	ClientRegistry.registerKeyBinding(Reload);
 	    ClientRegistry.registerKeyBinding(ChangeMagazineType);
     	ClientRegistry.registerKeyBinding(SeekerOpen_Close);
@@ -174,6 +185,7 @@ public class ClientProxyHMG extends CommonSideProxyHMG {
 			if (HandmadeGunsCore.cfg_RenderPlayer) {
 				//RenderingRegistry.registerEntityRenderingHandler(EntityPlayer.class, new HMGRenderPlayer());
 			}
+
 			try {
 				equippedProgress = ReflectionHelper.findField(HMG_proxy.getMCInstance().entityRenderer.itemRenderer.getClass(), "field_78454_c");
 			} catch (Exception e) {
@@ -195,6 +207,7 @@ public class ClientProxyHMG extends CommonSideProxyHMG {
 					ea.printStackTrace();
 				}
 			}
+
 			try {
 				itemToRender = ReflectionHelper.findField(HMG_proxy.getMCInstance().entityRenderer.itemRenderer.getClass(), "field_78453_b");
 			} catch (Exception e) {
@@ -205,6 +218,7 @@ public class ClientProxyHMG extends CommonSideProxyHMG {
 					ea.printStackTrace();
 				}
 			}
+
 			try {
 				rightClickDelayTimer = ReflectionHelper.findField(HMG_proxy.getMCInstance().getClass(), "field_71467_ac");
 			} catch (Exception e) {
@@ -215,15 +229,59 @@ public class ClientProxyHMG extends CommonSideProxyHMG {
 					ea.printStackTrace();
 				}
 			}
+
+			try {
+				fovModifierHandPrev = ReflectionHelper.findField(EntityRenderer.class, "field_78506_S");
+			} catch (Exception e) {
+				e.printStackTrace();
+				try {
+					fovModifierHandPrev = ReflectionHelper.findField(EntityRenderer.class, "fovModifierHandPrev");
+				} catch (Exception ea) {
+					ea.printStackTrace();
+				}
+			}
+
+			try {
+				fovModifierHand = ReflectionHelper.findField(EntityRenderer.class, "field_78507_R");
+			} catch (Exception e) {
+				e.printStackTrace();
+				try {
+					fovModifierHand = ReflectionHelper.findField(EntityRenderer.class, "fovModifierHand");
+				} catch (Exception ea) {
+					ea.printStackTrace();
+				}
+			}
+
+			try {
+				prevDebugCamFOV = ReflectionHelper.findField(EntityRenderer.class, "field_78494_N");
+			} catch (Exception e) {
+				e.printStackTrace();
+				try {
+					prevDebugCamFOV = ReflectionHelper.findField(EntityRenderer.class, "prevDebugCamFOV");
+				} catch (Exception ea) {
+					ea.printStackTrace();
+				}
+			}
+
+			try {
+				debugCamFOV = ReflectionHelper.findField(EntityRenderer.class, "field_78493_M");
+			} catch (Exception e) {
+				e.printStackTrace();
+				try {
+					debugCamFOV = ReflectionHelper.findField(EntityRenderer.class, "debugCamFOV");
+				} catch (Exception ea) {
+					ea.printStackTrace();
+				}
+			}
 //    	RenderingRegistry.registerEntityRenderingHandler(HMGEntityParticles.class, new HMGRenderParticles());
 			//RenderingRegistry.registerEntityRenderingHandler(HMGEntityParticles.class, new HMGRenderParticles2());
 			//RenderingRegistry.registerEntityRenderingHandler(HMGEntityHand.class, new HMGRenderHand());
 		}catch (Exception e){
     		e.printStackTrace();
 		}
-    	
+
     }
-    
+
     @Override
     public void registerTileEntity() {
 		RenderTileMounter renderTileMounter = new RenderTileMounter();
@@ -271,7 +329,7 @@ public class ClientProxyHMG extends CommonSideProxyHMG {
 		return keyDown(Minecraft.getMinecraft().gameSettings.keyBindJump.getKeyCode());
 		//return false;
 	}
-    
+
     @Override
     public boolean leftclick(){
 		return keyDown(Minecraft.getMinecraft().gameSettings.keyBindAttack.getKeyCode());
@@ -408,9 +466,10 @@ public class ClientProxyHMG extends CommonSideProxyHMG {
 						var10.setParticleScale(3);
 						break;
 					case 2:
-						
+
 						var10.setParticleIcon(HMGParticles.getInstance().getIcon("handmadeguns:lockonmarker"));
 						var10.setIcon(lockonmarker);
+						var10.animationspeed = 2;
 						var10.setParticleScale(1);
 						var10.isglow = false;
 						var10.fuse = 1;
@@ -418,7 +477,7 @@ public class ClientProxyHMG extends CommonSideProxyHMG {
 						var10.disable_DEPTH_TEST = true;
 						var10.isrenderglow = true;
 						message.id = 102;
-						
+
 						var10.prevPosX = message.posx;
 						var10.prevPosY = message.posy;
 						var10.prevPosZ = message.posz;
@@ -437,7 +496,7 @@ public class ClientProxyHMG extends CommonSideProxyHMG {
 						var10.setParticleScale(3);
 						break;
 					case 4:
-						
+
 						var10.setParticleIcon(HMGParticles.getInstance().getIcon("handmadeguns:lockonmarker"));
 						var10.setIcon(lockonmarker);
 						var10.setParticleScale(1);
@@ -447,7 +506,7 @@ public class ClientProxyHMG extends CommonSideProxyHMG {
 						var10.disable_DEPTH_TEST = true;
 						var10.isrenderglow = true;
 						message.id = 102;
-						
+
 						var10.prevPosX = message.posx;
 						var10.prevPosY = message.posy;
 						var10.prevPosZ = message.posz;
@@ -489,7 +548,7 @@ public class ClientProxyHMG extends CommonSideProxyHMG {
 				}
 			}
 			var10.isrenderglow = message.id/100 ==1;
-			
+
 			FMLClientHandler.instance().getClient().effectRenderer.addEffect(var10);
 		} catch (ClassCastException e) {
 			e.printStackTrace();
@@ -505,8 +564,49 @@ public class ClientProxyHMG extends CommonSideProxyHMG {
 		return Minecraft.getMinecraft().gameSettings.keyBindUseItem.getIsKeyPressed();
 		//return false;
 	}
-	
+
 	public String getFixkey(){
 		return GameSettings.getKeyDisplayString(Fix.getKeyCode());
+	}
+
+	public float getFOVModifier(Minecraft mc,float p_78481_1_, boolean p_78481_2_)
+	{
+		try {
+			EntityRenderer entityRenderer = mc.entityRenderer;
+			if (entityRenderer.debugViewDirection > 0)
+			{
+				return 90.0F;
+			}
+			else
+			{
+				EntityLivingBase entityplayer = (EntityLivingBase)mc.renderViewEntity;
+				float f1 = 70.0F;
+
+				if (p_78481_2_)
+				{
+					f1 = mc.gameSettings.fovSetting;
+					f1 *= fovModifierHandPrev.getFloat(entityRenderer) + (fovModifierHand.getFloat(entityRenderer) - fovModifierHandPrev.getFloat(entityRenderer)) * p_78481_1_;
+
+				}
+
+				if (entityplayer.getHealth() <= 0.0F)
+				{
+					float f2 = (float)entityplayer.deathTime + p_78481_1_;
+					f1 /= (1.0F - 500.0F / (f2 + 500.0F)) * 2.0F + 1.0F;
+				}
+
+				Block block = ActiveRenderInfo.getBlockAtEntityViewpoint(mc.theWorld, entityplayer, p_78481_1_);
+
+				if (block.getMaterial() == Material.water)
+				{
+					f1 = f1 * 60.0F / 70.0F;
+				}
+
+				return f1 + prevDebugCamFOV.getFloat(entityRenderer) + (debugCamFOV.getFloat(entityRenderer) - prevDebugCamFOV.getFloat(entityRenderer)) * p_78481_1_;
+			}
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
+		return 0;
 	}
 }

@@ -85,7 +85,6 @@ public class EntityPMCBase extends EntitySoBases implements IFF,IGVCmob {
 	public EntityPMCBase(World par1World) {
 		super(par1World);
 		worldForPathfind = new WorldForPathfind(par1World);
-		this.fri = this;
 		this.getNavigator().setBreakDoors(true);
 		aiSwimming = new EntityAISwimming(this);
 		AIOpenDoor           =new EntityAIOpenDoor(this, true);
@@ -114,91 +113,33 @@ public class EntityPMCBase extends EntitySoBases implements IFF,IGVCmob {
     {
 	    this.getEntityData().setBoolean("HMGisUsingItem",false);
         super.onUpdate();
-        
-		if(this.getHeldItem() != null) {
-			if(this.getHeldItem().hasTagCompound()){
-				if(this.getHeldItem().getItem() instanceof HMGItem_Unified_Guns)((HMGItem_Unified_Guns)this.getHeldItem().getItem()).checkTags(this.getHeldItem());
+		if(mode == 1) {
+			if (this.getAttackTarget() == null && this.getDistanceSq(homeposX+1, homeposY+1, homeposZ+1)>256) {
+				if(this.getNavigator().getPath() != null && this.getNavigator().getPath().getFinalPathPoint().xCoord != homeposX+1 && this.getNavigator().getPath().getFinalPathPoint().xCoord != homeposY && this.getNavigator().getPath().getFinalPathPoint().xCoord != homeposZ+1)this.getNavigator().setPath(worldForPathfind.getEntityPathToXYZ(this, homeposX+1, homeposY, homeposZ+1, 80f, true, false, false, true), 1.0d);
+				if(onGround)this.getNavigator().setPath(worldForPathfind.getEntityPathToXYZ(this, homeposX+1, homeposY, homeposZ+1, 80f, true, false, false, true), 1.0d);
 			}
-			if(!worldObj.isRemote)
-				if (this.getEntityData().getBoolean("HMGisUsingItem")) {
-					this.setSneaking(true);
-				} else {
-					this.setSneaking(false);
-				}
-			int bullets = this.getHeldItem().getItemDamage();
-			float backRP = rotationPitch;
-			float backRY = rotationYaw;
-			if (this.rand.nextInt(5) == 0) {
-				rndyaw = this.rand.nextGaussian() * (double) (this.rand.nextBoolean() ? -1 : 1) * spread;
-				rndpitch = this.rand.nextGaussian() * (double) (this.rand.nextBoolean() ? -1 : 1) * spread;
-			}
-			this.rotationPitch += rndyaw;
-			this.rotationYaw += rndpitch;
-			this.getHeldItem().getItem().onUpdate(this.getHeldItem(), worldObj, this, 0, true);
-			rotationPitch = backRP;
-			rotationYaw = backRY;
-			if (bullets != this.getHeldItem().getItemDamage()) {
-				this.aiAttackGun.burstingtime++;
-			}
-		}
-		if(this instanceof ITank){
-			if(mode == 2) {
-				if (this.getAttackTarget() == null && this.getDistanceSq(homeposX+1, homeposY+1, homeposZ+1)>256) {
-					if(this.getNavigator().getPath() != null && this.getNavigator().getPath().getFinalPathPoint().xCoord != homeposX+1 && this.getNavigator().getPath().getFinalPathPoint().xCoord != homeposY && this.getNavigator().getPath().getFinalPathPoint().xCoord != homeposZ+1)this.getNavigator().setPath(worldForPathfind.getEntityPathToXYZ(this, homeposX+1, homeposY, homeposZ+1, 80f, true, false, false, true), 1.0d);
-					this.getNavigator().setPath(worldForPathfind.getEntityPathToXYZ(this, homeposX+1, homeposY, homeposZ+1, 80f, true, false, false, true), 1.2);
-				}
-			}else if(mode == 1) {
-				if (master != null) {
-					homeposX = (int) master.posX;
-					homeposY = (int) master.posY;
-					homeposZ = (int) master.posZ;
-					if ((this.getAttackTarget() == null && this.getDistanceSq(homeposX, homeposY, homeposZ) > 64) || this.getDistanceSq(homeposX, homeposY + 1, homeposZ) > 256) {
-						if (resetFollowpathCnt > 10) {
-							homeposX = (int) master.posX + moveoffsetx;
-							homeposY = (int) master.posY;
-							homeposZ = (int) master.posZ + moveoffsetz;
-							resetFollowpathCnt = 0;
-							this.getNavigator().setPath(worldForPathfind.getEntityPathToXYZ(this, homeposX, homeposY, homeposZ, 60f, true, false, false, true), 1.2);
-						}
-					} else {
-						moveoffsetx = rand.nextInt(12) * (this.rand.nextBoolean() ? -1 : 1);
-						moveoffsetz = rand.nextInt(12) * (this.rand.nextBoolean() ? -1 : 1);
+		}else if(mode == 2) {
+			if (master != null) {
+				homeposX = (int) master.posX;
+				homeposY = (int) master.posY;
+				homeposZ = (int) master.posZ;
+				if ((this.getAttackTarget() == null && this.getDistanceSq(homeposX, homeposY, homeposZ) > 64) || this.getDistanceSq(homeposX, homeposY + 1, homeposZ) > 256) {
+					if (resetFollowpathCnt > 10) {
+						homeposX = (int) master.posX + moveoffsetx;
+						homeposY = (int) master.posY;
+						homeposZ = (int) master.posZ + moveoffsetz;
 						resetFollowpathCnt = 0;
+						if (onGround || isInWater())
+							this.getNavigator().setPath(worldForPathfind.getEntityPathToXYZ(this, homeposX, homeposY, homeposZ, 60f, true, false, false, true), 1.0d);
 					}
-					resetFollowpathCnt++;
-				}else {
-					mode = 2;
-				}
-			}
-		}else {
-			if(mode == 1) {
-				if (this.getAttackTarget() == null && this.getDistanceSq(homeposX+1, homeposY+1, homeposZ+1)>256) {
-					if(this.getNavigator().getPath() != null && this.getNavigator().getPath().getFinalPathPoint().xCoord != homeposX+1 && this.getNavigator().getPath().getFinalPathPoint().xCoord != homeposY && this.getNavigator().getPath().getFinalPathPoint().xCoord != homeposZ+1)this.getNavigator().setPath(worldForPathfind.getEntityPathToXYZ(this, homeposX+1, homeposY, homeposZ+1, 80f, true, false, false, true), 1.0d);
-					if(onGround)this.getNavigator().setPath(worldForPathfind.getEntityPathToXYZ(this, homeposX+1, homeposY, homeposZ+1, 80f, true, false, false, true), 1.0d);
-				}
-			}else if(mode == 2) {
-				if (master != null) {
-					homeposX = (int) master.posX;
-					homeposY = (int) master.posY;
-					homeposZ = (int) master.posZ;
-					if ((this.getAttackTarget() == null && this.getDistanceSq(homeposX, homeposY, homeposZ) > 64) || this.getDistanceSq(homeposX, homeposY + 1, homeposZ) > 256) {
-						if (resetFollowpathCnt > 10) {
-							homeposX = (int) master.posX + moveoffsetx;
-							homeposY = (int) master.posY;
-							homeposZ = (int) master.posZ + moveoffsetz;
-							resetFollowpathCnt = 0;
-							if (onGround || isInWater())
-								this.getNavigator().setPath(worldForPathfind.getEntityPathToXYZ(this, homeposX, homeposY, homeposZ, 60f, true, false, false, true), 1.0d);
-						}
-					} else {
-						moveoffsetx = rand.nextInt(12) * (this.rand.nextBoolean() ? -1 : 1);
-						moveoffsetz = rand.nextInt(12) * (this.rand.nextBoolean() ? -1 : 1);
-						resetFollowpathCnt = 0;
-					}
-					resetFollowpathCnt++;
 				} else {
-					mode = 0;
+					moveoffsetx = rand.nextInt(12) * (this.rand.nextBoolean() ? -1 : 1);
+					moveoffsetz = rand.nextInt(12) * (this.rand.nextBoolean() ? -1 : 1);
+					resetFollowpathCnt = 0;
 				}
+				resetFollowpathCnt++;
+			} else {
+				mode = 0;
 			}
 		}
 		if(rand.nextInt(10) == 0) this.addPotionEffect(new PotionEffect(Potion.regeneration.id, 1, 2));
@@ -312,18 +253,6 @@ public class EntityPMCBase extends EntitySoBases implements IFF,IGVCmob {
 	@Override
 	public float getviewWide() {
 		return viewWide;
-	}
-	@Override
-	public boolean canSeeTarget(Entity target) {
-		boolean flag;
-		flag = canhearsound(target);
-		if (!flag) {
-			Vec3 lookVec = getLookVec();
-			Vec3 toTGTvec = Vec3.createVectorHelper(target.posX - posX, target.posY + target.getEyeHeight() - (posY + getEyeHeight()), target.posZ - posZ);
-			toTGTvec = toTGTvec.normalize();
-			return lookVec.squareDistanceTo(toTGTvec) < getviewWide() * 1.2f;
-		}else
-			return true;
 	}
 
 	@Override

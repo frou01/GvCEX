@@ -21,13 +21,13 @@ public class HMVPacketHandler {
         INSTANCE.registerMessage(HMVHandleSeatData.class, HMVPacketSeatData.class, ++id, Side.SERVER);
         INSTANCE.registerMessage(HMVMHandleVehicleTurretSync.class, HMVPakcetVehicleTurretSync.class, ++id, Side.CLIENT);
         INSTANCE.registerMessage(HMVHandlePickNewEntity.class, HMVPacketPickNewEntity.class, ++id, Side.CLIENT);
-        INSTANCE.registerMessage(HMVHandlePickNewEntity.class, HMVPacketPickNewEntity.class, ++id, Side.SERVER);
         INSTANCE.registerMessage(HMVHandleDisMountEntity.class, HMVPacketDisMountEntity.class, ++id, Side.SERVER);
         INSTANCE.registerMessage(HMVHandleMouseD.class, HMVPacketMouseD.class, ++id, Side.SERVER);
         INSTANCE.registerMessage(HMVHandleTriggerSeatGun.class, HMVPacketTriggerSeatGun.class, ++id, Side.SERVER);
         INSTANCE.registerMessage(HMVHandleChangeSeat.class, HMVPacketChangeSeat.class, ++id, Side.SERVER);
         INSTANCE.registerMessage(HandleOpenVehicleGui.class, HMVPacketOpenVehicleGui.class, ++id, Side.SERVER);
-    
+        INSTANCE.registerMessage(HMVHandleMissileAndLockMarker.class, HMVPacketMissileAndLockMarker.class, ++id, Side.CLIENT);
+
     
     
     }

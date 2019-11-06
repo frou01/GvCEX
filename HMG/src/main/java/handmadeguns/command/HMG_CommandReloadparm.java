@@ -23,7 +23,7 @@ public class HMG_CommandReloadparm extends CommandBase implements ICommand{
     @Override
     public int getRequiredPermissionLevel()
     {
-        return 0;
+        return 2;
     }
     @Override
     public String getCommandUsage(ICommandSender p_71518_1_) {

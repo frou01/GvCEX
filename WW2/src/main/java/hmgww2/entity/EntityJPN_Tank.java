@@ -1,7 +1,6 @@
 package hmgww2.entity;
 
 
-import hmggvcmob.ai.AITankAttack;
 import handmadevehicle.entity.parts.logics.TankBaseLogicLogic;
 import handmadevehicle.entity.parts.turrets.TurretObj;
 import net.minecraft.world.World;

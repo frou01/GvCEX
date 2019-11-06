@@ -126,7 +126,7 @@ AddParts,Base_Sys
 				attachpart
 				dot
     			BackParts
-    			AddChildParts,mat5
+    			AddChildParts,mat41
 				AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
 				RenderOnNormal
 				AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
@@ -135,6 +135,16 @@ AddParts,Base_Sys
 				AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
 				attachpart
 				dot
+    			BackParts
+    			AddChildParts,mat5
+				AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+				RenderOnNormal
+				AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+				AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+				AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+				AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+				attachpart
+				scope
     			BackParts
     			AddChildParts,mat9
 				AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
@@ -277,7 +287,7 @@ AddParts,Base_Sys
 				attachpart
 				dot
     			BackParts
-    			AddChildParts,mat5
+    			AddChildParts,mat41
 				AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
 				RenderOnNormal
 				AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
@@ -286,6 +296,16 @@ AddParts,Base_Sys
 				AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
 				attachpart
 				dot
+    			BackParts
+    			AddChildParts,mat5
+				AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+				RenderOnNormal
+				AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+				AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+				AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+				AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+				attachpart
+				scope
     			BackParts
     			AddChildParts,mat9
 				AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0

@@ -18,7 +18,7 @@ public class WorldForPathfind
     public int serchingposZ;
 
 
-   public PathEntity getEntityPathToXYZ(Entity p_72844_1_, int p_72844_2_, int p_72844_3_, int p_72844_4_, float p_72844_5_, boolean p_72844_6_, boolean p_72844_7_, boolean p_72844_8_, boolean p_72844_9_)
+   public PathEntity getEntityPathToXYZ(Entity p_72844_1_, int p_72844_2_, int p_72844_3_, int p_72844_4_, float searchRange, boolean isWoddenDoorAllowed, boolean isMovementBlockAllowed, boolean isPathingInWater, boolean canEntityDrown)
     {
         if(/*((p_72844_2_-serchingposX)*(p_72844_2_-serchingposX)+(p_72844_3_-serchingposY)*(p_72844_3_-serchingposY)+(p_72844_4_-serchingposZ)*(p_72844_4_-serchingposZ)<10) &&*/ slowPathfinder != null && slowPathfinder.isserchingpath){
             PathEntity returnval = slowPathfinder.serchPath();
@@ -30,7 +30,7 @@ public class WorldForPathfind
             serchingposX = MathHelper.floor_double(p_72844_1_.posX);
             serchingposY = MathHelper.floor_double(p_72844_1_.posY);
             serchingposZ = MathHelper.floor_double(p_72844_1_.posZ);
-            int k1 = (int) (p_72844_5_ + 8.0F);//検索範囲
+            int k1 = (int) (searchRange + 8.0F);//検索範囲
             int l1 = l - k1;
             int i2 = i1 - k1;
             int j2 = j1 - k1;
@@ -38,9 +38,9 @@ public class WorldForPathfind
             int l2 = i1 + k1;
             int i3 = j1 + k1;
             ChunkChaceForPathfind chunkcache = new ChunkChaceForPathfind(this, l1, i2, j2, k2, l2, i3, 0);
-//        PathEntity pathentity = (new SlowPathfinder(chunkcache, p_72844_6_, p_72844_7_, p_72844_8_, p_72844_9_)).createEntityPathTo(p_72844_1_, p_72844_2_, p_72844_3_, p_72844_4_, p_72844_5_);
-            slowPathfinder = new SlowPathfinder(chunkcache, p_72844_6_, p_72844_7_, p_72844_8_, p_72844_9_);
-            PathEntity pathentity = slowPathfinder.createEntityPathTo(p_72844_1_, p_72844_2_, p_72844_3_, p_72844_4_, p_72844_5_);
+//        PathEntity pathentity = (new SlowPathfinder(chunkcache, isWoddenDoorAllowed, isMovementBlockAllowed, isPathingInWater, canEntityDrown)).createEntityPathTo(p_72844_1_, p_72844_2_, p_72844_3_, p_72844_4_, searchRange);
+            slowPathfinder = new SlowPathfinder(chunkcache, isWoddenDoorAllowed, isMovementBlockAllowed, isPathingInWater, canEntityDrown);
+            PathEntity pathentity = slowPathfinder.createEntityPathTo(p_72844_1_, p_72844_2_, p_72844_3_, p_72844_4_, searchRange);
             if(!slowPathfinder.isserchingpath) {
 //
                 return pathentity;

@@ -113,7 +113,7 @@ public class SlowPathfinder {
     }
     public PathEntity serchPath(){
         retrycount++;
-        int cntmax = new Random().nextInt(20) + 20;
+        int cntmax = 64;
         for(int cnt = 0; cnt<cntmax; cnt++) {
             if (!this.path.isPathEmpty()) {
 //                System.out.println("debug" + path);

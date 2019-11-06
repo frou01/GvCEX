@@ -217,11 +217,13 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
         par1 *= (double)par7;
         par3 *= (double)par7;
         par5 *= (double)par7;
-        double motionlength = sqrt(shooter.motionX * shooter.motionX + shooter.motionY * shooter.motionY +shooter.motionZ * shooter.motionZ);
-        if(motionlength>0.01) {
-            par1 += (shooter.motionX / motionlength + this.rand.nextGaussian() * (double) (this.rand.nextBoolean() ? -1 : 1) * 0.01 * (double) par8) * motionlength;
-            par3 += (shooter.motionY / motionlength + this.rand.nextGaussian() * (double) (this.rand.nextBoolean() ? -0.5 : 0.5) * 0.01 * (double) par8) * motionlength;
-            par5 += (shooter.motionZ / motionlength + this.rand.nextGaussian() * (double) (this.rand.nextBoolean() ? -1 : 1) * 0.01 * (double) par8) * motionlength;
+        if(shooter!= null) {
+            double motionlength = sqrt(shooter.motionX * shooter.motionX + shooter.motionY * shooter.motionY + shooter.motionZ * shooter.motionZ);
+            if (motionlength > 0.01) {
+                par1 += (shooter.motionX / motionlength + this.rand.nextGaussian() * (double) (this.rand.nextBoolean() ? -1 : 1) * 0.01 * (double) par8) * motionlength;
+                par3 += (shooter.motionY / motionlength + this.rand.nextGaussian() * (double) (this.rand.nextBoolean() ? -0.5 : 0.5) * 0.01 * (double) par8) * motionlength;
+                par5 += (shooter.motionZ / motionlength + this.rand.nextGaussian() * (double) (this.rand.nextBoolean() ? -1 : 1) * 0.01 * (double) par8) * motionlength;
+            }
         }
         this.motionX = par1;
         this.motionY = par3;
@@ -822,6 +824,7 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
                     movingobjectposition = new MovingObjectPosition(current.entity);
                     movingobjectposition.hitVec = vec3;
                     movingobjectposition.sideHit = movingobjectposition1.sideHit;
+                    movingobjectposition.hitInfo = movingobjectposition1.hitInfo;
                     avoidEntity = current.entity;
                     if (canbounce && !isDead) {
                         this.onImpact(movingobjectposition);

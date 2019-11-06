@@ -43,9 +43,9 @@ public class ClientProxyGVCM extends CommonSideProxyGVCM {
 		
 		RenderingRegistry.registerEntityRenderingHandler(GVCEntityGK.class, new GVCRenderGK());
 
-		RenderingRegistry.registerEntityRenderingHandler(GVCEntityTank.class, new GVCRenderTankobj());
+//		RenderingRegistry.registerEntityRenderingHandler(GVCEntityTank.class, new GVCRenderTankobj());
 		RenderingRegistry.registerEntityRenderingHandler(TU95.class, new GVCRenderTU95());
-		RenderingRegistry.registerEntityRenderingHandler(GVCEntityTankT90.class, new GVCRenderTankT90());
+//		RenderingRegistry.registerEntityRenderingHandler(GVCEntityTankT90.class, new GVCRenderTankT90());
 		/*if(GVCMobPlus.cfg_modelobj){
 			RenderingRegistry.registerEntityRenderingHandler(GVCEntityAPC.class, new GVCRenderAPCobj());
 			RenderingRegistry.registerEntityRenderingHandler(GVCEntityHeli.class, new GVCRenderHeliobj());
@@ -55,14 +55,14 @@ public class ClientProxyGVCM extends CommonSideProxyGVCM {
 		}*/
 		
 		
-		RenderingRegistry.registerEntityRenderingHandler(GVCEntityAPC.class, new GVCRenderAPC());
-		RenderingRegistry.registerEntityRenderingHandler(GVCEntityHeli.class, new GVCRenderHeliobj());
-		RenderingRegistry.registerEntityRenderingHandler(GVCEntityWZ10AttackHeli.class, new GVCRenderWZ10AttackHeli());
+//		RenderingRegistry.registerEntityRenderingHandler(GVCEntityAPC.class, new GVCRenderAPC());
+//		RenderingRegistry.registerEntityRenderingHandler(GVCEntityHeli.class, new GVCRenderHeliobj());
+//		RenderingRegistry.registerEntityRenderingHandler(GVCEntityWZ10AttackHeli.class, new GVCRenderWZ10AttackHeli());
 		RenderingRegistry.registerEntityRenderingHandler(GVCEntityDrawn.class, new GVCRenderDrawn());
 
 		
 		
-		RenderingRegistry.registerEntityRenderingHandler(GVCEntityJeep.class, new GVCRenderJeep());
+//		RenderingRegistry.registerEntityRenderingHandler(GVCEntityJeep.class, new GVCRenderJeep());
 		RenderingRegistry.registerEntityRenderingHandler(GVCEntityAAG.class, new GVCRenderAAG());
 		RenderingRegistry.registerEntityRenderingHandler(EntityParachute.class, new GVCRenderParachute());
 
@@ -80,14 +80,14 @@ public class ClientProxyGVCM extends CommonSideProxyGVCM {
 		RenderingRegistry.registerEntityRenderingHandler(GVCEntityPMCMG.class, new GVCRenderPMCMG());
 		RenderingRegistry.registerEntityRenderingHandler(GVCEntityPMCRPG.class, new GVCRenderPMCRPG());
 		
-		RenderingRegistry.registerEntityRenderingHandler(GVCEntityPMCTank.class, new GVCRenderPMCTankobj());
-		RenderingRegistry.registerEntityRenderingHandler(GVCEntityPMCT90Tank.class, new GVCRenderTankT90PMC());
-		RenderingRegistry.registerEntityRenderingHandler(GVCEntitySoldierBMP.class, new GVCRenderBMP());
-		RenderingRegistry.registerEntityRenderingHandler(GVCEntityPMCBMP.class, new GVCRenderPMCBMP());
-		RenderingRegistry.registerEntityRenderingHandler(EntityChild.class, new GVCRenderSeat());
+//		RenderingRegistry.registerEntityRenderingHandler(GVCEntityPMCTank.class, new GVCRenderPMCTankobj());
+//		RenderingRegistry.registerEntityRenderingHandler(GVCEntityPMCT90Tank.class, new GVCRenderTankT90PMC());
+//		RenderingRegistry.registerEntityRenderingHandler(GVCEntitySoldierBMP.class, new GVCRenderBMP());
+//		RenderingRegistry.registerEntityRenderingHandler(GVCEntityPMCBMP.class, new GVCRenderPMCBMP());
+//		RenderingRegistry.registerEntityRenderingHandler(EntityChild.class, new GVCRenderSeat());
 		RenderingRegistry.registerEntityRenderingHandler(GVCdummyhitbox.class, new GVCRenderSeat());
-		RenderingRegistry.registerEntityRenderingHandler(GVCEntityPMCHeli.class, new GVCRenderPMCHeliobj());
-		RenderingRegistry.registerEntityRenderingHandler(GVCEntityPlane.class, new GVCRenderPlane());
+//		RenderingRegistry.registerEntityRenderingHandler(GVCEntityPMCHeli.class, new GVCRenderPMCHeliobj());
+//		RenderingRegistry.registerEntityRenderingHandler(GVCEntityPlane.class, new GVCRenderPlane());
 		RenderingRegistry.registerEntityRenderingHandler(GVCEntityFriendGK.class, new GVCRenderFriendGK());
 		
 		
@@ -96,8 +96,8 @@ public class ClientProxyGVCM extends CommonSideProxyGVCM {
 		RenderingRegistry.registerEntityRenderingHandler(GVCEntitySoldierMG.class, new GVCRenderSoldierMG());
 		RenderingRegistry.registerEntityRenderingHandler(GVCEntitySoldierRPG.class, new GVCRenderSoldierRPG());
 		
-		RenderingRegistry.registerEntityRenderingHandler(GVCEntitySoldierTank.class, new GVCRenderSoldierTankobj());
-		RenderingRegistry.registerEntityRenderingHandler(GVCEntitySoldierHeli.class, new GVCRenderSoldierHeliobj());
+//		RenderingRegistry.registerEntityRenderingHandler(GVCEntitySoldierTank.class, new GVCRenderSoldierTankobj());
+//		RenderingRegistry.registerEntityRenderingHandler(GVCEntitySoldierHeli.class, new GVCRenderSoldierHeliobj());
 		RenderingRegistry.registerEntityRenderingHandler(GVCXEntitySoldierSpawn.class, new GVCRenderSoldier());
 
 		RenderingRegistry.registerEntityRenderingHandler(EntityMGAX55.class, new GVCRenderMGM());

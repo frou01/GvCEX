@@ -29,4 +29,5 @@ public class GunTemp {
 	public int currentMgazine;
 	
 	public static TurretObj currentConnectedTurret;
+	public boolean connectedTurret;
 }

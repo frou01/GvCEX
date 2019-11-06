@@ -7,6 +7,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 
 import javax.script.Invocable;
@@ -20,7 +21,6 @@ import static handmadeguns.HandmadeGunsCore.cfg_defaultknockbacky;
 public class GunInfo {
 	
 	public final UUID field_110179_h = UUID.fromString("254F543F-8B6F-407F-931B-4B76FEB8BA0D");
-	public float turretanglelimtMxY = 0;
 	public int power;
 	public int bulletRound = 30;
 	public float speed;
@@ -69,9 +69,10 @@ public class GunInfo {
 	public Item[] magazine = new Item[1];
 	public int[] reloadTimes = new int[1];
 	public int magazineItemCount = 1;
-	public String adstexture = "handmadeguns:handmadeguns/textures/misc/ironsight";
-	public String adstexturer = "handmadeguns:handmadeguns.textures.misc.reddot";
-	public String adstextures = "handmadeguns:handmadeguns.textures.misc.scope";
+	public String adstexture = "handmadeguns:textures/misc/ironsight";
+	public String adstexturer = "handmadeguns:textures.misc.reddot";
+	public String adstextures = "handmadeguns:textures.misc.scope";
+	public ResourceLocation lockOnMarker = new ResourceLocation("handmadeguns:textures/items/lockonmarker0.png");
 	public boolean zoomren = true;
 	public boolean zoomrer = true;
 	public boolean zoomres = true;
@@ -196,6 +197,7 @@ public class GunInfo {
 	public boolean[] hasNightVision = new boolean[]{false,false,false};
 	public float turretanglelimtMxP = 0;
 	public float turretanglelimtmnP = 0;
+	public float turretanglelimtMxY = 0;
 	public float turretanglelimtmnY = 0;
 	public double torpdraft;
 	public float damagerange;

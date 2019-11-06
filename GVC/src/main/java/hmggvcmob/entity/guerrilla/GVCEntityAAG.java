@@ -1,6 +1,7 @@
 package hmggvcmob.entity.guerrilla;
 
 
+import handmadevehicle.SlowPathFinder.WorldForPathfind;
 import hmggvcutil.GVCUtils;
 import hmggvcmob.ai.AIAttackGun;
 import net.minecraft.block.Block;
@@ -18,7 +19,7 @@ public class GVCEntityAAG extends EntityGBase
     {
         super(par1World);
         this.setSize(0.4F, 1.8F);
-        this.tasks.addTask(1,aiAttackGun = new AIAttackGun(this,1200,1200,10,100,30,true));
+        this.tasks.addTask(1,aiAttackGun = new AIAttackGun(this,1200,1200,10,100,true,true,new WorldForPathfind(worldObj)));
         viewWide = 0.75f;
         spread = 0;
         canuseAlreadyPlacedGun = false;

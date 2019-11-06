@@ -20,7 +20,6 @@ public class PartsRender_Vehicle extends PartsRender {
 		float flame;
 		int remainbullets = (int) currentBaseLogic.health;
 		ArrayList<HMGGunParts> partslist_temp = partslist = (ArrayList<HMGGunParts>) data[0];
-		//todo 履帯他のために車両弾薬の設定を持ってくる。
 		for (HMGGunParts parts : partslist_temp) {
 			GunState[] states;
 			if(parts instanceof HMVVehicleParts && ((HMVVehicleParts) parts).isTurretParts){
@@ -51,7 +50,7 @@ public class PartsRender_Vehicle extends PartsRender {
 				}
 				flame = 0;
 			}
-			for (GunState state : states) {
+			breakpoint:for (GunState state : states) {
 				switch (state) {
 					case Recoil:
 						if (parts.rendering_Recoil) {
@@ -64,11 +63,13 @@ public class PartsRender_Vehicle extends PartsRender {
 								
 								PartSidentification_Vehicle(parts, state, flame, remainbullets, OffsetAndRotation);
 							}
+							break breakpoint;
 						}
 						break;
 					case ADS:
 						if (parts.rendering_Ads) {
 							PartSidentification_Vehicle(parts, state, flame, remainbullets, parts.getRenderinfOfADS());
+							break breakpoint;
 						}
 						break;
 					case Cock:
@@ -82,11 +83,11 @@ public class PartsRender_Vehicle extends PartsRender {
 								
 								PartSidentification_Vehicle(parts, state, flame, remainbullets, OffsetAndRotation);
 							}
+							break breakpoint;
 						}
 						break;
 					case Reload:
 						if (parts.rendering_Reload) {
-							HMGGunParts_Motion_PosAndRotation rotationCenterAndRotation = parts.getRenderinfCenter();
 							if (parts.hasMotionReload) {
 								HMGGunParts_Motion_PosAndRotation OffsetAndRotation = parts.getReloadmotion(flame + smooth);
 								
@@ -96,11 +97,13 @@ public class PartsRender_Vehicle extends PartsRender {
 								
 								PartSidentification_Vehicle(parts, state, flame, remainbullets, OffsetAndRotation);
 							}
+							break breakpoint;
 						}
 						break;
 					case Default:
 						if (parts.rendering_Def) {
 							PartSidentification_Vehicle(parts, state, flame, remainbullets, parts.getRenderinfDefault_offset());
+							break breakpoint;
 						}
 						break;
 				}
@@ -109,52 +112,88 @@ public class PartsRender_Vehicle extends PartsRender {
 	}
 	
 	public void PartSidentification_Vehicle(HMGGunParts parts, GunState state, float flame, int remainbullets, HMGGunParts_Motion_PosAndRotation OffsetAndRotation){
-		if(OffsetAndRotation != null) {
+		if(OffsetAndRotation != null && OffsetAndRotation.renderOnOff) {
 			part_Render(parts, state, flame, remainbullets, OffsetAndRotation);
 		}
 	}
 	public void partModel_render(HMGGunParts parts, GunState state, float flame, int remainbullets, HMGGunParts_Motion_PosAndRotation OffsetAndRotation){
 		HMGGunParts_Motion_PosAndRotation rotationCenterAndRotation = parts.getRenderinfCenter();
 		
-		if(parts instanceof HMVVehicleParts && ((HMVVehicleParts) parts).isTurretParts && parts.hasbaseYawInfo) {
-			HMGGunParts_Motion_PosAndRotation baserotationCenterAndRotation = parts.getYawInfo(-(float) currentBaseLogic.allturrets[((HMVVehicleParts) parts).linkedTurretID].turretrotationYaw);
-			if (baserotationCenterAndRotation != null) {
-				GL11.glTranslatef(baserotationCenterAndRotation.posX, baserotationCenterAndRotation.posY, baserotationCenterAndRotation.posZ);
-				GL11.glTranslatef(rotationCenterAndRotation.posX, rotationCenterAndRotation.posY, rotationCenterAndRotation.posZ);
-				GL11.glRotatef(baserotationCenterAndRotation.rotationY, 0, 1, 0);
-				GL11.glRotatef(baserotationCenterAndRotation.rotationX, 1, 0, 0);
-				GL11.glRotatef(baserotationCenterAndRotation.rotationZ, 0, 0, 1);
-				GL11.glTranslatef(-rotationCenterAndRotation.posX, -rotationCenterAndRotation.posY, -rotationCenterAndRotation.posZ);
+		if(parts instanceof HMVVehicleParts) {
+			if (((HMVVehicleParts) parts).isTurretParts && parts.hasbaseYawInfo) {
+				HMGGunParts_Motion_PosAndRotation baserotationCenterAndRotation = parts.getYawInfo(-(float) currentBaseLogic.allturrets[((HMVVehicleParts) parts).linkedTurretID].turretrotationYaw);
+				if (baserotationCenterAndRotation != null) {
+					if(!baserotationCenterAndRotation.renderOnOff)return;
+					transformParts(rotationCenterAndRotation,baserotationCenterAndRotation,parts);
+				}
 			}
-		}
-		if(parts instanceof HMVVehicleParts && ((HMVVehicleParts) parts).isTurretParts && parts.hasbasePitchInfo){
-			HMGGunParts_Motion_PosAndRotation baserotationCenterAndRotation = parts.getPitchInfo((float) currentBaseLogic.allturrets[((HMVVehicleParts) parts).linkedTurretID].turretrotationPitch);
-			if (baserotationCenterAndRotation != null) {
-				GL11.glTranslatef(baserotationCenterAndRotation.posX, baserotationCenterAndRotation.posY, baserotationCenterAndRotation.posZ);
-				GL11.glTranslatef(rotationCenterAndRotation.posX, rotationCenterAndRotation.posY, rotationCenterAndRotation.posZ);
-				GL11.glRotatef(baserotationCenterAndRotation.rotationY, 0, 1, 0);
-				GL11.glRotatef(baserotationCenterAndRotation.rotationX, 1, 0, 0);
-				GL11.glRotatef(baserotationCenterAndRotation.rotationZ, 0, 0, 1);
-				GL11.glTranslatef(-rotationCenterAndRotation.posX, -rotationCenterAndRotation.posY, -rotationCenterAndRotation.posZ);
+			if (((HMVVehicleParts) parts).isTurretParts && parts.hasbasePitchInfo) {
+				HMGGunParts_Motion_PosAndRotation baserotationCenterAndRotation = parts.getPitchInfo((float) currentBaseLogic.allturrets[((HMVVehicleParts) parts).linkedTurretID].turretrotationPitch);
+				if (baserotationCenterAndRotation != null) {
+					if(!baserotationCenterAndRotation.renderOnOff)return;
+					transformParts(rotationCenterAndRotation,baserotationCenterAndRotation,parts);
+				}
 			}
-		}
-		
-		
-		if (parts.isbullet){
-			if(state == GunState.Recoil)
-				renderParts_Bullet(parts,flame/10,remainbullets,rotationCenterAndRotation);
-			else
-				renderParts_Bullet(parts,flame,remainbullets,rotationCenterAndRotation);
-		}else
-		if (parts instanceof HMVVehicleParts && ((HMVVehicleParts) parts).isTrack){
-			renderParts_Track((HMVVehicleParts) parts,flame,remainbullets,rotationCenterAndRotation);
-		}else {
-			{
-				if(parts.reticleAndPlate){
+
+			HMGGunParts_Motion_PosAndRotation yawLadderInfo = ((HMVVehicleParts) parts).getSomethingPositions(currentBaseLogic.yawrudder,0);
+			if (yawLadderInfo != null) {
+				if(!yawLadderInfo.renderOnOff)return;
+				transformParts(rotationCenterAndRotation,yawLadderInfo,parts);
+			}
+			HMGGunParts_Motion_PosAndRotation pitchLadderInfo = ((HMVVehicleParts) parts).getSomethingPositions(currentBaseLogic.pitchrudder,1);
+			if (pitchLadderInfo != null) {
+				if(!pitchLadderInfo.renderOnOff)return;
+				transformParts(rotationCenterAndRotation,pitchLadderInfo,parts);
+			}
+			HMGGunParts_Motion_PosAndRotation rollLadderInfo = ((HMVVehicleParts) parts).getSomethingPositions(currentBaseLogic.rollrudder,2);
+			if (rollLadderInfo != null) {
+				if(!rollLadderInfo.renderOnOff)return;
+				transformParts(rotationCenterAndRotation,rollLadderInfo,parts);
+			}
+			HMGGunParts_Motion_PosAndRotation throttleInfo = ((HMVVehicleParts) parts).getSomethingPositions(currentBaseLogic.throttle,3);
+			if (throttleInfo != null) {
+				if(!throttleInfo.renderOnOff)return;
+				transformParts(rotationCenterAndRotation,throttleInfo,parts);
+			}
+			HMGGunParts_Motion_PosAndRotation yawInfo = ((HMVVehicleParts) parts).getSomethingPositions(currentBaseLogic.bodyrotationYaw,4);
+			if (yawInfo != null) {
+				if(!yawInfo.renderOnOff)return;
+				transformParts(rotationCenterAndRotation,yawInfo,parts);
+			}
+			HMGGunParts_Motion_PosAndRotation pitchInfo = ((HMVVehicleParts) parts).getSomethingPositions(currentBaseLogic.bodyrotationPitch,5);
+			if (pitchInfo != null) {
+				if(!pitchInfo.renderOnOff)return;
+				transformParts(rotationCenterAndRotation,pitchInfo,parts);
+			}
+			HMGGunParts_Motion_PosAndRotation rollInfo = ((HMVVehicleParts) parts).getSomethingPositions(currentBaseLogic.bodyrotationRoll,6);
+			if (rollInfo != null) {
+				if(!rollInfo.renderOnOff)return;
+				transformParts(rotationCenterAndRotation,rollInfo,parts);
+			}
+			HMGGunParts_Motion_PosAndRotation gearInfo = ((HMVVehicleParts) parts).getSomethingPositions(currentBaseLogic.gearprogress,7);
+			if (gearInfo != null) {
+				if(!gearInfo.renderOnOff)return;
+				transformParts(rotationCenterAndRotation,gearInfo,parts);
+			}
+			HMGGunParts_Motion_PosAndRotation flapInfo = ((HMVVehicleParts) parts).getSomethingPositions(currentBaseLogic.flaplevel,8);
+			if (flapInfo != null) {
+				if(!flapInfo.renderOnOff)return;
+				transformParts(rotationCenterAndRotation,flapInfo,parts);
+			}
+
+			if (parts.isbullet) {
+				if (state == GunState.Recoil)
+					renderParts_Bullet(parts, flame / 10, remainbullets, rotationCenterAndRotation);
+				else
+					renderParts_Bullet(parts, flame, remainbullets, rotationCenterAndRotation);
+			} else if (((HMVVehicleParts) parts).isTrack) {
+				renderParts_Track((HMVVehicleParts) parts, flame, remainbullets, rotationCenterAndRotation);
+			} else {
+				if (parts.reticleAndPlate) {
 					glClear(GL_STENCIL_BUFFER_BIT);
 					glEnable(GL_STENCIL_TEST);
 					glStencilMask(1);
-					
+
 					glStencilFunc(
 							GL_ALWAYS,   // GLenum func
 							1,          // GLint ref
@@ -182,23 +221,23 @@ public class PartsRender_Vehicle extends PartsRender {
 								true,   // GLboolean blue
 								true);
 					}
-					
+
 					GL11.glDisable(GL11.GL_LIGHTING);
 					float lastBrightnessX = OpenGlHelper.lastBrightnessX;
 					float lastBrightnessY = OpenGlHelper.lastBrightnessY;
 					OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
 					glDisable(GL_DEPTH_TEST);
-					
-					
+
+
 					glStencilFunc(
 							GL_EQUAL,   // GLenum func
 							1,          // GLint ref
 							~0);// GLuint mask
-					
+
 					glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
 					glAlphaFunc(GL_ALWAYS, 1);
 					GL11.glDepthMask(false);
-					
+
 					GL11.glDepthFunc(GL11.GL_ALWAYS);//強制描画
 					model.renderPart(parts.partsname + "reticle");
 					GL11.glDepthFunc(GL11.GL_LEQUAL);
@@ -206,14 +245,14 @@ public class PartsRender_Vehicle extends PartsRender {
 					glDisable(GL_STENCIL_TEST);
 					glEnable(GL_DEPTH_TEST);
 					GL11.glEnable(GL11.GL_LIGHTING);
-					OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)lastBrightnessX, (float)lastBrightnessY);
-					
-					if(pass == 1) {
+					OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float) lastBrightnessX, (float) lastBrightnessY);
+
+					if (pass == 1) {
 						glEnable(GL_BLEND);
 						glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 						GL11.glDepthMask(false);
 						glAlphaFunc(GL_LESS, 1);
-					}else {
+					} else {
 						GL11.glDepthMask(true);
 						glAlphaFunc(GL_EQUAL, 1);
 					}
@@ -223,7 +262,7 @@ public class PartsRender_Vehicle extends PartsRender {
 				float lastBrightnessY = OpenGlHelper.lastBrightnessY;
 				OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
 				model.renderPart(parts.partsname + "light");
-				OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)lastBrightnessX, (float)lastBrightnessY);
+				OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float) lastBrightnessX, (float) lastBrightnessY);
 			}
 		}
 	}
@@ -235,14 +274,9 @@ public class PartsRender_Vehicle extends PartsRender {
 			if(parts.isbelt){
 				for (int i = 0; (i < parts.trackPieceCount); i++) {
 					HMGGunParts_Motion_PosAndRotation trackoffset = parts.getTrackPositions(i + flame);
-					if(trackoffset != null) {
+					if(trackoffset != null && trackoffset.renderOnOff) {
 						GL11.glPushMatrix();
-						GL11.glTranslatef(trackoffset.posX, trackoffset.posY, trackoffset.posZ);
-						GL11.glTranslatef(rotationCenterAndRotation.posX, rotationCenterAndRotation.posY, rotationCenterAndRotation.posZ);
-						GL11.glRotatef(trackoffset.rotationY, 0, 1, 0);
-						GL11.glRotatef(trackoffset.rotationX, 1, 0, 0);
-						GL11.glRotatef(trackoffset.rotationZ, 0, 0, 1);
-						GL11.glTranslatef(-rotationCenterAndRotation.posX, -rotationCenterAndRotation.posY, -rotationCenterAndRotation.posZ);
+						transformParts(rotationCenterAndRotation,trackoffset,parts);
 						model.renderPart(parts.partsname);
 						float lastBrightnessX = OpenGlHelper.lastBrightnessX;
 						float lastBrightnessY = OpenGlHelper.lastBrightnessY;
@@ -254,7 +288,7 @@ public class PartsRender_Vehicle extends PartsRender {
 				}
 			}else {
 				HMGGunParts_Motion_PosAndRotation trackoffset = parts.getRenderinfOfPeraPosAndRotation();
-				if(trackoffset != null) {
+				if(trackoffset != null && trackoffset.renderOnOff) {
 					GL11.glTranslatef(trackoffset.posX * -flame, trackoffset.posY * -flame, trackoffset.posZ * -flame);
 					GL11.glTranslatef(rotationCenterAndRotation.posX, rotationCenterAndRotation.posY, rotationCenterAndRotation.posZ);
 					GL11.glRotatef(trackoffset.rotationY * -flame, 0, 1, 0);
@@ -262,12 +296,7 @@ public class PartsRender_Vehicle extends PartsRender {
 					GL11.glRotatef(trackoffset.rotationZ * -flame, 0, 0, 1);
 					GL11.glTranslatef(-rotationCenterAndRotation.posX, -rotationCenterAndRotation.posY, -rotationCenterAndRotation.posZ);
 					for (int i = 0; (i < parts.trackPieceCount); i++) {
-						GL11.glTranslatef(trackoffset.posX, trackoffset.posY, trackoffset.posZ);
-						GL11.glTranslatef(rotationCenterAndRotation.posX, rotationCenterAndRotation.posY, rotationCenterAndRotation.posZ);
-						GL11.glRotatef(trackoffset.rotationY, 0, 1, 0);
-						GL11.glRotatef(trackoffset.rotationX, 1, 0, 0);
-						GL11.glRotatef(trackoffset.rotationZ, 0, 0, 1);
-						GL11.glTranslatef(-rotationCenterAndRotation.posX, -rotationCenterAndRotation.posY, -rotationCenterAndRotation.posZ);
+						transformParts(rotationCenterAndRotation,trackoffset,parts);
 						model.renderPart(parts.partsname);
 						float lastBrightnessX = OpenGlHelper.lastBrightnessX;
 						float lastBrightnessY = OpenGlHelper.lastBrightnessY;
@@ -280,14 +309,9 @@ public class PartsRender_Vehicle extends PartsRender {
 		}else {
 			if(parts.isbelt){
 				HMGGunParts_Motion_PosAndRotation trackoffset = parts.getTrackPositions(flame);
-				if(trackoffset != null) {
+				if(trackoffset != null && trackoffset.renderOnOff) {
 					GL11.glPushMatrix();
-					GL11.glTranslatef(trackoffset.posX, trackoffset.posY, trackoffset.posZ);
-					GL11.glTranslatef(rotationCenterAndRotation.posX, rotationCenterAndRotation.posY, rotationCenterAndRotation.posZ);
-					GL11.glRotatef(trackoffset.rotationY, 0, 1, 0);
-					GL11.glRotatef(trackoffset.rotationX, 1, 0, 0);
-					GL11.glRotatef(trackoffset.rotationZ, 0, 0, 1);
-					GL11.glTranslatef(-trackoffset.posX, -trackoffset.posY, -trackoffset.posZ);
+					transformParts(rotationCenterAndRotation,trackoffset,parts);
 					model.renderPart(parts.partsname);
 					float lastBrightnessX = OpenGlHelper.lastBrightnessX;
 					float lastBrightnessY = OpenGlHelper.lastBrightnessY;
@@ -298,7 +322,7 @@ public class PartsRender_Vehicle extends PartsRender {
 				}
 			}else {
 				HMGGunParts_Motion_PosAndRotation trackoffset = parts.getRenderinfOfPeraPosAndRotation();
-				if(trackoffset != null) {
+				if(trackoffset != null && trackoffset.renderOnOff) {
 					GL11.glTranslatef(trackoffset.posX * flame, trackoffset.posY * flame, trackoffset.posZ * flame);
 					GL11.glTranslatef(rotationCenterAndRotation.posX, rotationCenterAndRotation.posY, rotationCenterAndRotation.posZ);
 					GL11.glRotatef(trackoffset.rotationY * flame, 0, 1, 0);

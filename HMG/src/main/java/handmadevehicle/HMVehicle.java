@@ -110,10 +110,10 @@ public class HMVehicle {
 		lconf.load();
 		cfgVehicleWheel_UpRange = lconf.getFloat("cfgVehicleWheel_UpRange","Wheel",1,0,50,null);
 		cfgVehicleWheel_DownRange = lconf.getFloat("cfgVehicleWheel_DownRange","Wheel",2,0,50,null);
-		cfgControl_axisXID = lconf.getInt("cfgControl_axisXID","Control",0,0,128,null);
-		cfgControl_axisYID = lconf.getInt("cfgControl_axisYID","Control",1,0,128,null);
-		cfgControl_axisZID = lconf.getInt("cfgControl_axisZID","Control",2,0,128,null);
-		cfgControl_axisZ2ID = lconf.getInt("cfgControl_axisZ2ID","Control",3,0,128,null);
+		cfgControl_axisXID = lconf.getInt("cfgControl_axisXID","Control",3,0,128,null);
+		cfgControl_axisYID = lconf.getInt("cfgControl_axisYID","Control",2,0,128,null);
+		cfgControl_axisZ2ID = lconf.getInt("cfgControl_axisZ2ID","Control",0,0,128,null);
+		cfgControl_axisZID = lconf.getInt("cfgControl_axisZID","Control",1,0,128,null);
 		lconf.save();
 	}
 	@EventHandler

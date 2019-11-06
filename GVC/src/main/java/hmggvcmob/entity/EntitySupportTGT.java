@@ -3,7 +3,6 @@ package hmggvcmob.entity;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import handmadeguns.entity.bullets.HMGEntityBulletExprode;
-import hmggvcmob.entity.friend.GVCEntitySoldierHeli;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
@@ -332,15 +331,15 @@ public class EntitySupportTGT extends Entity {
                         }
                         case 1: {
                             if (!this.worldObj.isRemote) {
-                                if (shootingEntity instanceof EntityPlayerMP)
-                                    ((EntityPlayerMP) shootingEntity).addChatComponentMessage(new ChatComponentTranslation(
-                                            "roger that! Our heli will go toward X= " + field_145791_d + ", Z = " + field_145789_f + "!"));
-                                GVCEntitySoldierHeli entityskeleton = new GVCEntitySoldierHeli(worldObj);
-                                Vec3 playersdir = Vec3.createVectorHelper(shootingEntity.posX - field_145791_d,shootingEntity.posY - field_145792_e,shootingEntity.posZ - field_145789_f);
-                                playersdir.normalize();
-                                entityskeleton.setLocationAndAngles(field_145791_d, field_145792_e + 64, field_145789_f, 0, 0.0F);
-                                entityskeleton.setthrottle(2.5f);
-                                this.worldObj.spawnEntityInWorld(entityskeleton);
+//                                if (shootingEntity instanceof EntityPlayerMP)
+//                                    ((EntityPlayerMP) shootingEntity).addChatComponentMessage(new ChatComponentTranslation(
+//                                            "roger that! Our heli will go toward X= " + field_145791_d + ", Z = " + field_145789_f + "!"));
+//                                GVCEntitySoldierHeli entityskeleton = new GVCEntitySoldierHeli(worldObj);
+//                                Vec3 playersdir = Vec3.createVectorHelper(shootingEntity.posX - field_145791_d,shootingEntity.posY - field_145792_e,shootingEntity.posZ - field_145789_f);
+//                                playersdir.normalize();
+//                                entityskeleton.setLocationAndAngles(field_145791_d, field_145792_e + 64, field_145789_f, 0, 0.0F);
+//                                entityskeleton.setthrottle(2.5f);
+//                                this.worldObj.spawnEntityInWorld(entityskeleton);
                             }
                             break;
                         }

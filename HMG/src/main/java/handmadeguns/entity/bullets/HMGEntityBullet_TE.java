@@ -7,6 +7,7 @@ import handmadeguns.HMGMessageKeyPressedC;
 import handmadeguns.HMGPacketHandler;
 import handmadeguns.HandmadeGunsCore;
 import handmadeguns.entity.IFF;
+import handmadeguns.entity.I_SPdamageHandle;
 import io.netty.buffer.ByteBuf;
 import littleMaidMobX.LMM_EntityLittleMaid;
 import littleMaidMobX.LMM_EntityLittleMaidAvatar;
@@ -122,7 +123,14 @@ public class HMGEntityBullet_TE extends HMGEntityBulletBase
 				double moXback = var1.entityHit.motionX;//�m�b�N�o�b�N�������p
 				double moYback = var1.entityHit.motionY;//���ˏオ�薳�����p
 				double moZback = var1.entityHit.motionZ;//�m�b�N�o�b�N�������p
-				if(var1.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()), (float)var2)){
+
+				boolean flag;
+				if(var1.entityHit instanceof I_SPdamageHandle){
+					flag = ((I_SPdamageHandle)var1.entityHit).attackEntityFrom_with_Info(var1,(new EntityDamageSourceIndirect("arrow", this, this.getThrower())).setProjectile(),var2);
+				}else {
+					flag = var1.entityHit.attackEntityFrom((new EntityDamageSourceIndirect("arrow", this, this.getThrower())).setProjectile(),var2);
+				}
+				if(flag){
 					var1.entityHit.motionX = moXback;
 					var1.entityHit.motionY = moYback;
 					var1.entityHit.motionZ = moZback;

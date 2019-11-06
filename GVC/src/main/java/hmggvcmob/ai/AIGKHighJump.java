@@ -20,13 +20,13 @@ public class AIGKHighJump extends EntityAIBase {
     private int forget = 0;//忘れるまで
     private Random rnd;
     private boolean fEnable = true;
-    public AIGKHighJump(EntityLiving guerrilla, IIRVING iirving, float range){
+    public AIGKHighJump(EntityLiving guerrilla, IIRVING iirving, float range,WorldForPathfind worldForPathfind){
         this.IRVING_body = guerrilla;
         IFF = (handmadeguns.entity.IFF) guerrilla;
         this.IRVING_SPdata = iirving;
         this.range = range;
         rnd = new Random();
-        worldForPathfind = new WorldForPathfind(guerrilla.worldObj);
+        this.worldForPathfind = worldForPathfind;
     }
     public boolean shouldExecute() {
         EntityLivingBase entityliving = IRVING_body.getAttackTarget();

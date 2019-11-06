@@ -2,146 +2,125 @@ package hmggvcmob.entity.friend;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import handmadeguns.entity.IFF;
+import handmadeguns.items.guns.HMGItem_Unified_Guns;
+import handmadevehicle.SlowPathFinder.WorldForPathfind;
+import handmadevehicle.entity.EntityVehicle;
+import handmadevehicle.entity.parts.ITurretUser;
+import handmadevehicle.entity.parts.IVehicle;
+import handmadevehicle.entity.parts.turrets.TurretObj;
 import hmggvcmob.IflagBattler;
 import handmadevehicle.SlowPathFinder.ModifiedPathNavigater;
+import hmggvcmob.ai.*;
+import hmggvcmob.entity.IGVCmob;
+import hmggvcmob.entity.IHasVehicleGacha;
+import hmggvcmob.entity.VehicleSpawnGachaOBJ;
+import hmggvcmob.entity.guerrilla.EntityGBase;
+import hmggvcmob.entity.guerrilla.EntityGBases;
 import hmggvcmob.tile.TileEntityFlag;
 import handmadevehicle.entity.parts.IhasprevRidingEntity;
+import littleMaidMobX.LMM_EntityLittleMaid;
 import net.minecraft.block.Block;
 import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.*;
+import net.minecraft.entity.ai.*;
+import net.minecraft.entity.monster.EntityMob;
+import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.passive.EntityHorse;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.pathfinding.PathNavigate;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
+import java.util.List;
+
+import static handmadeguns.HandmadeGunsCore.islmmloaded;
 import static handmadeguns.Util.Utils.getmovingobjectPosition_forBlock;
+import static handmadevehicle.entity.EntityVehicle.EntityVehicle_spawnByMob;
 import static hmggvcmob.GVCMobPlus.fn_PMCflag;
 import static hmggvcmob.GVCMobPlus.fn_Supplyflag;
 import static java.lang.Math.abs;
 
-public class EntitySoBases extends EntityCreature implements INpc , IflagBattler , IhasprevRidingEntity {
+public class EntitySoBases extends EntityCreature implements INpc , IflagBattler , IhasprevRidingEntity ,  IFF, IGVCmob, ITurretUser {
 	public Entity prevRidingEntity;
-	private static final IEntitySelector horseBreedingSelector = new IEntitySelector()
-	{
-		private static final String __OBFID = "CL_00001642";
-		/**
-		 * Return whether the specified entity is applicable to this filter.
-		 */
-		public boolean isEntityApplicable(Entity p_82704_1_)
-		{
-			return p_82704_1_ instanceof EntityHorse && ((EntityHorse)p_82704_1_).func_110205_ce();
-		}
-	};
-	public boolean zoom = true;
-	public float roo;
-	public int deathTicks;
-	public EntityLivingBase fri;
+	public String summoningVehicle = null;//nullは無し。自然湧きはLivingSpawnEvent.SpecialSpawnで設定する
+	//特殊事情で（ダンジョンとかで）自由な役職の兵士を載せたいときのためにフィールドは残しておこう
 	
-	public boolean vehicle = false;
-	public boolean opentop = true;
-
-
-	public boolean server1 = false;
-	public boolean server2 = false;
-	public boolean serverspace = false;
-	public boolean serverx = false;
-	public boolean serverw = false;
-	public boolean servers = false;
-	public boolean servera = false;
-	public boolean serverd = false;
-	public boolean serverf = false;
-	
-	
-	
-	public double thpower;
-	public float th;
-	public double thpera = 0;
-	public float throte = 0;
-	
-	public int soundtick = 0;
-	
-	public float overlayhight = 1.0F;
-	public float overlayhight_3 = 1.0F;
-
-	public int ammo_2;
-	public int cooltime_2;
-	public int cooltime_3;
-	public int cooltime_4;
-	public boolean combattask_2 = false;
-	public boolean combattask_4 = false;
-	public boolean onstarting = false;
-	public boolean onstopping = false;
-	public boolean isstanding = false;
 	public int flagx;
 	public int flagy;
 	public int flagz;
 	private ModifiedPathNavigater modifiedPathNavigater;
+	WorldForPathfind worldForPathfind;
 	
+	public float viewWide = 1.14f;
+	public int deathTicks;
+	public double movespeed = 0.3d;
+	public float spread = 2;
+	public double rndyaw;
+	public double rndpitch;
+	public int type = 0;
+	public EntityAISwimming aiSwimming;
+	AIAttackGun aiAttackGun;
+	public static int spawnedcount;
+	public TileEntity spawnedtile = null;
+	public boolean isridingVehicle;
 	public EntitySoBases(World par1World) {
 		super(par1World);
 		renderDistanceWeight = 16384;
-		this.modifiedPathNavigater = new ModifiedPathNavigater(this, worldObj);
+		this.worldForPathfind = new WorldForPathfind(worldObj);
+		this.modifiedPathNavigater = new ModifiedPathNavigater(this, worldObj,worldForPathfind);
+		
+		this.getNavigator().setBreakDoors(true);
+		aiSwimming = new EntityAISwimming(this);
+		this.tasks.addTask(0, aiSwimming);
+		this.tasks.addTask(3, new AIattackOnCollide(this, EntityLiving.class, 1.0D, true));
+		this.tasks.addTask(3, new AIattackOnCollide(this, EntityGBases.class, 1.0D, true));
+		this.tasks.addTask(3, new AIAttackFlag(this,(IflagBattler) this,worldForPathfind));
+		this.tasks.addTask(5, new EntityAIRestrictOpenDoor(this));
+		this.tasks.addTask(6, new EntityAIOpenDoor(this, true));
+		this.tasks.addTask(7, new EntityAIMoveTowardsRestriction(this, 1.0D));
+		//こっから先は待機時（？）
+		this.tasks.addTask(8, new EntityAIWander(this, 1.0D));
+		this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
+		this.tasks.addTask(8, new EntityAILookIdle(this));
+		//ターゲティング
+		this.targetTasks.addTask(1, new AIHurtByTarget(this, true));
+		this.targetTasks.addTask(2, new AINearestAttackableTarget(this, EntityGBase.class, 0, true));
+		this.targetTasks.addTask(3, new AINearestAttackableTarget(this, EntityLiving.class, 0, true, false, IMob.mobSelector));
+		this.targetTasks.addTask(4, new AITargetFlag(this,this,this));
+		
 	}
-	public PathNavigate getNavigator()
-	{
-		return this.modifiedPathNavigater;
-	}
-	protected void updateAITasks()
-	{
-		super.updateAITasks();
-		modifiedPathNavigater.onUpdateNavigation();
+	protected void entityInit() {
+		super.entityInit();
+		this.dataWatcher.addObject(22, new Integer((int)0));
 	}
 	
-	/**
-     * (abstract) Protected helper method to read subclass entity data from NBT.
-     */
+	public void setMobMode(int integer) {
+		this.dataWatcher.updateObject(22, Integer.valueOf(integer));
+	}
+	public int getMobMode() {
+		return this.dataWatcher.getWatchableObjectInt(22);
+	}
+	
     public void readEntityFromNBT(NBTTagCompound p_70037_1_)
     {
         super.readEntityFromNBT(p_70037_1_);
         
         setMobMode(p_70037_1_.getInteger("MobMode"));
     }
-	/**
-     * (abstract) Protected helper method to write subclass entity data to NBT.
-     */
     public void writeEntityToNBT(NBTTagCompound p_70014_1_)
     {
         super.writeEntityToNBT(p_70014_1_);
-	    if(ridingEntity instanceof ImultiRidable)ridingEntity = null;
+	    spawnedcount--;
+//	    if(ridingEntity instanceof ImultiRidable)ridingEntity = null;
         
         p_70014_1_.setInteger("MobMode", getMobMode());
     }
-    protected void entityInit() {
-		super.entityInit();
-		this.dataWatcher.addObject(22, new Integer((int)0));
-    }
-
-    public void setMobMode(int integer) {
-    	this.dataWatcher.updateObject(22, Integer.valueOf(integer));
-	}
-    public int getMobMode() {
-    	return this.dataWatcher.getWatchableObjectInt(22);
-	}
-
-
-    
-    public boolean CanAttack(Entity entity){
-    	return false;
-    }
-
-    
-    protected int deadtime;
 	
-    
-    
-    
-    
-    
-    
-    
     public IEntityLivingData onSpawnWithEgg(IEntityLivingData par1EntityLivingData)
     {
         par1EntityLivingData = super.onSpawnWithEgg(par1EntityLivingData);
@@ -161,41 +140,29 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
     {
         return super.getBrightnessForRender(par1);
     }
-
-    /**
-     * Gets how bright this entity is.
-     */
-    /*public float getBrightness(float par1)
-    {
-        return 1.0F;
-    }*/
     
-    
-    
+	public void setDead(){
+		super.setDead();
+		spawnedcount--;
+		if(spawnedtile != null && spawnedtile instanceof TileEntityFlag)((TileEntityFlag) spawnedtile).spawnedEntities.remove(this);
+	}
     public boolean canAttackClass(Class par1Class)
     {
         return EntityCreature.class != par1Class;
     }
 
-    /**
-     * Returns the sound this mob makes when it is hurt.
-     */
     protected String getHurtSound()
     {
-        return "mob.irongolem.hit";
+        return "gvcmob:gvcmob.pmcHurt";
     }
 
-    /**
-     * Returns the sound this mob makes on death.
-     */
     protected String getDeathSound()
     {
-        return "mob.irongolem.death";
+	    return "gvcmob:gvcmob.pmcDeath";
     }
 
-    protected void func_145780_a(int p_145780_1_, int p_145780_2_, int p_145780_3_, Block p_145780_4_)
-    {
-        this.playSound("mob.irongolem.walk", 1F, 1.0F);
+    protected void func_145780_a(int p_145780_1_, int p_145780_2_, int p_145780_3_, Block p_145780_4_) {
+        this.playSound("gvcmob:gvcmob.pmcWalk", 1F, 1.0F);
     }
     
     protected boolean canDespawn()
@@ -203,9 +170,6 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
         return false;
     }
     
-    /**
-     * Returns true if the newer Entity AI code should be run
-     */
     public boolean isAIEnabled()
     {
         return true;
@@ -218,21 +182,12 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
 	public void addRandomArmor() {
 	}
 
-	
-
-	public boolean isConverting() {
-		return false;
-	}
-
-	public static float getMobScale() {
-		return 8;
-	}
-
 
 	@Override
 	public Block getFlag() {
 		return fn_PMCflag;
 	}
+	
 	public boolean isCreatureType(EnumCreatureType type, boolean forSpawnCount)
 	{
 		return type.getCreatureClass() == EntitySoBases.class;
@@ -265,9 +220,7 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
 		}
 		return !((this.isInWater() || p_70685_1_.isInWater()) && getDistanceSqToEntity(p_70685_1_) > 256);
 	}
-	/**
-	 * returns a (normalized) vector of where this entity is looking
-	 */
+	
 	public Vec3 getLookVec()
 	{
 		return this.getLook(1.0F);
@@ -302,19 +255,84 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
 			return Vec3.createVectorHelper((double)(f4 * f5), (double)f6, (double)(f3 * f5));
 		}
 	}
+	
 	public void onUpdate() {
+		if(summoningVehicle != null) {
+
+			int var12 = MathHelper.floor_double((double) (this.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+			System.out.println(summoningVehicle);
+			EntityVehicle bespawningEntity = EntityVehicle_spawnByMob(worldObj,summoningVehicle);
+			bespawningEntity.setLocationAndAngles(this.posX, this.posY, this.posZ, var12 , 0.0F);
+			if(bespawningEntity.checkObstacle()) {
+				worldObj.spawnEntityInWorld(bespawningEntity);
+				if(bespawningEntity.pickupEntity(this,0)) {
+					this.tasks.addTask(0, new AIAttackByTank(this, bespawningEntity, worldForPathfind, this));
+					this.tasks.addTask(1, new AIDriveTank(this, bespawningEntity, worldForPathfind));
+					isridingVehicle = true;
+				}
+			}
+			summoningVehicle = null;
+		}
 		if(this.getAttackTarget() != null && this.getAttackTarget().isDead)this.setAttackTarget(null);
 		super.onUpdate();
-		if(this.ridingEntity != getprevRidingEntity() && getprevRidingEntity() != null){
-			if(!getprevRidingEntity().isDead && getprevRidingEntity() instanceof ImultiRidable && ((ImultiRidable) getprevRidingEntity()).isRidingEntity(this)){
-				this.ridingEntity = getprevRidingEntity();
+		if(this.getAttackTarget() != null && (this.getAttackTarget() instanceof EntitySoBases || this.getAttackTarget() instanceof EntityPlayer || (islmmloaded && this.getAttackTarget() instanceof LMM_EntityLittleMaid)))this.setAttackTarget(null);
+		if(this.getHeldItem() != null) {
+			if(this.getHeldItem().hasTagCompound()){
+				if(this.getHeldItem().getItem() instanceof HMGItem_Unified_Guns)((HMGItem_Unified_Guns)this.getHeldItem().getItem()).checkTags(this.getHeldItem());
+			}
+			if(!worldObj.isRemote)
+				if (this.getEntityData().getBoolean("HMGisUsingItem")) {
+					this.setSneaking(true);
+				} else {
+					this.setSneaking(false);
+				}
+			float backRP = rotationPitch;
+			float backRY = rotationYaw;
+			if (this.rand.nextInt(5) == 0) {
+				rndyaw = this.rand.nextGaussian() * (double) (this.rand.nextBoolean() ? -1 : 1) * spread;
+				rndpitch = this.rand.nextGaussian() * (double) (this.rand.nextBoolean() ? -1 : 1) * spread;
+			}
+			this.rotationPitch += rndyaw;
+			this.rotationYaw += rndpitch;
+			this.getHeldItem().getItem().onUpdate(this.getHeldItem(), worldObj, this, 0, true);
+			rotationPitch = backRP;
+			rotationYaw = backRY;
+			if (this.getEntityData().getBoolean("HMGisUsingItem")) {
+				this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(movespeed / 4);
+			} else {
+				this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(movespeed);
 			}
 		}
-		if(ridingEntity != null && !ridingEntity.isDead && ridingEntity instanceof ImultiRidable && ((ImultiRidable)ridingEntity).isRidingEntity(this))this.ridingEntity.updateRiderPosition();
+		this.getEntityData().setBoolean("HMGisUsingItem",false);
 	}
+	
+	public void onLivingUpdate()
+	{
+		this.updateArmSwingProgress();
+		float f = this.getBrightness(1.0F);
+		
+		if (f > 0.5F)
+		{
+			this.entityAge += 2;
+		}
+		
+		super.onLivingUpdate();
+	}
+	
+	public PathNavigate getNavigator()
+	{
+		return this.modifiedPathNavigater;
+	}
+	protected void updateAITasks()
+	{
+		super.updateAITasks();
+		modifiedPathNavigater.onUpdateNavigation();
+	}
+	
 	public void dismountEntity(Entity p_110145_1_)
 	{
 	}
+	
 	@Override
 	public void mountEntity(Entity p_70078_1_)
 	{
@@ -350,11 +368,38 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
 			p_70078_1_.riddenByEntity = this;
 		}
 	}
+
+    protected void collideWithNearbyEntities()
+    {
+        List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox.expand(0.20000000298023224D, 0.0D, 0.20000000298023224D));
+
+        if (list != null && !list.isEmpty())
+        {
+            for (int i = 0; i < list.size(); ++i)
+            {
+                Entity entity = (Entity)list.get(i);
+
+                if (entity.canBePushed())
+                {
+                    this.collideWithEntity(entity);
+                }
+                if(!isridingVehicle && !entity.isDead && !worldObj.isRemote && entity instanceof EntityVehicle && ((EntityVehicle) entity).canUseByMob) {
+                    Entity pilot = ((EntityVehicle) entity).getBaseLogic().getRiddenEntityList()[((EntityVehicle) entity).getpilotseatid()];
+                    if((pilot == null || is_this_entity_friend(pilot))&&!((EntityVehicle) entity).getBaseLogic().isRidingEntity(this)){
+						if(((EntityVehicle) entity).pickupEntity(this,0)) {
+							isridingVehicle = true;
+							this.tasks.addTask(0, new AIAttackByTank(this, ((EntityVehicle) entity), worldForPathfind, this));
+							this.tasks.addTask(1, new AIDriveTank(this, ((EntityVehicle) entity), worldForPathfind));
+						}
+					}
+                }
+            }
+        }
+    }
 	
 	public void applyEntityCollision(Entity p_70108_1_)
 	{
 		boolean flag = p_70108_1_.riddenByEntity != this && p_70108_1_.ridingEntity != this;
-		flag &= !(p_70108_1_ instanceof ImultiRidable) || !((ImultiRidable) p_70108_1_).isRidingEntity(this);
 		if (flag)
 		{
 			double d0 = p_70108_1_.posX - this.posX;
@@ -384,6 +429,7 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
 			}
 		}
 	}
+	
 	public void moveFlying(float p_70060_1_, float p_70060_2_, float p_70060_3_)
 	{
 		float f3 = p_70060_1_ * p_70060_1_ + p_70060_2_ * p_70060_2_;
@@ -426,4 +472,82 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
 	public Entity getprevRidingEntity() {
 		return prevRidingEntity;
 	}
+
+    public void setVehicleName(String string) {
+        summoningVehicle = string;
+    }
+
+    @Override
+	public boolean is_this_entity_friend(Entity entity) {
+		if(entity instanceof EntityPlayer){
+			return true;
+		}else if(entity instanceof EntitySoBases) {
+			return true;
+		}else if(islmmloaded && entity instanceof LMM_EntityLittleMaid){
+			return true;
+		}
+		return false;
+	}
+	
+	@Override
+	public float getviewWide() {
+		return viewWide;
+	}
+	@Override
+	public boolean canSeeTarget(Entity target) {
+		boolean flag;
+		flag = canhearsound(target);
+		if (!flag) {
+			Vec3 lookVec = getLookVec();
+			Vec3 toTGTvec = Vec3.createVectorHelper(target.posX - posX, target.posY + target.getEyeHeight() - (posY + getEyeHeight()), target.posZ - posZ);
+			toTGTvec = toTGTvec.normalize();
+			return lookVec.squareDistanceTo(toTGTvec) < getviewWide() * 1.2f;
+		}else
+			return true;
+	}
+	
+	@Override
+	public boolean canhearsound(Entity target) {
+		boolean flag;
+		double dist = getDistanceToEntity(target);
+		flag = dist < target.getEntityData().getFloat("GunshotLevel") * 14;
+		return flag;
+	}
+	@Override
+	public void setspawnedtile(TileEntity flag) {
+		spawnedtile = flag;
+	}
+
+	public int seatID;
+	public TurretObj currentMainTurret;
+	public TurretObj currentSubTurret;
+    @Override
+    public void setSeatID(int id) {
+        seatID = id;
+    }
+
+    @Override
+    public void setTurretMain(TurretObj turret) {
+        currentMainTurret = turret;
+    }
+
+    @Override
+    public void setTurretSub(TurretObj turret) {
+        currentSubTurret = turret;
+    }
+
+    @Override
+    public int getSeatID() {
+        return seatID;
+    }
+
+    @Override
+    public TurretObj getTurretMain() {
+        return currentMainTurret;
+    }
+
+    @Override
+    public TurretObj getTurretSub() {
+        return currentSubTurret;
+    }
 }

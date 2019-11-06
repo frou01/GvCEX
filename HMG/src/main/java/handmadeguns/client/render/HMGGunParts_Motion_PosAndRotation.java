@@ -1,6 +1,7 @@
 package handmadeguns.client.render;
 
 import javax.vecmath.Vector3d;
+import javax.vecmath.Vector3f;
 
 public class HMGGunParts_Motion_PosAndRotation {
     public float rotationX;
@@ -9,12 +10,13 @@ public class HMGGunParts_Motion_PosAndRotation {
     public float posX;
     public float posY;
     public float posZ;
-    public Vector3d rotateVec;
+    public boolean renderOnOff = true;
+    public Vector3f rotateVec;
     public HMGGunParts_Motion_PosAndRotation(float centerX,float centerY,float centerZ,float VectorX,float VectorY,float VectorZ,float rotationAmount){
         this.posX      =centerX;
         this.posY      =centerY;
         this.posZ      =centerZ;
-        this.rotateVec = new Vector3d(VectorX,VectorY,VectorZ);
+        this.rotateVec = new Vector3f(VectorX,VectorY,VectorZ);
         this.rotationX = rotationAmount;
     }
     public HMGGunParts_Motion_PosAndRotation(float offsetX,float offsetY,float offsetZ,float rotationX,float rotationY,float rotationZ){

@@ -1,4 +1,0 @@
-NAME,GVC_SmallTrench
-BiomeRestriction,true,0,7,16,26
-Frequency,0.1
-Interval,3

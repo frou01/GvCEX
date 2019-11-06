@@ -44,14 +44,6 @@ public class GVCItemPMCDefSetter extends Item {
                 for (int i = 0; i < list.size(); ++i) {
                     if(mode == 0) {
                         Entity PMC = (Entity) list.get(i);
-                        if (PMC instanceof GVCEntityPMCT90Tank || PMC instanceof GVCEntityPMCTank) {
-                            entityPlayer.addChatComponentMessage(new ChatComponentTranslation(
-                                    "Defense  " + x + "," + z + "!"));
-                            ((EntityPMCBase) PMC).setMobMode(2);
-                            ((EntityPMCBase) PMC).homeposX = x;
-                            ((EntityPMCBase) PMC).homeposY = y;
-                            ((EntityPMCBase) PMC).homeposZ = z;
-                        }
                         if (PMC instanceof EntityPMCBase) {
                             entityPlayer.addChatComponentMessage(new ChatComponentTranslation(
                                     "Defense  " + x + "," + z + "!"));
@@ -63,14 +55,6 @@ public class GVCItemPMCDefSetter extends Item {
                         }
                     }else {
                         Entity PMC = (Entity) list.get(i);
-                        if (PMC instanceof GVCEntityPMCT90Tank || PMC instanceof GVCEntityPMCTank) {
-                            entityPlayer.addChatComponentMessage(new ChatComponentTranslation(
-                                    "I'll Follow Leader!"));
-                            ((EntityPMCBase) PMC).setMobMode(2);
-                            ((EntityPMCBase) PMC).homeposX = (int) entityPlayer.posX;
-                            ((EntityPMCBase) PMC).homeposY = (int) entityPlayer.posY;
-                            ((EntityPMCBase) PMC).homeposZ = (int) entityPlayer.posZ;
-                        }
                         if (PMC instanceof EntityPMCBase) {
                             entityPlayer.addChatComponentMessage(new ChatComponentTranslation(
                                     "I'll Follow Leader!"));
