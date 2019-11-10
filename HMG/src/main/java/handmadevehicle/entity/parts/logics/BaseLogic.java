@@ -1,6 +1,8 @@
 package handmadevehicle.entity.parts.logics;
 
 import cpw.mods.fml.client.FMLClientHandler;
+import handmadevehicle.entity.EntityDummy_rider;
+import handmadevehicle.entity.EntityVehicle;
 import handmadevehicle.network.HMVPacketHandler;
 import handmadevehicle.Utils;
 import handmadevehicle.entity.EntityCameraDummy;
@@ -15,9 +17,9 @@ import net.minecraft.block.material.Material;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.crash.CrashReportCategory;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -35,6 +37,7 @@ import java.util.List;
 import java.util.Random;
 
 import static handmadeguns.HandmadeGunsCore.HMG_proxy;
+import static handmadeguns.Util.Utils.isCollidableBlock;
 import static handmadevehicle.HMVehicle.HMV_Proxy;
 import static handmadevehicle.HMVehicle.cfgVehicleWheel_DownRange;
 import static handmadevehicle.HMVehicle.cfgVehicleWheel_UpRange;
@@ -78,9 +81,12 @@ public class BaseLogic implements IbaseLogic,IneedMouseTrack,MultiRiderLogics {
 	public float current_Draft = 5;
 	public float current_floater;
 
-	Entity mc_Entity;
-	IVehicle iVehicle;
-	World worldObj;
+	public Entity mc_Entity;
+	public IVehicle iVehicle;
+	public World worldObj;
+
+	public Vector3d localMotionVec = new Vector3d();
+
 	public void moveEntity(double p_70091_1_, double p_70091_3_, double p_70091_5_)
 	{
 		if (mc_Entity.noClip)
@@ -431,144 +437,33 @@ public class BaseLogic implements IbaseLogic,IneedMouseTrack,MultiRiderLogics {
 		int destroy_counterx = 0;
 		int destroy_countery = 0;
 		int destroy_counterz = 0;
-		
-		for (int x = (int) boundingBox.minX; x <= boundingBox.maxX; x++) {
-			for (int y = (int) boundingBox.minY; y <= boundingBox.maxY + 1; y++) {
-				for (int z = (int) boundingBox.minZ; z <= boundingBox.maxZ; z++) {
-					Block collidingblock = worldObj.getBlock(x, y, z);
-					if (sqrt(mc_Entity.motionX * mc_Entity.motionX +mc_Entity.motionY *mc_Entity.motionY +mc_Entity.motionZ *mc_Entity.motionZ) > collidingblock.getBlockHardness(null, 0, 0, 0)/2 || is_forceBrakeBrock(collidingblock)) {
-						if(!worldObj.isAirBlock(x, y, z)){
-							worldObj.setBlockToAir(x,y,z);
-							mc_Entity.worldObj.playAuxSFX(2001, x,y,z, Block.getIdFromBlock(collidingblock));
-							destroy_counterx++;
-							destroy_countery++;
-							destroy_counterz++;
-						}
-					}
-				}
+
+		for (int x = (int) boundingBox.minX; x <= boundingBox.maxX; x++) for (int y = (int) boundingBox.minY; y <= boundingBox.maxY + 1; y++) for (int z = (int) boundingBox.minZ; z <= boundingBox.maxZ; z++) {
+			Block collidingblock = worldObj.getBlock(x, y, z);
+			if ((sqrt(mc_Entity.motionX * mc_Entity.motionX + mc_Entity.motionZ *mc_Entity.motionZ + mc_Entity.motionY *mc_Entity.motionY) > collidingblock.getBlockHardness(null, 0, 0, 0)/2
+					||
+					is_forceBrakeBrock(collidingblock)) &&
+					isCollidableBlock(worldObj.getBlock(x, y, z))){
+				worldObj.setBlockToAir(x,y,z);
+				mc_Entity.worldObj.playAuxSFX(2001, x, y, z, Block.getIdFromBlock(collidingblock) + (worldObj.getBlockMetadata(x, y, z) << 12));
+				destroy_counterx++;
+				destroy_countery++;
+				destroy_counterz++;
 			}
 		}
-		for (int x = (int) boundingBox.maxX; x <= boundingBox.maxX + 2; x++) {
-			for (int y = (int) boundingBox.minY+1; y <= boundingBox.maxY; y++) {
-				for (int z = (int) boundingBox.minZ; z <= boundingBox.maxZ; z++) {
-					Block collidingblock = worldObj.getBlock(x, y, z);
-					if (abs(mc_Entity.motionX) > collidingblock.getBlockHardness(null, 0, 0, 0)/2 || is_forceBrakeBrock(collidingblock)) {
-						if(!worldObj.isAirBlock(x, y, z)) {
-							worldObj.setBlockToAir(x,y,z);
-							mc_Entity.worldObj.playAuxSFX(2001, x,y,z, Block.getIdFromBlock(collidingblock));
-							destroy_counterx++;
-						}
-					}
-				}
+		for (int x = (int) boundingBox.minX - 1; x <= boundingBox.maxX + 1; x++) for (int y = (int) boundingBox.minY+1; y <= boundingBox.maxY + 1; y++) for (int z = (int) boundingBox.minZ - 1; z <= boundingBox.maxZ + 1; z++) {
+			Block collidingblock = worldObj.getBlock(x, y, z);
+			if ((sqrt(mc_Entity.motionX * mc_Entity.motionX + mc_Entity.motionZ * mc_Entity.motionZ + mc_Entity.motionY * mc_Entity.motionY) > collidingblock.getBlockHardness(null, 0, 0, 0) / 2
+					||
+					is_forceBrakeBrock(collidingblock)) &&
+					isCollidableBlock(worldObj.getBlock(x, y, z))) {
+				worldObj.setBlockToAir(x, y, z);
+				mc_Entity.worldObj.playAuxSFX(2001, x, y, z, Block.getIdFromBlock(collidingblock) + (worldObj.getBlockMetadata(x, y, z) << 12));
+				destroy_counterx++;
+				destroy_counterz++;
 			}
 		}
-		for (int x = (int) boundingBox.minX - 2; x <= boundingBox.minX; x++) {
-			for (int y = (int) boundingBox.minY+1; y <= boundingBox.maxY; y++) {
-				for (int z = (int) boundingBox.minZ; z <= boundingBox.maxZ; z++) {
-					Block collidingblock = worldObj.getBlock(x, y, z);
-					if (abs(mc_Entity.motionX) > collidingblock.getBlockHardness(null, 0, 0, 0)/2 || is_forceBrakeBrock(collidingblock)) {
-						if(!worldObj.isAirBlock(x, y, z)){
-							worldObj.setBlockToAir(x,y,z);
-							mc_Entity.worldObj.playAuxSFX(2001, x,y,z, Block.getIdFromBlock(collidingblock));
-							destroy_counterx++;
-						}
-					}
-				}
-			}
-		}
-		for (int x = (int) boundingBox.minX; x <= boundingBox.maxX; x++) {
-			for (int y = (int) boundingBox.minY+1; y <= boundingBox.maxY; y++) {
-				for (int z = (int) boundingBox.maxZ; z <= boundingBox.maxZ + 2; z++) {
-					Block collidingblock = worldObj.getBlock(x, y, z);
-					if (abs(mc_Entity.motionZ) > collidingblock.getBlockHardness(null, 0, 0, 0)/2 || is_forceBrakeBrock(collidingblock)) {
-						if(!worldObj.isAirBlock(x, y, z)){
-							worldObj.setBlockToAir(x,y,z);
-							mc_Entity.worldObj.playAuxSFX(2001, x,y,z, Block.getIdFromBlock(collidingblock));
-							destroy_counterz++;
-						}
-					}
-				}
-			}
-		}
-		for (int x = (int) boundingBox.minX; x <= boundingBox.maxX; x++) {
-			for (int y = (int) boundingBox.minY+1; y <= boundingBox.maxY; y++) {
-				for (int z = (int) boundingBox.minZ - 2; z <= boundingBox.minZ; z++) {
-					Block collidingblock = worldObj.getBlock(x, y, z);
-					if (abs(mc_Entity.motionZ) > collidingblock.getBlockHardness(null, 0, 0, 0)/2 || is_forceBrakeBrock(collidingblock)) {
-						if(!worldObj.isAirBlock(x, y, z)){
-							worldObj.setBlockToAir(x,y,z);
-							mc_Entity.worldObj.playAuxSFX(2001, x,y,z, Block.getIdFromBlock(collidingblock));
-							destroy_counterz++;
-						}
-					}
-				}
-			}
-		}
-		
-		
-		for (int x = (int) boundingBox.maxX; x <= boundingBox.maxX + 2; x++) {
-			for (int y = (int) boundingBox.minY+1; y <= boundingBox.maxY; y++) {
-				for (int z = (int) boundingBox.maxZ; z <= boundingBox.maxZ + 2; z++) {
-					Block collidingblock = worldObj.getBlock(x, y, z);
-					if (sqrt(mc_Entity.motionX * mc_Entity.motionX +mc_Entity.motionZ *mc_Entity.motionZ) > collidingblock.getBlockHardness(null, 0, 0, 0)/2 || is_forceBrakeBrock(collidingblock)) {
-						if(!worldObj.isAirBlock(x, y, z)){
-							worldObj.setBlockToAir(x,y,z);
-							mc_Entity.worldObj.playAuxSFX(2001, x,y,z, Block.getIdFromBlock(collidingblock));
-							destroy_counterx++;
-							destroy_counterz++;
-						}
-					}
-				}
-			}
-		}
-		for (int x = (int) boundingBox.minX - 2; x <= boundingBox.minX; x++) {
-			for (int y = (int) boundingBox.minY+1; y <= boundingBox.maxY; y++) {
-				for (int z = (int) boundingBox.minZ - 2; z <= boundingBox.minZ; z++) {
-					Block collidingblock = worldObj.getBlock(x, y, z);
-					if (sqrt(mc_Entity.motionX * mc_Entity.motionX +mc_Entity.motionZ *mc_Entity.motionZ) > collidingblock.getBlockHardness(null, 0, 0, 0)/2 || is_forceBrakeBrock(collidingblock)) {
-						if(!worldObj.isAirBlock(x, y, z)){
-							worldObj.setBlockToAir(x,y,z);
-							mc_Entity.worldObj.playAuxSFX(2001, x,y,z, Block.getIdFromBlock(collidingblock));
-							destroy_counterx++;
-							destroy_counterz++;
-						}
-					}
-				}
-			}
-		}
-		
-		for (int x = (int) boundingBox.maxX; x <= boundingBox.maxX + 2; x++) {
-			for (int y = (int) boundingBox.minY+1; y <= boundingBox.maxY; y++) {
-				for (int z = (int) boundingBox.maxZ; z <= boundingBox.maxZ + 2; z++) {
-					Block collidingblock = worldObj.getBlock(x, y, z);
-					if (sqrt(mc_Entity.motionX * mc_Entity.motionX +mc_Entity.motionZ *mc_Entity.motionZ) > collidingblock.getBlockHardness(null, 0, 0, 0)/2 || is_forceBrakeBrock(collidingblock)) {
-						if(!worldObj.isAirBlock(x, y, z)){
-							worldObj.setBlockToAir(x,y,z);
-							mc_Entity.worldObj.playAuxSFX(2001, x,y,z, Block.getIdFromBlock(collidingblock));
-							destroy_counterx++;
-							destroy_counterz++;
-						}
-					}
-				}
-			}
-		}
-		for (int x = (int) boundingBox.minX - 2; x <= boundingBox.minX; x++) {
-			for (int y = (int) boundingBox.minY+1; y <= boundingBox.maxY; y++) {
-				for (int z = (int) boundingBox.minZ - 2; z <= boundingBox.minZ; z++) {
-					Block collidingblock = worldObj.getBlock(x, y, z);
-					if (sqrt(mc_Entity.motionX * mc_Entity.motionX +mc_Entity.motionZ *mc_Entity.motionZ) > collidingblock.getBlockHardness(null, 0, 0, 0)/2 || is_forceBrakeBrock(collidingblock)) {
-						if(!worldObj.isAirBlock(x, y, z)){
-							worldObj.setBlockToAir(x,y,z);
-							mc_Entity.worldObj.playAuxSFX(2001, x,y,z, Block.getIdFromBlock(collidingblock));
-							destroy_counterx++;
-							destroy_counterz++;
-						}
-					}
-				}
-			}
-		}
-		
-		
+
 		for(int temp= 0;temp < destroy_counterx;temp ++ ){
 			mc_Entity.motionX *= 0.95;
 		}
@@ -644,15 +539,32 @@ public class BaseLogic implements IbaseLogic,IneedMouseTrack,MultiRiderLogics {
 			if (entity != null) {
 				if((mc_Entity.worldObj.isRemote && entity == HMV_Proxy.getEntityPlayerInstance())) {
 					HMV_Proxy.setPlayerSeatID(cnt);
-					if( entity.isSneaking())
-					HMVPacketHandler.INSTANCE.sendToServer(new HMVPacketDisMountEntity(mc_Entity.getEntityId(),entity.getEntityId()));
-				}else
-				if(!mc_Entity.worldObj.isRemote && entity.isDead){
-//						System.out.println("debug");
-					riddenByEntities[cnt] = null;
-					entity.ridingEntity = null;
-				}else {
 					entity.ridingEntity = mc_Entity;
+					if(HMV_Proxy.isSneaking())
+						HMVPacketHandler.INSTANCE.sendToServer(new HMVPacketDisMountEntity(mc_Entity.getEntityId(),entity.getEntityId()));
+				}else
+				if(!mc_Entity.worldObj.isRemote) {
+					if (entity.isDead) {
+//						System.out.println("debug");
+						if(entity.ridingEntity != null)entity.ridingEntity.setDead();
+						riddenByEntities[cnt] = null;
+						entity.ridingEntity = null;
+					} else {
+						if(entity.ridingEntity instanceof EntityDummy_rider){
+							entity.ridingEntity.rotationYaw = entity.getRotationYawHead();
+							entity.rotationYaw = entity.getRotationYawHead();
+						}else {
+							entity.ridingEntity = new EntityDummy_rider(worldObj, this,cnt);
+							entity.ridingEntity.riddenByEntity = entity;
+						}
+					}
+				}else{
+					entity.rotationYaw = entity.getRotationYawHead();
+					if (entity.isDead) {
+//						System.out.println("debug");
+						riddenByEntities[cnt] = null;
+						entity.ridingEntity = null;
+					}else entity.ridingEntity = mc_Entity;
 				}
 				HMVPacketHandler.INSTANCE.sendToAll(new HMVPacketPickNewEntity(mc_Entity.getEntityId(),riddenByEntities));
 			}
@@ -772,8 +684,11 @@ public class BaseLogic implements IbaseLogic,IneedMouseTrack,MultiRiderLogics {
 //					System.out.println("" + riddenByEntitiesInfo[cnt].gunTrigger1);
 					}
 				}
-				entity.ridingEntity = mc_Entity;
-				if(entity instanceof IhasprevRidingEntity)((IhasprevRidingEntity) entity).setprevRidingEntity(mc_Entity);
+				if(entity.ridingEntity instanceof EntityDummy_rider){
+					entity.ridingEntity.setPosition(entity.posX,entity.posY,entity.posZ);
+				}
+//				entity.ridingEntity = mc_Entity;
+//				if(entity instanceof IhasprevRidingEntity)((IhasprevRidingEntity) entity).setprevRidingEntity(mc_Entity);
 				
 			}
 			cnt++;
@@ -1070,16 +985,21 @@ public class BaseLogic implements IbaseLogic,IneedMouseTrack,MultiRiderLogics {
 		}
 	}
 	
-	public void riderPosUpdate_forRender(Vector3d thispos){
+	public void riderPosUpdate_forRender(Vector3d thispos,Quat4d currentQuat){
 		
 		int cnt = 0;
 //		System.out.println("thispos  " + thispos);
 		for (Entity entity : riddenByEntities) {
 			if (entity != null) {
-				entity.setLocationAndAngles(thispos.x + seatInfos[cnt].currentSeatOffset_fromV.x,
-						thispos.y + seatInfos[cnt].currentSeatOffset_fromV.y - entity.yOffset,
-						thispos.z + seatInfos[cnt].currentSeatOffset_fromV.z,entity.getRotationYawHead(),entity.rotationPitch);
-				entity.ridingEntity = mc_Entity;
+				Vector3d currentOffsetVec = new Vector3d();
+				getVector_local_inRotatedObj(seatInfos[cnt].currentSeatOffset_fromV, currentOffsetVec, bodyRot);
+
+				currentOffsetVec = transformVecByQuat(currentOffsetVec,currentQuat);
+				currentOffsetVec.z *= -1;
+				entity.setPosition(thispos.x + currentOffsetVec.x,
+						thispos.y + currentOffsetVec.y,
+						thispos.z + currentOffsetVec.z);
+				entity.ridingEntity = this.mc_Entity;
 			}
 			cnt++;
 		}
@@ -1138,6 +1058,7 @@ public class BaseLogic implements IbaseLogic,IneedMouseTrack,MultiRiderLogics {
 	public boolean serverd = false;
 	public boolean serverf = false;
 	public boolean serverx = false;
+	public boolean server_allow_Entity_Ride = false;
 	
 	Random rand = new Random();
 	
@@ -1362,6 +1283,18 @@ public class BaseLogic implements IbaseLogic,IneedMouseTrack,MultiRiderLogics {
 					throttle += prefab_vehicle.throttle_speed;
 				}
 			}
+
+			if(server_allow_Entity_Ride && mc_Entity instanceof EntityVehicle){
+				server_allow_Entity_Ride = false;
+				((EntityVehicle) mc_Entity).canUseByMob = !((EntityVehicle) mc_Entity).canUseByMob;
+				if(riddenByEntities[getpilotseatid()] instanceof EntityPlayerMP){
+					if(((EntityVehicle) mc_Entity).canUseByMob){
+						((EntityPlayerMP)riddenByEntities[getpilotseatid()]).addChatComponentMessage(new ChatComponentTranslation("Mobs can use this vehicle"));
+					}else {
+						((EntityPlayerMP)riddenByEntities[getpilotseatid()]).addChatComponentMessage(new ChatComponentTranslation("Mobs can not use this vehicle"));
+					}
+				}
+			}
 		}
 		if(!worldObj.isRemote) {
 //			System.out.println("yawladder " + yawladder);
@@ -1512,11 +1445,11 @@ public class BaseLogic implements IbaseLogic,IneedMouseTrack,MultiRiderLogics {
 //				if (serverw = HMV_Proxy.throttle_up_click()) {
 //					keys.add(16);
 //				}
-//				if (servers = HMV_Proxy.throttle_down_click()) {
-//					keys.add(18);
-//				}
 				if (serverf = HMV_Proxy.flap_click()) {
 					keys.add(20);
+				}
+				if (server_allow_Entity_Ride = HMV_Proxy.allow_Entity_Ride_click()) {
+					keys.add(21);
 				}
 				int[] keys_array = new int[keys.size()];
 				for (int id = 0; id < keys_array.length; id++) {
@@ -1524,7 +1457,6 @@ public class BaseLogic implements IbaseLogic,IneedMouseTrack,MultiRiderLogics {
 				}
 				HMVPacketHandler.INSTANCE.sendToServer(new HMVMMessageKeyPressed(keys_array, mc_Entity.getEntityId()));
 				if (!FMLClientHandler.instance().getClient().isGamePaused() && Display.isActive()) {
-
 					double throttle_Target = throttle;
 					double yaw_Target = 0;
 					double pitch_Target = 0;
@@ -1610,6 +1542,43 @@ public class BaseLogic implements IbaseLogic,IneedMouseTrack,MultiRiderLogics {
 //		if(!worldObj.isRemote)System.out.println("" + yawladder);
 
 		
+	}
+
+	public void setKeyStateFromArray(int[] keys){
+		for(int i : keys) {
+			switch (i) {
+				case 11:
+					setControl_LeftClick(true);
+					break;
+				case 12:
+					setControl_RightClick(true);
+					break;
+				case 13:
+					setControl_Space(true);
+					break;
+				case 14:
+					setControl_brake(true);
+					break;
+				case 16:
+					setControl_throttle_up(true);
+					break;
+				case 17:
+					setControl_yaw_Left(true);
+					break;
+				case 18:
+					setControl_throttle_down(true);
+					break;
+				case 19:
+					setControl_yaw_Right(true);
+					break;
+				case 20:
+					setControl_flap(true);
+					break;
+				case 21:
+					server_allow_Entity_Ride = true;
+					break;
+			}
+		}
 	}
 //	void autocontrol(Vector3d bodyvector){
 //		if(health>0){
@@ -2392,6 +2361,9 @@ public class BaseLogic implements IbaseLogic,IneedMouseTrack,MultiRiderLogics {
 			} else {
 				motionvec.scale(0);
 				motionvec.y -= prefab_vehicle.gravity;
+			}
+			if(!worldObj.isRemote){
+				getVector_local_inRotatedObj(motionvec, localMotionVec, bodyRot);
 			}
 			if (!Double.isNaN(motionvec.x) && !Double.isNaN(motionvec.y) && !Double.isNaN(motionvec.z)) {
 				mc_Entity.motionX = motionvec.x;

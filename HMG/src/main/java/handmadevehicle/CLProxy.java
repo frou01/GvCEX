@@ -15,6 +15,7 @@ import handmadevehicle.entity.parts.turrets.TurretObj;
 import handmadevehicle.events.HMVRenderSomeEvent;
 import handmadevehicle.render.RenderVehicle;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
@@ -46,7 +47,11 @@ public class CLProxy extends CMProxy {
 	public static final KeyBinding Flare_Smoke = new KeyBinding("Flare/Smoke", Keyboard.KEY_COLON, "HMVehicle");
 	public static final KeyBinding Gear_Down_Up = new KeyBinding("Gear Down/Up", Keyboard.KEY_G, "HMVehicle");
 	public static final KeyBinding Weapon_Mode = new KeyBinding("Weapon Mode", Keyboard.KEY_ADD, "HMVehicle");
-	
+	public static boolean Weapon_Mode_stopper = false;
+	public static final KeyBinding Allow_Entity_Ride = new KeyBinding("Allow_Entity_Ride", Keyboard.KEY_LMENU, "HMVehicle");
+	public static boolean Allow_Entity_Ride_stopper = false;
+
+
 	public static final KeyBinding Next_Seat = new KeyBinding("Change to Next Seat", Keyboard.KEY_Y, "HMVehicle");
 	public static final KeyBinding Previous_Seat = new KeyBinding("Change to Previous Seat", Keyboard.KEY_H, "HMVehicle");
 	public static boolean Next_Seat_stopper = false;
@@ -90,6 +95,7 @@ public class CLProxy extends CMProxy {
 			ClientRegistry.registerKeyBinding(LButton);
 			ClientRegistry.registerKeyBinding(Flap);
 			ClientRegistry.registerKeyBinding(Air_Brake);
+			ClientRegistry.registerKeyBinding(Allow_Entity_Ride);
 			ClientRegistry.registerKeyBinding(Next_Seat);
 			ClientRegistry.registerKeyBinding(Previous_Seat);
 			ClientRegistry.registerKeyBinding(pitchUp);
@@ -267,9 +273,28 @@ public class CLProxy extends CMProxy {
 		return isKeyDown(Gear_Down_Up.getKeyCode());
 	}
 	@Override
-	public boolean weapon_Mode_click(){
-		return isKeyDown(Weapon_Mode.getKeyCode());
+	public boolean weapon_Mode_click() {
+		boolean flag = isKeyDown(Weapon_Mode.getKeyCode());
+		if (!flag) Weapon_Mode_stopper = false;
+		if (Weapon_Mode_stopper) {
+			return false;
+		} else if (flag) {
+			Weapon_Mode_stopper = true;
+			return true;
+		} else return false;
 	}
+	@Override
+	public boolean allow_Entity_Ride_click(){
+		boolean flag = isKeyDown(CLProxy.Allow_Entity_Ride.getKeyCode());
+		if(!flag) CLProxy.Allow_Entity_Ride_stopper = false;
+		if(CLProxy.Allow_Entity_Ride_stopper){
+			return false;
+		}else if(flag){
+			CLProxy.Allow_Entity_Ride_stopper = true;
+			return true;
+		}else return false;
+	}
+
 	@Override
 	public boolean next_Seatclick(){
 		boolean flag = isKeyDown(Next_Seat.getKeyCode());
@@ -444,5 +469,8 @@ public class CLProxy extends CMProxy {
 		tessellator.addVertex(p_147590_0_.minvertex.x, p_147590_0_.maxvertex.y, -p_147590_0_.maxvertex.z);
 		tessellator.draw();
 		GL11.glPopMatrix();
+	}
+	public boolean isSneaking(){
+		return getEntityPlayerInstance() != null && ((EntityPlayerSP) getEntityPlayerInstance()).movementInput.sneak;
 	}
 }

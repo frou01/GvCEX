@@ -6,7 +6,6 @@ import handmadevehicle.entity.parts.HasLoopSound;
 import handmadevehicle.entity.parts.turrets.TurretObj;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.AxisAlignedBB;
 
 import java.io.File;
@@ -110,6 +109,11 @@ public class CMProxy {
 	public boolean weapon_Mode_click(){
 		return false;
 	}
+
+	public boolean allow_Entity_Ride_click(){
+		return false;
+	}
+
 	public boolean next_Seatclick(){
 		return false;
 	}
@@ -206,5 +210,9 @@ public class CMProxy {
 	}
 	
 	public void setPlayerSeatID(int id){
+	}
+
+	public boolean isSneaking(){
+		return false;
 	}
 }

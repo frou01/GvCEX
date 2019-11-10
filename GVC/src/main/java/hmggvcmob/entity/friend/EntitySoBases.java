@@ -12,13 +12,13 @@ import handmadevehicle.entity.parts.turrets.TurretObj;
 import hmggvcmob.IflagBattler;
 import handmadevehicle.SlowPathFinder.ModifiedPathNavigater;
 import hmggvcmob.ai.*;
+import hmggvcmob.entity.EntityBodyHelper_modified;
 import hmggvcmob.entity.IGVCmob;
 import hmggvcmob.entity.IHasVehicleGacha;
 import hmggvcmob.entity.VehicleSpawnGachaOBJ;
 import hmggvcmob.entity.guerrilla.EntityGBase;
 import hmggvcmob.entity.guerrilla.EntityGBases;
 import hmggvcmob.tile.TileEntityFlag;
-import handmadevehicle.entity.parts.IhasprevRidingEntity;
 import littleMaidMobX.LMM_EntityLittleMaid;
 import net.minecraft.block.Block;
 import net.minecraft.command.IEntitySelector;
@@ -45,7 +45,8 @@ import static hmggvcmob.GVCMobPlus.fn_PMCflag;
 import static hmggvcmob.GVCMobPlus.fn_Supplyflag;
 import static java.lang.Math.abs;
 
-public class EntitySoBases extends EntityCreature implements INpc , IflagBattler , IhasprevRidingEntity ,  IFF, IGVCmob, ITurretUser {
+public class EntitySoBases extends EntityCreature implements INpc , IflagBattler ,  IFF, IGVCmob, ITurretUser {
+	private EntityBodyHelper_modified bodyHelper;
 	public Entity prevRidingEntity;
 	public String summoningVehicle = null;//nullは無し。自然湧きはLivingSpawnEvent.SpecialSpawnで設定する
 	//特殊事情で（ダンジョンとかで）自由な役職の兵士を載せたいときのためにフィールドは残しておこう
@@ -70,6 +71,7 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
 	public boolean isridingVehicle;
 	public EntitySoBases(World par1World) {
 		super(par1World);
+		this.bodyHelper = new EntityBodyHelper_modified(this);
 		renderDistanceWeight = 16384;
 		this.worldForPathfind = new WorldForPathfind(worldObj);
 		this.modifiedPathNavigater = new ModifiedPathNavigater(this, worldObj,worldForPathfind);
@@ -77,6 +79,7 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
 		this.getNavigator().setBreakDoors(true);
 		aiSwimming = new EntityAISwimming(this);
 		this.tasks.addTask(0, aiSwimming);
+		this.tasks.addTask(0, new AIAttackByTank(this, null, worldForPathfind, this));
 		this.tasks.addTask(3, new AIattackOnCollide(this, EntityLiving.class, 1.0D, true));
 		this.tasks.addTask(3, new AIattackOnCollide(this, EntityGBases.class, 1.0D, true));
 		this.tasks.addTask(3, new AIAttackFlag(this,(IflagBattler) this,worldForPathfind));
@@ -94,6 +97,20 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
 		this.targetTasks.addTask(4, new AITargetFlag(this,this,this));
 		
 	}
+
+	protected float func_110146_f(float p_110146_1_, float p_110146_2_)
+	{
+		if (this.isAIEnabled())
+		{
+			this.bodyHelper.func_75664_a();
+			return p_110146_2_;
+		}
+		else
+		{
+			return super.func_110146_f(p_110146_1_, p_110146_2_);
+		}
+	}
+
 	protected void entityInit() {
 		super.entityInit();
 		this.dataWatcher.addObject(22, new Integer((int)0));
@@ -266,8 +283,6 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
 			if(bespawningEntity.checkObstacle()) {
 				worldObj.spawnEntityInWorld(bespawningEntity);
 				if(bespawningEntity.pickupEntity(this,0)) {
-					this.tasks.addTask(0, new AIAttackByTank(this, bespawningEntity, worldForPathfind, this));
-					this.tasks.addTask(1, new AIDriveTank(this, bespawningEntity, worldForPathfind));
 					isridingVehicle = true;
 				}
 			}
@@ -352,7 +367,7 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
 			{
 				this.ridingEntity.riddenByEntity = null;
 			}
-			
+
 			if (p_70078_1_ != null)
 			{
 				for (Entity entity1 = p_70078_1_.ridingEntity; entity1 != null; entity1 = entity1.ridingEntity)
@@ -363,7 +378,7 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
 					}
 				}
 			}
-			
+
 			this.ridingEntity = p_70078_1_;
 			p_70078_1_.riddenByEntity = this;
 		}
@@ -388,8 +403,6 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
                     if((pilot == null || is_this_entity_friend(pilot))&&!((EntityVehicle) entity).getBaseLogic().isRidingEntity(this)){
 						if(((EntityVehicle) entity).pickupEntity(this,0)) {
 							isridingVehicle = true;
-							this.tasks.addTask(0, new AIAttackByTank(this, ((EntityVehicle) entity), worldForPathfind, this));
-							this.tasks.addTask(1, new AIDriveTank(this, ((EntityVehicle) entity), worldForPathfind));
 						}
 					}
                 }
@@ -461,17 +474,7 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
 	public boolean shouldDismountInWater(Entity entity){
 		return false;
 	}
-	
-	
-	@Override
-	public void setprevRidingEntity(Entity entity) {
-		prevRidingEntity = entity;
-	}
-	
-	@Override
-	public Entity getprevRidingEntity() {
-		return prevRidingEntity;
-	}
+
 
     public void setVehicleName(String string) {
         summoningVehicle = string;

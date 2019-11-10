@@ -26,7 +26,7 @@ public class HMVHandleChangeSeat implements IMessageHandler<HMVPacketChangeSeat,
 			Entity targetEntity = world.getEntityByID(message.targetID);
 			if (targetEntity instanceof HasBaseLogic) {
 				BaseLogic ibaseLogic = ((HasBaseLogic) targetEntity).getBaseLogic();
-				if (ibaseLogic instanceof MultiRiderLogics) {
+				{
 					Entity[] entities = ((MultiRiderLogics) ibaseLogic).getRiddenEntityList();
 					Entity targetRider = entities[message.currentSeatID];
 					entities[message.currentSeatID] = null;

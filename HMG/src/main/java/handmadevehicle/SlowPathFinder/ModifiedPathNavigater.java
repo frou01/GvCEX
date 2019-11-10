@@ -1,5 +1,6 @@
 package handmadevehicle.SlowPathFinder;
 
+import handmadevehicle.entity.EntityVehicle;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
@@ -16,6 +17,9 @@ import net.minecraft.pathfinding.PathPoint;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+
+import static java.lang.Math.abs;
+import static net.minecraft.util.MathHelper.wrapAngleTo180_float;
 
 public class ModifiedPathNavigater extends PathNavigate{
 	private Entity theEntity;
@@ -45,7 +49,9 @@ public class ModifiedPathNavigater extends PathNavigate{
 	 */
 	private boolean canSwim;
 	private static final String __OBFID = "CL_00001627";
-	
+
+	private float width_for_Follow;
+
 	public ModifiedPathNavigater(Entity p_i1671_1_, World p_i1671_2_,WorldForPathfind worldForPathfind)
 	{
 		super(p_i1671_1_ instanceof EntityLiving ? (EntityLiving)p_i1671_1_ :(new EntityLiving(p_i1671_2_) {
@@ -58,6 +64,21 @@ public class ModifiedPathNavigater extends PathNavigate{
 		this.theEntity = p_i1671_1_;
 		this.worldObj = p_i1671_2_;
 		this.worldForPathfind = worldForPathfind;
+		width_for_Follow = this.theEntity.width * this.theEntity.width;
+	}
+	public ModifiedPathNavigater(Entity p_i1671_1_, World p_i1671_2_,WorldForPathfind worldForPathfind,float width_for_Follow)
+	{
+		super(p_i1671_1_ instanceof EntityLiving ? (EntityLiving)p_i1671_1_ :(new EntityLiving(p_i1671_2_) {
+			@Override
+			protected void applyEntityAttributes() {
+				super.applyEntityAttributes();
+			}
+			//Dummy!!!
+		}), p_i1671_2_);
+		this.theEntity = p_i1671_1_;
+		this.worldObj = p_i1671_2_;
+		this.worldForPathfind = worldForPathfind;
+		this.width_for_Follow = width_for_Follow;
 	}
 	
 	public void setAvoidsWater(boolean p_75491_1_)
@@ -226,7 +247,9 @@ public class ModifiedPathNavigater extends PathNavigate{
 				
 				if (vec3 != null)
 				{
-					if(this.theEntity instanceof EntityLiving)((EntityLiving) this.theEntity).getMoveHelper().setMoveTo(vec3.xCoord, vec3.yCoord, vec3.zCoord, this.speed);
+					if(this.theEntity instanceof EntityLiving){
+						((EntityLiving) this.theEntity).getMoveHelper().setMoveTo(vec3.xCoord, vec3.yCoord, vec3.zCoord, this.speed);
+					}
 				}
 			}
 		}
@@ -246,9 +269,9 @@ public class ModifiedPathNavigater extends PathNavigate{
 			}
 		}
 		
-		float f = this.theEntity.width * this.theEntity.width;
-		if(this.theEntity.width < 2){
-			f = 4f;
+		float f = width_for_Follow;
+		if(width_for_Follow < 1.5){
+			f = 2.25f;
 		}
 		int k;
 		
@@ -275,7 +298,7 @@ public class ModifiedPathNavigater extends PathNavigate{
 		
 		if (this.totalTicks - this.ticksAtLastPos > 100)
 		{
-			if (vec3.squareDistanceTo(this.lastPosCheck) < 2.25D)
+			if (vec3.squareDistanceTo(this.lastPosCheck) < 2.25)
 			{
 				this.clearPathEntity();
 			}
@@ -408,8 +431,8 @@ public class ModifiedPathNavigater extends PathNavigate{
 			{
 				p_75493_3_ -= 2;
 				p_75493_5_ -= 2;
-				double d4 = 1.0D / Math.abs(d0);
-				double d5 = 1.0D / Math.abs(d1);
+				double d4 = 1.0D / abs(d0);
+				double d5 = 1.0D / abs(d1);
 				double d6 = (double)(l * 1) - p_75493_1_.xCoord;
 				double d7 = (double)(i1 * 1) - p_75493_1_.zCoord;
 				

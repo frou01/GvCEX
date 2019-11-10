@@ -15,6 +15,10 @@ public interface MultiRiderLogics {
 		for (int cnt = 0; cnt < riddenByEntities.length; cnt++) {
 			if(riddenByEntities[cnt] == p_70085_1_){
 				riddenByEntities[cnt] = null;
+				if(p_70085_1_.ridingEntity != null) {
+					p_70085_1_.ridingEntity.riddenByEntity = null;
+					p_70085_1_.ridingEntity = null;
+				}
 //				flag = true;
 			}
 		}

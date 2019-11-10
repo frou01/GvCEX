@@ -3,6 +3,7 @@ package handmadevehicle.events;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent;
 import handmadeguns.network.PacketOpenGui;
+import handmadevehicle.entity.EntityDummy_rider;
 import handmadevehicle.entity.parts.IVehicle;
 import handmadevehicle.network.HMVPacketHandler;
 import handmadevehicle.network.packets.HMVPacketOpenVehicleGui;
@@ -20,18 +21,26 @@ public class HMV_Event {
 	{
 		EntityLivingBase entity = event.entityLiving;
 		if(entity != null){
-			if ((entity.ridingEntity instanceof IVehicle)) {
-				if(entity instanceof EntityPlayer) {
+			if ((entity.ridingEntity instanceof EntityDummy_rider)) {
+				float userProtect = ((EntityDummy_rider) entity.ridingEntity).
+						linkedBaseLogic.info.
+						prefab_seats[((EntityDummy_rider) entity.ridingEntity).linkedSeatID]
+						.userProtect_maxDamageLevel;
+				if(userProtect < 0) {
+					if(entity instanceof EntityPlayer){
+						event.ammount = 0;
+						event.setCanceled(true);
+					}else {
+						event.ammount -= entity.getMaxHealth();
+						event.setCanceled(true);
+					}
+				}else {
+					event.ammount -= userProtect;
 					event.setCanceled(true);
 				}
-				if(event.source.getDamageType().equals("explosion") || event.source.getDamageType().equals("explosion.player")){
-					event.setCanceled(true);
-				}
-				entity.ridingEntity.attackEntityFrom(event.source,event.ammount);
 			}
 		}
 	}
-	
 	@SubscribeEvent
 	public void KeyHandlingEvent(InputEvent.KeyInputEvent event) {
 		if (HMV_Proxy.reloadConfigclick()) {

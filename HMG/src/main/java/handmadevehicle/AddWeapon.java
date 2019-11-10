@@ -118,6 +118,9 @@ public class AddWeapon {
 						case "childFireBlank":
 							prefab_turret.childFireBlank = parseInt(type[1]);
 							break;
+						case "useVehicleInventory":
+							prefab_turret.useVehicleInventory = parseBoolean(type[1]);
+							break;
 						case "needGunStack":
 							prefab_turret.needGunStack = parseBoolean(type[1]);
 							break;

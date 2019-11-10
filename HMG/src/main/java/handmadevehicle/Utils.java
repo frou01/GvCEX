@@ -245,6 +245,17 @@ public class Utils {
         quat4d.z = s * tz;
         quat4d.w = c;
     }
+
+    public static void getVector_local_inRotatedObj(Vector3d in,Vector3d out,Quat4d rot){
+        Quat4d invertRot = new Quat4d();
+        invertRot.inverse(rot);
+        transformVecforMinecraft(in);
+        out.set(transformVecByQuat(in, invertRot));
+        if(in != out){
+            transformVecforMinecraft(in);
+        }
+    }
+
     public static void transformVecforMinecraft(Vector3d vec){
         vec.z = -vec.z;
     }

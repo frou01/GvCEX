@@ -94,9 +94,6 @@ public class AddNewVehicle extends HMGGunMaker {
 								case "thirdDist":
 									data.thirdDist = parseFloat(type[1]);
 									break;
-								case "zoomLevel":
-									data.zoomLevel = parseFloat(type[1]);
-									break;
 								case "splashsound":
 									data.splashsound = type[1];
 									break;

@@ -54,7 +54,7 @@ public class EntityVehicle extends Entity implements IFF,IVehicle,IMultiTurretVe
 	
 	public EntityVehicle(World par1World) {
 		super(par1World);
-		this.modifiedPathNavigater = new ModifiedPathNavigater(this, worldObj,worldForPathfind = new WorldForPathfind(worldObj));
+		this.modifiedPathNavigater = new ModifiedPathNavigater(this, worldObj,worldForPathfind = new WorldForPathfind(worldObj),64);
 		//AI入りはこのmodでは実装しない！良いな！
 		
 		renderDistanceWeight = 16384;
@@ -214,11 +214,6 @@ public class EntityVehicle extends Entity implements IFF,IVehicle,IMultiTurretVe
 		float temparomor = 0;
 		if (source.getEntity() != null) {
 			temp = ((HasBaseLogic) this).getBaseLogic();
-			Vector3d shooterMotionVec = new Vector3d(source.getSourceOfDamage().motionX, source.getSourceOfDamage().motionY, source.getSourceOfDamage().motionZ);
-//			Vector3d shooterPositionVec = new Vector3d(source.getSourceOfDamage().posX - this.posX
-//					                                          , source.getSourceOfDamage().posY - (this.posY + 1.5f)
-//					                                          , source.getSourceOfDamage().posZ - this.posZ
-//			);
 			Vector3d TankFrontVec = new Vector3d(0, 0, -1);
 			TankFrontVec = transformVecByQuat(TankFrontVec, temp.bodyRot);
 			TankFrontVec.z *= -1;
@@ -232,7 +227,6 @@ public class EntityVehicle extends Entity implements IFF,IVehicle,IMultiTurretVe
 			double angle_sin = 0;
 			Vector3d Incident_vector = new Vector3d();
 			Incident_vector.normalize((Vector3d) movingObjectPosition.hitInfo);
-			System.out.println("" + Incident_vector);
 			switch (hitside) {
 				case 2: //正面
 					System.out.println("front");
@@ -292,7 +286,7 @@ public class EntityVehicle extends Entity implements IFF,IVehicle,IMultiTurretVe
 
 				if (this.canDespawn() && d3 > ((WorldServer)worldObj).func_73046_m().getConfigurationManager().getViewDistance()*16 *
 						((WorldServer)worldObj).func_73046_m().getConfigurationManager().getViewDistance()*16) {
-					System.out.println("debug");
+//					System.out.println("debug");
 					this.setDead();
 				}
 			}
@@ -300,9 +294,19 @@ public class EntityVehicle extends Entity implements IFF,IVehicle,IMultiTurretVe
 	}
 
 	public boolean attackEntityFrom(DamageSource source, float par2) {
+		if(baseLogic!= null){
+			if(baseLogic.riddenByEntities[baseLogic.getpilotseatid()] != null){
+				baseLogic.riddenByEntities[baseLogic.getpilotseatid()].attackEntityFrom(source,par2);
+			}
+		}
 		if(source.getDamageType().equals(DamageSource.fall.damageType) ||
 				   source.getDamageType().equals(DamageSource.outOfWorld.damageType) ||
 				   source.getDamageType().equals(DamageSource.inWall.damageType))return attackEntityFrom_exceptArmor(source, par2);
+
+		if(source.isExplosion()){
+			par2 *= baseLogic.info.antiExplosionCof;
+		}
+
 		if(par2 < 0)par2 = 0;
 		if (this.riddenByEntity == source.getEntity()) {
 			return false;

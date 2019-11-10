@@ -196,7 +196,7 @@ public class GVCMobPlus
         cfg_guerrillaspawndrawn = lconf.get("Guerrilla", "cfg_CanSpawndrawn", true).getBoolean(true);
         cfg_guerrillacanusePlacedGun = lconf.get("Guerrilla", "cfg_CanusePlacedGun", true).getBoolean(true);
 
-        cfg_soldierspawnnormal = (float)lconf.get("Soldier", "cfg_SoldierSpawnNormal", 4).getDouble(4.0D);
+        cfg_soldierspawnnormal = (float)lconf.get("Soldier", "cfg_SoldierSpawnNormal", 2).getDouble(2.0D);
         cfg_soldierspawntank = (float)lconf.get("Soldier", "cfg_SoldierSpawntank", 1).getDouble(1.0D);
         String ignoretgtmobs = lconf.get("Soldier", "ignoreSoldierTargetEntityClass", "").getString();
         String[] ignoretgtmob = ignoretgtmobs.split(",");
@@ -204,29 +204,24 @@ public class GVCMobPlus
             ignoreSoTargetEntity.put(ignoretgtmob[i], Integer.valueOf(i));
         }
         {
-            int typenum = lconf.get("Vehicle", "cfg_Soldier_VehicleType_num", 2).getInt();
-            if(typenum>0) {
-                GVCEntitySoldierRPG.vehicleSpawnGachaOBJ = new VehicleSpawnGachaOBJ[typenum];
-                String[] types = lconf.get("Vehicle", "cfg_Soldier_VehicleType",new String[]{"50","KPZ-70:10"}).getStringList();
-                int cnt = 0;
-                for(String atype:types){
-                    GVCEntitySoldierRPG.vehicleSpawnGachaOBJ[cnt] = new VehicleSpawnGachaOBJ(atype);
-                    GVCEntitySoldierRPG.vehilceGacha_rate_sum+=GVCEntitySoldierRPG.vehicleSpawnGachaOBJ[cnt].rate;
-                    cnt++;
-                }
+
+            String[] types = lconf.get("Vehicle", "cfg_Soldier_VehicleType",new String[]{"50","KPZ-70:10"}).getStringList();
+            GVCEntitySoldierRPG.vehicleSpawnGachaOBJ = new VehicleSpawnGachaOBJ[types.length];
+            int cnt = 0;
+            for(String atype:types){
+                GVCEntitySoldierRPG.vehicleSpawnGachaOBJ[cnt] = new VehicleSpawnGachaOBJ(atype);
+                GVCEntitySoldierRPG.vehilceGacha_rate_sum+=GVCEntitySoldierRPG.vehicleSpawnGachaOBJ[cnt].rate;
+                cnt++;
             }
         }
         {
-            int typenum = lconf.get("Vehicle", "cfg_Guerrilla_VehicleType_num", 2).getInt();
-            if(typenum>0) {
-                GVCEntityGuerrillaRPG.vehicleSpawnGachaOBJ = new VehicleSpawnGachaOBJ[typenum];
-                String[] types = lconf.get("Vehicle", "cfg_Guerrilla_VehicleType",new String[]{"50","T-34-85_mod:10"}).getStringList();
-                int cnt = 0;
-                for(String atype:types){
-                    GVCEntityGuerrillaRPG.vehicleSpawnGachaOBJ[cnt] = new VehicleSpawnGachaOBJ(atype);
-                    GVCEntityGuerrillaRPG.vehilceGacha_rate_sum+=GVCEntityGuerrillaRPG.vehicleSpawnGachaOBJ[cnt].rate;
-                    cnt++;
-                }
+            String[] types = lconf.get("Vehicle", "cfg_Guerrilla_VehicleType",new String[]{"50","T-34-85_mod:10"}).getStringList();
+            GVCEntityGuerrillaRPG.vehicleSpawnGachaOBJ = new VehicleSpawnGachaOBJ[types.length];
+            int cnt = 0;
+            for(String atype:types){
+                GVCEntityGuerrillaRPG.vehicleSpawnGachaOBJ[cnt] = new VehicleSpawnGachaOBJ(atype);
+                GVCEntityGuerrillaRPG.vehilceGacha_rate_sum+=GVCEntityGuerrillaRPG.vehicleSpawnGachaOBJ[cnt].rate;
+                cnt++;
             }
         }
         cfg_flagspawnlevel = lconf.get("Guerrilla", "cfg_FlagSpawnLevel", 180).getInt(180);

@@ -239,19 +239,19 @@ public class OBB {
             byte b0 = -1;
         
             if (vec38 == vec32) {
-                b0 = 4;
-            }
-        
-            if (vec38 == vec33) {
                 b0 = 5;
             }
         
+            if (vec38 == vec33) {
+                b0 = 4;
+            }
+        
             if (vec38 == vec34) {
-                b0 = 0;
+                b0 = 1;
             }
         
             if (vec38 == vec35) {
-                b0 = 1;
+                b0 = 0;
             }
         
             if (vec38 == vec36) {

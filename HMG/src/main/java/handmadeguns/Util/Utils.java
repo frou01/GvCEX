@@ -272,7 +272,7 @@ public class Utils {
 	}
 	
 	public static boolean isCollidableBlock(Block block){
-	    return !((((block.getMaterial() == Material.plants) || (block.getMaterial() == Material.leaves) || ((
+	    return !((((block.getMaterial() == Material.air) || (block.getMaterial() == Material.plants) || (block.getMaterial() == Material.leaves) || (block.getMaterial() == Material.fire) || ((
 	                                                                                                                block.getMaterial() == Material.glass ||
 	                                                                                                                        block instanceof BlockFence ||
 	                                                                                                                        block instanceof BlockFenceGate ||

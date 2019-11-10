@@ -11,6 +11,7 @@ import hmggvcmob.GVCMobPlus;
 import hmggvcmob.IflagBattler;
 import handmadevehicle.SlowPathFinder.ModifiedPathNavigater;
 import hmggvcmob.ai.*;
+import hmggvcmob.entity.EntityBodyHelper_modified;
 import hmggvcmob.entity.IGVCmob;
 import hmggvcmob.entity.IHasVehicleGacha;
 import hmggvcmob.entity.VehicleSpawnGachaOBJ;
@@ -18,10 +19,7 @@ import hmggvcmob.entity.friend.EntitySoBases;
 import hmggvcmob.entity.friend.GVCEntityFlag;
 import hmggvcmob.tile.TileEntityFlag;
 import net.minecraft.block.Block;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.IEntityLivingData;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.monster.EntityGolem;
 import net.minecraft.entity.monster.EntityMob;
@@ -50,6 +48,7 @@ import static java.lang.Math.pow;
 import static net.minecraft.util.MathHelper.wrapAngleTo180_float;
 
 public class EntityGBases extends EntityMob implements IflagBattler,IGVCmob, IFF , ITurretUser {
+    private EntityBodyHelper_modified bodyHelper;
     public float viewWide = 0.267f;
     public boolean flaginvensionmode = false;
     public int staningtime;
@@ -88,6 +87,7 @@ public class EntityGBases extends EntityMob implements IflagBattler,IGVCmob, IFF
     
     public EntityGBases(World par1World) {
         super(par1World);
+        this.bodyHelper = new EntityBodyHelper_modified(this);
         renderDistanceWeight = 16384;
         this.worldForPathfind = new WorldForPathfind(worldObj);
         this.modifiedPathNavigater = new ModifiedPathNavigater(this, worldObj,worldForPathfind);
@@ -101,6 +101,7 @@ public class EntityGBases extends EntityMob implements IflagBattler,IGVCmob, IFF
         AIMoveThroughVillage       =new AIMoveThroughVillage(this, 1.0D, false);
         this.getNavigator().setBreakDoors(true);
         this.tasks.addTask(0, aiSwimming);
+        this.tasks.addTask(0, new AIAttackByTank(this, null, worldForPathfind, this));
         this.tasks.addTask(3, AIattackOncollidetoPlayer);
         this.tasks.addTask(3, AIattackOncollidetoVillager);
         this.tasks.addTask(3, AIattackOncollidetoSoldier);
@@ -122,7 +123,20 @@ public class EntityGBases extends EntityMob implements IflagBattler,IGVCmob, IFF
         this.targetTasks.addTask(4, new AITargetFlag(this,this,this));
         this.setCanPickUpLoot(true);
     }
-    
+
+    protected float func_110146_f(float p_110146_1_, float p_110146_2_)
+    {
+        if (this.isAIEnabled())
+        {
+            this.bodyHelper.func_75664_a();
+            return p_110146_2_;
+        }
+        else
+        {
+            return super.func_110146_f(p_110146_1_, p_110146_2_);
+        }
+    }
+
     public boolean attackEntityFrom(DamageSource source, float par2)
     {
         if(!worldObj.isRemote) {
@@ -180,8 +194,12 @@ public class EntityGBases extends EntityMob implements IflagBattler,IGVCmob, IFF
     }
     protected void updateAITasks()
     {
+        float backUpRotationYaw = this.rotationYaw;
         super.updateAITasks();
         modifiedPathNavigater.onUpdateNavigation();
+        if(abs(wrapAngleTo180_float(this.rotationYaw - this.getRotationYawHead()))>70){
+            this.rotationYaw = backUpRotationYaw;
+        }
     }
 	/**
      * (abstract) Protected helper method to read subclass entity data from NBT.
@@ -222,8 +240,6 @@ public class EntityGBases extends EntityMob implements IflagBattler,IGVCmob, IFF
             if(bespawningEntity.checkObstacle()) {
                 worldObj.spawnEntityInWorld(bespawningEntity);
                 if(bespawningEntity.pickupEntity(this,0)) {
-                    this.tasks.addTask(0, new AIAttackByTank(this, bespawningEntity, worldForPathfind, this));
-                    this.tasks.addTask(1, new AIDriveTank(this, bespawningEntity, worldForPathfind));
                     bespawningEntity.canUseByMob = true;
                     bespawningEntity.despawn = true;
                     isridingVehicle = true;
@@ -232,9 +248,6 @@ public class EntityGBases extends EntityMob implements IflagBattler,IGVCmob, IFF
             summoningVehicle = null;
         }
         if(this.getAttackTarget() != null && this.getAttackTarget().isDead)this.setAttackTarget(null);
-        if(getMoveHelper().getSpeed()<0){
-            getNavigator().clearPathEntity();
-        }
 
         if (!this.worldObj.isRemote && (this.worldObj.difficultySetting == EnumDifficulty.PEACEFUL && this.candespawn)) {
             this.setDead();
@@ -662,8 +675,6 @@ public class EntityGBases extends EntityMob implements IflagBattler,IGVCmob, IFF
                     Entity pilot = ((EntityVehicle) entity).getBaseLogic().getRiddenEntityList()[((EntityVehicle) entity).getpilotseatid()];
                     if((pilot == null || is_this_entity_friend(pilot))&&!((EntityVehicle) entity).getBaseLogic().isRidingEntity(this)){
                         if(((EntityVehicle) entity).pickupEntity(this,0)) {
-                            this.tasks.addTask(0, new AIAttackByTank(this, ((EntityVehicle) entity), worldForPathfind, this));
-                            this.tasks.addTask(1, new AIDriveTank(this, ((EntityVehicle) entity), worldForPathfind));
                             isridingVehicle = true;
                         }
                     }

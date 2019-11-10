@@ -13,6 +13,7 @@ import handmadevehicle.Utils;
 import handmadevehicle.entity.parts.HasBaseLogic;
 import handmadevehicle.entity.parts.HasLoopSound;
 import handmadevehicle.entity.parts.IVehicle;
+import handmadevehicle.entity.parts.logics.BaseLogic;
 import handmadevehicle.entity.prefab.Prefab_Turret;
 import handmadevehicle.inventory.InventoryVehicle;
 import handmadevehicle.network.HMVPacketHandler;
@@ -712,6 +713,26 @@ public class TurretObj implements HasLoopSound{
 	    Vector3d lookVec = getCannonDir();
 	    transformVecforMinecraft(lookVec);
 	    transformVecforMinecraft(cannonPos);
+        if(motherEntity instanceof HasBaseLogic){
+            BaseLogic linkedBaseLogic = ((HasBaseLogic) motherEntity).getBaseLogic();
+            if(linkedBaseLogic.info.recoilResist != 0) {
+                Vector3d centerOfGravity = new Vector3d(linkedBaseLogic.prefab_vehicle.center_of_gravity);
+                Vector3d localBulletPos = new Vector3d();
+                Vector3d relativeCannonPos = new Vector3d(cannonPos);
+                relativeCannonPos.sub(new Vector3d(motherEntity.posX,motherEntity.posY,motherEntity.posZ));
+
+                Vector3d localBulletMotion = new Vector3d();
+                getVector_local_inRotatedObj(relativeCannonPos, localBulletPos, linkedBaseLogic.bodyRot);
+                getVector_local_inRotatedObj(lookVec, localBulletMotion, linkedBaseLogic.bodyRot);
+                System.out.println("localBulletPos" + localBulletPos);
+                localBulletPos.sub(centerOfGravity);
+
+                Vector3d recoilRotVector = new Vector3d();
+                recoilRotVector.cross(localBulletPos, localBulletMotion);
+                AxisAngle4d recoilRotor = new AxisAngle4d(recoilRotVector, -dummyGunItem.gunInfo.recoil/linkedBaseLogic.info.recoilResist);
+                linkedBaseLogic.rotationmotion = Utils.quatRotateAxis(linkedBaseLogic.rotationmotion, recoilRotor);
+            }
+        }
 	    for (HMGEntityBulletBase abullet : bullets) {
             abullet.setPosition(cannonPos.x,cannonPos.y,cannonPos.z);
 		    abullet.setThrowableHeading(lookVec.x, lookVec.y, lookVec.z, prefab_turret.gunInfo.speed, prefab_turret.gunInfo.spread_setting, currentEntity);

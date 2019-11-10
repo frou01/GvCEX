@@ -79,10 +79,10 @@ public class HMVRenderSomeEvent {
 				if(zooming) {
 
 					TurretObj turretObj = getPlayerUsingTurret(entityplayer);
-					if(turretObj.dummyGunItem != null) {
+					if(turretObj.dummyGunItem != null && turretObj.dummyGunItem.gunInfo.scopezoombase != 1) {
 						event.newfov = event.fov / turretObj.dummyGunItem.gunInfo.scopezoombase;
-					}else {
-						event.newfov = event.fov / ((IVehicle) entityplayer.ridingEntity).getBaseLogic().info.zoomLevel;
+					}else if(((IVehicle) entityplayer.ridingEntity).getBaseLogic().info.prefab_seats.length > playerSeatID){
+						event.newfov = event.fov / ((IVehicle) entityplayer.ridingEntity).getBaseLogic().info.prefab_seats[playerSeatID].zoomLevel;
 					}
 				}
 			}
@@ -161,11 +161,35 @@ public class HMVRenderSomeEvent {
 							nowPos.interpolate(new Vector3d(vehicleBody.lastTickPosX ,
 									vehicleBody.lastTickPosY,
 									vehicleBody.lastTickPosZ),new Vector3d(vehicleBody.posX,vehicleBody.posY,vehicleBody.posZ),renderTickTime);
-							
-							logic.riderPosUpdate_forRender(nowPos);
+
 							Vector3d bodyvector = Utils.transformVecByQuat(new Vector3d(0, 0, 1), logic.bodyRot);
 							Vector3d tailwingvector = Utils.transformVecByQuat(new Vector3d(0, 1, 0), logic.bodyRot);
 							Vector3d mainwingvector = Utils.transformVecByQuat(new Vector3d(1, 0, 0), logic.bodyRot);
+
+							Quat4d currentquat = new Quat4d();
+							currentquat.interpolate(logic.prevbodyRot,logic.bodyRot, (double) renderTickTime);
+							logic.riderPosUpdate_forRender(nowPos,currentquat);
+//									if (abs(logic.pitchladder) > 0.001) {
+//										Vector3d axisx = Utils.transformVecByQuat(new Vector3d(1, 0, 0), currentquat);
+//										AxisAngle4d axisxangled = new AxisAngle4d(axisx, toRadians(-logic.pitchladder * renderTickTime / 4));
+//										currentquat = Utils.quatRotateAxis(currentquat, axisxangled);
+//									}
+//									if (abs(logic.yawladder) > 0.001) {
+//										Vector3d axisy = Utils.transformVecByQuat(new Vector3d(0, 1, 0), currentquat);
+//										AxisAngle4d axisyangled = new AxisAngle4d(axisy, toRadians(logic.yawladder * renderTickTime / 4));
+//										currentquat = Utils.quatRotateAxis(currentquat, axisyangled);
+//									}
+//									if (abs(logic.rollladder) > 0.001) {
+//										Vector3d axisz = Utils.transformVecByQuat(new Vector3d(0, 0, 1), currentquat);
+//										AxisAngle4d axiszangled = new AxisAngle4d(axisz, toRadians(logic.rollladder * renderTickTime / 4));
+//										currentquat = Utils.quatRotateAxis(currentquat, axiszangled);
+//									}
+
+							double[] xyz = Utils.eulerfrommatrix(Utils.matrixfromQuat(currentquat));
+							xyz[0] = toDegrees(xyz[0]);
+							xyz[1] = toDegrees(xyz[1]);
+							xyz[2] = toDegrees(xyz[2]);
+
 							if (logic.ispilot(entityplayer)) {
 								if (!logic.mouseStickMode || logic.prefab_vehicle.T_Land_F_Plane) {
 									float f1 = HMG_proxy.getMCInstance().gameSettings.mouseSensitivity * 0.6F + 0.2F;
@@ -184,28 +208,6 @@ public class HMVRenderSomeEvent {
 								logic.camerarot.set(Headrot);
 								logic.camerarot_current.set(logic.camerarot);
 
-								Quat4d currentquat = new Quat4d();
-								currentquat.interpolate(logic.prevbodyRot,logic.bodyRot, (double) renderTickTime);
-//									if (abs(logic.pitchladder) > 0.001) {
-//										Vector3d axisx = Utils.transformVecByQuat(new Vector3d(1, 0, 0), currentquat);
-//										AxisAngle4d axisxangled = new AxisAngle4d(axisx, toRadians(-logic.pitchladder * renderTickTime / 4));
-//										currentquat = Utils.quatRotateAxis(currentquat, axisxangled);
-//									}
-//									if (abs(logic.yawladder) > 0.001) {
-//										Vector3d axisy = Utils.transformVecByQuat(new Vector3d(0, 1, 0), currentquat);
-//										AxisAngle4d axisyangled = new AxisAngle4d(axisy, toRadians(logic.yawladder * renderTickTime / 4));
-//										currentquat = Utils.quatRotateAxis(currentquat, axisyangled);
-//									}
-//									if (abs(logic.rollladder) > 0.001) {
-//										Vector3d axisz = Utils.transformVecByQuat(new Vector3d(0, 0, 1), currentquat);
-//										AxisAngle4d axiszangled = new AxisAngle4d(axisz, toRadians(logic.rollladder * renderTickTime / 4));
-//										currentquat = Utils.quatRotateAxis(currentquat, axiszangled);
-//									}
-								
-								double[] xyz = Utils.eulerfrommatrix(Utils.matrixfromQuat(currentquat));
-								xyz[0] = toDegrees(xyz[0]);
-								xyz[1] = toDegrees(xyz[1]);
-								xyz[2] = toDegrees(xyz[2]);
 //							System.out.println("y" + xyz[0] + " , x" + xyz[1] + " , z" + xyz[2] + " , renderTickTime" + renderTickTime);
 								bodyvector = Utils.transformVecByQuat(new Vector3d(0, 0, 1), currentquat);
 								tailwingvector = Utils.transformVecByQuat(new Vector3d(0, 1, 0), currentquat);
@@ -248,19 +250,19 @@ public class HMVRenderSomeEvent {
 									ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer, (float) cameraxyz[2], "camRoll", "R", "field_78495_O");
 									ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer, (float) cameraxyz[2], "prevCamRoll", "R", "field_78495_O");
 								}
-								logic.bodyrotationYaw = (float) xyz[1];
-								logic.prevbodyrotationYaw = (float) xyz[1];
-								logic.bodyrotationPitch = (float) xyz[0];
-								logic.prevbodyrotationPitch = (float) xyz[0];
-								vehicleBody.rotationPitch = (float) xyz[0];
-								vehicleBody.prevRotationPitch = (float) xyz[0];
-								logic.bodyrotationRoll = (float) xyz[2];
-								logic.prevbodyrotationRoll = (float) xyz[2];
-								ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer, 24, "thirdPersonDistance", "E", "field_78490_B");
-								bodyvector = Utils.transformVecByQuat(new Vector3d(0, 0, 1), currentquat);
-								tailwingvector = Utils.transformVecByQuat(new Vector3d(0, 1, 0), currentquat);
-								mainwingvector = Utils.transformVecByQuat(new Vector3d(1, 0, 0), currentquat);
 							}
+							logic.bodyrotationYaw = (float) xyz[1];
+							logic.prevbodyrotationYaw = (float) xyz[1];
+							logic.bodyrotationPitch = (float) xyz[0];
+							logic.prevbodyrotationPitch = (float) xyz[0];
+							vehicleBody.rotationPitch = (float) xyz[0];
+							vehicleBody.prevRotationPitch = (float) xyz[0];
+							logic.bodyrotationRoll = (float) xyz[2];
+							logic.prevbodyrotationRoll = (float) xyz[2];
+							ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer, 24, "thirdPersonDistance", "E", "field_78490_B");
+							bodyvector = Utils.transformVecByQuat(new Vector3d(0, 0, 1), currentquat);
+							tailwingvector = Utils.transformVecByQuat(new Vector3d(0, 1, 0), currentquat);
+							mainwingvector = Utils.transformVecByQuat(new Vector3d(1, 0, 0), currentquat);
 							
 							tailwingvector.normalize();
 							bodyvector.normalize();
