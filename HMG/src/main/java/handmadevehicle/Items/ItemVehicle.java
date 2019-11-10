@@ -17,7 +17,6 @@ public class ItemVehicle extends Item {
 	{
 		super();
 		this.setTextureName(name);
-		this.setCreativeTab(tabHMV);
 		this.dataName = name;
 		this.maxStackSize = 64;
 	}

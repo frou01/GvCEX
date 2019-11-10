@@ -178,6 +178,8 @@ public class GunInfo {
 	public boolean canlockEntity = false;
 	public boolean semiActive = false;
 	public boolean lock_to_Vehicle = false;
+	public double lookDown = 90;
+	public double radarRange = 1200 * 1200;
 	public float induction_precision;
 	public String flashname = null;
 	public int flashfuse = 1;

@@ -1,9 +1,20 @@
 package handmadevehicle.render;
 
+import cpw.mods.fml.client.FMLClientHandler;
+import handmadeguns.HandmadeGunsCore;
 import handmadeguns.client.render.*;
+import handmadeguns.items.HMGItemAttachment_reddot;
+import handmadeguns.items.HMGItemAttachment_scope;
+import handmadeguns.items.HMGItemSightBase;
 import handmadevehicle.entity.parts.turrets.TurretObj;
 import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraftforge.client.IItemRenderer;
+import net.minecraftforge.client.MinecraftForgeClient;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 
 import java.util.ArrayList;
 
@@ -11,6 +22,7 @@ import static handmadeguns.event.RenderTickSmoothing.smooth;
 import static handmadevehicle.HMVehicle.HMV_Proxy;
 import static handmadevehicle.render.RenderVehicle.currentBaseLogic;
 import static handmadevehicle.render.RenderVehicle.currentEntity;
+import static net.minecraft.util.MathHelper.wrapAngleTo180_float;
 import static org.lwjgl.opengl.GL11.*;
 
 public class PartsRender_Vehicle extends PartsRender {
@@ -25,21 +37,29 @@ public class PartsRender_Vehicle extends PartsRender {
 			if(parts instanceof HMVVehicleParts && ((HMVVehicleParts) parts).isTurretParts){
 				states = new GunState[2];
 				TurretObj linkedTurret = currentBaseLogic.allturrets[((HMVVehicleParts) parts).linkedTurretID];
-				remainbullets = linkedTurret.dummyGunItem.remain_Bullet(linkedTurret.dummyGunStack);
-				if(linkedTurret.isreloading()){
-					states[0] = GunState.Reload;
-					flame = linkedTurret.getDummyStackTag().getInteger("RloadTime") - smooth;
-				}else if(linkedTurret.isLoading()){
-					states[0] = GunState.Recoil;
-					flame = (linkedTurret.getDummyStackTag().getByte("Bolt") - smooth) * 10;
- 				}else {
-					states[0] = GunState.Default;
-					flame = 0;
-				}
-				if(HMV_Proxy.iszooming()){
-					states[1] = GunState.ADS;
+				if(linkedTurret.dummyGunItem != null && linkedTurret.dummyGunStack != null) {
+					remainbullets = linkedTurret.dummyGunItem.remain_Bullet(linkedTurret.dummyGunStack);
+					if (linkedTurret.isreloading()) {
+						states[0] = GunState.Reload;
+						flame = linkedTurret.getDummyStackTag().getInteger("RloadTime") - smooth;
+					} else if (linkedTurret.isLoading()) {
+						states[0] = GunState.Recoil;
+						flame = (linkedTurret.getDummyStackTag().getByte("Bolt") - smooth) * 10;
+					} else {
+						states[0] = GunState.Default;
+						flame = 0;
+					}
+					if (HMV_Proxy.iszooming()) {
+						states[1] = GunState.ADS;
+					} else {
+						states[1] = GunState.Default;
+					}
 				}else {
-					states[1] = GunState.Default;
+					remainbullets = 0;
+					{
+						states[0] = GunState.Reload;
+						flame = 0;
+					}
 				}
 			}else {
 				states = new GunState[1];
@@ -257,6 +277,12 @@ public class PartsRender_Vehicle extends PartsRender {
 						glAlphaFunc(GL_EQUAL, 1);
 					}
 				}
+				if(((HMVVehicleParts) parts).isTurret_linkedGunMount &&
+						currentBaseLogic.allturrets[((HMVVehicleParts) parts).linkedTurretID]
+						.dummyGunStack != null){
+					renderLinkedStack(currentBaseLogic.allturrets[((HMVVehicleParts) parts).linkedTurretID]
+							.dummyGunStack);
+				}
 				model.renderPart(parts.partsname);
 				float lastBrightnessX = OpenGlHelper.lastBrightnessX;
 				float lastBrightnessY = OpenGlHelper.lastBrightnessY;
@@ -266,7 +292,21 @@ public class PartsRender_Vehicle extends PartsRender {
 			}
 		}
 	}
-	
+
+	public void renderLinkedStack(ItemStack gunStack) {
+		GL11.glPushMatrix();
+		if (gunStack != null) {
+			IItemRenderer gunrender = MinecraftForgeClient.getItemRenderer(gunStack, IItemRenderer.ItemRenderType.EQUIPPED);
+			if (gunrender instanceof HMGRenderItemGun_U_NEW) {
+				GL11.glScalef(0.5f, 0.5f, 0.5f);
+			} else if (gunrender instanceof HMGRenderItemGun_U) {
+				//base は matbase を利用してそれらしく描画可能
+				GL11.glScalef(0.5f, 0.5f, 0.5f);
+				gunrender.renderItem(IItemRenderer.ItemRenderType.ENTITY, gunStack);
+			}
+		}
+		GL11.glPopMatrix();
+	}
 	
 	public void renderParts_Track(HMVVehicleParts parts,float flame,int remainbullets,HMGGunParts_Motion_PosAndRotation rotationCenterAndRotation){
 		flame = (currentBaseLogic.prev_pera_trackPos + (currentBaseLogic.pera_trackPos - currentBaseLogic.prev_pera_trackPos) * smooth)/currentBaseLogic.prefab_vehicle.max_pera_trackPos;

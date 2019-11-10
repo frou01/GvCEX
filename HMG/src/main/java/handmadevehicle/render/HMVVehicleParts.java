@@ -11,6 +11,7 @@ import static java.lang.Integer.parseInt;
 public class HMVVehicleParts extends HMGGunParts {
 	public int linkedTurretID;
 	public boolean isTurretParts = false;
+	public boolean isTurret_linkedGunMount = false;
 	public int trackPieceCount;
 	private HMGGunParts_Motion_PosAndRotation peraPosAndRotation;
 	private HMGGunParts_Motions trackPositions = new HMGGunParts_Motions();

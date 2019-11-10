@@ -102,9 +102,12 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
     
     public String bulletTypeName = "default";
     public int modelid = -1;
-    Vec3 lockedpos;
+    public Vec3 lockedpos;
     public Entity homingEntity;
     public Vec3 lockedBlockPos;
+
+    public boolean isSemiActive;
+
     public float induction_precision = 0.1f;
     public float seekerwidth = 15f;
     public int soundcool;

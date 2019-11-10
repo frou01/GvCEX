@@ -48,7 +48,6 @@ import java.util.Random;
 
 import static handmadeguns.HandmadeGunsCore.islmmloaded;
 import static handmadeguns.HandmadeGunsCore.HMG_proxy;
-import static handmadeguns.items.GunTemp.currentConnectedTurret;
 import static java.lang.Math.*;
 import static java.lang.StrictMath.toRadians;
 import static net.minecraft.util.MathHelper.wrapAngleTo180_float;
@@ -116,25 +115,33 @@ public class HMGItem_Unified_Guns extends Item {
             par3List.add(EnumChatFormatting.WHITE + "ScopeZoom " + "x" + StatCollector.translateToLocal(scopezoom));
         }
         if(gunInfo.needfix){
-            par3List.add(EnumChatFormatting.WHITE + "cannot handhold Shot. Press " + HMG_proxy.getFixkey() + " while pointing block");
+            par3List.add(EnumChatFormatting.WHITE + "you cannot handhold Shot. \nPress " + HMG_proxy.getFixkey() + " while pointing block");
         }else
         if(gunInfo.canfix){
-            par3List.add(EnumChatFormatting.WHITE + "can Fix. Press " + HMG_proxy.getFixkey() + " while pointing block");
+            par3List.add(EnumChatFormatting.WHITE + "you can put on block this \ngun. Press " + HMG_proxy.getFixkey() + " while pointing block");
         }
     }
     public void onUpdate_fromTurret(ItemStack itemstack, World world, Entity entity, int i, boolean flag, TurretObj turretObj){
         guntemp = new GunTemp();
-        currentConnectedTurret = turretObj;
+        guntemp.currentConnectedTurret = turretObj;
+        guntemp.connectedTurret = true;
+        checkTags(itemstack);
+        NBTTagCompound nbt = itemstack.getTagCompound();
+        guntemp.connectedTurret = nbt.getBoolean("IsTurretStack");
+        nbt.setBoolean("HMGfixed",true);
         try{
             onUpdate(itemstack , world , entity , i , flag);
         }catch (Exception e){
             e.printStackTrace();
         }
-        currentConnectedTurret = null;
+        nbt.setBoolean("HMGfixed",false);
+        guntemp = null;
     }
     public void onUpdate(ItemStack itemstack, World world, Entity entity, int i, boolean flag){
         try {
-            guntemp = new GunTemp();
+            if(guntemp == null || !guntemp.connectedTurret){
+                guntemp = new GunTemp();
+            }
             guntemp.invocable = (Invocable) gunInfo.script;
             if (islmmloaded && entity instanceof LMM_IEntityLittleMaidAvatarBase) {
                 return;
@@ -142,7 +149,7 @@ public class HMGItem_Unified_Guns extends Item {
             if (entity != null && flag) {
                 checkTags(itemstack);
                 NBTTagCompound nbt = itemstack.getTagCompound();
-                if (guntemp.connectedTurret = nbt.getBoolean("IsTurretStack") && currentConnectedTurret == null) {
+                if (guntemp.connectedTurret = nbt.getBoolean("IsTurretStack") && guntemp.currentConnectedTurret == null) {
                     return;
                 }
                 if (i != -10) nbt.setBoolean("IsTurretStack", false);
@@ -197,7 +204,7 @@ public class HMGItem_Unified_Guns extends Item {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    if (!world.isRemote && currentConnectedTurret == null) {
+                    if (!world.isRemote && guntemp.currentConnectedTurret == null) {
                         float walkedDist = entity.distanceWalkedModified - nbt.getFloat("prevdistanceWalkedModified");
                         float headShakeDist;
                         if (entity instanceof EntityLivingBase) {
@@ -393,7 +400,7 @@ public class HMGItem_Unified_Guns extends Item {
                     boolean isbulletremaining = remain_Bullet(itemstack) > 0;
                     {
                         if (nbt.getBoolean("IsTriggered")) {
-                            if ((!gunInfo.needfix || nbt.getBoolean("HMGfixed"))) {
+                            if (!gunInfo.needfix || nbt.getBoolean("HMGfixed")) {
                                 if (!nbt.getBoolean("TriggerBacked")) {
                                     if (getburstCount(mode) == 0) {
                                         nbt.setBoolean("Bursting", false);
@@ -520,13 +527,14 @@ public class HMGItem_Unified_Guns extends Item {
                 NBTTagCompound tagCompound = itemstack.getTagCompound();
                 tagCompound.setInteger("RloadTime", 0);//持っていなければリロード初期化
             }
+            guntemp = null;
         }catch (Exception e){
             e.printStackTrace();
         }
     }
     public void lockon(ItemStack itemstack, World world, Entity entity, NBTTagCompound nbt){
-        if(currentConnectedTurret != null){
-            guntemp.TGT = currentConnectedTurret.target;
+        if(guntemp.currentConnectedTurret != null){
+            guntemp.TGT = guntemp.currentConnectedTurret.target;
             if(guntemp.TGT != null)
                 guntemp.islockingentity = true;
         }else {
@@ -620,8 +628,8 @@ public class HMGItem_Unified_Guns extends Item {
     }
     public void fireProcess(ItemStack itemstack, World world, Entity entity, NBTTagCompound nbt){
     	int fireLoop = 1;
-    	if(currentConnectedTurret != null){
-		    fireLoop = currentConnectedTurret.getSyncroFireNum();
+    	if(guntemp.currentConnectedTurret != null){
+		    fireLoop = guntemp.currentConnectedTurret.getSyncroFireNum();
 	    }
     	for(int fired = 0;fired < fireLoop;fired ++) {
 		    if (!world.isRemote) {
@@ -717,8 +725,8 @@ public class HMGItem_Unified_Guns extends Item {
 			    }
 			
 			    if (bullet != null) {
-                    if (currentConnectedTurret != null) {
-                        currentConnectedTurret.setBulletsPos(bullet);
+                    if (guntemp.currentConnectedTurret != null) {
+                        guntemp.currentConnectedTurret.setBulletsPos(bullet);
                     }else this.Flash(itemstack, world, entity, nbt);
 				    for (HMGEntityBulletBase bulletBase : bullet) {
 					    bulletBase.knockbackXZ = gunInfo.knockback;
@@ -735,7 +743,7 @@ public class HMGItem_Unified_Guns extends Item {
 					    bulletBase.damageRange = gunInfo.damagerange;
 					    bulletBase.resistanceinwater = gunInfo.resistanceinWater;
 
-                        if (currentConnectedTurret == null) {
+                        if (guntemp.currentConnectedTurret == null) {
                             if (guntemp.islockingentity) {
                                 bulletBase.homingEntity = guntemp.TGT;
                                 bulletBase.induction_precision = gunInfo.induction_precision;
@@ -749,10 +757,10 @@ public class HMGItem_Unified_Guns extends Item {
                         }else {
                             if(gunInfo.canlock) {
                                 if (guntemp.islockingentity) {
-                                    bulletBase.homingEntity = currentConnectedTurret.target;
+                                    bulletBase.homingEntity = guntemp.currentConnectedTurret.target;
                                     bulletBase.induction_precision = gunInfo.induction_precision;
                                 } else if (guntemp.islockingblock) {
-                                    bulletBase.lockedBlockPos = currentConnectedTurret.lockedBlockPos;
+                                    bulletBase.lockedBlockPos = guntemp.currentConnectedTurret.lockedBlockPos;
                                     bulletBase.induction_precision = gunInfo.induction_precision;
                                 }
                             }
@@ -926,7 +934,7 @@ public class HMGItem_Unified_Guns extends Item {
     }
     public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
     	checkTags(par1ItemStack);
-        if(!gunInfo.needfix||(par1ItemStack.getTagCompound().getBoolean("HMGfixed"))) {
+        if(!gunInfo.needfix || (par1ItemStack.getTagCompound().getBoolean("HMGfixed"))) {
             HMG_proxy.resetRightclicktimer();
             par1ItemStack.getTagCompound().setBoolean("IsTriggered", true);
             par1ItemStack.getTagCompound().setBoolean("set_up", true);
@@ -1150,8 +1158,8 @@ public class HMGItem_Unified_Guns extends Item {
     
     }
     public IInventory getuserInventory(Entity entity){
-        if(currentConnectedTurret != null && currentConnectedTurret.connectedInventory != null){
-           return currentConnectedTurret.connectedInventory;
+        if(guntemp.currentConnectedTurret != null && guntemp.currentConnectedTurret.connectedInventory != null){
+           return guntemp.currentConnectedTurret.connectedInventory;
         }
         if (entity instanceof EntityPlayer) {
             return ((EntityPlayer) entity).inventory;
@@ -1186,6 +1194,7 @@ public class HMGItem_Unified_Guns extends Item {
         {
             if (iInventory.getStackInSlot(i) != null && iInventory.getStackInSlot(i).getItem() == p_146029_1_)
             {
+                System.out.println("debug" + i);
                 return i;
             }
         }
@@ -1229,9 +1238,9 @@ public class HMGItem_Unified_Guns extends Item {
         else return !(entity instanceof PlacedGunEntity) || !(entity.riddenByEntity == null || entity.riddenByEntity instanceof EntityPlayer);
     }
     public IInventory getInventory_fromEntity(Entity entity){
-        if(guntemp.connectedTurret && GunTemp.currentConnectedTurret != null &&
-                currentConnectedTurret.motherEntity instanceof HasBaseLogic){
-            return ((HasBaseLogic) currentConnectedTurret.motherEntity).getBaseLogic().inventoryVehicle;
+        if(guntemp.connectedTurret && guntemp.currentConnectedTurret != null &&
+                guntemp.currentConnectedTurret.motherEntity instanceof HasBaseLogic){
+            return ((HasBaseLogic) guntemp.currentConnectedTurret.motherEntity).getBaseLogic().inventoryVehicle;
         }
         if(entity instanceof EntityPlayer)
             return ((EntityPlayer) entity).inventory;
@@ -1528,6 +1537,7 @@ public class HMGItem_Unified_Guns extends Item {
         gunInfo.sightPosS = new double[]{(-px + 0.694f)*0.2 * gunInfo.inworldScale,(-py + 1.8f)*0.2 * gunInfo.inworldScale,-pz*0.2 * gunInfo.inworldScale};
     }
     public double[] getSeatpos(ItemStack itemStack){
+        if(guntemp == null)guntemp = new GunTemp();
         guntemp.items = new ItemStack[6];
         try {
             NBTTagList tags = (NBTTagList) itemStack.getTagCompound().getTag("Items");

@@ -1,0 +1,100 @@
+---- Minecraft Crash Report ----
+// Don't be sad, have a hug! <3
+
+Time: 19/11/10 21:05
+Description: Ticking entity
+
+java.lang.NullPointerException: Ticking entity
+	at handmadevehicle.entity.parts.turrets.TurretObj.lock(TurretObj.java:351)
+	at handmadevehicle.entity.parts.turrets.TurretObj.update(TurretObj.java:558)
+	at handmadevehicle.entity.parts.logics.BaseLogic.updateCommon(BaseLogic.java:701)
+	at handmadevehicle.entity.parts.logics.BaseLogic.onUpdate(BaseLogic.java:1224)
+	at handmadevehicle.entity.EntityVehicle.onUpdate(EntityVehicle.java:132)
+	at net.minecraft.world.World.updateEntityWithOptionalForce(World.java:2298)
+	at net.minecraft.world.WorldServer.updateEntityWithOptionalForce(WorldServer.java:684)
+	at net.minecraft.world.World.updateEntity(World.java:2258)
+	at net.minecraft.world.World.updateEntities(World.java:2108)
+	at net.minecraft.world.WorldServer.updateEntities(WorldServer.java:515)
+	at net.minecraft.server.MinecraftServer.updateTimeLightAndEntities(MinecraftServer.java:703)
+	at net.minecraft.server.MinecraftServer.tick(MinecraftServer.java:614)
+	at net.minecraft.server.integrated.IntegratedServer.tick(IntegratedServer.java:118)
+	at net.minecraft.server.MinecraftServer.run(MinecraftServer.java:485)
+	at net.minecraft.server.MinecraftServer$2.run(MinecraftServer.java:752)
+
+
+A detailed walkthrough of the error, its code path and all known details is as follows:
+---------------------------------------------------------------------------------------
+
+-- Head --
+Stacktrace:
+	at handmadevehicle.entity.parts.turrets.TurretObj.lock(TurretObj.java:351)
+	at handmadevehicle.entity.parts.turrets.TurretObj.update(TurretObj.java:558)
+	at handmadevehicle.entity.parts.logics.BaseLogic.updateCommon(BaseLogic.java:701)
+	at handmadevehicle.entity.parts.logics.BaseLogic.onUpdate(BaseLogic.java:1224)
+	at handmadevehicle.entity.EntityVehicle.onUpdate(EntityVehicle.java:132)
+	at net.minecraft.world.World.updateEntityWithOptionalForce(World.java:2298)
+	at net.minecraft.world.WorldServer.updateEntityWithOptionalForce(WorldServer.java:684)
+	at net.minecraft.world.World.updateEntity(World.java:2258)
+
+-- Entity being ticked --
+Details:
+	Entity Type: HMVehicle.HMVVehicle (handmadevehicle.entity.EntityVehicle)
+	Entity ID: 26
+	Entity Name: entity.HMVehicle.HMVVehicle.name
+	Entity's Exact location: 1556.96, 62.00, 311.29
+	Entity's Block location: World: (1556,62,311), Chunk: (at 4,3,7 in 97,19; contains blocks 1552,0,304 to 1567,255,319), Region: (3,0; contains chunks 96,0 to 127,31, blocks 1536,0,0 to 2047,255,511)
+	Entity's Momentum: 0.20, 0.00, 0.04
+Stacktrace:
+	at net.minecraft.world.World.updateEntities(World.java:2108)
+	at net.minecraft.world.WorldServer.updateEntities(WorldServer.java:515)
+
+-- Affected level --
+Details:
+	Level name: Copy of Copy of Copy of Copy of
+	All players: 1 total; [EntityPlayerMP['Player682'/98, l='Copy of Copy of Copy of Copy of', x=1560.49, y=62.72, z=312.00]]
+	Chunk stats: ServerChunkCache: 609 Drop: 0
+	Level seed: -5854246074712388222
+	Level generator: ID 01 - flat, ver 0. Features enabled: true
+	Level generator options: 2;7,60x3,2;1;village
+	Level spawn location: World: (1511,4,213), Chunk: (at 7,0,5 in 94,13; contains blocks 1504,0,208 to 1519,255,223), Region: (2,0; contains chunks 64,0 to 95,31, blocks 1024,0,0 to 1535,255,511)
+	Level time: 128158 game time, 895 day time
+	Level dimension: 0
+	Level storage version: 0x04ABD - Anvil
+	Level weather: Rain time: 125041 (now: false), thunder time: 12830 (now: true)
+	Level game mode: Game mode: creative (ID 1). Hardcore: false. Cheats: true
+Stacktrace:
+	at net.minecraft.server.MinecraftServer.updateTimeLightAndEntities(MinecraftServer.java:703)
+	at net.minecraft.server.MinecraftServer.tick(MinecraftServer.java:614)
+	at net.minecraft.server.integrated.IntegratedServer.tick(IntegratedServer.java:118)
+	at net.minecraft.server.MinecraftServer.run(MinecraftServer.java:485)
+	at net.minecraft.server.MinecraftServer$2.run(MinecraftServer.java:752)
+
+-- System Details --
+Details:
+	Minecraft Version: 1.7.10
+	Operating System: Windows 10 (amd64) version 10.0
+	Java Version: 1.8.0_231, Oracle Corporation
+	Java VM Version: Java HotSpot(TM) 64-Bit Server VM (mixed mode), Oracle Corporation
+	Memory: 871756824 bytes (831 MB) / 1453326336 bytes (1386 MB) up to 3803185152 bytes (3627 MB)
+	JVM Flags: 0 total; 
+	AABB Pool Size: 0 (0 bytes; 0 MB) allocated, 0 (0 bytes; 0 MB) used
+	IntCache: cache: 0, tcache: 0, allocated: 0, tallocated: 0
+	FML: MCP v9.05 FML v7.10.99.99 Minecraft Forge 10.13.4.1614 11 mods loaded, 11 mods active
+	States: 'U' = Unloaded 'L' = Loaded 'C' = Constructed 'H' = Pre-initialized 'I' = Initialized 'J' = Post-initialized 'A' = Available 'D' = Disabled 'E' = Errored
+	UCHIJAAAA	mcp{9.05} [Minecraft Coder Pack] (minecraft.jar) 
+	UCHIJAAAA	FML{7.10.99.99} [Forge Mod Loader] (forgeSrc-1.7.10-10.13.4.1614-1.7.10.jar) 
+	UCHIJAAAA	Forge{10.13.4.1614} [Minecraft Forge] (forgeSrc-1.7.10-10.13.4.1614-1.7.10.jar) 
+	UCHIJAAAA	HandmadeGuns{1.7.x-srg-1} [HandMadeGunsModEX] (HMG-EX12.322.jar) 
+	UCHIJAAAA	HMVehicle{1.7.x-srg-1} [HMVehicle] (HMG-EX12.322.jar) 
+	UCHIJAAAA	lmmx{1.0} [lmmx] (Depend-1.0.jar) 
+	UCHIJAAAA	MMMLibX{1.7.x-srg-1} [MMMLibX] (Depend-1.0.jar) 
+	UCHIJAAAA	Sokoniyatugairuzo{1.7.x} [Sokoniyatugairuzo] (Depend-1.0.jar) 
+	UCHIJAAAA	zabuton{1.0} [zabuton] (Depend-1.0.jar) 
+	UCHIJAAAA	GVCGuns{1.7.x-srg-1} [GVCGuns] (GVC-HD12.33.jar) 
+	UCHIJAAAA	GVCMob{HD11} [Guerrilla vs Command mod : High Difficulity version] (GVC-HD12.33.jar) 
+	GL info: ~~ERROR~~ RuntimeException: No OpenGL context found in the current thread.
+	Profiler Position: N/A (disabled)
+	Vec3 Pool Size: 0 (0 bytes; 0 MB) allocated, 0 (0 bytes; 0 MB) used
+	Player Count: 1 / 8; [EntityPlayerMP['Player682'/98, l='Copy of Copy of Copy of Copy of', x=1560.49, y=62.72, z=312.00]]
+	Type: Integrated Server (map_client.txt)
+	Is Modded: Definitely; Client brand changed to 'fml,forge'

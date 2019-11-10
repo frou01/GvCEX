@@ -18,13 +18,19 @@ import handmadevehicle.entity.prefab.Prefab_Turret;
 import handmadevehicle.inventory.InventoryVehicle;
 import handmadevehicle.network.HMVPacketHandler;
 import handmadevehicle.network.packets.HMVPacketMissileAndLockMarker;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockFence;
+import net.minecraft.block.BlockFenceGate;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
@@ -33,6 +39,7 @@ import javax.vecmath.Quat4d;
 import javax.vecmath.Vector3d;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import static handmadeguns.HandmadeGunsCore.cfg_defgravitycof;
 import static handmadeguns.HandmadeGunsCore.HMG_proxy;
@@ -277,43 +284,78 @@ public class TurretObj implements HasLoopSound{
     }
     
     public void lock(){
-        try {
-            Vector3d frontVec = getCannonDir();
-            transformVecforMinecraft(frontVec);
-            frontVec.scale(-1);
-            target = null;
-            double predeg = -1;
-            for (Object obj : worldObj.loadedEntityList) {
-                Entity aEntity = (Entity) obj;
-                if (!aEntity.isDead) {
-                    if (aEntity.worldObj == this.worldObj && aEntity.canBeCollidedWith() &&
-                                iscandamageentity(aEntity) &&
-                                (!prefab_turret.gunInfo.lock_to_Vehicle || aEntity instanceof IVehicle)) {
-                        double distsq = currentEntity.getDistanceSqToEntity(aEntity);
-                        if (distsq < 16777216) {
-                            Vector3d totgtvec = new Vector3d(currentEntity.posX - aEntity.posX, currentEntity.posY - aEntity.posY, currentEntity.posZ - aEntity.posZ);
-                            if (totgtvec.length() > 1) {
-                                totgtvec.scale(1);
-                                double deg = wrapAngleTo180_double(toDegrees(totgtvec.angle(frontVec)));
-                                if (prefab_turret.seekerSize > abs(deg) && (abs(deg) < predeg || predeg == -1)) {
-                                    predeg = deg;
-                                    target = aEntity;
+        if(dummyGunItem != null && currentEntity != null) {
+            try {
+                Vector3d frontVec = getCannonDir();
+                transformVecforMinecraft(frontVec);
+                frontVec.scale(-1);
+                target = null;
+                double predeg = -1;
+                if(dummyGunItem.gunInfo.canlockEntity) {
+                    for (Object obj : worldObj.loadedEntityList) {
+                        Entity aEntity = (Entity) obj;
+                        if (!aEntity.isDead) {
+                            if (aEntity.worldObj == this.worldObj && aEntity.canBeCollidedWith() &&
+                                    iscandamageentity(aEntity) &&
+                                    (!dummyGunItem.gunInfo.lock_to_Vehicle || aEntity.width > 1.2)) {
+                                double distsq = currentEntity.getDistanceSqToEntity(aEntity);
+                                if (distsq < 16777216) {
+                                    Vector3d totgtvec = new Vector3d(currentEntity.posX - aEntity.posX, currentEntity.posY - aEntity.posY, currentEntity.posZ - aEntity.posZ);
+                                    if (totgtvec.length() > 1) {
+                                        totgtvec.normalize();
+                                        if (totgtvec.y < dummyGunItem.gunInfo.lookDown) {
+                                            double deg = wrapAngleTo180_double(toDegrees(totgtvec.angle(frontVec)));
+                                            if (prefab_turret.seekerSize > abs(deg) && (abs(deg) < predeg || predeg == -1)) {
+                                                predeg = deg;
+                                                target = aEntity;
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
                     }
                 }
-            }
-            if(currentEntity instanceof EntityPlayerMP && prefab_turret.gunInfo.semiActive && missile != null) {
-                for (HMGEntityBulletBase amissile:missile) {
-                    amissile.homingEntity = target;
+                if(dummyGunItem.gunInfo.canlockBlock){
+                    Vec3 vec3 = Vec3.createVectorHelper(currentEntity.posX, currentEntity.posY + currentEntity.getEyeHeight(), currentEntity.posZ);
+                    Vec3 playerlook = getMinecraftVecObj(frontVec);
+
+                    playerlook.xCoord *= -1;
+                    playerlook.yCoord *= -1;
+                    playerlook.zCoord *= -1;
+
+                    playerlook = Vec3.createVectorHelper(playerlook.xCoord * 256, playerlook.yCoord * 256, playerlook.zCoord * 256);
+
+                    Vec3 vec31 = Vec3.createVectorHelper(currentEntity.posX + playerlook.xCoord, currentEntity.posY + currentEntity.getEyeHeight() + playerlook.yCoord, currentEntity.posZ + playerlook.zCoord);
+                    MovingObjectPosition movingobjectposition = handmadeguns.Util.Utils.getmovingobjectPosition_forBlock(worldObj,vec3, vec31, false, true, false);//Õ“Ë‚·‚éƒuƒƒbƒN‚ð’²‚×‚é
+                    if(movingobjectposition != null && movingobjectposition.hitVec != null){
+                        if (missile != null) {
+                            lockedBlockPos = movingobjectposition.hitVec;
+                        }
+                    }
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            if(currentEntity instanceof EntityPlayerMP && target != null && missile != null){
-                HMVPacketHandler.INSTANCE.sendTo(new HMVPacketMissileAndLockMarker(missile, target), (EntityPlayerMP) currentEntity);
+            if (missile != null) {
+                ArrayList<HMGEntityBulletBase> tempRemove = new ArrayList<HMGEntityBulletBase>();
+                for (HMGEntityBulletBase amissile : missile) {
+                    amissile.homingEntity = target;
+                    amissile.lockedBlockPos = lockedBlockPos;
+                    if(!amissile.isSemiActive){
+                        tempRemove.add(amissile);
+                    }
+                }
+                if(lockedBlockPos != null && currentEntity instanceof EntityPlayerMP) {
+                    HMVPacketHandler.INSTANCE.sendTo(new HMVPacketMissileAndLockMarker(missile,
+                                    new double[]{lockedBlockPos.xCoord,lockedBlockPos.yCoord,lockedBlockPos.zCoord}),
+                            (EntityPlayerMP) currentEntity);
+                }
+                if (currentEntity instanceof EntityPlayerMP && target != null) {
+                    HMVPacketHandler.INSTANCE.sendTo(new HMVPacketMissileAndLockMarker(missile, target), (EntityPlayerMP) currentEntity);
+                }
+                missile.removeAll(tempRemove);
             }
-        }catch (Exception e){
-            e.printStackTrace();
         }
     }
     
@@ -481,12 +523,15 @@ public class TurretObj implements HasLoopSound{
         if(!prefab_turret.needGunStack) {
             if (dummyGunItem == null) dummyGunItem = new HMGItem_Unified_Guns();
             if (dummyGunStack == null) dummyGunStack = new ItemStack(dummyGunItem);
+            dummyGunItem.gunInfo = prefab_turret.gunInfo;
         }else if(motherEntity instanceof HasBaseLogic){
             InventoryVehicle inventoryVehicle = ((HasBaseLogic) motherEntity).getBaseLogic().inventoryVehicle;
+            connectedInventory = inventoryVehicle;
             dummyGunStack = inventoryVehicle.getStackInSlot(linkedGunStackID);
             if(dummyGunStack != null){
                 dummyGunItem = (HMGItem_Unified_Guns) dummyGunStack.getItem();
-                prefab_turret.gunInfo = dummyGunItem.gunInfo;
+            }else {
+                dummyGunItem = null;
             }
         }
         if(currentEntity == null)
@@ -508,7 +553,7 @@ public class TurretObj implements HasLoopSound{
         triggerFreeze--;
         if(readytoFire())childFireBlank=prefab_turret.childFireBlank;
         else childFireBlank--;
-        if(!worldObj.isRemote && prefab_turret.gunInfo.canlock){
+        if(!worldObj.isRemote){
             lock();
         }
         if(prefab_turret.gunInfo.semiActive){
@@ -563,14 +608,11 @@ public class TurretObj implements HasLoopSound{
             achild.mother = this;
             achild.update(temp, this.pos);
         }
-    
-        GunTemp.currentConnectedTurret = this;
         if(dummyGunStack != null) {
             getDummyStackTag().setBoolean("IsTurretStack", true);
             dummyGunItem.onUpdate_fromTurret(dummyGunStack, worldObj, currentEntity, -10, true, this);
             getDummyStackTag().setBoolean("IsTurretStack", false);
         }
-        GunTemp.currentConnectedTurret = null;
         this.currentEntity = null;
 //        if(!worldObj.isRemote) {
 //            cycle_timer--;
@@ -735,19 +777,19 @@ public class TurretObj implements HasLoopSound{
         }
 	    for (HMGEntityBulletBase abullet : bullets) {
             abullet.setPosition(cannonPos.x,cannonPos.y,cannonPos.z);
-		    abullet.setThrowableHeading(lookVec.x, lookVec.y, lookVec.z, prefab_turret.gunInfo.speed, prefab_turret.gunInfo.spread_setting, currentEntity);
+		    abullet.setThrowableHeading(lookVec.x, lookVec.y, lookVec.z, dummyGunItem.gunInfo.speed, dummyGunItem.gunInfo.spread_setting, currentEntity);
 		    if(abullet.homingEntity != null)missile.add(abullet);
 	    }
 	    {
-		    if(prefab_turret.gunInfo.flashname != null){
+		    if(dummyGunItem.gunInfo.flashname != null){
                 PacketSpawnParticle flash = new PacketSpawnParticle(
                         cannonPos.x + lookVec.x * prefab_turret.flashoffset,
                         cannonPos.y + lookVec.y * prefab_turret.flashoffset,
                         cannonPos.z + lookVec.z * prefab_turret.flashoffset,
                         toDegrees(-atan2(lookVec.x, lookVec.z)),
-                        toDegrees(-asin(lookVec.y)), 100, prefab_turret.gunInfo.flashname, true);
-                flash.fuse = prefab_turret.gunInfo.flashfuse;
-                flash.scale = prefab_turret.gunInfo.flashScale;
+                        toDegrees(-asin(lookVec.y)), 100, dummyGunItem.gunInfo.flashname, true);
+                flash.fuse = dummyGunItem.gunInfo.flashfuse;
+                flash.scale = dummyGunItem.gunInfo.flashScale;
                 flash.id = 100;
                 HMGPacketHandler.INSTANCE.sendToAll(flash);
 		    }else {
@@ -757,8 +799,8 @@ public class TurretObj implements HasLoopSound{
                         cannonPos.z + lookVec.z * prefab_turret.flashoffset,
                         toDegrees(-atan2(lookVec.x, lookVec.z)),
                         toDegrees(-asin(lookVec.y)), 0,100);
-                flash.fuse = prefab_turret.gunInfo.flashfuse;
-                flash.scale = prefab_turret.gunInfo.flashScale;
+                flash.fuse = dummyGunItem.gunInfo.flashfuse;
+                flash.scale = dummyGunItem.gunInfo.flashScale;
                 flash.id = 100;
                 HMGPacketHandler.INSTANCE.sendToAll(flash);
 		    }

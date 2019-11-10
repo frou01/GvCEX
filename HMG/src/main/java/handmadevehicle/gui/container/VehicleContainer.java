@@ -29,10 +29,11 @@ public class VehicleContainer extends Container {
 					this.addSlotToContainer(new SlotModded(inventoryVehicle, line + raw * 9, 8 + line * 18, 18 + raw * 18));
 				}
 			}
-			for (line = 0; line < inventoryVehicle.getSizeInventory()%9; ++line)
+			for (line = 0; line < inventoryVehicle.baseLogic.info.weaponSlotNum%9; ++line)
 			{
 				this.addSlotToContainer(new SlotModded(inventoryVehicle, line + (numRowsWeapon) * 9, 8 + line * 18, 18 + (numRowsWeapon) * 18));
 			}
+			numRowsWeapon = inventoryVehicle.baseLogic.info.weaponSlotNum / 9;
 
 			int yoffset = numRowsWeapon * 18;
 			numRowsCargo = inventoryVehicle.baseLogic.info.cargoSlotNum / 9;
@@ -43,10 +44,11 @@ public class VehicleContainer extends Container {
 					this.addSlotToContainer(new SlotModded(inventoryVehicle, line + raw * 9, 8 + line * 18, 18 + raw * 18 + yoffset));
 				}
 			}
-			for (line = 0; line < inventoryVehicle.getSizeInventory()%9; ++line)
+			for (line = 0; line < inventoryVehicle.baseLogic.info.cargoSlotNum%9; ++line)
 			{
 				this.addSlotToContainer(new SlotModded(inventoryVehicle, line + (numRowsCargo) * 9, 8 + line * 18, 18 + (numRowsCargo) * 18 + yoffset));
 			}
+			numRowsCargo = inventoryVehicle.baseLogic.info.cargoSlotNum / 9 + (inventoryVehicle.baseLogic.info.cargoSlotNum%9 > 0 ? 1:0);
 
 			numRows = numRowsCargo+numRowsWeapon;
 

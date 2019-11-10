@@ -40,7 +40,7 @@ public class Prefab_Turret {
 	public FireRist[] fireRists;
 	
 	
-	public GunInfo gunInfo = new GunInfo();
+	public final GunInfo gunInfo;
 	
 	public boolean userOnBarrell = false;
 	public double flashoffset;
@@ -50,14 +50,14 @@ public class Prefab_Turret {
 	public String[] gunStackwhitelist;
 
 	public Prefab_Turret(){
-
+		gunInfo = new GunInfo();
 	}
 	public Prefab_Turret(HMGItem_Unified_Guns unified_gun){
+		this.gunInfo = unified_gun.gunInfo;
 		attachGunStack(unified_gun);
 	}
 	public void attachGunStack(HMGItem_Unified_Guns unified_gun){
 
-		this.gunInfo = unified_gun.gunInfo;
 		this.turretYawCenterpos = new Vector3d(this.gunInfo.posGetter.turretRotationYawPoint);
 		this.turretPitchCenterpos = new Vector3d(this.gunInfo.posGetter.turretRotationPitchPoint);
 		if(this.gunInfo.restrictTurretMoveSpeed){

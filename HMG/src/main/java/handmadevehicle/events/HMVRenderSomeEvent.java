@@ -473,8 +473,8 @@ public class HMVRenderSomeEvent {
 								, a_pos_motion.posZ - minecraft.renderViewEntity.posZ
 						);
 						vecToLockonPos.normalize();
-						RotateVectorAroundY(vecToLockonPos, entityplayer.rotationYawHead);
-						RotateVectorAroundX(vecToLockonPos, entityplayer.rotationPitch);
+						RotateVectorAroundY(vecToLockonPos, minecraft.renderViewEntity.rotationYawHead);
+						RotateVectorAroundX(vecToLockonPos, minecraft.renderViewEntity.rotationPitch);
 						renderLockOnMarker(minecraft, turretObj.dummyGunItem.gunInfo.lockOnMarker, vecToLockonPos);
 					}
 				}

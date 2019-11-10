@@ -27,6 +27,7 @@ import javax.script.ScriptException;
 import static handmadeguns.HandmadeGunsCore.*;
 import static java.lang.Double.parseDouble;
 import static java.lang.Integer.parseInt;
+import static java.lang.Math.*;
 
 public class HMGGunMaker {
 	public static ArrayList Guns = new ArrayList();
@@ -2176,6 +2177,12 @@ public class HMGGunMaker {
 				break;
 			case "lock_to_Vehicle":
 				gunInfo.lock_to_Vehicle = Boolean.parseBoolean(type[1]);
+				break;
+			case "lookDown":
+				gunInfo.lookDown = sin(toRadians(Float.parseFloat(type[1])));
+				break;
+			case "radarRange":
+				gunInfo.radarRange = Float.parseFloat(type[1]) * Float.parseFloat(type[1]);
 				break;
 			case "guntype":
 				gunInfo.guntype = parseInt(type[1]);

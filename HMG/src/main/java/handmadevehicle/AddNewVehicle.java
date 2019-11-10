@@ -2,6 +2,7 @@ package handmadevehicle;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import handmadeguns.HMGGunMaker;
+import handmadeguns.HandmadeGunsCore;
 import handmadeguns.client.render.HMGGunParts;
 import handmadeguns.items.guns.HMGItem_Unified_Guns;
 import handmadevehicle.Items.ItemVehicle;
@@ -14,7 +15,9 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static handmadeguns.HandmadeGunsCore.tabshmg;
 import static handmadevehicle.AddWeapon.prefab_turretHashMap;
+import static handmadevehicle.HMVehicle.tabHMV;
 import static java.lang.Boolean.parseBoolean;
 import static java.lang.Float.parseFloat;
 import static java.lang.Double.parseDouble;
@@ -29,6 +32,7 @@ public class AddNewVehicle extends HMGGunMaker {
 			VehicleType vehicleType = null;
 			Prefab_AttachedWeapon current = null;
 			int turretId_current = 0;
+			String tabname = null;
 			ArrayList<HMGGunParts> partslist = new ArrayList<HMGGunParts>();
 			//File file = new File(configfile,"hmg_handmadeguns.txt");
 			if (checkBeforeReadfile(file))
@@ -165,6 +169,9 @@ public class AddNewVehicle extends HMGGunMaker {
 								case "back":
 									current = current.motherTurret;
 									break;
+								case "Tabname":
+									tabname = type[1];
+									break;
 								case "End":
 									if (isClient) {
 										data.setModel();
@@ -172,8 +179,14 @@ public class AddNewVehicle extends HMGGunMaker {
 									}
 									prefabBaseHashMap.put(dataName, data);
 									Item check = GameRegistry.findItem("HMVehicle",dataName);
-									if(check == null)
-										GameRegistry.registerItem(new ItemVehicle(dataName).setUnlocalizedName(dataName), dataName);
+									if(check == null){
+										Item itemVehicle;
+										GameRegistry.registerItem(itemVehicle = new ItemVehicle(dataName).setUnlocalizedName(dataName), dataName);
+										if(tabname == null) itemVehicle.setCreativeTab(tabHMV);
+										else if(tabshmg.containsKey(tabname)){
+											itemVehicle.setCreativeTab(tabshmg.get(tabname));
+										}
+									}
 									break;
 							}
 							data.readSettings(type);
@@ -227,6 +240,9 @@ public class AddNewVehicle extends HMGGunMaker {
 			case "TurretParts":
 				((HMVVehicleParts)currentParts).isTurretParts = true;
 				((HMVVehicleParts)currentParts).linkedTurretID = parseInt(type[readerCnt++]);
+				break;
+			case "isTurret_linkedGunMount":
+				((HMVVehicleParts)currentParts).isTurret_linkedGunMount = true;
 				break;
 			case "AddSomeMotion":
 				((HMVVehicleParts)currentParts).AddSomethingMotionKey(type);

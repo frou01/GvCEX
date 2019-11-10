@@ -13,6 +13,6 @@ seekerSize,30
 
 needGunStack,true
 useVehicleInventory,true
-gunStackwhitelist,PKM,RPK,DP28LMG
+gunStackwhitelist,R-3,R-27,Kh-31
 
 End

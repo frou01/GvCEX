@@ -28,6 +28,6 @@ public class GunTemp {
 	public int selectingMagazine;
 	public int currentMgazine;
 	
-	public static TurretObj currentConnectedTurret;
+	public TurretObj currentConnectedTurret;
 	public boolean connectedTurret;
 }

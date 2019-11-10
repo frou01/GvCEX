@@ -75,6 +75,9 @@ public class CLProxy extends CMProxy {
 	static boolean reload_stopper;
 	
 	static boolean inited = false;
+
+	static int currentStickControllerID;
+
 	public CLProxy() {
 		if(!inited) {
 			net.minecraftforge.client.ClientCommandHandler.instance.registerCommand(hmv_commandReloadparm);
@@ -140,29 +143,33 @@ public class CLProxy extends CMProxy {
 	
 	public float getXaxis(){
 		if(Controllers.getControllerCount() > 0){
-			Controller stick = Controllers.getController(0);
+			Controller stick = Controllers.getController(currentStickControllerID);
 			if(stick != null && stick.getAxisCount() > cfgControl_axisXID)return stick.getAxisValue(cfgControl_axisXID);
+			else currentStickControllerID++;
 		}
 		return 0;
 	}
 	public float getYaxis(){
 		if(Controllers.getControllerCount() > 0){
-			Controller stick = Controllers.getController(0);
+			Controller stick = Controllers.getController(currentStickControllerID);
 			if(stick != null && stick.getAxisCount() > cfgControl_axisYID)return stick.getAxisValue(cfgControl_axisYID);
+			else currentStickControllerID++;
 		}
 		return 0;
 	}
 	public float getZaxis(){
 		if(Controllers.getControllerCount() > 0){
-			Controller stick = Controllers.getController(0);
+			Controller stick = Controllers.getController(currentStickControllerID);
 			if(stick != null && stick.getAxisCount() > cfgControl_axisZID)return stick.getAxisValue(cfgControl_axisZID);
+			else currentStickControllerID++;
 		}
 		return 0;
 	}
 	public float getZaxis2(){
 		if(Controllers.getControllerCount() > 0){
-			Controller stick = Controllers.getController(0);
+			Controller stick = Controllers.getController(currentStickControllerID);
 			if(stick != null && stick.getAxisCount() > cfgControl_axisZ2ID)return stick.getAxisValue(cfgControl_axisZ2ID);
+			else currentStickControllerID++;
 		}
 		return 0;
 	}

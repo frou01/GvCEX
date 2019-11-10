@@ -1,6 +1,9 @@
 Texture,pra
 Stack,64
 Name,Prastic
+
+Tabname,HMG_GVCGuns_ammo
+
 Magazine,Prastic
 Recipe1,aba
 Recipe2,   
