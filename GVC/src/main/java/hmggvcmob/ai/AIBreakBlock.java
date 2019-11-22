@@ -36,7 +36,7 @@ public class AIBreakBlock extends EntityAIBase
      */
     public boolean shouldExecute()
     {
-        if((theEntity.getAttackTarget() != null && !theEntity.getEntitySenses().canSee(theEntity.getAttackTarget())||(theEntity instanceof IflagBattler && ((IflagBattler) theEntity).istargetingflag()))){
+        if((theEntity.getAttackTarget() != null && !theEntity.getEntitySenses().canSee(theEntity.getAttackTarget()))){
             targetBlockpos = new int[]{
                     (int)(theEntity.posX + theEntity.getLookVec().xCoord),
                     (int)(theEntity.posY + 1 + theEntity.getLookVec().yCoord),

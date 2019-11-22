@@ -422,7 +422,7 @@ public class TurretObj implements HasLoopSound{
         
     
         boolean result1 = false;
-        if(prefab_turret.turretspeedY != -1) {
+        if(prefab_turret.turretspeedY > 0) {
             double AngulardifferenceYaw = targetyaw - this.turretrotationYaw;
             AngulardifferenceYaw = wrapAngleTo180_double(AngulardifferenceYaw);
             if(Double.isNaN(targetyaw))AngulardifferenceYaw = 0;
@@ -452,7 +452,7 @@ public class TurretObj implements HasLoopSound{
         }
     
         boolean result2 = false;
-        if(prefab_turret.turretspeedP != -1) {
+        if(prefab_turret.turretspeedP > 0) {
             double AngulardifferencePitch = targetpitch - this.turretrotationPitch;
             if (Double.isNaN(targetpitch)) AngulardifferencePitch = 0;
             AngulardifferencePitch = wrapAngleTo180_double(AngulardifferencePitch);
@@ -528,9 +528,14 @@ public class TurretObj implements HasLoopSound{
             InventoryVehicle inventoryVehicle = ((HasBaseLogic) motherEntity).getBaseLogic().inventoryVehicle;
             connectedInventory = inventoryVehicle;
             dummyGunStack = inventoryVehicle.getStackInSlot(linkedGunStackID);
-            if(dummyGunStack != null){
+            if(dummyGunStack != null && dummyGunStack.getItem() instanceof HMGItem_Unified_Guns){
                 dummyGunItem = (HMGItem_Unified_Guns) dummyGunStack.getItem();
+                if (dummyGunStack.stackSize < 0) {
+                    dummyGunStack = null;
+                    dummyGunItem = null;
+                }
             }else {
+                dummyGunStack = null;
                 dummyGunItem = null;
             }
         }
@@ -766,7 +771,7 @@ public class TurretObj implements HasLoopSound{
                 Vector3d localBulletMotion = new Vector3d();
                 getVector_local_inRotatedObj(relativeCannonPos, localBulletPos, linkedBaseLogic.bodyRot);
                 getVector_local_inRotatedObj(lookVec, localBulletMotion, linkedBaseLogic.bodyRot);
-                System.out.println("localBulletPos" + localBulletPos);
+//                System.out.println("localBulletPos" + localBulletPos);
                 localBulletPos.sub(centerOfGravity);
 
                 Vector3d recoilRotVector = new Vector3d();
@@ -1040,6 +1045,7 @@ public class TurretObj implements HasLoopSound{
         if(dummyGunStack != null) {
             if (getDummyStackTag() != null) temp.setTag("DummysTag", getDummyStackTag());
             temp.setInteger("DummysDamage", dummyGunStack.getItemDamage());
+            temp.setInteger("DummysStackSize", dummyGunStack.stackSize);
         }
         tagCompound.setTag("turret" + id,temp);
     }

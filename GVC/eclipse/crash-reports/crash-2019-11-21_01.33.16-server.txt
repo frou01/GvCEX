@@ -1,0 +1,86 @@
+---- Minecraft Crash Report ----
+// Shall we play a game?
+
+Time: 19/11/21 1:33
+Description: Ticking block entity
+
+java.lang.NullPointerException: Ticking block entity
+	at hmggvcmob.tile.TileEntityFlag.updateEntity(TileEntityFlag.java:84)
+	at net.minecraft.world.World.updateEntities(World.java:2160)
+	at net.minecraft.world.WorldServer.updateEntities(WorldServer.java:515)
+	at net.minecraft.server.MinecraftServer.updateTimeLightAndEntities(MinecraftServer.java:703)
+	at net.minecraft.server.MinecraftServer.tick(MinecraftServer.java:614)
+	at net.minecraft.server.integrated.IntegratedServer.tick(IntegratedServer.java:118)
+	at net.minecraft.server.MinecraftServer.run(MinecraftServer.java:485)
+	at net.minecraft.server.MinecraftServer$2.run(MinecraftServer.java:752)
+
+
+A detailed walkthrough of the error, its code path and all known details is as follows:
+---------------------------------------------------------------------------------------
+
+-- Head --
+Stacktrace:
+	at hmggvcmob.tile.TileEntityFlag.updateEntity(TileEntityFlag.java:84)
+
+-- Block entity being ticked --
+Details:
+	Name: FlagTile // hmggvcmob.tile.TileEntityFlag
+	Block type: ID #183 (tile.BaseFlagBlock // hmggvcmob.block.GVCBlockFlag)
+	Block data value: 0 / 0x0 / 0b0000
+	Block location: World: (-1307,62,-245), Chunk: (at 5,3,11 in -82,-16; contains blocks -1312,0,-256 to -1297,255,-241), Region: (-3,-1; contains chunks -96,-32 to -65,-1, blocks -1536,0,-512 to -1025,255,-1)
+	Actual block type: ID #183 (tile.BaseFlagBlock // hmggvcmob.block.GVCBlockFlag)
+	Actual block data value: 0 / 0x0 / 0b0000
+Stacktrace:
+	at net.minecraft.world.World.updateEntities(World.java:2160)
+	at net.minecraft.world.WorldServer.updateEntities(WorldServer.java:515)
+
+-- Affected level --
+Details:
+	Level name: FlagTest
+	All players: 1 total; [EntityPlayerMP['Player383'/77, l='FlagTest', x=-1304.72, y=62.88, z=-245.17]]
+	Chunk stats: ServerChunkCache: 1163 Drop: 0
+	Level seed: -7296305551371122087
+	Level generator: ID 01 - flat, ver 0. Features enabled: true
+	Level generator options: 2;7,60x3,2;1;village
+	Level spawn location: World: (-1251,4,-329), Chunk: (at 13,0,7 in -79,-21; contains blocks -1264,0,-336 to -1249,255,-321), Region: (-3,-1; contains chunks -96,-32 to -65,-1, blocks -1536,0,-512 to -1025,255,-1)
+	Level time: 9740 game time, 9740 day time
+	Level dimension: 0
+	Level storage version: 0x04ABD - Anvil
+	Level weather: Rain time: 77566 (now: false), thunder time: 64378 (now: false)
+	Level game mode: Game mode: creative (ID 1). Hardcore: false. Cheats: true
+Stacktrace:
+	at net.minecraft.server.MinecraftServer.updateTimeLightAndEntities(MinecraftServer.java:703)
+	at net.minecraft.server.MinecraftServer.tick(MinecraftServer.java:614)
+	at net.minecraft.server.integrated.IntegratedServer.tick(IntegratedServer.java:118)
+	at net.minecraft.server.MinecraftServer.run(MinecraftServer.java:485)
+	at net.minecraft.server.MinecraftServer$2.run(MinecraftServer.java:752)
+
+-- System Details --
+Details:
+	Minecraft Version: 1.7.10
+	Operating System: Windows 10 (amd64) version 10.0
+	Java Version: 1.8.0_231, Oracle Corporation
+	Java VM Version: Java HotSpot(TM) 64-Bit Server VM (mixed mode), Oracle Corporation
+	Memory: 379881536 bytes (362 MB) / 841482240 bytes (802 MB) up to 3803185152 bytes (3627 MB)
+	JVM Flags: 0 total; 
+	AABB Pool Size: 0 (0 bytes; 0 MB) allocated, 0 (0 bytes; 0 MB) used
+	IntCache: cache: 0, tcache: 0, allocated: 0, tallocated: 0
+	FML: MCP v9.05 FML v7.10.99.99 Minecraft Forge 10.13.4.1614 11 mods loaded, 11 mods active
+	States: 'U' = Unloaded 'L' = Loaded 'C' = Constructed 'H' = Pre-initialized 'I' = Initialized 'J' = Post-initialized 'A' = Available 'D' = Disabled 'E' = Errored
+	UCHIJAAAA	mcp{9.05} [Minecraft Coder Pack] (minecraft.jar) 
+	UCHIJAAAA	FML{7.10.99.99} [Forge Mod Loader] (forgeSrc-1.7.10-10.13.4.1614-1.7.10.jar) 
+	UCHIJAAAA	Forge{10.13.4.1614} [Minecraft Forge] (forgeSrc-1.7.10-10.13.4.1614-1.7.10.jar) 
+	UCHIJAAAA	HandmadeGuns{1.7.x-srg-1} [HandMadeGuns&VehicleModEX] (HMG-EX13.jar) 
+	UCHIJAAAA	HMVehicle{1.7.x-srg-1} [HMVehicle] (HMG-EX13.jar) 
+	UCHIJAAAA	lmmx{1.0} [lmmx] (Depend-1.0.jar) 
+	UCHIJAAAA	MMMLibX{1.7.x-srg-1} [MMMLibX] (Depend-1.0.jar) 
+	UCHIJAAAA	Sokoniyatugairuzo{1.7.x} [Sokoniyatugairuzo] (Depend-1.0.jar) 
+	UCHIJAAAA	zabuton{1.0} [zabuton] (Depend-1.0.jar) 
+	UCHIJAAAA	GVCGuns{1.7.x-srg-1} [GVCGuns] (GVC-HD13.jar) 
+	UCHIJAAAA	GVCMob{HD11} [Guerrilla vs Command mod : High Difficulity version] (GVC-HD13.jar) 
+	GL info: ~~ERROR~~ RuntimeException: No OpenGL context found in the current thread.
+	Profiler Position: N/A (disabled)
+	Vec3 Pool Size: 0 (0 bytes; 0 MB) allocated, 0 (0 bytes; 0 MB) used
+	Player Count: 1 / 8; [EntityPlayerMP['Player383'/77, l='FlagTest', x=-1304.72, y=62.88, z=-245.17]]
+	Type: Integrated Server (map_client.txt)
+	Is Modded: Definitely; Client brand changed to 'fml,forge'

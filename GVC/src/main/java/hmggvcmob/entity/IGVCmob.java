@@ -8,5 +8,4 @@ public interface IGVCmob {
     float getviewWide();
     boolean canSeeTarget(Entity target);
     boolean canhearsound(Entity target);
-    void setspawnedtile(TileEntity flag);
 }

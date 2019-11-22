@@ -5,6 +5,7 @@ import handmadevehicle.entity.parts.logics.BaseLogic;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
+import org.lwjgl.Sys;
 
 import javax.vecmath.Quat4d;
 import javax.vecmath.Vector3d;
@@ -409,20 +410,13 @@ public class ModifiedBoundingBox extends AxisAlignedBB {
     }
 @Override
     public boolean intersectsWith(AxisAlignedBB hittingbox){
-//        System.out.println("debug" + hittingbox);
-//        int cnt = 0;
-//        if(hittingbox.maxX - hittingbox.minX > 1) {
-//            System.out.println("debug" + hittingbox);
-//        }
         for(OBB abox:boxes){
-//            if(hittingbox.maxX - hittingbox.minX > 1){
-//                System.out.println("debug" + cnt + " , " + abox);
-//            }
-//            if(abox.intersectsWith(this,hittingbox))
-            if(abox.intersectsWith(this,hittingbox)){
+            if(abox.intersectsWith(this,hittingbox)) {
+//                if(hittingbox.maxX - hittingbox.minX > 1) {
+//                    System.out.println("debug" + hittingbox);
+//                }
                 return true;
             }
-//            cnt++;
         }
         return false;
         
@@ -458,13 +452,16 @@ public class ModifiedBoundingBox extends AxisAlignedBB {
      */
     public boolean isVecInside(Vec3 p_72318_1_)
     {
+//        System.out.println("isVecInside " + p_72318_1_);
 //        return
 //                p_72318_1_.xCoord > minXforColCheck  && p_72318_1_.xCoord < maxXforColCheck  &&
 //                p_72318_1_.yCoord > minYforColCheck  && p_72318_1_.yCoord < maxYforColCheck  &&
 //                p_72318_1_.zCoord > minZforColCheck  && p_72318_1_.zCoord < maxZforColCheck  ;
-    
+
         for(OBB abox:boxes){
-            if(abox.isVecInside(this,p_72318_1_))return true;
+            if(abox.isVecInside(this,p_72318_1_)){
+                return true;
+            }
         }
         return false;
     }

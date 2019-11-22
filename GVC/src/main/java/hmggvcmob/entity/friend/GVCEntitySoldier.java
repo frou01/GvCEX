@@ -29,7 +29,7 @@ public class GVCEntitySoldier extends EntitySoBase
     public void addRandomArmor()
     {
         super.addRandomArmor();
-        this.setCurrentItemOrArmor(0, new ItemStack(GVCUtils.fn_m16a4));
+        this.setCurrentItemOrArmor(0, new ItemStack(GVCUtils.fn_g36));
     }
 
 //    public void onUpdate()

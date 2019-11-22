@@ -38,9 +38,7 @@ import java.util.Random;
 
 import static handmadeguns.HandmadeGunsCore.HMG_proxy;
 import static handmadeguns.Util.Utils.isCollidableBlock;
-import static handmadevehicle.HMVehicle.HMV_Proxy;
-import static handmadevehicle.HMVehicle.cfgVehicleWheel_DownRange;
-import static handmadevehicle.HMVehicle.cfgVehicleWheel_UpRange;
+import static handmadevehicle.HMVehicle.*;
 import static handmadevehicle.Utils.*;
 import static java.lang.Math.*;
 import static java.lang.Math.toRadians;
@@ -72,6 +70,7 @@ public class BaseLogic implements IbaseLogic,IneedMouseTrack,MultiRiderLogics {
 	public Quat4d serverSideBodyRot = new Quat4d(0,0,0,1);
 	public Quat4d rotationmotion = new Quat4d(0,0,0,1);
 	public Quat4d prevbodyRot = new Quat4d(0,0,0,1);
+	public Vector3d receivedPosition;
 	
 	
 	public boolean needStartSound = false;
@@ -86,321 +85,309 @@ public class BaseLogic implements IbaseLogic,IneedMouseTrack,MultiRiderLogics {
 	public World worldObj;
 
 	public Vector3d localMotionVec = new Vector3d();
+	private int nextStepDistance = 1;
 
-	public void moveEntity(double p_70091_1_, double p_70091_3_, double p_70091_5_)
+	public void moveEntity(double inMotionX, double inMotionY, double inMotionZ)
 	{
-		if (mc_Entity.noClip)
+		if (mc_Entity.noClip || worldObj.isRemote)
 		{
-			mc_Entity.boundingBox.offset(p_70091_1_, p_70091_3_, p_70091_5_);
+			List list = this.worldObj.getCollidingBoundingBoxes(mc_Entity, ((ModifiedBoundingBox)mc_Entity.boundingBox.addCoord(0, inMotionY, 0)).noMod_copy());
+
+			for (int i = 0; i < list.size(); ++i)
+			{
+				inMotionY = ((AxisAlignedBB)list.get(i)).calculateYOffset(mc_Entity.boundingBox, inMotionY);
+			}
+			mc_Entity.boundingBox.offset(inMotionX, inMotionY, inMotionZ);
 			mc_Entity.posX = (mc_Entity.boundingBox.minX + mc_Entity.boundingBox.maxX) / 2.0D;
-			mc_Entity.posY = mc_Entity.boundingBox.minY + (double)mc_Entity.yOffset - (double)mc_Entity.ySize;
+			mc_Entity.posY = mc_Entity.boundingBox.minY + (double) mc_Entity.yOffset - (double) mc_Entity.ySize;
 			mc_Entity.posZ = (mc_Entity.boundingBox.minZ + mc_Entity.boundingBox.maxZ) / 2.0D;
 		}
 		else
 		{
-			if(!worldObj.isRemote){
-				destroyNearBlocks(mc_Entity.boundingBox);
-			}
-			mc_Entity.worldObj.theProfiler.startSection("move");
-			mc_Entity.ySize *= 0.4F;
-			double d3 = mc_Entity.posX;
-			double d4 = mc_Entity.posY;
-			double d5 = mc_Entity.posZ;
-//			
+			destroyNearBlocks(mc_Entity.boundingBox);
+			double firstPosX = mc_Entity.posX;
+			double firstPosY = mc_Entity.posY;
+			double firstPosZ = mc_Entity.posZ;
+
 //			if (mc_Entity.isInWeb)
 //			{
 //				mc_Entity.isInWeb = false;
-//				p_70091_1_ *= 0.25D;
-//				p_70091_3_ *= 0.05000000074505806D;
-//				p_70091_5_ *= 0.25D;
-//				mc_Entity.motionX = 0.0D;
-//				mc_Entity.motionY = 0.0D;
-//				mc_Entity.motionZ = 0.0D;
+//				inMotionX *= 0.25D;
+//				inMotionY *= 0.05000000074505806D;
+//				inMotionZ *= 0.25D;
+//				this.motionX = 0.0D;
+//				this.motionY = 0.0D;
+//				this.motionZ = 0.0D;
 //			}
-			
-			double d6 = p_70091_1_;
-			double d7 = p_70091_3_;
-			double d8 = p_70091_5_;
-			AxisAlignedBB axisalignedbb = ((ModifiedBoundingBox)mc_Entity.boundingBox).noMod_copy();
-			boolean flag = mc_Entity.onGround && mc_Entity.isSneaking();
-			
-			if (flag)
-			{
-				double d9;
-				
-				for (d9 = 0.05D; p_70091_1_ != 0.0D && mc_Entity.worldObj.getCollidingBoundingBoxes(mc_Entity, axisalignedbb.getOffsetBoundingBox(p_70091_1_, -1.0D, 0.0D)).isEmpty(); d6 = p_70091_1_)
-				{
-					if (p_70091_1_ < d9 && p_70091_1_ >= -d9)
-					{
-						p_70091_1_ = 0.0D;
-					}
-					else if (p_70091_1_ > 0.0D)
-					{
-						p_70091_1_ -= d9;
-					}
-					else
-					{
-						p_70091_1_ += d9;
-					}
-				}
-				
-				for (; p_70091_5_ != 0.0D && mc_Entity.worldObj.getCollidingBoundingBoxes(mc_Entity, axisalignedbb.getOffsetBoundingBox(0.0D, -1.0D, p_70091_5_)).isEmpty(); d8 = p_70091_5_)
-				{
-					if (p_70091_5_ < d9 && p_70091_5_ >= -d9)
-					{
-						p_70091_5_ = 0.0D;
-					}
-					else if (p_70091_5_ > 0.0D)
-					{
-						p_70091_5_ -= d9;
-					}
-					else
-					{
-						p_70091_5_ += d9;
-					}
-				}
-				
-				while (p_70091_1_ != 0.0D && p_70091_5_ != 0.0D && mc_Entity.worldObj.getCollidingBoundingBoxes(mc_Entity, axisalignedbb.getOffsetBoundingBox(p_70091_1_, -1.0D, p_70091_5_)).isEmpty())
-				{
-					if (p_70091_1_ < d9 && p_70091_1_ >= -d9)
-					{
-						p_70091_1_ = 0.0D;
-					}
-					else if (p_70091_1_ > 0.0D)
-					{
-						p_70091_1_ -= d9;
-					}
-					else
-					{
-						p_70091_1_ += d9;
-					}
-					
-					if (p_70091_5_ < d9 && p_70091_5_ >= -d9)
-					{
-						p_70091_5_ = 0.0D;
-					}
-					else if (p_70091_5_ > 0.0D)
-					{
-						p_70091_5_ -= d9;
-					}
-					else
-					{
-						p_70091_5_ += d9;
-					}
-					
-					d6 = p_70091_1_;
-					d8 = p_70091_5_;
-				}
-			}
-			
-			List list = mc_Entity.worldObj.getCollidingBoundingBoxes(mc_Entity, axisalignedbb.addCoord(p_70091_1_, p_70091_3_, p_70091_5_));
-			
+
+			double d6 = inMotionX;
+			double d7 = inMotionY;
+			double d8 = inMotionZ;
+//			boolean flag = false;
+//
+//			if (flag)
+//			{
+//				double d9;
+//
+//				for (d9 = 0.05D; inMotionX != 0.0D && this.worldObj.getCollidingBoundingBoxes(mc_Entity, mc_Entity.boundingBox.getOffsetBoundingBox(inMotionX, -1.0D, 0.0D)).isEmpty(); d6 = inMotionX)
+//				{
+//					if (inMotionX < d9 && inMotionX >= -d9)
+//					{
+//						inMotionX = 0.0D;
+//					}
+//					else if (inMotionX > 0.0D)
+//					{
+//						inMotionX -= d9;
+//					}
+//					else
+//					{
+//						inMotionX += d9;
+//					}
+//				}
+//
+//				for (; inMotionZ != 0.0D && this.worldObj.getCollidingBoundingBoxes(mc_Entity, mc_Entity.boundingBox.getOffsetBoundingBox(0.0D, -1.0D, inMotionZ)).isEmpty(); d8 = inMotionZ)
+//				{
+//					if (inMotionZ < d9 && inMotionZ >= -d9)
+//					{
+//						inMotionZ = 0.0D;
+//					}
+//					else if (inMotionZ > 0.0D)
+//					{
+//						inMotionZ -= d9;
+//					}
+//					else
+//					{
+//						inMotionZ += d9;
+//					}
+//				}
+//
+//				while (inMotionX != 0.0D && inMotionZ != 0.0D && this.worldObj.getCollidingBoundingBoxes(mc_Entity, mc_Entity.boundingBox.getOffsetBoundingBox(inMotionX, -1.0D, inMotionZ)).isEmpty())
+//				{
+//					if (inMotionX < d9 && inMotionX >= -d9)
+//					{
+//						inMotionX = 0.0D;
+//					}
+//					else if (inMotionX > 0.0D)
+//					{
+//						inMotionX -= d9;
+//					}
+//					else
+//					{
+//						inMotionX += d9;
+//					}
+//
+//					if (inMotionZ < d9 && inMotionZ >= -d9)
+//					{
+//						inMotionZ = 0.0D;
+//					}
+//					else if (inMotionZ > 0.0D)
+//					{
+//						inMotionZ -= d9;
+//					}
+//					else
+//					{
+//						inMotionZ += d9;
+//					}
+//
+//					d6 = inMotionX;
+//					d8 = inMotionZ;
+//				}
+//			}
+
+			List list = this.worldObj.getCollidingBoundingBoxes(mc_Entity, ((ModifiedBoundingBox)mc_Entity.boundingBox.addCoord(inMotionX, inMotionY, inMotionZ)).noMod_copy());
+
 			for (int i = 0; i < list.size(); ++i)
 			{
-				p_70091_3_ = ((AxisAlignedBB)list.get(i)).calculateYOffset(mc_Entity.boundingBox, p_70091_3_);
+				inMotionY = ((AxisAlignedBB)list.get(i)).calculateYOffset(mc_Entity.boundingBox, inMotionY);
 			}
-			
-			mc_Entity.boundingBox.offset(0.0D, p_70091_3_, 0.0D);
-			
-			if (!mc_Entity.field_70135_K && d7 != p_70091_3_)
+
+			mc_Entity.boundingBox.offset(0.0D, inMotionY, 0.0D);
+
+			if (!mc_Entity.field_70135_K && d7 != inMotionY)
 			{
-				p_70091_5_ = 0.0D;
-				p_70091_3_ = 0.0D;
-				p_70091_1_ = 0.0D;
+				inMotionZ = 0.0D;
+				inMotionY = 0.0D;
+				inMotionX = 0.0D;
 			}
-			
-			boolean flag1 = mc_Entity.onGround || d7 != p_70091_3_ && d7 < 0.0D;
+
+			boolean flag1 = mc_Entity.onGround || d7 != inMotionY && d7 < 0.0D;
+
 			int j;
-			
+
 			for (j = 0; j < list.size(); ++j)
 			{
-				p_70091_1_ = ((AxisAlignedBB)list.get(j)).calculateXOffset(mc_Entity.boundingBox, p_70091_1_);
+				inMotionX = ((AxisAlignedBB)list.get(j)).calculateXOffset(mc_Entity.boundingBox, inMotionX);
 			}
-			
-			mc_Entity.boundingBox.offset(p_70091_1_, 0.0D, 0.0D);
-			
-			if (!mc_Entity.field_70135_K && d6 != p_70091_1_)
+
+			mc_Entity.boundingBox.offset(inMotionX, 0.0D, 0.0D);
+
+			if (!mc_Entity.field_70135_K && d6 != inMotionX)
 			{
-				p_70091_5_ = 0.0D;
-				p_70091_3_ = 0.0D;
-				p_70091_1_ = 0.0D;
+				inMotionZ = 0.0D;
+				inMotionY = 0.0D;
+				inMotionX = 0.0D;
 			}
-			
+
 			for (j = 0; j < list.size(); ++j)
 			{
-				p_70091_5_ = ((AxisAlignedBB)list.get(j)).calculateZOffset(mc_Entity.boundingBox, p_70091_5_);
+				inMotionZ = ((AxisAlignedBB)list.get(j)).calculateZOffset(mc_Entity.boundingBox, inMotionZ);
 			}
-			
-			mc_Entity.boundingBox.offset(0.0D, 0.0D, p_70091_5_);
-			
-			if (!mc_Entity.field_70135_K && d8 != p_70091_5_)
+
+			mc_Entity.boundingBox.offset(0.0D, 0.0D, inMotionZ);
+
+			if (!mc_Entity.field_70135_K && d8 != inMotionZ)
 			{
-				p_70091_5_ = 0.0D;
-				p_70091_3_ = 0.0D;
-				p_70091_1_ = 0.0D;
+				inMotionZ = 0.0D;
+				inMotionY = 0.0D;
+				inMotionX = 0.0D;
 			}
-			
+
 			double d10;
 			double d11;
 			int k;
 			double d12;
-			
-			if (!worldObj.isRemote && mc_Entity.stepHeight > 0.0F && (flag || mc_Entity.ySize < 0.05F) && (d6 != p_70091_1_ || d8 != p_70091_5_))
+
+			if ((!worldObj.isRemote && mc_Entity.stepHeight > 0.0F) && flag1 && mc_Entity.ySize < 0.05F && (d6 != inMotionX || d8 != inMotionZ))
 			{
-				d12 = p_70091_1_;
-				d10 = p_70091_3_;
-				d11 = p_70091_5_;
-				p_70091_1_ = d6;
-				p_70091_3_ = (double)mc_Entity.stepHeight;
-				p_70091_5_ = d8;
-				AxisAlignedBB axisalignedbb1 = ((ModifiedBoundingBox) mc_Entity.boundingBox).noMod_copy();
-				mc_Entity.boundingBox.setBB(axisalignedbb);
-				list = mc_Entity.worldObj.getCollidingBoundingBoxes(mc_Entity, axisalignedbb1.addCoord(d6, p_70091_3_, d8));
-				
+				d12 = inMotionX;
+				d10 = inMotionY;
+				d11 = inMotionZ;
+				inMotionX = d6;
+				inMotionY = (double)mc_Entity.stepHeight;
+				inMotionZ = d8;
+				AxisAlignedBB axisalignedbb1 = mc_Entity.boundingBox.copy();
+				mc_Entity.boundingBox.setBB(mc_Entity.boundingBox.copy());
+				list = this.worldObj.getCollidingBoundingBoxes(mc_Entity, mc_Entity.boundingBox.addCoord(d6, inMotionY, d8));
+
 				for (k = 0; k < list.size(); ++k)
 				{
-					p_70091_3_ = ((AxisAlignedBB)list.get(k)).calculateYOffset(mc_Entity.boundingBox, p_70091_3_);
+					inMotionY = ((AxisAlignedBB)list.get(k)).calculateYOffset(mc_Entity.boundingBox, inMotionY);
 				}
-				
-				mc_Entity.boundingBox.offset(0.0D, p_70091_3_, 0.0D);
-				
-				if (!mc_Entity.field_70135_K && d7 != p_70091_3_)
+
+				mc_Entity.boundingBox.offset(0.0D, inMotionY, 0.0D);
+
+				if (!mc_Entity.field_70135_K && d7 != inMotionY)
 				{
-					p_70091_5_ = 0.0D;
-					p_70091_3_ = 0.0D;
-					p_70091_1_ = 0.0D;
+					inMotionZ = 0.0D;
+					inMotionY = 0.0D;
+					inMotionX = 0.0D;
 				}
-				
+
 				for (k = 0; k < list.size(); ++k)
 				{
-					p_70091_1_ = ((AxisAlignedBB)list.get(k)).calculateXOffset(mc_Entity.boundingBox, p_70091_1_);
+					inMotionX = ((AxisAlignedBB)list.get(k)).calculateXOffset(mc_Entity.boundingBox, inMotionX);
 				}
-				
-				mc_Entity.boundingBox.offset(p_70091_1_, 0.0D, 0.0D);
-				
-				if (!mc_Entity.field_70135_K && d6 != p_70091_1_)
+
+				mc_Entity.boundingBox.offset(inMotionX, 0.0D, 0.0D);
+
+				if (!mc_Entity.field_70135_K && d6 != inMotionX)
 				{
-					p_70091_5_ = 0.0D;
-					p_70091_3_ = 0.0D;
-					p_70091_1_ = 0.0D;
+					inMotionZ = 0.0D;
+					inMotionY = 0.0D;
+					inMotionX = 0.0D;
 				}
-				
+
 				for (k = 0; k < list.size(); ++k)
 				{
-					p_70091_5_ = ((AxisAlignedBB)list.get(k)).calculateZOffset(mc_Entity.boundingBox, p_70091_5_);
+					inMotionZ = ((AxisAlignedBB)list.get(k)).calculateZOffset(mc_Entity.boundingBox, inMotionZ);
 				}
-				
-				mc_Entity.boundingBox.offset(0.0D, 0.0D, p_70091_5_);
-				
-				if (!mc_Entity.field_70135_K && d8 != p_70091_5_)
+
+				mc_Entity.boundingBox.offset(0.0D, 0.0D, inMotionZ);
+
+				if (!mc_Entity.field_70135_K && d8 != inMotionZ)
 				{
-					p_70091_5_ = 0.0D;
-					p_70091_3_ = 0.0D;
-					p_70091_1_ = 0.0D;
+					inMotionZ = 0.0D;
+					inMotionY = 0.0D;
+					inMotionX = 0.0D;
 				}
-				
-				if (!mc_Entity.field_70135_K && d7 != p_70091_3_)
+
+				if (!mc_Entity.field_70135_K && d7 != inMotionY)
 				{
-					p_70091_5_ = 0.0D;
-					p_70091_3_ = 0.0D;
-					p_70091_1_ = 0.0D;
+					inMotionZ = 0.0D;
+					inMotionY = 0.0D;
+					inMotionX = 0.0D;
 				}
 				else
 				{
-					p_70091_3_ = (double)(-mc_Entity.stepHeight);
-					
+					inMotionY = (double)(-mc_Entity.stepHeight);
+
 					for (k = 0; k < list.size(); ++k)
 					{
-						p_70091_3_ = ((AxisAlignedBB)list.get(k)).calculateYOffset(mc_Entity.boundingBox, p_70091_3_);
+						inMotionY = ((AxisAlignedBB)list.get(k)).calculateYOffset(mc_Entity.boundingBox, inMotionY);
 					}
-					
-					mc_Entity.boundingBox.offset(0.0D, p_70091_3_, 0.0D);
+
+					mc_Entity.boundingBox.offset(0.0D, inMotionY, 0.0D);
 				}
-				
-				if (d12 * d12 + d11 * d11 >= p_70091_1_ * p_70091_1_ + p_70091_5_ * p_70091_5_)
+
+				if (d12 * d12 + d11 * d11 >= inMotionX * inMotionX + inMotionZ * inMotionZ)
 				{
-					p_70091_1_ = d12;
-					p_70091_3_ = d10;
-					p_70091_5_ = d11;
+					inMotionX = d12;
+					inMotionY = d10;
+					inMotionZ = d11;
 					mc_Entity.boundingBox.setBB(axisalignedbb1);
 				}
 			}
-			
-			mc_Entity.worldObj.theProfiler.endSection();
-			mc_Entity.worldObj.theProfiler.startSection("rest");
-			mc_Entity.posX = (mc_Entity.boundingBox.minX + mc_Entity.boundingBox.maxX) / 2.0D;
-			mc_Entity.posY = mc_Entity.boundingBox.minY + (double)mc_Entity.yOffset - (double)mc_Entity.ySize;
-			mc_Entity.posZ = (mc_Entity.boundingBox.minZ + mc_Entity.boundingBox.maxZ) / 2.0D;
-			mc_Entity.isCollidedHorizontally = d6 != p_70091_1_ || d8 != p_70091_5_;
-			mc_Entity.isCollidedVertically = d7 != p_70091_3_;
-			mc_Entity.onGround = d7 != p_70091_3_ && d7 < 0.0D;
+			if(!worldObj.isRemote) {
+				mc_Entity.posX = (mc_Entity.boundingBox.minX + mc_Entity.boundingBox.maxX) / 2.0D;
+				mc_Entity.posY = mc_Entity.boundingBox.minY + (double) mc_Entity.yOffset - (double) mc_Entity.ySize;
+				mc_Entity.posZ = (mc_Entity.boundingBox.minZ + mc_Entity.boundingBox.maxZ) / 2.0D;
+			}
+			mc_Entity.isCollidedHorizontally = d6 != inMotionX || d8 != inMotionZ;
+			mc_Entity.isCollidedVertically = d7 != inMotionY;
+			mc_Entity.onGround = d7 != inMotionY && d7 < 0.0D;
 			mc_Entity.isCollided = mc_Entity.isCollidedHorizontally || mc_Entity.isCollidedVertically;
-			((HasBaseLogic)mc_Entity).updateFallState_public(p_70091_3_, mc_Entity.onGround);
-			
-			if (d6 != p_70091_1_)
+			iVehicle.updateFallState_public(inMotionY, mc_Entity.onGround);
+
+			if (d6 != inMotionX)
 			{
 				mc_Entity.motionX = 0.0D;
 			}
-			
-			if (d7 != p_70091_3_)
+
+			if (d7 != inMotionY)
 			{
 				mc_Entity.motionY = 0.0D;
 			}
-			
-			if (d8 != p_70091_5_)
+
+			if (d8 != inMotionZ)
 			{
 				mc_Entity.motionZ = 0.0D;
 			}
-			
-			d12 = mc_Entity.posX - d3;
-			d10 = mc_Entity.posY - d4;
-			d11 = mc_Entity.posZ - d5;
-			
-			if (!flag && mc_Entity.ridingEntity == null)
+
+			d12 = mc_Entity.posX - firstPosX;
+			d10 = mc_Entity.posY - firstPosY;
+			d11 = mc_Entity.posZ - firstPosZ;
+
+			if (mc_Entity.ridingEntity == null)
 			{
 				int j1 = MathHelper.floor_double(mc_Entity.posX);
 				k = MathHelper.floor_double(mc_Entity.posY - 0.20000000298023224D - (double)mc_Entity.yOffset);
 				int l = MathHelper.floor_double(mc_Entity.posZ);
 				Block block = mc_Entity.worldObj.getBlock(j1, k, l);
 				int i1 = mc_Entity.worldObj.getBlock(j1, k - 1, l).getRenderType();
-				
+
 				if (i1 == 11 || i1 == 32 || i1 == 21)
 				{
 					block = mc_Entity.worldObj.getBlock(j1, k - 1, l);
 				}
-				
+
 				if (block != Blocks.ladder)
 				{
 					d10 = 0.0D;
 				}
-				
+
 				mc_Entity.distanceWalkedModified = (float)((double)mc_Entity.distanceWalkedModified + (double)MathHelper.sqrt_double(d12 * d12 + d11 * d11) * 0.6D);
 				mc_Entity.distanceWalkedOnStepModified = (float)((double)mc_Entity.distanceWalkedOnStepModified + (double)MathHelper.sqrt_double(d12 * d12 + d10 * d10 + d11 * d11) * 0.6D);
-				
-				if (mc_Entity.distanceWalkedOnStepModified > (float) HMV_Proxy.getNextstepdistance(mc_Entity) && block.getMaterial() != Material.air)
+
+				if (mc_Entity.distanceWalkedOnStepModified > (float)this.nextStepDistance && block.getMaterial() != Material.air)
 				{
-					HMV_Proxy.setNextstepdistance(mc_Entity,(int)mc_Entity.distanceWalkedOnStepModified + 1);
-					
-					if (mc_Entity.isInWater())
-					{
-						float f = MathHelper.sqrt_double(mc_Entity.motionX * mc_Entity.motionX * 0.20000000298023224D + mc_Entity.motionY * mc_Entity.motionY + mc_Entity.motionZ * mc_Entity.motionZ * 0.20000000298023224D) * 0.35F;
-						
-						if (f > 1.0F)
-						{
-							f = 1.0F;
-						}
-						
-//						mc_Entity.playSound(mc_Entity.getSwimSound(), f, 1.0F + (rand.nextFloat() - rand.nextFloat()) * 0.4F);
-					}
-					
-//					mc_Entity.func_145780_a(j1, k, l, block);
-					block.onEntityWalking(mc_Entity.worldObj, j1, k, l, mc_Entity);
+					this.nextStepDistance = (int)mc_Entity.distanceWalkedOnStepModified + 1;
+					block.onEntityWalking(this.worldObj, j1, k, l, mc_Entity);
 				}
 			}
-			
+
 			try
 			{
-				((HasBaseLogic)mc_Entity).func_145775_I_public();
+				iVehicle.func_145775_I_public();
 			}
 			catch (Throwable throwable)
 			{
@@ -409,25 +396,6 @@ public class BaseLogic implements IbaseLogic,IneedMouseTrack,MultiRiderLogics {
 				mc_Entity.addEntityCrashInfo(crashreportcategory);
 				throw new ReportedException(crashreport);
 			}
-			
-			mc_Entity.extinguish();
-//
-//			if (mc_Entity.worldObj.func_147470_e(mc_Entity.boundingBox.contract(0.001D, 0.001D, 0.001D)))
-//			{
-//				mc_Entity.dealFireDamage(1);
-//			}
-//			else if (mc_Entity.fire <= 0)
-//			{
-//				mc_Entity.fire = -mc_Entity.fireResistance;
-//			}
-//
-//			if (flag2 && mc_Entity.fire > 0)
-//			{
-//				mc_Entity.playSound("random.fizz", 0.7F, 1.6F + (rand.nextFloat() - rand.nextFloat()) * 0.4F);
-//				mc_Entity.fire = -mc_Entity.fireResistance;
-//			}
-			
-			mc_Entity.worldObj.theProfiler.endSection();
 		}
 	}
 	
@@ -566,9 +534,54 @@ public class BaseLogic implements IbaseLogic,IneedMouseTrack,MultiRiderLogics {
 						entity.ridingEntity = null;
 					}else entity.ridingEntity = mc_Entity;
 				}
-				HMVPacketHandler.INSTANCE.sendToAll(new HMVPacketPickNewEntity(mc_Entity.getEntityId(),riddenByEntities));
+
 			}
+
+			TurretObj seatmaingun = null;
+			if(seatInfos[cnt].maingun != null)seatmaingun = seatInfos[cnt].maingun[seatInfos[cnt].currentWeaponMode];
+			TurretObj seatsubgun = seatInfos[cnt].subgun;
+			if (worldObj.isRemote) {
+				if (entity == HMV_Proxy.getEntityPlayerInstance()) {
+					if (HMV_Proxy.weapon_Mode_click()) seatInfos[cnt].currentWeaponMode++;
+					if (seatInfos[cnt].maingun == null || seatInfos[cnt].currentWeaponMode >= seatInfos[cnt].maingun.length) {
+						seatInfos[cnt].currentWeaponMode = 0;
+					}
+					if (seatmaingun != null || seatsubgun != null)
+						HMVPacketHandler.INSTANCE.sendToServer(new HMVPacketTriggerSeatGun(HMV_Proxy.leftclick(), HMV_Proxy.rightclick(), seatInfos[cnt].currentWeaponMode, mc_Entity.getEntityId(), cnt));
+					if (HMV_Proxy.next_Seatclick())
+						HMVPacketHandler.INSTANCE.sendToServer(new HMVPacketChangeSeat(mc_Entity.getEntityId(), cnt, true));
+					else if (HMV_Proxy.previous_Seatclick())
+						HMVPacketHandler.INSTANCE.sendToServer(new HMVPacketChangeSeat(mc_Entity.getEntityId(), cnt, false));
+				}
+			} else {
+				if (seatmaingun != null) {
+					if (!seatInfos[cnt].prefab_seat.aimGun || seatmaingun.aimIn) {
+						if (seatInfos[cnt].gunTrigger1) {
+							seatmaingun.fireall();
+						}
+					}
+//					System.out.println("" + riddenByEntitiesInfo[cnt].gunTrigger1);
+				}
+				if (seatsubgun != null) {
+					if (!seatInfos[cnt].prefab_seat.aimGun || seatsubgun.aimIn) {
+						if (seatInfos[cnt].gunTrigger2) {
+							seatsubgun.fireall();
+						}
+					}
+//					System.out.println("" + riddenByEntitiesInfo[cnt].gunTrigger1);
+				}
+				if(entity == null){
+					seatInfos[cnt].gunTrigger1 = false;
+					seatInfos[cnt].gunTrigger2 = false;
+				}
+			}
+
 			cnt ++;
+		}
+		HMVPacketHandler.INSTANCE.sendToAll(new HMVPacketPickNewEntity(mc_Entity.getEntityId(),riddenByEntities));
+		for(TurretObj aturret :turrets){
+			aturret.motherEntity = mc_Entity;
+			aturret.update(bodyRot,new Vector3d(mc_Entity.posX,mc_Entity.posY,-mc_Entity.posZ));
 		}
 		mc_Entity.riddenByEntity = riddenByEntities[0];
 	}
@@ -585,12 +598,12 @@ public class BaseLogic implements IbaseLogic,IneedMouseTrack,MultiRiderLogics {
 //				else System.out.println("debug SV Pre" + cnt + " , " + entity);
 //			temp.add(playeroffsetter);
 //			System.out.println(temp);
-				TurretObj seatmaingun = seatInfos[cnt].maingun;
+				TurretObj seatmaingun = null;
+				if(seatInfos[cnt].maingun != null)seatmaingun = seatInfos[cnt].maingun[seatInfos[cnt].currentWeaponMode];
 				TurretObj seatsubgun = seatInfos[cnt].subgun;
 				if(entity instanceof ITurretUser)((ITurretUser) entity).setSeatID(cnt);
 				if(seatmaingun != null) {
 					seatmaingun.currentEntity = entity;
-					seatmaingun.motherEntity = mc_Entity;
 					if(seatInfos[cnt].prefab_seat.aimGun && !worldObj.isRemote) {
 						if((entity instanceof ITurretUser))
 							((ITurretUser) entity).setTurretMain(seatmaingun);
@@ -599,7 +612,6 @@ public class BaseLogic implements IbaseLogic,IneedMouseTrack,MultiRiderLogics {
 					}
 					if(seatsubgun!=null){
 						seatsubgun.currentEntity = entity;
-						seatsubgun.motherEntity = mc_Entity;
                         if(seatInfos[cnt].prefab_seat.aimGun && !worldObj.isRemote) {
                         	if((entity instanceof ITurretUser))
 								((ITurretUser) entity).setTurretSub(seatsubgun);
@@ -622,68 +634,42 @@ public class BaseLogic implements IbaseLogic,IneedMouseTrack,MultiRiderLogics {
 						entity.posZ = temp.z;
 					}else {
 						Vector3d tempplayerPos = new Vector3d(HMV_Proxy.iszooming() && seatInfos_zoom.length > cnt && seatInfos_zoom[cnt] != null? seatInfos_zoom[cnt].pos: seatInfos[cnt].pos);
-						tempplayerPos.sub(new Vector3d(0,0,0));
-						Vector3d temp = transformVecByQuat(tempplayerPos, bodyRot);
-						transformVecforMinecraft(temp);
-						temp.add(new Vector3d(0,0,0));
-//				System.out.println("" + temp);
-						temp.add(thispos);
-						entity.setPosition(temp.x,
-								temp.y - (worldObj.isRemote && entity instanceof EntityPlayer ? 0:entity.getEyeHeight()),
-								temp.z);
-						entity.posX = temp.x;
-						entity.posY = temp.y - (worldObj.isRemote && entity instanceof EntityPlayer ? 0:entity.getEyeHeight());
-						entity.posZ = temp.z;
+						tempplayerPos.sub(new Vector3d(prefab_vehicle.rotcenter));
+						tempplayerPos = transformVecByQuat(tempplayerPos, bodyRot);
+						transformVecforMinecraft(tempplayerPos);
+						tempplayerPos.add(new Vector3d(prefab_vehicle.rotcenter));
+//				System.out.println("" + tempplayerPos);
+						tempplayerPos.add(thispos);
+						entity.setPosition(tempplayerPos.x,
+								tempplayerPos.y - (worldObj.isRemote && entity instanceof EntityPlayer ? 0:entity.getEyeHeight()),
+								tempplayerPos.z);
+						entity.posX = tempplayerPos.x;
+						entity.posY = tempplayerPos.y - (worldObj.isRemote && entity instanceof EntityPlayer ? 0:entity.getEyeHeight());
+						entity.posZ = tempplayerPos.z;
 					}
 					entity.motionX = mc_Entity.motionX;
 					entity.motionY = mc_Entity.motionY;
 					entity.motionZ = mc_Entity.motionZ;
-				}else {
+				} else {
 					Vector3d tempplayerPos = new Vector3d(HMV_Proxy.iszooming() && seatInfos_zoom.length > cnt && seatInfos_zoom[cnt] != null? seatInfos_zoom[cnt].pos: seatInfos[cnt].pos);
-					tempplayerPos.sub(new Vector3d(0,0,0));
-					Vector3d temp = transformVecByQuat(tempplayerPos, bodyRot);
-					transformVecforMinecraft(temp);
-					temp.add(new Vector3d(0,0,0));
-//				System.out.println("" + temp);
-					temp.add(thispos);
-					entity.setPosition(temp.x,
-							temp.y - (worldObj.isRemote && entity instanceof EntityPlayer ? 0:entity.getEyeHeight()),
-							temp.z);
-					entity.posX = temp.x;
-					entity.posY = temp.y - (worldObj.isRemote && entity instanceof EntityPlayer ? 0:entity.getEyeHeight());
-					entity.posZ = temp.z;
+					tempplayerPos.sub(new Vector3d(prefab_vehicle.rotcenter));
+					tempplayerPos = transformVecByQuat(tempplayerPos, bodyRot);
+					transformVecforMinecraft(tempplayerPos);
+					tempplayerPos.add(new Vector3d(prefab_vehicle.rotcenter));
+//				System.out.println("" + tempplayerPos);
+					tempplayerPos.add(thispos);
+					entity.setPosition(tempplayerPos.x,
+							tempplayerPos.y - (worldObj.isRemote && entity instanceof EntityPlayer ? 0:entity.getEyeHeight()),
+							tempplayerPos.z);
+					entity.posX = tempplayerPos.x;
+					entity.posY = tempplayerPos.y - (worldObj.isRemote && entity instanceof EntityPlayer ? 0:entity.getEyeHeight());
+					entity.posZ = tempplayerPos.z;
 					entity.motionX = mc_Entity.motionX;
 					entity.motionY = mc_Entity.motionY;
 					entity.motionZ = mc_Entity.motionZ;
 				}
 				
 				seatInfos[cnt].currentSeatOffset_fromV.sub(new Vector3d(entity.posX, entity.posY, entity.posZ), thispos);
-				if(worldObj.isRemote){
-					if(entity == HMV_Proxy.getEntityPlayerInstance()){
-						
-						if(seatmaingun != null || seatsubgun != null)HMVPacketHandler.INSTANCE.sendToServer(new HMVPacketTriggerSeatGun(HMV_Proxy.leftclick(), HMV_Proxy.rightclick(), mc_Entity.getEntityId(), cnt));
-						if(HMV_Proxy.next_Seatclick())HMVPacketHandler.INSTANCE.sendToServer(new HMVPacketChangeSeat(mc_Entity.getEntityId(),cnt,true));
-						else
-						if(HMV_Proxy.previous_Seatclick())HMVPacketHandler.INSTANCE.sendToServer(new HMVPacketChangeSeat(mc_Entity.getEntityId(),cnt,false));
-					}
-				}else {
-					if(seatmaingun != null) {
-						if (!seatInfos[cnt].prefab_seat.aimGun || seatmaingun.aimIn) {
-							if (seatInfos[cnt].gunTrigger1) {
-								seatmaingun.fireall();
-							}
-						}
-//					System.out.println("" + riddenByEntitiesInfo[cnt].gunTrigger1);
-					}
-					if(seatsubgun != null) {
-						if (!seatInfos[cnt].prefab_seat.aimGun || seatsubgun.aimIn) {
-							if (seatInfos[cnt].gunTrigger2) {
-								seatsubgun.fireall();
-							}
-						}
-//					System.out.println("" + riddenByEntitiesInfo[cnt].gunTrigger1);
-					}
-				}
 				if(entity.ridingEntity instanceof EntityDummy_rider){
 					entity.ridingEntity.setPosition(entity.posX,entity.posY,entity.posZ);
 				}
@@ -697,9 +683,6 @@ public class BaseLogic implements IbaseLogic,IneedMouseTrack,MultiRiderLogics {
 	}
 	
 	public void updateCommon(){
-		for(TurretObj aturret :turrets){
-			aturret.update(bodyRot,new Vector3d(mc_Entity.posX,mc_Entity.posY,-mc_Entity.posZ));
-		}
 		if(!worldObj.isRemote){
 			Quat4d Headrot = new Quat4d(0, 0, 0, 1);
 			Headrot = quatRotateAxis(Headrot, new AxisAngle4d(unitX, toRadians(this.cameraPitch) / 2));
@@ -996,12 +979,33 @@ public class BaseLogic implements IbaseLogic,IneedMouseTrack,MultiRiderLogics {
 
 				currentOffsetVec = transformVecByQuat(currentOffsetVec,currentQuat);
 				currentOffsetVec.z *= -1;
+				entity.prevPosX = entity.posX = thispos.x + currentOffsetVec.x;
+				entity.prevPosY = entity.posY = thispos.y + currentOffsetVec.y;
+				entity.prevPosZ = entity.posZ = thispos.z + currentOffsetVec.z;
 				entity.setPosition(thispos.x + currentOffsetVec.x,
 						thispos.y + currentOffsetVec.y,
 						thispos.z + currentOffsetVec.z);
-				entity.ridingEntity = this.mc_Entity;
 			}
 			cnt++;
+		}
+	}
+
+	public void riderPosUpdate_camera(Vector3d thispos,Quat4d currentQuat){
+
+		int cnt = 0;
+//		System.out.println("thispos  " + thispos);
+		Entity entity = riddenByEntities[0];
+		if (entity != null) {
+			Vector3d currentOffsetVec = new Vector3d();
+			getVector_local_inRotatedObj(seatInfos[cnt].currentSeatOffset_fromV, currentOffsetVec, bodyRot);
+
+			currentOffsetVec = transformVecByQuat(currentOffsetVec,currentQuat);
+			currentOffsetVec.z *= -1;
+
+			camera.setLocationAndAngles(
+					thispos.x + currentOffsetVec.x,
+					thispos.y + currentOffsetVec.y - entity.yOffset,
+					thispos.z + currentOffsetVec.z,0,0);
 		}
 	}
 	
@@ -1016,8 +1020,6 @@ public class BaseLogic implements IbaseLogic,IneedMouseTrack,MultiRiderLogics {
 	public boolean mouseStickMode = true;
 	
 	public int mode = 0;//0:attack 1:leave 2:follow player 3:go to home
-	public boolean trigger1 = false;
-	public boolean trigger2 = false;
 	//	public double[][] gunpos = new double[6][3];
 	public Vector3d prevmotionVec = new Vector3d(0,0,0);
 	Vector3d unitX = new Vector3d(1,0,0);
@@ -1215,27 +1217,24 @@ public class BaseLogic implements IbaseLogic,IneedMouseTrack,MultiRiderLogics {
 			prev_pera_trackPos += temp_pera_trackPos-pera_trackPos;
 			pera_trackPos = temp_pera_trackPos;
 		}
-		motionUpdate(mainwingvector,tailwingvector,bodyvector);
 		
 		if(mc_Entity instanceof IMultiTurretVehicle){
 			HMVPacketHandler.INSTANCE.sendToAll(new HMVPakcetVehicleTurretSync(mc_Entity.getEntityId(), (IMultiTurretVehicle) mc_Entity));
 		}
-		
+
+		motionUpdate(mainwingvector,tailwingvector,bodyvector);
 		updateCommon();
-		updateRider();
-		riderPosUpdate();
 		if(this.health<0)this.mc_Entity.setDead();
 		if(worldObj.isRemote) bodyRot.set(serverSideBodyRot);
+		updateRider();
+		riderPosUpdate();
 		bodyRot.normalize();
 		prevbodyRot.normalize();
 		rotationmotion.normalize();
 	}
 	
 	
-	
-	public void setVelocity(double p_70016_1_, double p_70016_3_, double p_70016_5_)
-	{
-	}
+
 	boolean standalone(){
 		return vehicle_hasmode != null && vehicle_hasmode.standalone();
 	}
@@ -1295,44 +1294,8 @@ public class BaseLogic implements IbaseLogic,IneedMouseTrack,MultiRiderLogics {
 					}
 				}
 			}
-		}
-		if(!worldObj.isRemote) {
-//			System.out.println("yawladder " + yawladder);
-//		System.out.println("" + pitchladder);
-			Vector3d motionvec = new Vector3d(mc_Entity.motionX, mc_Entity.motionY, mc_Entity.motionZ);
-			double currentForcedEffect = (mc_Entity.onGround ? prefab_vehicle.forced_rudder_effect_OnGround : prefab_vehicle.forced_rudder_effect);
-			double cof = (currentForcedEffect * throttle)*0.1;
-			if(motionvec.length() > 0.001)cof -= angle_cos(bodyvector, motionvec) * (motionvec.length());
-			if(abs(cof) > 0.001) {
-				if (abs(pitchrudder) > 0.0001) {
-//				Vector3d axisx = Utils.transformVecByQuat(new Vector3d(unitX), bodyRot);
-					AxisAngle4d axisxangled = new AxisAngle4d(unitX, toRadians(-pitchrudder / 4 * cof * prefab_vehicle.pitchspeed));
-					rotationmotion = Utils.quatRotateAxis(rotationmotion, axisxangled);
-				}
-				if (abs(yawrudder) > 0.001) {
-					AxisAngle4d axisyangled;
-					if (mc_Entity.onGround) {
-//					Vector3d axisy = Utils.transformVecByQuat(new Vector3d(unitY), bodyRot);
-						axisyangled = new AxisAngle4d(unitY, toRadians(yawrudder / 5 * cof * prefab_vehicle.yawspeed_taxing));
-					} else {
-//					Vector3d axisy = Utils.transformVecByQuat(new Vector3d(unitY), bodyRot);
-						axisyangled = new AxisAngle4d(unitY, toRadians(yawrudder / 5 * cof * prefab_vehicle.yawspeed));
-					}
-					rotationmotion = Utils.quatRotateAxis(rotationmotion, axisyangled);
-				}
-				if (abs(rollrudder) > 0.0001) {
-//				Vector3d axisz = Utils.transformVecByQuat(new Vector3d(unitZ), bodyRot);
-					AxisAngle4d axiszangled = new AxisAngle4d(unitZ, toRadians(rollrudder / 4 * cof * prefab_vehicle.rollspeed));
-					rotationmotion = Utils.quatRotateAxis(rotationmotion, axiszangled);
-				}
-			}
+		}else
 
-			double[] xyz = Utils.eulerfrommatrix(Utils.matrixfromQuat(bodyRot));
-			bodyrotationPitch = (float) toDegrees(xyz[0]);
-			if (!Double.isNaN(xyz[1])) {
-				bodyrotationYaw = (float) toDegrees(xyz[1]);
-			}
-			bodyrotationRoll = (float) toDegrees(xyz[2]);
 //		HMVPacketHandler.INSTANCE.sendToServer(new HMVPakcetVehicleState(planebody.getEntityId(),bodyRot, throttle,trigger1,trigger2));
 //				if(th<2.5){
 //					th +=0.1;
@@ -1425,9 +1388,7 @@ public class BaseLogic implements IbaseLogic,IneedMouseTrack,MultiRiderLogics {
 //				setRotationYaw(bodyrotationYaw);
 //				setRotationPitch(bodyrotationPitch);
 //				setRotationRoll(bodyrotationRoll);
-		}
-
-		if(worldObj.isRemote && !standalone() && ispilot(HMV_Proxy.getEntityPlayerInstance())){
+		if(ispilot(HMV_Proxy.getEntityPlayerInstance())){
 			ArrayList<Integer> keys = new ArrayList<>();
 			if(HMG_proxy.getMCInstance().inGameHasFocus) {
 				if (HMV_Proxy.leftclick()) {
@@ -1442,9 +1403,6 @@ public class BaseLogic implements IbaseLogic,IneedMouseTrack,MultiRiderLogics {
 				if (serverx = HMV_Proxy.air_Brake_click()) {
 					keys.add(14);
 				}
-//				if (serverw = HMV_Proxy.throttle_up_click()) {
-//					keys.add(16);
-//				}
 				if (serverf = HMV_Proxy.flap_click()) {
 					keys.add(20);
 				}
@@ -1463,7 +1421,7 @@ public class BaseLogic implements IbaseLogic,IneedMouseTrack,MultiRiderLogics {
 					double roll_Target = 0;
 					int tempMouseDX = mouseStickMode && !prefab_vehicle.T_Land_F_Plane ? Mouse.getDX():0;
 					int tempMouseDY = mouseStickMode && !prefab_vehicle.T_Land_F_Plane ? Mouse.getDY():0;
-					if (HMV_Proxy.hasStick()) {
+					if (cfgControl_useStick && HMV_Proxy.hasStick()) {
 						if(!mouseStickMode||tempMouseDX != 0 || HMV_Proxy.getXaxis() != 0)roll_Target = HMV_Proxy.getXaxis() * 16;
 						yaw_Target = HMV_Proxy.getZaxis() * 16;
 						if(!mouseStickMode||tempMouseDY != 0 || HMV_Proxy.getYaxis() != 0)pitch_Target = -HMV_Proxy.getYaxis() * 16;
@@ -1503,17 +1461,17 @@ public class BaseLogic implements IbaseLogic,IneedMouseTrack,MultiRiderLogics {
 					if(abs(throttle_Target - throttle) < prefab_vehicle.throttle_speed)throttle = (float) (throttle_Target);
 					else
 					if(throttle_Target > throttle){
-						throttle +=prefab_vehicle.throttle_speed;
+						throttle += prefab_vehicle.throttle_speed;
 					}else if(throttle_Target < throttle){
-						throttle -=prefab_vehicle.throttle_speed;
+						throttle -= prefab_vehicle.throttle_speed;
 					}
 
 					if(abs(yaw_Target - yawrudder) < prefab_vehicle.rudderSpeed)yawrudder = (float) (yaw_Target);
 					else
 					if(yaw_Target > yawrudder){
-						yawrudder +=prefab_vehicle.rudderSpeed;
+						yawrudder += prefab_vehicle.rudderSpeed;
 					}else if(yaw_Target < yawrudder){
-						yawrudder -=prefab_vehicle.rudderSpeed;
+						yawrudder -= prefab_vehicle.rudderSpeed;
 					}
 					if(pitch_Target > 16)pitch_Target = 16;
 					if(pitch_Target <-16)pitch_Target =-16;
@@ -2245,40 +2203,40 @@ public class BaseLogic implements IbaseLogic,IneedMouseTrack,MultiRiderLogics {
 //	}
 	
 	void motionUpdate(Vector3d mainwingvector,Vector3d tailwingvector,Vector3d bodyvector){
-		
 
-		{
-			Vector3d motionvec = new Vector3d(mc_Entity.motionX, mc_Entity.motionY, mc_Entity.motionZ);
-			
-			Vector3d windvec = new Vector3d(motionvec);
-			if (mc_Entity.onGround && windvec.y < 0) windvec.y = 0;
-			if (windvec.length() > 0.000001 && (prefab_vehicle.stability_roll + (mc_Entity.onGround ? prefab_vehicle.stability_roll_onGround:0)) != 0) {
-				Vector3d axisstall = new Vector3d();
-				windvec.normalize();
-				windvec.add(new Vector3d(bodyvector.x * 0.3,
-						bodyvector.y * 0.3,
-						bodyvector.z * 0.3));
-				tailwingvector.normalize();
-				axisstall.cross(bodyvector, windvec);
-				axisstall.normalize();
-				axisstall.z = -axisstall.z;
-				Quat4d quat4d = new Quat4d();
-				quat4d.inverse(bodyRot);
-				quat4d.normalize();
-				axisstall = Utils.transformVecByQuat(axisstall, quat4d);
-				if (!Double.isNaN(axisstall.x) && !Double.isNaN(axisstall.y) && !Double.isNaN(axisstall.z)) {
-					windvec.set(motionvec);
-					if (mc_Entity.onGround && windvec.y < 0) windvec.y = 0;
-					Vector3d bodyVec_front = new Vector3d(bodyvector);
-					bodyVec_front.scale(-1);
-					double sin = angle_cos(bodyVec_front, motionvec);
-					sin = sqrt(1 - sin * sin);
+		Vector3d motionvec = new Vector3d(mc_Entity.motionX, mc_Entity.motionY, mc_Entity.motionZ);
+
+		Vector3d windvec = new Vector3d(motionvec);
+		if (mc_Entity.onGround && windvec.y < 0) windvec.y = 0;
+		if (windvec.lengthSquared() > 0 && (prefab_vehicle.stability_roll + (mc_Entity.onGround ? prefab_vehicle.stability_roll_onGround:0)) != 0) {
+			Vector3d axisstall = new Vector3d();
+			windvec.normalize();
+			windvec.add(new Vector3d(bodyvector.x * 0.3,
+					bodyvector.y * 0.3,
+					bodyvector.z * 0.3));
+			tailwingvector.normalize();
+			axisstall.cross(bodyvector, windvec);
+			axisstall.normalize();
+			axisstall.z = -axisstall.z;
+			Quat4d quat4d = new Quat4d();
+			quat4d.inverse(bodyRot);
+			quat4d.normalize();
+			axisstall = Utils.transformVecByQuat(axisstall, quat4d);
+			if (!Double.isNaN(axisstall.x) && !Double.isNaN(axisstall.y) && !Double.isNaN(axisstall.z)) {
+				windvec.set(motionvec);
+				if (mc_Entity.onGround && windvec.y < 0) windvec.y = 0;
+				Vector3d bodyVec_front = new Vector3d(bodyvector);
+				bodyVec_front.scale(-1);
+				double sin = angle_cos(bodyVec_front, motionvec);
+				sin = sqrt(1 - sin * sin);
 //					System.out.println(sin);
-					AxisAngle4d axisxangledstall = new AxisAngle4d(axisstall, motionvec.length() * sin / (prefab_vehicle.stability_roll + (mc_Entity.onGround ? prefab_vehicle.stability_roll_onGround:0)));
-					rotationmotion = Utils.quatRotateAxis(rotationmotion, axisxangledstall);
-				}
+				AxisAngle4d axisxangledstall = new AxisAngle4d(axisstall, motionvec.length() * sin / (prefab_vehicle.stability_roll + (mc_Entity.onGround ? prefab_vehicle.stability_roll_onGround:0)));
+				rotationmotion = Utils.quatRotateAxis(rotationmotion, axisxangledstall);
 			}
-			
+		}
+
+		if(!worldObj.isRemote){
+
 			windvec = new Vector3d(motionvec);
 			if (mc_Entity.onGround && windvec.y < 0) windvec.y = 0;
 			rotationmotion.normalize();
@@ -2290,7 +2248,7 @@ public class BaseLogic implements IbaseLogic,IneedMouseTrack,MultiRiderLogics {
 					rotationmotion.interpolate(new Quat4d(0, 0, 0, 1), cos);
 				else
 					rotationmotion.interpolate(new Quat4d(0, 0, 0, 1), cos);
-				
+
 				double[] xyz = Utils.eulerfrommatrix(Utils.matrixfromQuat(rotationmotion));
 				AxisAngle4d axiszangled = new AxisAngle4d(unitZ, -xyz[2] * prefab_vehicle.rotmotion_reduceSpeedRoll);
 				rotationmotion = Utils.quatRotateAxis(rotationmotion, axiszangled);
@@ -2301,70 +2259,88 @@ public class BaseLogic implements IbaseLogic,IneedMouseTrack,MultiRiderLogics {
 										(inWater ? prefab_vehicle.rotmotion_reduceSpeed_inWater:0)
 						) * 1);
 			}
-			
-			
+
+
 			tailwingvector = Utils.transformVecByQuat(new Vector3d(unitY), bodyRot);
 			bodyvector = Utils.transformVecByQuat(new Vector3d(unitZ), bodyRot);
 			mainwingvector = Utils.transformVecByQuat(new Vector3d(unitX), bodyRot);
-			
+
 			Utils.transformVecforMinecraft(tailwingvector);
 			Utils.transformVecforMinecraft(bodyvector);
 			Utils.transformVecforMinecraft(mainwingvector);
-			
-			if (motionvec.lengthSquared() > 0) {
+
+			if (windvec.lengthSquared() > 0) {
+
+
 				motionvec.y -= prefab_vehicle.gravity;
-				double cos;
-				if (windvec.lengthSquared() > 0 && prefab_vehicle.stability_motion != 0) {
-					Vector3d liftVec1 = new Vector3d();
-					liftVec1.cross(mainwingvector, windvec);
-					liftVec1.normalize();
-					if (!(Double.isNaN(liftVec1.x) || Double.isNaN(liftVec1.y) || Double.isNaN(liftVec1.z))) {
-						double sin = angle_cos(liftVec1, bodyvector);
-//						System.out.println(sin);
-						liftVec1.set(tailwingvector);
-						liftVec1.normalize();
-						liftVec1.scale(windvec.length() * sin * prefab_vehicle.stability_motion);
-//						if (windvec.length() < 0.8) liftVec1.scale(windvec.length() / 0.8);
-						if (!Double.isNaN(sin)) {
-//							System.out.println(sin);
-							motionvec.add(liftVec1);
-						}
-					}
-				}
+				Vector3d localWindVec = new Vector3d();
+				Vector3d localMotionVec = new Vector3d();
+				getVector_local_inRotatedObj(windvec, localWindVec, bodyRot);
+				getVector_local_inRotatedObj(motionvec, localMotionVec, bodyRot);
+//				if (windvec.lengthSquared() > 0 && prefab_vehicle.stability_motion != 0) {
+//					Vector3d liftVec1 = new Vector3d();
+//					liftVec1.cross(mainwingvector, windvec);
+//					liftVec1.normalize();
+//					if (!(Double.isNaN(liftVec1.x) || Double.isNaN(liftVec1.y) || Double.isNaN(liftVec1.z))) {
+//						double sin = angle_cos(liftVec1, bodyvector);
+////						System.out.println(sin);
+//						liftVec1.set(tailwingvector);
+//						liftVec1.normalize();
+//						liftVec1.scale(windvec.length() * windvec.length() * sin * prefab_vehicle.stability_motion);
+////						if (windvec.length() < 0.8) liftVec1.scale(windvec.length() / 0.8);
+//						if (!Double.isNaN(sin)) {
+////							System.out.println(sin);
+//							motionvec.add(liftVec1);
+//						}
+//					}
+//				}
+
+				localMotionVec.y += (cos(toRadians(bodyrotationRoll)) * cos(toRadians(bodyrotationPitch))
+						* cos(toRadians(bodyrotationRoll)) * cos(toRadians(bodyrotationPitch)))
+						* sqrt(localWindVec.x * localWindVec.x + localWindVec.z * localWindVec.z) * (info.liftfactor + flaplevel*prefab_vehicle.flapliftfactor);
+
+				localMotionVec.y -= (localWindVec.y > 0 ? 1 : -1) * localWindVec.y * localWindVec.y * info.stability_motion;
 				{
-					cos = angle_cos(bodyvector, windvec) * cos(toRadians(bodyrotationPitch));
-					Vector3d tailwingvectorForFloating = new Vector3d(tailwingvector);
-					tailwingvectorForFloating.scale(windvec.lengthSquared() * -cos * (prefab_vehicle.liftfactor + flaplevel * prefab_vehicle.flapliftfactor));
-					if(tailwingvectorForFloating.y<0)tailwingvectorForFloating.scale(-1);
-//			System.out.println("debug" + cos);
-					motionvec.x += tailwingvectorForFloating.x;
-					motionvec.y += tailwingvectorForFloating.y;
-					motionvec.z += tailwingvectorForFloating.z;
+					double temp = abs(localMotionVec.x) + abs(localMotionVec.z);
+					if (temp > 1) localMotionVec.y /= temp;
 				}
+				double slipResist = (localWindVec.x > 0 ? 1 : -1) * localWindVec.x * localWindVec.x * info.slipresist;
+				if(inWater)slipResist += (localWindVec.x > 0 ? 1 : -1) * localWindVec.x * info.slipresist_inwater;
+				if(mc_Entity.onGround)slipResist += abs(localMotionVec.y) * info.slipresist_onground;
+				if(slipResist > 0 && slipResist > localWindVec.x){
+					localMotionVec.x = 0;
+				}else if(slipResist < 0 && slipResist < localWindVec.x){
+					localMotionVec.x = 0;
+				}else if(slipResist != 0){
+					localMotionVec.x -= slipResist;
+				}
+//				if (windvec.lengthSquared() > 0) {
+//					Vector3d resistskidding = new Vector3d();
+//					resistskidding.cross(tailwingvector, windvec);
+//					resistskidding.normalize();
+//					if (!(Double.isNaN(resistskidding.x) || Double.isNaN(resistskidding.y) || Double.isNaN(resistskidding.z))) {
+//						double sin = angle_cos(resistskidding, bodyvector);
+//						resistskidding.set(mainwingvector);
+//						resistskidding.normalize();
+//						resistskidding.scale(sin * (-(mc_Entity.onGround ? prefab_vehicle.slipresist_onground : 0  + (inWater ? (info.slipresist_inwater * (sinking/info.molded_depth)) : 0)) + -windvec.length() * prefab_vehicle.slipresist));
+//						if (!Double.isNaN(sin)) {
+////							System.out.println(sin);
+//							motionvec.add(resistskidding);
+//						}
+//					}
+//				}
+
+				motionvec = transformVecByQuat(localMotionVec,bodyRot);
+				transformVecforMinecraft(motionvec);
 //				if (planebody.onGround && motionvec.y < 0) motionvec.y = 0;
-				if (windvec.lengthSquared() > 0) {
-					Vector3d resistskidding = new Vector3d();
-					resistskidding.cross(tailwingvector, windvec);
-					resistskidding.normalize();
-					if (!(Double.isNaN(resistskidding.x) || Double.isNaN(resistskidding.y) || Double.isNaN(resistskidding.z))) {
-						double sin = angle_cos(resistskidding, bodyvector);
-						resistskidding.set(mainwingvector);
-						resistskidding.normalize();
-						resistskidding.scale(-windvec.length() * sin * (mc_Entity.onGround ? prefab_vehicle.slipresist_onground : inWater ? (info.slipresist_inwater * (sinking/info.molded_depth)) : prefab_vehicle.slipresist));
-						if (windvec.length() < 0.8) resistskidding.scale(windvec.length() / 0.8);
-						if (!Double.isNaN(sin)) {
-//							System.out.println(sin);
-							motionvec.add(resistskidding);
-						}
-					}
-				}
 			} else {
 				motionvec.scale(0);
 				motionvec.y -= prefab_vehicle.gravity;
 			}
-			if(!worldObj.isRemote){
-				getVector_local_inRotatedObj(motionvec, localMotionVec, bodyRot);
-			}
+//				System.out.println("pre " + motionvec);
+
+//				localMotionVec = transformVecByQuat(localMotionVec,bodyRot);
+//				System.out.println("af " + localMotionVec);
 			if (!Double.isNaN(motionvec.x) && !Double.isNaN(motionvec.y) && !Double.isNaN(motionvec.z)) {
 				mc_Entity.motionX = motionvec.x;
 				mc_Entity.motionY = motionvec.y;
@@ -2372,17 +2348,19 @@ public class BaseLogic implements IbaseLogic,IneedMouseTrack,MultiRiderLogics {
 			}
 
 			if(mc_Entity.onGround || inWater)followGround(mainwingvector,tailwingvector,bodyvector, (float) abs(mc_Entity.motionY));
-			
+
 			Vector3d motionvec_backUp = new Vector3d(motionvec);
 			handleWaterMovement();
-			moveEntity(mc_Entity.motionX, mc_Entity.motionY, mc_Entity.motionZ);
-			setPosition(mc_Entity.posX,mc_Entity.posY,mc_Entity.posZ);
 
-			motionvec = new Vector3d(mc_Entity.motionX, mc_Entity.motionY, mc_Entity.motionZ);
 
 			if(!worldObj.isRemote){
-				HMVPacketHandler.INSTANCE.sendToAll(new HMVPakcetVehicleState(mc_Entity.getEntityId(),bodyRot,rotationmotion,motionvec,throttle,health));
+				HMVPacketHandler.INSTANCE.sendToAll(new HMVPakcetVehicleState(mc_Entity.getEntityId(),bodyRot,rotationmotion,motionvec,
+						new Vector3d(mc_Entity.posX,mc_Entity.posY,mc_Entity.posZ),throttle,health));
 			}
+			setPosition(mc_Entity.posX, mc_Entity.posY, mc_Entity.posZ);
+			moveEntity(mc_Entity.motionX, mc_Entity.motionY, mc_Entity.motionZ);
+
+			motionvec = new Vector3d(mc_Entity.motionX, mc_Entity.motionY, mc_Entity.motionZ);
 
 			//空気抵抗・動摩擦は動きへの反作用。よって加減速はこっちで計算する。
 			Vector3d powerVec = new Vector3d(prefab_vehicle.unitThrottle);
@@ -2390,20 +2368,21 @@ public class BaseLogic implements IbaseLogic,IneedMouseTrack,MultiRiderLogics {
 			transformVecforMinecraft(powerVec);
 			Vector3d powerVec2 = new Vector3d(powerVec);
 			if (!(Double.isNaN(powerVec.x) || Double.isNaN(powerVec.y) || Double.isNaN(powerVec.z))) {
-				powerVec.scale(-throttle * prefab_vehicle.speedfactor);
-				motionvec.add(powerVec);
 				if (prefab_vehicle.throttle_AF < throttle) {
 					powerVec.normalize();
-					powerVec.scale(-throttle * prefab_vehicle.speedfactor_af);
+					powerVec.scale(-throttle * (prefab_vehicle.speedfactor_af + prefab_vehicle.speedfactor));
+					motionvec.add(powerVec);
+				}else {
+					powerVec.scale(-throttle * prefab_vehicle.speedfactor);
 					motionvec.add(powerVec);
 				}
 			}
-			if (motionvec.length() > 0) {//
+			getVector_local_inRotatedObj(motionvec, localMotionVec, bodyRot);
+			if (motionvec.lengthSquared() > 0) {//
 				Vector3d drug = new Vector3d(motionvec);
 				drug.normalize();
 				drug.scale(motionvec.length() * motionvec.length() *
-								(prefab_vehicle.dragfactor + gearprogress * prefab_vehicle.geardragfactor + flaplevel * prefab_vehicle.flapdragfactor)
-						              + (serverx ? motionvec.length() * prefab_vehicle.brakedragfactor : 0)
+								(prefab_vehicle.dragfactor + gearprogress * prefab_vehicle.geardragfactor)
 									  + (inWater ? motionvec.length() * motionvec.length() * (info.dragfactor_inwater * (sinking/info.molded_depth)) : 0)
 						             /* + (mc_Entity.onGround ? prefab_vehicle.dragfactor_ground * (motionvec_backUp.y < 0 ? -motionvec_backUp.y :0) : 0) *//*ここは別処理に移行*/
 						             /* + (mc_Entity.onGround && serverx ? prefab_vehicle.brakedragfactor_ground * (motionvec_backUp.y < 0 ? -motionvec_backUp.y :0): 0)*/);
@@ -2411,50 +2390,48 @@ public class BaseLogic implements IbaseLogic,IneedMouseTrack,MultiRiderLogics {
 					motionvec.set(0,0,0);
 				}
 				else motionvec.sub(drug);
-			} else {
-				motionvec.set(0,0,0);
 			}
+
+
+			if (motionvec.lengthSquared() > 0) {
+				double dragFactor = ((
+						(localMotionVec.z > 0 ? 1 : -1) * localMotionVec.z * localMotionVec.z *
+								(
+										prefab_vehicle.dragfactor_front +
+										(serverx ? prefab_vehicle.brakedragfactor : 0) +
+										flaplevel * prefab_vehicle.flapdragfactor
+								)
+								+
+								(serverx && mc_Entity.onGround ? (motionvec_backUp.y < 0 ? motionvec_backUp.y :0) * prefab_vehicle.brakefactor_ground : 0)));
+				if(dragFactor > 0 && dragFactor > localMotionVec.z){
+					localMotionVec.z = 0;
+				}else if(dragFactor < 0 && dragFactor < localMotionVec.z){
+					localMotionVec.z = 0;
+				}else {
+					localMotionVec.z -= dragFactor;
+				}
+				motionvec = transformVecByQuat(localMotionVec,bodyRot);
+				transformVecforMinecraft(motionvec);
+			}
+
 			if (!(Double.isNaN(powerVec2.x) || Double.isNaN(powerVec2.y) || Double.isNaN(powerVec2.z))) {
 				if(mc_Entity.onGround || inWater){//車輪・履帯を介すると速度はその回転速度に収束する。
 					//よって前後方向(z軸)についての移動量を出し、
-					double motion_zaxis = 0;
-					motion_zaxis = (motionvec.length() * (motionvec.lengthSquared() > 0 ?  -angle_cos(motionvec,bodyvector):1));
+					double motion_zaxis = -localMotionVec.z;
 					//その移動量と車輪・履帯の回転速を比べ加減速させる。
 					//この際摩擦係数となっているdragfactor_groundをかけて緩急を付ける。
 //					System.out.println("motionvec" + motionvec);
 //					System.out.println("bodyvector" + bodyvector);
 //					System.out.println("angle_cos" + angle_cos(motionvec,bodyvector));
-					double speed_difference = !serverx
-							?
-							((throttle *
-									(
-											mc_Entity.onGround
-													?
-													prefab_vehicle.speedfactor_onGround
-													:
-													inWater
-															?
-															prefab_vehicle.speedfactor_onGround
-															:
-															0
-									)
-									- motion_zaxis) *
-									(
-											(mc_Entity.onGround ? prefab_vehicle.torque:0)
-											+
-											(inWater ? prefab_vehicle.torque_inWater:0)
-									)
-							)
-							:
-							(- motion_zaxis * prefab_vehicle.brakefactor_ground);
-//					System.out.println("speed_difference" + speed_difference);
+					double speed_difference =
+							((!serverx ?throttle:0) * prefab_vehicle.speedfactor_onGround - motion_zaxis ) * ((mc_Entity.onGround ? prefab_vehicle.torque : 0) + (inWater ? prefab_vehicle.torque_inWater : 0));
 //					System.out.println("motionvec_backUp.y" + motionvec_backUp.y);
 					double temp = (mc_Entity.onGround ? (prefab_vehicle.dragfactor_ground * (motionvec_backUp.y < 0 ? motionvec_backUp.y :0)):0)
 							-
 							(inWater ? (info.dragfactor_inwater_screw * (1 - sinking/info.molded_depth)):0);
-					if(temp < -1)temp = -1;
-					powerVec2.scale(speed_difference * temp);
-					motionvec.add(powerVec2);
+					localMotionVec.z += speed_difference * temp;
+					motionvec = transformVecByQuat(localMotionVec,bodyRot);
+					transformVecforMinecraft(motionvec);
 				}
 			}
 			if (!Double.isNaN(motionvec.x) && !Double.isNaN(motionvec.y) && !Double.isNaN(motionvec.z)) {
@@ -2465,8 +2442,8 @@ public class BaseLogic implements IbaseLogic,IneedMouseTrack,MultiRiderLogics {
 			if (mc_Entity.motionY > 0) {
 				mc_Entity.isAirBorne = true;
 			}
-			
-			
+
+
 			if (throttle > prefab_vehicle.throttle_Max) {
 				throttle = prefab_vehicle.throttle_Max;
 			}
@@ -2479,7 +2456,55 @@ public class BaseLogic implements IbaseLogic,IneedMouseTrack,MultiRiderLogics {
 					mc_Entity.attackEntityFrom(DamageSource.fall, (float) motionvec_backUp.length() * prefab_vehicle.collidedHorizontally_damageCoefficient);
 				}
 			}
+
+			if(!worldObj.isRemote) {
+//			System.out.println("yawladder " + yawladder);
+//		System.out.println("" + pitchladder);
+				motionvec = new Vector3d(mc_Entity.motionX, mc_Entity.motionY, mc_Entity.motionZ);
+				double currentForcedEffect = (mc_Entity.onGround ? prefab_vehicle.forced_rudder_effect_OnGround : prefab_vehicle.forced_rudder_effect);
+				double cof = 0;
+				if(motionvec.length() > 0.001)cof = -angle_cos(bodyvector, motionvec) * (motionvec.length());
+				cof += (currentForcedEffect * throttle);
+//				System.out.println("cof " + cof);
+//				System.out.println("abs(motionvec_backUp.y) " + abs(motionvec_backUp.y));
+				if(abs(cof) > 0) {
+					if (abs(pitchrudder) > 0.0001) {
+						AxisAngle4d axisxangled = new AxisAngle4d(unitX, toRadians(-pitchrudder / 4 * cof * prefab_vehicle.pitchspeed));
+						rotationmotion = Utils.quatRotateAxis(rotationmotion, axisxangled);
+					}
+					if (abs(yawrudder) > 0.001) {
+						AxisAngle4d axisyangled;
+						axisyangled = new AxisAngle4d(unitY, toRadians(yawrudder / 5 * cof * (prefab_vehicle.yawspeed + (mc_Entity.onGround ? prefab_vehicle.yawspeed_taxing * abs(motionvec_backUp.y):0))));
+
+						rotationmotion = Utils.quatRotateAxis(rotationmotion, axisyangled);
+					}
+					if (abs(rollrudder) > 0.0001) {
+						AxisAngle4d axiszangled = new AxisAngle4d(unitZ, toRadians(rollrudder / 4 * cof * prefab_vehicle.rollspeed));
+						rotationmotion = Utils.quatRotateAxis(rotationmotion, axiszangled);
+					}
+				}
+
+				double[] xyz = Utils.eulerfrommatrix(Utils.matrixfromQuat(bodyRot));
+				bodyrotationPitch = (float) toDegrees(xyz[0]);
+				if (!Double.isNaN(xyz[1])) {
+					bodyrotationYaw = (float) toDegrees(xyz[1]);
+				}
+				bodyrotationRoll = (float) toDegrees(xyz[2]);
+			}
+		}else{
+
+			handleWaterMovement();
+			if(receivedPosition != null) {
+				mc_Entity.posX = receivedPosition.x;
+				mc_Entity.posY = receivedPosition.y;
+				mc_Entity.posZ = receivedPosition.z;
+				receivedPosition = null;
+			}
+			setPosition(mc_Entity.posX, mc_Entity.posY, mc_Entity.posZ);
+			moveEntity(mc_Entity.motionX, mc_Entity.motionY, mc_Entity.motionZ);
+			getVector_local_inRotatedObj(motionvec, localMotionVec, bodyRot);
 		}
+
 		{
 			if (mc_Entity.onGround) {
 				gearprogress = 100;
@@ -2489,16 +2514,16 @@ public class BaseLogic implements IbaseLogic,IneedMouseTrack,MultiRiderLogics {
 				} else {
 					gearprogress++;
 				}
-				
+
 				if (gearprogress < 0) {
 					gearprogress = 0;
 				}
 				if (gearprogress > 100) {
 					gearprogress = 100;
 				}
-				
+
 			}
-			Vector3d motionvec = new Vector3d(mc_Entity.motionX, mc_Entity.motionY, mc_Entity.motionZ);
+			motionvec = new Vector3d(mc_Entity.motionX, mc_Entity.motionY, mc_Entity.motionZ);
 			if ((motionvec.y < -bodyvector.y && prefab_vehicle.autoflap) || mc_Entity.onGround || serverf || HMV_Proxy.flap_click()) {
 				Flapextension();
 			} else {
@@ -2656,14 +2681,13 @@ public class BaseLogic implements IbaseLogic,IneedMouseTrack,MultiRiderLogics {
 		needStartSound = false;
 	}
 	
-	
+
 	public void setControl_RightClick(boolean value) {
-		trigger1 = value;
 	}
-	
-	
+
+
 	public void setControl_LeftClick(boolean value) {
-		trigger2 = value;
+
 	}
 	
 	

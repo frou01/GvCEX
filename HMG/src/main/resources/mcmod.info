@@ -1,9 +1,9 @@
 [
 {
   "modid": "HandmadeGuns",
-  "name": "HandMadeGunsModEX",
+  "name": "HandMadeGuns&VehicleModEX",
   "description": "The Addable Gun Mod",
-  "version": "10.37",
+  "version": "EX13",
   "mcversion": "1.7.10",
   "url": "",
   "updateUrl": "",

@@ -10,6 +10,7 @@ import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import handmadeguns.HMGGunMaker;
 import handmadeguns.items.guns.HMGItem_Unified_Guns;
+import hmggvcmob.camp.CampObj;
 import hmggvcmob.item.*;
 import hmggvcmob.item.GVCItemPMCEgg;
 import hmggvcmob.block.GVCBlockFlag;
@@ -33,6 +34,7 @@ import java.util.List;
 import java.util.Map;
 
 import hmggvcmob.util.SpotObj;
+import hmggvcmob.world.WWorld;
 import hmggvcutil.GVCUtils;
 import handmadevehicle.HMVehicle;
 import net.minecraft.block.Block;
@@ -43,22 +45,24 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.stats.Achievement;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.AchievementPage;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 
-@Mod(modid="GVCMob", name="GVCMob", version="HD11", dependencies="required-after:GVCGuns;required-after:HMVehicle")
+import static hmggvcmob.GVCMobPlus.modid;
+
+@Mod(modid=modid, name=modid, version="HD11", dependencies="required-after:GVCGuns;required-after:HMVehicle")
 public class GVCMobPlus
 {
+    public static final String modid = "GVCMob";
     @SidedProxy(clientSide="hmggvcmob.proxy.ClientProxyGVCM", serverSide="hmggvcmob.proxy.CommonSideProxyGVCM")
     public static CommonSideProxyGVCM proxy;
     public static boolean isDebugMessage = true;
     public static boolean cfg_setCamp = true;
     public static boolean cfg_guerrillacanusePlacedGun = true;
     public static boolean cfg_mob_setCamp = true;
-    @Mod.Instance("GVCMob")
+    @Mod.Instance(modid)
     public static GVCMobPlus INSTANCE;
     public static boolean cfg_modeGorC = true;
     public static final CreativeTabs tabgvcm = new GVMTab("GVCmobs");
@@ -78,6 +82,7 @@ public class GVCMobPlus
     public static boolean cfg_blockdestory;
     public static boolean cfg_modelobj;
     public static Map<String, Integer> ignoreSoTargetEntity = new HashMap();
+    public static Map<String, CampObj> campsHash = new HashMap();
     public static boolean cfg_throwngrenade;
     public static boolean cfg_canspawnhell;
     public static boolean cfg_canspawnsky;
@@ -131,9 +136,13 @@ public class GVCMobPlus
     public static GVCBlockMobSpawnerExtended GKspawner;
     public static GVCBlockMobSpawnerExtended tankspawner;
     public static GVCBlockMobSpawnerExtended APCspawner;
-    public static GVCBlockFlag fn_PMCflag;
+    public static GVCBlockFlag fn_playerFlag;
+    public static CampObj boxes;
+    public static GVCBlockFlag fn_SoldierFlag;
+    public static CampObj soldiers;
     public static GVCBlockFlag fn_Supplyflag;
     public static Block fn_Guerrillaflag;
+    public static CampObj guerrillas;
     public static int bulletbase = 61;
     public static Item gvcmx_reqsupport_arty;
     public static Item gvcmx_reqsupport_heli;
@@ -225,7 +234,7 @@ public class GVCMobPlus
             }
         }
         cfg_flagspawnlevel = lconf.get("Guerrilla", "cfg_FlagSpawnLevel", 180).getInt(180);
-        cfg_flagspawninterval = lconf.get("Guerrilla", "cfg_Flagspawninterval", 24000).getInt(24000);
+        cfg_flagspawninterval = lconf.get("Guerrilla", "cfg_Flagspawninterval", 2400).getInt(2400);
         HMVehicle.cfgVehicleWheel_UpRange = lconf.get("Vehicle", "cfgVehicleWheel_UpRange", 1).getDouble(1);
         HMVehicle.cfgVehicleWheel_DownRange = lconf.get("Vehicle", "cfgVehicleWheel_DownRange", 2).getDouble(2);
         cfg_cansetIED = lconf.get("world", "cfg_CansetIED", true).getBoolean(true);
@@ -264,20 +273,37 @@ public class GVCMobPlus
         APCspawner.setBlockName("MobSpawnerKai_APC").setBlockTextureName("gvcmob:mobspawner");
         APCspawner.mobname = "GVCMob.APC";
         GameRegistry.registerBlock(APCspawner, "MobSpawnerKai_APC");
-        Class[] PTeamEntityclass = { GVCEntitySoldier.class,GVCEntitySoldier.class,GVCEntitySoldier.class,GVCEntitySoldier.class, GVCEntitySoldierMG.class, GVCEntitySoldierRPG.class, GVCEntitySoldierSP.class };
-        fn_PMCflag = new GVCBlockFlag(PTeamEntityclass, new ResourceLocation("gvcmob:textures/model/pflagtexture.png"));
-        fn_PMCflag.setBlockName("BaseFlagBlock").setBlockTextureName("gvcmob:mobspawner");
-        fn_PMCflag.withPlane = true;
-        GameRegistry.registerBlock(fn_PMCflag, "BaseFlagBlock");
+        soldiers = new CampObj();
+        soldiers.campName = "UNION";
+        soldiers.campBlockTextureModel= "gvcmob:textures/model/pflagtexture.png";
+        campsHash.put(soldiers.campName,soldiers);
+        soldiers.teamEntityClasses = new Class[]{ GVCEntitySoldier.class,GVCEntitySoldier.class,GVCEntitySoldier.class,GVCEntitySoldier.class, GVCEntitySoldierMG.class, GVCEntitySoldierRPG.class, GVCEntitySoldierSP.class };
+        fn_SoldierFlag = new GVCBlockFlag(soldiers);
+        fn_SoldierFlag.setBlockName("BaseFlagBlock").setBlockTextureName("gvcmob:mobspawner");
+        soldiers.campsBlock = fn_SoldierFlag;
+        GameRegistry.registerBlock(fn_SoldierFlag, "BaseFlagBlock");
 
-        Class[] STeamEntityclass = { EntitySupplyBox.class };
-        fn_Supplyflag = new GVCBlockFlag(STeamEntityclass, new ResourceLocation("gvcmob:textures/model/sflagtexture.png"));
+
+        boxes = new CampObj();
+        boxes.campName = "Supply";
+        boxes.campBlockTextureModel= "gvcmob:textures/model/sflagtexture.png";
+        boxes.teamEntityClasses = new Class[]{ EntitySupplyBox.class };
+        boxes.flagWidth = 0;
+        campsHash.put(boxes.campName, boxes);
+
+        fn_Supplyflag = new GVCBlockFlag(boxes);
         fn_Supplyflag.setBlockName("SupplyFlagBlock").setBlockTextureName("gvcmob:mobspawner");
-        fn_Supplyflag.withPlane = true;
+        boxes.campsBlock = fn_Supplyflag;
         GameRegistry.registerBlock(fn_Supplyflag, "SupplyFlagBlock");
 
-        Class[] GTeamEntityclass = { GVCEntityGuerrilla.class,GVCEntityGuerrilla.class,GVCEntityGuerrilla.class,GVCEntityGuerrilla.class, GVCEntityGuerrillaMG.class,GVCEntityGuerrillaMG.class, GVCEntityGuerrillaSP.class, GVCEntityGuerrillaRPG.class };
-        fn_Guerrillaflag = new GVCBlockFlag(GTeamEntityclass, new ResourceLocation("gvcmob:textures/model/gflagtexture.png")).setBlockName("GuerrillaBaseFlagBlock").setBlockTextureName("gvcmob:mobspawner");
+        guerrillas = new CampObj();
+        guerrillas.campBlockTextureModel= "gvcmob:textures/model/gflagtexture.png";
+        guerrillas.campName = "ALLIES Radical Party";
+        campsHash.put(guerrillas.campName,guerrillas);
+        //TODO
+        guerrillas.teamEntityClasses = new Class[]{ GVCEntityGuerrilla.class,GVCEntityGuerrilla.class,GVCEntityGuerrilla.class,GVCEntityGuerrilla.class, GVCEntityGuerrillaMG.class,GVCEntityGuerrillaMG.class, GVCEntityGuerrillaSP.class, GVCEntityGuerrillaRPG.class };
+        fn_Guerrillaflag = new GVCBlockFlag(guerrillas).setBlockName("GuerrillaBaseFlagBlock").setBlockTextureName("gvcmob:mobspawner");
+        guerrillas.campsBlock = fn_Guerrillaflag;
         GameRegistry.registerBlock(fn_Guerrillaflag, "GuerrillaBaseFlagBlock");
 
         fn_guerrillaegg = new GVCItemGuerrillaEgg(0).setUnlocalizedName("GuerrillaEgg").setTextureName("gvcmob:guerrillaegg");
@@ -554,7 +580,7 @@ public class GVCMobPlus
                 "dd",
                 'd', Items.emerald,'I',Items.iron_ingot
         );
-        GameRegistry.addRecipe(new ItemStack(fn_PMCflag, 1),
+        GameRegistry.addRecipe(new ItemStack(fn_SoldierFlag, 1),
                 " I ",
                 " I ",
                 "ddd",

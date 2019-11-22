@@ -1,0 +1,122 @@
+---- Minecraft Crash Report ----
+// Don't do that.
+
+Time: 19/11/20 23:49
+Description: Ticking entity
+
+java.lang.NullPointerException: Ticking entity
+	at handmadevehicle.entity.parts.turrets.TurretObj.update(TurretObj.java:539)
+	at handmadevehicle.entity.parts.logics.BaseLogic.updateRider(BaseLogic.java:584)
+	at handmadevehicle.entity.parts.logics.BaseLogic.onUpdate(BaseLogic.java:1229)
+	at handmadevehicle.entity.EntityVehicle.onUpdate(EntityVehicle.java:145)
+	at net.minecraft.world.World.updateEntityWithOptionalForce(World.java:2298)
+	at net.minecraft.world.World.updateEntity(World.java:2258)
+	at net.minecraft.world.World.updateEntities(World.java:2108)
+	at net.minecraft.client.Minecraft.runTick(Minecraft.java:2097)
+	at net.minecraft.client.Minecraft.runGameLoop(Minecraft.java:1039)
+	at net.minecraft.client.Minecraft.run(Minecraft.java:962)
+	at net.minecraft.client.main.Main.main(Main.java:164)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at net.minecraft.launchwrapper.Launch.launch(Launch.java:135)
+	at net.minecraft.launchwrapper.Launch.main(Launch.java:28)
+	at net.minecraftforge.gradle.GradleStartCommon.launch(Unknown Source)
+	at GradleStart.main(Unknown Source)
+
+
+A detailed walkthrough of the error, its code path and all known details is as follows:
+---------------------------------------------------------------------------------------
+
+-- Head --
+Stacktrace:
+	at handmadevehicle.entity.parts.turrets.TurretObj.update(TurretObj.java:539)
+	at handmadevehicle.entity.parts.logics.BaseLogic.updateRider(BaseLogic.java:584)
+	at handmadevehicle.entity.parts.logics.BaseLogic.onUpdate(BaseLogic.java:1229)
+	at handmadevehicle.entity.EntityVehicle.onUpdate(EntityVehicle.java:145)
+	at net.minecraft.world.World.updateEntityWithOptionalForce(World.java:2298)
+	at net.minecraft.world.World.updateEntity(World.java:2258)
+
+-- Entity being ticked --
+Details:
+	Entity Type: HMVehicle.HMVVehicle (handmadevehicle.entity.EntityVehicle)
+	Entity ID: 78
+	Entity Name: entity.HMVehicle.HMVVehicle.name
+	Entity's Exact location: 614.62, 62.00, 805.76
+	Entity's Block location: World: (614,62,805), Chunk: (at 6,3,5 in 38,50; contains blocks 608,0,800 to 623,255,815), Region: (1,1; contains chunks 32,32 to 63,63, blocks 512,0,512 to 1023,255,1023)
+	Entity's Momentum: -0.00, -0.05, -0.00
+Stacktrace:
+	at net.minecraft.world.World.updateEntities(World.java:2108)
+
+-- Affected level --
+Details:
+	Level name: MpServer
+	All players: 1 total; [EntityClientPlayerMP['Player224'/77, l='MpServer', x=612.06, y=64.24, z=802.95]]
+	Chunk stats: MultiplayerChunkCache: 1032, 1032
+	Level seed: 0
+	Level generator: ID 01 - flat, ver 0. Features enabled: false
+	Level generator options: 
+	Level spawn location: World: (927,4,-496), Chunk: (at 15,0,0 in 57,-31; contains blocks 912,0,-496 to 927,255,-481), Region: (1,-1; contains chunks 32,-32 to 63,-1, blocks 512,0,-512 to 1023,255,-1)
+	Level time: 116283 game time, 62117 day time
+	Level dimension: 0
+	Level storage version: 0x00000 - Unknown?
+	Level weather: Rain time: 0 (now: true), thunder time: 0 (now: false)
+	Level game mode: Game mode: creative (ID 1). Hardcore: false. Cheats: false
+	Forced entities: 59 total; [GVCEntityGuerrilla_Flamer['entity.GVCMob.GuerrillaFlamer.name'/128, l='MpServer', x=656.66, y=62.00, z=723.28], EntitySpider['Spider'/129, l='MpServer', x=692.13, y=62.00, z=759.66], GVCEntityGuerrillaSG['GuerrillaSG'/135, l='MpServer', x=718.50, y=62.00, z=807.50], GVCEntityGuerrillaSG['GuerrillaSG'/136, l='MpServer', x=718.50, y=62.00, z=802.50], GVCEntityGuerrillaSG['GuerrillaSG'/137, l='MpServer', x=714.50, y=62.00, z=803.50], GVCEntityBoxSpawner['entity.GVCGuns.Box_spawned.name'/138, l='MpServer', x=514.22, y=62.00, z=788.75], GVCEntityGuerrillaBM['entity.GVCMob.Bommer.name'/142, l='MpServer', x=525.50, y=62.00, z=845.50], EntitySpider['Spider'/144, l='MpServer', x=687.44, y=62.00, z=728.34], GVCEntityGuerrillaSG['GuerrillaSG'/146, l='MpServer', x=692.50, y=62.00, z=866.50], EntityZombie['Zombie'/14615, l='MpServer', x=535.50, y=62.00, z=827.50], EntityZombie['Zombie'/14616, l='MpServer', x=538.50, y=62.00, z=830.50], GVCEntityGK['IRVING'/153, l='MpServer', x=598.03, y=62.00, z=694.25], GVCEntityGuerrillaRPG['GuerrillaRPG'/154, l='MpServer', x=722.50, y=62.00, z=828.50], EntityVehicle['entity.HMVehicle.HMVVehicle.name'/179, l='MpServer', x=770.50, y=62.00, z=825.50], EntityVehicle['entity.HMVehicle.HMVVehicle.name'/78, l='MpServer', x=614.62, y=62.00, z=805.76], EntityClientPlayerMP['Player224'/77, l='MpServer', x=612.06, y=64.24, z=802.95], GVCEntityGK['IRVING'/82, l='MpServer', x=596.88, y=62.00, z=812.34], EntitySkeleton['Skeleton'/83, l='MpServer', x=593.59, y=62.00, z=795.91], EntityZombie['Zombie'/84, l='MpServer', x=629.41, y=62.00, z=797.94], EntityZombie['Zombie'/85, l='MpServer', x=585.75, y=62.00, z=819.16], EntitySkeleton['Skeleton'/86, l='MpServer', x=635.78, y=62.00, z=773.97], GVCEntityGuerrillaBM['entity.GVCMob.Bommer.name'/87, l='MpServer', x=634.44, y=62.00, z=771.78], EntitySpider['Spider'/88, l='MpServer', x=631.13, y=62.00, z=773.09], EntitySpider['Spider'/89, l='MpServer', x=636.91, y=62.00, z=772.13], EntityCreeper['Creeper'/90, l='MpServer', x=645.06, y=62.00, z=790.31], EntityZombie['Zombie'/91, l='MpServer', x=635.84, y=62.00, z=841.63], EntitySkeleton['Skeleton'/92, l='MpServer', x=557.66, y=62.00, z=786.88], EntitySkeleton['Skeleton'/93, l='MpServer', x=571.50, y=62.00, z=795.50], EntityZombie['Zombie'/94, l='MpServer', x=595.50, y=62.00, z=753.50], EntitySpider['Spider'/95, l='MpServer', x=659.94, y=62.00, z=796.19], GVCEntityGuerrilla_Flamer['entity.GVCMob.GuerrillaFlamer.name'/96, l='MpServer', x=658.66, y=62.00, z=795.31], GVCEntityGuerrilla_Flamer['entity.GVCMob.GuerrillaFlamer.name'/97, l='MpServer', x=657.50, y=62.00, z=794.50], EntityZombie['Zombie'/98, l='MpServer', x=661.56, y=62.00, z=800.03], GVCEntityGuerrilla['Guerrilla'/99, l='MpServer', x=637.50, y=62.00, z=852.50], GVCEntityGuerrillaSP['GuerrillaSP'/100, l='MpServer', x=591.00, y=62.00, z=758.91], EntitySkeleton['Skeleton'/101, l='MpServer', x=584.31, y=62.00, z=746.91], EntityZombie['Zombie'/102, l='MpServer', x=652.50, y=62.00, z=761.50], EntityCreeper['Creeper'/103, l='MpServer', x=649.28, y=62.00, z=851.06], EntityZombie['Zombie'/104, l='MpServer', x=600.03, y=62.00, z=744.00], EntityZombie['Zombie'/105, l='MpServer', x=595.25, y=62.00, z=746.84], GVCEntityGuerrillaRPG['GuerrillaRPG'/106, l='MpServer', x=686.50, y=62.00, z=830.50], EntitySkeleton['Skeleton'/107, l='MpServer', x=579.50, y=62.00, z=878.50], EntityCreeper['Creeper'/108, l='MpServer', x=576.50, y=62.00, z=875.50], GVCEntityGuerrillaBM['entity.GVCMob.Bommer.name'/109, l='MpServer', x=556.50, y=62.00, z=838.50], EntityCreeper['Creeper'/110, l='MpServer', x=558.50, y=62.00, z=838.50], EntitySkeleton['Skeleton'/111, l='MpServer', x=546.91, y=62.00, z=831.66], EntitySkeleton['Skeleton'/112, l='MpServer', x=596.34, y=62.00, z=747.88], EntitySkeleton['Skeleton'/113, l='MpServer', x=676.69, y=62.00, z=846.16], GVCEntityBoxSpawner['entity.GVCGuns.Box_spawned.name'/114, l='MpServer', x=694.66, y=62.00, z=803.47], EntitySpider['Spider'/115, l='MpServer', x=693.66, y=62.00, z=805.50], GVCEntityGuerrillaSG['GuerrillaSG'/117, l='MpServer', x=682.50, y=62.00, z=852.50], EntityZombie['Zombie'/118, l='MpServer', x=673.50, y=62.00, z=860.50], EntitySpider['Spider'/119, l='MpServer', x=675.50, y=62.00, z=862.50], EntitySpider['Spider'/120, l='MpServer', x=676.69, y=62.00, z=854.34], EntitySpider['Spider'/121, l='MpServer', x=664.50, y=62.00, z=873.50], GVCEntityBoxSpawner['entity.GVCGuns.Box_spawned.name'/123, l='MpServer', x=691.22, y=62.00, z=799.84], GVCEntityGuerrillaRPG['GuerrillaRPG'/124, l='MpServer', x=688.69, y=62.00, z=830.53], EntityCreeper['Creeper'/125, l='MpServer', x=679.50, y=62.00, z=865.50], EntitySkeleton['Skeleton'/127, l='MpServer', x=656.50, y=62.00, z=728.50]]
+	Retry entities: 0 total; []
+	Server brand: fml,forge
+	Server type: Integrated singleplayer server
+Stacktrace:
+	at net.minecraft.client.multiplayer.WorldClient.addWorldInfoToCrashReport(WorldClient.java:415)
+	at net.minecraft.client.Minecraft.addGraphicsAndWorldToCrashReport(Minecraft.java:2566)
+	at net.minecraft.client.Minecraft.run(Minecraft.java:984)
+	at net.minecraft.client.main.Main.main(Main.java:164)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at net.minecraft.launchwrapper.Launch.launch(Launch.java:135)
+	at net.minecraft.launchwrapper.Launch.main(Launch.java:28)
+	at net.minecraftforge.gradle.GradleStartCommon.launch(Unknown Source)
+	at GradleStart.main(Unknown Source)
+
+-- System Details --
+Details:
+	Minecraft Version: 1.7.10
+	Operating System: Windows 10 (amd64) version 10.0
+	Java Version: 1.8.0_231, Oracle Corporation
+	Java VM Version: Java HotSpot(TM) 64-Bit Server VM (mixed mode), Oracle Corporation
+	Memory: 139008032 bytes (132 MB) / 923271168 bytes (880 MB) up to 3803185152 bytes (3627 MB)
+	JVM Flags: 0 total; 
+	AABB Pool Size: 0 (0 bytes; 0 MB) allocated, 0 (0 bytes; 0 MB) used
+	IntCache: cache: 0, tcache: 0, allocated: 0, tallocated: 0
+	FML: MCP v9.05 FML v7.10.99.99 Minecraft Forge 10.13.4.1614 11 mods loaded, 11 mods active
+	States: 'U' = Unloaded 'L' = Loaded 'C' = Constructed 'H' = Pre-initialized 'I' = Initialized 'J' = Post-initialized 'A' = Available 'D' = Disabled 'E' = Errored
+	UCHIJAAAA	mcp{9.05} [Minecraft Coder Pack] (minecraft.jar) 
+	UCHIJAAAA	FML{7.10.99.99} [Forge Mod Loader] (forgeSrc-1.7.10-10.13.4.1614-1.7.10.jar) 
+	UCHIJAAAA	Forge{10.13.4.1614} [Minecraft Forge] (forgeSrc-1.7.10-10.13.4.1614-1.7.10.jar) 
+	UCHIJAAAA	HandmadeGuns{1.7.x-srg-1} [HandMadeGuns&VehicleModEX] (HMG-EX13.jar) 
+	UCHIJAAAA	HMVehicle{1.7.x-srg-1} [HMVehicle] (HMG-EX13.jar) 
+	UCHIJAAAA	lmmx{1.0} [lmmx] (Depend-1.0.jar) 
+	UCHIJAAAA	MMMLibX{1.7.x-srg-1} [MMMLibX] (Depend-1.0.jar) 
+	UCHIJAAAA	Sokoniyatugairuzo{1.7.x} [Sokoniyatugairuzo] (Depend-1.0.jar) 
+	UCHIJAAAA	zabuton{1.0} [zabuton] (Depend-1.0.jar) 
+	UCHIJAAAA	GVCGuns{1.7.x-srg-1} [GVCGuns] (GVC-HD13.jar) 
+	UCHIJAAAA	GVCMob{HD11} [Guerrilla vs Command mod : High Difficulity version] (GVC-HD13.jar) 
+	GL info: ' Vendor: 'NVIDIA Corporation' Version: '4.6.0 NVIDIA 441.12' Renderer: 'GeForce GTX 960/PCIe/SSE2'
+	Launched Version: 1.7.10
+	LWJGL: 2.9.1
+	OpenGL: GeForce GTX 960/PCIe/SSE2 GL version 4.6.0 NVIDIA 441.12, NVIDIA Corporation
+	GL Caps: Using GL 1.3 multitexturing.
+Using framebuffer objects because OpenGL 3.0 is supported and separate blending is supported.
+Anisotropic filtering is supported and maximum anisotropy is 16.
+Shaders are available because OpenGL 2.1 is supported.
+
+	Is Modded: Definitely; Client brand changed to 'fml,forge'
+	Type: Client (map_client.txt)
+	Resource Packs: []
+	Current Language: English (US)
+	Profiler Position: N/A (disabled)
+	Vec3 Pool Size: 0 (0 bytes; 0 MB) allocated, 0 (0 bytes; 0 MB) used
+	Anisotropic Filtering: Off (1)

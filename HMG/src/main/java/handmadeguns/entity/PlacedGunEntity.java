@@ -11,6 +11,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -48,6 +49,7 @@ public class PlacedGunEntity extends Entity implements IEntityAdditionalSpawnDat
     public PlacedGunEntity(World p_i1582_1_) {
         super(p_i1582_1_);
         ignoreFrustumCheck = true;
+        setSize(1,1);
     }
     public PlacedGunEntity(World p_i1582_1_,ItemStack stack) {
         this(p_i1582_1_);
@@ -70,75 +72,40 @@ public class PlacedGunEntity extends Entity implements IEntityAdditionalSpawnDat
     public void updateRiderPosition() {
         if(gunStack != null && gunItem != null) {
             Vec3 seatVec = seatVec();
-            if (worldObj.isRemote) {
-                if (riddenByEntity == FMLClientHandler.instance().getClientPlayerEntity()) {
-                    this.riddenByEntity.setPosition(
-                            this.posX + seatVec.xCoord,
-                            this.posY + this.gunyoffset + seatVec.yCoord,
-                            this.posZ + seatVec.zCoord);
-                    prevRiddenByEntityPosX = riddenByEntity.posX;
-                    prevRiddenByEntityPosY = riddenByEntity.posY;
-                    prevRiddenByEntityPosZ = riddenByEntity.posZ;
-                }else if(!(riddenByEntity instanceof EntityPlayer)){
-                    this.riddenByEntity.setPosition(
-                            this.posX + seatVec.xCoord,
-                            this.posY + this.gunyoffset + seatVec.yCoord - riddenByEntity.getEyeHeight(),
-                            this.posZ + seatVec.zCoord);
-                    prevRiddenByEntityPosX = riddenByEntity.posX;
-                    prevRiddenByEntityPosY = riddenByEntity.posY;
-                    prevRiddenByEntityPosZ = riddenByEntity.posZ;
-                }
-            }else {
-                this.riddenByEntity.setPosition(
-                        this.posX + seatVec.xCoord,
-                        this.posY + this.gunyoffset + seatVec.yCoord - riddenByEntity.getEyeHeight(),
-                        this.posZ + seatVec.zCoord);
-                prevRiddenByEntityPosX = riddenByEntity.posX;
-                prevRiddenByEntityPosY = riddenByEntity.posY;
-                prevRiddenByEntityPosZ = riddenByEntity.posZ;
-            }
-            /*if(ridingEntity == null) {
-                if (worldObj.isRemote) {
-                    if (riddenByEntity == FMLClientHandler.instance().getClientPlayerEntity()) {
-                        {
-                            this.riddenByEntity.moveEntity(
-                                    this.posX + seatVec.xCoord - riddenByEntity.posX,
-                                    this.posY + this.gunyoffset + seatVec.yCoord - riddenByEntity.posY,
-                                    this.posZ + seatVec.zCoord - riddenByEntity.posZ);
-                        }
-                        prevRiddenByEntityPosX = riddenByEntity.posX;
-                        prevRiddenByEntityPosY = riddenByEntity.posY;
-                        prevRiddenByEntityPosZ = riddenByEntity.posZ;
-                    }else if(!(riddenByEntity instanceof EntityPlayer)){
-                        this.riddenByEntity.setPosition(
-                                this.posX + seatVec.xCoord,
-                                this.posY + this.gunyoffset + seatVec.yCoord,
-                                this.posZ + seatVec.zCoord);
-                        prevRiddenByEntityPosX = riddenByEntity.posX;
-                        prevRiddenByEntityPosY = riddenByEntity.posY;
-                        prevRiddenByEntityPosZ = riddenByEntity.posZ;
-                    }
-                }else if(!(riddenByEntity instanceof EntityPlayer)){
-                    this.riddenByEntity.setPosition(
-                            this.posX + seatVec.xCoord,
-                            this.posY + this.gunyoffset + seatVec.yCoord,
-                            this.posZ + seatVec.zCoord);
-                    prevRiddenByEntityPosX = riddenByEntity.posX;
-                    prevRiddenByEntityPosY = riddenByEntity.posY;
-                    prevRiddenByEntityPosZ = riddenByEntity.posZ;
-                }
-            }else {
-                if (worldObj.isRemote && riddenByEntity == FMLClientHandler.instance().getClientPlayerEntity()) {
-                } else {
-                    this.riddenByEntity.setPosition(
-                            this.posX + seatVec.xCoord,
-                            this.posY + this.gunyoffset + seatVec.yCoord - riddenByEntity.getEyeHeight(),
-                            this.posZ + seatVec.zCoord);
-                    prevRiddenByEntityPosX = riddenByEntity.posX;
-                    prevRiddenByEntityPosY = riddenByEntity.posY;
-                    prevRiddenByEntityPosZ = riddenByEntity.posZ;
-                }
-            }*/
+//            if (worldObj.isRemote) {
+//                if (riddenByEntity == FMLClientHandler.instance().getClientPlayerEntity()) {
+//                    this.riddenByEntity.setPosition(
+//                            this.posX + seatVec.xCoord,
+//                            this.posY + this.gunyoffset + seatVec.yCoord,
+//                            this.posZ + seatVec.zCoord);
+//                    prevRiddenByEntityPosX = riddenByEntity.posX;
+//                    prevRiddenByEntityPosY = riddenByEntity.posY;
+//                    prevRiddenByEntityPosZ = riddenByEntity.posZ;
+//                }else if(!(riddenByEntity instanceof EntityPlayer)){
+//                    this.riddenByEntity.setPosition(
+//                            this.posX + seatVec.xCoord,
+//                            this.posY + this.gunyoffset + seatVec.yCoord - riddenByEntity.getEyeHeight(),
+//                            this.posZ + seatVec.zCoord);
+//                    prevRiddenByEntityPosX = riddenByEntity.posX;
+//                    prevRiddenByEntityPosY = riddenByEntity.posY;
+//                    prevRiddenByEntityPosZ = riddenByEntity.posZ;
+//                }
+//            }else {
+//                this.riddenByEntity.setPosition(
+//                        this.posX + seatVec.xCoord,
+//                        this.posY + this.gunyoffset + seatVec.yCoord - riddenByEntity.getEyeHeight(),
+//                        this.posZ + seatVec.zCoord);
+//                prevRiddenByEntityPosX = riddenByEntity.posX;
+//                prevRiddenByEntityPosY = riddenByEntity.posY;
+//                prevRiddenByEntityPosZ = riddenByEntity.posZ;
+//            }
+            this.riddenByEntity.moveEntity(
+                    this.posX + seatVec.xCoord - riddenByEntity.posX,
+                    this.posY + this.gunyoffset + seatVec.yCoord - riddenByEntity.posY,
+                    this.posZ + seatVec.zCoord - riddenByEntity.posZ);
+            prevRiddenByEntityPosX = riddenByEntity.posX;
+            prevRiddenByEntityPosY = riddenByEntity.posY;
+            prevRiddenByEntityPosZ = riddenByEntity.posZ;
         }
     }
     public void onUpdate(){
@@ -158,6 +125,7 @@ public class PlacedGunEntity extends Entity implements IEntityAdditionalSpawnDat
         if(gunItem != null){
             this.gunyoffset = gunItem.gunInfo.yoffset;
             maxhitpoint = gunItem.gunInfo.turretMaxHP;
+            setSize(gunItem.gunInfo.turreboxW, gunItem.gunInfo.turreboxH);
         }
         rotationYawGun = wrapAngleTo180_float(rotationYawGun);
         rotationYaw = wrapAngleTo180_float(rotationYaw);

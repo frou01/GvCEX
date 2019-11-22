@@ -8,6 +8,7 @@ import net.minecraft.item.ItemStack;
 public class InventoryVehicle implements IInventory {
 	public ItemStack[] items;
 	public BaseLogic baseLogic;
+	public boolean needSync = true;
 
 
 	public InventoryVehicle(BaseLogic baseLogic)
@@ -105,7 +106,7 @@ public class InventoryVehicle implements IInventory {
 	}
 	
 	@Override
-	public void markDirty() {}
+	public void markDirty() {needSync = true;}
 	
 	@Override
 	public boolean isUseableByPlayer(EntityPlayer p_70300_1_)

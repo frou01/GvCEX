@@ -88,6 +88,9 @@ public class Prefab_Turret {
 		if(!this.needGunStack) {
 			turretObj.dummyGunItem.gunInfo = this.gunInfo;
 			turretObj.dummyGunItem.setMaxDamage(gunInfo.bulletRound);
+		}else {
+			turretObj.dummyGunStack = null;
+			turretObj.dummyGunItem = null;
 		}
 		return turretObj;
 	}

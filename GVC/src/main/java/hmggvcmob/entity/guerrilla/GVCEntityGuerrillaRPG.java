@@ -28,7 +28,7 @@ public class GVCEntityGuerrillaRPG extends EntityGBase implements IHasVehicleGac
     {
         super(par1World);
         this.setSize(0.6F, 1.8F);
-        this.tasks.addTask(1,breakBlock = new AIBreakBlock(this));
+//        this.tasks.addTask(1,breakBlock = new AIBreakBlock(this));
         this.tasks.addTask(2,aiAttackGun = new AIAttackGun(this,40,5,10,15,true,true,new WorldForPathfind(worldObj)));
         spread = 3;
         canuseAlreadyPlacedGun = false;

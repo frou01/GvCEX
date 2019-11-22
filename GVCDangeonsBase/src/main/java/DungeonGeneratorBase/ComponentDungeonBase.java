@@ -381,9 +381,6 @@ public class ComponentDungeonBase extends StructureComponent {
                                     ((EntityGBase)newentity).candespawn = false;
                                     ((EntityGBase)newentity).addRandomArmor();
                                 }
-                                if(newentity instanceof GVCEntityPMCTank){
-                                    ((GVCEntityPMCTank) newentity).setMobMode(1);
-                                }
                                 newentity.setLocationAndAngles(i + 0.5, Ystart + pos.y, j + 0.5,random.nextInt(360)-180,0);
                                 world.spawnEntityInWorld(newentity);
                             } catch (NoSuchMethodException e) {

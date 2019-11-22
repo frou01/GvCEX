@@ -162,32 +162,6 @@ public class EntityPMCBase extends EntitySoBases implements IFF,IGVCmob {
     {
     	return false;
     }
-    
-    protected boolean isValidLightLevel()
-    {
-        int var1 = MathHelper.floor_double(this.posX);
-        int var2 = MathHelper.floor_double(this.boundingBox.minY);
-        int var3 = MathHelper.floor_double(this.posZ);
-
-        if (this.worldObj.getSavedLightValue(EnumSkyBlock.Sky, var1, var2, var3) > this.rand.nextInt(32))
-        {
-            return false;
-        }
-        else
-        {
-            int var4 = this.worldObj.getBlockLightValue(var1, var2, var3);
-
-            if (this.worldObj.isThundering())
-            {
-                int var5 = this.worldObj.skylightSubtracted;
-                this.worldObj.skylightSubtracted = 10;
-                var4 = this.worldObj.getBlockLightValue(var1, var2, var3);
-                this.worldObj.skylightSubtracted = var5;
-            }
-
-            return var4 <= this.rand.nextInt(6);
-        }
-    }
 	
 	/**
 	 * Returns true if the newer Entity AI code should be run
@@ -261,13 +235,5 @@ public class EntityPMCBase extends EntitySoBases implements IFF,IGVCmob {
 		double dist = getDistanceToEntity(target);
 		flag = dist < target.getEntityData().getFloat("GunshotLevel") * 16;
 		return flag;
-	}
-
-	@Override
-	public void setspawnedtile(TileEntity flag) {
-
-	}
-	public double[] getTargetpos() {
-		return new double[]{homeposX,homeposY,homeposZ};
 	}
 }

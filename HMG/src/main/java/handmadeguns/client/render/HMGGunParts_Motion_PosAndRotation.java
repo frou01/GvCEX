@@ -12,6 +12,9 @@ public class HMGGunParts_Motion_PosAndRotation {
     public float posZ;
     public boolean renderOnOff = true;
     public Vector3f rotateVec;
+    public HMGGunParts_Motion_PosAndRotation(){
+
+    }
     public HMGGunParts_Motion_PosAndRotation(float centerX,float centerY,float centerZ,float VectorX,float VectorY,float VectorZ,float rotationAmount){
         this.posX      =centerX;
         this.posY      =centerY;
@@ -20,6 +23,14 @@ public class HMGGunParts_Motion_PosAndRotation {
         this.rotationX = rotationAmount;
     }
     public HMGGunParts_Motion_PosAndRotation(float offsetX,float offsetY,float offsetZ,float rotationX,float rotationY,float rotationZ){
+        this.posX      =offsetX;
+        this.posY      =offsetY;
+        this.posZ      =offsetZ;
+        this.rotationX =rotationX;
+        this.rotationY =rotationY;
+        this.rotationZ =rotationZ;
+    }
+    public void set(float offsetX,float offsetY,float offsetZ,float rotationX,float rotationY,float rotationZ){
         this.posX      =offsetX;
         this.posY      =offsetY;
         this.posZ      =offsetZ;

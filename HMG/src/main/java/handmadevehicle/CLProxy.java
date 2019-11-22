@@ -42,38 +42,30 @@ public class CLProxy extends CMProxy {
 	public static final KeyBinding Yaw_Right = new KeyBinding("Yaw Right", Keyboard.KEY_D, "HMVehicle");
 	public static final KeyBinding Throttle_Brake = new KeyBinding("Throttle Brake", Keyboard.KEY_SPACE, "HMVehicle");
 	
-	public static final KeyBinding Flap = new KeyBinding("Flap", Keyboard.KEY_F, "HMVehicle");
+	public static final KeyBinding_withStopper Flap = new KeyBinding_withStopper("Flap", Keyboard.KEY_F, "HMVehicle");
 	public static final KeyBinding Air_Brake = new KeyBinding("Air Brake", Keyboard.KEY_X, "HMVehicle");
 	public static final KeyBinding Flare_Smoke = new KeyBinding("Flare/Smoke", Keyboard.KEY_COLON, "HMVehicle");
-	public static final KeyBinding Gear_Down_Up = new KeyBinding("Gear Down/Up", Keyboard.KEY_G, "HMVehicle");
-	public static final KeyBinding Weapon_Mode = new KeyBinding("Weapon Mode", Keyboard.KEY_ADD, "HMVehicle");
-	public static boolean Weapon_Mode_stopper = false;
-	public static final KeyBinding Allow_Entity_Ride = new KeyBinding("Allow_Entity_Ride", Keyboard.KEY_LMENU, "HMVehicle");
-	public static boolean Allow_Entity_Ride_stopper = false;
+	public static final KeyBinding_withStopper Gear_Down_Up = new KeyBinding_withStopper("Gear Down/Up", Keyboard.KEY_G, "HMVehicle");
+	public static final KeyBinding_withStopper Weapon_Mode = new KeyBinding_withStopper("Weapon Mode", Keyboard.KEY_ADD, "HMVehicle");
+	public static final KeyBinding_withStopper Allow_Entity_Ride = new KeyBinding_withStopper("Allow Entity to Ride", Keyboard.KEY_LMENU, "HMVehicle");
 
 
-	public static final KeyBinding Next_Seat = new KeyBinding("Change to Next Seat", Keyboard.KEY_Y, "HMVehicle");
-	public static final KeyBinding Previous_Seat = new KeyBinding("Change to Previous Seat", Keyboard.KEY_H, "HMVehicle");
-	public static boolean Next_Seat_stopper = false;
-	public static boolean Previous_Seat_stopper = false;
-	public static final KeyBinding ChangeControl = new KeyBinding("Change Control", Keyboard.KEY_N, "HMVehicle");
-	public static boolean ChangeControl_stopper = false;
-	public static final KeyBinding resetCamrot = new KeyBinding("Reset camera Rotation", Keyboard.KEY_V, "HMVehicle");
-	public static boolean resetCamrot_stopper = false;
-	public static final KeyBinding reloadConfig = new KeyBinding("Reload Config Settings", Keyboard.KEY_NONE, "HMVehicle");
-	public static boolean reloadConfig_stopper = false;
-	public static final KeyBinding openGUI = new KeyBinding("Open Vehicle Gui", Keyboard.KEY_NONE, "HMVehicle");
-	public static boolean openGUI_stopper = false;
+	public static final KeyBinding_withStopper Next_Seat = new KeyBinding_withStopper("Change to Next Seat", Keyboard.KEY_Y, "HMVehicle");
+	public static final KeyBinding_withStopper Previous_Seat = new KeyBinding_withStopper("Change to Previous Seat", Keyboard.KEY_H, "HMVehicle");
+	public static final KeyBinding_withStopper ChangeControl = new KeyBinding_withStopper("Change Control", Keyboard.KEY_N, "HMVehicle");
+	public static final KeyBinding_withStopper resetCamrot = new KeyBinding_withStopper("Reset Camera Rotation", Keyboard.KEY_V, "HMVehicle");
+	public static final KeyBinding_withStopper reloadConfig = new KeyBinding_withStopper("Reload Config Settings", Keyboard.KEY_NONE, "HMVehicle");
+	public static final KeyBinding_withStopper openGUI = new KeyBinding_withStopper("Open Vehicle Gui", Keyboard.KEY_COLON, "HMVehicle");
 	
-	public static final KeyBinding pitchUp = new KeyBinding("pitchUp", Keyboard.KEY_I, "HMVehicle");
-	public static final KeyBinding pitchDown = new KeyBinding("pitchDown", Keyboard.KEY_K, "HMVehicle");
-	public static final KeyBinding RollRight = new KeyBinding("rollRight", Keyboard.KEY_L, "HMVehicle");
-	public static final KeyBinding RollLeft = new KeyBinding("rollLeft", Keyboard.KEY_J, "HMVehicle");
+	public static final KeyBinding pitchUp = new KeyBinding("Pitch Up", Keyboard.KEY_I, "HMVehicle");
+	public static final KeyBinding pitchDown = new KeyBinding("Pitch Down", Keyboard.KEY_K, "HMVehicle");
+	public static final KeyBinding RollRight = new KeyBinding("Roll Right", Keyboard.KEY_L, "HMVehicle");
+	public static final KeyBinding RollLeft = new KeyBinding("Roll Left", Keyboard.KEY_J, "HMVehicle");
 	public static boolean zooming;
 	static boolean zoomkey_stopper;
 	static boolean fkey_stopper;
 	static boolean reload_stopper;
-	
+
 	static boolean inited = false;
 
 	static int currentStickControllerID;
@@ -96,19 +88,21 @@ public class CLProxy extends CMProxy {
 			FMLClientHandler.instance().getClient().gameSettings.keyBindJump = new KeyBinding("key.jump", 57, "key.categories.movement");
 			ClientRegistry.registerKeyBinding(RButton);
 			ClientRegistry.registerKeyBinding(LButton);
-			ClientRegistry.registerKeyBinding(Flap);
+			ClientRegistry.registerKeyBinding(Flap.keyBinding);
 			ClientRegistry.registerKeyBinding(Air_Brake);
-			ClientRegistry.registerKeyBinding(Allow_Entity_Ride);
-			ClientRegistry.registerKeyBinding(Next_Seat);
-			ClientRegistry.registerKeyBinding(Previous_Seat);
+			ClientRegistry.registerKeyBinding(Next_Seat.keyBinding);
+			ClientRegistry.registerKeyBinding(Previous_Seat.keyBinding);
 			ClientRegistry.registerKeyBinding(pitchUp);
 			ClientRegistry.registerKeyBinding(pitchDown);
 			ClientRegistry.registerKeyBinding(RollRight);
 			ClientRegistry.registerKeyBinding(RollLeft);
-			ClientRegistry.registerKeyBinding(ChangeControl);
-			ClientRegistry.registerKeyBinding(resetCamrot);
-			ClientRegistry.registerKeyBinding(reloadConfig);
-			ClientRegistry.registerKeyBinding(openGUI);
+			ClientRegistry.registerKeyBinding(Weapon_Mode.keyBinding);
+			ClientRegistry.registerKeyBinding(Allow_Entity_Ride.keyBinding);
+			ClientRegistry.registerKeyBinding(ChangeControl.keyBinding);
+			ClientRegistry.registerKeyBinding(resetCamrot.keyBinding);
+			ClientRegistry.registerKeyBinding(reloadConfig.keyBinding);
+			ClientRegistry.registerKeyBinding(openGUI.keyBinding);
+			ClientRegistry.registerKeyBinding(Gear_Down_Up.keyBinding);
 			inited = true;
 			
 			RenderingRegistry.registerEntityRenderingHandler(EntityVehicle.class,new RenderVehicle());
@@ -217,13 +211,13 @@ public class CLProxy extends CMProxy {
 	@Override
 	public boolean leftclick(){
 		boolean flag = FMLClientHandler.instance().getClient().gameSettings.keyBindAttack.getKeyCode() == LButton.getKeyCode();
-		return (flag ? FMLClientHandler.instance().getClient().gameSettings.keyBindAttack.getIsKeyPressed():LButton.getIsKeyPressed());
+		return (flag ? FMLClientHandler.instance().getClient().gameSettings.keyBindAttack.getIsKeyPressed():isKeyDown(LButton.getKeyCode()));
 		//return false;
 	}
 	@Override
 	public boolean rightclick(){
 		boolean flag = FMLClientHandler.instance().getClient().gameSettings.keyBindUseItem.getKeyCode() == RButton.getKeyCode();
-		return (flag ? FMLClientHandler.instance().getClient().gameSettings.keyBindUseItem.getIsKeyPressed():RButton.getIsKeyPressed());
+		return (flag ? FMLClientHandler.instance().getClient().gameSettings.keyBindUseItem.getIsKeyPressed():isKeyDown(RButton.getKeyCode()));
 		//return false;
 	}
 	@Override
@@ -263,7 +257,7 @@ public class CLProxy extends CMProxy {
 	}
 	@Override
 	public boolean flap_click(){
-		return isKeyDown(Flap.getKeyCode());
+		return isKeyDown(Flap.keyBinding.getKeyCode());
 		//return false;
 	}
 	@Override
@@ -277,103 +271,40 @@ public class CLProxy extends CMProxy {
 	}
 	@Override
 	public boolean gear_Down_Up_click(){
-		return isKeyDown(Gear_Down_Up.getKeyCode());
+		return Gear_Down_Up.isKeyDown();
 	}
 	@Override
 	public boolean weapon_Mode_click() {
-		boolean flag = isKeyDown(Weapon_Mode.getKeyCode());
-		if (!flag) Weapon_Mode_stopper = false;
-		if (Weapon_Mode_stopper) {
-			return false;
-		} else if (flag) {
-			Weapon_Mode_stopper = true;
-			return true;
-		} else return false;
+		return Weapon_Mode.isKeyDown();
 	}
 	@Override
 	public boolean allow_Entity_Ride_click(){
-		boolean flag = isKeyDown(CLProxy.Allow_Entity_Ride.getKeyCode());
-		if(!flag) CLProxy.Allow_Entity_Ride_stopper = false;
-		if(CLProxy.Allow_Entity_Ride_stopper){
-			return false;
-		}else if(flag){
-			CLProxy.Allow_Entity_Ride_stopper = true;
-			return true;
-		}else return false;
+		return Allow_Entity_Ride.isKeyDown();
 	}
 
 	@Override
 	public boolean next_Seatclick(){
-		boolean flag = isKeyDown(Next_Seat.getKeyCode());
-		if(!flag)Next_Seat_stopper = false;
-		if(Next_Seat_stopper){
-			return false;
-		}else if(flag){
-			Next_Seat_stopper = true;
-			return true;
-		}else return false;
-		//return false;
+		return Next_Seat.isKeyDown();
 	}
 	@Override
 	public boolean previous_Seatclick(){
-		boolean flag = isKeyDown(Previous_Seat.getKeyCode());
-		if(!flag)Previous_Seat_stopper = false;
-		if(Previous_Seat_stopper){
-			return false;
-		}else if(flag){
-			Previous_Seat_stopper = true;
-			return true;
-		}else return false;
-		//return false;
+		return Previous_Seat.isKeyDown();
 	}
 	@Override
 	public boolean changeControlclick(){
-		boolean flag = isKeyDown(ChangeControl.getKeyCode());
-		if(!flag)ChangeControl_stopper = false;
-		if(ChangeControl_stopper){
-			return false;
-		}else if(flag){
-			ChangeControl_stopper = true;
-			return true;
-		}else return false;
-		//return false;
+		return ChangeControl.isKeyDown();
 	}
 	@Override
 	public boolean resetCamrotclick(){
-		boolean flag = isKeyDown(resetCamrot.getKeyCode());
-		if(!flag)resetCamrot_stopper = false;
-		if(resetCamrot_stopper){
-			return false;
-		}else if(flag){
-			resetCamrot_stopper = true;
-			return true;
-		}else return false;
-		//return false;
+		return resetCamrot.isKeyDown();
 	}
 	@Override
 	public boolean reloadConfigclick(){
-		boolean flag = isKeyDown(reloadConfig.getKeyCode());
-		if(!flag) reloadConfig_stopper = false;
-		if(reloadConfig_stopper){
-			return false;
-		}else if(flag){
-			reloadConfig_stopper = true;
-			return true;
-		}else return false;
-		//return false;
+		return reloadConfig.isKeyDown();
 	}
 	@Override
 	public boolean openGUIKeyDown(){
-		boolean flag = isKeyDown(openGUI.getKeyCode());
-		if(!flag) openGUI_stopper = false;
-		if(openGUI_stopper){
-			return false;
-		}else if(flag){
-			openGUI_stopper = true;
-			return true;
-		}else return false;
-		
-		//return false;
+		return openGUI.isKeyDown();
 	}
 	
 	public boolean iszooming(){

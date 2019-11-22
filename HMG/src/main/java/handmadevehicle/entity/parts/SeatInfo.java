@@ -9,7 +9,7 @@ public class SeatInfo {
     public SeatInfo(){
     
     }
-    public SeatInfo(double[] pos,Prefab_Seat prefab_seat,boolean hasGun,boolean aimGun,TurretObj maingun,TurretObj subgun){
+    public SeatInfo(double[] pos,Prefab_Seat prefab_seat,TurretObj[] maingun,TurretObj subgun){
         this(pos);
         this.prefab_seat = prefab_seat;
         this.maingun = maingun;
@@ -26,7 +26,8 @@ public class SeatInfo {
     public boolean hasParentGun = false;
     public boolean gunTrigger1;
     public boolean gunTrigger2;
-    public TurretObj maingun;
+    public TurretObj[] maingun;
+    public int currentWeaponMode = 0;
     public TurretObj subgun;
     public Vector3d currentSeatOffset_fromV = new Vector3d();
 

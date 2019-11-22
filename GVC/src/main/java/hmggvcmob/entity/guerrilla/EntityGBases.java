@@ -11,6 +11,7 @@ import hmggvcmob.GVCMobPlus;
 import hmggvcmob.IflagBattler;
 import handmadevehicle.SlowPathFinder.ModifiedPathNavigater;
 import hmggvcmob.ai.*;
+import hmggvcmob.camp.CampObj;
 import hmggvcmob.entity.EntityBodyHelper_modified;
 import hmggvcmob.entity.IGVCmob;
 import hmggvcmob.entity.IHasVehicleGacha;
@@ -28,21 +29,20 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.pathfinding.PathNavigate;
+import net.minecraft.scoreboard.Team;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.*;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import static handmadeguns.Util.Utils.getmovingobjectPosition_forBlock;
 import static handmadevehicle.entity.EntityVehicle.EntityVehicle_spawnByMob;
-import static hmggvcmob.GVCMobPlus.cfg_guerrillacanusePlacedGun;
-import static hmggvcmob.GVCMobPlus.fn_Guerrillaflag;
+import static hmggvcmob.GVCMobPlus.*;
 import static java.lang.Math.abs;
 import static java.lang.Math.pow;
 import static net.minecraft.util.MathHelper.wrapAngleTo180_float;
@@ -111,7 +111,7 @@ public class EntityGBases extends EntityMob implements IflagBattler,IGVCmob, IFF
         this.tasks.addTask(6, AIMoveTowardsRestriction);
         this.tasks.addTask(7, AIMoveThroughVillage);
         //こっから先は待機時（？）
-        this.tasks.addTask(8, new EntityAIWander(this, 1.0D));
+        this.tasks.addTask(8, new EntityAIWander(this, 0.3));
         this.tasks.addTask(8, new EntityAILookIdle(this));
         //ターゲティング
         this.targetTasks.addTask(1, new AIHurtByTarget(this, true));
@@ -157,18 +157,6 @@ public class EntityGBases extends EntityMob implements IflagBattler,IGVCmob, IFF
             this.dropItem(((HMGItem_Unified_Guns) this.getHeldItem().getItem()).getcurrentMagazine(this.getHeldItem()), 1);
         }
     }
-//	@SideOnly(Side.CLIENT)
-//	public int getBrightnessForRender(float par1) {
-//		System.out.println("par1" + par1);
-//		return (int)(par1*16);
-//	}
-    
-    /**
-     * Gets how bright this entity is.
-     */
-//	public float getBrightness(float par1) {
-//		return par1;
-//	}
     
     
     
@@ -225,8 +213,6 @@ public class EntityGBases extends EntityMob implements IflagBattler,IGVCmob, IFF
     public boolean CanAttack(Entity entity){
     	return true;
     }
-    
-    private int deadtime;
 	public void onUpdate()
     {
         super.onUpdate();
@@ -371,22 +357,6 @@ public class EntityGBases extends EntityMob implements IflagBattler,IGVCmob, IFF
         }
         return par1EntityLivingData;
     }
-	
-	
-	
-	/*@SideOnly(Side.CLIENT)
-    public int getBrightnessForRender(float par1)
-    {
-        return 15728880;
-    }
-
-    /**
-     * Gets how bright this entity is.
-     */
-    /*public float getBrightness(float par1)
-    {
-        return 1.0F;
-    }*/
     
     
     
@@ -429,27 +399,7 @@ public class EntityGBases extends EntityMob implements IflagBattler,IGVCmob, IFF
 		return 8;
 	}
 
-    @Override
-    public Block getFlag() {
-        return fn_Guerrillaflag;
-    }
 
-    @Override
-    public boolean istargetingflag() {
-        return worldObj.getTileEntity(flagx,flagy,flagz) instanceof TileEntityFlag && worldObj.getBlock(flagx,flagy,flagz) != getFlag();
-    }
-
-    @Override
-    public Vec3 getflagposition() {
-        return Vec3.createVectorHelper(flagx,flagy,flagz);
-    }
-
-    @Override
-    public void setflagposition(int x,int y,int z) {
-        flagx = x;
-        flagy = y;
-        flagz = z;
-    }
     @Override
     public boolean canEntityBeSeen(Entity p_70685_1_)
     {
@@ -515,12 +465,6 @@ public class EntityGBases extends EntityMob implements IflagBattler,IGVCmob, IFF
             this.motionZ += (double)( p_70060_2_ * f5 + p_70060_1_ * f4);
         }
     }
-
-
-    @Override
-    public boolean isthisFlagIsEnemys(Block block) {
-        return block != fn_Guerrillaflag;
-    }
     
     @Override
     public float getviewWide() {
@@ -550,12 +494,6 @@ public class EntityGBases extends EntityMob implements IflagBattler,IGVCmob, IFF
         flag = dist < target.getEntityData().getFloat("GunshotLevel") * 10;
         return flag;
     }
-    
-    @Override
-    public void setspawnedtile(TileEntity flag) {
-        spawnedtile = flag;
-    }
-
 
     @Override
     public boolean is_this_entity_friend(Entity entity) {
@@ -583,7 +521,6 @@ public class EntityGBases extends EntityMob implements IflagBattler,IGVCmob, IFF
     
     public void setDead(){
         super.setDead();
-        if(spawnedtile != null && spawnedtile instanceof TileEntityFlag)((TileEntityFlag) spawnedtile).spawnedEntities.remove(this);
     }
     
     
@@ -659,23 +596,22 @@ public class EntityGBases extends EntityMob implements IflagBattler,IGVCmob, IFF
 
     protected void collideWithNearbyEntities()
     {
-        List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox.expand(0.20000000298023224D, 0.0D, 0.20000000298023224D));
+        if(!worldObj.isRemote) {
+            List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox.expand(0.20000000298023224D, 0.0D, 0.20000000298023224D));
 
-        if (list != null && !list.isEmpty())
-        {
-            for (int i = 0; i < list.size(); ++i)
-            {
-                Entity entity = (Entity)list.get(i);
+            if (list != null && !list.isEmpty()) {
+                for (int i = 0; i < list.size(); ++i) {
+                    Entity entity = (Entity) list.get(i);
 
-                if (entity.canBePushed())
-                {
-                    this.collideWithEntity(entity);
-                }
-                if(!entity.isDead && !worldObj.isRemote && entity instanceof EntityVehicle && ((EntityVehicle) entity).canUseByMob) {
-                    Entity pilot = ((EntityVehicle) entity).getBaseLogic().getRiddenEntityList()[((EntityVehicle) entity).getpilotseatid()];
-                    if((pilot == null || is_this_entity_friend(pilot))&&!((EntityVehicle) entity).getBaseLogic().isRidingEntity(this)){
-                        if(((EntityVehicle) entity).pickupEntity(this,0)) {
-                            isridingVehicle = true;
+                    if (entity.canBePushed()) {
+                        this.collideWithEntity(entity);
+                    }
+                    if (!entity.isDead && entity instanceof EntityVehicle && ((EntityVehicle) entity).canUseByMob) {
+                        Entity pilot = ((EntityVehicle) entity).getBaseLogic().getRiddenEntityList()[((EntityVehicle) entity).getpilotseatid()];
+                        if ((pilot == null || is_this_entity_friend(pilot)) && !((EntityVehicle) entity).getBaseLogic().isRidingEntity(this)) {
+                            if (((EntityVehicle) entity).pickupEntity(this, 0)) {
+                                isridingVehicle = true;
+                            }
                         }
                     }
                 }
@@ -726,5 +662,99 @@ public class EntityGBases extends EntityMob implements IflagBattler,IGVCmob, IFF
     @Override
     public TurretObj getTurretSub() {
         return currentSubTurret;
+    }
+//TODO
+    @Override
+    public CampObj getCampObj() {
+        return guerrillas;
+    }
+
+    public Team getTeam()
+    {
+        return getCampObj();
+    }
+
+    private byte state;
+    @Override
+    public byte getState() {
+        return state;
+    }
+
+    @Override
+    public void setState(byte state) {
+        this.state = state;
+    }
+
+    private int[] flagPos = new int[3];
+    @Override
+    public int[] getTargetCampPosition() {
+        return flagPos;
+    }
+
+    @Override
+    public void setTargetCampPosition(int[] ints) {
+        flagPos[0] = ints[0];
+        flagPos[1] = ints[1];
+        flagPos[2] = ints[2];
+    }
+
+    ArrayList<Entity> platoon;
+    IflagBattler platoonLeader;
+
+    @Override
+    public void makePlatoon() {
+        if(platoon == null){
+            platoon = new ArrayList<>();
+            platoonLeader = this;
+
+            List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, AxisAlignedBB.getBoundingBox(this.posX, this.posY, this.posZ, this.posX + 1.0D, this.posY + 1.0D, this.posZ + 1.0D).expand(32, 32, 32));
+            Iterator iterator = list.iterator();
+
+            while (iterator.hasNext())
+            {
+                Entity entitycreature = (Entity)iterator.next();
+                if(entitycreature instanceof EntityGBases){
+                    platoon.add(entitycreature);
+                    ((EntityGBases) entitycreature).joinPlatoon(this);
+                }
+
+            }
+        }
+    }
+
+    @Override
+    public void setPlatoon(ArrayList<Entity> entities) {
+        platoon = entities;
+    }
+
+    @Override
+    public void joinPlatoon(IflagBattler iflagBattler) {
+        platoonLeader = iflagBattler;
+        if(platoonLeader != null)platoon = iflagBattler.getPlatoon();
+    }
+
+    @Override
+    public ArrayList<Entity> getPlatoon() {
+        return platoon;
+    }
+
+    @Override
+    public IflagBattler getPlatoonLeader() {
+        return platoonLeader;
+    }
+
+    @Override
+    public boolean isThisAttackAbleCamp(CampObj campObj) {
+        return campObj != guerrillas;
+    }
+
+    @Override
+    public boolean isThisFriendCamp(CampObj campObj) {
+        return campObj == guerrillas;
+    }
+
+    @Override
+    public boolean isThisIgnoreSpawnCamp(CampObj campObj) {
+        return campObj != guerrillas;
     }
 }

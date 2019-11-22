@@ -15,6 +15,7 @@ import handmadeguns.entity.bullets.*;
 import handmadeguns.items.guns.HMGItem_Unified_Guns;
 import handmadeguns.network.PacketSpawnParticle;
 import handmadeguns.client.render.*;
+import handmadeguns.obj_modelloaderMod.obj.ObjModelLoader;
 import handmadeguns.tcn_modelloaderMod.TechneModelLoader;
 import handmadeguns.tile.TileMounter;
 import net.minecraft.block.Block;
@@ -107,6 +108,7 @@ public class ClientProxyHMG extends CommonSideProxyHMG {
 
 		AdvancedModelLoader.registerModelHandler(new MQO_ModelLoader());
 		AdvancedModelLoader.registerModelHandler(new TechneModelLoader());
+		AdvancedModelLoader.registerModelHandler(new ObjModelLoader());//怒りのオーバーライド
 	}
 	@Override
 	public void playsoundat(String sound, float soundLV, float soundSP, float tempsp, double posX, double posY, double posZ){
@@ -163,6 +165,7 @@ public class ClientProxyHMG extends CommonSideProxyHMG {
 			RenderingRegistry.registerEntityRenderingHandler(HMGEntityItemMount2.class, new HMGRenderItemMount2());
 
 			RenderingRegistry.registerEntityRenderingHandler(HMGEntityBullet.class, new HMGRenderBullet());
+			RenderingRegistry.registerEntityRenderingHandler(HMGEntityFallingBlockModified.class, new RenderFallingBlockMod());
 			RenderingRegistry.registerEntityRenderingHandler(HMGEntityBulletRocket.class, new HMGRenderBulletExplode());
 			RenderingRegistry.registerEntityRenderingHandler(HMGEntityBulletExprode.class, new HMGRenderBulletExplode());
 			RenderingRegistry.registerEntityRenderingHandler(HMGEntityBulletTorp.class, new HMGRenderBulletExplode());

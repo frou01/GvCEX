@@ -26,12 +26,11 @@ import static net.minecraft.util.MathHelper.wrapAngleTo180_float;
 import static org.lwjgl.opengl.GL11.*;
 
 public class PartsRender_Vehicle extends PartsRender {
-	public ArrayList<HMGGunParts> partslist = new ArrayList<HMGGunParts>();
 	
 	public void partSidentification(Object... data){
 		float flame;
 		int remainbullets = (int) currentBaseLogic.health;
-		ArrayList<HMGGunParts> partslist_temp = partslist = (ArrayList<HMGGunParts>) data[0];
+		ArrayList<HMGGunParts> partslist_temp = (ArrayList<HMGGunParts>) data[0];
 		for (HMGGunParts parts : partslist_temp) {
 			GunState[] states;
 			if(parts instanceof HMVVehicleParts && ((HMVVehicleParts) parts).isTurretParts){
@@ -56,10 +55,8 @@ public class PartsRender_Vehicle extends PartsRender {
 					}
 				}else {
 					remainbullets = 0;
-					{
-						states[0] = GunState.Reload;
-						flame = 0;
-					}
+					states[0] = GunState.Reload;
+					flame = 0;
 				}
 			}else {
 				states = new GunState[1];

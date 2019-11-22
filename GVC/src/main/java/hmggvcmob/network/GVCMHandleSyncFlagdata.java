@@ -8,6 +8,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
 import static handmadeguns.HandmadeGunsCore.HMG_proxy;
+import static hmggvcmob.GVCMobPlus.campsHash;
 
 public class GVCMHandleSyncFlagdata implements IMessageHandler<GVCMPacketSyncFlagdata, IMessage> {
     @Override
@@ -23,6 +24,10 @@ public class GVCMHandleSyncFlagdata implements IMessageHandler<GVCMPacketSyncFla
             TileEntity tile = world.getTileEntity(gvcmPacketSyncFlagdata.x,gvcmPacketSyncFlagdata.y,gvcmPacketSyncFlagdata.z);
             if(tile instanceof TileEntityFlag){
                 ((TileEntityFlag) tile).flagHeight = gvcmPacketSyncFlagdata.height;
+                ((TileEntityFlag) tile).respawncycle = gvcmPacketSyncFlagdata.respawncycle;
+                if(gvcmPacketSyncFlagdata.campChanged){
+                    ((TileEntityFlag) tile).campObj = campsHash.get(gvcmPacketSyncFlagdata.campName);
+                }
             }
         }
         return null;

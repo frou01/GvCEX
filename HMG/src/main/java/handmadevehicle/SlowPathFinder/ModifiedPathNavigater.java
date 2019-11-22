@@ -212,6 +212,13 @@ public class ModifiedPathNavigater extends PathNavigate{
 			else
 			{
 				this.speed = p_75484_2_;
+				double entitySpeed;
+				if(this.speed < 1 && this.theEntity instanceof EntityLiving && (entitySpeed = ((EntityLiving) this.theEntity).getEntityAttribute(SharedMonsterAttributes.movementSpeed).getAttributeValue())<0.3){
+					this.speed *= 0.3/entitySpeed;
+					if(this.speed > 1){
+						this.speed = 1;
+					}
+				}
 				Vec3 vec3 = this.getEntityPosition();
 				this.ticksAtLastPos = this.totalTicks;
 				this.lastPosCheck.xCoord = vec3.xCoord;
@@ -270,7 +277,7 @@ public class ModifiedPathNavigater extends PathNavigate{
 		}
 		
 		float f = width_for_Follow;
-		if(width_for_Follow < 1.5){
+		if(width_for_Follow < 2.25f){
 			f = 2.25f;
 		}
 		int k;

@@ -239,7 +239,6 @@ public class EntitySupplyBox extends GVCEntityBox implements IGVCmob{
     }
     public void setDead(){
         super.setDead();
-        if(spawnedtile != null && spawnedtile instanceof TileEntityFlag)((TileEntityFlag) spawnedtile).spawnedEntities.remove(this);
     }
 
     @Override
@@ -255,10 +254,5 @@ public class EntitySupplyBox extends GVCEntityBox implements IGVCmob{
     @Override
     public boolean canhearsound(Entity target) {
         return false;
-    }
-
-    @Override
-    public void setspawnedtile(TileEntity flag) {
-        spawnedtile = flag;
     }
 }

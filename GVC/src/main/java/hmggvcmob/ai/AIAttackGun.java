@@ -2,18 +2,14 @@ package hmggvcmob.ai;
 
 import handmadeguns.entity.PlacedGunEntity;
 import handmadeguns.items.guns.HMGItem_Unified_Guns;
-import hmggvcutil.entity.GVCEntityBox;
+import hmggvcmob.IflagBattler;
 import handmadevehicle.SlowPathFinder.WorldForPathfind;
-import hmggvcmob.entity.IGVCmob;
 import hmggvcmob.entity.friend.EntitySoBases;
 import hmggvcmob.entity.guerrilla.EntityGBases;
-import handmadevehicle.entity.parts.Hasmode;
-import handmadevehicle.entity.parts.ITank;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.passive.EntityChicken;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.MathHelper;
@@ -55,7 +51,7 @@ public class AIAttackGun extends EntityAIBase {
 
     private int refindpath = 0;
     private int dir_modeChangeCool = 600;
-    private boolean moveRound_Dir;
+    private boolean roundDir;
     private boolean moveRound = false;
 
     private boolean fEnable = true;
@@ -121,6 +117,7 @@ public class AIAttackGun extends EntityAIBase {
 
     @Override
     public void resetTask() {
+        shooter.getNavigator().clearPathEntity();
         burstingtime = 0;
     }
     @Override
@@ -144,65 +141,10 @@ public class AIAttackGun extends EntityAIBase {
                     if (canSee) {
                         shooter.getLookHelper().setLookPosition(currentAttackToPosition.x, currentAttackToPosition.y + target.getEyeHeight(), currentAttackToPosition.z, 1000000, 1000000);
                     }else {
-                        changesearchdircool--;
-                        if (changesearchdircool < 0) {
-                            searchdirY = rnd.nextBoolean();
-                            searchdirP = rnd.nextBoolean();
-                            changesearchdircool = rnd.nextInt(10) * 50;
-                        }
-                        float f1;
-                        float f2;
-                        float f3;
-                        float f4;
-                        f1 = MathHelper.cos(-(shooter.rotationYawHead + (searchdirY ? 8 : -8)) * 0.017453292F - (float) Math.PI);
-                        f2 = MathHelper.sin(-(shooter.rotationYawHead + (searchdirY ? 8 : -8)) * 0.017453292F - (float) Math.PI);
-                        f3 = -MathHelper.cos(-(shooter.rotationPitch + (searchdirP ? 0 : -0)) * 0.017453292F);
-                        f4 = MathHelper.sin(-(shooter.rotationPitch + (searchdirP ? 0 : -0)) * 0.017453292F);
-                        Vec3 look = Vec3.createVectorHelper((double) (f2 * f3), (double) f4, (double) (f1 * f3));
-                        shooter.getLookHelper().setLookPosition(shooter.posX + look.xCoord, shooter.posY + shooter.getEyeHeight() + look.yCoord, shooter.posZ + look.zCoord, 90F, 18000000);
+                        lookAround();
                     }
                     if(refindpath < 0){
-
-
-                        Vector3d relativeCurrentAttackToPosition = new Vector3d(currentAttackToPosition);
-                        Vector3d moveTo = new Vector3d(shooter.posX, shooter.posY, shooter.posZ);
-                        relativeCurrentAttackToPosition.sub(moveTo);
-                        if(moveRound) {
-                            Vector3d relativeCurrentAttackToPosition_Copy = new Vector3d(relativeCurrentAttackToPosition);
-                            relativeCurrentAttackToPosition.x = relativeCurrentAttackToPosition_Copy.z;
-                            relativeCurrentAttackToPosition.z = -relativeCurrentAttackToPosition_Copy.x;
-
-                            if (moveRound_Dir) {
-                                relativeCurrentAttackToPosition.x *= -1;
-                                relativeCurrentAttackToPosition.z *= -1;
-                            }
-                            if(tocurrentAttackToPosition < minrange){
-                                relativeCurrentAttackToPosition.sub(relativeCurrentAttackToPosition_Copy);
-                            }else
-                            if(tocurrentAttackToPosition > maxrange){
-                                relativeCurrentAttackToPosition.add(relativeCurrentAttackToPosition_Copy);
-                            }
-                        }
-                        moveTo.add(relativeCurrentAttackToPosition);
-
-                        shooter.getNavigator().clearPathEntity();
-
-                        if(!canSee || maxrange < tocurrentAttackToPosition)
-                            shooter.getNavigator().setPath(worldForPathfind.getEntityPathToXYZ(shooter,MathHelper.floor_double(moveTo.x),
-                                    MathHelper.floor_double(moveTo.y),
-                                    MathHelper.floor_double(moveTo.z),
-                                    80,true,false,true,false),1);
-                        else if(moveRound){
-                            shooter.getNavigator().setPath(worldForPathfind.getEntityPathToXYZ(shooter,MathHelper.floor_double(moveTo.x),
-                                    MathHelper.floor_double(moveTo.y),
-                                    MathHelper.floor_double(moveTo.z),
-                                    80,true,false,true,false),1);
-                        }else
-                        if(minrange > tocurrentAttackToPosition)
-                            shooter.getNavigator().setPath(worldForPathfind.getEntityPathToXYZ(shooter,MathHelper.floor_double(moveTo.x),
-                                    MathHelper.floor_double(moveTo.y),
-                                    MathHelper.floor_double(moveTo.z),
-                                    80,true,false,true,false),-1);
+                        setPath(currentAttackToPosition,tocurrentAttackToPosition,canSee);
                         refindpath = 10;
                     }
 //                System.out.println("debug PR" + shooter.rotationPitch);
@@ -214,7 +156,7 @@ public class AIAttackGun extends EntityAIBase {
                     else standingTime--;
                     if(dir_modeChangeCool < 0 || standingTime>100){
                         dir_modeChangeCool = 20 + rnd.nextInt(60);
-                        moveRound_Dir = rnd.nextBoolean();
+                        roundDir = rnd.nextBoolean();
                         moveRound = rnd.nextBoolean();
                     }
                     if (!canSee) {
@@ -265,6 +207,162 @@ public class AIAttackGun extends EntityAIBase {
         }catch(Exception e){
             e.printStackTrace();
         }
+    }
+    private void lookAround(){
+        changesearchdircool--;
+        if (changesearchdircool < 0) {
+            searchdirY = rnd.nextBoolean();
+            searchdirP = rnd.nextBoolean();
+            changesearchdircool = rnd.nextInt(10) * 50;
+        }
+        float f1;
+        float f2;
+        float f3;
+        float f4;
+        f1 = MathHelper.cos(-(shooter.rotationYawHead + (searchdirY ? 8 : -8)) * 0.017453292F - (float) Math.PI);
+        f2 = MathHelper.sin(-(shooter.rotationYawHead + (searchdirY ? 8 : -8)) * 0.017453292F - (float) Math.PI);
+        f3 = -MathHelper.cos(-(shooter.rotationPitch + (searchdirP ? 0 : -0)) * 0.017453292F);
+        f4 = MathHelper.sin(-(shooter.rotationPitch + (searchdirP ? 0 : -0)) * 0.017453292F);
+        Vec3 look = Vec3.createVectorHelper((double) (f2 * f3), (double) f4, (double) (f1 * f3));
+        shooter.getLookHelper().setLookPosition(shooter.posX + look.xCoord, shooter.posY + shooter.getEyeHeight() + look.yCoord, shooter.posZ + look.zCoord, 90F, 18000000);
+    }
+    private void setPath(Vector3d currentAttackToPosition,double tocurrentAttackToPosition,boolean canSee){
+        double maxrange = maxshootrange * maxshootrange;
+        double minrange = minshootrange * minshootrange;
+        if (shooter.ridingEntity == null && !(shooter.getHeldItem() != null && shooter.getHeldItem().getItem() instanceof HMGItem_Unified_Guns)) {
+            maxrange = 0;
+            minrange = 0;
+        }
+//        Vector3d reCurToTargetPosition = new Vector3d(currentAttackToPosition);
+//        Vector3d moveTo = new Vector3d(shooter.posX, shooter.posY, shooter.posZ);
+//        reCurToTargetPosition.sub(moveTo);
+//        if(moveRound) {
+//            Vector3d relativeCurrentAttackToPosition_Copy = new Vector3d(reCurToTargetPosition);
+//            reCurToTargetPosition.x = relativeCurrentAttackToPosition_Copy.z;
+//            reCurToTargetPosition.z = -relativeCurrentAttackToPosition_Copy.x;
+//
+//            if (roundDir) {
+//                reCurToTargetPosition.x *= -1;
+//                reCurToTargetPosition.z *= -1;
+//            }
+//            boolean flag = false;
+//            if(shooter instanceof IflagBattler){
+//                byte state = ((IflagBattler) shooter).getState();
+//                int[] targetPos = ((IflagBattler) shooter).getTargetCampPosition();
+//                Vector3d relativeCurrentFlagToPosition = new Vector3d(targetPos[0],targetPos[1],targetPos[2]);
+//                Vector3d moveToflag = new Vector3d(shooter.posX, shooter.posY, shooter.posZ);
+//                relativeCurrentFlagToPosition.sub(moveToflag);
+//                if (state == 1) {
+//                    reCurToTargetPosition.add(relativeCurrentFlagToPosition);
+//                    flag = true;
+//                }else
+//                if (state == 2) {
+//                    reCurToTargetPosition.add(relativeCurrentFlagToPosition);
+//                    flag = true;
+//                }
+//                if (state == 4) {
+//                    reCurToTargetPosition.sub(relativeCurrentFlagToPosition);
+//                    flag = true;
+//                }else
+//                if (state == 5) {
+//                    reCurToTargetPosition.sub(relativeCurrentFlagToPosition);
+//                    flag = true;
+//                }
+//            }
+//            if(!flag) {
+//                if (tocurrentAttackToPosition < minrange) {
+//                    reCurToTargetPosition.sub(relativeCurrentAttackToPosition_Copy);
+//                } else if (tocurrentAttackToPosition > maxrange) {
+//                    reCurToTargetPosition.add(relativeCurrentAttackToPosition_Copy);
+//                }
+//            }
+//        }
+//        moveTo.add(reCurToTargetPosition);
+//
+//        shooter.getNavigator().clearPathEntity();
+//
+//        if(moveRound) {
+//            shooter.getNavigator().setPath(worldForPathfind.getEntityPathToXYZ(shooter, MathHelper.floor_double(moveTo.x),
+//                    MathHelper.floor_double(moveTo.y),
+//                    MathHelper.floor_double(moveTo.z),
+//                    80, true, false, true, false), 0.4);
+//        }
+//        else if(!(shooter instanceof IflagBattler)||((IflagBattler) shooter).getState() == -1)//旗AI積んでる時は突撃しない
+//        {
+//            if (!canSee || maxrange < tocurrentAttackToPosition)
+//                shooter.getNavigator().setPath(worldForPathfind.getEntityPathToXYZ(shooter, MathHelper.floor_double(moveTo.x),
+//                        MathHelper.floor_double(moveTo.y),
+//                        MathHelper.floor_double(moveTo.z),
+//                        80, true, false, true, false), 1);
+//            else if (minrange > tocurrentAttackToPosition)
+//                shooter.getNavigator().setPath(worldForPathfind.getEntityPathToXYZ(shooter, MathHelper.floor_double(moveTo.x),
+//                        MathHelper.floor_double(moveTo.y),
+//                        MathHelper.floor_double(moveTo.z),
+//                        80, true, false, true, false), -1);
+//        }else {
+//            byte state = ((IflagBattler) shooter).getState();
+//            int[] targetPos = ((IflagBattler) shooter).getTargetCampPosition();
+//            double speed = 0;
+//            if (state == 1) {
+//                speed = 1;
+//            }else
+//            if (state == 2) {
+//                speed = 0.6;
+//            }
+//            shooter.getNavigator().setPath(worldForPathfind.getEntityPathToXYZ(shooter,
+//                    targetPos[0],
+//                    targetPos[1],
+//                    targetPos[2],
+//                    80, true, false, true, false), speed);
+//        }
+        Vector3d reCurToTargetPosition = new Vector3d(currentAttackToPosition);
+        Vector3d moveToVec = new Vector3d(shooter.posX, shooter.posY, shooter.posZ);
+        Vector3d reCurToTargetPosition_copy = new Vector3d(reCurToTargetPosition);
+        reCurToTargetPosition.sub(moveToVec);
+        byte state = -1;//stop
+
+
+        if(shooter instanceof IflagBattler) {
+            state = ((IflagBattler) shooter).getState();
+        }
+        if(state == -1) {
+            if (!canSee || maxrange < tocurrentAttackToPosition)
+                state = 1;//go
+            else if (minrange > tocurrentAttackToPosition)
+                state = 3;//back
+            else if (moveRound)
+                state = 2;//slow
+        }
+
+        double speed = 0;
+        if (state == 1) {
+            speed = 1;
+        } else if (state == 2) {
+            speed = 0.6;
+        }else
+        if (state == 3) {
+            speed = -1;
+        }
+        if(moveRound) {
+            reCurToTargetPosition.x = reCurToTargetPosition_copy.z * -1;
+            reCurToTargetPosition.z = reCurToTargetPosition_copy.x;
+            if (roundDir){
+                reCurToTargetPosition.x *= -1;
+                reCurToTargetPosition.z *= -1;
+            }
+            reCurToTargetPosition_copy.scale(speed);
+            reCurToTargetPosition.add(reCurToTargetPosition_copy);
+            speed = 0.6;
+        }else {
+            reCurToTargetPosition.scale(speed != 0?1:0);
+        }
+        moveToVec.add(reCurToTargetPosition);
+
+        shooter.getNavigator().setPath(worldForPathfind.getEntityPathToXYZ(shooter,
+                MathHelper.floor_double(moveToVec.x),
+                MathHelper.floor_double(moveToVec.y),
+                MathHelper.floor_double(moveToVec.z),
+                80, true, false, false, false), speed);
     }
     private void checkSelector(ItemStack gunStack){
 

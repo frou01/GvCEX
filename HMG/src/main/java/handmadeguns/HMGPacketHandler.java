@@ -31,8 +31,6 @@ public class HMGPacketHandler {
                 Side.SERVER);
         INSTANCE.registerMessage(MessageCatcher_DamageHeldItem.class, PacketDamageHeldItem.class, ++id,
                 Side.SERVER);
-        INSTANCE.registerMessage(MessageCatcher_FireEXP.class, PacketFireEXP.class, ++id,
-                Side.SERVER);
         INSTANCE.registerMessage(MessageCatcher_RecieveSpawnparticle.class,PacketRequestSpawnParticle.class,++id,
                 Side.SERVER);
         INSTANCE.registerMessage(MessageCatcher_ChangeModeHeldItem.class, PacketChangeModeHeldItem.class, ++id,

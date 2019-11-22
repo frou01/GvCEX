@@ -166,6 +166,18 @@ public class AddNewVehicle extends HMGGunMaker {
 								case "SetUpSeat3_AddSeat_Zoom":
 									data.prefab_seats_zoom[parseInt(type[1])] = new Prefab_Seat(new double[]{parseDouble(type[2]), parseDouble(type[3]), parseDouble(type[4])}, parseBoolean(type[5]), parseBoolean(type[6]), parseBoolean(type[7]), parseInt(type[8]), parseInt(type[9]));
 									break;
+								case "SetUpSeat4_AddSeat_AdditionalTurret":
+									data.prefab_seats[parseInt(type[1])].mainid = new int[type.length - 2];
+									int cnt = -2;
+									for(String column:type){
+										if(cnt < 0){
+											cnt++;
+											continue;
+										}
+										data.prefab_seats[parseInt(type[1])].mainid[cnt] = parseInt(column);
+										cnt++;
+									}
+									break;
 								case "back":
 									current = current.motherTurret;
 									break;

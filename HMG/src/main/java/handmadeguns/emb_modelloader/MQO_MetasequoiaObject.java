@@ -139,7 +139,17 @@ public class MQO_MetasequoiaObject implements IModelCustom
 	@Override
 	public void renderPart(String partName)
 	{
-		if(partName.charAt(0)=='$')
+		if(partName.charAt(0)!='$')
+		{
+			for (MQO_GroupObject groupObject : groupObjects)
+			{
+				if (partName.equalsIgnoreCase(groupObject.name))
+				{
+					groupObject.render();
+				}
+			}
+		}
+		else
 		{
 			for (int i=0; i < groupObjects.size(); i++)
 			{
@@ -158,16 +168,6 @@ public class MQO_MetasequoiaObject implements IModelCustom
 						}
 						groupObject.render();
 					}
-				}
-			}
-		}
-		else
-		{
-			for (MQO_GroupObject groupObject : groupObjects)
-			{
-				if (partName.equalsIgnoreCase(groupObject.name))
-				{
-					groupObject.render();
 				}
 			}
 		}

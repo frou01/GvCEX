@@ -15,7 +15,7 @@ import static handmadeguns.HandmadeGunsCore.HMG_proxy;
 public class HMVHandlePickNewEntity implements IMessageHandler<HMVPacketPickNewEntity, IMessage> {
 	@Override
 	public IMessage onMessage(HMVPacketPickNewEntity message, MessageContext ctx) {
-		
+
 		World world;
 //        System.out.println("debug");
 //		if(ctx.side.isServer()) {
@@ -35,17 +35,19 @@ public class HMVHandlePickNewEntity implements IMessageHandler<HMVPacketPickNewE
 //				}
 //			}
 //		}else
-			{
+		{
 			world = HMG_proxy.getCilentWorld();
-			Entity picking;
-			Entity picked;
-			if((picking = world.getEntityByID(message.pickingEntityID)) != null && picking instanceof IVehicle){
-				Entity[] entitylist = ((IVehicle) picking).getRiddenEntityList();
-				int cnt = 0;
-				for (int a_id : message.pickedEntityIDs) {
-					picked = world.getEntityByID(a_id);
-					entitylist[cnt] = picked;
-					cnt ++;
+			if(world != null) {
+				Entity picking;
+				Entity picked;
+				if ((picking = world.getEntityByID(message.pickingEntityID)) != null && picking instanceof IVehicle) {
+					Entity[] entitylist = ((IVehicle) picking).getRiddenEntityList();
+					int cnt = 0;
+					for (int a_id : message.pickedEntityIDs) {
+						picked = world.getEntityByID(a_id);
+						entitylist[cnt] = picked;
+						cnt++;
+					}
 				}
 			}
 		}

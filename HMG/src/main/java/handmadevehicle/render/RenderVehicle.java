@@ -95,13 +95,12 @@ public class RenderVehicle extends Render {
 			GL11.glRotatef((float) xyz[2], 0.0F, 0.0F, 1.0F);
 			GL11.glTranslatef(-(float) currentBaseLogic.info.rotcenter[0], -(float) currentBaseLogic.info.rotcenter[1], -(float) currentBaseLogic.info.rotcenter[2]);
 
-			if(!currentBaseLogic.isRidingEntity(HMV_Proxy.getEntityPlayerInstance())){
-				Vector3d nowPos = new Vector3d();
-				nowPos.interpolate(new Vector3d(currentEntity.lastTickPosX ,
-						currentEntity.lastTickPosY,
-						currentEntity.lastTickPosZ),new Vector3d(currentEntity.posX,currentEntity.posY,currentEntity.posZ),in_partialTicks);
-				currentBaseLogic.riderPosUpdate_forRender(nowPos,currentquat);
-			}
+
+			Vector3d nowPos = new Vector3d();
+			nowPos.interpolate(new Vector3d(currentEntity.prevPosX ,
+					currentEntity.prevPosY,
+					currentEntity.prevPosZ),new Vector3d(currentEntity.posX,currentEntity.posY,currentEntity.posZ),in_partialTicks);
+			currentBaseLogic.riderPosUpdate_forRender(nowPos,currentquat);
 			GL11.glPushMatrix();
 			GL11.glScalef((float) currentBaseLogic.info.scale, (float) currentBaseLogic.info.scale, (float) currentBaseLogic.info.scale);
 			if(currentBaseLogic.info.partslist != null){

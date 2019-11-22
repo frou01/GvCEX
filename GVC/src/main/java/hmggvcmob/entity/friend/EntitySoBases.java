@@ -7,63 +7,54 @@ import handmadeguns.items.guns.HMGItem_Unified_Guns;
 import handmadevehicle.SlowPathFinder.WorldForPathfind;
 import handmadevehicle.entity.EntityVehicle;
 import handmadevehicle.entity.parts.ITurretUser;
-import handmadevehicle.entity.parts.IVehicle;
 import handmadevehicle.entity.parts.turrets.TurretObj;
 import hmggvcmob.IflagBattler;
 import handmadevehicle.SlowPathFinder.ModifiedPathNavigater;
 import hmggvcmob.ai.*;
+import hmggvcmob.camp.CampObj;
 import hmggvcmob.entity.EntityBodyHelper_modified;
 import hmggvcmob.entity.IGVCmob;
-import hmggvcmob.entity.IHasVehicleGacha;
-import hmggvcmob.entity.VehicleSpawnGachaOBJ;
 import hmggvcmob.entity.guerrilla.EntityGBase;
 import hmggvcmob.entity.guerrilla.EntityGBases;
-import hmggvcmob.tile.TileEntityFlag;
 import littleMaidMobX.LMM_EntityLittleMaid;
 import net.minecraft.block.Block;
-import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.*;
-import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.IMob;
-import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.pathfinding.PathNavigate;
+import net.minecraft.scoreboard.Team;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import static handmadeguns.HandmadeGunsCore.islmmloaded;
 import static handmadeguns.Util.Utils.getmovingobjectPosition_forBlock;
 import static handmadevehicle.entity.EntityVehicle.EntityVehicle_spawnByMob;
-import static hmggvcmob.GVCMobPlus.fn_PMCflag;
-import static hmggvcmob.GVCMobPlus.fn_Supplyflag;
+import static hmggvcmob.GVCMobPlus.*;
 import static java.lang.Math.abs;
 
 public class EntitySoBases extends EntityCreature implements INpc , IflagBattler ,  IFF, IGVCmob, ITurretUser {
 	private EntityBodyHelper_modified bodyHelper;
-	public Entity prevRidingEntity;
 	public String summoningVehicle = null;//nullは無し。自然湧きはLivingSpawnEvent.SpecialSpawnで設定する
 	//特殊事情で（ダンジョンとかで）自由な役職の兵士を載せたいときのためにフィールドは残しておこう
-	
-	public int flagx;
-	public int flagy;
-	public int flagz;
+
 	private ModifiedPathNavigater modifiedPathNavigater;
 	WorldForPathfind worldForPathfind;
 	
 	public float viewWide = 1.14f;
-	public int deathTicks;
 	public double movespeed = 0.3d;
-	public float spread = 2;
+	public float spread = 1;
 	public double rndyaw;
 	public double rndpitch;
-	public int type = 0;
 	public EntityAISwimming aiSwimming;
 	AIAttackGun aiAttackGun;
 	public static int spawnedcount;
@@ -82,7 +73,7 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
 		this.tasks.addTask(0, new AIAttackByTank(this, null, worldForPathfind, this));
 		this.tasks.addTask(3, new AIattackOnCollide(this, EntityLiving.class, 1.0D, true));
 		this.tasks.addTask(3, new AIattackOnCollide(this, EntityGBases.class, 1.0D, true));
-		this.tasks.addTask(3, new AIAttackFlag(this,(IflagBattler) this,worldForPathfind));
+		this.tasks.addTask(3, new AIAttackFlag(this,this,worldForPathfind));
 		this.tasks.addTask(5, new EntityAIRestrictOpenDoor(this));
 		this.tasks.addTask(6, new EntityAIOpenDoor(this, true));
 		this.tasks.addTask(7, new EntityAIMoveTowardsRestriction(this, 1.0D));
@@ -161,7 +152,6 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
 	public void setDead(){
 		super.setDead();
 		spawnedcount--;
-		if(spawnedtile != null && spawnedtile instanceof TileEntityFlag)((TileEntityFlag) spawnedtile).spawnedEntities.remove(this);
 	}
     public boolean canAttackClass(Class par1Class)
     {
@@ -199,43 +189,105 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
 	public void addRandomArmor() {
 	}
 
+	@Override
+	public CampObj getCampObj() {
+		return soldiers;
+	}
+
+	public Team getTeam()
+	{
+		return getCampObj();
+	}
+
+	private byte state;
+	@Override
+	public byte getState() {
+		return state;
+	}
 
 	@Override
-	public Block getFlag() {
-		return fn_PMCflag;
+	public void setState(byte state) {
+		this.state = state;
 	}
-	
+
+
+	private int[] flagPos = new int[3];
+	@Override
+	public int[] getTargetCampPosition() {
+		return flagPos;
+	}
+
+	@Override
+	public void setTargetCampPosition(int[] ints) {
+		flagPos[0] = ints[0];
+		flagPos[1] = ints[1];
+		flagPos[2] = ints[2];
+	}
+
+	ArrayList<Entity> platoon;
+	IflagBattler platoonLeader;
+
+	@Override
+	public void makePlatoon() {
+		if(platoon == null){
+			platoon = new ArrayList<>();
+			platoonLeader = this;
+
+			List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, AxisAlignedBB.getBoundingBox(this.posX, this.posY, this.posZ, this.posX + 1.0D, this.posY + 1.0D, this.posZ + 1.0D).expand(32, 32, 32));
+			Iterator iterator = list.iterator();
+
+			while (iterator.hasNext())
+			{
+				Entity entitycreature = (Entity)iterator.next();
+				if(entitycreature instanceof EntitySoBases){
+					platoon.add(entitycreature);
+					((EntitySoBases) entitycreature).joinPlatoon(this);
+				}
+
+			}
+		}
+	}
+
+	@Override
+	public void setPlatoon(ArrayList<Entity> entities) {
+		platoon = entities;
+	}
+
+	@Override
+	public void joinPlatoon(IflagBattler iflagBattler) {
+		platoonLeader = iflagBattler;
+		if(platoonLeader != null)platoon = iflagBattler.getPlatoon();
+	}
+
+	@Override
+	public ArrayList<Entity> getPlatoon() {
+		return platoon;
+	}
+
+	@Override
+	public IflagBattler getPlatoonLeader() {
+		return platoonLeader;
+	}
+
+
+	@Override
+	public boolean isThisAttackAbleCamp(CampObj campObj) {
+		return campObj == guerrillas;
+	}
+
+	@Override
+	public boolean isThisFriendCamp(CampObj campObj) {
+		return campObj == soldiers || campObj == boxes;
+	}
+
+	@Override
+	public boolean isThisIgnoreSpawnCamp(CampObj campObj) {
+		return campObj == guerrillas;
+	}
+
 	public boolean isCreatureType(EnumCreatureType type, boolean forSpawnCount)
 	{
 		return type.getCreatureClass() == EntitySoBases.class;
-	}
-	@Override
-	public boolean istargetingflag() {
-		return worldObj.getTileEntity(flagx,flagy,flagz) instanceof TileEntityFlag && worldObj.getBlock(flagx,flagy,flagz) != getFlag();
-	}
-
-	@Override
-	public Vec3 getflagposition() {
-		return Vec3.createVectorHelper(flagx,flagy,flagz);
-	}
-
-	@Override
-	public void setflagposition(int x,int y,int z) {
-		flagx = x;
-		flagy = y;
-		flagz = z;
-	}
-	
-	@Override
-	public boolean canEntityBeSeen(Entity p_70685_1_)
-	{
-		Vec3 startpos = Vec3.createVectorHelper(this.posX, this.posY + (double) this.getEyeHeight(), this.posZ);
-		Vec3 targetpos = Vec3.createVectorHelper(p_70685_1_.posX, p_70685_1_.posY + (double) p_70685_1_.getEyeHeight(), p_70685_1_.posZ);
-		MovingObjectPosition movingobjectposition = getmovingobjectPosition_forBlock(worldObj,startpos, targetpos, false, true, false);
-		if(movingobjectposition!=null) {
-			return false;
-		}
-		return !((this.isInWater() || p_70685_1_.isInWater()) && getDistanceSqToEntity(p_70685_1_) > 256);
 	}
 	
 	public Vec3 getLookVec()
@@ -319,13 +371,14 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
 			}
 		}
 		this.getEntityData().setBoolean("HMGisUsingItem",false);
+
 	}
-	
+
 	public void onLivingUpdate()
 	{
 		this.updateArmSwingProgress();
 		float f = this.getBrightness(1.0F);
-		
+
 		if (f > 0.5F)
 		{
 			this.entityAge += 2;
@@ -342,105 +395,6 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
 	{
 		super.updateAITasks();
 		modifiedPathNavigater.onUpdateNavigation();
-	}
-	
-	public void dismountEntity(Entity p_110145_1_)
-	{
-	}
-	
-	@Override
-	public void mountEntity(Entity p_70078_1_)
-	{
-		
-		if (p_70078_1_ == null)
-		{
-			if (this.ridingEntity != null)
-			{
-				this.ridingEntity.riddenByEntity = null;
-			}
-			
-			this.ridingEntity = null;
-		}
-		else
-		{
-			if (this.ridingEntity != null)
-			{
-				this.ridingEntity.riddenByEntity = null;
-			}
-
-			if (p_70078_1_ != null)
-			{
-				for (Entity entity1 = p_70078_1_.ridingEntity; entity1 != null; entity1 = entity1.ridingEntity)
-				{
-					if (entity1 == this)
-					{
-						return;
-					}
-				}
-			}
-
-			this.ridingEntity = p_70078_1_;
-			p_70078_1_.riddenByEntity = this;
-		}
-	}
-
-    protected void collideWithNearbyEntities()
-    {
-        List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox.expand(0.20000000298023224D, 0.0D, 0.20000000298023224D));
-
-        if (list != null && !list.isEmpty())
-        {
-            for (int i = 0; i < list.size(); ++i)
-            {
-                Entity entity = (Entity)list.get(i);
-
-                if (entity.canBePushed())
-                {
-                    this.collideWithEntity(entity);
-                }
-                if(!isridingVehicle && !entity.isDead && !worldObj.isRemote && entity instanceof EntityVehicle && ((EntityVehicle) entity).canUseByMob) {
-                    Entity pilot = ((EntityVehicle) entity).getBaseLogic().getRiddenEntityList()[((EntityVehicle) entity).getpilotseatid()];
-                    if((pilot == null || is_this_entity_friend(pilot))&&!((EntityVehicle) entity).getBaseLogic().isRidingEntity(this)){
-						if(((EntityVehicle) entity).pickupEntity(this,0)) {
-							isridingVehicle = true;
-						}
-					}
-                }
-            }
-        }
-    }
-	
-	public void applyEntityCollision(Entity p_70108_1_)
-	{
-		boolean flag = p_70108_1_.riddenByEntity != this && p_70108_1_.ridingEntity != this;
-		if (flag)
-		{
-			double d0 = p_70108_1_.posX - this.posX;
-			double d1 = p_70108_1_.posZ - this.posZ;
-			double d2 = MathHelper.abs_max(d0, d1);
-			
-			if (d2 >= 0.009999999776482582D)
-			{
-				d2 = (double)MathHelper.sqrt_double(d2);
-				d0 /= d2;
-				d1 /= d2;
-				double d3 = 1.0D / d2;
-				
-				if (d3 > 1.0D)
-				{
-					d3 = 1.0D;
-				}
-				
-				d0 *= d3;
-				d1 *= d3;
-				d0 *= 0.05000000074505806D;
-				d1 *= 0.05000000074505806D;
-				d0 *= (double)(1.0F - this.entityCollisionReduction);
-				d1 *= (double)(1.0F - this.entityCollisionReduction);
-				this.addVelocity(-d0, 0.0D, -d1);
-				p_70108_1_.addVelocity(d0, 0.0D, d1);
-			}
-		}
 	}
 	
 	public void moveFlying(float p_70060_1_, float p_70060_2_, float p_70060_3_)
@@ -464,11 +418,6 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
 			this.motionX += (double)(-p_70060_2_ * f4 + p_70060_1_ * f5);
 			this.motionZ += (double)( p_70060_2_ * f5 + p_70060_1_ * f4);
 		}
-	}
-
-	@Override
-	public boolean isthisFlagIsEnemys(Block block) {
-		return block != fn_PMCflag && block != fn_Supplyflag;
 	}
 	
 	public boolean shouldDismountInWater(Entity entity){
@@ -508,7 +457,19 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
 		}else
 			return true;
 	}
-	
+
+	@Override
+	public boolean canEntityBeSeen(Entity p_70685_1_)
+	{
+		Vec3 startpos = Vec3.createVectorHelper(this.posX, this.posY + (double) this.getEyeHeight(), this.posZ);
+		Vec3 targetpos = Vec3.createVectorHelper(p_70685_1_.posX, p_70685_1_.posY + (double) p_70685_1_.getEyeHeight(), p_70685_1_.posZ);
+		MovingObjectPosition movingobjectposition = getmovingobjectPosition_forBlock(worldObj,startpos, targetpos, false, true, false);
+		if(movingobjectposition!=null) {
+			return false;
+		}
+		return canSeeTarget(p_70685_1_) && !((this.isInWater() || p_70685_1_.isInWater()) && getDistanceSqToEntity(p_70685_1_) > 256);
+	}
+
 	@Override
 	public boolean canhearsound(Entity target) {
 		boolean flag;
@@ -516,9 +477,36 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
 		flag = dist < target.getEntityData().getFloat("GunshotLevel") * 14;
 		return flag;
 	}
-	@Override
-	public void setspawnedtile(TileEntity flag) {
-		spawnedtile = flag;
+
+
+	protected void collideWithNearbyEntities()
+	{
+		if(!worldObj.isRemote) {
+			List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox.expand(0.20000000298023224D, 0.0D, 0.20000000298023224D));
+
+			if (list != null && !list.isEmpty()) {
+				for (int i = 0; i < list.size(); ++i) {
+					Entity entity = (Entity) list.get(i);
+
+					if (entity.canBePushed()) {
+						this.collideWithEntity(entity);
+					}
+					if (!entity.isDead && entity instanceof EntityVehicle && ((EntityVehicle) entity).canUseByMob) {
+						Entity pilot = ((EntityVehicle) entity).getBaseLogic().getRiddenEntityList()[((EntityVehicle) entity).getpilotseatid()];
+						if ((pilot == null || is_this_entity_friend(pilot)) && !((EntityVehicle) entity).getBaseLogic().isRidingEntity(this)) {
+							if (((EntityVehicle) entity).pickupEntity(this, 0)) {
+								isridingVehicle = true;
+							}
+						}else {
+							((EntityVehicle) entity).getBaseLogic().health += 0.1;
+						}
+					}
+					if(entity instanceof EntityLivingBase && is_this_entity_friend(entity)){
+						((EntityLivingBase) entity).heal(1f);
+					}
+				}
+			}
+		}
 	}
 
 	public int seatID;

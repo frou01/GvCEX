@@ -1,14 +1,15 @@
 package hmggvcmob.event;
 
+import cpw.mods.fml.common.eventhandler.Event;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
-import handmadeguns.entity.IFF;
 import hmggvcmob.IflagBattler;
+import hmggvcmob.camp.CampObj;
+import hmggvcmob.camp.CampObjAndPos;
 import hmggvcmob.entity.IHasVehicleGacha;
 import hmggvcmob.entity.VehicleSpawnGachaOBJ;
 import hmggvcmob.entity.friend.EntitySoBase;
-import hmggvcmob.tile.TileEntityFlag;
-import net.minecraft.entity.Entity;
+import hmggvcmob.world.WorldSavedData_Flag;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
@@ -62,13 +63,20 @@ public class GVCMSpawnEvent {
     }
     @SubscribeEvent
     public void specialSpawnevent(LivingSpawnEvent.SpecialSpawn event) {
-        if(event.entityLiving instanceof IflagBattler) {
-            Chunk spawningChunk = event.world.getChunkFromBlockCoords((int) event.x, (int) event.z);
-            for (Object o : spawningChunk.chunkTileEntityMap.values()) {
-                if (o instanceof TileEntityFlag) {
-                    //todo 敵フラッグかどうか判定
-                    //周囲のチャンクも一緒に行うことで広域脇つぶしをできるようにする
+        Chunk spawningChunk = event.world.getChunkFromBlockCoords(
+                MathHelper.floor_double(event.x),
+                MathHelper.floor_double(event.z));
+        WorldSavedData_Flag worldSavedData_flag = WorldSavedData_Flag.get(event.world);
+        CampObjAndPos campObj = worldSavedData_flag.campObjHashMap.get(spawningChunk.getChunkCoordIntPair());
+        if(campObj != null) {
+            if (event.entityLiving instanceof IflagBattler) {
+                if (((IflagBattler) event.entityLiving).isThisIgnoreSpawnCamp(campObj.campObj)) {
+                    event.setCanceled(true);
+                    return;
                 }
+            } else {
+                event.setCanceled(true);
+                return;
             }
         }
         if(event.entityLiving instanceof IHasVehicleGacha){//車両ガチャのお時間

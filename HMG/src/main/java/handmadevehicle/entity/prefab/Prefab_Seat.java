@@ -9,7 +9,7 @@ public class Prefab_Seat {
 	public boolean hasGun;
 	public boolean aimGun;
 	public boolean seatOnTurret = true;
-	public int mainid;
+	public int[] mainid;
 	public int subid;
 	public float userProtect_maxDamageLevel = 0;
 	public float zoomLevel = 1.0f;
@@ -20,11 +20,20 @@ public class Prefab_Seat {
 		this.hasGun = hasGun;
 		this.aimGun = aimGun;
 		this.seatOnTurret = seatOnTurret;
-		this.mainid = mainid;
+		if(mainid != -1)this.mainid = new int[]{mainid};
 		this.subid = subid;
 	}
 	
 	public SeatInfo getSeatOBJ(TurretObj[] turrets){
-		return new SeatInfo(pos,this,hasGun,aimGun, mainid != -1 ? turrets[mainid]:null, subid != -1 ? turrets[subid]:null);
+		TurretObj[] maingun = null;
+		if(mainid != null && mainid.length > 0) {
+			maingun = new TurretObj[mainid.length];
+			int cnt = 0;
+			for (int id : mainid) {
+				if (id >= 0) maingun[cnt] = turrets[id];
+				cnt++;
+			}
+		}
+		return new SeatInfo(pos,this,maingun, subid != -1 ? turrets[subid]:null);
 	}
 }

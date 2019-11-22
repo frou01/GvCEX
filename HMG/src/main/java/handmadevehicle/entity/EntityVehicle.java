@@ -29,6 +29,8 @@ import net.minecraftforge.event.ForgeEventFactory;
 
 import javax.vecmath.Vector3d;
 
+import static cpw.mods.fml.common.network.ByteBufUtils.readTag;
+import static cpw.mods.fml.common.network.ByteBufUtils.writeTag;
 import static handmadeguns.HandmadeGunsCore.cfg_defgravitycof;
 import static handmadeguns.Util.Utils.getmovingobjectPosition_forBlock;
 import static handmadevehicle.HMVehicle.HMV_Proxy;
@@ -120,14 +122,25 @@ public class EntityVehicle extends Entity implements IFF,IVehicle,IMultiTurretVe
 	public void onUpdate() {
 		modifiedPathNavigater.onUpdateNavigation();
 		boolean onground = this.onGround;
-		this.lastTickPosX = this.posX;
-		this.lastTickPosY = this.posY;
-		this.lastTickPosZ = this.posZ;
-		double backupMotionX = this.motionX,backupMotionZ = this.motionY,backupMotionY = this.motionZ;
+		double backupMotionX = this.motionX;
+		double backupMotionZ = this.motionY;
+		double backupMotionY = this.motionZ;
+		Vector3d backupPos = new Vector3d(
+				this.posX,
+				this.posY,
+				this.posZ
+		);
 		super.onUpdate();
 		this.motionX = backupMotionX;
 		this.motionY = backupMotionZ;
 		this.motionZ = backupMotionY;
+		this.posX = backupPos.x;
+		this.posY = backupPos.y;
+		this.posZ = backupPos.z;
+		this.prevPosX = backupPos.x;
+		this.prevPosY = backupPos.y;
+		this.prevPosZ = backupPos.z;
+
 		this.onGround = onground;
 		baseLogic.onUpdate();
 		if (!this.worldObj.isRemote)
@@ -145,7 +158,13 @@ public class EntityVehicle extends Entity implements IFF,IVehicle,IMultiTurretVe
 		this.rotationPitch = p_70012_8_;
 		this.setPosition(this.posX, this.posY, this.posZ);
 	}
-	
+
+	@SideOnly(Side.CLIENT)
+	public void setPositionAndRotation2(double p_70056_1_, double p_70056_3_, double p_70056_5_, float p_70056_7_, float p_70056_8_, int p_70056_9_)
+	{
+		this.setPosition(posX, posY, posZ);
+	}
+
 	public void setVelocity(double p_70016_1_, double p_70016_3_, double p_70016_5_) {
 //		baseLogic.setVelocity(p_70016_1_,p_70016_3_,p_70016_5_);
 	}
@@ -229,32 +248,32 @@ public class EntityVehicle extends Entity implements IFF,IVehicle,IMultiTurretVe
 			Incident_vector.normalize((Vector3d) movingObjectPosition.hitInfo);
 			switch (hitside) {
 				case 2: //正面
-					System.out.println("front");
+//					System.out.println("front");
 					angle_sin = abs(Incident_vector.z);
 					temparomor = box.armor_Front;
 					break;
 				case 4://ヒダリ
-					System.out.println("left");
+//					System.out.println("left");
 					angle_sin = abs(Incident_vector.x);
 					temparomor = box.armor_SideLeft;
 					break;
 				case 5://ミギ
-					System.out.println("right");
+//					System.out.println("right");
 					angle_sin = abs(Incident_vector.x);
 					temparomor = box.armor_SideRight;
 					break;
 				case 0://上
-					System.out.println("top");
+//					System.out.println("top");
 					angle_sin = abs(Incident_vector.y);
 					temparomor = box.armor_Top;
 					break;
 				case 1://下
-					System.out.println("bottom");
+//					System.out.println("bottom");
 					angle_sin = abs(Incident_vector.y);
 					temparomor = box.armor_Bottom;
 					break;
 				case 3: //背面
-					System.out.println("back");
+//					System.out.println("back");
 					angle_sin = abs(Incident_vector.z);
 					temparomor = box.armor_Back;
 					break;
@@ -466,15 +485,13 @@ public class EntityVehicle extends Entity implements IFF,IVehicle,IMultiTurretVe
 	
 	@Override
 	public void writeSpawnData(ByteBuf buffer){
-		ByteBufUtils.writeUTF8String(buffer,typename);
+		writeEntityToNBT(this.getEntityData());
+		writeTag(buffer, this.getEntityData());
 	}
 	
 	@Override
 	public void readSpawnData(ByteBuf additionalData){
-		typename = ByteBufUtils.readUTF8String(additionalData);
-		
-		System.out.println("" + typename);
-		init_2(typename);
+		readEntityFromNBT(readTag(additionalData));
 	}
 	public boolean shouldDismountInWater(Entity entity){
 		return false;
@@ -676,6 +693,7 @@ public class EntityVehicle extends Entity implements IFF,IVehicle,IMultiTurretVe
 	{
 		return pass == 0 || pass == 1;
 	}
+	@Override
 	public boolean canBeCollidedWith()
 	{
 		return true;

@@ -23,7 +23,7 @@ public abstract class PartsRender {
 		transformParts(rotationCenterAndRotation,OffsetAndRotation,parts);
 
 		partModel_render(parts, state, flame, remainbullets, OffsetAndRotation);
-		partSidentification(parts.childs,new GunState[]{state},flame,remainbullets);
+		partSidentification(parts.childs,state,flame,remainbullets);
 		GL11.glPopMatrix();
 	}
 

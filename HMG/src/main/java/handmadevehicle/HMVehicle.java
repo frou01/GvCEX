@@ -49,6 +49,7 @@ public class HMVehicle {
 	public static final CreativeTabs tabHMV = new HMVDefaultTab("HMV");
 	public static double cfgVehicleWheel_UpRange = 1;
 	public static double cfgVehicleWheel_DownRange = 2;
+	public static boolean cfgControl_useStick = false;
 	public static int cfgControl_axisXID = 0;
 	public static int cfgControl_axisYID = 1;
 	public static int cfgControl_axisZID = 2;
@@ -110,6 +111,7 @@ public class HMVehicle {
 		lconf.load();
 		cfgVehicleWheel_UpRange = lconf.getFloat("cfgVehicleWheel_UpRange","Wheel",1,0,50,null);
 		cfgVehicleWheel_DownRange = lconf.getFloat("cfgVehicleWheel_DownRange","Wheel",2,0,50,null);
+		cfgControl_useStick = lconf.getBoolean("cfgControl_useStick","Control",false,null);
 		cfgControl_axisXID = lconf.getInt("cfgControl_axisXID","Control",3,0,128,null);
 		cfgControl_axisYID = lconf.getInt("cfgControl_axisYID","Control",2,0,128,null);
 		cfgControl_axisZ2ID = lconf.getInt("cfgControl_axisZ2ID","Control",0,0,128,null);
@@ -119,7 +121,7 @@ public class HMVehicle {
 	@EventHandler
 	public void init(FMLInitializationEvent pEvent) {
 		int id = 0;
-		EntityRegistry.registerModEntity(EntityVehicle.class , "HMVVehicle" , id++ , this , 250, 1, true);
+		EntityRegistry.registerModEntity(EntityVehicle.class , "HMVVehicle" , id++ , this , 250, 1, false);
 		itemWrench = new ItemWrench();
 		GameRegistry.registerItem(itemWrench,"Wrench");
 		itemWrench.setUnlocalizedName("Wrench");

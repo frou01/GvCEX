@@ -39,7 +39,8 @@ public class PartsRender_Gun extends PartsRender {
 		ArrayList<HMGGunParts> partslist_temp = partslist;
 		if(data.length >3){
 			partslist_temp = (ArrayList<HMGGunParts>) data[0];
-			states = (GunState[]) data[1];
+			if(data[1] instanceof GunState[])states = (GunState[]) data[1];
+			else states = new GunState[]{(GunState) data[1]};
 			flame = (float) data[2];
 			remainbullets = (int) data[3];
 		}else {
@@ -184,7 +185,6 @@ public class PartsRender_Gun extends PartsRender {
 					} else if (parts.issword && items[3].getItem() instanceof HMGItemSwordBase) {
 						part_Render(parts, state, flame, remainbullets, OffsetAndRotation);
 					} else if (parts.isswordbase && items[3].getItem() instanceof HMGItemSwordBase) {
-						part_Render(parts, state, flame, remainbullets, OffsetAndRotation);
 						IItemRenderer attachrender = MinecraftForgeClient.getItemRenderer(items[3], IItemRenderer.ItemRenderType.EQUIPPED);
 						if (attachrender != null) {
 							GL11.glPushMatrix();
@@ -201,7 +201,7 @@ public class PartsRender_Gun extends PartsRender {
 						}
 					}
 				}
-				if (items[4] != null) {//�A���_�[�o�����n
+				if (items[4] != null) {
 					if (parts.isgripBase && items[4].getItem() instanceof HMGItemAttachmentBase) {
 						IItemRenderer attachrender = MinecraftForgeClient.getItemRenderer(items[4], IItemRenderer.ItemRenderType.EQUIPPED);
 						if (attachrender instanceof HMGRenderItemCustom) {
@@ -231,14 +231,20 @@ public class PartsRender_Gun extends PartsRender {
 						if (parts.isunderGunbase) {
 							IItemRenderer attachrender = MinecraftForgeClient.getItemRenderer(items[4], IItemRenderer.ItemRenderType.EQUIPPED);
 							if (attachrender != null) {
+								boolean backUp = isfirstperson;
 								GL11.glPushMatrix();
+
+								HMGGunParts_Motion_PosAndRotation rotationCenterAndRotation = parts.getRenderinfCenter();
+								if(!OffsetAndRotation.renderOnOff)return;
+
+								transformParts(rotationCenterAndRotation,OffsetAndRotation,parts);
 								part_Render(parts, state, flame, remainbullets, OffsetAndRotation);
 								glTranslatef(gunitem.gunInfo.underoffsetpx, gunitem.gunInfo.underoffsetpy, gunitem.gunInfo.underoffsetpz);
 								GL11.glRotatef(gunitem.gunInfo.underrotationy, 0, 1, 0);
 								GL11.glRotatef(gunitem.gunInfo.underrotationx, 1, 0, 0);
 								GL11.glRotatef(gunitem.gunInfo.underrotationz, 0, 0, 1);
 								HMGItem_Unified_Guns undergun = (HMGItem_Unified_Guns) items[4].getItem();
-								glTranslatef(gunitem.gunInfo.onunderoffsetpx, gunitem.gunInfo.onunderoffsetpy, gunitem.gunInfo.onunderoffsetpz);
+								glTranslatef(undergun.gunInfo.onunderoffsetpx, undergun.gunInfo.onunderoffsetpy, undergun.gunInfo.onunderoffsetpz);
 								GL11.glRotatef(gunitem.gunInfo.onunderrotationy, 0, 1, 0);
 								GL11.glRotatef(gunitem.gunInfo.onunderrotationx, 1, 0, 0);
 								GL11.glRotatef(gunitem.gunInfo.onunderrotationz, 0, 0, 1);
@@ -248,12 +254,15 @@ public class PartsRender_Gun extends PartsRender {
 								GL11.glScalef(1 / (0.4f * modelscala * gunitem.gunInfo.inworldScale), 1 / (0.4f * modelscala * gunitem.gunInfo.inworldScale), 1 / (0.4f * modelscala * gunitem.gunInfo.inworldScale));
 								
 								attachrender.renderItem(IItemRenderer.ItemRenderType.ENTITY, items[4], datas);
+
 								if (attachrender instanceof HMGRenderItemGun_U_NEW) {
 									((HMGRenderItemGun_U_NEW) attachrender).isUnder = false;
 								}
 								Minecraft.getMinecraft().renderEngine.bindTexture(texture);
 								GL11.glPopMatrix();
+								isfirstperson = backUp;
 							}
+							part_Render(parts, state, flame, remainbullets, OffsetAndRotation);
 						} else if (parts.isunderGL && gunitem.gunInfo.guntype == 2) {
 							part_Render(parts, state, flame, remainbullets, OffsetAndRotation);
 						} else if (parts.isunderSG && gunitem.gunInfo.guntype == 1) {

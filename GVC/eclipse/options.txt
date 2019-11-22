@@ -1,9 +1,9 @@
 invertYMouse:false
 mouseSensitivity:0.5
-fov:1.0
+fov:0.0
 gamma:1.0
 saturation:0.0
-renderDistance:10
+renderDistance:16
 guiScale:0
 particles:0
 bobView:true
@@ -12,7 +12,7 @@ advancedOpengl:false
 maxFps:60
 fboEnable:true
 difficulty:2
-fancyGraphics:false
+fancyGraphics:true
 ao:0
 clouds:true
 resourcePacks:[]
@@ -39,7 +39,7 @@ chatHeightUnfocused:0.44366196
 chatScale:1.0
 chatWidth:1.0
 showInventoryAchievementHint:false
-mipmapLevels:0
+mipmapLevels:4
 anisotropicFiltering:1
 streamBytesPerPixel:0.5
 streamMicVolume:1.0
@@ -95,17 +95,19 @@ key_Fire1:-99
 key_Fire2:-100
 key_Flap:33
 key_Air Brake:45
-key_Allow_Entity_Ride:56
 key_Change to Next Seat:21
 key_Change to Previous Seat:35
-key_pitchUp:23
-key_pitchDown:37
-key_rollRight:38
-key_rollLeft:36
+key_Pitch Up:23
+key_Pitch Down:37
+key_Roll Right:38
+key_Roll Left:36
+key_Weapon Mode:78
+key_Allow Entity to Ride:56
 key_Change Control:49
-key_Reset camera Rotation:47
+key_Reset Camera Rotation:47
 key_Reload Config Settings:0
 key_Open Vehicle Gui:39
+key_Gear Down/Up:34
 key_Reload Magazine:19
 key_Change Magazine Type:48
 key_Seeker Open/Close:46
@@ -114,7 +116,7 @@ key_Fire AttachedGun:33
 key_ADS_Key:47
 key_Mode_Key:41
 key_Fix Gun:35
-soundCategory_master:0.052980132
+soundCategory_master:0.3245033
 soundCategory_music:0.0
 soundCategory_record:1.0
 soundCategory_weather:1.0

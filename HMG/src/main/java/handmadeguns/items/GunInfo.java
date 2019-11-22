@@ -153,14 +153,14 @@ public class GunInfo {
 	public float gravity = 0.029F;
 	public boolean canbounce = false;
 	public ArrayList<Integer> burstcount = new ArrayList<Integer>(){
-		{
-			add(-1);
-		}
+//		{
+//			add(-1);
+//		}
 	};
 	public ArrayList<Integer> rates = new ArrayList<Integer>(){
-		{
-			add(1);
-		}
+//		{
+//			add(1);
+//		}
 	};
 	public boolean userenderscript = false;
 	public ScriptEngine renderscript;

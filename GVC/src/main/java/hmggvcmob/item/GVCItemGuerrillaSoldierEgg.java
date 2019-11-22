@@ -39,7 +39,7 @@ public class GVCItemGuerrillaSoldierEgg extends Item
                 int var12 = MathHelper.floor_double((double)(par2EntityPlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
                 GVCEntitySoldier entityskeleton = new GVCEntitySoldier(par3World);
                 entityskeleton.setLocationAndAngles(par4+0.5, par5, par6+0.5, par2EntityPlayer.rotationYaw, 0.0F);
-                entityskeleton.setCurrentItemOrArmor(0, new ItemStack(GVCUtils.fn_m16a4));
+                entityskeleton.addRandomArmor();
                 par3World.spawnEntityInWorld(entityskeleton);
                 --par1ItemStack.stackSize;
                 return true;
@@ -49,7 +49,7 @@ public class GVCItemGuerrillaSoldierEgg extends Item
                 int var12 = MathHelper.floor_double((double)(par2EntityPlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
                 GVCEntitySoldierSP entityskeleton = new GVCEntitySoldierSP(par3World);
                 entityskeleton.setLocationAndAngles(par4+0.5, par5, par6+0.5, par2EntityPlayer.rotationYaw, 0.0F);
-                entityskeleton.setCurrentItemOrArmor(0, new ItemStack(GVCUtils.fn_m110));
+                entityskeleton.addRandomArmor();
                 par3World.spawnEntityInWorld(entityskeleton);
                 --par1ItemStack.stackSize;
                 return true;
@@ -59,7 +59,7 @@ public class GVCItemGuerrillaSoldierEgg extends Item
                 int var12 = MathHelper.floor_double((double)(par2EntityPlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
                 GVCEntitySoldierMG entityskeleton = new GVCEntitySoldierMG(par3World);
                 entityskeleton.setLocationAndAngles(par4+0.5, par5, par6+0.5, par2EntityPlayer.rotationYaw, 0.0F);
-                entityskeleton.setCurrentItemOrArmor(0, new ItemStack(GVCUtils.fn_m240b));
+                entityskeleton.addRandomArmor();
                 par3World.spawnEntityInWorld(entityskeleton);
                 --par1ItemStack.stackSize;
                 return true;
@@ -69,7 +69,7 @@ public class GVCItemGuerrillaSoldierEgg extends Item
                 int var12 = MathHelper.floor_double((double)(par2EntityPlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
                 GVCEntitySoldierRPG entityskeleton = new GVCEntitySoldierRPG(par3World);
                 entityskeleton.setLocationAndAngles(par4+0.5, par5, par6+0.5, par2EntityPlayer.rotationYaw, 0.0F);
-                entityskeleton.setCurrentItemOrArmor(0, new ItemStack(GVCUtils.fn_smaw));
+                entityskeleton.addRandomArmor();
                 --par1ItemStack.stackSize;
                 if(par1ItemStack.hasDisplayName()){
                     entityskeleton.summoningVehicle = par1ItemStack.getDisplayName();

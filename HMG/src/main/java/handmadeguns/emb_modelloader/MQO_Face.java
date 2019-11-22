@@ -2,6 +2,7 @@ package handmadeguns.emb_modelloader;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import handmadeguns.HandmadeGunsCore;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.Vec3;
 
@@ -74,7 +75,7 @@ public class MQO_Face
 					tessellator.setNormal(this.vertexNormals[i].x, this.vertexNormals[i].y, this.vertexNormals[i].z);
 				}
 
-				tessellator.addVertexWithUV(vertices[i].x, vertices[i].y, vertices[i].z, textureCoordinates[i].u + offsetU, textureCoordinates[i].v + offsetV);
+				tessellator.addVertexWithUV(vertices[i].x, vertices[i].y, vertices[i].z, textureCoordinates[i].u + offsetU + HandmadeGunsCore.textureOffsetU, textureCoordinates[i].v + offsetV + HandmadeGunsCore.textureOffsetV);
 			}
 			else
 			{

@@ -5,6 +5,7 @@ import java.io.NotSerializableException;
 import java.io.OptionalDataException;
 import java.io.StreamCorruptedException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 //import littleMaidMobX.LMM_EntityLittleMaid;
@@ -21,10 +22,7 @@ import handmadeguns.Util.SoundInfo;
 import handmadeguns.Util.TrailInfo;
 import handmadeguns.Util.Utils;
 import handmadeguns.Util.sendEntitydata;
-import handmadeguns.entity.EntityHasMaster;
-import handmadeguns.entity.IFF;
-import handmadeguns.entity.MovingObjectPosition_And_Entity;
-import handmadeguns.entity.SpHitCheckEntity;
+import handmadeguns.entity.*;
 import handmadeguns.network.PacketFixClientbullet;
 import handmadeguns.network.PacketSpawnParticle;
 import io.netty.buffer.ByteBuf;
@@ -37,8 +35,10 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IProjectile;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.play.server.S27PacketExplosion;
 import net.minecraft.util.*;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
@@ -531,7 +531,30 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
     {
         noex = true;
         if(!worldObj.isRemote){
-            this.worldObj.createExplosion(thrower,x,y,z, level, candestroy);
+            HMGExplosion explosion = new HMGExplosion(worldObj,thrower,x,y,z, level);
+            explosion.isFlaming = false;
+            explosion.isSmoking = candestroy;
+            if (net.minecraftforge.event.ForgeEventFactory.onExplosionStart(worldObj, explosion)) return;
+            explosion.doExplosionA();
+            explosion.doExplosionB(false);
+
+            if (!candestroy)
+            {
+                explosion.affectedBlockPositions.clear();
+            }
+
+            Iterator iterator = worldObj.playerEntities.iterator();
+
+            while (iterator.hasNext())
+            {
+                EntityPlayer entityplayer = (EntityPlayer)iterator.next();
+
+                if (entityplayer.getDistanceSq(x, y, z) < 4096.0D)
+                {
+                    ((EntityPlayerMP)entityplayer).playerNetServerHandler.sendPacket(new S27PacketExplosion(x, y, z, level, explosion.affectedBlockPositions, (Vec3)explosion.func_77277_b().get(entityplayer)));
+                }
+            }
+//            this.worldObj.createExplosion(thrower,x,y,z, level, candestroy);
         }
         
         

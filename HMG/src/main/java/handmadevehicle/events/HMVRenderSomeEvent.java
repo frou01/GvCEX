@@ -158,13 +158,16 @@ public class HMVRenderSomeEvent {
 						Entity vehicleBody = entityplayer.ridingEntity;
 						{
 							Vector3d nowPos = new Vector3d();
-							nowPos.interpolate(new Vector3d(vehicleBody.lastTickPosX ,
-									vehicleBody.lastTickPosY,
-									vehicleBody.lastTickPosZ),new Vector3d(vehicleBody.posX,vehicleBody.posY,vehicleBody.posZ),renderTickTime);
-
-							Vector3d bodyvector = Utils.transformVecByQuat(new Vector3d(0, 0, 1), logic.bodyRot);
-							Vector3d tailwingvector = Utils.transformVecByQuat(new Vector3d(0, 1, 0), logic.bodyRot);
-							Vector3d mainwingvector = Utils.transformVecByQuat(new Vector3d(1, 0, 0), logic.bodyRot);
+							nowPos.interpolate(
+									new Vector3d(
+											vehicleBody.prevPosX,
+											vehicleBody.prevPosY,
+											vehicleBody.prevPosZ),
+									new Vector3d(
+											vehicleBody.posX,
+											vehicleBody.posY,
+											vehicleBody.posZ),
+									renderTickTime);
 
 							Quat4d currentquat = new Quat4d();
 							currentquat.interpolate(logic.prevbodyRot,logic.bodyRot, (double) renderTickTime);
@@ -209,15 +212,22 @@ public class HMVRenderSomeEvent {
 								logic.camerarot_current.set(logic.camerarot);
 
 //							System.out.println("y" + xyz[0] + " , x" + xyz[1] + " , z" + xyz[2] + " , renderTickTime" + renderTickTime);
-								bodyvector = Utils.transformVecByQuat(new Vector3d(0, 0, 1), currentquat);
-								tailwingvector = Utils.transformVecByQuat(new Vector3d(0, 1, 0), currentquat);
-								mainwingvector = Utils.transformVecByQuat(new Vector3d(1, 0, 0), currentquat);
-								Utils.transformVecforMinecraft(tailwingvector);
-								Utils.transformVecforMinecraft(bodyvector);
-								Utils.transformVecforMinecraft(mainwingvector);
-								mainwingvector.scale(logic.getCamerapos()[0]-logic.prefab_vehicle.rotcenter[0]);
-								tailwingvector.scale(logic.getCamerapos()[1]-logic.prefab_vehicle.rotcenter[1]);
-								bodyvector.scale(logic.getCamerapos()[2]-logic.prefab_vehicle.rotcenter[2]);
+
+//								Vector3d bodyvector = Utils.transformVecByQuat(new Vector3d(0, 0, 1), currentquat);
+//								Vector3d tailwingvector = Utils.transformVecByQuat(new Vector3d(0, 1, 0), currentquat);
+//								Vector3d mainwingvector = Utils.transformVecByQuat(new Vector3d(1, 0, 0), currentquat);
+//
+//								Utils.transformVecforMinecraft(tailwingvector);
+//								Utils.transformVecforMinecraft(bodyvector);
+//								Utils.transformVecforMinecraft(mainwingvector);
+//								mainwingvector.scale(logic.getCamerapos()[0]-logic.prefab_vehicle.rotcenter[0]);
+//								tailwingvector.scale(logic.getCamerapos()[1]-logic.prefab_vehicle.rotcenter[1]);
+//								bodyvector.scale(logic.getCamerapos()[2]-logic.prefab_vehicle.rotcenter[2]);
+								Vector3d cameraPos_Global = new Vector3d(logic.getCamerapos());
+								cameraPos_Global.sub(new Vector3d(logic.prefab_vehicle.rotcenter));
+								cameraPos_Global = Utils.transformVecByQuat(cameraPos_Global, currentquat);
+								cameraPos_Global.add(new Vector3d(logic.prefab_vehicle.rotcenter));
+								cameraPos_Global.z *= -1;
 								if (logic.camera != null) {
 									Quat4d currentcamRot = new Quat4d(currentquat);
 									currentcamRot.mul(zooming && logic.prefab_vehicle.camerarot_zoom != null ?logic.prefab_vehicle.camerarot_zoom: logic.camerarot_current);
@@ -227,16 +237,17 @@ public class HMVRenderSomeEvent {
 									cameraxyz[2] = toDegrees(cameraxyz[2]);
 									if(!logic.seatInfos[logic.getpilotseatid()].prefab_seat.seatOnTurret)
 										logic.camera.setLocationAndAngles(
-												vehicleBody.prevPosX + (vehicleBody.posX - vehicleBody.prevPosX) * renderTickTime + bodyvector.x + tailwingvector.x + mainwingvector.x + logic.prefab_vehicle.rotcenter[0],
-												vehicleBody.prevPosY + (vehicleBody.posY - vehicleBody.prevPosY) * renderTickTime + bodyvector.y + tailwingvector.y + mainwingvector.y + logic.prefab_vehicle.rotcenter[1] - entityplayer.yOffset,
-												vehicleBody.prevPosZ + (vehicleBody.posZ - vehicleBody.prevPosZ) * renderTickTime + bodyvector.z + tailwingvector.z + mainwingvector.z + logic.prefab_vehicle.rotcenter[2],
+												vehicleBody.prevPosX + (vehicleBody.posX - vehicleBody.prevPosX) * renderTickTime + cameraPos_Global.x,
+												vehicleBody.prevPosY + (vehicleBody.posY - vehicleBody.prevPosY) * renderTickTime + cameraPos_Global.y - entityplayer.yOffset,
+												vehicleBody.prevPosZ + (vehicleBody.posZ - vehicleBody.prevPosZ) * renderTickTime + cameraPos_Global.z,
 												(float) cameraxyz[1], (float) cameraxyz[0]);
 									else
-										logic.camera.setLocationAndAngles(
-												entityplayer.posX,
-												entityplayer.posY - entityplayer.yOffset,
-												entityplayer.posZ,
-												(float) cameraxyz[1], (float) cameraxyz[0]);
+										logic.riderPosUpdate_camera(nowPos,currentquat);
+//										logic.camera.setLocationAndAngles(
+//												entityplayer.posX,
+//												entityplayer.posY - entityplayer.yOffset,
+//												entityplayer.posZ,
+//												(float) cameraxyz[1], (float) cameraxyz[0]);
 									minecraft.renderViewEntity = logic.camera;
 									logic.camera.rotationYaw = (float) cameraxyz[1];
 									logic.camera.prevRotationYaw = (float) cameraxyz[1];
@@ -260,16 +271,6 @@ public class HMVRenderSomeEvent {
 							logic.bodyrotationRoll = (float) xyz[2];
 							logic.prevbodyrotationRoll = (float) xyz[2];
 							ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer, 24, "thirdPersonDistance", "E", "field_78490_B");
-							bodyvector = Utils.transformVecByQuat(new Vector3d(0, 0, 1), currentquat);
-							tailwingvector = Utils.transformVecByQuat(new Vector3d(0, 1, 0), currentquat);
-							mainwingvector = Utils.transformVecByQuat(new Vector3d(1, 0, 0), currentquat);
-							
-							tailwingvector.normalize();
-							bodyvector.normalize();
-							mainwingvector.normalize();
-							Utils.transformVecforMinecraft(tailwingvector);
-							Utils.transformVecforMinecraft(bodyvector);
-							Utils.transformVecforMinecraft(mainwingvector);
 							needrest = true;
 							
 						}
@@ -322,8 +323,8 @@ public class HMVRenderSomeEvent {
 				if(!logic.info.T_Land_F_Plane ) {
 					Entity planebody = entityplayer.ridingEntity;
 					if (logic.prefab_vehicle.displayModernHud)
-						displayFlyersHUD_AftGen2(logic.prevbodyRot, logic.bodyRot, planebody, logic.prevmotionVec, event);
-					else displayFlyersHUD(logic.prevbodyRot, logic.bodyRot, planebody, logic.prevmotionVec, event);
+						displayFlyersHUD_AftGen2(logic,logic.prevbodyRot, logic.bodyRot, planebody, logic.prevmotionVec, event);
+					else displayFlyersHUD(logic,logic.prevbodyRot, logic.bodyRot, planebody, logic.prevmotionVec, event);
 //				Quat4d tempquat = new Quat4d(
 //						logic.prevbodyRot.x * (1-event.partialTicks) + logic.bodyRot.x * event.partialTicks ,
 //						logic.prevbodyRot.y * (1-event.partialTicks) + logic.bodyRot.y * event.partialTicks ,
@@ -417,7 +418,8 @@ public class HMVRenderSomeEvent {
 						
 						SeatInfo playerSeatInfo = vehicle.getBaseLogic().seatInfos[playerSeatID];
 						if (playerSeatInfo.maingun != null) {
-							TurretObj turretObj = playerSeatInfo.maingun;
+							if(playerSeatInfo.currentWeaponMode >= playerSeatInfo.maingun.length)playerSeatInfo.currentWeaponMode = 0;
+							TurretObj turretObj = playerSeatInfo.maingun[playerSeatInfo.currentWeaponMode];
 							displayGunState(turretObj,fontrenderer,i,j,240,60,"MAIN");
 						}
 						if (playerSeatInfo.subgun != null) {
@@ -430,7 +432,7 @@ public class HMVRenderSomeEvent {
 						//fontrenderer.drawStringWithShadow("Speed"+ speed, (i/2) - 80, j/2 +20, 0xFFFFFF);
 						GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 						int color = 0xFFFFFF;
-						fontrenderer.drawStringWithShadow("Speed : " + (int) (sqrt(vehicleBody.motionX * vehicleBody.motionX + vehicleBody.motionY * vehicleBody.motionY + vehicleBody.motionZ * vehicleBody.motionZ) * 72), i - 300, j - 80 - 10, color);
+						fontrenderer.drawStringWithShadow("Speed : " + (int) (vehicle.getBaseLogic().localMotionVec.z * 72), i - 300, j - 80 - 10, color);
 						
 						fontrenderer.drawStringWithShadow("Draft : " + vehicle.getBaseLogic().info.draft, i - 300, j - 160 - 10, color);
 						//g.drawTexturedModelRectFromIcon(i-70, j-63, armor.getIconFromDamage(0), 16, 16);
@@ -499,7 +501,10 @@ public class HMVRenderSomeEvent {
 	public void displayGunState(TurretObj turretObj,FontRenderer fontrenderer,int i,int j,int posx,int posy,String name){
 		if(turretObj.dummyGunStack != null) {
 			if (turretObj.readytoFire()) {
-				fontrenderer.drawStringWithShadow(name + "Ready magazine:" + turretObj.dummyGunItem.remain_Bullet(turretObj.dummyGunStack) + "/" + turretObj.max_Bullet(),
+				if(turretObj.dummyGunStack.getDisplayName() != null){
+					name = name.concat("  " + turretObj.dummyGunStack.getDisplayName());
+				}
+				fontrenderer.drawStringWithShadow(name + " Ready magazine:" + turretObj.dummyGunItem.remain_Bullet(turretObj.dummyGunStack) + "/" + turretObj.max_Bullet(),
 						i - posx, j - posy, 0xFFFFFF);
 			} else if (turretObj.isreloading()) {
 				fontrenderer.drawStringWithShadow(name + "       Reloading" + turretObj.getDummyStackTag().getInteger("RloadTime") + "/" + turretObj.dummyGunItem.reloadTime(turretObj.dummyGunStack),
@@ -509,12 +514,12 @@ public class HMVRenderSomeEvent {
 					fontrenderer.drawStringWithShadow(name + "         Loading" + turretObj.getDummyStackTag().getByte("Bolt") + "/" + turretObj.prefab_turret.gunInfo.cycle,
 							i - posx, j - posy, 0xFFFFFF);
 				else
-					fontrenderer.drawStringWithShadow(name + " Loading magazine:" + turretObj.dummyGunItem.remain_Bullet(turretObj.dummyGunStack) + "/" + turretObj.max_Bullet(),
+					fontrenderer.drawStringWithShadow(name + " Ready magazine:" + turretObj.dummyGunItem.remain_Bullet(turretObj.dummyGunStack) + "/" + turretObj.max_Bullet(),
 							i - posx, j - posy, 0xFFFFFF);
 			}
 		}
 	}
-	public void displayFlyersHUD(Quat4d prevbodyRot, Quat4d bodyRot, Entity plane, Vector3d prevmotionVec, RenderGameOverlayEvent.Post event){
+	public void displayFlyersHUD(BaseLogic logic,Quat4d prevbodyRot, Quat4d bodyRot, Entity plane, Vector3d prevmotionVec, RenderGameOverlayEvent.Post event){
 		GL11.glColor4f(1,1,1,1);
 		GL11.glAlphaFunc(GL11.GL_GREATER, 0);
 		GL11.glEnable(GL_BLEND);
@@ -560,7 +565,7 @@ public class HMVRenderSomeEvent {
 		GL11.glPopMatrix();
 	}
 
-	public void displayFlyersHUD_AftGen2(Quat4d prevbodyRot, Quat4d bodyRot, Entity plane, Vector3d prevmotionVec, RenderGameOverlayEvent.Post event){
+	public void displayFlyersHUD_AftGen2(BaseLogic logic,Quat4d prevbodyRot, Quat4d bodyRot, Entity plane, Vector3d prevmotionVec, RenderGameOverlayEvent.Post event){
 		GL11.glAlphaFunc(GL11.GL_GREATER, 0);
 		GL11.glEnable(GL_BLEND);
 		GL11.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -576,23 +581,7 @@ public class HMVRenderSomeEvent {
 				prevbodyRot.w * (1-event.partialTicks) + bodyRot.w * event.partialTicks );
 
 
-		Vector3d motionvec = new Vector3d(
-				  plane.motionX * event.partialTicks + prevmotionVec.x * (1-event.partialTicks),
-				  plane.motionY * event.partialTicks + prevmotionVec.y * (1-event.partialTicks),
-				-(plane.motionZ * event.partialTicks + prevmotionVec.z * (1-event.partialTicks)));
-		Vector3d forDisplayplaneMotion;
-		double angle = 0;
-		if(motionvec.length()>0.01) {
-			Quat4d quat4d = new Quat4d();
-			quat4d.inverse(bodyRot);
-			forDisplayplaneMotion = Utils.transformVecByQuat(motionvec, quat4d);
-			forDisplayplaneMotion.scale(-1);
-			angle = toDegrees(forDisplayplaneMotion.angle(new Vector3d(0, 0, 1)));
-			forDisplayplaneMotion.normalize();
-			forDisplayplaneMotion.z = 0;
-		}else {
-			forDisplayplaneMotion = new Vector3d(0, 0, 1);
-		}
+		Vector3d forDisplayplaneMotion = logic.localMotionVec;
 
 		GL11.glPushMatrix();
 		double width = scaledresolution.getScaledWidth_double();
@@ -618,13 +607,6 @@ public class HMVRenderSomeEvent {
 		GL11.glRotatef((float) -xyz[2],0,0,1);
 		GL11.glTranslatef(-(float)width/2,-(float) height/2,0);
 
-
-		Vector3d motionvecE = new Vector3d();
-		if(motionvec.length()>0.01) {
-			motionvecE.normalize(motionvec);
-		}else {
-			motionvecE.set(0,0,1);
-		}
 		minecraft.renderEngine.bindTexture(new ResourceLocation("gvcmob:textures/items/HUD.png"));
 //		drawTexturedModalRect(0,height/2 - 325 * scale - (xyz[0] - toDegrees(asin(motionvecE.y))) * 1.8 * scale,sizeW,sizeH);
 //		System.out.println(xyz[0]);
@@ -724,7 +706,7 @@ public class HMVRenderSomeEvent {
 		sizeW = width;
 		sizeH = width;
 		
-		GL11.glTranslatef((float)( forDisplayplaneMotion.x * angle * 3.6 * scale), (float)( forDisplayplaneMotion.y * angle * 3.6 * scale),0);
+		GL11.glTranslatef((float)(-forDisplayplaneMotion.x * 15 * scale), (float)(-forDisplayplaneMotion.y * 15 * scale),0);
 
 		minecraft.renderEngine.bindTexture(new ResourceLocation("gvcmob:textures/items/HUD3.png"));
 		drawTexturedModalRect(0,height/2 - 150 * scale,sizeW,sizeH);
@@ -766,7 +748,7 @@ public class HMVRenderSomeEvent {
 			turretObj = playerSeatInfo.subgun;
 		}
 		if (playerSeatInfo.maingun != null) {
-			turretObj = playerSeatInfo.maingun;
+			turretObj = playerSeatInfo.maingun[playerSeatInfo.currentWeaponMode];
 		}
 		return turretObj;
 	}

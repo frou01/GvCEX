@@ -69,6 +69,8 @@ import javax.script.ScriptException;
 		version	= "1.7.x-srg-1"
 )
 public class HandmadeGunsCore {
+	public static float textureOffsetU;//for textureAnimation
+	public static float textureOffsetV;
 	static Field mcResourcePackRepository;
 	static Field repositoryEntries;
 	@SidedProxy(clientSide = "handmadeguns.ClientProxyHMG", serverSide = "handmadeguns.CommonSideProxyHMG")
@@ -529,28 +531,29 @@ public class HandmadeGunsCore {
 				'b', new ItemStack(Blocks.wooden_slab, 1, D)
 		);
 
-		EntityRegistry.instance().registerModEntity(EntityItemFrameHMG.class, "ItemFrameHMG", 200, this, 128, 5, true);
-		EntityRegistry.instance().registerModEntity(HMGEntityItemMount.class, "HMGEntityItemMount", 201, this, 128, 5, true);
-		EntityRegistry.instance().registerModEntity(HMGEntityItemMount2.class, "HMGEntityItemMount2", 202, this, 128, 5, true);
+//		EntityRegistry.registerModEntity(EntityItemFrameHMG.class, "ItemFrameHMG", 200, this, 128, 5, true);
+		EntityRegistry.registerModEntity(HMGEntityFallingBlockModified.class, "HMGEntityFallingBlockModified", 200, this, 128, 5, true);
+		EntityRegistry.registerModEntity(HMGEntityItemMount.class, "HMGEntityItemMount", 201, this, 128, 5, true);
+		EntityRegistry.registerModEntity(HMGEntityItemMount2.class, "HMGEntityItemMount2", 202, this, 128, 5, true);
 
 		//EntityRegistry.instance()ry.registerModEntity(HGEntityBullet.class, "BulletHG", 150, this, 128, 5, true);
-		EntityRegistry.instance().registerModEntity(HMGEntityBullet.class, "Bullet_HMG", 260, this, 60, 5, false);
-		EntityRegistry.instance().registerModEntity(HMGEntityBulletRocket.class, "BulletRPG_HMG", 261, this, 60, 5, false);
-		EntityRegistry.instance().registerModEntity(HMGEntityBulletExprode.class, "BulletGrenade_HMG", 262, this, 60, 5, false);
-		EntityRegistry.instance().registerModEntity(HMGEntityBulletTorp.class, "BulletTorp_HMG", 262, this, 60, 5, false);
-		EntityRegistry.instance().registerModEntity(HMGEntityLight.class, "Right_HMG", 263, this, 128, 5, true);
-		EntityRegistry.instance().registerModEntity(HMGEntityLight2.class, "Right2_HMG", 264, this, 128, 5, false);
-		EntityRegistry.instance().registerModEntity(HMGEntityLaser.class, "Laser_HMG", 265, this, 128, 5, false);
+		EntityRegistry.registerModEntity(HMGEntityBullet.class, "Bullet_HMG", 260, this, 60, 5, false);
+		EntityRegistry.registerModEntity(HMGEntityBulletRocket.class, "BulletRPG_HMG", 261, this, 60, 5, false);
+		EntityRegistry.registerModEntity(HMGEntityBulletExprode.class, "BulletGrenade_HMG", 262, this, 60, 5, false);
+		EntityRegistry.registerModEntity(HMGEntityBulletTorp.class, "BulletTorp_HMG", 262, this, 60, 5, false);
+		EntityRegistry.registerModEntity(HMGEntityLight.class, "Right_HMG", 263, this, 128, 5, true);
+		EntityRegistry.registerModEntity(HMGEntityLight2.class, "Right2_HMG", 264, this, 128, 5, false);
+		EntityRegistry.registerModEntity(HMGEntityLaser.class, "Laser_HMG", 265, this, 128, 5, false);
 
-		EntityRegistry.instance().registerModEntity(HMGEntityBullet_AP.class, "Bullet_AP_HMG", 270, this, 60, 5, false);
-		EntityRegistry.instance().registerModEntity(HMGEntityBullet_Frag.class, "Bullet_Frag_HMG", 271, this, 60, 5, false);
-		EntityRegistry.instance().registerModEntity(HMGEntityBullet_TE.class, "Bullet_TE_HMG", 272, this, 60, 5, false);
-		EntityRegistry.instance().registerModEntity(HMGEntityBullet_AT.class, "Bullet_AT_HMG", 273, this, 60, 5, false);
-		EntityRegistry.instance().registerModEntity(HMGEntityBullet_HE.class, "Bullet_HE_HMG", 274, this, 60, 5, false);
-		EntityRegistry.instance().registerModEntity(HMGEntityBullet_Flame.class, "Bullet_Flame_HMG", 275, this, 60, 5, false);
+		EntityRegistry.registerModEntity(HMGEntityBullet_AP.class, "Bullet_AP_HMG", 270, this, 60, 5, false);
+		EntityRegistry.registerModEntity(HMGEntityBullet_Frag.class, "Bullet_Frag_HMG", 271, this, 60, 5, false);
+		EntityRegistry.registerModEntity(HMGEntityBullet_TE.class, "Bullet_TE_HMG", 272, this, 60, 5, false);
+		EntityRegistry.registerModEntity(HMGEntityBullet_AT.class, "Bullet_AT_HMG", 273, this, 60, 5, false);
+		EntityRegistry.registerModEntity(HMGEntityBullet_HE.class, "Bullet_HE_HMG", 274, this, 60, 5, false);
+		EntityRegistry.registerModEntity(HMGEntityBullet_Flame.class, "Bullet_Flame_HMG", 275, this, 60, 5, false);
 
-		EntityRegistry.instance().registerModEntity(HMGEntityBulletCartridge.class, "BulletCartridge_HMG", 255, this, 128, 5, true);
-		EntityRegistry.instance().registerModEntity(PlacedGunEntity.class, "PlacedGun", 253, this, 128, 1, true);
+		EntityRegistry.registerModEntity(HMGEntityBulletCartridge.class, "BulletCartridge_HMG", 255, this, 128, 5, true);
+		EntityRegistry.registerModEntity(PlacedGunEntity.class, "PlacedGun", 253, this, 128, 1, true);
 		Block mounter = new HMGBlockMounter(1).setBlockName("ItemHolder").setBlockTextureName("handmadeguns:camp");
 		GameRegistry.registerBlock(mounter, "ItemHolder");
 		GameRegistry.addRecipe(new ItemStack(mounter, 1),
@@ -559,7 +562,7 @@ public class HandmadeGunsCore {
 				"   ",
 				'b', new ItemStack(Blocks.wooden_slab, 1, D)
 		);
-//		EntityRegistry.instance().registerModEntity(HMGEntityParticles.class, "HMGEntityParticles", 267, this, 128, 5, true);
+//		EntityRegistry.registerModEntity(HMGEntityParticles.class, "HMGEntityParticles", 267, this, 128, 5, true);
 
 		//	EntityRegistry.registerModEntity(HMGEntityTurret.class, "HMGEntityTurret", 268, this, 128, 5, true);
 		//EntityRegistry.registerModEntity(HMGEntityHand.class, "HMGEntityHand", 268, this, 128, 5, true);

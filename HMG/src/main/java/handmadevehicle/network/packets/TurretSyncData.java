@@ -11,6 +11,7 @@ public class TurretSyncData {
 	public float pitch;
 	public NBTTagCompound gunState;
 	public int gunDamaged;
+	public int gunStackSize;
 	public int childAndBrotherNum = 0;
 	public TurretSyncData[] childData;
 	public TurretSyncData(TurretObj turretObj){
@@ -19,6 +20,9 @@ public class TurretSyncData {
 		if(turretObj.dummyGunStack != null) {
 			gunState = turretObj.getDummyStackTag();
 			gunDamaged = turretObj.dummyGunStack.getItemDamage();
+			gunStackSize = turretObj.dummyGunStack.stackSize;
+		}else {
+			gunStackSize = -1;
 		}
 		childData = new TurretSyncData[turretObj.getChilds().size() + turretObj.getChildsOnBarrel().size() + turretObj.getBrothers().size()];
 		int id = 0;
@@ -44,6 +48,7 @@ public class TurretSyncData {
 		if(target.dummyGunStack != null) {
 			target.dummyGunStack.setTagCompound(gunState);
 			target.dummyGunStack.setItemDamage(gunDamaged);
+			target.dummyGunStack.stackSize = gunStackSize;
 		}
 		int id = 0;
 		for(TurretObj aturretObj : target.getChilds()){
@@ -65,6 +70,7 @@ public class TurretSyncData {
 		pitch = buf.readFloat();
 		gunState = readTag(buf);
 		gunDamaged = buf.readInt();
+		gunStackSize = buf.readInt();
 		childAndBrotherNum = buf.readInt();
 		childData = new TurretSyncData[childAndBrotherNum];
 		for(int id = 0;id < childAndBrotherNum ; id ++){
@@ -77,6 +83,7 @@ public class TurretSyncData {
 		buf.writeFloat(pitch);
 		writeTag(buf,gunState);
 		buf.writeInt(gunDamaged);
+		buf.writeInt(gunStackSize);
 		buf.writeInt(childAndBrotherNum);
 		for(TurretSyncData syncData:childData){
 			syncData.toBytes(buf);

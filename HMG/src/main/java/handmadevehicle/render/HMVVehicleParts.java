@@ -50,7 +50,6 @@ public class HMVVehicleParts extends HMGGunParts {
 
 	public void AddRenderinfSomething(float offsetX, float offsetY, float offsetZ, float rotationX, float rotationY, float rotationZ,int id){
 		somethingPosAndRotation[id] = new HMGGunParts_Motion_PosAndRotation(offsetX,offsetY,offsetZ,rotationX,rotationY,rotationZ);
-		isPera = true;
 	}
 	public HMGGunParts_Motion_PosAndRotation getRenderinfOfPeraPosAndRotation(){
 		return peraPosAndRotation;
