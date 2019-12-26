@@ -15,7 +15,6 @@ import static java.lang.Math.sqrt;
 public class BulletSoundHMG extends MovingSound
 {
 	private final Entity attachedEntity;
-	private static final String __OBFID = "CL_00001118";
 	private double disttoPlayer = -1;
 	private float savedfield_147663_c;
 	private float minspeed;

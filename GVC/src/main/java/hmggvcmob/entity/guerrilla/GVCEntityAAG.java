@@ -18,6 +18,7 @@ public class GVCEntityAAG extends EntityGBase
     public GVCEntityAAG(World par1World)
     {
         super(par1World);
+        canRideVehicle = false;
         this.setSize(0.4F, 1.8F);
         this.tasks.addTask(1,aiAttackGun = new AIAttackGun(this,1200,1200,10,100,true,true,new WorldForPathfind(worldObj)));
         viewWide = 0.75f;

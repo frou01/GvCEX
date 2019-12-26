@@ -10,7 +10,7 @@ import static java.lang.Integer.parseInt;
 
 public class DungeonData_withSettings {
 	boolean biomeRestrictionType = false;//true:black false:white
-	int[] biomeSetting = null;
+	int[] biomeSetting = new int[0];
 	float frequency = 0.5f;
 	boolean hasFixedPosition;
 	boolean onStrongHold;

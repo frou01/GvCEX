@@ -1,10 +1,9 @@
 package hmgx_lmmrinker.AI;
 
-import hmgx_lmmrinker.SlowPathFinder.WorldForPathfind;
+import handmadevehicle.SlowPathFinder.WorldForPathfind;
 import littleMaidMobX.LMM_EntityLittleMaid;
 import littleMaidMobX.LMM_IEntityAI;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.pathfinding.PathNavigate;

@@ -1,0 +1,3 @@
+ObjModel,M26_noPin.obj
+ObjTexture,M26.png
+Name,M26grenade

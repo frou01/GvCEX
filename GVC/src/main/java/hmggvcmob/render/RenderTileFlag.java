@@ -72,6 +72,7 @@ public class RenderTileFlag extends TileEntitySpecialRenderer {
         FontRenderer fontrenderer = minecraft.fontRenderer;
         Tessellator tessellator = Tessellator.instance;
         GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GL11.glDisable(GL11.GL_LIGHTING);
         GL11.glDepthMask(false);
         int width = fontrenderer.getStringWidth(renderObj) / 2;
         GL11.glEnable(GL11.GL_BLEND);
@@ -83,6 +84,7 @@ public class RenderTileFlag extends TileEntitySpecialRenderer {
         tessellator.addVertex((double)(width + 1), -1.0D, 0.0D);
         tessellator.draw();
         GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL11.glEnable(GL11.GL_LIGHTING);
         GL11.glDepthMask(true);
         GL11.glDisable(GL11.GL_BLEND);
         fontrenderer.drawString(renderObj,-width,0,0xFFFFFF);

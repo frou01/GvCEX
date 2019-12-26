@@ -2,6 +2,7 @@ package hmggvcmob.entity.friend;
 
 
 import handmadevehicle.SlowPathFinder.WorldForPathfind;
+import hmggvcmob.ai.AIBuilder;
 import hmggvcmob.entity.IHasVehicleGacha;
 import hmggvcmob.entity.VehicleSpawnGachaOBJ;
 import hmggvcutil.GVCUtils;
@@ -21,6 +22,7 @@ public class GVCEntitySoldierRPG extends EntitySoBase implements IHasVehicleGach
         super(par1World);
         this.setSize(0.6F, 1.8F);
 		this.tasks.addTask(2, aiAttackGun = new AIAttackGun(this, 120,20, 10, 5, true,true,new WorldForPathfind(worldObj)));
+        this.tasks.addTask(1,new AIBuilder(this,worldForPathfind));
     }
     protected void applyEntityAttributes()
     {

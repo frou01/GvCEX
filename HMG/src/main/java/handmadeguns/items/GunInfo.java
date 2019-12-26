@@ -37,10 +37,10 @@ public class GunInfo {
 	public double recoil_sneak;
 	public float onTurretScale = 1.0f;
 	public boolean restrictTurretMoveSpeed;
-	public float turretMoveSpeedP;
-	public float turretMoveSpeedY;
-	public float turreboxW = 1;
-	public float turreboxH = 1;
+	public float turretspeedY = -1;
+	public float turretspeedP = -1;
+	public float turreboxW = 0.8f;
+	public float turreboxH = 0.8f;
 	public int turretMaxHP = -1;
 	public boolean restrictTurretAngle = false;
 	public int canuseclass = -1;
@@ -81,10 +81,12 @@ public class GunInfo {
 	public boolean zoomrest = false;
 	public String texture;
 	public double motion = 1D;
+	public double weight = 1D;
 	public boolean muzzleflash = true;
 	public float soundrespeed = 1.0F;
 	public int cocktime = 20;
 	public boolean needcock = false;
+	public boolean needFirstCock = false;
 	public int pellet = 1;
 	//01/27
 	//02/14
@@ -176,9 +178,10 @@ public class GunInfo {
 	public boolean canlock = false;
 	public boolean canlockBlock = false;
 	public boolean canlockEntity = false;
+	public double seekerSize = 60;
 	public boolean semiActive = false;
 	public boolean lock_to_Vehicle = false;
-	public double lookDown = 90;
+	public double lookDown = 1;
 	public double radarRange = 1200 * 1200;
 	public float induction_precision;
 	public String flashname = null;
@@ -197,10 +200,10 @@ public class GunInfo {
 	public boolean canceler;
 	public boolean chargeType;
 	public boolean[] hasNightVision = new boolean[]{false,false,false};
-	public float turretanglelimtMxP = 0;
-	public float turretanglelimtmnP = 0;
-	public float turretanglelimtMxY = 0;
-	public float turretanglelimtmnY = 0;
+	public float turretanglelimtPitchMax = 360;
+	public float turretanglelimtPitchmin = -360;
+	public float turretanglelimtYawMax = 360;
+	public float turretanglelimtYawmin = -360;
 	public double torpdraft;
 	public float damagerange;
 	public float resistanceinWater;

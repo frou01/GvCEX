@@ -12,8 +12,6 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
-import java.util.Random;
-
 public class Utils {
 	public static Vec3 getLook(float p_70676_1_, Entity entity)
 	{

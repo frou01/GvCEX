@@ -25,10 +25,11 @@ import static java.lang.Integer.parseInt;
 
 public class AddNewVehicle extends HMGGunMaker {
 	private static final HashMap<String,Prefab_Vehicle_Base> prefabBaseHashMap = new HashMap<>();
+	private static Prefab_Vehicle_Base currentVehicleData;
 	public void load( boolean isClient, File file){
 		try {
 			String dataName = null;
-			Prefab_Vehicle_Base data = new Prefab_Vehicle_Base();
+			currentVehicleData = new Prefab_Vehicle_Base();
 			VehicleType vehicleType = null;
 			Prefab_AttachedWeapon current = null;
 			int turretId_current = 0;
@@ -56,125 +57,157 @@ public class AddNewVehicle extends HMGGunMaker {
 							switch (type[0]) {
 								case "Name":
 									dataName = type[1];
-									if (prefabBaseHashMap.containsKey(dataName)) data = prefabBaseHashMap.get(dataName);
+									if (prefabBaseHashMap.containsKey(dataName)) currentVehicleData = prefabBaseHashMap.get(dataName);
+									currentVehicleData.weaponSlotNum = 0;
+									currentVehicleData.cargoSlotNum = 0;
 									break;
 								case "modelName":
 									System.out.println(type[1]);
-									data.modelName = type[1];
+									currentVehicleData.modelName = type[1];
 									break;
 								case "modelName_texture":
-									data.modelName_texture = type[1];
+									currentVehicleData.modelName_texture = type[1];
 									break;
 								case "scale":
-									data.scale = parseFloat(type[1]);
+									currentVehicleData.scale = parseFloat(type[1]);
 									break;
 								case "health":
-									data.maxhealth = parseFloat(type[1]);
+									currentVehicleData.maxhealth = parseFloat(type[1]);
 									break;
 								case "soundname":
-									data.soundname = type[1];
+									currentVehicleData.soundname = type[1];
+									currentVehicleData.AFsoundname = type[1] + "AF";
 									break;
 								case "soundpitch":
-									data.soundpitch = parseFloat(type[1]);
+									currentVehicleData.soundpitch = parseFloat(type[1]);
 									break;
 								case "throttle_Max":
-									data.throttle_Max = parseFloat(type[1]);
+									currentVehicleData.throttle_Max = parseFloat(type[1]);
 									break;
 								case "throttle_min":
-									data.throttle_min = parseFloat(type[1]);
+									currentVehicleData.throttle_min = parseFloat(type[1]);
 									break;
 								case "throttle_speed":
-									data.throttle_speed = parseFloat(type[1]);
+									currentVehicleData.throttle_speed = parseFloat(type[1]);
 									break;
 								case "draft":
-									data.draft = parseFloat(type[1]);
+									currentVehicleData.draft = parseFloat(type[1]);
 									break;
 								case "molded_depth":
-									data.molded_depth = parseFloat(type[1]);
+									currentVehicleData.molded_depth = parseFloat(type[1]);
 									break;
 								case "floatOnWater":
-									data.floatOnWater = parseBoolean(type[1]);
+									currentVehicleData.floatOnWater = parseBoolean(type[1]);
 									break;
 								case "thirdDist":
-									data.thirdDist = parseFloat(type[1]);
+									currentVehicleData.thirdDist = parseFloat(type[1]);
 									break;
 								case "splashsound":
-									data.splashsound = type[1];
+									currentVehicleData.splashsound = type[1];
 									break;
 								case "sightTex":
-									data.sightTex = type[1];
+									currentVehicleData.sightTex = type[1];
 									break;
 								//LandOnly
 								//AirOnly
 								case "ParentWeapons_NUM":
-									data.prefab_attachedWeapons = new Prefab_AttachedWeapon[parseInt(type[1])];
+									currentVehicleData.prefab_attachedWeapons = new Prefab_AttachedWeapon[parseInt(type[1])];
 									break;
 								case "AllWeapons_NUM":
-									data.prefab_attachedWeapons_all = new Prefab_AttachedWeapon[parseInt(type[1])];
+									currentVehicleData.prefab_attachedWeapons_all = new Prefab_AttachedWeapon[parseInt(type[1])];
 									break;
 								case "addParentWeapon":
-									data.prefab_attachedWeapons_all[turretId_current] = data.prefab_attachedWeapons[parseInt(type[1])] = new Prefab_AttachedWeapon();
+									currentVehicleData.prefab_attachedWeapons_all[turretId_current] = currentVehicleData.prefab_attachedWeapons[parseInt(type[1])] = new Prefab_AttachedWeapon();
+									current = currentVehicleData.prefab_attachedWeapons[parseInt(type[1])];
 									turretId_current++;
-									if(prefab_turretHashMap.containsKey(type[2]))data.prefab_attachedWeapons[parseInt(type[1])].prefab_turret = prefab_turretHashMap.get(type[2]);
+									if(prefab_turretHashMap.containsKey(type[2]))current.prefab_turret = prefab_turretHashMap.get(type[2]);
 									else {
 										Item check = GameRegistry.findItem("HandmadeGuns",type[2]);
 										if(check instanceof HMGItem_Unified_Guns){
-											data.prefab_attachedWeapons[parseInt(type[1])].prefab_turret = new Prefab_Turret(((HMGItem_Unified_Guns) check));
+											current.prefab_turret = new Prefab_Turret(((HMGItem_Unified_Guns) check));
 										}
 									}
-									if(data.prefab_attachedWeapons[parseInt(type[1])].prefab_turret.needGunStack){
-										data.prefab_attachedWeapons[parseInt(type[1])].linkedGunStackID = data.weaponSlotNum++;
-										data.weaponSlot_linkedTurret_StackWhiteList.add(data.prefab_attachedWeapons[parseInt(type[1])].prefab_turret.gunStackwhitelist);
+									if(current.prefab_turret.needGunStack){
+										current.linkedGunStackID = currentVehicleData.weaponSlotNum++;
+										currentVehicleData.weaponSlot_linkedTurret_StackWhiteList.add(current.prefab_turret.gunStackwhitelist);
 									}
 
 
-									data.prefab_attachedWeapons[parseInt(type[1])].turretsPos = new Vector3d(parseDouble(type[3]), parseDouble(type[4]), parseDouble(type[5]));
-									data.prefab_attachedWeapons[parseInt(type[1])].prefab_Childturrets = new Prefab_AttachedWeapon[parseInt(type[6])];
-									current = data.prefab_attachedWeapons[parseInt(type[1])];
+									current.turretsPos = new Vector3d(parseDouble(type[3]), parseDouble(type[4]), parseDouble(type[5]));
+									current.prefab_Childturrets = new Prefab_AttachedWeapon[parseInt(type[6])];
+									if(type.length >= 8)current.prefab_ChildOnBarrel = new Prefab_AttachedWeapon[parseInt(type[7])];
 									break;
 								case "addChildWeapon":
-									data.prefab_attachedWeapons_all[turretId_current] = current.prefab_Childturrets[parseInt(type[1])] = new Prefab_AttachedWeapon();
+									currentVehicleData.prefab_attachedWeapons_all[turretId_current] = current.prefab_Childturrets[parseInt(type[1])] = new Prefab_AttachedWeapon();
+									current.prefab_Childturrets[parseInt(type[1])].motherTurret = current;
+									current = current.prefab_Childturrets[parseInt(type[1])];
 									turretId_current++;
-									if(prefab_turretHashMap.containsKey(type[2]))current.prefab_Childturrets[parseInt(type[1])].prefab_turret = prefab_turretHashMap.get(type[2]);
+									if(prefab_turretHashMap.containsKey(type[2]))current.prefab_turret = prefab_turretHashMap.get(type[2]);
 									else {
 										Item check = GameRegistry.findItem("HandmadeGuns",type[2]);
 										if(check instanceof HMGItem_Unified_Guns){
-											current.prefab_Childturrets[parseInt(type[1])].prefab_turret = new Prefab_Turret(((HMGItem_Unified_Guns) check));
+											current.prefab_turret = new Prefab_Turret(((HMGItem_Unified_Guns) check));
 										}
 									}
-									if(current.prefab_Childturrets[parseInt(type[1])].prefab_turret.needGunStack){
-										current.prefab_Childturrets[parseInt(type[1])].linkedGunStackID = data.weaponSlotNum++;
-										data.weaponSlot_linkedTurret_StackWhiteList.add(current.prefab_Childturrets[parseInt(type[1])].prefab_turret.gunStackwhitelist);
+									if(current.prefab_turret.needGunStack){
+										current.linkedGunStackID = currentVehicleData.weaponSlotNum++;
+										currentVehicleData.weaponSlot_linkedTurret_StackWhiteList.add(current.prefab_turret.gunStackwhitelist);
 									}
 
-									current.prefab_Childturrets[parseInt(type[1])].turretsPos = new Vector3d(parseDouble(type[3]), parseDouble(type[4]), parseDouble(type[5]));
-									current.prefab_Childturrets[parseInt(type[1])].prefab_Childturrets = new Prefab_AttachedWeapon[parseInt(type[6])];
-									current.prefab_Childturrets[parseInt(type[1])].motherTurret = current;
-									current = current.prefab_Childturrets[parseInt(type[1])];
+									current.turretsPos = new Vector3d(parseDouble(type[3]), parseDouble(type[4]), parseDouble(type[5]));
+									current.prefab_Childturrets = new Prefab_AttachedWeapon[parseInt(type[6])];
+									break;
+								case "addBarrelChildWeapon":
+									currentVehicleData.prefab_attachedWeapons_all[turretId_current] = current.prefab_ChildOnBarrel[parseInt(type[1])] = new Prefab_AttachedWeapon();
+									current.prefab_ChildOnBarrel[parseInt(type[1])].motherTurret = current;
+									current = current.prefab_ChildOnBarrel[parseInt(type[1])];
+									turretId_current++;
+									if(prefab_turretHashMap.containsKey(type[2]))current.prefab_turret = prefab_turretHashMap.get(type[2]);
+									else {
+										Item check = GameRegistry.findItem("HandmadeGuns",type[2]);
+										if(check instanceof HMGItem_Unified_Guns){
+											current.prefab_turret = new Prefab_Turret(((HMGItem_Unified_Guns) check));
+										}
+									}
+									if(current.prefab_turret.needGunStack){
+										current.linkedGunStackID = currentVehicleData.weaponSlotNum++;
+										currentVehicleData.weaponSlot_linkedTurret_StackWhiteList.add(current.prefab_turret.gunStackwhitelist);
+									}
+
+									current.turretsPos = new Vector3d(parseDouble(type[3]), parseDouble(type[4]), parseDouble(type[5]));
+									current.prefab_Childturrets = new Prefab_AttachedWeapon[parseInt(type[6])];
 									break;
 								case "Set_CurrentTurret_to_Mother":
 									current = current.motherTurret;
 									break;
 								
 								case "SetUpSeat1_NUM":
-									data.prefab_seats = new Prefab_Seat[parseInt(type[1])];
-									data.prefab_seats_zoom = new Prefab_Seat[parseInt(type[1])];
+									currentVehicleData.prefab_seats = new Prefab_Seat[parseInt(type[1])];
+									currentVehicleData.prefab_seats_zoom = new Prefab_Seat[parseInt(type[1])];
 									break;
 								case "SetUpSeat2_AddSeat_Normal":
-									data.prefab_seats_zoom[parseInt(type[1])] = data.prefab_seats[parseInt(type[1])] = new Prefab_Seat(new double[]{parseDouble(type[2]), parseDouble(type[3]), parseDouble(type[4])}, parseBoolean(type[5]), parseBoolean(type[6]), parseBoolean(type[7]), parseInt(type[8]), parseInt(type[9]));
+									if(type.length < 11)currentVehicleData.prefab_seats_zoom[parseInt(type[1])] = currentVehicleData.prefab_seats[parseInt(type[1])] =
+											new Prefab_Seat(new double[]{parseDouble(type[2]), parseDouble(type[3]), parseDouble(type[4])}, parseBoolean(type[5]), parseBoolean(type[6]), parseBoolean(type[7]), parseInt(type[8]), parseInt(type[9]));
+									else currentVehicleData.prefab_seats_zoom[parseInt(type[1])] = currentVehicleData.prefab_seats[parseInt(type[1])] =
+											new Prefab_Seat(new double[]{parseDouble(type[2]), parseDouble(type[3]), parseDouble(type[4])}, parseBoolean(type[5]), parseBoolean(type[6]), parseBoolean(type[7]),parseBoolean(type[8]), parseInt(type[9]), parseInt(type[10]));
 									break;
 								case "SetUpSeat3_AddSeat_Zoom":
-									data.prefab_seats_zoom[parseInt(type[1])] = new Prefab_Seat(new double[]{parseDouble(type[2]), parseDouble(type[3]), parseDouble(type[4])}, parseBoolean(type[5]), parseBoolean(type[6]), parseBoolean(type[7]), parseInt(type[8]), parseInt(type[9]));
+									if(type.length < 11)
+										currentVehicleData.prefab_seats_zoom[parseInt(type[1])] =
+												new Prefab_Seat(new double[]{parseDouble(type[2]), parseDouble(type[3]), parseDouble(type[4])}, parseBoolean(type[5]), parseBoolean(type[6]), parseBoolean(type[7]), parseInt(type[8]), parseInt(type[9]));
+									else currentVehicleData.prefab_seats_zoom[parseInt(type[1])] = 
+											new Prefab_Seat(new double[]{parseDouble(type[2]), parseDouble(type[3]), parseDouble(type[4])}, parseBoolean(type[5]), parseBoolean(type[6]), parseBoolean(type[7]),parseBoolean(type[8]), parseInt(type[9]), parseInt(type[10]));
+
 									break;
 								case "SetUpSeat4_AddSeat_AdditionalTurret":
-									data.prefab_seats[parseInt(type[1])].mainid = new int[type.length - 2];
+									currentVehicleData.prefab_seats[parseInt(type[1])].mainid = new int[type.length - 2];
 									int cnt = -2;
 									for(String column:type){
 										if(cnt < 0){
 											cnt++;
 											continue;
 										}
-										data.prefab_seats[parseInt(type[1])].mainid[cnt] = parseInt(column);
+										currentVehicleData.prefab_seats[parseInt(type[1])].mainid[cnt] = parseInt(column);
 										cnt++;
 									}
 									break;
@@ -186,10 +219,10 @@ public class AddNewVehicle extends HMGGunMaker {
 									break;
 								case "End":
 									if (isClient) {
-										data.setModel();
-										if (!partslist.isEmpty()) data.partslist = partslist;
+										currentVehicleData.setModel();
+										if (!partslist.isEmpty()) currentVehicleData.partslist = partslist;
 									}
-									prefabBaseHashMap.put(dataName, data);
+									prefabBaseHashMap.put(dataName, currentVehicleData);
 									Item check = GameRegistry.findItem("HMVehicle",dataName);
 									if(check == null){
 										Item itemVehicle;
@@ -198,10 +231,11 @@ public class AddNewVehicle extends HMGGunMaker {
 										else if(tabshmg.containsKey(tabname)){
 											itemVehicle.setCreativeTab(tabshmg.get(tabname));
 										}
+										itemVehicle.setTextureName("handmadevehicle:"+dataName);
 									}
 									break;
 							}
-							data.readSettings(type);
+							currentVehicleData.readSettings(type);
 							if (isClient) readParts_vehicle(type, partslist);
 						}
 					}
@@ -246,12 +280,20 @@ public class AddNewVehicle extends HMGGunMaker {
 			case "IsTrack":
 				((HMVVehicleParts)currentParts).setIsTrack(Boolean.parseBoolean(type[readerCnt++]), parseInt(type[readerCnt++]));
 				break;
+			case "IsPera":
+				((HMVVehicleParts)currentParts).setIsPera(Boolean.parseBoolean(type[readerCnt++]));
+				break;
 			case "IsCloningTrack":
 				((HMVVehicleParts)currentParts).setIsTrack_Cloning(Boolean.parseBoolean(type[readerCnt++]), parseInt(type[readerCnt++]));
 				break;
 			case "TurretParts":
 				((HMVVehicleParts)currentParts).isTurretParts = true;
 				((HMVVehicleParts)currentParts).linkedTurretID = parseInt(type[readerCnt++]);
+				Vector3d weaponPos = currentVehicleData.prefab_attachedWeapons_all[((HMVVehicleParts)currentParts).linkedTurretID].turretsPos;
+				currentParts.AddRenderinfDefoffset((float) weaponPos.x / currentVehicleData.scale * 0.5f,
+						(float) weaponPos.y / currentVehicleData.scale * 0.5f,
+						(float) -weaponPos.z / currentVehicleData.scale * 0.5f,
+						0, 0, 0);
 				break;
 			case "isTurret_linkedGunMount":
 				((HMVVehicleParts)currentParts).isTurret_linkedGunMount = true;

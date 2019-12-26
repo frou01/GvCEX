@@ -3,6 +3,7 @@ package DungeonGeneratorBase;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import net.minecraft.item.Item;
+import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.structure.MapGenStructureIO;
 import net.minecraftforge.common.MinecraftForge;
@@ -55,12 +56,18 @@ public class mod_DungeonGeneratorBase {
                     for (int ii = 0; ii < fileData.length; ii++) {
                         try {
                             if (fileData[ii].isFile()) {
-                                BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(fileData[ii]), "Shift-JIS"));
-                                dungeonData.add(DungeonData.loadDungeon(br));
+                                if(fileData[ii].getName().endsWith(".schematic")) {
+                                    dungeonData.add(DungeonData.loadDungeon(CompressedStreamTools.readCompressed(new FileInputStream(fileData[ii]))));
+                                }else {
+                                    BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(fileData[ii]), "Shift-JIS"));
+                                    dungeonData.add(DungeonData.loadDungeon(br));
+                                }
                             }
                         } catch (UnsupportedEncodingException e) {
                             e.printStackTrace();
                         } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
                             e.printStackTrace();
                         }
                     }
@@ -126,7 +133,7 @@ public class mod_DungeonGeneratorBase {
 //            }
 //        }
     }
-    public static boolean getNextDungeon(MapGenStructure_forGVC mapGenStructure_forGVC,World world,int x, int z,Random rand){
+    public static boolean getNextDungeon(MapGenStructure_forGVC mapGenStructure_forGVC,World world,int x, int z,final Random rand){
         for(DungeonData_withSettings dungeonDataWithSettings :dungeonDataList.values()){
             if(dungeonDataWithSettings.onStrongHold && mapGenStructure_forGVC.canSpawnStructureAtCoords_astrongHold(x,z)){
                 mapGenStructure_forGVC.currentDungeon = dungeonDataWithSettings;
@@ -144,7 +151,10 @@ public class mod_DungeonGeneratorBase {
                 }
             }
             
-            if((flag_biomeCheck && (x % dungeonDataWithSettings.interval) == 0 && (z % dungeonDataWithSettings.interval) == 0 &&rand.nextFloat() < dungeonDataWithSettings.frequency)
+            if((flag_biomeCheck &&
+                    (x % dungeonDataWithSettings.interval) == 0 &&
+                    (z % dungeonDataWithSettings.interval) == 0 &&
+                    rand.nextFloat() < dungeonDataWithSettings.frequency)
                        ||
                        ((dungeonDataWithSettings.hasFixedPosition && x == dungeonDataWithSettings.x && z == dungeonDataWithSettings.z))){
                 mapGenStructure_forGVC.currentDungeon = dungeonDataWithSettings;

@@ -1,6 +1,7 @@
 package handmadeguns.tile;
 
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
@@ -11,6 +12,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryLargeChest;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -120,11 +122,30 @@ public class TileMounter extends TileEntityChest {
 
             if (j >= 0 && j < this.chestContents.length)
             {
-                this.chestContents[j] = ItemStack.loadItemStackFromNBT(nbttagcompound1);
+                this.chestContents[j] = loadItemStackFromNBT(nbttagcompound1);
             }
         }
     }
 
+
+    public static ItemStack loadItemStackFromNBT(NBTTagCompound nbttagcompound1)
+    {
+        String[] modIdAndName = nbttagcompound1.getString("ItemID").split(":");
+        ItemStack itemstack = new ItemStack(GameRegistry.findItem(modIdAndName[0],modIdAndName[1]));
+        itemstack.stackSize = nbttagcompound1.getByte("Count");
+        itemstack.setItemDamage(nbttagcompound1.getShort("Damage"));
+
+        if (itemstack.getItemDamage() < 0)
+        {
+            itemstack.setItemDamage(0);
+        }
+
+        if (nbttagcompound1.hasKey("tag", 10))
+        {
+            itemstack.setTagCompound(nbttagcompound1.getCompoundTag("tag"));
+        }
+        return itemstack.getItem() != null ? itemstack : null;
+    }
     public void writeToNBT(NBTTagCompound p_145841_1_)
     {
         super.writeToNBT(p_145841_1_);
@@ -136,6 +157,8 @@ public class TileMounter extends TileEntityChest {
             {
                 NBTTagCompound nbttagcompound1 = new NBTTagCompound();
                 nbttagcompound1.setByte("Slot", (byte)i);
+                GameRegistry.UniqueIdentifier uniqueIdentifier = GameRegistry.findUniqueIdentifierFor(this.chestContents[i].getItem());
+                nbttagcompound1.setString("ItemID",uniqueIdentifier.modId+":"+uniqueIdentifier.name);
                 this.chestContents[i].writeToNBT(nbttagcompound1);
                 nbttaglist.appendTag(nbttagcompound1);
             }
@@ -210,7 +233,7 @@ public class TileMounter extends TileEntityChest {
      */
     public int getInventoryStackLimit()
     {
-        return 1;
+        return 64;
     }
 
     /**

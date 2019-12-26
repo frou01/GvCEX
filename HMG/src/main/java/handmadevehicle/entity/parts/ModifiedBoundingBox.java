@@ -94,17 +94,17 @@ public class ModifiedBoundingBox extends AxisAlignedBB {
                                   new Vector3d(rMX,
                                                       rMY,
                                                       rMZ));
-        maxvertex.add(boxes[0].GetPos_W(),boxes[0].size);
-        minvertex.sub(boxes[0].GetPos_W(),boxes[0].size);
+        maxvertex.add(boxes[0].GetPos_W(),boxes[0].info.size);
+        minvertex.sub(boxes[0].GetPos_W(),boxes[0].info.size);
         calculateMax_And_Min();
     }
     public void calculateMax_And_Min(){
         //X
         for(OBB abox:boxes){
             Vector3d tempMaxvertex = new Vector3d();
-            tempMaxvertex.add(abox.pos,abox.size);
+            tempMaxvertex.add(abox.info.pos,abox.info.size);
             Vector3d tempminvertex = new Vector3d();
-            tempminvertex.sub(abox.pos,abox.size);
+            tempminvertex.sub(abox.info.pos,abox.info.size);
             if(maxvertex.x < tempMaxvertex.x)maxvertex.x = tempMaxvertex.x;
             if(maxvertex.y < tempMaxvertex.y)maxvertex.y = tempMaxvertex.y;
             if(maxvertex.z < tempMaxvertex.z)maxvertex.z = tempMaxvertex.z;

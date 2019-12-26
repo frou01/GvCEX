@@ -1,0 +1,15 @@
+{
+ "handmadevehicle.120mmFire": {"category":"hostile","sounds": ["120mmFire"]},
+ "handmadevehicle.jetplane": {"category":"ambient","sounds": ["jetplane"]},
+ "handmadevehicle.jetplaneAF": {"category":"ambient","sounds": ["jetplaneAF"]},
+ "handmadevehicle.73mmLowPresureGunFire": {"category":"hostile","sounds": ["73mmLowPresureGunFire"]},
+ "handmadevehicle.Leopard1Track": {"category":"ambient","sounds": ["Leopard1Track"]},
+ "handmadevehicle.BMPTrack": {"category":"ambient","sounds": ["BMPTrack"]},
+ "handmadevehicle.traverseSound": {"category":"ambient","sounds": ["traverseSound"]},
+ "handmadevehicle.Tu-95prop": {"category":"ambient","sounds": ["Tu-95prop"]},
+ "handmadevehicle.zis-5-85mm": {"category":"hostile","sounds": ["zis-5-85mm"]},
+ "handmadevehicle.T34Track": {"category":"ambient","sounds": ["T34Track"]},
+ "handmadevehicle.heli": {"category":"ambient","sounds": ["heli"]},
+ "handmadevehicle.BRDM-2": {"category":"ambient","sounds": ["BRDM-2"]},
+ "handmadevehicle.nulls": {"category":"ambient","sounds": ["nulls"]}
+}

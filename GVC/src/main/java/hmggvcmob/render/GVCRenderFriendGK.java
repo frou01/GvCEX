@@ -47,7 +47,10 @@ public class GVCRenderFriendGK extends Render {
 		GL11.glRotatef(180 - (entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * partialTicks), 0.0F, 1.0F, 0.0F);
 		if(entity.isSneaking()){
 			GL11.glRotatef(75, 1.0F, 0.0F, 0.0F);
+			int back = entity.angletime;
+			entity.angletime = 45;
 			this.renderlegs(entity);
+			entity.angletime = back;
 			GL11.glTranslatef(0F, 2.0F, 0.0F);
 			GL11.glRotatef(-90, 1.0F, 0.0F, 0.0F);
 			GL11.glTranslatef(0F, -2.0F, 0.0F);

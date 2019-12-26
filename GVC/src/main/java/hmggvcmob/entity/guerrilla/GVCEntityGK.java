@@ -54,6 +54,7 @@ public class GVCEntityGK extends EntityGBase implements IIRVING
 	public GVCEntityGK(World par1World)
 	{
 		super(par1World);
+		canRideVehicle = false;
 		this.setSize(2.5F, 4F);
 		this.tasks.removeTask(AIattackOncollidetoPlayer);
 		this.tasks.removeTask(AIattackOncollidetoVillager);

@@ -22,15 +22,15 @@ public class RenderTileMounter extends TileEntitySpecialRenderer {
     public float[][] gunpos = new float[4][3];
     public RenderTileMounter(){
         gunpos[0][0]=0;
-        gunpos[0][1]=0.6f;
+        gunpos[0][1]=0.45f;
         gunpos[0][2]=-0.3f;
 
         gunpos[1][0]=0;
-        gunpos[1][1]=0.5f;
+        gunpos[1][1]=0.35f;
         gunpos[1][2]=0.0f;
 
         gunpos[2][0]=0;
-        gunpos[2][1]=0.4f;
+        gunpos[2][1]=0.25f;
         gunpos[2][2]=0.3f;
     }
     public void renderTileEntityAt(TileMounter tileEntity, double x, double y, double z, float p_147500_8_) {

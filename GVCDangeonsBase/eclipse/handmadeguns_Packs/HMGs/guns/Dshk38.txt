@@ -1,0 +1,311 @@
+BulletPower,26
+BulletSpeed,8.6
+BulletGravity,0.485
+BlletSpread,3.0f
+Recoil,5
+ReloadTime,150
+RemainingBullet,50
+Attacking,2.0f
+Zoom,1.0f,2.0f,4.0f
+ZoomRender,true
+ZoomRenderType,true,true,false
+ZoomRenderTypeTxture,false,false,true
+Cycle,2
+Texture,Dshk38
+GunSound,handmadeguns.dshk38Fire,handmadeguns.dshk38Fire
+SoundSpeed,1f
+GunSoundReload,handmadeguns.reload
+CanObj,true
+ObjModel,DSHK38.mqo
+ObjTexture,DSHK.png
+ModelScala,0.5
+ModelHigh,0.35,-0.0087,0.35
+ModelWidthZ,5,5,5
+ModelEquipped,-0.7F,0.35,2.5
+Tabname,HMG_GVCGuns
+
+CustomFlash,CannonMuzzleFlash,3
+ScopeTexture,ironsight.png,reddot.png,scope.png
+RenderCross,false
+UnderBarrelWeapon,0
+RightType,0
+Canfix,true
+NeedFix,true
+FixAsEntity,true
+Magazine,0,HandmadeGuns,12.7mmx108mmBox
+ModelArm,true
+OnEntity_BarrelPoint,0,0.168,0.9
+OnEntity_RotationPitchPoint,0,0.11593,-0.12688
+Turretanglelimit,24,-85,360,-360
+
+attachRestriction,true
+allowattach,reddot
+allowattach,Bullet_AP
+
+OnEntity_Yoffset,1.5
+
+//パーツ追加開始
+
+AddParts,SYS_ALL?_Base
+    AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+    AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+    RenderOnNormal
+    AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+
+    AddChildParts,Tripod
+        AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+        AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+        RenderOnNormal
+        AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+        turretbase
+    BackParts
+
+    AddChildParts,Base
+        AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+        AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+        RenderOnNormal
+        AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+        AddYawInfoKey,-360,0,0,0,0,-360,0        ,360,0,0,0,0,360,0
+
+        AddChildParts,MainBody
+            //パーツを回転させる中心と、デフォルトで回転させる場合の設定
+            AddPartsRotationCenterAndRotationAmount,0,1.1593,-1.2688,0,0,0
+            //通常時に描画するか
+            RenderOnNormal
+            //ADS中にどのくらい移動するかと、どのくらい回転するか
+            AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+            //リコイル中にどのくらい移動するかと、どのくらい回転するか Stg44の排莢口蓋くらいしか用途が思いつかない。でもこれを書かないとそもそも描画されない
+            AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+            //コッキング中に(RY
+            AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+            //リローｄ(RY
+            AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+            AddPitchInfoKey,-360,0,0,0,-360,0,0        ,360,0,0,0,360,0,0
+
+            //レシーバー
+            AddChildParts,Receiver
+                AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+                RenderOnNormal
+                AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+                AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+                AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+                AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+                //リコイルモーション 10キー
+                //220前進
+                AddRecoilMotionKey,0,0,0,0,0,0,0,           4,0,0,2.20,0,0,0
+                //一瞬保って
+                AddRecoilMotionKey,4,0,0,2.20,0,0,0,         6,0,0,2.20,0,0,0
+                //戻す
+                AddRecoilMotionKey,6,0,0,2.20,0,0,0,         10,0,0,0,0,0,0
+
+
+                AddReloadMotionKey,0,0,0,2.20,0,0,0,           130,0,0,2.20,0,0,0
+                AddReloadMotionKey,130,0,0,2.20,0,0,0,        150,0,0,0,0,0,0
+
+                AddChildParts,cartridge_Lever
+                    AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+                    AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+
+
+                    AddReloadMotionKey,0,false,           130
+                    AddReloadMotionKey,130,0,0,0,0,0,0,        150,0,0,0,0,0,0
+                BackParts
+            BackParts
+            //ローダーロール
+            AddChildParts,Loader
+                AddPartsRotationCenterAndRotationAmount,0,2.1957,0,0,0,0
+                RenderOnNormal
+                AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+                AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+                AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+                AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+                //リコイルモーション 10キー
+                //待機
+                AddRecoilMotionKey,0,0,0,0,0,0,0,           4,0,0,0,0,0,0
+                //45度回転
+                AddRecoilMotionKey,0,0,0,0,0,0,0,           4,0,0,0,0,0,45
+                AddRecoilMotionKey,4,0,0,0,0,0,45,         10,0,0,0,0,0,45
+                AddRecoilMotionKey,10,0,0,0,0,0,45,         20,0,0,0,0,0,45
+            BackParts
+            AddChildParts,Level
+                AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+                RenderOnNormal
+                AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+                AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+                AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+                AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+            BackParts
+            AddChildParts,Barrel
+                AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+                RenderOnNormal
+                AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+                AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+                AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+                AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+            BackParts
+            AddChildParts,Stock
+                AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+                RenderOnNormal
+                AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+                AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+                AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+                AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+            BackParts
+            AddChildParts,Triggers
+                AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+                RenderOnNormal
+                AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+                AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+                AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+                AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+            BackParts
+            AddChildParts,frontSight
+                AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+                RenderOnNormal
+                AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+                AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+                AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+                AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+            BackParts
+
+                //チェンバー蓋
+            AddChildParts,Dustcover
+                AddPartsRotationCenterAndRotationAmount,0,2.08f,-1.52f,0,0,0
+                RenderOnNormal
+                AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+                AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+                AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+                AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+                //リロードモーション
+                //開放状態で保持される
+                AddReloadMotionKey,0,0,0,0,0,0,0,           10,0,0,0,0,0,0
+                AddReloadMotionKey,10,0,0,0,0,0,0,           25,0,0,0,90,0,0
+                AddReloadMotionKey,25,0,0,0,90,0,0,         125,0,0,0,90,0,0
+                AddReloadMotionKey,125,0,0,0,90,0,0,        140,0,0,0,0,0,0
+                AddReloadMotionKey,140,0,0,0,0,0,0,        150,0,0,0,0,0,0
+                AddChildParts,Larm
+                    AddPartsRotationCenterAndRotationAmount,0.21,0.8,2.5,0,0,0
+                    RenderOnNormal
+                    AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+                    AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+                    AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+                    AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+                    AddReloadMotionKey,0,0,0,0,0,0,0,           10,0,0.8,-2.4,0,0,0
+                    AddReloadMotionKey,10,0,0.8,-2.4,0,0,0,          25,0,0.8,-2.4,-90,0,0
+                    AddReloadMotionKey,25,false,125
+                    AddReloadMotionKey,125,0,0.8,-2.4,-90,0,0,        140,0,0.8,-2.4,0,0,0
+                    AddReloadMotionKey,140,0,0.8,-2.4,0,0,0,        150,0,0,0,0,0,0
+                BackParts
+            BackParts
+
+            //ノーマルサイト
+            AddChildParts,RearSightBase
+                AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+                RenderOnNormal
+                AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+                AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+                AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+                AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+            BackParts
+            AddChildParts,RearSightLadder
+                AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+                RenderOnNormal
+                AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+                AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+                AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+                AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+                attachpart
+                sight
+
+                AddChildParts,RearSight
+                    AddPartsRotationCenterAndRotationAmount,0,1.50f,2f,0,0,0
+                    RenderOnNormal
+                    AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+                    AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+                    AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+                    AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+                BackParts
+            BackParts
+            AddChildParts,AASight
+                AddPartsRotationCenterAndRotationAmount,0,1.50f,2f,0,0,0
+                RenderOnNormal
+                AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+                AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+                AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+                AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+                attachpart
+                dot
+            BackParts
+            //弾箱
+            AddChildParts,AmmoBox
+                AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+                //↓これを削ると描画されなくなる。がしかし子パーツにも影響が出るので注意
+                RenderOnNormal
+                AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+                AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+                AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+                AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+                //リロードモーション
+                AddReloadMotionKey,25,false,        40
+                AddReloadMotionKey,40,2,-1,0,0,0,0,            65,0,0.4,0,0,0,0
+                AddReloadMotionKey,65,0,0.4,0,0,0,0,          70,0,0,0,0,0,0
+                AddReloadMotionKey,70,0,0,0,0,0,0,          150,0,0,0,0,0,0
+
+                AddChildParts,Ammos
+                    AddPartsRotationCenterAndRotationAmount,0.78,1.80f,-3.32f,0,0,0
+                    RenderOnNormal
+                    AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+                    AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+                    AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+                    AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+                    //リロードモーション
+                    AddReloadMotionKey,25,0,0,0,0,0,-40,          70,0,0,0,0,0,-40
+                    AddReloadMotionKey,70,0,0,0,0,0,-40,          110,0,0,0,0,0,0
+                    AddReloadMotionKey,110,0,0,0,0,0,0,          150,0,0,0,0,0,0
+                BackParts
+
+                //弾帯
+            //    AddChildParts,obj3
+            //        AddPartsRotationCenterAndRotationAmount,0.233,1.28,0,0,0,0
+            //        RenderOnNormal
+            //        AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+            //        AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+            //        AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+            //        AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+            //        //弾として描画するかどうかと、描画する最大弾数
+            //        Isbullet,true,13
+            //        AddPartsRenderAsBulletInf,0,0,0,0,0,0
+            //        AddBulletPositions,0,-0.3  ,0      ,0,0,0,90        ,4,0.1    ,0      ,0,0,0,90
+            //        AddBulletPositions,4,0.1   ,0      ,0,0,0,90        ,5,0.2    ,-0.03  ,0,0,0,45
+            //        AddBulletPositions,5,0.2   ,-0.03  ,0,0,0,45        ,6,0.26   ,-0.14  ,0,0,0,22.5
+            //        AddBulletPositions,6,0.26  ,-0.14  ,0,0,0,22.5      ,7,0.288  ,-0.25  ,0,0,0,0
+            //        AddBulletPositions,7,0.288 ,-0.25  ,0,0,0,0         ,13,0.288 ,-0.85  ,0,0,0,0
+            //    BackParts
+            BackParts
+        BackParts
+    BackParts
+
+BulletNameALL,12_7mmBullet
+BulletNameCart,12_7mmCart
+BulletNameMAG,DSHKBulletBox
+
+Name,Heavy Machine Gun ДШК
+LMG,Dshk38
+
+
+Recipe1,  a
+Recipe2,aaa
+Recipe3,abc
+ItemA,minecraft,iron_ingot
+ItemB,minecraft,iron_block
+ItemC,minecraft,emerald
+addNewRecipe,HandmadeGuns,Dshk38,1

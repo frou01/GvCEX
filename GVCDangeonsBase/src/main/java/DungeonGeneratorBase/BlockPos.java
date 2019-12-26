@@ -11,6 +11,11 @@ public class BlockPos {
         this.y = y;
         this.z = z;
     }
+    public BlockPos(String x,String y,String z){
+        this.x = Integer.parseInt(x);
+        this.y = Integer.parseInt(y);
+        this.z = Integer.parseInt(z);
+    }
     public boolean equals(Object o){
         return o instanceof BlockPos && this.x == ((BlockPos) o).x && this.y == ((BlockPos) o).y && this.z == ((BlockPos) o).z;
     }

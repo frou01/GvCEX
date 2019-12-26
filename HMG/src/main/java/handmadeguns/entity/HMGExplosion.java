@@ -123,9 +123,9 @@ public class HMGExplosion extends Explosion {
 					double d11 = (1.0D - d4) * d10;
 					entity.attackEntityFrom(DamageSource.setExplosionSource(this), (float)((int)((d11 * d11 + d11) / 2.0D * 8.0D * (double)this.explosionSize + 1.0D)));
 					double d8 = EnchantmentProtection.func_92092_a(entity, d11);
-					entity.motionX += d5 * d8;
-					entity.motionY += d6 * d8;
-					entity.motionZ += d7 * d8;
+					entity.addVelocity(d5 * d8,
+							d6 * d8,
+							d7 * d8);
 
 					if (entity instanceof EntityPlayer)
 					{
@@ -200,7 +200,7 @@ public class HMGExplosion extends Explosion {
 							j+0.5 - this.explosionY,
 							k+0.5 - this.explosionZ);
 
-					if(zeroToBlockVec.lengthSquared() < 1 || block != Blocks.grass && block != Blocks.dirt && block != Blocks.sand && block != Blocks.cobblestone){
+					if(zeroToBlockVec.lengthSquared() < explosionSize/10 || block != Blocks.grass && block != Blocks.dirt && block != Blocks.sand && block != Blocks.cobblestone){
 						if (block.canDropFromExplosion(this))
 						{
 							block.dropBlockAsItemWithChance(this.worldObj, i, j, k, this.worldObj.getBlockMetadata(i, j, k), 1.0F / this.explosionSize, 0);

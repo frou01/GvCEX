@@ -104,11 +104,11 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 	private float modelRotationZ_Normal;
 	private float modelRotationZ_Red;
 	private float modelRotationZ_Scope;
-	
-	
-	
-	
-	
+
+
+
+
+
 	public float Sprintrotationx = 20F;
 	public float Sprintrotationy = 60F;
 	public float Sprintrotationz = 0F;
@@ -148,8 +148,8 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 	private float onads_modelRotationZ_Normal;
 	private float onads_modelRotationZ_Red;
 	private float onads_modelRotationZ_Scope;
-	
-	
+
+
 	public float jump = 0;
 
 
@@ -167,20 +167,20 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 	public static boolean isPlacedGun = false;
 	public static float turretYaw = 0;
 	public static float turretPitch = 0;
-	
+
 	public PartsRender_Gun partsRender_gun;
 	public HMGRenderItemGun_U_NEW(IModelCustom modelgun, ResourceLocation texture, float scala) {
 		partsRender_gun = new PartsRender_Gun();
 		partsRender_gun.model = model = modelgun;
 		partsRender_gun.texture = guntexture = texture;
-		
+
 		partsRender_gun.modelscala = this.modelscala = scala;
 	}
 	public void reloadConstructor(IModelCustom modelgun, ResourceLocation texture, float scala) {
 		partsRender_gun = new PartsRender_Gun();
 		partsRender_gun.model = model = modelgun;
 		partsRender_gun.texture = guntexture = texture;
-		
+
 		partsRender_gun.modelscala = this.modelscala = scala;
 	}
 
@@ -250,65 +250,66 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 	public void renderItem(ItemRenderType type, ItemStack gunstack, Object... data) {
 		GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
 		GL11.glShadeModel(GL11.GL_SMOOTH);
-		for(pass = 0;pass<2;pass++) {
-			if(pass == 1) {
-				glEnable(GL_BLEND);
-				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-				GL11.glDepthMask(false);
-				glAlphaFunc(GL_LESS, 1);
-			}else {
-				GL11.glDepthMask(true);
-				glAlphaFunc(GL_EQUAL, 1);
-			}
-			partsRender_gun.pass = pass;
-			GL11.glPushMatrix();
-			datas = data;
-			GL11.glEnable(GL_BLEND);
-			GL11.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			GL11.glColor4f(1, 1, 1, 1F);
-			float f2 = 1.0F;
-			f2 = 60.0F;
+		GL11.glPushMatrix();
+		datas = data;
+		GL11.glEnable(GL_BLEND);
+		GL11.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		GL11.glColor4f(1, 1, 1, 1F);
+		float f2 = 1.0F;
+		f2 = 60.0F;
 //		glMaterialf(GL_FRONT_AND_BACK,GL_SHININESS,120);
-			float scala = this.modelscala;
-			HMGItem_Unified_Guns gunitem;
-			if (gunstack.getItem() instanceof HMGItem_Unified_Guns)
-				gunitem = (HMGItem_Unified_Guns) gunstack.getItem();
-			else {
-				
-				GL11.glDepthMask(true);
-				GL11.glDisable(GL_BLEND);
-				return;
-			}
-			nbt = gunstack.getTagCompound();
-			if (nbt == null) gunitem.checkTags(gunstack);
-			this.gunitem = gunitem;
-			nbt = gunstack.getTagCompound();
-			items[0] = null;
-			items[1] = null;
-			items[2] = null;
-			items[3] = null;
-			items[4] = null;
-			items[5] = null;
-			NBTTagList tags = (NBTTagList) nbt.getTag("Items");
-			if (tags != null) {
-				for (int i = 0; i < tags.tagCount(); i++)//133
-				{
-					NBTTagCompound tagCompound = tags.getCompoundTagAt(i);
-					int slot = tagCompound.getByte("Slot");
-					if (slot >= 0 && slot < items.length) {
-						items[slot] = ItemStack.loadItemStackFromNBT(tagCompound);
-					}
+		float scala = this.modelscala;
+		HMGItem_Unified_Guns gunitem;
+		if (gunstack.getItem() instanceof HMGItem_Unified_Guns)
+			gunitem = (HMGItem_Unified_Guns) gunstack.getItem();
+		else {
+
+			GL11.glDepthMask(true);
+			GL11.glDisable(GL_BLEND);
+			return;
+		}
+		nbt = gunstack.getTagCompound();
+		if (nbt == null) gunitem.checkTags(gunstack);
+		this.gunitem = gunitem;
+		nbt = gunstack.getTagCompound();
+		items[0] = null;
+		items[1] = null;
+		items[2] = null;
+		items[3] = null;
+		items[4] = null;
+		items[5] = null;
+		NBTTagList tags = (NBTTagList) nbt.getTag("Items");
+		if (tags != null) {
+			for (int i = 0; i < tags.tagCount(); i++)//133
+			{
+				NBTTagCompound tagCompound = tags.getCompoundTagAt(i);
+				int slot = tagCompound.getByte("Slot");
+				if (slot >= 0 && slot < items.length) {
+					items[slot] = ItemStack.loadItemStackFromNBT(tagCompound);
 				}
 			}
-			rotex = nbt.getFloat("rotex");
-			rotey = nbt.getFloat("rotey");
-			rotez = nbt.getFloat("rotez");
-			switch (type) {
-				case INVENTORY:
-					glMatrixForRenderInInventory();
-					break;
-				case EQUIPPED_FIRST_PERSON://first
-				{
+		}
+		rotex = nbt.getFloat("rotex");
+		rotey = nbt.getFloat("rotey");
+		rotez = nbt.getFloat("rotez");
+		switch (type) {
+			case INVENTORY:
+				glMatrixForRenderInInventory();
+				break;
+			case EQUIPPED_FIRST_PERSON://first
+			{
+
+				for(pass = 0;pass<2;pass++) {
+					if (pass == 1) {
+						glEnable(GL_BLEND);
+						glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+						GL11.glDepthMask(false);
+						glAlphaFunc(GL_LESS, 1);
+					} else {
+						GL11.glDepthMask(true);
+						glAlphaFunc(GL_EQUAL, 1);
+					}
+					partsRender_gun.pass = pass;
 					isfirstperson = true;
 					EntityLivingBase entity = (EntityLivingBase) data[1];
 					boolean recoiled = this.getbooleanfromnbt("Recoiled");//���R�C�������ǂ����i�e������u���˂�l�ɕ`�悷�邽�߂̃t���O�j
@@ -347,15 +348,15 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 						modelPosX = modelPosX_Normal;
 						modelPosY = modelPosY_Normal;
 						modelPosZ = modelPosZ_Normal;
-						
+
 						modelRotationX = modelRotationX_Normal;
 						modelRotationY = modelRotationY_Normal;
 						modelRotationZ = modelRotationZ_Normal;
-						
+
 						onads_modelPosX = onads_modelPosX_Normal;
 						onads_modelPosY = onads_modelPosY_Normal;
 						onads_modelPosZ = onads_modelPosZ_Normal;
-						
+
 						onads_modelRotationX = onads_modelRotationX_Normal;
 						onads_modelRotationY = onads_modelRotationY_Normal;
 						onads_modelRotationZ = onads_modelRotationZ_Normal;
@@ -364,7 +365,7 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 							modelPosX = modelPosX_Normal - ((HMGItemSightBase) itemstackSight.getItem()).gunoffset[0] * scala / 2;
 							modelPosY = modelPosY_Normal - ((HMGItemSightBase) itemstackSight.getItem()).gunoffset[1] * scala / 2;
 							modelPosZ = modelPosZ_Normal - ((HMGItemSightBase) itemstackSight.getItem()).gunoffset[2] * scala / 2;
-							
+
 							modelRotationX = modelRotationX_Normal + ((HMGItemSightBase) itemstackSight.getItem()).gunrotation[0];
 							modelRotationY = modelRotationY_Normal + ((HMGItemSightBase) itemstackSight.getItem()).gunrotation[1];
 							modelRotationZ = modelRotationZ_Normal + ((HMGItemSightBase) itemstackSight.getItem()).gunrotation[2];
@@ -382,15 +383,15 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 							modelPosX = modelPosX_Red;
 							modelPosY = modelPosY_Red;
 							modelPosZ = modelPosZ_Red;
-							
+
 							modelRotationX = modelRotationX_Red;
 							modelRotationY = modelRotationY_Red;
 							modelRotationZ = modelRotationZ_Red;
-							
+
 							onads_modelPosX = onads_modelPosX_Red;
 							onads_modelPosY = onads_modelPosY_Red;
 							onads_modelPosZ = onads_modelPosZ_Red;
-							
+
 							onads_modelRotationX = onads_modelRotationX_Red;
 							onads_modelRotationY = onads_modelRotationY_Red;
 							onads_modelRotationZ = onads_modelRotationZ_Red;
@@ -398,15 +399,15 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 							modelPosX = modelPosX_Scope;
 							modelPosY = modelPosY_Scope;
 							modelPosZ = modelPosZ_Scope;
-							
+
 							modelRotationX = modelRotationX_Scope;
 							modelRotationY = modelRotationY_Scope;
 							modelRotationZ = modelRotationZ_Scope;
-							
+
 							onads_modelPosX = onads_modelPosX_Scope;
 							onads_modelPosY = onads_modelPosY_Scope;
 							onads_modelPosZ = onads_modelPosZ_Scope;
-							
+
 							onads_modelRotationX = onads_modelRotationX_Scope;
 							onads_modelRotationY = onads_modelRotationY_Scope;
 							onads_modelRotationZ = onads_modelRotationZ_Scope;
@@ -416,7 +417,7 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 						this.glMatrixForRenderInEquipped(-0.2f);
 						GL11.glScalef(scala, scala, scala);
 						int reloadprogress = this.getintfromnbt("RloadTime");
-						partsRender_gun.partSidentification(new GunState[]{GunState.Reload}, (float)reloadprogress, remainbullets);
+						partsRender_gun.partSidentification(new GunState[]{GunState.Reload}, (float) reloadprogress, remainbullets);
 					} else if (HandmadeGunsCore.Key_ADS(entity)) {
 						GunState[] state = new GunState[2];
 						state[1] = GunState.ADS;
@@ -438,7 +439,7 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 							state[0] = GunState.ADS;
 							this.glMatrixForRenderInEquippedADS(-1.4f);
 							GL11.glScalef(scala, scala, scala);
-							partsRender_gun.partSidentification(state, (float)0, remainbullets);
+							partsRender_gun.partSidentification(state, (float) 0, remainbullets);
 						}
 					} else {
 						if (this.isentitysprinting(entity)) {
@@ -448,7 +449,7 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 							GL11.glRotatef(Sprintrotationz, 0.0f, 0.0f, 1.0f);
 							GL11.glTranslatef(Sprintoffsetx, Sprintoffsety, Sprintoffsetz);
 							GL11.glScalef(scala, scala, scala);
-							partsRender_gun.partSidentification(new GunState[]{GunState.Default}, (float)0, remainbullets);
+							partsRender_gun.partSidentification(new GunState[]{GunState.Default}, (float) 0, remainbullets);
 						} else {
 							int cockingtime = this.getintfromnbt("CockingTime");
 							if (cockingtime > 0) {
@@ -467,82 +468,62 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 								//�ʏ���
 								this.glMatrixForRenderInEquipped(-0.2f);
 								GL11.glScalef(scala, scala, scala);
-								partsRender_gun.partSidentification(new GunState[]{GunState.Default}, (float)0, remainbullets);
+								partsRender_gun.partSidentification(new GunState[]{GunState.Default}, (float) 0, remainbullets);
 							}
 						}
 //						renderpartsNormal(this,gunitem,gunstack,model,entity,type,data);
 					}
 					GL11.glPopMatrix();//�I�����ɂ�����Ă�ōs����o�b�N�A�b�v����߂��܂��B
 					isfirstperson = false;
-					
-					break;
 				}
-				case EQUIPPED: {//thrid
-					isfirstperson = false;
-					EntityLivingBase entity = (EntityLivingBase) data[1];
-					boolean recoiled = this.getbooleanfromnbt("Recoiled");//���R�C�������ǂ����i�e������u���˂�l�ɕ`�悷�邽�߂̃t���O�j
-					boolean isreloading = this.getbooleanfromnbt("IsReloading");//�����[�h�����ǂ���
-					int remainbullets = gunitem.getMaxDamage() - gunstack.getItemDamage();//�����[�h�����ǂ���
-					Minecraft.getMinecraft().renderEngine.bindTexture(guntexture);
-					GL11.glPushMatrix();
-					GL11.glScalef(1f / 2f, 1f / 2f, 1f / 2f);
-					if (entity instanceof EntityPlayer) {
-						this.glMatrixForRenderInEntityPlayer(-0.75f);
-						GL11.glScalef(scala, scala, scala);
-					} else {
-						this.glMatrixForRenderInEntity(-0.2f);
-						GL11.glScalef(-scala * 0.6f, scala * 0.6f, scala * 0.6f);
-					}
-					GL11.glScalef(gunitem.gunInfo.inworldScale, gunitem.gunInfo.inworldScale, gunitem.gunInfo.inworldScale);
-					if (isreloading) {
-						int reloadprogress = this.getintfromnbt("RloadTime");
-						partsRender_gun.partSidentification(new GunState[]{GunState.Reload}, (float)reloadprogress, remainbullets);
-					} else if (HandmadeGunsCore.Key_ADS(entity)) {
-						int cockingtime = this.getintfromnbt("CockingTime");
-						if (cockingtime > 0) {
-							float cockingprogress = cockingtime + this.getSmoothing() - 1;
-							partsRender_gun.partSidentification(new GunState[]{GunState.Cock}, cockingprogress, remainbullets);
-						} else if (!recoiled) {
-							GL11.glRotatef(jump * (1 - this.getSmoothing()), 1.0f, 0.0f, 0.0f);
-							float recoileprogress = 10 * (nbt.getByte("Bolt") + smoothing) / gunitem.gunInfo.cycle;
-							partsRender_gun.partSidentification(new GunState[]{GunState.ADS,GunState.Recoil}, recoileprogress, remainbullets);
-						} else {
-							partsRender_gun.partSidentification(new GunState[]{GunState.ADS}, (float)0, remainbullets);
-						}
-					} else {
-						if (this.isentitysprinting(entity)) {
-							partsRender_gun.partSidentification(new GunState[]{GunState.Default}, (float)0, remainbullets);
-						} else {
-							int cockingtime = this.getintfromnbt("CockingTime");
-							if (cockingtime > 0) {
-								float cockingprogress = cockingtime + this.getSmoothing() - 1;
-								partsRender_gun.partSidentification(new GunState[]{GunState.Cock}, cockingprogress, remainbullets);
-							} else if (!recoiled) {
-								//�ˌ����1tick���̂݌Ă΂�܂�
-								GL11.glRotatef(jump * (1 - this.getSmoothing()), 1.0f, 0.0f, 0.0f);
-								float recoileprogress = 10 * (nbt.getByte("Bolt") + smoothing) / gunitem.gunInfo.cycle;
-								partsRender_gun.partSidentification(new GunState[]{GunState.Recoil}, recoileprogress, remainbullets);
-							} else {
-								partsRender_gun.partSidentification(new GunState[]{GunState.Default}, (float)0, remainbullets);
-							}
-						}
-//						renderpartsNormal(this,gunitem,gunstack,model,entity,type,data);
-					}
-					GL11.glPopMatrix();//�I�����ɂ�����Ă�ōs����o�b�N�A�b�v����߂��܂��B
-					break;
+				break;
+			}
+			case EQUIPPED: {//thrid
+				pass = MinecraftForgeClient.getRenderPass();
+				if(pass == 1) {
+					glEnable(GL_BLEND);
+					glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+					GL11.glDepthMask(false);
+					glAlphaFunc(GL_LESS, 1);
+				}else {
+					GL11.glDepthMask(true);
+					glAlphaFunc(GL_EQUAL, 1);
 				}
-				case ENTITY: {
-					isfirstperson = false;
-					boolean recoiled = this.getbooleanfromnbt("Recoiled");//���R�C�������ǂ����i�e������u���˂�l�ɕ`�悷�邽�߂̃t���O�j
-					boolean isreloading = this.getbooleanfromnbt("IsReloading");//�����[�h�����ǂ���
-					int remainbullets = gunitem.getMaxDamage() - gunstack.getItemDamage();//�����[�h�����ǂ���
-					smoothing = isPlacedGun ? RenderTickSmoothing.smooth : 0;
-					Minecraft.getMinecraft().renderEngine.bindTexture(guntexture);
-					GL11.glPushMatrix();
-					GL11.glScalef(0.4f * scala * gunitem.gunInfo.inworldScale * (isPlacedGun ? gunitem.gunInfo.onTurretScale : 1), 0.4f * scala * gunitem.gunInfo.inworldScale * (isPlacedGun ? gunitem.gunInfo.onTurretScale : 1), 0.4f * scala * gunitem.gunInfo.inworldScale * (isPlacedGun ? gunitem.gunInfo.onTurretScale : 1));
-					if (isreloading) {
-						int reloadprogress = this.getintfromnbt("RloadTime");
-						partsRender_gun.partSidentification(new GunState[]{GunState.Reload}, (float)reloadprogress, remainbullets);
+				partsRender_gun.pass = pass;
+				isfirstperson = false;
+				EntityLivingBase entity = (EntityLivingBase) data[1];
+				boolean recoiled = this.getbooleanfromnbt("Recoiled");//���R�C�������ǂ����i�e������u���˂�l�ɕ`�悷�邽�߂̃t���O�j
+				boolean isreloading = this.getbooleanfromnbt("IsReloading");//�����[�h�����ǂ���
+				int remainbullets = gunitem.getMaxDamage() - gunstack.getItemDamage();//�����[�h�����ǂ���
+				Minecraft.getMinecraft().renderEngine.bindTexture(guntexture);
+				GL11.glPushMatrix();
+				GL11.glScalef(1f / 2f, 1f / 2f, 1f / 2f);
+				if (entity instanceof EntityPlayer) {
+					this.glMatrixForRenderInEntityPlayer(-0.75f);
+					GL11.glScalef(scala, scala, scala);
+				} else {
+					this.glMatrixForRenderInEntity(-0.2f);
+					GL11.glScalef(-scala * 0.6f, scala * 0.6f, scala * 0.6f);
+				}
+				GL11.glScalef(gunitem.gunInfo.inworldScale, gunitem.gunInfo.inworldScale, gunitem.gunInfo.inworldScale);
+				if (isreloading) {
+					int reloadprogress = this.getintfromnbt("RloadTime");
+					partsRender_gun.partSidentification(new GunState[]{GunState.Reload}, (float)reloadprogress, remainbullets);
+				} else if (HandmadeGunsCore.Key_ADS(entity)) {
+					int cockingtime = this.getintfromnbt("CockingTime");
+					if (cockingtime > 0) {
+						float cockingprogress = cockingtime + this.getSmoothing() - 1;
+						partsRender_gun.partSidentification(new GunState[]{GunState.Cock}, cockingprogress, remainbullets);
+					} else if (!recoiled) {
+						GL11.glRotatef(jump * (1 - this.getSmoothing()), 1.0f, 0.0f, 0.0f);
+						float recoileprogress = 10 * (nbt.getByte("Bolt") + smoothing) / gunitem.gunInfo.cycle;
+						partsRender_gun.partSidentification(new GunState[]{GunState.ADS,GunState.Recoil}, recoileprogress, remainbullets);
+					} else {
+						partsRender_gun.partSidentification(new GunState[]{GunState.ADS}, (float)0, remainbullets);
+					}
+				} else {
+					if (this.isentitysprinting(entity)) {
+						partsRender_gun.partSidentification(new GunState[]{GunState.Default}, (float)0, remainbullets);
 					} else {
 						int cockingtime = this.getintfromnbt("CockingTime");
 						if (cockingtime > 0) {
@@ -556,20 +537,61 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 						} else {
 							partsRender_gun.partSidentification(new GunState[]{GunState.Default}, (float)0, remainbullets);
 						}
-//						renderpartsNormal(this,gunitem,gunstack,model,entity,type,data);
 					}
-					GL11.glPopMatrix();//�I�����ɂ�����Ă�ōs����o�b�N�A�b�v����߂��܂��B
-					smoothing = RenderTickSmoothing.smooth;
-					break;
+//						renderpartsNormal(this,gunitem,gunstack,model,entity,type,data);
 				}
-				case FIRST_PERSON_MAP:
-					break;
+				GL11.glPopMatrix();//�I�����ɂ�����Ă�ōs����o�b�N�A�b�v����߂��܂��B
+				break;
 			}
-			
-			GL11.glDepthMask(true);
-			GL11.glDisable(GL_BLEND);
-			GL11.glPopMatrix();
+			case ENTITY: {
+				pass = MinecraftForgeClient.getRenderPass();
+				if(pass == 1) {
+					glEnable(GL_BLEND);
+					glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+					GL11.glDepthMask(false);
+					glAlphaFunc(GL_LESS, 1);
+				}else {
+					GL11.glDepthMask(true);
+					glAlphaFunc(GL_EQUAL, 1);
+				}
+				partsRender_gun.pass = pass;
+				isfirstperson = false;
+				boolean recoiled = this.getbooleanfromnbt("Recoiled");//���R�C�������ǂ����i�e������u���˂�l�ɕ`�悷�邽�߂̃t���O�j
+				boolean isreloading = this.getbooleanfromnbt("IsReloading");//�����[�h�����ǂ���
+				int remainbullets = gunitem.getMaxDamage() - gunstack.getItemDamage();//�����[�h�����ǂ���
+				smoothing = isPlacedGun ? RenderTickSmoothing.smooth : 0;
+				Minecraft.getMinecraft().renderEngine.bindTexture(guntexture);
+				GL11.glPushMatrix();
+				GL11.glScalef(0.4f * scala * gunitem.gunInfo.inworldScale * (isPlacedGun ? gunitem.gunInfo.onTurretScale : 1), 0.4f * scala * gunitem.gunInfo.inworldScale * (isPlacedGun ? gunitem.gunInfo.onTurretScale : 1), 0.4f * scala * gunitem.gunInfo.inworldScale * (isPlacedGun ? gunitem.gunInfo.onTurretScale : 1));
+				if (isreloading) {
+					int reloadprogress = this.getintfromnbt("RloadTime");
+					partsRender_gun.partSidentification(new GunState[]{GunState.Reload}, (float)reloadprogress, remainbullets);
+				} else {
+					int cockingtime = this.getintfromnbt("CockingTime");
+					if (cockingtime > 0) {
+						float cockingprogress = cockingtime + this.getSmoothing() - 1;
+						partsRender_gun.partSidentification(new GunState[]{GunState.Cock}, cockingprogress, remainbullets);
+					} else if (!recoiled) {
+						//�ˌ����1tick���̂݌Ă΂�܂�
+						GL11.glRotatef(jump * (1 - this.getSmoothing()), 1.0f, 0.0f, 0.0f);
+						float recoileprogress = 10 * (nbt.getByte("Bolt") + smoothing) / gunitem.gunInfo.cycle;
+						partsRender_gun.partSidentification(new GunState[]{GunState.Recoil}, recoileprogress, remainbullets);
+					} else {
+						partsRender_gun.partSidentification(new GunState[]{GunState.Default}, (float)0, remainbullets);
+					}
+//						renderpartsNormal(this,gunitem,gunstack,model,entity,type,data);
+				}
+				GL11.glPopMatrix();//�I�����ɂ�����Ă�ōs����o�b�N�A�b�v����߂��܂��B
+				smoothing = RenderTickSmoothing.smooth;
+				break;
+			}
+			case FIRST_PERSON_MAP:
+				break;
 		}
+
+		GL11.glDepthMask(true);
+		GL11.glDisable(GL_BLEND);
+		GL11.glPopMatrix();
 		GL11.glPopAttrib();
 	}
 
@@ -653,7 +675,7 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 			Minecraft.getMinecraft().renderEngine.bindTexture(resourcelocation);
 		}
 	}
-	
+
 //	public void renderarm(float armrotationxl,float armrotationyl,float armrotationzl,float armoffsetxl,float armoffsetyl,float armoffsetzl,
 //						  float armrotationxr,float armrotationyr,float armrotationzr,float armoffsetxr,float armoffsetyr,float armoffsetzr){
 //		GL11.glScalef(1/modelscala,1/modelscala,1/modelscala);
@@ -1193,7 +1215,7 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 			}
 		}
 	}
-	
+
 	public void setEqippedOffset_Normal(float x, float y, float z){
 		modelPosX = x;
 		modelPosY = y;

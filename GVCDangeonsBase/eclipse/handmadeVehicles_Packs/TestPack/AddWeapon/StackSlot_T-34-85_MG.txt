@@ -1,0 +1,11 @@
+WeaponName,StackSlot_noTriggerLink
+turretYawCenterpos,0,0,0
+turretPitchCenterpos,0,0,0
+cannonPos,0,0,0
+turretspeedY,0
+turretspeedP,0
+linked_MotherTrigger,false
+needGunStack,true
+useVehicleInventory,true
+gunStackwhitelist,PKM,RPK74,DP28LMG
+End

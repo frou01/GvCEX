@@ -23,7 +23,7 @@ public class HMG_CommandReloadparm extends CommandBase implements ICommand{
     @Override
     public int getRequiredPermissionLevel()
     {
-        return 2;
+        return 0;
     }
     @Override
     public String getCommandUsage(ICommandSender p_71518_1_) {
@@ -79,7 +79,7 @@ public class HMG_CommandReloadparm extends CommandBase implements ICommand{
             for (int ii = 0; ii < filegun.length; ii++) {
                 if (filegun[ii].isFile()) {
                     try {
-                        new HMGGunMaker().load(null,true, filegun[ii]);
+                        new HMGGunMaker().load(true, filegun[ii]);
                     } catch (ModelFormatException e) {
                         e.printStackTrace();
                     }

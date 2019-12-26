@@ -1,7 +1,7 @@
 package hmgx_lmmrinker.AI;
 
 import handmadeguns.items.guns.HMGItem_Unified_Guns;
-import hmgx_lmmrinker.SlowPathFinder.WorldForPathfind;
+import handmadevehicle.SlowPathFinder.WorldForPathfind;
 import littleMaidMobX.*;
 import mmmlibx.lib.MMM_Helper;
 import net.minecraft.entity.Entity;
@@ -28,7 +28,7 @@ public class EntityAIAttackHMGun extends EntityAIBase implements LMM_IEntityAI {
     protected LMM_InventoryLittleMaid fInventory;
     protected LMM_SwingStatus swingState;
     protected World worldObj;
-    private WorldForPathfind worldForPathfind;
+    public WorldForPathfind worldForPathfind;
     protected EntityLivingBase fTarget;
     protected int fForget;
     /** �^�[�Q�b�g�̗̑͂������ԃJ�E���g�A�b�v����B���C�h�̈ʒu�������_���[�W��^�����Ȃ��ꍇ�Ɉړ������邽�߂̃J�E���^  */
@@ -222,9 +222,7 @@ public class EntityAIAttackHMGun extends EntityAIBase implements LMM_IEntityAI {
                     lcanattack &= (milsq > 3D || il < 0D);
                     lcanattack &= ldotarget;
                     lcanattack &= lsee;
-                    // �ː���ɖ���������Ή��ړ��A4�b�ȏ�G��HP���ς��Ȃ��ꍇ�����ړ�
                     if ((!lcanattack || fTargetDamegeCounter > 40)) {
-                        // �ˌ��ʒu���m�ۂ���
                         double tpx = fMaid.posX;
                         double tpy = fMaid.posY;
                         double tpz = fMaid.posZ;
@@ -232,26 +230,21 @@ public class EntityAIAttackHMGun extends EntityAIBase implements LMM_IEntityAI {
 //						double tpr = Math.sqrt(atl) * 0.5D;
                         tpr = Math.sqrt(atx * atx + atz * atz);
                         if (fTargetSearchDir==1) {
-                            // �E���
                             tpx += atx*2 / tpr;
                             tpz += atz*2 / tpr;
                             tpx += (atz*5 / tpr );
                             tpz -= (atx*5 / tpr );
                         } else if (fTargetSearchDir==2) {
-                            // �����
                             tpx += atx*2 / tpr;
                             tpz += atz*2 / tpr;
                             tpx -= (atz*5 / tpr );
                             tpz += (atx*5 / tpr );
                         } else if(fTargetSearchDir==3) {
-                            // �O�i
                             tpx += atx;
                             tpz += atz;
                         } else if(fTargetSearchDir==0) {
-                            // �ҋ@
                         }
-                        if(fMaid.onGround)
-                            fMaid.getNavigator().setPath(worldForPathfind.getEntityPathToXYZ(fMaid,(int)tpx, (int)tpy, (int)tpz,30,true,true,true,true),1.0);
+                        fMaid.getNavigator().setPath(worldForPathfind.getEntityPathToXYZ(fMaid,(int)tpx, (int)tpy, (int)tpz,30,true,true,true,true),1.0);
                     }else {
                         fMaid.getNavigator().clearPathEntity();
                     }

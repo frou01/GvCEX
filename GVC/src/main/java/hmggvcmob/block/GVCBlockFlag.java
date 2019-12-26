@@ -1,29 +1,22 @@
 package hmggvcmob.block;
 
-import hmggvcmob.GVCMobPlus;
 import hmggvcmob.camp.CampObj;
 import hmggvcmob.tile.TileEntityFlag;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.scoreboard.Team;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.List;
 import java.util.Random;
 
 import static hmggvcmob.GVCMobPlus.beacon_defensive;
-import static hmggvcmob.GVCMobPlus.fn_Supplyflag;
+import static hmggvcmob.GVCMobPlus.fn_PlayerFlag;
 
 public class GVCBlockFlag extends BlockContainer {
     public CampObj campObj;
@@ -62,7 +55,7 @@ public class GVCBlockFlag extends BlockContainer {
     @Override
     public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_)
     {
-        if(this == fn_Supplyflag&& !p_149915_1_.isRemote){
+        if(this == fn_PlayerFlag && !p_149915_1_.isRemote){
             for(Object obj : p_149915_1_.playerEntities){
                 if(obj instanceof EntityPlayer){
                     EntityPlayer entityPlayer = (EntityPlayer) obj;

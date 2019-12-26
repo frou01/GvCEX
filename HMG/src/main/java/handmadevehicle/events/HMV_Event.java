@@ -13,6 +13,7 @@ import net.minecraftforge.event.entity.living.LivingHurtEvent;
 
 import static handmadevehicle.HMVehicle.HMV_Proxy;
 import static handmadevehicle.HMVehicle.loadConfig;
+import static net.minecraft.util.DamageSource.inWall;
 
 public class HMV_Event {
 	
@@ -20,24 +21,22 @@ public class HMV_Event {
 	public void entitydamaged(LivingHurtEvent event)
 	{
 		EntityLivingBase entity = event.entityLiving;
-		if(entity != null){
-			if ((entity.ridingEntity instanceof EntityDummy_rider)) {
-				float userProtect = ((EntityDummy_rider) entity.ridingEntity).
-						linkedBaseLogic.info.
-						prefab_seats[((EntityDummy_rider) entity.ridingEntity).linkedSeatID]
-						.userProtect_maxDamageLevel;
-				if(userProtect < 0) {
-					if(entity instanceof EntityPlayer){
-						event.ammount = 0;
-						event.setCanceled(true);
-					}else {
-						event.ammount -= entity.getMaxHealth();
-						event.setCanceled(true);
-					}
-				}else {
-					event.ammount -= userProtect;
+
+		if ((entity != null && entity.ridingEntity instanceof EntityDummy_rider)) {
+			float userProtect = ((EntityDummy_rider) entity.ridingEntity).
+					linkedBaseLogic.prefab_vehicle.
+					prefab_seats[((EntityDummy_rider) entity.ridingEntity).linkedSeatID]
+					.userProtect_maxDamageLevel;
+			System.out.println("userProtect" + userProtect);
+			if (userProtect < 0) {
+				if (entity instanceof EntityPlayer) {
+					event.ammount = 0;
 					event.setCanceled(true);
+				} else {
+					event.ammount -= entity.getMaxHealth() / 2;
 				}
+			} else {
+				event.ammount -= userProtect;
 			}
 		}
 	}

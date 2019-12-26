@@ -1,9 +1,12 @@
 package hmgx_lmmrinker.mode;
 
+import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import handmadeguns.items.guns.HMGItem_Unified_Guns;
+import handmadevehicle.SlowPathFinder.ModifiedPathNavigater;
 import hmgx_lmmrinker.AI.EntityAIAttackHMGun;
 import hmgx_lmmrinker.AI.EntityAIFollow_with_Gun;
 import littleMaidMobX.*;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAILeapAtTarget;
@@ -129,5 +132,8 @@ public class EntityModeHMGunner extends LMM_EntityModeBase {
     @Override
     public void onUpdate(int pMode) {
         super.onUpdate(pMode);
+        if(!(owner.getNavigator() instanceof ModifiedPathNavigater))
+            //バグ修正版に置き換え
+            ObfuscationReflectionHelper.setPrivateValue(EntityLiving.class, this.owner, new ModifiedPathNavigater(this.owner,this.owner.worldObj,mAiAttackGun.worldForPathfind), "navigator", "field_70699_by", "bo");
     }
 }

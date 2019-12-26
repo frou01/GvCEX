@@ -23,6 +23,7 @@ public class GVCEntityAPCSpawn extends EntityGBase
 	public GVCEntityAPCSpawn(World par1World)
     {
         super(par1World);
+        canRideVehicle = false;
         this.fuse = 1;
         this.renderDistanceWeight = 0;
     }

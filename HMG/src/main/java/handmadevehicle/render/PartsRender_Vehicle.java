@@ -1,32 +1,23 @@
 package handmadevehicle.render;
 
-import cpw.mods.fml.client.FMLClientHandler;
-import handmadeguns.HandmadeGunsCore;
 import handmadeguns.client.render.*;
-import handmadeguns.items.HMGItemAttachment_reddot;
-import handmadeguns.items.HMGItemAttachment_scope;
-import handmadeguns.items.HMGItemSightBase;
 import handmadevehicle.entity.parts.turrets.TurretObj;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.MinecraftForgeClient;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
 
+import javax.vecmath.Vector3d;
 import java.util.ArrayList;
 
 import static handmadeguns.event.RenderTickSmoothing.smooth;
 import static handmadevehicle.HMVehicle.HMV_Proxy;
 import static handmadevehicle.render.RenderVehicle.currentBaseLogic;
-import static handmadevehicle.render.RenderVehicle.currentEntity;
-import static net.minecraft.util.MathHelper.wrapAngleTo180_float;
 import static org.lwjgl.opengl.GL11.*;
 
 public class PartsRender_Vehicle extends PartsRender {
-	
+	public RenderVehicle mother;
 	public void partSidentification(Object... data){
 		float flame;
 		int remainbullets = (int) currentBaseLogic.health;
@@ -36,27 +27,38 @@ public class PartsRender_Vehicle extends PartsRender {
 			if(parts instanceof HMVVehicleParts && ((HMVVehicleParts) parts).isTurretParts){
 				states = new GunState[2];
 				TurretObj linkedTurret = currentBaseLogic.allturrets[((HMVVehicleParts) parts).linkedTurretID];
-				if(linkedTurret.dummyGunItem != null && linkedTurret.dummyGunStack != null) {
-					remainbullets = linkedTurret.dummyGunItem.remain_Bullet(linkedTurret.dummyGunStack);
-					if (linkedTurret.isreloading()) {
-						states[0] = GunState.Reload;
-						flame = linkedTurret.getDummyStackTag().getInteger("RloadTime") - smooth;
-					} else if (linkedTurret.isLoading()) {
-						states[0] = GunState.Recoil;
-						flame = (linkedTurret.getDummyStackTag().getByte("Bolt") - smooth) * 10;
-					} else {
+				if(linkedTurret.gunItem != null && linkedTurret.gunStack != null) {
+					if(((HMVVehicleParts) parts).isTurret_linkedGunMount){
+						states[1] = GunState.Default;
 						states[0] = GunState.Default;
 						flame = 0;
-					}
-					if (HMV_Proxy.iszooming()) {
-						states[1] = GunState.ADS;
-					} else {
-						states[1] = GunState.Default;
+					}else {
+						remainbullets = linkedTurret.gunItem.remain_Bullet(linkedTurret.gunStack);
+						if (linkedTurret.isreloading()) {
+							states[0] = GunState.Reload;
+							flame = linkedTurret.getDummyStackTag().getInteger("RloadTime") - smooth;
+						} else if (linkedTurret.isLoading()) {
+							states[0] = GunState.Recoil;
+							flame = (linkedTurret.getDummyStackTag().getByte("Bolt") - smooth) * 10;
+						} else {
+							states[0] = GunState.Default;
+							flame = 0;
+						}
+						if (HMV_Proxy.iszooming()) {
+							states[1] = GunState.ADS;
+						} else {
+							states[1] = GunState.Default;
+						}
 					}
 				}else {
 					remainbullets = 0;
 					states[0] = GunState.Reload;
 					flame = 0;
+					if (HMV_Proxy.iszooming()) {
+						states[1] = GunState.ADS;
+					} else {
+						states[1] = GunState.Default;
+					}
 				}
 			}else {
 				states = new GunState[1];
@@ -137,15 +139,18 @@ public class PartsRender_Vehicle extends PartsRender {
 		HMGGunParts_Motion_PosAndRotation rotationCenterAndRotation = parts.getRenderinfCenter();
 		
 		if(parts instanceof HMVVehicleParts) {
+			TurretObj linked = currentBaseLogic.allturrets[((HMVVehicleParts) parts).linkedTurretID];
 			if (((HMVVehicleParts) parts).isTurretParts && parts.hasbaseYawInfo) {
-				HMGGunParts_Motion_PosAndRotation baserotationCenterAndRotation = parts.getYawInfo(-(float) currentBaseLogic.allturrets[((HMVVehicleParts) parts).linkedTurretID].turretrotationYaw);
+				HMGGunParts_Motion_PosAndRotation baserotationCenterAndRotation = parts.getYawInfo(-(float)
+						(smooth * linked.turretrotationYaw + (1-smooth) * linked.prevturretrotationYaw));
 				if (baserotationCenterAndRotation != null) {
 					if(!baserotationCenterAndRotation.renderOnOff)return;
 					transformParts(rotationCenterAndRotation,baserotationCenterAndRotation,parts);
 				}
 			}
 			if (((HMVVehicleParts) parts).isTurretParts && parts.hasbasePitchInfo) {
-				HMGGunParts_Motion_PosAndRotation baserotationCenterAndRotation = parts.getPitchInfo((float) currentBaseLogic.allturrets[((HMVVehicleParts) parts).linkedTurretID].turretrotationPitch);
+				HMGGunParts_Motion_PosAndRotation baserotationCenterAndRotation = parts.getPitchInfo((float)
+						(smooth * linked.turretrotationPitch + (1-smooth) * linked.prevturretrotationPitch));
 				if (baserotationCenterAndRotation != null) {
 					if(!baserotationCenterAndRotation.renderOnOff)return;
 					transformParts(rotationCenterAndRotation,baserotationCenterAndRotation,parts);
@@ -167,7 +172,7 @@ public class PartsRender_Vehicle extends PartsRender {
 				if(!rollLadderInfo.renderOnOff)return;
 				transformParts(rotationCenterAndRotation,rollLadderInfo,parts);
 			}
-			HMGGunParts_Motion_PosAndRotation throttleInfo = ((HMVVehicleParts) parts).getSomethingPositions(currentBaseLogic.throttle,3);
+			HMGGunParts_Motion_PosAndRotation throttleInfo = ((HMVVehicleParts) parts).getSomethingPositions(currentBaseLogic.throttle*10,3);
 			if (throttleInfo != null) {
 				if(!throttleInfo.renderOnOff)return;
 				transformParts(rotationCenterAndRotation,throttleInfo,parts);
@@ -197,6 +202,40 @@ public class PartsRender_Vehicle extends PartsRender {
 				if(!flapInfo.renderOnOff)return;
 				transformParts(rotationCenterAndRotation,flapInfo,parts);
 			}
+			HMGGunParts_Motion_PosAndRotation motionInfox = ((HMVVehicleParts) parts).getSomethingPositions((float) currentBaseLogic.localMotionVec.x*10,9);
+			if (motionInfox != null) {
+				if(!motionInfox.renderOnOff)return;
+				transformParts(rotationCenterAndRotation,motionInfox,parts);
+			}
+			HMGGunParts_Motion_PosAndRotation motionInfoy = ((HMVVehicleParts) parts).getSomethingPositions((float) currentBaseLogic.localMotionVec.y*10,10);
+			if (motionInfoy != null) {
+				if(!motionInfoy.renderOnOff)return;
+				transformParts(rotationCenterAndRotation,motionInfoy,parts);
+			}
+			HMGGunParts_Motion_PosAndRotation motionInfoz = ((HMVVehicleParts) parts).getSomethingPositions((float) currentBaseLogic.localMotionVec.z*10,11);
+			if (motionInfoz != null) {
+				if(!motionInfoz.renderOnOff)return;
+				transformParts(rotationCenterAndRotation,motionInfoz,parts);
+			}
+
+			if (((HMVVehicleParts) parts).isPera){
+				float peraOffset = (currentBaseLogic.prev_pera_trackPos + (currentBaseLogic.pera_trackPos - currentBaseLogic.prev_pera_trackPos) * smooth)/currentBaseLogic.prefab_vehicle.max_pera_trackPos;
+				HMGGunParts_Motion_PosAndRotation peraPosAndRotation = ((HMVVehicleParts) parts).getRenderinfOfPeraPosAndRotation();
+				if(peraPosAndRotation != null) {
+					GL11.glTranslatef(peraPosAndRotation.posX * peraOffset, peraPosAndRotation.posY * peraOffset, peraPosAndRotation.posZ * peraOffset);
+					if(parts.rotateTypeIsVector){
+						GL11.glTranslatef(rotationCenterAndRotation.posX, rotationCenterAndRotation.posY, rotationCenterAndRotation.posZ);
+						GL11.glRotatef(peraPosAndRotation.rotationX * peraOffset, rotationCenterAndRotation.rotateVec.x, rotationCenterAndRotation.rotateVec.y, rotationCenterAndRotation.rotateVec.z);
+						GL11.glTranslatef(-rotationCenterAndRotation.posX, -rotationCenterAndRotation.posY, -rotationCenterAndRotation.posZ);
+					}else {
+						GL11.glTranslatef(rotationCenterAndRotation.posX, rotationCenterAndRotation.posY, rotationCenterAndRotation.posZ);
+						GL11.glRotatef(peraPosAndRotation.rotationY * peraOffset, 0, 1, 0);
+						GL11.glRotatef(peraPosAndRotation.rotationX * peraOffset, 1, 0, 0);
+						GL11.glRotatef(peraPosAndRotation.rotationZ * peraOffset, 0, 0, 1);
+						GL11.glTranslatef(-rotationCenterAndRotation.posX, -rotationCenterAndRotation.posY, -rotationCenterAndRotation.posZ);
+					}
+				}
+			}
 
 			if (parts.isbullet) {
 				if (state == GunState.Recoil)
@@ -207,6 +246,7 @@ public class PartsRender_Vehicle extends PartsRender {
 				renderParts_Track((HMVVehicleParts) parts, flame, remainbullets, rotationCenterAndRotation);
 			} else {
 				if (parts.reticleAndPlate) {
+					glClearStencil(0);
 					glClear(GL_STENCIL_BUFFER_BIT);
 					glEnable(GL_STENCIL_TEST);
 					glStencilMask(1);
@@ -228,7 +268,7 @@ public class PartsRender_Vehicle extends PartsRender {
 								false,   // GLboolean blue
 								false);
 					}
-					model.renderPart(parts.partsname + "reticlePlate");
+					model.renderPart(parts.partsname_reticlePlate);
 					if (pass != 1) {
 						GL11.glDepthMask(true);
 						glAlphaFunc(GL_EQUAL, 1);
@@ -256,7 +296,8 @@ public class PartsRender_Vehicle extends PartsRender {
 					GL11.glDepthMask(false);
 
 					GL11.glDepthFunc(GL11.GL_ALWAYS);//強制描画
-					model.renderPart(parts.partsname + "reticle");
+					model.renderPart(parts.partsname_reticle);
+					if(parts.reticleChild != null)partSidentification(parts.reticleChild,state,flame,remainbullets);
 					GL11.glDepthFunc(GL11.GL_LEQUAL);
 					GL11.glDepthMask(true);
 					glDisable(GL_STENCIL_TEST);
@@ -264,41 +305,63 @@ public class PartsRender_Vehicle extends PartsRender {
 					GL11.glEnable(GL11.GL_LIGHTING);
 					OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float) lastBrightnessX, (float) lastBrightnessY);
 
-					if (pass == 1) {
-						glEnable(GL_BLEND);
-						glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-						GL11.glDepthMask(false);
-						glAlphaFunc(GL_LESS, 1);
-					} else {
-						GL11.glDepthMask(true);
-						glAlphaFunc(GL_EQUAL, 1);
-					}
 				}
-				if(((HMVVehicleParts) parts).isTurret_linkedGunMount &&
-						currentBaseLogic.allturrets[((HMVVehicleParts) parts).linkedTurretID]
-						.dummyGunStack != null){
-					renderLinkedStack(currentBaseLogic.allturrets[((HMVVehicleParts) parts).linkedTurretID]
-							.dummyGunStack);
+				if(pass == 1) {
+					glEnable(GL_BLEND);
+					glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+					GL11.glDepthMask(false);
+					glAlphaFunc(GL_LESS, 1);
+				}else {
+					GL11.glDepthMask(true);
+					glAlphaFunc(GL_EQUAL, 1);
 				}
+
 				model.renderPart(parts.partsname);
+
+				GL11.glDisable(GL11.GL_LIGHTING);
 				float lastBrightnessX = OpenGlHelper.lastBrightnessX;
 				float lastBrightnessY = OpenGlHelper.lastBrightnessY;
 				OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
-				model.renderPart(parts.partsname + "light");
+				model.renderPart(parts.partsname_light);
 				OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float) lastBrightnessX, (float) lastBrightnessY);
+				GL11.glEnable(GL11.GL_LIGHTING);
+				if(((HMVVehicleParts) parts).isTurret_linkedGunMount &&
+						currentBaseLogic.allturrets[((HMVVehicleParts) parts).linkedTurretID]
+								.gunStack != null){
+					renderLinkedStack(currentBaseLogic.allturrets[((HMVVehicleParts) parts).linkedTurretID],
+							currentBaseLogic.allturrets[((HMVVehicleParts) parts).linkedTurretID]
+							.gunStack);
+				}
+				mother.bindEntityTexture_public();
+
 			}
 		}
 	}
 
-	public void renderLinkedStack(ItemStack gunStack) {
+	public void renderLinkedStack(TurretObj turretObj,ItemStack gunStack) {
 		GL11.glPushMatrix();
 		if (gunStack != null) {
 			IItemRenderer gunrender = MinecraftForgeClient.getItemRenderer(gunStack, IItemRenderer.ItemRenderType.EQUIPPED);
+			GL11.glScaled(1/currentBaseLogic.prefab_vehicle.scale,
+					1/currentBaseLogic.prefab_vehicle.scale,
+					1/currentBaseLogic.prefab_vehicle.scale);
+			GL11.glTranslatef(0, turretObj.gunItem.gunInfo.yoffset,0);
 			if (gunrender instanceof HMGRenderItemGun_U_NEW) {
 				GL11.glScalef(0.5f, 0.5f, 0.5f);
+				HMGRenderItemGun_U_NEW.isPlacedGun = true;
+				HMGRenderItemGun_U_NEW.turretYaw = (float) -(turretObj.prevturretrotationYaw);
+				HMGRenderItemGun_U_NEW.turretPitch = (float) (turretObj.prevturretrotationPitch);
+
+				gunrender.renderItem(IItemRenderer.ItemRenderType.ENTITY, gunStack);
+
+				HMGRenderItemGun_U_NEW.isPlacedGun = false;
 			} else if (gunrender instanceof HMGRenderItemGun_U) {
 				//base は matbase を利用してそれらしく描画可能
 				GL11.glScalef(0.5f, 0.5f, 0.5f);
+				GL11.glRotatef((float) -(turretObj.prevturretrotationYaw +
+						(turretObj.turretrotationYaw - turretObj.prevturretrotationYaw) * smooth), 0.0F, 1.0F, 0.0F);
+				GL11.glRotatef((float) (turretObj.prevturretrotationPitch +
+						(turretObj.turretrotationPitch - turretObj.prevturretrotationPitch) * smooth), 1.0F, 0.0F, 0.0F);
 				gunrender.renderItem(IItemRenderer.ItemRenderType.ENTITY, gunStack);
 			}
 		}
@@ -318,7 +381,7 @@ public class PartsRender_Vehicle extends PartsRender {
 						float lastBrightnessX = OpenGlHelper.lastBrightnessX;
 						float lastBrightnessY = OpenGlHelper.lastBrightnessY;
 						OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
-						model.renderPart(parts.partsname + "light");
+						model.renderPart(parts.partsname_light);
 						OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)lastBrightnessX, (float)lastBrightnessY);
 						GL11.glPopMatrix();
 					}
@@ -338,7 +401,7 @@ public class PartsRender_Vehicle extends PartsRender {
 						float lastBrightnessX = OpenGlHelper.lastBrightnessX;
 						float lastBrightnessY = OpenGlHelper.lastBrightnessY;
 						OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
-						model.renderPart(parts.partsname + "light");
+						model.renderPart(parts.partsname_light);
 						OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)lastBrightnessX, (float)lastBrightnessY);
 					}
 				}
@@ -353,7 +416,7 @@ public class PartsRender_Vehicle extends PartsRender {
 					float lastBrightnessX = OpenGlHelper.lastBrightnessX;
 					float lastBrightnessY = OpenGlHelper.lastBrightnessY;
 					OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
-					model.renderPart(parts.partsname + "light");
+					model.renderPart(parts.partsname_light);
 					OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)lastBrightnessX, (float)lastBrightnessY);
 					GL11.glPopMatrix();
 				}
@@ -370,7 +433,7 @@ public class PartsRender_Vehicle extends PartsRender {
 					float lastBrightnessX = OpenGlHelper.lastBrightnessX;
 					float lastBrightnessY = OpenGlHelper.lastBrightnessY;
 					OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
-					model.renderPart(parts.partsname + "light");
+					model.renderPart(parts.partsname_light);
 					OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)lastBrightnessX, (float)lastBrightnessY);
 				}
 			}

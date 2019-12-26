@@ -1,0 +1,9 @@
+WeaponName,StackSlot_NormalGunMount_TOYOTA
+turretYawCenterpos,0,0,0
+turretPitchCenterpos,0,0,0
+cannonPos,0,0,0
+linked_MotherTrigger,false
+needGunStack,true
+useVehicleInventory,false
+useGunSight,true
+End

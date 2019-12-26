@@ -1,0 +1,9 @@
+ObjModel,FAB-250.mqo
+ObjTexture,FAB-250.png
+Objscale,1
+FlyingSoundName,bombdrops
+FlyingSoundLV,4
+FlyingSoundSP,1
+FlyingSoundmaxdist,1024
+FlyingSound_BulletMinSpeed,0.5
+Name,FAB-250

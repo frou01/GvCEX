@@ -46,6 +46,7 @@ public class GVCEntityDrawn extends EntityGBase {
     public GVCEntityDrawn(World par1World)
     {
         super(par1World);
+        canRideVehicle = false;
         this.setSize(3F, 2F);
         viewWide = 3f;
         //this.tasks.addTask(1, new AIEntityInvasionFlag(this, 1.0D));

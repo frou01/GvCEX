@@ -319,7 +319,16 @@ public class ClientProxyHMG extends CommonSideProxyHMG {
 			e.printStackTrace();
 		}
 	}
-    @Override
+	@Override
+	public void setRightclicktimer(){
+		try {
+			ClientProxyHMG.rightClickDelayTimer.set(HMG_proxy.getMCInstance(), 10);
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
     public void InitRendering()
     {
     	super.InitRendering();

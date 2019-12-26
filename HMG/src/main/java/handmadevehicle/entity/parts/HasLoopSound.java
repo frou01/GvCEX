@@ -1,7 +1,7 @@
 package handmadevehicle.entity.parts;
 
 public interface HasLoopSound {
-	default void yourSoundIsremain(){
+	default void yourSoundIsremain(String playingSound){
 		((HasBaseLogic)this).getBaseLogic().yourSoundIsremain();
 	}
 	default float getsoundPitch(){

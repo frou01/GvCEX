@@ -217,6 +217,59 @@ public class HandmadeGunsCore {
 		HMG_proxy.setuprender();
 		File packdir = new File(HMG_proxy.ProxyFile(), "handmadeguns_Packs");
 		packdir.mkdirs();
+		readPack(packdir,pEvent.getSide().isClient());
+
+		String filepath = "mods/handmadeguns/addgun";
+		packdir = new File(HMG_proxy.ProxyFile(), filepath);
+		packdir.mkdirs();
+		readPack(packdir,pEvent.getSide().isClient());
+
+
+		//TODO:INJECT_FUNCTION
+		File[] packlist = packdir.listFiles();
+		Arrays.sort(packlist, new Comparator<File>() {
+			public int compare(File file1, File file2){
+				return file1.getName().compareTo(file2.getName());
+			}
+		});
+		for (File aPacklist : packlist) {
+			if (aPacklist.isDirectory()) {
+				File[] recipelist = getFileList(aPacklist, "addscripts");
+				if (recipelist != null && recipelist.length > 0) {
+					for (File aRecipelist : recipelist) {
+						System.out.println("debug" + aRecipelist);
+						try {
+							ScriptEngine script = (new ScriptEngineManager(null)).getEngineByName("js");
+							try {
+								if (script.toString().contains("Nashorn")) {
+									script.eval("load(\"nashorn:mozilla_compat.js\");");
+								}
+								script.eval(new FileReader(aRecipelist));
+								try {
+									((Invocable) script).invokeFunction("preInit", pEvent);
+								} catch (ScriptException e) {
+									e.printStackTrace();
+								} catch (NoSuchMethodException e) {
+									e.printStackTrace();
+								}
+								scripts.add((Invocable) script);
+							} catch (ScriptException e) {
+								throw new RuntimeException("Script exec error", e);
+							}
+						} catch (FileNotFoundException e) {
+							e.printStackTrace();
+						}
+					}
+				}
+				//fileSetup(filelist1[pack], "addbattlepack", "battlepacks");
+			}
+		}
+		//END
+
+	}
+
+	public void readPack(File packdir,boolean isClient){
+
 		{
 			File[] packlist = packdir.listFiles();
 			Arrays.sort(packlist, new Comparator<File>() {
@@ -298,7 +351,7 @@ public class HandmadeGunsCore {
 				{
 					try
 					{
-						if(pEvent.getSide().isClient()) {
+						if(isClient) {
 							HashMap<String, Object> map = new HashMap<String, Object>();
 							map.put("modid", "HandmadeGuns");
 							map.put("name", "HandmadeGuns");
@@ -316,7 +369,7 @@ public class HandmadeGunsCore {
 					System.out.println("Loaded content pack resource : " + file.getName());
 				}
 			}
-			if(pEvent.getSide().isClient())Minecraft.getMinecraft().refreshResources();
+			if(isClient)Minecraft.getMinecraft().refreshResources();
 			Arrays.sort(packlist);
 			for (File apack : packlist) {
 				if (apack.isDirectory()) {
@@ -330,7 +383,7 @@ public class HandmadeGunsCore {
 						});
 						for (int ii = 0; ii < filetab.length; ii++) {
 							if (filetab[ii].isFile()) {
-								HMGAddTabs.load(pEvent.getSide().isClient(), filetab[ii]);
+								HMGAddTabs.load(isClient, filetab[ii]);
 							}
 						}
 					}
@@ -344,7 +397,7 @@ public class HandmadeGunsCore {
 						});
 						for (int ii = 0; ii < fileattach.length; ii++) {
 							if (fileattach[ii].isFile()) {
-								HMGAddAttachment.load(pEvent.getModConfigurationDirectory(), pEvent.getSide().isClient(), fileattach[ii]);
+								HMGAddAttachment.load(isClient, fileattach[ii]);
 							}
 						}
 					}
@@ -359,7 +412,7 @@ public class HandmadeGunsCore {
 						for (int ii = 0; ii < filelistmag.length; ii++) {
 							if (filelistmag[ii].isFile()) {
 								try {
-									HMGAddmagazine.load(pEvent.getSide().isClient(), filelistmag[ii]);
+									HMGAddmagazine.load(isClient, filelistmag[ii]);
 								} catch (ModelFormatException e) {
 									e.printStackTrace();
 								} catch (IOException e) {
@@ -375,7 +428,7 @@ public class HandmadeGunsCore {
 						for (int ii = 0; ii < filebullet.length; ii++) {
 							if (filebullet[ii].isFile()) {
 								try {
-									HMGAddBullets.load(pEvent.getSide().isClient(), filebullet[ii]);
+									HMGAddBullets.load(isClient, filebullet[ii]);
 								} catch (ModelFormatException e) {
 									e.printStackTrace();
 								}
@@ -410,7 +463,7 @@ public class HandmadeGunsCore {
 					for (int ii = 0; ii < filegun.length; ii++) {
 						if (filegun[ii].isFile()) {
 							try {
-								new HMGGunMaker().load(direjs, pEvent.getSide().isClient(), filegun[ii]);
+								new HMGGunMaker().load(isClient, filegun[ii]);
 							} catch (ModelFormatException e) {
 								e.printStackTrace();
 							}
@@ -420,46 +473,6 @@ public class HandmadeGunsCore {
 
 			}
 		}
-		//TODO:INJECT_FUNCTION
-		File[] packlist = packdir.listFiles();
-		Arrays.sort(packlist, new Comparator<File>() {
-			public int compare(File file1, File file2){
-				return file1.getName().compareTo(file2.getName());
-			}
-		});
-		for (File aPacklist : packlist) {
-			if (aPacklist.isDirectory()) {
-				File[] recipelist = getFileList(aPacklist, "addscripts");
-				if (recipelist != null && recipelist.length > 0) {
-					for (File aRecipelist : recipelist) {
-						System.out.println("debug" + aRecipelist);
-						try {
-							ScriptEngine script = (new ScriptEngineManager(null)).getEngineByName("js");
-							try {
-								if (script.toString().contains("Nashorn")) {
-									script.eval("load(\"nashorn:mozilla_compat.js\");");
-								}
-								script.eval(new FileReader(aRecipelist));
-								try {
-									((Invocable) script).invokeFunction("preInit", pEvent);
-								} catch (ScriptException e) {
-									e.printStackTrace();
-								} catch (NoSuchMethodException e) {
-									e.printStackTrace();
-								}
-								scripts.add((Invocable) script);
-							} catch (ScriptException e) {
-								throw new RuntimeException("Script exec error", e);
-							}
-						} catch (FileNotFoundException e) {
-							e.printStackTrace();
-						}
-					}
-				}
-				//fileSetup(filelist1[pack], "addbattlepack", "battlepacks");
-			}
-		}
-		//END
 	}
 
 	public static void copyFile(File in, File out) throws IOException {
@@ -537,20 +550,20 @@ public class HandmadeGunsCore {
 		EntityRegistry.registerModEntity(HMGEntityItemMount2.class, "HMGEntityItemMount2", 202, this, 128, 5, true);
 
 		//EntityRegistry.instance()ry.registerModEntity(HGEntityBullet.class, "BulletHG", 150, this, 128, 5, true);
-		EntityRegistry.registerModEntity(HMGEntityBullet.class, "Bullet_HMG", 260, this, 60, 5, false);
-		EntityRegistry.registerModEntity(HMGEntityBulletRocket.class, "BulletRPG_HMG", 261, this, 60, 5, false);
-		EntityRegistry.registerModEntity(HMGEntityBulletExprode.class, "BulletGrenade_HMG", 262, this, 60, 5, false);
-		EntityRegistry.registerModEntity(HMGEntityBulletTorp.class, "BulletTorp_HMG", 262, this, 60, 5, false);
+		EntityRegistry.registerModEntity(HMGEntityBullet.class, "Bullet_HMG", 260, this, 4096, 5, false);
+		EntityRegistry.registerModEntity(HMGEntityBulletRocket.class, "BulletRPG_HMG", 261, this, 4096, 5, false);
+		EntityRegistry.registerModEntity(HMGEntityBulletExprode.class, "BulletGrenade_HMG", 262, this, 4096, 5, false);
+		EntityRegistry.registerModEntity(HMGEntityBulletTorp.class, "BulletTorp_HMG", 262, this, 4096, 5, false);
 		EntityRegistry.registerModEntity(HMGEntityLight.class, "Right_HMG", 263, this, 128, 5, true);
 		EntityRegistry.registerModEntity(HMGEntityLight2.class, "Right2_HMG", 264, this, 128, 5, false);
 		EntityRegistry.registerModEntity(HMGEntityLaser.class, "Laser_HMG", 265, this, 128, 5, false);
 
-		EntityRegistry.registerModEntity(HMGEntityBullet_AP.class, "Bullet_AP_HMG", 270, this, 60, 5, false);
-		EntityRegistry.registerModEntity(HMGEntityBullet_Frag.class, "Bullet_Frag_HMG", 271, this, 60, 5, false);
-		EntityRegistry.registerModEntity(HMGEntityBullet_TE.class, "Bullet_TE_HMG", 272, this, 60, 5, false);
-		EntityRegistry.registerModEntity(HMGEntityBullet_AT.class, "Bullet_AT_HMG", 273, this, 60, 5, false);
-		EntityRegistry.registerModEntity(HMGEntityBullet_HE.class, "Bullet_HE_HMG", 274, this, 60, 5, false);
-		EntityRegistry.registerModEntity(HMGEntityBullet_Flame.class, "Bullet_Flame_HMG", 275, this, 60, 5, false);
+		EntityRegistry.registerModEntity(HMGEntityBullet_AP.class, "Bullet_AP_HMG", 270, this, 4096, 5, false);
+		EntityRegistry.registerModEntity(HMGEntityBullet_Frag.class, "Bullet_Frag_HMG", 271, this, 4096, 5, false);
+		EntityRegistry.registerModEntity(HMGEntityBullet_TE.class, "Bullet_TE_HMG", 272, this, 4096, 5, false);
+		EntityRegistry.registerModEntity(HMGEntityBullet_AT.class, "Bullet_AT_HMG", 273, this, 4096, 5, false);
+		EntityRegistry.registerModEntity(HMGEntityBullet_HE.class, "Bullet_HE_HMG", 274, this, 4096, 5, false);
+		EntityRegistry.registerModEntity(HMGEntityBullet_Flame.class, "Bullet_Flame_HMG", 275, this, 4096, 5, false);
 
 		EntityRegistry.registerModEntity(HMGEntityBulletCartridge.class, "BulletCartridge_HMG", 255, this, 128, 5, true);
 		EntityRegistry.registerModEntity(PlacedGunEntity.class, "PlacedGun", 253, this, 128, 1, true);
@@ -584,32 +597,6 @@ public class HandmadeGunsCore {
 		//if(pEvent.getSide().isClient())
 		{
 			MinecraftForge.EVENT_BUS.register(new LivingEventHooks());
-		}
-		//TODO:INJECT_FUNCTION
-		//AddRecipe
-		String filepath = "mods/handmadeguns/addgun";
-		File packdir = new File(HMG_proxy.ProxyFile(), "handmadeguns_Packs");
-		File[] packlist = packdir.listFiles();
-		Arrays.sort(packlist, new Comparator<File>() {
-			public int compare(File file1, File file2){
-				return file1.getName().compareTo(file2.getName());
-			}
-		});
-		for (File aPacklist : packlist) {
-			if (aPacklist.isDirectory()) {
-				File[] recipelist = getFileList(aPacklist, "addpackrecipe");
-				if(recipelist != null && recipelist.length>0){
-					Arrays.sort(recipelist, new Comparator<File>(){
-						public int compare(File file1, File file2){
-							return file1.getName().compareTo(file2.getName());
-						}
-					});
-					for(int count = 0 ; count < recipelist.length ; count++){
-						HMGGunMaker.addRecipe(recipelist[count]);
-					}
-				}
-
-			}
 		}
 
 		for(int count = 0 ; count < scripts.size() ; count++){
@@ -747,6 +734,39 @@ public class HandmadeGunsCore {
 			}
 		}
 		//END
+
+
+		//TODO:INJECT_FUNCTION
+		//AddRecipe
+		readPackRecipe(new File(HMG_proxy.ProxyFile(), "handmadeguns_Packs"));
+		String filepath = "mods/handmadeguns/addgun";
+		readPackRecipe(new File(HMG_proxy.ProxyFile(), filepath));
+	}
+
+	public void readPackRecipe(File packdir){
+
+		File[] packlist = packdir.listFiles();
+		Arrays.sort(packlist, new Comparator<File>() {
+			public int compare(File file1, File file2){
+				return file1.getName().compareTo(file2.getName());
+			}
+		});
+		for (File aPacklist : packlist) {
+			if (aPacklist.isDirectory()) {
+				File[] recipelist = getFileList(aPacklist, "addpackrecipe");
+				if(recipelist != null && recipelist.length>0){
+					Arrays.sort(recipelist, new Comparator<File>(){
+						public int compare(File file1, File file2){
+							return file1.getName().compareTo(file2.getName());
+						}
+					});
+					for(int count = 0 ; count < recipelist.length ; count++){
+						HMGGunMaker.addRecipe(recipelist[count]);
+					}
+				}
+
+			}
+		}
 	}
 
 	@EventHandler

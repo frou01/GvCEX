@@ -285,7 +285,7 @@ public class PartsRender_Gun extends PartsRender {
 		GL11.glRotatef(attachrotation[0], 0, 1, 0);
 		GL11.glRotatef(attachrotation[1], 1, 0, 0);
 		GL11.glRotatef(attachrotation[2], 0, 0, 1);
-		((HMGRenderItemCustom) attachrender).renderaspart();
+		((HMGRenderItemCustom) attachrender).renderaspart(pass);
 		GL11.glPopMatrix();
 		HMG_proxy.getMCInstance().getTextureManager().bindTexture(texture);
 		part_Render(parts, state, flame, remainbullets, OffsetAndRotation);

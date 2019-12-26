@@ -14,15 +14,6 @@ import net.minecraft.world.World;
 public abstract class HMGEntityItemMountBase extends EntityCreature implements IInventory
 {
 	protected ItemStack[] minecartContainerItems = new ItemStack[36];
-	protected int rack1;
-	protected int rack2;
-	protected int rack3;
-	protected int rack4;
-	
-	protected ItemStack item1;
-	protected ItemStack item2;
-	protected ItemStack item3;
-	protected ItemStack item4;
 	
     /**
      * When set to true, the minecart will drop all items when setDead() is called. When false (such as when travelling
@@ -330,7 +321,6 @@ public abstract class HMGEntityItemMountBase extends EntityCreature implements I
         if (p_82334_1_ != null)
         {
             p_82334_1_ = p_82334_1_.copy();
-            p_82334_1_.stackSize = 1;
         }
 
         this.getDataWatcher().updateObject(22, p_82334_1_);
@@ -345,7 +335,6 @@ public abstract class HMGEntityItemMountBase extends EntityCreature implements I
         if (p_82334_1_ != null)
         {
             p_82334_1_ = p_82334_1_.copy();
-            p_82334_1_.stackSize = 1;
         }
         this.getDataWatcher().updateObject(23, p_82334_1_);
         this.getDataWatcher().setObjectWatched(23);
@@ -359,7 +348,6 @@ public abstract class HMGEntityItemMountBase extends EntityCreature implements I
         if (p_82334_1_ != null)
         {
             p_82334_1_ = p_82334_1_.copy();
-            p_82334_1_.stackSize = 1;
         }
         this.getDataWatcher().updateObject(24, p_82334_1_);
         this.getDataWatcher().setObjectWatched(24);

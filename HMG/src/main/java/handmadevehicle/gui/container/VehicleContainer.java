@@ -22,7 +22,7 @@ public class VehicleContainer extends Container {
 			userInventory = player.inventory;
 			inventoryVehicle = ((EntityVehicle) player.ridingEntity).getBaseLogic().inventoryVehicle;
 
-			numRowsWeapon = inventoryVehicle.baseLogic.info.weaponSlotNum / 9;
+			numRowsWeapon = inventoryVehicle.baseLogic.prefab_vehicle.weaponSlotNum / 9;
 			int raw;
 			int line;
 			for (raw = 0; raw < numRowsWeapon; ++raw)
@@ -33,30 +33,30 @@ public class VehicleContainer extends Container {
 							8 + line * 18, 18 + raw * 18));
 				}
 			}
-			for (line = 0; line < inventoryVehicle.baseLogic.info.weaponSlotNum%9; ++line)
+			for (line = 0; line < inventoryVehicle.baseLogic.prefab_vehicle.weaponSlotNum%9; ++line)
 			{
 				this.addSlotToContainer(new SlotModded(inventoryVehicle, line + (numRowsWeapon) * 9, 8 + line * 18, 18 + (numRowsWeapon) * 18));
 			}
 
 			yoffset_Cargo = (numRowsWeapon +
-					(numLinesWeapon = (inventoryVehicle.baseLogic.info.weaponSlotNum%9) > 0 ? 1:0)) * 18;
+					(numLinesWeapon = (inventoryVehicle.baseLogic.prefab_vehicle.weaponSlotNum%9) > 0 ? 1:0)) * 18;
 
-			numRowsCargo = inventoryVehicle.baseLogic.info.cargoSlotNum / 9;
+			numRowsCargo = inventoryVehicle.baseLogic.prefab_vehicle.cargoSlotNum / 9;
 			for (raw = 0; raw < numRowsCargo; ++raw)
 			{
 				for (line = 0; line < 9; ++line)
 				{
-					this.addSlotToContainer(new SlotModded(inventoryVehicle, inventoryVehicle.baseLogic.info.weaponSlotNum + line + raw * 9, 8 + line * 18, 18 + raw * 18 + yoffset_Cargo));
+					this.addSlotToContainer(new SlotModded(inventoryVehicle, inventoryVehicle.baseLogic.prefab_vehicle.weaponSlotNum + line + raw * 9, 8 + line * 18, 18 + raw * 18 + yoffset_Cargo));
 				}
 			}
-			for (line = 0; line < inventoryVehicle.baseLogic.info.cargoSlotNum%9; ++line)
+			for (line = 0; line < inventoryVehicle.baseLogic.prefab_vehicle.cargoSlotNum%9; ++line)
 			{
-				this.addSlotToContainer(new SlotModded(inventoryVehicle, inventoryVehicle.baseLogic.info.weaponSlotNum + line + (numRowsCargo) * 9, 8 + line * 18, 18 + (numRowsCargo) * 18 + yoffset_Cargo));
+				this.addSlotToContainer(new SlotModded(inventoryVehicle, inventoryVehicle.baseLogic.prefab_vehicle.weaponSlotNum + line + (numRowsCargo) * 9, 8 + line * 18, 18 + (numRowsCargo) * 18 + yoffset_Cargo));
 			}
 
 			numRows = numRowsCargo + numRowsWeapon +
-					(inventoryVehicle.baseLogic.info.weaponSlotNum%9 > 0 ? 1:0)+
-					(inventoryVehicle.baseLogic.info.cargoSlotNum%9 > 0 ? 1:0);
+					(inventoryVehicle.baseLogic.prefab_vehicle.weaponSlotNum%9 > 0 ? 1:0)+
+					(inventoryVehicle.baseLogic.prefab_vehicle.cargoSlotNum%9 > 0 ? 1:0);
 
 
 			yoffset_playerInventory = (numRows - 4) * 18;
@@ -105,6 +105,7 @@ public class VehicleContainer extends Container {
 			if (itemstack1.stackSize == 0)
 			{
 				slot.putStack((ItemStack)null);
+				slot.onSlotChanged();
 			}
 			else
 			{
@@ -212,5 +213,10 @@ public class VehicleContainer extends Container {
 			e.printStackTrace();
 			return null;
 		}
+	}
+	public void onContainerClosed(EntityPlayer p_75134_1_)
+	{
+		super.onContainerClosed(p_75134_1_);
+		this.inventoryVehicle.closeInventory();
 	}
 }

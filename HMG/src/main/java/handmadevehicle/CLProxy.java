@@ -5,8 +5,8 @@ import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import handmadeguns.client.render.ModelSetAndData;
 import handmadevehicle.audio.TurretSound;
-import handmadevehicle.audio.VehicleSound;
-import handmadevehicle.audio.Vehicle_OptionalSound;
+import handmadevehicle.audio.VehicleEngineSound;
+import handmadevehicle.audio.VehicleNoRepeatSound;
 import handmadevehicle.entity.EntityVehicle;
 import handmadevehicle.entity.parts.HasLoopSound;
 import handmadevehicle.entity.parts.ModifiedBoundingBox;
@@ -121,7 +121,7 @@ public class CLProxy extends CMProxy {
 	
 	@Override
 	public void playsoundasVehicle(float maxdist, Entity attached){
-		Minecraft.getMinecraft().getSoundHandler().playSound(new VehicleSound(attached,maxdist));
+		Minecraft.getMinecraft().getSoundHandler().playSound(new VehicleEngineSound(attached,maxdist));
 	}
 	@Override
 	public void playsoundasTurret(float maxdist, TurretObj attached){
@@ -129,7 +129,7 @@ public class CLProxy extends CMProxy {
 	}
 	@Override
 	public void playsoundasVehicle_noRepeat(String name , float maxdist, Entity attached, HasLoopSound hasLoopSound,int time){
-		Minecraft.getMinecraft().getSoundHandler().playSound(new Vehicle_OptionalSound(name,attached,hasLoopSound,maxdist,time));
+		Minecraft.getMinecraft().getSoundHandler().playSound(new VehicleNoRepeatSound(name,attached,hasLoopSound,maxdist,time));
 	}
 	public boolean hasStick(){
 		return Controllers.getControllerCount() > 0;
@@ -350,17 +350,17 @@ public class CLProxy extends CMProxy {
 		}
 
 		{
-			double[] xyz = Utils.eulerfrommatrix(Utils.matrixfromQuat(p_147590_0_.boxRotation));
+			double[] xyz = Utils.eulerfrommatrix(Utils.matrixfromQuat(p_147590_0_.info.boxRotation));
 			xyz[0] = toDegrees(xyz[0]);
 			xyz[1] = toDegrees(xyz[1]);
 			xyz[2] = toDegrees(xyz[2]);
-			GL11.glTranslatef((float) p_147590_0_.boxRotCenter.x, (float) p_147590_0_.boxRotCenter.y, (float) -p_147590_0_.boxRotCenter.z);
+			GL11.glTranslatef((float) p_147590_0_.info.boxRotCenter.x, (float) p_147590_0_.info.boxRotCenter.y, (float) -p_147590_0_.info.boxRotCenter.z);
 
-			GL11.glRotatef(180 - (float) xyz[1], 0.0F, 1.0F, 0.0F);
+			GL11.glRotatef(-(float) xyz[1], 0.0F, 1.0F, 0.0F);
 			GL11.glRotatef((float) xyz[0], 1.0F, 0.0F, 0.0F);
 			GL11.glRotatef((float) xyz[2], 0.0F, 0.0F, 1.0F);
 
-			GL11.glTranslatef(-(float) p_147590_0_.boxRotCenter.x, -(float) p_147590_0_.boxRotCenter.y, (float) p_147590_0_.boxRotCenter.z);
+			GL11.glTranslatef(-(float) p_147590_0_.info.boxRotCenter.x, -(float) p_147590_0_.info.boxRotCenter.y, (float) p_147590_0_.info.boxRotCenter.z);
 		}
 
 		Tessellator tessellator = Tessellator.instance;

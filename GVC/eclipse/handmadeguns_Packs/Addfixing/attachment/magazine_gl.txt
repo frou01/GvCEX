@@ -1,0 +1,13 @@
+Texture,bullet_gl
+Stack,64
+Tabname,HMG_Ammo
+Name,Grenade_Bullet
+Magazine,bullet_gl
+Recipe1,bbb
+Recipe2, a 
+Recipe3,bbb
+ItemA,minecraft,iron_ingot
+ItemB,minecraft,gunpowder
+ItemC,minecraft,emerald
+addNewRecipe,HandmadeGuns,bullet_gl,6
+

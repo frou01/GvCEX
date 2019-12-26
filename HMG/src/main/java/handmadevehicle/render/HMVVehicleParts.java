@@ -15,8 +15,8 @@ public class HMVVehicleParts extends HMGGunParts {
 	public int trackPieceCount;
 	private HMGGunParts_Motion_PosAndRotation peraPosAndRotation;
 	private HMGGunParts_Motions trackPositions = new HMGGunParts_Motions();
-	private HMGGunParts_Motion_PosAndRotation[] somethingPosAndRotation = new HMGGunParts_Motion_PosAndRotation[11];//x,y,z,z2,yaw,pitch,roll,gear,flap,brake,speed
-	private HMGGunParts_Motions[] somethingMotionKey = new HMGGunParts_Motions[11];//TODO å„ì˙é¿ëïÅI
+	private HMGGunParts_Motion_PosAndRotation[] somethingPosAndRotation = new HMGGunParts_Motion_PosAndRotation[12];//x,y,z,z2,yaw,pitch,roll,gear,flap,brake,speed
+	private HMGGunParts_Motions[] somethingMotionKey = new HMGGunParts_Motions[12];//TODO å„ì˙é¿ëïÅI
 	public boolean isTrack;
 	public boolean isPera;
 	
@@ -33,9 +33,12 @@ public class HMVVehicleParts extends HMGGunParts {
 		isbelt = true;
 	}
 	
-	public void setIsTrack(boolean isTrack,int trackPieceCount){
-		this.isTrack = isTrack;
+	public void setIsTrack(boolean isPera,int trackPieceCount){
+		this.isPera = isPera;
 		this.trackPieceCount = trackPieceCount;
+	}
+	public void setIsPera(boolean isPera){
+		this.isPera = isPera;
 	}
 	public void setIsTrack_Cloning(boolean isTrack,int trackPieceCount){
 		this.isTrack = isTrack;
@@ -45,7 +48,6 @@ public class HMVVehicleParts extends HMGGunParts {
 	
 	public void AddRenderinfTrack(float offsetX, float offsetY, float offsetZ, float rotationX, float rotationY, float rotationZ){
 		peraPosAndRotation = new HMGGunParts_Motion_PosAndRotation(offsetX,offsetY,offsetZ,rotationX,rotationY,rotationZ);
-		isPera = true;
 	}
 
 	public void AddRenderinfSomething(float offsetX, float offsetY, float offsetZ, float rotationX, float rotationY, float rotationZ,int id){

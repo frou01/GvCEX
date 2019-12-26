@@ -39,7 +39,7 @@ public class TurretSound extends MovingSound
 		}
 		else
 		{
-			attachedturret.yourSoundIsremain();
+			attachedturret.yourSoundIsremain(null);
 			this.xPosF = (float)this.attachedturret.motherPos.x;
 			this.yPosF = (float)this.attachedturret.motherPos.y;
 			this.zPosF = (float)this.attachedturret.motherPos.z;

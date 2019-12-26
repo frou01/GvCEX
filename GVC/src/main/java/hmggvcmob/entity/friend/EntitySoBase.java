@@ -1,36 +1,21 @@
 package hmggvcmob.entity.friend;
 
-import handmadeguns.items.guns.HMGItem_Unified_Guns;
 import hmggvcmob.GVCMobPlus;
-import hmggvcmob.IflagBattler;
-import hmggvcmob.ai.*;
-import handmadeguns.entity.IFF;
-import hmggvcmob.ai.AIHurtByTarget;
-import hmggvcmob.entity.IGVCmob;
-import hmggvcmob.entity.guerrilla.EntityGBase;
-import hmggvcmob.entity.guerrilla.EntityGBases;
-import hmggvcmob.tile.TileEntityFlag;
-import littleMaidMobX.LMM_EntityLittleMaid;
-import net.minecraft.entity.*;
-import net.minecraft.entity.ai.*;
-import net.minecraft.entity.monster.EntityMob;
-import net.minecraft.entity.monster.IMob;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
+import hmggvcmob.ai.AIAttackFlag;
+import hmggvcmob.ai.AITargetFlag;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
-import net.minecraft.util.Vec3;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
-
-import static handmadeguns.HandmadeGunsCore.islmmloaded;
 
 public class EntitySoBase extends EntitySoBases {
 
 
 	public EntitySoBase(World par1World) {
 		super(par1World);
+		this.tasks.addTask(3, aiAttackFlag = new AIAttackFlag(this,this,worldForPathfind));
+		this.targetTasks.addTask(4, aiTargetFlag = new AITargetFlag(this,this,this));
 	}
 	
 	public boolean getCanSpawnHere()
@@ -43,7 +28,7 @@ public class EntitySoBase extends EntitySoBases {
 			TileEntity tileentity;
 			Object aLoadedTileEntityList = worldObj.loadedTileEntityList.get(i);
 			tileentity = (TileEntity) aLoadedTileEntityList;
-			if (tileentity.getBlockType() == GVCMobPlus.fn_Supplyflag)return false;
+			if (tileentity.getBlockType() == GVCMobPlus.fn_PlayerFlag)return false;
 		}
 		int i = MathHelper.floor_double(this.posX);
 		int j = MathHelper.floor_double(this.boundingBox.minY);

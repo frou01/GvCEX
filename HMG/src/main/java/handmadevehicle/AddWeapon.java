@@ -36,20 +36,24 @@ public class AddWeapon {
 						case "WeaponName":
 							name = type[1];
 							if(prefab_turretHashMap.containsKey(name))prefab_turret = prefab_turretHashMap.get(name);
+							prefab_turret.turretName = name;
+							break;
+						case "WeaponDisplayName":
+							prefab_turret.turretName = type[1];
 							break;
 						case "turretYawCenterpos":
-							prefab_turret.turretYawCenterpos = new Vector3d(parseDouble(type[1]),parseDouble(type[2]),parseDouble(type[3]));
+							prefab_turret.gunInfo.posGetter.turretYawCenterpos = new Vector3d(parseDouble(type[1]),parseDouble(type[2]),parseDouble(type[3]));
 							break;
 						case "turretPitchCenterpos":
-							prefab_turret.turretPitchCenterpos = new Vector3d(parseDouble(type[1]),parseDouble(type[2]),parseDouble(type[3]));
+							prefab_turret.gunInfo.posGetter.turretPitchCenterpos = new Vector3d(parseDouble(type[1]),parseDouble(type[2]),parseDouble(type[3]));
 							break;
 						case "cannonPos":
-							prefab_turret.cannonPos = new Vector3d(parseDouble(type[1]),parseDouble(type[2]),parseDouble(type[3]));
+							prefab_turret.gunInfo.posGetter.cannonPos = new Vector3d(parseDouble(type[1]),parseDouble(type[2]),parseDouble(type[3]));
 							break;
 						case "multicannonPos":
-							prefab_turret.multicannonPos = new Vector3d[(type.length-1)/3];
-							for(int id = 0;id < prefab_turret.multicannonPos.length; id++){
-								prefab_turret.multicannonPos[id] = new Vector3d(parseDouble(type[id * 3 + 1]),parseDouble(type[id * 3 + 2]),parseDouble(type[id * 3 + 3]));
+							prefab_turret.gunInfo.posGetter.multicannonPos = new Vector3d[(type.length-1)/3];
+							for(int id = 0;id < prefab_turret.gunInfo.posGetter.multicannonPos.length; id++){
+								prefab_turret.gunInfo.posGetter.multicannonPos[id] = new Vector3d(parseDouble(type[id * 3 + 1]),parseDouble(type[id * 3 + 2]),parseDouble(type[id * 3 + 3]));
 							}
 							break;
 						case "linked_MotherTrigger":
@@ -67,29 +71,26 @@ public class AddWeapon {
 						case "syncTurretAngle":
 							prefab_turret.syncTurretAngle = parseBoolean(type[1]);
 							break;
-						case "seekerSize":
-							prefab_turret.seekerSize = parseDouble(type[1]);
-							break;
 						case "elevationType":
 							prefab_turret.elevationType = parseInt(type[1]);
 							break;
 						case "turretanglelimtYawMax":
-							prefab_turret.turretanglelimtYawMax = parseFloat(type[1]);
+							prefab_turret.gunInfo.turretanglelimtYawMax = parseFloat(type[1]);
 							break;
 						case "turretanglelimtYawmin":
-							prefab_turret.turretanglelimtYawmin = parseFloat(type[1]);
+							prefab_turret.gunInfo.turretanglelimtYawmin = parseFloat(type[1]);
 							break;
 						case "turretanglelimtPitchMax":
-							prefab_turret.turretanglelimtPitchMax = parseFloat(type[1]);
+							prefab_turret.gunInfo.turretanglelimtPitchMax = parseFloat(type[1]);
 							break;
 						case "turretanglelimtPitchmin":
-							prefab_turret.turretanglelimtPitchmin = parseFloat(type[1]);
+							prefab_turret.gunInfo.turretanglelimtPitchmin = parseFloat(type[1]);
 							break;
 						case "turretspeedY":
-							prefab_turret.turretspeedY = parseDouble(type[1]);
+							prefab_turret.gunInfo.turretspeedY = (float) parseDouble(type[1]);
 							break;
 						case "turretspeedP":
-							prefab_turret.turretspeedP = parseDouble(type[1]);
+							prefab_turret.gunInfo.turretspeedP = (float) parseDouble(type[1]);
 							break;
 						case "traverseSound":
 							prefab_turret.traverseSound = type[1];
@@ -123,6 +124,9 @@ public class AddWeapon {
 							break;
 						case "needGunStack":
 							prefab_turret.needGunStack = parseBoolean(type[1]);
+							break;
+						case "useGunSight":
+							prefab_turret.useGunSight = parseBoolean(type[1]);
 							break;
 						case "gunStackwhitelist":
 							prefab_turret.gunStackwhitelist = new String[type.length-1];

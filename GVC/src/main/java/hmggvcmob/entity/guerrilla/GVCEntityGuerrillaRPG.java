@@ -3,19 +3,14 @@ package hmggvcmob.entity.guerrilla;
 
 import handmadeguns.items.guns.HMGItem_Unified_Guns;
 import handmadevehicle.SlowPathFinder.WorldForPathfind;
-import handmadevehicle.entity.EntityVehicle;
-import hmggvcmob.ai.AIAttackByTank;
-import hmggvcmob.ai.AIDriveTank;
+import hmggvcmob.ai.*;
 import hmggvcmob.entity.IHasVehicleGacha;
 import hmggvcutil.GVCUtils;
-import hmggvcmob.ai.AIAttackGun;
-import hmggvcmob.ai.AIBreakBlock;
 import net.minecraft.block.Block;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
 import static hmggvcmob.GVCMobPlus.Guns_RR;
@@ -28,7 +23,7 @@ public class GVCEntityGuerrillaRPG extends EntityGBase implements IHasVehicleGac
     {
         super(par1World);
         this.setSize(0.6F, 1.8F);
-//        this.tasks.addTask(1,breakBlock = new AIBreakBlock(this));
+        this.tasks.addTask(1,new AIBuilder(this,worldForPathfind));
         this.tasks.addTask(2,aiAttackGun = new AIAttackGun(this,40,5,10,15,true,true,new WorldForPathfind(worldObj)));
         spread = 3;
         canuseAlreadyPlacedGun = false;
@@ -89,11 +84,6 @@ public class GVCEntityGuerrillaRPG extends EntityGBase implements IHasVehicleGac
         this.setCurrentItemOrArmor(0,null);
     }
 
-    protected void dropRareDrop(int par1)
-    {
-            this.entityDropItem(new ItemStack(Items.skull, 1, 1), 0.0F);
-    }
-
 
 
     public void onUpdate()
@@ -105,9 +95,9 @@ public class GVCEntityGuerrillaRPG extends EntityGBase implements IHasVehicleGac
             } else {
                 this.setSneaking(false);
             }
-            if (this.ridingEntity == null && this.getAttackTarget() == null && rnd.nextInt(100) == 1) {
+            if (getHeldItem() == null && this.ridingEntity == null && this.getAttackTarget() == null && rnd.nextInt(100) == 1) {
 //            worldObj.getBlock((int)(this.posX + this.getLookVec().xCoord),(int)(this.posY + this.getLookVec().yCoord),(int)(this.posZ + this.getLookVec().zCoord));
-                if (getHeldItem() == null && worldObj.isAirBlock((int) (this.posX - this.getLookVec().xCoord), (int) (this.posY - this.getLookVec().yCoord), (int) (this.posZ - this.getLookVec().zCoord)) && !worldObj.isAirBlock((int) (this.posX - this.getLookVec().xCoord), (int) (this.posY - this.getLookVec().yCoord)-1, (int) (this.posZ - this.getLookVec().zCoord))) {
+                if (worldObj.isAirBlock((int) (this.posX - this.getLookVec().xCoord), (int) (this.posY - this.getLookVec().yCoord), (int) (this.posZ - this.getLookVec().zCoord)) && !worldObj.isAirBlock((int) (this.posX - this.getLookVec().xCoord), (int) (this.posY - this.getLookVec().yCoord)-1, (int) (this.posZ - this.getLookVec().zCoord))) {
                     worldObj.setBlock((int) (this.posX - this.getLookVec().xCoord), (int) (this.posY - this.getLookVec().yCoord), (int) (this.posZ - this.getLookVec().zCoord), GVCUtils.fn_ied);
                 }
             }

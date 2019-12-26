@@ -16,5 +16,14 @@ public class ItemWrench extends Item {
 //		}
 		return false;
 	}
+	public boolean itemInteractionForEntity2(ItemStack stack, EntityPlayer player, EntityVehicle target)
+	{
+		target.heal(5);
+//		if(target instanceof EntityVehicle){
+//			target.heal(1);
+//			return true;
+//		}
+		return false;
+	}
 	
 }

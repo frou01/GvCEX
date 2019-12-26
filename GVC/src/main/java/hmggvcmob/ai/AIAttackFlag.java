@@ -43,8 +43,10 @@ public class AIAttackFlag extends EntityAIBase{
                     if (platoonLeader == flagBattler) {//自分が分隊長
                         flagBattler.setState((byte) 2);//旗で待機
                     } else {
-                        if (meToTDist  < 2) {
+                        if (meToTDist  < 5) {
                             flagBattler.setState((byte) 3);//離れろー！脱出せよ！
+                        } else if (meToTDist > 16) {
+                            flagBattler.setState((byte) 1);//戻れ！我々の陣地を守れ！
                         } else if (meToTDist > 10) {
                             flagBattler.setState((byte) 0);//撃て！この位置を保て！
                         }
@@ -89,17 +91,16 @@ public class AIAttackFlag extends EntityAIBase{
     public void updateTask(){
         //銃撃AIが動いてない時はこっちで前進させる
 
-        if(changeMoveModeCNT<0){
-            moveRound = random.nextBoolean();
-            roundDir = random.nextBoolean();
-            if(moveRound)
-                changeMoveModeCNT = random.nextInt(40);
-            else
-                changeMoveModeCNT = 200 + random.nextInt(200);
-        }
-        repathcntcool--;
-        if(repathcntcool < 0) {
-            repathcntcool = random.nextInt(40);
+        changeMoveModeCNT--;
+        {
+            if(changeMoveModeCNT<0){
+                moveRound = random.nextBoolean();
+                roundDir = random.nextBoolean();
+                if(moveRound)
+                    changeMoveModeCNT = 20 + random.nextInt(20);
+                else
+                    changeMoveModeCNT = 80 + random.nextInt(40);
+            }
             flagBattlerBody.getNavigator().clearPathEntity();
 
             byte state = flagBattler.getState();
@@ -128,13 +129,12 @@ public class AIAttackFlag extends EntityAIBase{
                 reCurToTargetPosition.sub(moveToVec);
                 double speed = 0;
 
-                if (meToTDist > 5) {
-                    if (state == 1) {
-                        speed = 1;
-                    } else if (state == 2) {
-                        speed = 0.6;
-                    }
-                } else if (state == 3) {
+
+                if (state == 1) {
+                    speed = 1;
+                } else if (state == 2) {
+                    speed = 0.6;
+                }else if (state == 3) {
                     speed = -1;
                 }
                 if (moveRound) {
@@ -145,6 +145,7 @@ public class AIAttackFlag extends EntityAIBase{
                         reCurToTargetPosition.z *= -1;
                     }
                     reCurToTargetPosition_copy.scale(speed);
+                    reCurToTargetPosition_copy.normalize();
                     reCurToTargetPosition.add(reCurToTargetPosition_copy);
                     speed = 1;
                 } else {

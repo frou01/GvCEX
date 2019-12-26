@@ -36,10 +36,6 @@ public class TileRenderFlag extends TileEntitySpecialRenderer
             GL11.glPushMatrix();
             GL11.glEnable(GL12.GL_RESCALE_NORMAL);
             GL11.glTranslatef((float)p_147500_2_ + 0.5F, (float)p_147500_4_ + 0F, (float)p_147500_6_ + 0.5F);
-            int i = tileEntity.getWorldObj().getLightBrightnessForSkyBlocks(tileEntity.xCoord, tileEntity.yCoord+1, tileEntity.zCoord, 0);
-            int j = i % 65536;
-            int k = i / 65536;
-            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)j / 1.0F, (float)k / 1.0F);
             // GL11.glScalef(1.0F, -1.0F, -1.0F);
             //GL11.glRotatef(180.0F, 0.0F, 0.0F, 1.0F);
             //GL11.glRotatef(180.0F, 1.0F, 0.0F, 0.0F);

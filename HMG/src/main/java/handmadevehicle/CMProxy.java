@@ -1,9 +1,11 @@
 package handmadevehicle;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import handmadeguns.client.render.ModelSetAndData;
 import handmadevehicle.command.HMV_CommandReloadparm;
 import handmadevehicle.entity.parts.HasLoopSound;
 import handmadevehicle.entity.parts.turrets.TurretObj;
+import net.minecraft.command.CommandHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.AxisAlignedBB;
@@ -12,8 +14,9 @@ import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
+import static handmadevehicle.HMVehicle.hmv_commandReloadparm;
+
 public class CMProxy {
-	static HMV_CommandReloadparm hmv_commandReloadparm = new HMV_CommandReloadparm();
 	Field boundingboxField = null;
 	Field modifiersField = null;
 	public EntityPlayer getEntityPlayerInstance() {return null;}
@@ -140,6 +143,7 @@ public class CMProxy {
 	public static Field nextstepdistance;
 	public void initSome(){
 		try {
+			((CommandHandler)FMLCommonHandler.instance().getMinecraftServerInstance().getCommandManager()).registerCommand(hmv_commandReloadparm);
 			nextstepdistance = Entity.class.getDeclaredField("field_70150_b");
 		} catch (Exception e) {
 			e.printStackTrace();

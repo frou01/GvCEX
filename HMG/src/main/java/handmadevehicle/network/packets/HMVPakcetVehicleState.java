@@ -14,10 +14,11 @@ public class HMVPakcetVehicleState implements IMessage {
     public Vector3d posVec = new Vector3d();
     public float th;
     public float health;
+    public boolean onGround;
 
     public HMVPakcetVehicleState(){
     }
-    public HMVPakcetVehicleState(int tgtid , Quat4d tgtrot , Quat4d tgtrotmotion , Vector3d tgtmotion ,Vector3d posVec , float t , float health){
+    public HMVPakcetVehicleState(int tgtid , Quat4d tgtrot , Quat4d tgtrotmotion , Vector3d tgtmotion ,Vector3d posVec , float t , float health,boolean onGround){
         this.targetID = tgtid;
         this.rot = tgtrot;
         this.rotmotion = tgtrotmotion;
@@ -25,6 +26,7 @@ public class HMVPakcetVehicleState implements IMessage {
         this.posVec = posVec;
         this.th = t;
         this.health = health;
+        this.onGround = onGround;
     }
 
     @Override
@@ -46,6 +48,7 @@ public class HMVPakcetVehicleState implements IMessage {
         posVec.y = buf.readDouble();
         posVec.z = buf.readDouble();
         health = buf.readFloat();
+        onGround = buf.readBoolean();
     }
 
     @Override
@@ -67,5 +70,6 @@ public class HMVPakcetVehicleState implements IMessage {
         buf.writeDouble(posVec.y);
         buf.writeDouble(posVec.z);
         buf.writeFloat(health);
+        buf.writeBoolean(onGround);
     }
 }

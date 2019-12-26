@@ -1,6 +1,9 @@
 package handmadevehicle.inventory;
 
 import handmadevehicle.entity.parts.logics.BaseLogic;
+import handmadevehicle.entity.parts.turrets.TurretObj;
+import handmadevehicle.network.HMVPacketHandler;
+import handmadevehicle.network.packets.HMVPacketSyncInventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -19,7 +22,7 @@ public class InventoryVehicle implements IInventory {
 		//currentItem = stack;
 		
 		//InventorySize
-		items = new ItemStack[baseLogic.info.weaponSlotNum+baseLogic.info.cargoSlotNum];
+		items = new ItemStack[baseLogic.prefab_vehicle.weaponSlotNum+baseLogic.prefab_vehicle.cargoSlotNum];
 	}
 	
 	@Override
@@ -106,7 +109,9 @@ public class InventoryVehicle implements IInventory {
 	}
 	
 	@Override
-	public void markDirty() {needSync = true;}
+	public void markDirty() {
+		needSync = true;
+	}
 	
 	@Override
 	public boolean isUseableByPlayer(EntityPlayer p_70300_1_)
@@ -117,20 +122,22 @@ public class InventoryVehicle implements IInventory {
 	@Override
 	public void openInventory()
 	{
-	
+
 	}
 	
 	@Override
 	public void closeInventory()
 	{
-	
+		baseLogic.saveToTag(baseLogic.mc_Entity.getEntityData());
+		baseLogic.readFromTag(baseLogic.mc_Entity.getEntityData());
+		HMVPacketHandler.INSTANCE.sendToAll(new HMVPacketSyncInventory(baseLogic.mc_Entity));
 	}
 	@Override
 	public boolean isItemValidForSlot(int slotID, ItemStack checkingStack)
 	{
 		if(slotID<baseLogic.prefab_vehicle.weaponSlotNum && checkingStack != null){
 			String itemName = checkingStack.getUnlocalizedName();
-			if(baseLogic.prefab_vehicle.weaponSlot_linkedTurret_StackWhiteList.get(slotID).length == 0)return true;
+			if(baseLogic.prefab_vehicle.weaponSlot_linkedTurret_StackWhiteList.get(slotID) == null)return true;
 			for(String whiteList: baseLogic.prefab_vehicle.weaponSlot_linkedTurret_StackWhiteList.get(slotID)) {
 				if("item.".concat(whiteList).equals(itemName)){
 					return true;

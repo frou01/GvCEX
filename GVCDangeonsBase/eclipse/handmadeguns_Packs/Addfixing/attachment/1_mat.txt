@@ -1,0 +1,20 @@
+Texture,WP_Certificate
+Name,WP Certificate
+cosume_onCraft,false
+Stack,64
+SimpleMaterial,WP_Certificate
+
+Texture,NATO_Certificate
+Name,NATO Certificate
+cosume_onCraft,false
+Stack,64
+SimpleMaterial,NATO_Certificate
+
+
+//Recipe1,a  
+//Recipe2,c  
+//Recipe3,b  
+//ItemA,minecraft,iron_ingot
+//ItemB,minecraft,emerald
+//ItemC,minecraft,gunpowder
+//addNewRecipe,HandmadeGuns,WP_Certificate,1

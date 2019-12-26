@@ -30,29 +30,11 @@ public class GVCEntityFriendGK extends EntityPMCBase implements IIRVING
     public boolean onstopping = false;
     public boolean isstanding = false;
     Random rnd = new Random();
-    private int forget;
-    private int TGThealth;
     public float bodyrotationYaw;
-    public float bodyrotationPitch;
-    public float bodyrotationRoll;
-    public float prevbodyrotationYaw;
-    public float prevbodyrotationPitch;
-    public float prevbodyrotationRoll;
     public float turretrotationYaw;
-    public float turretrotationPitch;
-    public float prevangletime;
-    public float angletime;
-    public int ammo3;
-    public int cooltime;
-    public int cooltime2;
-    public int cooltime3;
-    public int magazine;
-    public int gun_count1 = 0;
-    public int reload1 = 0;
-    public int reload_time1;
+    public int angletime;
     public int Accumulationdamage_leg;
     public boolean staning;
-    private int tgthealth;
     public int kickprogeress;
     // public int type;
     public GVCEntityFriendGK(World par1World)
@@ -62,7 +44,6 @@ public class GVCEntityFriendGK extends EntityPMCBase implements IIRVING
         //this.tasks.addTask(1, new AIEntityInvasionFlag(this, 1.0D));
         //  this.tasks.addTask(2, new AIEntityAIWander(this, 1.0D));
         this.targetTasks.removeTask(aiSwimming);
-        this.targetTasks.removeTask(AIOpenDoor);
         this.tasks.addTask(1,new AIGKkick(this,this,3.5f));
         this.tasks.addTask(2,new AIGKHighJump(this,this,3.5f,new WorldForPathfind(worldObj)));
         this.tasks.addTask(3,new AIGKFire(this,10f,new WorldForPathfind(worldObj)));
@@ -231,7 +212,7 @@ public class GVCEntityFriendGK extends EntityPMCBase implements IIRVING
     {
         return "mob.cow.say";
     }
-
+    public int deathTicks;
     protected void onDeathUpdate() {
         ++this.deathTicks;
         if(this.deathTicks == 1){

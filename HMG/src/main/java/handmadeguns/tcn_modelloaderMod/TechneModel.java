@@ -30,6 +30,9 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipInputStream;
 
+import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
+import static org.lwjgl.opengl.GL11.GL_FRONT_AND_BACK;
+
 /**
  * Techne model importer, based on iChun's Hats importer
  */
@@ -333,6 +336,7 @@ public class TechneModel extends ModelBase implements IModelCustom {
 		GL11.glRotatef(180,0,1,0);
 		GL11.glRotatef(180,0,0,1);
         List<ModelRenderer> part = parts.get(partName);
+        GL11.glDisable(GL_CULL_FACE);
         if (part != null)
         {
             for (ModelRenderer onepart : part)
@@ -340,6 +344,7 @@ public class TechneModel extends ModelBase implements IModelCustom {
                 onepart.renderWithRotation(1.0F);
             }
         }
+        GL11.glEnable(GL_CULL_FACE);
         GL11.glPopMatrix();
     }
 

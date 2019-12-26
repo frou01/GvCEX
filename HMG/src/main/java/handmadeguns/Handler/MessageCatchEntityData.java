@@ -36,6 +36,9 @@ public class MessageCatchEntityData implements IMessageHandler<PacketFixClientbu
                     tgtEntity.posX = message.data.posX;
                     tgtEntity.posY = message.data.posY;
                     tgtEntity.posZ = message.data.posZ;
+                    ((HMGEntityBulletBase) tgtEntity).inGround = message.data.inGround;
+                    tgtEntity.rotationYaw = message.data.yaw;
+                    tgtEntity.rotationPitch = message.data.pitch;
                 }
             }
 //        bullet = message.bullet.setdata(bullet);

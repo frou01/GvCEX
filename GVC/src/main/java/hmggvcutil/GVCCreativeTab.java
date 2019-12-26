@@ -16,7 +16,7 @@ public class GVCCreativeTab extends CreativeTabs
 	@SideOnly(Side.CLIENT)
 	public Item getTabIconItem()
 	{
-		return GVCUtils.fn_ak74;
+		return GVCUtils.fn_cm;
 	}
  
 	@Override

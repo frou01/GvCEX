@@ -1,0 +1,16 @@
+Texture,bullet_14_5 HE
+Stack,64
+BulletRound,1
+BulletType,10
+Name,14.5mm Ammo (HE)
+
+Tabname,HMG_Ammo
+
+CustomMagazine,14.5mm Ammo (HE)
+Recipe1,bab
+Recipe2, b 
+Recipe3,cc 
+ItemA,minecraft,iron_ingot
+ItemB,minecraft,gunpowder
+ItemC,minecraft,emerald
+addNewRecipe,HandmadeGuns,14.5mm Ammo HE,8

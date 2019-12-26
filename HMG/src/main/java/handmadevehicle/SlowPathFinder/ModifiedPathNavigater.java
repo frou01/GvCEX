@@ -1,6 +1,7 @@
 package handmadevehicle.SlowPathFinder;
 
 import handmadevehicle.entity.EntityVehicle;
+import handmadevehicle.entity.parts.IhasMoveHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
@@ -218,6 +219,9 @@ public class ModifiedPathNavigater extends PathNavigate{
 					if(this.speed > 1){
 						this.speed = 1;
 					}
+					if(this.speed < -1){
+						this.speed = -1;
+					}
 				}
 				Vec3 vec3 = this.getEntityPosition();
 				this.ticksAtLastPos = this.totalTicks;
@@ -251,11 +255,12 @@ public class ModifiedPathNavigater extends PathNavigate{
 			if (!this.noPath())
 			{
 				Vec3 vec3 = this.currentPath.getPosition(this.theEntity);
-				
 				if (vec3 != null)
 				{
 					if(this.theEntity instanceof EntityLiving){
 						((EntityLiving) this.theEntity).getMoveHelper().setMoveTo(vec3.xCoord, vec3.yCoord, vec3.zCoord, this.speed);
+					}else if(this.theEntity instanceof IhasMoveHelper){
+						((IhasMoveHelper) this.theEntity).getmoveHelper().setMoveTo(vec3.xCoord, vec3.yCoord, vec3.zCoord, this.speed);
 					}
 				}
 			}
@@ -277,8 +282,8 @@ public class ModifiedPathNavigater extends PathNavigate{
 		}
 		
 		float f = width_for_Follow;
-		if(width_for_Follow < 2.25f){
-			f = 2.25f;
+		if(width_for_Follow < 1.44f){
+			f = 1.44f;
 		}
 		int k;
 		
@@ -331,6 +336,11 @@ public class ModifiedPathNavigater extends PathNavigate{
 	public void clearPathEntity()
 	{
 		this.currentPath = null;
+		if(this.theEntity instanceof EntityLiving){
+			((EntityLiving) this.theEntity).getMoveHelper().setMoveTo(theEntity.posX, theEntity.posY, theEntity.posZ, 0);
+		}else if(this.theEntity instanceof IhasMoveHelper){
+			((IhasMoveHelper) this.theEntity).getmoveHelper().setMoveTo(theEntity.posX, theEntity.posY, theEntity.posZ, 0);
+		}
 	}
 	
 	private Vec3 getEntityPosition()

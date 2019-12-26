@@ -5,9 +5,13 @@ import java.util.ArrayList;
 public class HMGGunParts {
     public boolean rotateTypeIsVector = false;
     public String partsname;
+    public String partsname_reticlePlate;
+    public String partsname_reticle;
+    public String partsname_light;
     public boolean isLarm;
     public boolean isRarm;
     public ArrayList<HMGGunParts> childs = new ArrayList<HMGGunParts>();
+    public ArrayList<HMGGunParts> reticleChild = null;
     public ArrayList<Boolean> current_magazineType = null;
     public ArrayList<Boolean> select_magazineType = null;
     public HMGGunParts mother;
@@ -95,6 +99,9 @@ public class HMGGunParts {
         if(partsname.equals("Larm"))isLarm=true;
         if(partsname.equals("Rarm"))isRarm=true;
         this.partsname = partsname;
+        this.partsname_reticlePlate = partsname + "reticlePlate";
+        this.partsname_reticle      = partsname + "reticle";
+        this.partsname_light        = partsname + "light";
     }
     
     public HMGGunParts(String string, int motherID, HMGGunParts mother) {

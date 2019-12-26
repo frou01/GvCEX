@@ -1,0 +1,10 @@
+WeaponName,StackSlot_NormalGunMount
+turretYawCenterpos,0,0,0
+turretPitchCenterpos,0,0,0
+cannonPos,0,0,0
+linked_MotherTrigger,false
+needGunStack,true
+useVehicleInventory,false
+useGunSight,true
+gunStackwhitelist,R-3,R-27,Kh-31,UB-32,UPK-23,FAB-250
+End

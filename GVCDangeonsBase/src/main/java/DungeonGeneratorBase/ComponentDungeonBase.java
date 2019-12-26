@@ -6,6 +6,7 @@ import handmadeguns.entity.PlacedGunEntity;
 import handmadeguns.items.guns.HMGItem_Unified_Guns;
 import hmggvcmob.GVCMobPlus;
 import hmggvcmob.entity.guerrilla.EntityGBase;
+import hmggvcmob.entity.guerrilla.EntityGBases;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLadder;
 import net.minecraft.block.BlockStairs;
@@ -15,11 +16,13 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.structure.StructureBoundingBox;
 import net.minecraft.world.gen.structure.StructureComponent;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -166,6 +169,7 @@ public class ComponentDungeonBase extends StructureComponent {
             {
                 this.hight = dungeonData.minHeight;
             }
+            System.out.println("" + this.hight);
 
             this.boundingBox.offset(0, this.hight - this.boundingBox.minY + dungeonData.offset[1], 0);
         }
@@ -179,7 +183,7 @@ public class ComponentDungeonBase extends StructureComponent {
                     for (int h2 = dungeonData.maxy; h2 < dungeonData.maxy + dungeonData.placeAir; h2++) {
                         world.setBlock(i, this.boundingBox.minY +h2, j, Blocks.air);
                     }
-                    if(dungeonData.fillStone_to_Ground){
+                    if(dungeonData.fillStone_to_Ground && boundingBox.minX <= i && boundingBox.minZ <= j && i <= boundingBox.maxX && j <= boundingBox.maxZ){
                         for(int l = todpethlevel; l < this.boundingBox.minY + dungeonData.levelhightoffset; l++){
                             world.setBlock(i, l, j, Blocks.stone);
                         }
@@ -218,159 +222,185 @@ public class ComponentDungeonBase extends StructureComponent {
                                 int meta = 0;
                                 int dir = 0;
                                 if (dungeonData.metas.containsKey(pos)) meta = dungeonData.metas.get(pos);
-                                if(temp instanceof BlockStairs) {
-                                    dir = meta % 4;
-                                    meta -= dir;
-                                    switch (this.dir) {
-                                        case 0:
-                                            break;
-                                        case 1:
-                                            //-90
-                                            //east -> south
-                                            if (dir == 0) {
-                                                dir = 2;
-                                                break;
-                                            }
-                                            //west -> north
-                                            if (dir == 1) {
-                                                dir = 3;
-                                                break;
-                                            }
-                                            //south -> west
-                                            if (dir == 2) {
-                                                dir = 1;
-                                                break;
-                                            }
-                                            //north -> east
-                                            if (dir == 3) {
-                                                dir = 0;
-                                                break;
-                                            }
-                                        case 2:
-                                            //+90
-                                            //east -> north
-                                            if (dir == 0) {
-                                                dir = 3;
-                                                break;
-                                            }
-                                            //west -> south
-                                            if (dir == 1) {
-                                                dir = 2;
-                                                break;
-                                            }
-                                            //south -> east
-                                            if (dir == 2) {
-                                                dir = 0;
-                                                break;
-                                            }
-                                            //north -> west
-                                            if (dir == 3) {
-                                                dir = 1;
-                                                break;
-                                            }
-                                        case 3:
-                                            //+180
-                                            //east -> west
-                                            if (dir == 0) {
-                                                dir = 1;
-                                                break;
-                                            }
-                                            //west -> east
-                                            if (dir == 1) {
-                                                dir = 0;
-                                                break;
-                                            }
-                                            //south -> north
-                                            if (dir == 2) {
-                                                dir = 3;
-                                                break;
-                                            }
-                                            //north -> south
-                                            if (dir == 3) {
-                                                dir = 2;
-                                                break;
-                                            }
-                                    }
-                                    meta +=dir;
-                                }else if(temp instanceof BlockLadder) {
-                                    dir = meta;
-                                    switch (this.dir) {
-                                        case 0:
-                                            break;
-                                        case 1:
-                                            //+90
-                                            //east -> north
-                                            if (dir == 5) {
-                                                dir = 2;
-                                            }else
-                                            //west -> south
-                                            if (dir == 4) {
-                                                dir = 3;
-                                            }else
-                                            //south -> east
-                                            if (dir == 3) {
-                                                dir = 5;
-                                            }else
-                                            //north -> west
-                                            if (dir == 2) {
-                                                dir = 4;
-                                            }
-                                            break;
-                                        case 2:
-                                            //-90
-                                            //east -> south
-                                            if (dir == 5) {
-                                                dir = 3;
-                                            }else
-                                            //west -> north
-                                            if (dir == 4) {
-                                                dir = 2;
-                                            }else
-                                            //south -> west
-                                            if (dir == 3) {
-                                                dir = 4;
-                                            }else
-                                            //north -> east
-                                            if (dir == 2) {
-                                                dir = 5;
-                                            }
-                                            break;
-                                        case 3:
-                                            //+180
-                                            //east -> west
-                                            if (dir == 5) {
-                                                dir = 4;
-                                            }else
-                                            //west -> east
-                                            if (dir == 4) {
-                                                dir = 5;
-                                            }else
-                                            //south -> north
-                                            if (dir == 3) {
-                                                dir = 2;
-                                            }else
-                                            //north -> south
-                                            if (dir == 2) {
-                                                dir = 3;
-                                            }
-                                            break;
-                                    }
-                                    meta = dir;
+//                                if(temp instanceof BlockStairs) {
+//                                    dir = meta % 4;
+//                                    meta -= dir;
+//                                    switch (this.dir) {
+//                                        case 0:
+//                                            break;
+//                                        case 1:
+//                                            //-90
+//                                            //east -> south
+//                                            if (dir == 0) {
+//                                                dir = 2;
+//                                                break;
+//                                            }
+//                                            //west -> north
+//                                            if (dir == 1) {
+//                                                dir = 3;
+//                                                break;
+//                                            }
+//                                            //south -> west
+//                                            if (dir == 2) {
+//                                                dir = 1;
+//                                                break;
+//                                            }
+//                                            //north -> east
+//                                            if (dir == 3) {
+//                                                dir = 0;
+//                                                break;
+//                                            }
+//                                        case 2:
+//                                            //+90
+//                                            //east -> north
+//                                            if (dir == 0) {
+//                                                dir = 3;
+//                                                break;
+//                                            }
+//                                            //west -> south
+//                                            if (dir == 1) {
+//                                                dir = 2;
+//                                                break;
+//                                            }
+//                                            //south -> east
+//                                            if (dir == 2) {
+//                                                dir = 0;
+//                                                break;
+//                                            }
+//                                            //north -> west
+//                                            if (dir == 3) {
+//                                                dir = 1;
+//                                                break;
+//                                            }
+//                                        case 3:
+//                                            //+180
+//                                            //east -> west
+//                                            if (dir == 0) {
+//                                                dir = 1;
+//                                                break;
+//                                            }
+//                                            //west -> east
+//                                            if (dir == 1) {
+//                                                dir = 0;
+//                                                break;
+//                                            }
+//                                            //south -> north
+//                                            if (dir == 2) {
+//                                                dir = 3;
+//                                                break;
+//                                            }
+//                                            //north -> south
+//                                            if (dir == 3) {
+//                                                dir = 2;
+//                                                break;
+//                                            }
+//                                    }
+//                                    meta +=dir;
+//                                }else if(temp instanceof BlockLadder) {
+//                                    dir = meta;
+//                                    switch (this.dir) {
+//                                        case 0:
+//                                            break;
+//                                        case 1:
+//                                            //+90
+//                                            //east -> north
+//                                            if (dir == 5) {
+//                                                dir = 2;
+//                                            }else
+//                                            //west -> south
+//                                            if (dir == 4) {
+//                                                dir = 3;
+//                                            }else
+//                                            //south -> east
+//                                            if (dir == 3) {
+//                                                dir = 5;
+//                                            }else
+//                                            //north -> west
+//                                            if (dir == 2) {
+//                                                dir = 4;
+//                                            }
+//                                            break;
+//                                        case 2:
+//                                            //-90
+//                                            //east -> south
+//                                            if (dir == 5) {
+//                                                dir = 3;
+//                                            }else
+//                                            //west -> north
+//                                            if (dir == 4) {
+//                                                dir = 2;
+//                                            }else
+//                                            //south -> west
+//                                            if (dir == 3) {
+//                                                dir = 4;
+//                                            }else
+//                                            //north -> east
+//                                            if (dir == 2) {
+//                                                dir = 5;
+//                                            }
+//                                            break;
+//                                        case 3:
+//                                            //+180
+//                                            //east -> west
+//                                            if (dir == 5) {
+//                                                dir = 4;
+//                                            }else
+//                                            //west -> east
+//                                            if (dir == 4) {
+//                                                dir = 5;
+//                                            }else
+//                                            //south -> north
+//                                            if (dir == 3) {
+//                                                dir = 2;
+//                                            }else
+//                                            //north -> south
+//                                            if (dir == 2) {
+//                                                dir = 3;
+//                                            }
+//                                            break;
+//                                    }
+//                                    meta = dir;
+//                                }
+                                world.setBlock(i, Ystart + pos.y, j, temp, meta, 0);
+                                switch (this.dir) {
+                                    case 0:
+                                        break;
+                                    case 1:
+                                        //+90
+                                        //north -> west
+                                        temp.rotateBlock(world,i, Ystart + pos.y, j,ForgeDirection.DOWN);
+                                        temp.rotateBlock(world,i, Ystart + pos.y, j,ForgeDirection.DOWN);
+                                        temp.rotateBlock(world,i, Ystart + pos.y, j,ForgeDirection.DOWN);
+                                        break;
+                                    case 2:
+                                        //-90
+                                        //north -> east
+                                        temp.rotateBlock(world,i, Ystart + pos.y, j,ForgeDirection.DOWN);
+                                        break;
+                                    case 3:
+                                        //+180
+                                        //north -> south
+                                        temp.rotateBlock(world,i, Ystart + pos.y, j,ForgeDirection.DOWN);
+                                        temp.rotateBlock(world,i, Ystart + pos.y, j,ForgeDirection.DOWN);
+                                        break;
                                 }
-                                world.setBlock(i, Ystart + pos.y, j, temp, meta, 2);
-                                if (temp == Blocks.chest){
+                                if (temp == Blocks.chest && !dungeonData.TileEntitys.containsKey(pos)){
                                     addChestHelper(random,world,i, Ystart + pos.y, j,pos);
                                 }else
-                                if (temp == Blocks.mob_spawner) {
+                                if (temp == Blocks.mob_spawner && !dungeonData.TileEntitys.containsKey(pos)) {
                                     dungeonData.spawnerpos.get(pos).setnormalspawner(world, i, Ystart + pos.y, j);
                                 }else
-                                if (temp == GVCMobPlus.fn_mobspawner) {
+                                if (temp == GVCMobPlus.fn_mobspawner && !dungeonData.TileEntitys.containsKey(pos)) {
                                     dungeonData.spawnerpos.get(pos).setspawner(world, i, Ystart + pos.y, j);
                                 }
                             }catch (Exception e){
                                 e.printStackTrace();
                                 System.out.println("position" + pos);
                             }
+                        }
+                        AddVehicleHelper vehicleHelper = dungeonData.vehiclePos.get(pos);
+                        if(vehicleHelper != null){
+                            vehicleHelper.setVehicle(world,i + 0.5, Ystart + pos.y, j + 0.5);
                         }
                         Class<? extends Entity> entityClass = dungeonData.entitys.get(pos);
                         if(entityClass != null){
@@ -392,6 +422,45 @@ public class ComponentDungeonBase extends StructureComponent {
                             } catch (InvocationTargetException e) {
                                 e.printStackTrace();
                             }
+                        }
+                        if(dungeonData.TileEntitys.containsKey(pos)){
+                            TileEntityInfo tileEntityInfo = dungeonData.TileEntitys.get(pos);
+                            TileEntity tileEntity = tileEntityInfo.createAndLoadEntity();
+                            tileEntity.xCoord = i;
+                            tileEntity.yCoord = Ystart + pos.y;
+                            tileEntity.zCoord = j;
+                            world.setTileEntity(i,Ystart + pos.y,j,tileEntity);
+                        }
+                        if(dungeonData.entitys_withData.containsKey(pos)){
+                            EntityInfo entityInfo = dungeonData.entitys_withData.get(pos);
+                            Entity entity = entityInfo.createAndLoadEntity(world);
+                            entity.posX = i + 0.5;
+                            entity.posY = Ystart + pos.y + 0.5;
+                            entity.posZ = j + 0.5;
+                            switch (this.dir) {
+                                case 0:
+                                    break;
+                                case 1:
+                                    //+90
+                                    //north -> west
+                                    entity.rotationYaw += 90;
+                                    break;
+                                case 2:
+                                    //-90
+                                    //north -> east
+                                    entity.rotationYaw += 270;
+                                    break;
+                                case 3:
+                                    //+180
+                                    //north -> south
+                                    entity.rotationYaw += 180;
+                                    break;
+                            }
+                            System.out.println("" + entity);
+                            if(entity instanceof EntityGBases){
+                                ((EntityGBases) entity).candespawn = false;
+                            }
+                            world.spawnEntityInWorld(entity);
                         }
                         String gunname = dungeonData.turrets.get(pos);
                         if(gunname != null){

@@ -43,7 +43,8 @@ public class RenderVehicle extends Render {
 	protected ResourceLocation getEntityTexture(Entity p_110775_1_) {
 		return skeletonTexturesz;
 	}
-	
+
+
 	/*private double func_110828_a(double p_110828_1_, double p_110828_3_, double p_110828_5_)
     {
         return p_110828_1_ + (p_110828_3_ - p_110828_1_) * p_110828_5_;
@@ -54,10 +55,10 @@ public class RenderVehicle extends Render {
 	public void doRender(Entity entity, double p_76986_2_, double p_76986_4_, double p_76986_6_,
 	                     float entityYaw, float in_partialTicks) {
 		
-		if(entity instanceof IMultiTurretVehicle && entity instanceof IVehicle && ((IVehicle) entity).getBaseLogic().info.modelSetAndData != null){
+		if(entity instanceof IMultiTurretVehicle && entity instanceof IVehicle && ((IVehicle) entity).getBaseLogic().prefab_vehicle.modelSetAndData != null){
 			GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
-			skeletonTexturesz = ((IVehicle) entity).getBaseLogic().info.modelSetAndData.texture;
-			vehicleModel = ((IVehicle) entity).getBaseLogic().info.modelSetAndData.model;
+			skeletonTexturesz = ((IVehicle) entity).getBaseLogic().prefab_vehicle.modelSetAndData.texture;
+			vehicleModel = ((IVehicle) entity).getBaseLogic().prefab_vehicle.modelSetAndData.model;
 			pass = MinecraftForgeClient.getRenderPass();
 			currentBaseLogic = ((IVehicle) entity).getBaseLogic();
 			currentEntity = entity;
@@ -66,22 +67,13 @@ public class RenderVehicle extends Render {
 			TurretObj[] turretObjs = currentBaseLogic.turrets;
 			
 			GL11.glShadeModel(GL11.GL_SMOOTH);
-			if (pass == 1) {
-				glEnable(GL_BLEND);
-				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-				GL11.glDepthMask(false);
-				glAlphaFunc(GL_LESS, 1);
-			} else {
-				GL11.glDepthMask(true);
-				glAlphaFunc(GL_EQUAL, 1);
-			}
 			
 			this.bindEntityTexture(entity);
 			GL11.glPushMatrix();
 			GL11.glTranslatef((float) p_76986_2_, (float) p_76986_4_, (float) p_76986_6_);
 			GL11.glRotatef(180F, 0.0F, 1.0F, 0.0F);
 			GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-			GL11.glTranslatef((float) currentBaseLogic.info.rotcenter[0], (float) currentBaseLogic.info.rotcenter[1], (float) currentBaseLogic.info.rotcenter[2]);
+			GL11.glTranslatef((float) currentBaseLogic.prefab_vehicle.rotcenter[0], (float) currentBaseLogic.prefab_vehicle.rotcenter[1], (float) currentBaseLogic.prefab_vehicle.rotcenter[2]);
 			
 			Quat4d currentquat = new Quat4d();
 			currentquat.interpolate(currentBaseLogic.prevbodyRot,currentBaseLogic.bodyRot, (double) partialTicks);
@@ -93,20 +85,40 @@ public class RenderVehicle extends Render {
 			GL11.glRotatef(180 - (float)xyz[1], 0.0F, 1.0F, 0.0F);
 			GL11.glRotatef((float) xyz[0], 1.0F, 0.0F, 0.0F);
 			GL11.glRotatef((float) xyz[2], 0.0F, 0.0F, 1.0F);
-			GL11.glTranslatef(-(float) currentBaseLogic.info.rotcenter[0], -(float) currentBaseLogic.info.rotcenter[1], -(float) currentBaseLogic.info.rotcenter[2]);
+			GL11.glTranslatef(-(float) currentBaseLogic.prefab_vehicle.rotcenter[0], -(float) currentBaseLogic.prefab_vehicle.rotcenter[1], -(float) currentBaseLogic.prefab_vehicle.rotcenter[2]);
 
 
 			Vector3d nowPos = new Vector3d();
 			nowPos.interpolate(new Vector3d(currentEntity.prevPosX ,
 					currentEntity.prevPosY,
 					currentEntity.prevPosZ),new Vector3d(currentEntity.posX,currentEntity.posY,currentEntity.posZ),in_partialTicks);
-			currentBaseLogic.riderPosUpdate_forRender(nowPos,currentquat);
+			currentBaseLogic.riderPosUpdate_forRender_withoutPlayer(nowPos,currentquat);
 			GL11.glPushMatrix();
-			GL11.glScalef((float) currentBaseLogic.info.scale, (float) currentBaseLogic.info.scale, (float) currentBaseLogic.info.scale);
-			if(currentBaseLogic.info.partslist != null){
+			GL11.glScalef((float) currentBaseLogic.prefab_vehicle.scale, (float) currentBaseLogic.prefab_vehicle.scale, (float) currentBaseLogic.prefab_vehicle.scale);
+			if(currentBaseLogic.prefab_vehicle.partslist != null){
+				if(pass == 1) {
+					glEnable(GL_BLEND);
+					glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+					GL11.glDepthMask(false);
+					glAlphaFunc(GL_LESS, 1);
+				}else {
+					GL11.glDepthMask(true);
+					glAlphaFunc(GL_EQUAL, 1);
+				}
+				partsRender_vehicle.pass = pass;
 				partsRender_vehicle.model = this.vehicleModel;
-				partsRender_vehicle.partSidentification(currentBaseLogic.info.partslist);
+				partsRender_vehicle.mother = this;
+				partsRender_vehicle.partSidentification(currentBaseLogic.prefab_vehicle.partslist,this);
 			}else {
+				if(pass == 1) {
+					glEnable(GL_BLEND);
+					glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+					GL11.glDepthMask(false);
+					glAlphaFunc(GL_LESS, 1);
+				}else {
+					GL11.glDepthMask(true);
+					glAlphaFunc(GL_EQUAL, 1);
+				}
 				vehicleModel.renderPart("obj1");
 				vehicleModel.renderPart("body");
 				if (turretObjs != null)
@@ -114,16 +126,16 @@ public class RenderVehicle extends Render {
 						TurretObj aturretobj = turretObjs[i];
 						GL11.glPushMatrix();
 						GL11.glTranslatef((float) aturretobj.onMotherPos.x, (float) aturretobj.onMotherPos.y, (float) -aturretobj.onMotherPos.z);
-						GL11.glTranslatef((float) aturretobj.prefab_turret.turretYawCenterpos.x, (float) aturretobj.prefab_turret.turretYawCenterpos.y, (float) -aturretobj.prefab_turret.turretYawCenterpos.z);
+						GL11.glTranslatef((float) aturretobj.gunItem.gunInfo.posGetter.turretYawCenterpos.x, (float) aturretobj.gunItem.gunInfo.posGetter.turretYawCenterpos.y, (float) -aturretobj.gunItem.gunInfo.posGetter.turretYawCenterpos.z);
 						GL11.glRotatef((float) -(aturretobj.prevturretrotationYaw + (aturretobj.turretrotationYaw - aturretobj.prevturretrotationYaw) * partialTicks), 0.0F, 1.0F, 0.0F);
-						GL11.glTranslatef((float) -aturretobj.prefab_turret.turretYawCenterpos.x, (float) -aturretobj.prefab_turret.turretYawCenterpos.y, (float) aturretobj.prefab_turret.turretYawCenterpos.z);
+						GL11.glTranslatef((float) -aturretobj.gunItem.gunInfo.posGetter.turretYawCenterpos.x, (float) -aturretobj.gunItem.gunInfo.posGetter.turretYawCenterpos.y, (float) aturretobj.gunItem.gunInfo.posGetter.turretYawCenterpos.z);
 						GL11.glTranslatef((float) -aturretobj.onMotherPos.x, (float) -aturretobj.onMotherPos.y, (float) aturretobj.onMotherPos.z);
 						vehicleModel.renderPart("Turret" + i);
 						renderchild(aturretobj.getChilds(), "Turret" + i);
 						GL11.glTranslatef((float) aturretobj.onMotherPos.x, (float) aturretobj.onMotherPos.y, (float) -aturretobj.onMotherPos.z);
-						GL11.glTranslatef((float) aturretobj.prefab_turret.turretPitchCenterpos.x, (float) aturretobj.prefab_turret.turretPitchCenterpos.y, (float) aturretobj.prefab_turret.turretPitchCenterpos.z);
+						GL11.glTranslatef((float) aturretobj.gunItem.gunInfo.posGetter.turretPitchCenterpos.x, (float) aturretobj.gunItem.gunInfo.posGetter.turretPitchCenterpos.y, (float) aturretobj.gunItem.gunInfo.posGetter.turretPitchCenterpos.z);
 						GL11.glRotatef((float) (aturretobj.prevturretrotationPitch + (aturretobj.turretrotationPitch - aturretobj.prevturretrotationPitch) * partialTicks), 1.0F, 0.0F, 0.0F);
-						GL11.glTranslatef((float) -aturretobj.prefab_turret.turretPitchCenterpos.x, (float) -aturretobj.prefab_turret.turretPitchCenterpos.y, (float) -aturretobj.prefab_turret.turretPitchCenterpos.z);
+						GL11.glTranslatef((float) -aturretobj.gunItem.gunInfo.posGetter.turretPitchCenterpos.x, (float) -aturretobj.gunItem.gunInfo.posGetter.turretPitchCenterpos.y, (float) -aturretobj.gunItem.gunInfo.posGetter.turretPitchCenterpos.z);
 						GL11.glTranslatef((float) -aturretobj.onMotherPos.x, (float) -aturretobj.onMotherPos.y, (float) aturretobj.onMotherPos.z);
 						vehicleModel.renderPart("Turret" + i + "Cannon");
 						renderReticle(pass, aturretobj, "Turret" + i);
@@ -264,16 +276,16 @@ public class RenderVehicle extends Render {
 			TurretObj achild = childturretObjs.get(ic);
 			GL11.glPushMatrix();
 			GL11.glTranslatef((float)achild.onMotherPos.x,(float)achild.onMotherPos.y,(float)-achild.onMotherPos.z);
-			GL11.glTranslatef((float)achild.prefab_turret.turretYawCenterpos.x,(float)achild.prefab_turret.turretYawCenterpos.y,(float)-achild.prefab_turret.turretYawCenterpos.z);
+			GL11.glTranslatef((float)achild.gunItem.gunInfo.posGetter.turretYawCenterpos.x,(float)achild.gunItem.gunInfo.posGetter.turretYawCenterpos.y,(float)-achild.gunItem.gunInfo.posGetter.turretYawCenterpos.z);
 			GL11.glRotatef((float)-(achild.prevturretrotationYaw + (achild.turretrotationYaw - achild.prevturretrotationYaw) * partialTicks), 0.0F, 1.0F, 0.0F);
-			GL11.glTranslatef((float)-achild.prefab_turret.turretYawCenterpos.x,(float)-achild.prefab_turret.turretYawCenterpos.y,(float)achild.prefab_turret.turretYawCenterpos.z);
+			GL11.glTranslatef((float)-achild.gunItem.gunInfo.posGetter.turretYawCenterpos.x,(float)-achild.gunItem.gunInfo.posGetter.turretYawCenterpos.y,(float)achild.gunItem.gunInfo.posGetter.turretYawCenterpos.z);
 			GL11.glTranslatef((float)-achild.onMotherPos.x,(float)-achild.onMotherPos.y,(float)achild.onMotherPos.z);
 			vehicleModel.renderPart(motherID + "child" + ic);
 			renderchild(achild.getChilds(),motherID + "child" + ic);
 			GL11.glTranslatef((float)achild.onMotherPos.x,(float)achild.onMotherPos.y,(float)-achild.onMotherPos.z);
-			GL11.glTranslatef((float)achild.prefab_turret.turretPitchCenterpos.x,(float)achild.prefab_turret.turretPitchCenterpos.y,(float)-achild.prefab_turret.turretPitchCenterpos.z);
+			GL11.glTranslatef((float)achild.gunItem.gunInfo.posGetter.turretPitchCenterpos.x,(float)achild.gunItem.gunInfo.posGetter.turretPitchCenterpos.y,(float)-achild.gunItem.gunInfo.posGetter.turretPitchCenterpos.z);
 			GL11.glRotatef((float)(achild.prevturretrotationPitch + (achild.turretrotationPitch - achild.prevturretrotationPitch) * partialTicks), 1.0F, 0.0F, 0.0F);
-			GL11.glTranslatef((float)-achild.prefab_turret.turretPitchCenterpos.x,(float)-achild.prefab_turret.turretPitchCenterpos.y,(float)achild.prefab_turret.turretPitchCenterpos.z);
+			GL11.glTranslatef((float)-achild.gunItem.gunInfo.posGetter.turretPitchCenterpos.x,(float)-achild.gunItem.gunInfo.posGetter.turretPitchCenterpos.y,(float)achild.gunItem.gunInfo.posGetter.turretPitchCenterpos.z);
 			GL11.glTranslatef((float)-achild.onMotherPos.x,(float)-achild.onMotherPos.y,(float)achild.onMotherPos.z);
 			vehicleModel.renderPart(motherID + "child" + ic + "Cannon");
 			
@@ -281,5 +293,8 @@ public class RenderVehicle extends Render {
 			GL11.glPopMatrix();
 		}
 	}
-	
+
+	public void bindEntityTexture_public() {
+		this.bindEntityTexture(currentEntity);
+	}
 }

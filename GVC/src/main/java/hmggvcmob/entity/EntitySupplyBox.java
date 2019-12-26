@@ -31,7 +31,7 @@ import static hmggvcutil.GVCUtils.fn_health;
 import static hmggvcmob.GVCMobPlus.fn_pmcegg;
 import static hmggvcmob.GVCMobPlus.gvcmx_reqsupport_arty;
 
-public class EntitySupplyBox extends GVCEntityBox implements IGVCmob{
+public class EntitySupplyBox extends GVCEntityBox{
     public boolean hasItems;
     public TileEntity spawnedtile = null;
     public boolean interact(EntityPlayer p_70085_1_) {
@@ -239,20 +239,5 @@ public class EntitySupplyBox extends GVCEntityBox implements IGVCmob{
     }
     public void setDead(){
         super.setDead();
-    }
-
-    @Override
-    public float getviewWide() {
-        return 0;
-    }
-
-    @Override
-    public boolean canSeeTarget(Entity target) {
-        return false;
-    }
-
-    @Override
-    public boolean canhearsound(Entity target) {
-        return false;
     }
 }

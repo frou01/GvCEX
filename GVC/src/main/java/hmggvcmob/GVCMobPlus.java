@@ -136,11 +136,12 @@ public class GVCMobPlus
     public static GVCBlockMobSpawnerExtended GKspawner;
     public static GVCBlockMobSpawnerExtended tankspawner;
     public static GVCBlockMobSpawnerExtended APCspawner;
-    public static GVCBlockFlag fn_playerFlag;
-    public static CampObj boxes;
     public static GVCBlockFlag fn_SoldierFlag;
     public static CampObj soldiers;
-    public static GVCBlockFlag fn_Supplyflag;
+    public static GVCBlockFlag fn_PlayerFlag;
+    public static CampObj forPlayer;
+    public static GVCBlockFlag fn_PlayerFlag_withRaid;
+    public static CampObj boxes_withRaid;
     public static Block fn_Guerrillaflag;
     public static CampObj guerrillas;
     public static int bulletbase = 61;
@@ -155,6 +156,7 @@ public class GVCMobPlus
     public static List Guns_FL = new ArrayList();
     public static List Guns_HVG = new ArrayList();
     public static List Guns_BoltR = new ArrayList();
+    public static List<HMGItem_Unified_Guns> Guns_CanUse = new ArrayList<HMGItem_Unified_Guns>();
     public static List Guns_SWORD = new ArrayList();
     protected static File configFile;
 
@@ -214,7 +216,7 @@ public class GVCMobPlus
         }
         {
 
-            String[] types = lconf.get("Vehicle", "cfg_Soldier_VehicleType",new String[]{"50","KPZ-70:10"}).getStringList();
+            String[] types = lconf.get("Vehicle", "cfg_Soldier_VehicleType",new String[]{"50","KPZ-70:10","BMP-1:20","BRDM-2:20","Mi-24:10"}).getStringList();
             GVCEntitySoldierRPG.vehicleSpawnGachaOBJ = new VehicleSpawnGachaOBJ[types.length];
             int cnt = 0;
             for(String atype:types){
@@ -224,7 +226,7 @@ public class GVCMobPlus
             }
         }
         {
-            String[] types = lconf.get("Vehicle", "cfg_Guerrilla_VehicleType",new String[]{"50","T-34-85_mod:10"}).getStringList();
+            String[] types = lconf.get("Vehicle", "cfg_Guerrilla_VehicleType",new String[]{"50","T-34-85_mod:10","TOYOTA:30"}).getStringList();
             GVCEntityGuerrillaRPG.vehicleSpawnGachaOBJ = new VehicleSpawnGachaOBJ[types.length];
             int cnt = 0;
             for(String atype:types){
@@ -264,15 +266,15 @@ public class GVCMobPlus
         GKspawner.mobname = "GVCMob.IRVING";
         GameRegistry.registerBlock(GKspawner, "MobSpawnerKai_IRVING");
 
-        tankspawner = new GVCBlockMobSpawnerExtended();
-        tankspawner.setBlockName("MobSpawnerKai_TANK").setBlockTextureName("gvcmob:mobspawner");
-        tankspawner.mobname = "GVCMob.Tank";
-        GameRegistry.registerBlock(tankspawner, "MobSpawnerKai_TANK");
+//        tankspawner = new GVCBlockMobSpawnerExtended();
+//        tankspawner.setBlockName("MobSpawnerKai_TANK").setBlockTextureName("gvcmob:mobspawner");
+//        tankspawner.mobname = "GVCMob.Tank";
+//        GameRegistry.registerBlock(tankspawner, "MobSpawnerKai_TANK");
 
-        APCspawner = new GVCBlockMobSpawnerExtended();
-        APCspawner.setBlockName("MobSpawnerKai_APC").setBlockTextureName("gvcmob:mobspawner");
-        APCspawner.mobname = "GVCMob.APC";
-        GameRegistry.registerBlock(APCspawner, "MobSpawnerKai_APC");
+//        APCspawner = new GVCBlockMobSpawnerExtended();
+//        APCspawner.setBlockName("MobSpawnerKai_APC").setBlockTextureName("gvcmob:mobspawner");
+//        APCspawner.mobname = "GVCMob.APC";
+//        GameRegistry.registerBlock(APCspawner, "MobSpawnerKai_APC");
         soldiers = new CampObj();
         soldiers.campName = "UNION";
         soldiers.campBlockTextureModel= "gvcmob:textures/model/pflagtexture.png";
@@ -284,23 +286,41 @@ public class GVCMobPlus
         GameRegistry.registerBlock(fn_SoldierFlag, "BaseFlagBlock");
 
 
-        boxes = new CampObj();
-        boxes.campName = "Supply";
-        boxes.campBlockTextureModel= "gvcmob:textures/model/sflagtexture.png";
-        boxes.teamEntityClasses = new Class[]{ EntitySupplyBox.class };
-        boxes.flagWidth = 0;
-        campsHash.put(boxes.campName, boxes);
+        forPlayer = new CampObj();
+        forPlayer.campName = "for Player";
+        forPlayer.campBlockTextureModel= "gvcmob:textures/model/sflagtexture.png";
+        forPlayer.teamEntityClasses = null;
+        forPlayer.flagWidth = 2;
+        forPlayer.playerIsFriend = true;
+        campsHash.put(forPlayer.campName, forPlayer);
 
-        fn_Supplyflag = new GVCBlockFlag(boxes);
-        fn_Supplyflag.setBlockName("SupplyFlagBlock").setBlockTextureName("gvcmob:mobspawner");
-        boxes.campsBlock = fn_Supplyflag;
-        GameRegistry.registerBlock(fn_Supplyflag, "SupplyFlagBlock");
+        fn_PlayerFlag = new GVCBlockFlag(forPlayer);
+        fn_PlayerFlag.setBlockName("SupplyFlagBlock").setBlockTextureName("gvcmob:mobspawner");
+        forPlayer.campsBlock = fn_PlayerFlag;
+        GameRegistry.registerBlock(fn_PlayerFlag, "SupplyFlagBlock");
+
+        boxes_withRaid = new CampObj();
+        boxes_withRaid.campName = "Raid Target";
+        boxes_withRaid.campBlockTextureModel= "gvcmob:textures/model/sflagtexture.png";
+        boxes_withRaid.teamEntityClasses = new Class[]{ EntitySupplyBox.class };
+        boxes_withRaid.raiderEntityClasses = new Class[]{ GVCEntityGuerrilla.class,GVCEntityGuerrilla.class,GVCEntityGuerrilla.class,GVCEntityGuerrilla.class, GVCEntityGuerrillaMG.class,GVCEntityGuerrillaMG.class, GVCEntityGuerrillaSP.class, GVCEntityGuerrillaRPG.class };
+        boxes_withRaid.isRaidType = true;
+        boxes_withRaid.flagWidth = 2;
+        boxes_withRaid.flagSpawnInterval = 12000;
+        boxes_withRaid.playerIsFriend = true;
+        boxes_withRaid.raiderIgnoreList = new CampObj[]{forPlayer,boxes_withRaid,soldiers};
+        campsHash.put(boxes_withRaid.campName, boxes_withRaid);
+
+        fn_PlayerFlag_withRaid = new GVCBlockFlag(boxes_withRaid);
+        fn_PlayerFlag_withRaid.setBlockName("SupplyFlagBlock_withRaid").setBlockTextureName("gvcmob:mobspawner");
+        boxes_withRaid.campsBlock = fn_PlayerFlag_withRaid;
+        GameRegistry.registerBlock(fn_PlayerFlag_withRaid, "SupplyFlagBlock_withRaid");
 
         guerrillas = new CampObj();
         guerrillas.campBlockTextureModel= "gvcmob:textures/model/gflagtexture.png";
         guerrillas.campName = "ALLIES Radical Party";
         campsHash.put(guerrillas.campName,guerrillas);
-        //TODO
+
         guerrillas.teamEntityClasses = new Class[]{ GVCEntityGuerrilla.class,GVCEntityGuerrilla.class,GVCEntityGuerrilla.class,GVCEntityGuerrilla.class, GVCEntityGuerrillaMG.class,GVCEntityGuerrillaMG.class, GVCEntityGuerrillaSP.class, GVCEntityGuerrillaRPG.class };
         fn_Guerrillaflag = new GVCBlockFlag(guerrillas).setBlockName("GuerrillaBaseFlagBlock").setBlockTextureName("gvcmob:mobspawner");
         guerrillas.campsBlock = fn_Guerrillaflag;
@@ -586,7 +606,7 @@ public class GVCMobPlus
                 "ddd",
                 'd', Items.emerald,'I',Items.iron_ingot
         );
-        GameRegistry.addRecipe(new ItemStack(fn_Supplyflag, 1),
+        GameRegistry.addRecipe(new ItemStack(fn_PlayerFlag, 1),
                 " I ",
                 " I ",
                 " d ",
@@ -654,6 +674,7 @@ public class GVCMobPlus
                             Guns_FL.add(unified_guns);
                             break;
                     }
+                    Guns_CanUse.add(unified_guns);
                     if(unified_guns.gunInfo.guntype == 0 && unified_guns.gunInfo.needcock){
                         Guns_BoltR.add(unified_guns);
                     }

@@ -14,6 +14,7 @@ public class EntityDummy_rider extends Entity implements SpHitCheckEntity {
         this.linkedBaseLogic = linkedBaseLogic;
         worldObj.loadedEntityList.add(this);//クソッタレハードコードにはこうやって対策してやる！
         //マジでこれで動くんすか・・・
+        this.linkedSeatID = linkedSeatID;
     }
 
     public void updateRiderPosition(){

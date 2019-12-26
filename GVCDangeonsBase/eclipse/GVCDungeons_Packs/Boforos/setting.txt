@@ -1,0 +1,5 @@
+NAME,Boforos
+BiomeRestriction,true,0,7,16,26
+FixedPosition,0,0
+Frequency,0.08
+Interval,8

@@ -7,7 +7,8 @@ import handmadevehicle.entity.parts.turrets.TurretObj;
 public class Prefab_Seat {
 	public double[] pos = new double[3];
 	public boolean hasGun;
-	public boolean aimGun;
+	public boolean aimMainGun;
+	public boolean aimSubGun;
 	public boolean seatOnTurret = true;
 	public int[] mainid;
 	public int subid;
@@ -15,10 +16,20 @@ public class Prefab_Seat {
 	public float zoomLevel = 1.0f;
 	public Prefab_Seat(){
 	}
-	public Prefab_Seat(double[] pos,boolean hasGun,boolean aimGun,boolean seatOnTurret,int mainid,int subid){
+	public Prefab_Seat(double[] pos, boolean hasGun, boolean aimMainGun,boolean aimSubGun, boolean seatOnTurret, int mainid, int subid){
 		this.pos = pos;
 		this.hasGun = hasGun;
-		this.aimGun = aimGun;
+		this.aimMainGun = aimMainGun;
+		this.aimSubGun = aimSubGun;
+		this.seatOnTurret = seatOnTurret;
+		if(mainid != -1)this.mainid = new int[]{mainid};
+		this.subid = subid;
+	}
+	public Prefab_Seat(double[] pos, boolean hasGun, boolean aimMainGun, boolean seatOnTurret, int mainid, int subid){
+		this.pos = pos;
+		this.hasGun = hasGun;
+		this.aimMainGun = aimMainGun;
+		this.aimSubGun = aimMainGun;
 		this.seatOnTurret = seatOnTurret;
 		if(mainid != -1)this.mainid = new int[]{mainid};
 		this.subid = subid;

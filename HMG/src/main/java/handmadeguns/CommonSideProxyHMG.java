@@ -15,6 +15,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
+import static handmadeguns.HandmadeGunsCore.HMG_proxy;
+
 
 public class CommonSideProxyHMG {
 	public File ProxyFile(){
@@ -37,6 +39,10 @@ public class CommonSideProxyHMG {
 	public Minecraft getMCInstance() {
 		return null;
 	}
+
+	public void setRightclicktimer(){
+	}
+
 	public void InitRendering() {
 	}
 

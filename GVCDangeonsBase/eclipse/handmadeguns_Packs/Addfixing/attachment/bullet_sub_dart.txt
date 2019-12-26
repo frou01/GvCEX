@@ -1,0 +1,5 @@
+Texture,bullet_sub_dart
+Stack,1
+Name,Dart Bullet
+BulletDart,Bullet_Dart
+addRecipe,Bullet_Dart,2,ab0,de0,000,49,339,0,339,289,0,0,0,0

@@ -12,6 +12,8 @@ public class sendEntitydata implements Serializable{
     public double posX;
     public double posY;
     public double posZ;
+    public float yaw;
+    public float pitch;
     public sendEntitydata(HMGEntityBulletBase entityin){
         motionX = entityin.motionX;
         motionY = entityin.motionY;
@@ -20,5 +22,7 @@ public class sendEntitydata implements Serializable{
         posX = entityin.posX;
         posY = entityin.posY;
         posZ = entityin.posZ;
+        yaw = entityin.rotationYaw;
+        pitch = entityin.rotationPitch;
     }
 }

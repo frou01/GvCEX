@@ -55,7 +55,7 @@ public class HMGAddSounds
 					for (int i = 0; i < filelist1.length; i++) {
 						String s = "\"handmadeguns." + soundsfile[i] + "\"";
 						String c = "\"category\"";
-						String n = "\"neutral\"";
+						String n = "\"hostile\"";
 						String ss = "\"sounds\"";
 						bw.write(s + ": {" + c + ": " + n + "," + ss + ": [\"" + soundsfile[i] + "\"]},");
 						bw.newLine();
@@ -63,7 +63,7 @@ public class HMGAddSounds
 					{
 						String s = "\"handmadeguns." + "nulls" + "\"";
 						String c = "\"category\"";
-						String n = "\"neutral\"";
+						String n = "\"hostile\"";
 						String ss = "\"sounds\"";
 						bw.write(s + ": {" + c + ": " + n + "," + ss + ": [\"" + "nulls" + "\"]}");
 						bw.newLine();

@@ -4,7 +4,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.FloatBuffer;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.lwjgl.opengl.GL11;
 
@@ -17,12 +19,16 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.IModelCustom;
 import net.minecraftforge.client.model.ModelFormatException;
 
+import static java.lang.Float.parseFloat;
+import static java.lang.Integer.parseInt;
+
 @SideOnly(Side.CLIENT)
 public class MQO_MetasequoiaObject implements IModelCustom
 {
 	public ArrayList<MQO_Vertex>		vertices		= new ArrayList<MQO_Vertex>();
 	public ArrayList<MQO_GroupObject>	groupObjects	= new ArrayList<MQO_GroupObject>();
 	private MQO_GroupObject				currentGroupObject	= null;
+	public MQO_Material[] materials = null;
 	private String						fileName;
 	private int							vertexNum = 0;
 	private int							faceNum = 0;
@@ -91,7 +97,7 @@ public class MQO_MetasequoiaObject implements IModelCustom
 	{
 		for(MQO_GroupObject groupObject : groupObjects)
 		{
-			if (partName.equalsIgnoreCase(groupObject.name))
+			if (partName.equals(groupObject.name))
 			{
 				return true;
 			}
@@ -102,23 +108,10 @@ public class MQO_MetasequoiaObject implements IModelCustom
 	@Override
 	public void renderAll()
 	{
-		Tessellator tessellator = Tessellator.instance;
-
-		if (currentGroupObject != null)
-		{
-			tessellator.startDrawing(currentGroupObject.glDrawingMode);
-		}
-		else
-		{
-			tessellator.startDrawing(GL11.GL_TRIANGLES);
-		}
-
 		for (MQO_GroupObject groupObject : groupObjects)
 		{
-			groupObject.render(tessellator);
+			groupObject.render();
 		}
-
-		tessellator.draw();
 	}
 
 	@Override
@@ -128,7 +121,7 @@ public class MQO_MetasequoiaObject implements IModelCustom
 		{
 			for (String groupName : groupNames)
 			{
-				if (groupName.equalsIgnoreCase(groupObject.name))
+				if (groupName.equals(groupObject.name))
 				{
 					groupObject.render();
 				}
@@ -139,36 +132,11 @@ public class MQO_MetasequoiaObject implements IModelCustom
 	@Override
 	public void renderPart(String partName)
 	{
-		if(partName.charAt(0)!='$')
+		for (MQO_GroupObject groupObject : groupObjects)
 		{
-			for (MQO_GroupObject groupObject : groupObjects)
+			if (partName.equals(groupObject.name))
 			{
-				if (partName.equalsIgnoreCase(groupObject.name))
-				{
-					groupObject.render();
-				}
-			}
-		}
-		else
-		{
-			for (int i=0; i < groupObjects.size(); i++)
-			{
-				MQO_GroupObject groupObject = groupObjects.get(i);
-				if (partName.equalsIgnoreCase(groupObject.name))
-				{
-					groupObject.render();
-
-					i++;
-					for (; i < groupObjects.size(); i++)
-					{
-						groupObject = groupObjects.get(i);
-						if(groupObject.name.charAt(0)=='$')
-						{
-							break;
-						}
-						groupObject.render();
-					}
-				}
+				groupObject.render();
 			}
 		}
 	}
@@ -181,7 +149,7 @@ public class MQO_MetasequoiaObject implements IModelCustom
 			boolean skipPart=false;
 			for (String excludedGroupName : excludedGroupNames)
 			{
-				if (excludedGroupName.equalsIgnoreCase(groupObject.name))
+				if (excludedGroupName.equals(groupObject.name))
 				{
 					skipPart=true;
 				}
@@ -194,82 +162,82 @@ public class MQO_MetasequoiaObject implements IModelCustom
 	}
 
 
-	public void renderAllLine(int startLine, int maxLine)
-	{
-		Tessellator tessellator = Tessellator.instance;
+//	public void renderAllLine(int startLine, int maxLine)
+//	{
+//		Tessellator tessellator = Tessellator.instance;
+//
+//		tessellator.startDrawing(1);
+//
+//		renderAllLine(tessellator, startLine, maxLine);
+//
+//		tessellator.draw();
+//	}
+//
+//	public void renderAllLine(Tessellator tessellator, int startLine, int maxLine)
+//	{
+//		int lineCnt = 0;
+//		for (MQO_GroupObject groupObject : groupObjects)
+//		{
+//			if (groupObject.faces.size() > 0)
+//			{
+//				for (MQO_Face face : groupObject.faces)
+//				{
+//					for (int i = 0; i < face.vertices.length/3; ++i)
+//					{
+//						MQO_Vertex v1 = face.vertices[i*3 + 0];
+//						MQO_Vertex v2 = face.vertices[i*3 + 1];
+//						MQO_Vertex v3 = face.vertices[i*3 + 2];
+//
+//						lineCnt++;
+//						if(lineCnt > maxLine) return;
+//						tessellator.addVertex(v1.x, v1.y, v1.z);
+//						tessellator.addVertex(v2.x, v2.y, v2.z);
+//
+//						lineCnt++;
+//						if(lineCnt > maxLine) return;
+//						tessellator.addVertex(v2.x, v2.y, v2.z);
+//						tessellator.addVertex(v3.x, v3.y, v3.z);
+//
+//						lineCnt++;
+//						if(lineCnt > maxLine) return;
+//						tessellator.addVertex(v3.x, v3.y, v3.z);
+//						tessellator.addVertex(v1.x, v1.y, v1.z);
+//					}
+//				}
+//			}
+//		}
+//	}
 
-		tessellator.startDrawing(1);
-
-		renderAllLine(tessellator, startLine, maxLine);
-
-		tessellator.draw();
-	}
-
-	public void renderAllLine(Tessellator tessellator, int startLine, int maxLine)
-	{
-		int lineCnt = 0;
-		for (MQO_GroupObject groupObject : groupObjects)
-		{
-			if (groupObject.faces.size() > 0)
-			{
-				for (MQO_Face face : groupObject.faces)
-				{
-					for (int i = 0; i < face.vertices.length/3; ++i)
-					{
-						MQO_Vertex v1 = face.vertices[i*3 + 0];
-						MQO_Vertex v2 = face.vertices[i*3 + 1];
-						MQO_Vertex v3 = face.vertices[i*3 + 2];
-
-						lineCnt++;
-						if(lineCnt > maxLine) return;
-						tessellator.addVertex(v1.x, v1.y, v1.z);
-						tessellator.addVertex(v2.x, v2.y, v2.z);
-
-						lineCnt++;
-						if(lineCnt > maxLine) return;
-						tessellator.addVertex(v2.x, v2.y, v2.z);
-						tessellator.addVertex(v3.x, v3.y, v3.z);
-
-						lineCnt++;
-						if(lineCnt > maxLine) return;
-						tessellator.addVertex(v3.x, v3.y, v3.z);
-						tessellator.addVertex(v1.x, v1.y, v1.z);
-					}
-				}
-			}
-		}
-	}
-
-	public void renderAll(int startFace, int maxFace)
-	{
-		if(startFace < 0) startFace = 0;
-
-		Tessellator tessellator = Tessellator.instance;
-
-		tessellator.startDrawing(GL11.GL_TRIANGLES);
-
-		renderAll(tessellator, startFace, maxFace);
-
-		tessellator.draw();
-	}
-
-	public void renderAll(Tessellator tessellator, int startFace, int maxLine)
-	{
-		int faceCnt = 0;
-		for (MQO_GroupObject groupObject : groupObjects)
-		{
-			if (groupObject.faces.size() > 0)
-			{
-				for (MQO_Face face : groupObject.faces)
-				{
-					faceCnt++;
-					if(faceCnt < startFace) continue;
-					if(faceCnt > maxLine) return;
-					face.addFaceForRender(tessellator);
-				}
-			}
-		}
-	}
+//	public void renderAll(int startFace, int maxFace)
+//	{
+//		if(startFace < 0) startFace = 0;
+//
+//		Tessellator tessellator = Tessellator.instance;
+//
+//		tessellator.startDrawing(GL11.GL_TRIANGLES);
+//
+//		renderAll(tessellator, startFace, maxFace);
+//
+//		tessellator.draw();
+//	}
+//
+//	public void renderAll(Tessellator tessellator, int startFace, int maxLine)
+//	{
+//		int faceCnt = 0;
+//		for (MQO_GroupObject groupObject : groupObjects)
+//		{
+//			if (groupObject.faces.size() > 0)
+//			{
+//				for (MQO_Face face : groupObject.faces)
+//				{
+//					faceCnt++;
+//					if(faceCnt < startFace) continue;
+//					if(faceCnt > maxLine) return;
+//					face.addFaceForRender(tessellator);
+//				}
+//			}
+//		}
+//	}
 
 
 
@@ -298,6 +266,12 @@ public class MQO_MetasequoiaObject implements IModelCustom
 					{
 						continue;
 					}
+					group.faces = new ArrayList[materials == null?1:materials.length];
+					Arrays.fill(group.faces, new ArrayList<MQO_Face>());
+
+					for(int id = 0;id < group.faces.length;id++){
+						group.faces[id] = new ArrayList<MQO_Face>();
+					}
 
 					group.glDrawingMode = GL11.GL_TRIANGLES;
 
@@ -315,17 +289,17 @@ public class MQO_MetasequoiaObject implements IModelCustom
 						lineCount++;
 						currentLine = currentLine.replaceAll("\\s+", " ").trim();
 
-						if(currentLine.equalsIgnoreCase("mirror 1"))
+						if(currentLine.equals("mirror 1"))
 						{
 							mirror = true;
 						}
-						if(currentLine.equalsIgnoreCase("shading 1"))
+						if(currentLine.equals("shading 1"))
 						{
 							shading = true;
 						}
 
 						String s[] = currentLine.split(" ");
-						if(s.length==2 && s[0].equalsIgnoreCase("facet"))
+						if(s.length==2 && s[0].equals("facet"))
 						{
 							facet   = Math.cos(Double.parseDouble(s[1]) * 3.1415926535 / 180.0);
 						}
@@ -404,7 +378,7 @@ public class MQO_MetasequoiaObject implements IModelCustom
 										MQO_Face faces[] = parseFace(currentLine, lineCount, mirror);
 										for(MQO_Face face : faces)
 										{
-											group.faces.add(face);
+											group.faces[face.faceMat].add(face);
 										}
 									}
 									faceNum--;
@@ -423,10 +397,14 @@ public class MQO_MetasequoiaObject implements IModelCustom
 						}
 					}
 					this.vertexNum += this.vertices.size();
-					this.faceNum   += group.faces.size();
+					for(int id = 0;id < group.faces.length;id++){
+						this.faceNum   += group.faces[id].size();
+					}
 					this.vertices.clear();
 
 					groupObjects.add(group);
+				}else if(isValidMaterialLine(currentLine)){
+					materials = parseMaterial(currentLine,reader);
 				}
 			}
 		}
@@ -471,30 +449,32 @@ public class MQO_MetasequoiaObject implements IModelCustom
 
 	private void calcVerticesNormal(MQO_GroupObject group, boolean shading, double facet)
 	{
-		for(MQO_Face f : group.faces)
-		{
-			f.vertexNormals = new MQO_Vertex[f.verticesID.length];
-			for(int i=0; i<f.verticesID.length; i++)
+		for(int id = 0;id < group.faces.length;id++){
+			for(MQO_Face f : (ArrayList<MQO_Face>)group.faces[id])
 			{
-				MQO_Vertex vn = getVerticesNormalFromFace(f.faceNormal, f.verticesID[i], group, (float)facet);
-				vn.normalize();
-
-
-
-				if(shading)
+				f.vertexNormals = new MQO_Vertex[f.verticesID.length];
+				for(int i=0; i<f.verticesID.length; i++)
 				{
-					if(f.faceNormal.x * vn.x + f.faceNormal.y * vn.y + f.faceNormal.z * vn.z >= facet)
+					MQO_Vertex vn = getVerticesNormalFromFace(f.faceNormal, f.verticesID[i], group, (float)facet);
+					vn.normalize();
+
+
+
+					if(shading)
 					{
-						f.vertexNormals[i] = vn;
+						if(f.faceNormal.x * vn.x + f.faceNormal.y * vn.y + f.faceNormal.z * vn.z >= facet)
+						{
+							f.vertexNormals[i] = vn;
+						}
+						else
+						{
+							f.vertexNormals[i] = f.faceNormal;
+						}
 					}
 					else
 					{
 						f.vertexNormals[i] = f.faceNormal;
 					}
-				}
-				else
-				{
-					f.vertexNormals[i] = f.faceNormal;
 				}
 			}
 		}
@@ -504,17 +484,15 @@ public class MQO_MetasequoiaObject implements IModelCustom
 	{
 		MQO_Vertex v = new MQO_Vertex(0,0,0);
 
-		for(MQO_Face f : group.faces)
-		{
-			for(int id : f.verticesID)
-			{
-				if(id==verticesID)
-				{
-					if(f.faceNormal.x * faceNormal.x + f.faceNormal.y * faceNormal.y + f.faceNormal.z * faceNormal.z >= facet)
-					{
-						v.add(f.faceNormal);
+		for(int i = 0;i < group.faces.length;i++) {
+			for(MQO_Face f : (ArrayList<MQO_Face>)group.faces[i]) {
+				for (int id : f.verticesID) {
+					if (id == verticesID) {
+						if (f.faceNormal.x * faceNormal.x + f.faceNormal.y * faceNormal.y + f.faceNormal.z * faceNormal.z >= facet) {
+							v.add(f.faceNormal);
+						}
+						break;
 					}
-					break;
 				}
 			}
 		}
@@ -555,6 +533,7 @@ public class MQO_MetasequoiaObject implements IModelCustom
 			};
 			if(s.length>=11)
 			{
+				face.faceMat = parseInt(s[4]);
 				face.textureCoordinates = new MQO_TextureCoordinate[]{
 					new MQO_TextureCoordinate(Float.valueOf(s[9]), Float.valueOf(s[10])),
 					new MQO_TextureCoordinate(Float.valueOf(s[7]), Float.valueOf(s[8])),
@@ -591,6 +570,7 @@ public class MQO_MetasequoiaObject implements IModelCustom
 
 			if(s.length>=12)
 			{
+				if(s.length>=14)face1.faceMat = parseInt(s[5]);
 				face1.textureCoordinates = new MQO_TextureCoordinate[]{
 					new MQO_TextureCoordinate(Float.valueOf(s[10]), Float.valueOf(s[11])),
 					new MQO_TextureCoordinate(Float.valueOf(s[ 8]), Float.valueOf(s[ 9])),
@@ -625,6 +605,7 @@ public class MQO_MetasequoiaObject implements IModelCustom
 
 			if(s.length>=14)
 			{
+				face2.faceMat = parseInt(s[5]);
 				face2.textureCoordinates = new MQO_TextureCoordinate[]{
 					new MQO_TextureCoordinate(Float.valueOf(s[12]), Float.valueOf(s[13])),
 					new MQO_TextureCoordinate(Float.valueOf(s[10]), Float.valueOf(s[11])),
@@ -663,6 +644,69 @@ public class MQO_MetasequoiaObject implements IModelCustom
 
 		return true;
 	}
+	private static boolean isValidMaterialLine(String line)
+	{
+		// Object "obj4" {
+		String[] s = line.split(" ");
+
+		if(s.length < 2 || !s[0].equals("Material"))
+		{
+			return false;
+		}
+
+		return true;
+	}
+	private MQO_Material[] parseMaterial(String line, BufferedReader reader){
+		try {
+			String s[] = line.split(" ");
+			int matNum = parseInt(s[1]);
+			MQO_Material[] materials = new MQO_Material[matNum];
+			for(int id = 0;id < matNum;id++){
+				String matLine = null;
+				MQO_Material currentMat = new MQO_Material();
+				try {
+					matLine = reader.readLine();
+					matLine = matLine.replaceAll("\\s+", " ").trim();
+					String[] matInfo = matLine.split(" ");
+					for (String ainfo : matInfo) {
+						ainfo = ainfo.replace('(',',');
+						ainfo = ainfo.replace(')',' ');
+						String[] matValue = ainfo.split(",");
+						if (matValue.length > 1) {
+							String infoType = matValue[0];
+							String infoValue = matValue[1];
+							switch (infoType) {
+								case "dif":
+									currentMat.dif = parseFloat(infoValue);
+									break;
+								case "amb":
+									currentMat.amb = parseFloat(infoValue);
+									break;
+								case "emi":
+									currentMat.emi = parseFloat(infoValue);
+									break;
+								case "spc":
+									currentMat.spc = parseFloat(infoValue);
+									break;
+								case "power":
+									currentMat.power = parseFloat(infoValue)*(128f/100f);
+									break;
+							}
+						}
+					}
+					currentMat.setUp();
+					materials[id] = currentMat;
+				}catch (IOException e) {
+					e.printStackTrace();
+					System.out.println("WTF at" + matLine);
+				}
+			}
+			return materials;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 	private MQO_GroupObject parseGroupObject(String line, int lineCount) throws ModelFormatException
 	{
 		MQO_GroupObject group = null;
@@ -674,7 +718,7 @@ public class MQO_MetasequoiaObject implements IModelCustom
 
 			if (trimmedLine.length() > 0)
 			{
-				group = new MQO_GroupObject(trimmedLine);
+				group = new MQO_GroupObject(trimmedLine,this);
 			}
 		}
 		else

@@ -43,7 +43,7 @@ public class AITargetFlag extends EntityAIBase {
     public boolean shouldExecute() {
         cool--;
         if(cool < 0 && (flagBattler.getPlatoon() == null || flagBattler.getPlatoonLeader() == flagBattler)){//•ª‘à‚É–¢Š‘®‚©A•ª‘à’·
-            cool = new Random().nextInt(600);
+            cool = new Random().nextInt(20);
             try {
                 if(worldSavedData_flag == null) worldSavedData_flag = WorldSavedData_Flag.get(world);
                 Iterator<CampObjAndPos> iterator = worldSavedData_flag.campObjHashMap.values().iterator();

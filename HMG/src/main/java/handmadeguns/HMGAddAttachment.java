@@ -23,7 +23,7 @@ public class HMGAddAttachment
 	public static List Attach = new ArrayList();
 	public static List<Item> Magazines = new ArrayList<Item>();
 
-	public static void load(File configfile, boolean isClient, File file1)
+	public static void load( boolean isClient, File file1)
 	{
 		String GunName = null;
 		String Namegun = null;

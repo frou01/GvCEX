@@ -1,10 +1,13 @@
 package handmadevehicle;
 
+import handmadevehicle.entity.EntityDummy_rider;
 import handmadevehicle.entity.parts.turrets.TurretObj;
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
+import net.minecraft.world.World;
 
 import javax.vecmath.*;
 
@@ -256,11 +259,51 @@ public class Utils {
         }
     }
 
+    public static Vector3d LinePrediction(Vector3d shotPosition, Vector3d targetPosition, Vector3d v3_Mv, double bulletSpeed)
+    {
+        //from https://qiita.com/A_rosuko/items/4a0612e4ed91f71813d6
+        //Unityの物理はm/sなのでm/flameにする
+        //目標の1フレームの移動速度 = targetMotion
+        //射撃する位置から見た目標位置
+        Vector3d v3_Pos = new Vector3d();v3_Pos.sub(targetPosition , shotPosition);;
+
+        double A = v3_Mv.lengthSquared() - bulletSpeed * bulletSpeed;
+        double B = v3_Pos.dot(v3_Mv);
+        double C = v3_Pos.lengthSquared();
+
+        //0割禁止
+        if (A == 0 && B == 0)return targetPosition;
+        if (A == 0 ){
+            v3_Mv.scale(-C / B / 2);
+            targetPosition.add(v3_Mv);
+            return targetPosition;
+        }
+
+        //虚数解はどうせ当たらないので絶対値で無視した
+        float D = (float) sqrt(abs(B * B - A * C));
+        v3_Mv.scale(PlusMin((-B - D) / A, (-B + D) / A));
+        targetPosition.add(v3_Mv);
+        return targetPosition;
+    }
+
+    //プラスの最小値を返す(両方マイナスなら0)
+    public static double PlusMin(double a, double b)
+    {
+        if (a < 0 && b < 0) return 0;
+        if (a < 0) return b;
+        if (b < 0) return a;
+        return a < b ? a : b;
+    }
+
     public static void transformVecforMinecraft(Vector3d vec){
         vec.z = -vec.z;
     }
     public static Vector3d transformVecByQuat(Vector3d vec, Quat4d qua)
     {
+        if(Double.isNaN(qua.x))qua.x = 0;
+        if(Double.isNaN(qua.y))qua.y = 0;
+        if(Double.isNaN(qua.z))qua.z = 0;
+        if(Double.isNaN(qua.w))qua.w = 1;
         double x = qua.x + qua.x;
         double y = qua.y + qua.y;
         double z = qua.z + qua.z;
@@ -321,6 +364,9 @@ public class Utils {
                           2*xz+2*wy ,   2*yz-2*wx , 1-2*x2-2*y2);
     }
     public static double[] eulerfrommatrix(Matrix3d matrix3d){
+        //1:Y
+        //0:P
+        //2:R
         double[] xyz = new double[3];
         if(matrix3d.m21>1)matrix3d.m21 = 1;
         if(matrix3d.m21<-1)matrix3d.m21 = -1;
@@ -489,6 +535,30 @@ public class Utils {
     public static Vector3d getjavaxVecObj(Vec3 invec){
         return invec == null ? null : new Vector3d(invec.xCoord,invec.yCoord,invec.zCoord);
     }
+    public static Vector3d getJavaxVecFromIntArray(int[] in){
+        return new Vector3d(in[0],in[1],in[2]);
+    }
+    public static int[] getIntPosesFromVector(Vector3d vector3d){
+        return new int[]{MathHelper.floor_double(vector3d.x),
+                MathHelper.floor_double(vector3d.y),
+                MathHelper.floor_double(vector3d.z)};
+    }
+    public static Block getBlock(World world, Vector3d vector3d){
+        int[] pos = getIntPosesFromVector(vector3d);
+        return world.getBlock(pos[0],pos[1],pos[2]);
+    }
+    public static float getBlockHardness(World world, Vector3d vector3d){
+        int[] pos = getIntPosesFromVector(vector3d);
+        return world.getBlock(pos[0],pos[1],pos[2]).getBlockHardness(world,pos[0],pos[1],pos[2]);
+    }
+    public static void setBlock(World world, Vector3d vector3d,Block block,boolean replace){
+        int[] pos = getIntPosesFromVector(vector3d);
+        if(replace || !getBlock(world,vector3d).getMaterial().isSolid())world.setBlock(pos[0],pos[1],pos[2],block);
+    }
+    public static void playBlockDestroyEffect(World world, Vector3d vector3d){
+        int[] pos = getIntPosesFromVector(vector3d);
+        world.playAuxSFX(2001,pos[0],pos[1],pos[2], Block.getIdFromBlock(getBlock(world,vector3d)));
+    }
     public static double getDistanceSq(Vector3d a,Vector3d b){
         a = new Vector3d(a);
         b = new Vector3d(b);
@@ -518,5 +588,10 @@ public class Utils {
                 addAllTurret(turrets, a_brothers);
             }
         }
+    }
+    public static boolean canMoveEntity(Entity entity){
+        if(entity.ridingEntity instanceof EntityDummy_rider && ((EntityDummy_rider) entity.ridingEntity).linkedBaseLogic.ispilot(entity))return true;
+        if(entity.ridingEntity == null)return true;
+        return false;
     }
 }

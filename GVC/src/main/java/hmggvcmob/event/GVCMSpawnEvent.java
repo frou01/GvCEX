@@ -62,23 +62,25 @@ public class GVCMSpawnEvent {
         }
     }
     @SubscribeEvent
-    public void specialSpawnevent(LivingSpawnEvent.SpecialSpawn event) {
+    public void checkspawnSpawnevent(LivingSpawnEvent.CheckSpawn event) {
+        event.setResult(Event.Result.DEFAULT);
         Chunk spawningChunk = event.world.getChunkFromBlockCoords(
                 MathHelper.floor_double(event.x),
                 MathHelper.floor_double(event.z));
         WorldSavedData_Flag worldSavedData_flag = WorldSavedData_Flag.get(event.world);
         CampObjAndPos campObj = worldSavedData_flag.campObjHashMap.get(spawningChunk.getChunkCoordIntPair());
-        if(campObj != null) {
+        if (campObj != null) {
             if (event.entityLiving instanceof IflagBattler) {
                 if (((IflagBattler) event.entityLiving).isThisIgnoreSpawnCamp(campObj.campObj)) {
-                    event.setCanceled(true);
-                    return;
+                    event.setResult(Event.Result.DENY);
                 }
             } else {
-                event.setCanceled(true);
-                return;
+                event.setResult(Event.Result.DENY);
             }
         }
+    }
+    @SubscribeEvent
+    public void specialSpawnevent(LivingSpawnEvent.SpecialSpawn event) {
         if(event.entityLiving instanceof IHasVehicleGacha){//ŽÔ—¼ƒKƒ`ƒƒ‚Ì‚¨ŽžŠÔ
             Random rand = new Random();
             if(((IHasVehicleGacha) event.entityLiving).getVehicleGacha_rate_sum() >0) {

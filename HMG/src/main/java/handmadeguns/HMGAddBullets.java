@@ -48,8 +48,6 @@ public class HMGAddBullets {
                 objmodel = null;
                 objtexture = null;
                 flyingsoundname = null;
-                flyingsoundlv = 2;
-                flyingsoundsp = 1;
 
                 boolean enabletrai       = false;
                 float   trailProbability   = 0.2f;

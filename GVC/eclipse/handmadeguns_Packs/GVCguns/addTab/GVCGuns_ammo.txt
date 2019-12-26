@@ -1,3 +1,0 @@
-name,HMG_GVCGuns_ammo
-Icon,HandmadeGuns:5.45mm magazine
-End

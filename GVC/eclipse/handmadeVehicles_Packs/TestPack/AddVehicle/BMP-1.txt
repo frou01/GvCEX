@@ -1,0 +1,95 @@
+Name,BMP-1;
+rotcenter,0,0,0;
+modelName,BMP-1.tcn;
+modelName_texture,BMP-1.png;
+scale,0.05;
+health,350;
+draft,1;
+molded_depth,1.25;
+floatOnWater,true;
+soundname,handmadevehicle:handmadevehicle.BMPTrack;
+soundpitch,1;
+LandPreset;
+off_road_followability_inwater,0.03;
+dragfactor_inwater_screw,0.2;
+yawspeed_Inwater,0.2;
+torque_inWater,0.1;
+soundpitch,1;
+throttle_Max,4;
+throttle_min,-4;
+yawspeed_ground,4;
+speedfactor,0;
+speedfactor_af,0;
+speedfactor_onGround,0.08;
+forced_rudder_effect_OnGround,0;
+rotmotion_reduceSpeed,0.1;
+//ïêëïí«â¡;
+ParentWeapons_NUM,1;
+AllWeapons_NUM,2;
+addParentWeapon,0,	73mm_2A28	,0,0,0,0,1;
+addBarrelChildWeapon,0,HardPoint_ATM,0,1.5,0.5,0,0;
+
+//ç¿ê»í«â¡;
+SetUpSeat1_NUM,7;
+SetUpSeat2_AddSeat_Normal,	0 , 0.2 , 2.0,0,  true,true,false,true,0,1;
+SetUpSeat3_AddSeat_Zoom,	0 , 0.2 , 2.0,0,   true,true,true,0,-1;
+SetUpSeat2_AddSeat_Normal, 	1 , 0.75 , 2.5,	3   ,false,false,false,-1,-1;
+SetUpSeat2_AddSeat_Normal, 	2 , -0.75 , 2.5,	3   ,false,false,false,-1,-1;
+SetUpSeat2_AddSeat_Normal, 	3 , 0.75 , 2.5,	2   ,false,false,false,-1,-1;
+SetUpSeat2_AddSeat_Normal, 	4 , -0.75 , 2.5,	2   ,false,false,false,-1,-1;
+SetUpSeat2_AddSeat_Normal, 	5 , 0.75 , 2.5,	1   ,false,false,false,-1,-1;
+SetUpSeat2_AddSeat_Normal, 	6 , -0.75 , 2.5,	1   ,false,false,false,-1,-1;
+
+userProtect_maxDamageLevel,0,-1;
+userProtect_maxDamageLevel,1,20;
+userProtect_maxDamageLevel,2,20;
+userProtect_maxDamageLevel,3,20;
+userProtect_maxDamageLevel,4,20;
+
+//top,bottom,front,back,left,right;
+boxes_withInfo,2,
+0,0.5,0,	    0,0,0,	2.4,1,5,	0,0,0,1,	12,7,12,4,12,12,-1,
+0,1.25,0,	    0,0,0,	1,0.5,1,	0,0,0,1,	20,40,90,25,50,50,0;
+
+max_pera_trackPos,60;
+cargoSlotNum,18;
+
+AddParts,catap;
+	SetAsNormalParts;
+BackParts;
+AddParts,bodyL;
+	SetAsNormalParts;
+BackParts;
+AddParts,bodyR;
+	SetAsNormalParts;
+BackParts;
+AddParts,mainbody;
+	SetAsNormalParts;
+BackParts;
+AddParts,bodyacc;
+	SetAsNormalParts;
+BackParts;
+AddParts,Cannon;
+	SetAsNormalParts;
+	TurretParts,0;
+	AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0;
+	RenderOnNormal;
+	AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0;
+	AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0;
+	AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0;
+	AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0;
+	AddYawInfoKey,-360,0,0,0,0,-360,0        ,360,0,0,0,0,360,0;
+	AddChildParts,cannon2;
+		AddPartsRotationCenterAndRotationAmount,0,31,12,0,0,0;
+		TurretParts,0;
+		RenderOnNormal;
+		AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0;
+		AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0;
+		AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0;
+		AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0;
+		AddPitchInfoKey,-360,0,0,0,-360,0,0        ,360,0,0,0,360,0,0;
+	BackParts;
+BackParts;
+
+//Test TCN model!;
+End;

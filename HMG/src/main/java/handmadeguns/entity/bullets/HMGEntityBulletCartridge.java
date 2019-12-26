@@ -107,7 +107,7 @@ public class HMGEntityBulletCartridge extends Entity implements IEntityAdditiona
         this.motionY = par3;
         this.motionZ = par5;
         float var10 = MathHelper.sqrt_double(par1 * par1 + par5 * par5);
-        this.prevRotationYaw = this.rotationYaw = (float)(Math.atan2(par1, par5) * 180.0D / Math.PI);
+        this.prevRotationYaw = this.rotationYaw = (float)(Math.atan2(par1, par5) * 180.0D / Math.PI) + 90;
         this.prevRotationPitch = this.rotationPitch = (float)(Math.atan2(par3, (double)var10) * 180.0D / Math.PI);
     }
     

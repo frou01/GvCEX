@@ -1,6 +1,7 @@
 package handmadeguns.entity;
 
 import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -11,7 +12,6 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -19,6 +19,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import org.lwjgl.Sys;
 
 import static handmadeguns.HandmadeGunsCore.HMG_proxy;
 import static java.lang.Math.abs;
@@ -46,23 +47,22 @@ public class PlacedGunEntity extends Entity implements IEntityAdditionalSpawnDat
     int triggerFreeze = 10;
 
     public Entity preRiddenByEntity;
+
+    int freezeCnt = 0;
     public PlacedGunEntity(World p_i1582_1_) {
         super(p_i1582_1_);
         ignoreFrustumCheck = true;
-        setSize(1,1);
+        renderDistanceWeight = 4096;
     }
     public PlacedGunEntity(World p_i1582_1_,ItemStack stack) {
         this(p_i1582_1_);
         gunStack = stack;
-        renderDistanceWeight = 4096;
         ignoreFrustumCheck = true;
         if(gunStack != null) {
             gunItem = (HMGItem_Unified_Guns) gunStack.getItem();
             hitpoint = gunItem.gunInfo.turretMaxHP;
             maxhitpoint = gunItem.gunInfo.turretMaxHP;
             setSize(gunItem.gunInfo.turreboxW, gunItem.gunInfo.turreboxH);
-        }else {
-            setSize(1,1);
         }
     }
     public void resize(){
@@ -99,10 +99,23 @@ public class PlacedGunEntity extends Entity implements IEntityAdditionalSpawnDat
 //                prevRiddenByEntityPosY = riddenByEntity.posY;
 //                prevRiddenByEntityPosZ = riddenByEntity.posZ;
 //            }
-            this.riddenByEntity.moveEntity(
-                    this.posX + seatVec.xCoord - riddenByEntity.posX,
-                    this.posY + this.gunyoffset + seatVec.yCoord - riddenByEntity.posY,
-                    this.posZ + seatVec.zCoord - riddenByEntity.posZ);
+            if(worldObj.isRemote) {
+                if(riddenByEntity == HMG_proxy.getEntityPlayerInstance())
+                    this.riddenByEntity.moveEntity(
+                            this.posX + seatVec.xCoord - riddenByEntity.posX,
+                            this.posY + this.gunyoffset + seatVec.yCoord - riddenByEntity.posY,
+                            this.posZ + seatVec.zCoord - riddenByEntity.posZ);
+                else
+                    this.riddenByEntity.moveEntity(
+                            this.posX + seatVec.xCoord - riddenByEntity.posX,
+                            this.posY + this.gunyoffset - riddenByEntity.getEyeHeight() + seatVec.yCoord - riddenByEntity.posY,
+                            this.posZ + seatVec.zCoord - riddenByEntity.posZ);
+            }else {
+                this.riddenByEntity.moveEntity(
+                        this.posX + seatVec.xCoord - riddenByEntity.posX,
+                        this.posY + this.gunyoffset - riddenByEntity.getEyeHeight() + seatVec.yCoord - riddenByEntity.posY,
+                        this.posZ + seatVec.zCoord - riddenByEntity.posZ);
+            }
             prevRiddenByEntityPosX = riddenByEntity.posX;
             prevRiddenByEntityPosY = riddenByEntity.posY;
             prevRiddenByEntityPosZ = riddenByEntity.posZ;
@@ -125,21 +138,21 @@ public class PlacedGunEntity extends Entity implements IEntityAdditionalSpawnDat
         if(gunItem != null){
             this.gunyoffset = gunItem.gunInfo.yoffset;
             maxhitpoint = gunItem.gunInfo.turretMaxHP;
-            setSize(gunItem.gunInfo.turreboxW, gunItem.gunInfo.turreboxH);
+            resize();
         }
         rotationYawGun = wrapAngleTo180_float(rotationYawGun);
         rotationYaw = wrapAngleTo180_float(rotationYaw);
         if(riddenByEntity != null){
             if(gunItem != null && gunItem.gunInfo.restrictTurretMoveSpeed){
                 float angularDif = wrapAngleTo180_float(this.rotationYawGun - riddenByEntity.getRotationYawHead());
-                if (angularDif <-gunItem.gunInfo.turretMoveSpeedY) {
-                    this.rotationYawGun += gunItem.gunInfo.turretMoveSpeedY;
-                } else if (angularDif > gunItem.gunInfo.turretMoveSpeedY){
-                    this.rotationYawGun -= gunItem.gunInfo.turretMoveSpeedY;
+                if (angularDif <-gunItem.gunInfo.turretspeedP) {
+                    this.rotationYawGun += gunItem.gunInfo.turretspeedP;
+                } else if (angularDif > gunItem.gunInfo.turretspeedP){
+                    this.rotationYawGun -= gunItem.gunInfo.turretspeedP;
                 }else{
                     this.rotationYawGun = riddenByEntity.getRotationYawHead();
                 }
-                this.rotationPitch = abs(riddenByEntity.rotationPitch - this.rotationPitch) < gunItem.gunInfo.turretMoveSpeedP ? riddenByEntity.rotationPitch : this.rotationPitch + gunItem.gunInfo.turretMoveSpeedP * ((riddenByEntity.rotationPitch - this.rotationPitch) < 0? -1 : 1);
+                this.rotationPitch = abs(riddenByEntity.rotationPitch - this.rotationPitch) < gunItem.gunInfo.turretspeedY ? riddenByEntity.rotationPitch : this.rotationPitch + gunItem.gunInfo.turretspeedY * ((riddenByEntity.rotationPitch - this.rotationPitch) < 0? -1 : 1);
             }else {
                 this.rotationYawGun = riddenByEntity.getRotationYawHead();
                 this.rotationPitch = riddenByEntity.rotationPitch;
@@ -156,16 +169,16 @@ public class PlacedGunEntity extends Entity implements IEntityAdditionalSpawnDat
 
         if(gunItem != null && gunItem.gunInfo.restrictTurretAngle) {
             float yawamount = wrapAngleTo180_float(this.rotationYawGun - this.rotationYaw);
-            if (yawamount > gunItem.gunInfo.turretanglelimtMxY){
-                this.rotationYawGun = this.rotationYaw + gunItem.gunInfo.turretanglelimtMxY;
-            }else if (yawamount < gunItem.gunInfo.turretanglelimtmnY){
-                this.rotationYawGun = this.rotationYaw + gunItem.gunInfo.turretanglelimtmnY;
+            if (yawamount > gunItem.gunInfo.turretanglelimtYawMax){
+                this.rotationYawGun = this.rotationYaw + gunItem.gunInfo.turretanglelimtYawMax;
+            }else if (yawamount < gunItem.gunInfo.turretanglelimtYawmin){
+                this.rotationYawGun = this.rotationYaw + gunItem.gunInfo.turretanglelimtYawmin;
             }
 
-            if (this.rotationPitch > gunItem.gunInfo.turretanglelimtMxP){
-                this.rotationPitch = gunItem.gunInfo.turretanglelimtMxP;
-            }else if (this.rotationPitch < gunItem.gunInfo.turretanglelimtmnP){
-                this.rotationPitch = gunItem.gunInfo.turretanglelimtmnP;
+            if (this.rotationPitch > gunItem.gunInfo.turretanglelimtPitchMax){
+                this.rotationPitch = gunItem.gunInfo.turretanglelimtPitchMax;
+            }else if (this.rotationPitch < gunItem.gunInfo.turretanglelimtPitchmin){
+                this.rotationPitch = gunItem.gunInfo.turretanglelimtPitchmin;
             }
         }
 
@@ -192,6 +205,11 @@ public class PlacedGunEntity extends Entity implements IEntityAdditionalSpawnDat
             }else {
                 firing = false;
             }
+
+            if(stanCnt>0){
+                stanCnt--;
+                firing = false;
+            }
             if(gunStack != null)gunStack = gunStack.copy();
             if(gunItem != null){
                 gunItem.onUpdate(gunStack,worldObj,this,0,true);
@@ -205,10 +223,6 @@ public class PlacedGunEntity extends Entity implements IEntityAdditionalSpawnDat
         }
         rotationYaw = baserotationYaw;
         rotationPitch = backpitch;
-        motionY -=0.049;
-        motionX *= 0.7;
-        motionY *= 0.96;
-        motionZ *= 0.7;
 
         if(issummonbyMob && ((ridingEntity == null && riddenByEntity == null) || (ridingEntity == null && riddenByEntity != null && riddenByEntity.isDead))){
             if(!worldObj.isRemote)if(gunStack != null){
@@ -232,11 +246,22 @@ public class PlacedGunEntity extends Entity implements IEntityAdditionalSpawnDat
         {
             this.prevrotationYawGun += 360.0F;
         }
-        if(!worldObj.isRemote)moveEntity(motionX,motionY,motionZ);
+        if(!worldObj.isRemote){
+            if(freezeCnt>0){
+                freezeCnt--;
+            }else {
+                moveEntity(motionX, motionY, motionZ);
+                motionY -=0.049;
+                motionX *= 0.7;
+                motionY *= 0.96;
+                motionZ *= 0.7;
+            }
+        }
         setPosition(posX,posY,posZ);
         super.onUpdate();
     }
 
+    private int stanCnt = 0;
     public boolean attackEntityFrom(DamageSource source, float par2)
     {
         if(!worldObj.isRemote) {
@@ -255,7 +280,9 @@ public class PlacedGunEntity extends Entity implements IEntityAdditionalSpawnDat
                 this.setDead();
                 return true;
             }
-            if(riddenByEntity != null)riddenByEntity.mountEntity(null);
+            if(riddenByEntity != null && !(riddenByEntity instanceof EntityPlayer)){
+                stanCnt = 20;
+            }
         }
         return false;
     }
@@ -265,6 +292,10 @@ public class PlacedGunEntity extends Entity implements IEntityAdditionalSpawnDat
     }
     public boolean shouldRiderSit(){
         return false;
+    }
+    public boolean shouldRenderInPass(int pass)
+    {
+        return pass == 0 || pass == 1;
     }
     public boolean canDespawn(){
         return false;
@@ -290,10 +321,11 @@ public class PlacedGunEntity extends Entity implements IEntityAdditionalSpawnDat
         hitpoint = p_70037_1_.getFloat("hitpoint");
         NBTBase nbttagcompound = p_70037_1_.getTag("GunStack");
         if(nbttagcompound instanceof NBTTagCompound){
-            gunStack = ItemStack.loadItemStackFromNBT((NBTTagCompound) nbttagcompound);
+            gunStack = loadItemStackFromNBT((NBTTagCompound) nbttagcompound);
             if(gunStack != null && gunStack.getItem() instanceof HMGItem_Unified_Guns){
                 gunItem = (HMGItem_Unified_Guns) gunStack.getItem();
-                setSize(gunItem.gunInfo.turreboxW, gunItem.gunInfo.turreboxH);
+                resize();
+                freezeCnt = 60;
             }
         }
     }
@@ -305,10 +337,34 @@ public class PlacedGunEntity extends Entity implements IEntityAdditionalSpawnDat
         NBTTagCompound nbttagcompound = new NBTTagCompound();
         gunStack.writeToNBT(nbttagcompound);
         p_70014_1_.setTag("GunStack" , nbttagcompound);
+        GameRegistry.UniqueIdentifier uniqueIdentifier = GameRegistry.findUniqueIdentifierFor(gunStack.getItem());
+        nbttagcompound.setString("ItemID",uniqueIdentifier.modId+":"+uniqueIdentifier.name);
         p_70014_1_.setBoolean("issummonbyMob",issummonbyMob);
         p_70014_1_.setFloat("rotationYawGun",rotationYawGun);
         p_70014_1_.setFloat("rotationYaw",rotationYaw);
         p_70014_1_.setFloat("hitpoint",hitpoint);
+    }
+    public static ItemStack loadItemStackFromNBT(NBTTagCompound nbttagcompound1)
+    {
+        String[] modIdAndName = nbttagcompound1.getString("ItemID").split(":");
+        if(modIdAndName.length >= 2){
+            ItemStack itemstack = new ItemStack(GameRegistry.findItem(modIdAndName[0],modIdAndName[1]));
+            itemstack.stackSize = nbttagcompound1.getByte("Count");
+            itemstack.setItemDamage(nbttagcompound1.getShort("Damage"));
+
+            if (itemstack.getItemDamage() < 0)
+            {
+                itemstack.setItemDamage(0);
+            }
+
+            if (nbttagcompound1.hasKey("tag", 10))
+            {
+                itemstack.setTagCompound(nbttagcompound1.getCompoundTag("tag"));
+            }
+            return itemstack.getItem() != null ? itemstack : null;
+        }else {
+            return ItemStack.loadItemStackFromNBT(nbttagcompound1);
+        }
     }
 
     public boolean interactFirst(EntityPlayer p_70085_1_) {

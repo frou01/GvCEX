@@ -23,6 +23,7 @@ import net.minecraftforge.client.model.IModelCustom;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
+import javax.vecmath.Vector3d;
 
 import static handmadeguns.HandmadeGunsCore.*;
 import static java.lang.Double.parseDouble;
@@ -38,7 +39,7 @@ public class HMGGunMaker {
 
 
 
-	public void load(File configfile, boolean isClient, File file1) {
+	public void load( boolean isClient, File file1) {
 		GunInfo gunInfo = new GunInfo();
 		String  GunName = null;
 		String  displayNamegun = null;
@@ -338,14 +339,7 @@ public class HMGGunMaker {
 									);
 								}
 								break;
-							case "RendeScript": {
-								gunInfo.userenderscript = true;
-								FileReader sc = new FileReader(new File(HMG_proxy.ProxyFile(), "mods" + File.separatorChar + "handmadeguns"
-										                                                           + File.separatorChar + "assets" + File.separatorChar + "handmadeguns" + File.separatorChar +
-										                                                           "scripts" + File.separatorChar + type[1])); // ファイルを開く
-								gunInfo.renderscript = doScript(sc);
-								break;
-							}
+							case "RendeScript":
 							case "Script": {
 								gunInfo.userenderscript = true;
 								FileReader sc = new FileReader(new File(HMG_proxy.ProxyFile(), "mods" + File.separatorChar + "handmadeguns"
@@ -1768,6 +1762,11 @@ public class HMGGunMaker {
 				currentIndex = currentParts.childs.size();
 				currentParts.childs.add(currentParts = createGunPart(type, currentIndex, currentParts));
 				break;
+			case "AddReticleChildParts":
+				if(currentParts.reticleChild == null)currentParts.reticleChild = new ArrayList<>();
+				currentIndex = currentParts.reticleChild.size();
+				currentParts.reticleChild.add(currentParts = createGunPart(type, currentIndex, currentParts));
+				break;
 			case "BackParts":
 				currentIndex = currentParts.motherIndex;
 				currentParts = currentParts.mother;
@@ -1858,6 +1857,9 @@ public class HMGGunMaker {
 				break;
 			case "Motion":
 				gunInfo.motion = parseDouble(type[1]);
+				break;
+			case "Weight":
+				gunInfo.weight = parseDouble(type[1]);
 				break;
 			case "Zoom":
 				gunInfo.scopezoombase = Float.parseFloat(type[1]);
@@ -2172,6 +2174,9 @@ public class HMGGunMaker {
 			case "canlockEntity":
 				gunInfo.canlockEntity = Boolean.parseBoolean(type[1]);
 				break;
+			case "seekerSize":
+				gunInfo.seekerSize = Double.parseDouble(type[1]);
+				break;
 			case "CanlockBlock":
 				gunInfo.canlockBlock = Boolean.parseBoolean(type[1]);
 				break;
@@ -2209,17 +2214,24 @@ public class HMGGunMaker {
 			case "FixAsEntity":
 				gunInfo.fixAsEntity = Boolean.parseBoolean(type[1]);
 				break;
+			case "damagerange":
+				gunInfo.damagerange = Float.parseFloat(type[1]);
+				break;
 			case "OnEntity_RotationYawPoint":
 				gunInfo.posGetter.turretRotationYawPoint = new double[]{parseDouble(type[1]), parseDouble(type[2]), parseDouble(type[3])};
+				gunInfo.posGetter.turretYawCenterpos = new Vector3d(gunInfo.posGetter.turretRotationYawPoint);
 				break;
 			case "OnEntity_RotationPitchPoint":
 				gunInfo.posGetter.turretRotationPitchPoint = new double[]{parseDouble(type[1]), parseDouble(type[2]), parseDouble(type[3])};
+				gunInfo.posGetter.turretPitchCenterpos = new Vector3d(gunInfo.posGetter.turretRotationPitchPoint);
 				break;
 			case "OnEntity_BarrelPoint":
 				gunInfo.posGetter.barrelpos = new double[]{parseDouble(type[1]), parseDouble(type[2]), parseDouble(type[3])};
+				gunInfo.posGetter.cannonPos = new Vector3d(gunInfo.posGetter.barrelpos);
 				break;
 			case "OnEntity_multi_BarrelPoint":
 				gunInfo.posGetter.multi_barrelpos = new double[parseInt(type[1])][3];
+				gunInfo.posGetter.multicannonPos = new Vector3d[parseInt(type[1])];
 				int id = 0;
 				double[][] multi_barrelpos = gunInfo.posGetter.multi_barrelpos;
 				for (int i = 0; i < multi_barrelpos.length; i++) {
@@ -2227,6 +2239,7 @@ public class HMGGunMaker {
 					aBarrelPos[0] = parseDouble(type[id * 3 + 2]);
 					aBarrelPos[1] = parseDouble(type[id * 3 + 3]);
 					aBarrelPos[2] = parseDouble(type[id * 3 + 4]);
+					gunInfo.posGetter.multicannonPos[i] = new Vector3d(aBarrelPos);
 					id++;
 				}
 				break;
@@ -2235,15 +2248,15 @@ public class HMGGunMaker {
 				break;
 			case "restrictTurretMoveSpeed":
 				gunInfo.restrictTurretMoveSpeed = true;
-				gunInfo.turretMoveSpeedY = Float.parseFloat(type[1]);
-				gunInfo.turretMoveSpeedP = Float.parseFloat(type[2]);
+				gunInfo.turretspeedP = Float.parseFloat(type[1]);
+				gunInfo.turretspeedY = Float.parseFloat(type[2]);
 				break;
 			case "Turretanglelimit":
 				gunInfo.restrictTurretAngle = true;
-				gunInfo.turretanglelimtMxP = Float.parseFloat(type[1]);
-				gunInfo.turretanglelimtmnP = Float.parseFloat(type[2]);
-				gunInfo.turretanglelimtMxY = Float.parseFloat(type[3]);
-				gunInfo.turretanglelimtmnY = Float.parseFloat(type[4]);
+				gunInfo.turretanglelimtPitchMax = Float.parseFloat(type[1]);
+				gunInfo.turretanglelimtPitchmin = Float.parseFloat(type[2]);
+				gunInfo.turretanglelimtYawMax = Float.parseFloat(type[3]);
+				gunInfo.turretanglelimtYawmin = Float.parseFloat(type[4]);
 				break;
 			case "TurretBoxSize":
 				gunInfo.turreboxW = Float.parseFloat(type[1]);

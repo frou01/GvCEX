@@ -27,6 +27,7 @@ public class HMVPacketHandler {
         INSTANCE.registerMessage(HMVHandleChangeSeat.class, HMVPacketChangeSeat.class, ++id, Side.SERVER);
         INSTANCE.registerMessage(HandleOpenVehicleGui.class, HMVPacketOpenVehicleGui.class, ++id, Side.SERVER);
         INSTANCE.registerMessage(HMVHandleMissileAndLockMarker.class, HMVPacketMissileAndLockMarker.class, ++id, Side.CLIENT);
+        INSTANCE.registerMessage(HMVHandleSyncInventory.class, HMVPacketSyncInventory.class, ++id, Side.CLIENT);
 
     
     

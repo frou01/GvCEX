@@ -18,10 +18,8 @@ public abstract class PartsRender {
 		HMGGunParts_Motion_PosAndRotation rotationCenterAndRotation = parts.getRenderinfCenter();
 		if(OffsetAndRotation != null && !OffsetAndRotation.renderOnOff)return;
 		GL11.glPushMatrix();
-		if(OffsetAndRotation == null)OffsetAndRotation = parts.getRenderinfDefault_offset();
-
-		transformParts(rotationCenterAndRotation,OffsetAndRotation,parts);
-
+		transformParts(rotationCenterAndRotation,parts.getRenderinfDefault_offset(),parts);
+		if(OffsetAndRotation != null)transformParts(rotationCenterAndRotation,OffsetAndRotation,parts);
 		partModel_render(parts, state, flame, remainbullets, OffsetAndRotation);
 		partSidentification(parts.childs,state,flame,remainbullets);
 		GL11.glPopMatrix();
@@ -78,7 +76,7 @@ public abstract class PartsRender {
 							false,   // GLboolean blue
 							false);
 				}
-				model.renderPart(parts.partsname + "reticlePlate");
+				model.renderPart(parts.partsname_reticlePlate);
 				if (pass != 1) {
 					GL11.glDepthMask(true);
 					glAlphaFunc(GL_EQUAL, 1);
@@ -106,7 +104,8 @@ public abstract class PartsRender {
 				GL11.glDepthMask(false);
 				
 				GL11.glDepthFunc(GL11.GL_ALWAYS);//強制描画
-				model.renderPart(parts.partsname + "reticle");
+				model.renderPart(parts.partsname_reticle);
+				if(parts.reticleChild != null)partSidentification(parts.reticleChild,state,flame,remainbullets);
 				GL11.glDepthFunc(GL11.GL_LEQUAL);
 				GL11.glDepthMask(true);
 				glDisable(GL_STENCIL_TEST);
@@ -128,7 +127,7 @@ public abstract class PartsRender {
 			float lastBrightnessX = OpenGlHelper.lastBrightnessX;
 			float lastBrightnessY = OpenGlHelper.lastBrightnessY;
 			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
-			model.renderPart(parts.partsname + "light");
+			model.renderPart(parts.partsname_light);
 			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)lastBrightnessX, (float)lastBrightnessY);
 		}
 	}
@@ -145,7 +144,7 @@ public abstract class PartsRender {
 						float lastBrightnessX = OpenGlHelper.lastBrightnessX;
 						float lastBrightnessY = OpenGlHelper.lastBrightnessY;
 						OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
-						model.renderPart(parts.partsname + "light");
+						model.renderPart(parts.partsname_light);
 						OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)lastBrightnessX, (float)lastBrightnessY);
 						GL11.glPopMatrix();
 					}
@@ -165,7 +164,7 @@ public abstract class PartsRender {
 						float lastBrightnessX = OpenGlHelper.lastBrightnessX;
 						float lastBrightnessY = OpenGlHelper.lastBrightnessY;
 						OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
-						model.renderPart(parts.partsname + "light");
+						model.renderPart(parts.partsname_light);
 						OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)lastBrightnessX, (float)lastBrightnessY);
 					}
 				}
@@ -180,7 +179,7 @@ public abstract class PartsRender {
 					float lastBrightnessX = OpenGlHelper.lastBrightnessX;
 					float lastBrightnessY = OpenGlHelper.lastBrightnessY;
 					OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
-					model.renderPart(parts.partsname + "light");
+					model.renderPart(parts.partsname_light);
 					OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)lastBrightnessX, (float)lastBrightnessY);
 					GL11.glPopMatrix();
 				}
@@ -200,7 +199,7 @@ public abstract class PartsRender {
 					float lastBrightnessX = OpenGlHelper.lastBrightnessX;
 					float lastBrightnessY = OpenGlHelper.lastBrightnessY;
 					OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
-					model.renderPart(parts.partsname + "light");
+					model.renderPart(parts.partsname_light);
 					OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)lastBrightnessX, (float)lastBrightnessY);
 				}
 			}

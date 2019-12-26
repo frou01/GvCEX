@@ -81,7 +81,7 @@ public class HMGGunParts_Motion {
         size_posZ = endposZ -startposZ;
         size_flame = endflame - startflame;
     }
-    HMGGunParts_Motion_PosAndRotation temp = new HMGGunParts_Motion_PosAndRotation();
+    public final HMGGunParts_Motion_PosAndRotation temp = new HMGGunParts_Motion_PosAndRotation();
     public HMGGunParts_Motion_PosAndRotation posAndRotation(float flame){
         float flameforCompletion = flame-startflame;
         temp.set(startposX + size_posX * (flameforCompletion/size_flame),

@@ -279,10 +279,6 @@ public class HMGEntityParticles extends EntityFX
                             (float) (this.posX - interpPosX),
                             (float) (this.posY - interpPosY),
                             (float) (this.posZ - interpPosZ));
-                    if (fixedsize) {
-                        float toplayerdist = (float) HMG_proxy.getEntityPlayerInstance().getDistance(posX, posY, posZ);
-                        GL11.glScalef(toplayerdist, toplayerdist, toplayerdist);
-                    }
                     GL11.glEnable(GL12.GL_RESCALE_NORMAL);
                     GL11.glScalef(1.0F, 1.0F, 1.0F);
                     GL11.glNormal3f(1.0F, 0.0F, 0.0F);
@@ -294,7 +290,7 @@ public class HMGEntityParticles extends EntityFX
                     double taildist2 = postoprepos.lengthVector();
                     if (isfirstflame) taildist2 *= p_70539_2_;
                     double taildist;
-                    if (fuse == 0) taildist = postoprepos.lengthVector() * (p_70539_2_ + 0.2);
+                    if (fuse == 0) taildist = postoprepos.lengthVector() * p_70539_2_;
                     else taildist = 0;
                     tessellator.addVertexWithUV(
                             renderVec.xCoord * trailwidth/2 + motionVec.xCoord * taildist2,

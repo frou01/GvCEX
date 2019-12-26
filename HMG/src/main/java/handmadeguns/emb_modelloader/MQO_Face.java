@@ -3,12 +3,14 @@ package handmadeguns.emb_modelloader;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import handmadeguns.HandmadeGunsCore;
+import javafx.scene.paint.Material;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.Vec3;
 
 @SideOnly(Side.CLIENT)
 public class MQO_Face
 {
+	public int faceMat;
 	public int[] verticesID;
 	public MQO_Vertex[] vertices;
 	public MQO_Vertex[] vertexNormals;
@@ -84,14 +86,19 @@ public class MQO_Face
 		}
 	}
 
+	private MQO_Vertex oldVertex = null;
 	public MQO_Vertex calculateFaceNormal()
 	{
-		Vec3 v1 = Vec3.createVectorHelper(vertices[1].x - vertices[0].x, vertices[1].y - vertices[0].y, vertices[1].z - vertices[0].z);
-		Vec3 v2 = Vec3.createVectorHelper(vertices[2].x - vertices[0].x, vertices[2].y - vertices[0].y, vertices[2].z - vertices[0].z);
-		Vec3 normalVector = null;
+		if(oldVertex == null) {
+			Vec3 v1 = Vec3.createVectorHelper(vertices[1].x - vertices[0].x, vertices[1].y - vertices[0].y, vertices[1].z - vertices[0].z);
+			Vec3 v2 = Vec3.createVectorHelper(vertices[2].x - vertices[0].x, vertices[2].y - vertices[0].y, vertices[2].z - vertices[0].z);
+			Vec3 normalVector = null;
 
-		normalVector = v1.crossProduct(v2).normalize();
+			normalVector = v1.crossProduct(v2).normalize();
 
-		return new MQO_Vertex((float) normalVector.xCoord, (float) normalVector.yCoord, (float) normalVector.zCoord);
+			return oldVertex = new MQO_Vertex((float) normalVector.xCoord, (float) normalVector.yCoord, (float) normalVector.zCoord);
+		}else {
+			return oldVertex;
+		}
 	}
 }

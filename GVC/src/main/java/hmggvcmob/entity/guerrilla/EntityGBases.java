@@ -1,12 +1,16 @@
 package hmggvcmob.entity.guerrilla;
 
+import cpw.mods.fml.common.registry.GameRegistry;
+import handmadeguns.HMGGunMaker;
 import handmadeguns.entity.IFF;
 import handmadeguns.entity.PlacedGunEntity;
 import handmadeguns.items.guns.HMGItem_Unified_Guns;
 import handmadevehicle.SlowPathFinder.WorldForPathfind;
+import handmadevehicle.entity.EntityDummy_rider;
 import handmadevehicle.entity.EntityVehicle;
 import handmadevehicle.entity.parts.ITurretUser;
 import handmadevehicle.entity.parts.turrets.TurretObj;
+import handmadevehicle.entity.prefab.Prefab_Vehicle_Base;
 import hmggvcmob.GVCMobPlus;
 import hmggvcmob.IflagBattler;
 import handmadevehicle.SlowPathFinder.ModifiedPathNavigater;
@@ -14,11 +18,9 @@ import hmggvcmob.ai.*;
 import hmggvcmob.camp.CampObj;
 import hmggvcmob.entity.EntityBodyHelper_modified;
 import hmggvcmob.entity.IGVCmob;
-import hmggvcmob.entity.IHasVehicleGacha;
 import hmggvcmob.entity.VehicleSpawnGachaOBJ;
 import hmggvcmob.entity.friend.EntitySoBases;
 import hmggvcmob.entity.friend.GVCEntityFlag;
-import hmggvcmob.tile.TileEntityFlag;
 import net.minecraft.block.Block;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.*;
@@ -27,6 +29,8 @@ import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.scoreboard.Team;
@@ -41,6 +45,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import static handmadeguns.Util.Utils.getmovingobjectPosition_forBlock;
+import static handmadevehicle.Utils.canMoveEntity;
 import static handmadevehicle.entity.EntityVehicle.EntityVehicle_spawnByMob;
 import static hmggvcmob.GVCMobPlus.*;
 import static java.lang.Math.abs;
@@ -49,10 +54,8 @@ import static net.minecraft.util.MathHelper.wrapAngleTo180_float;
 
 public class EntityGBases extends EntityMob implements IflagBattler,IGVCmob, IFF , ITurretUser {
     private EntityBodyHelper_modified bodyHelper;
-    public float viewWide = 0.267f;
-    public boolean flaginvensionmode = false;
+    public float viewWide = 0.75f;
     public int staningtime;
-    TileEntity spawnedtile = null;
     public float spread = 10;
     public double movespeed = 0.3d;
     int placing;
@@ -83,10 +86,10 @@ public class EntityGBases extends EntityMob implements IflagBattler,IGVCmob, IFF
     EntityAIMoveTowardsRestriction AIMoveTowardsRestriction;
     hmggvcmob.ai.AIMoveThroughVillage AIMoveThroughVillage;
     AIAttackGun aiAttackGun;
-    public boolean isridingVehicle;
     
     public EntityGBases(World par1World) {
         super(par1World);
+        canRideVehicle = true;
         this.bodyHelper = new EntityBodyHelper_modified(this);
         renderDistanceWeight = 16384;
         this.worldForPathfind = new WorldForPathfind(worldObj);
@@ -105,7 +108,8 @@ public class EntityGBases extends EntityMob implements IflagBattler,IGVCmob, IFF
         this.tasks.addTask(3, AIattackOncollidetoPlayer);
         this.tasks.addTask(3, AIattackOncollidetoVillager);
         this.tasks.addTask(3, AIattackOncollidetoSoldier);
-        this.tasks.addTask(3, new AIAttackFlag(this,(IflagBattler) this,worldForPathfind));
+        this.tasks.addTask(3, new AIAttackFlag(this, this,worldForPathfind));
+        this.tasks.addTask(3, new AIDriveTank(this, null, worldForPathfind));
         this.tasks.addTask(4, AIRestrictOpenDoor);
         this.tasks.addTask(5, EntityAIOpenDoor);
         this.tasks.addTask(6, AIMoveTowardsRestriction);
@@ -182,12 +186,8 @@ public class EntityGBases extends EntityMob implements IflagBattler,IGVCmob, IFF
     }
     protected void updateAITasks()
     {
-        float backUpRotationYaw = this.rotationYaw;
         super.updateAITasks();
         modifiedPathNavigater.onUpdateNavigation();
-        if(abs(wrapAngleTo180_float(this.rotationYaw - this.getRotationYawHead()))>70){
-            this.rotationYaw = backUpRotationYaw;
-        }
     }
 	/**
      * (abstract) Protected helper method to read subclass entity data from NBT.
@@ -226,9 +226,29 @@ public class EntityGBases extends EntityMob implements IflagBattler,IGVCmob, IFF
             if(bespawningEntity.checkObstacle()) {
                 worldObj.spawnEntityInWorld(bespawningEntity);
                 if(bespawningEntity.pickupEntity(this,0)) {
-                    bespawningEntity.canUseByMob = true;
-                    bespawningEntity.despawn = true;
-                    isridingVehicle = true;
+                }
+                bespawningEntity.canUseByMob = true;
+                bespawningEntity.despawn = true;
+                Prefab_Vehicle_Base prefab_vehicle = bespawningEntity.getBaseLogic().prefab_vehicle;
+                for(int slotID = 0 ;slotID < prefab_vehicle.weaponSlotNum;slotID++) {
+                    if(prefab_vehicle.weaponSlot_linkedTurret_StackWhiteList.get(slotID) != null) {
+                        int randUsingSlot = rand.nextInt(prefab_vehicle.weaponSlot_linkedTurret_StackWhiteList.get(slotID).length);
+                        {
+                            String whiteList = prefab_vehicle.weaponSlot_linkedTurret_StackWhiteList.get(slotID)[randUsingSlot];
+                            Item check = GameRegistry.findItem("HandmadeGuns", whiteList);
+                            if (check instanceof HMGItem_Unified_Guns && ((HMGItem_Unified_Guns) check).gunInfo.guerrila_can_use) {
+                                bespawningEntity.getBaseLogic().inventoryVehicle.setInventorySlotContents(slotID, new ItemStack(check));
+                            }
+                        }
+                    }else{
+                        int randUsingSlot = rand.nextInt(GVCMobPlus.Guns_CanUse.size());
+                        Item choosenGun = GVCMobPlus.Guns_CanUse.get(randUsingSlot);
+                        bespawningEntity.getBaseLogic().inventoryVehicle.setInventorySlotContents(slotID, new ItemStack(choosenGun));
+                    }
+                }
+                if(!prefab_vehicle.T_Land_F_Plane){
+                    bespawningEntity.setLocationAndAngles(this.posX, 128, this.posZ, var12 , 0.0F);
+                    bespawningEntity.getBaseLogic().throttle = prefab_vehicle.throttle_Max;
                 }
             }
             summoningVehicle = null;
@@ -243,20 +263,22 @@ public class EntityGBases extends EntityMob implements IflagBattler,IGVCmob, IFF
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(movespeed);
     
     
-        if(cfg_guerrillacanusePlacedGun && canuseAlreadyPlacedGun && !worldObj.isRemote && ridingEntity == null && this.getAttackTarget() != null) {
+        {
             List PlaceGunDetector = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox.expand(2, 3.0D, 2));
         
             if (PlaceGunDetector != null && !PlaceGunDetector.isEmpty()) {
                 for (int i = 0; i < PlaceGunDetector.size(); ++i) {
-                    Entity colliedentity = (Entity) PlaceGunDetector.get(i);
-                    if (colliedentity.riddenByEntity == null && colliedentity instanceof PlacedGunEntity) {
-                        placing ++;
-                        if(placing>60) {
-                            placing = 0;
-                            this.mountEntity((PlacedGunEntity) colliedentity);
+                    if(cfg_guerrillacanusePlacedGun && canuseAlreadyPlacedGun && !worldObj.isRemote && ridingEntity == null && this.getAttackTarget() != null) {
+                        Entity colliedentity = (Entity) PlaceGunDetector.get(i);
+                        if (colliedentity.riddenByEntity == null && colliedentity instanceof PlacedGunEntity) {
+                            placing++;
+                            if (placing > 60) {
+                                placing = 0;
+                                this.mountEntity((PlacedGunEntity) colliedentity);
+                            }
+                            this.setCurrentItemOrArmor(0, null);
+                            break;
                         }
-                        this.setCurrentItemOrArmor(0, null);
-                        break;
                     }
                 }
             }
@@ -299,10 +321,18 @@ public class EntityGBases extends EntityMob implements IflagBattler,IGVCmob, IFF
                             offset[1] = -2;
                             break;
                     }
+                    if(willGunSetBlock == null && ((HMGItem_Unified_Guns) this.getHeldItem().getItem()).gunInfo.needfix){
+                        willGunSetBlock = worldObj.getBlock((int) posX-1, (int) posY-1, (int) posZ - 1);
+                        offset[0] = -1;
+                        offset[1] = -1;
+                    }
                     if (willGunSetBlock != null && willGunSetBlock != Blocks.air) {
                         PlacedGunEntity gunEntity = new PlacedGunEntity(worldObj, getHeldItem());
-                        gunEntity.setLocationAndAngles((int) this.posX + 0.5f + offset[0], this.posY + 1.8, (int) this.posZ + 0.5f + offset[1], this.rotationYaw, this.rotationPitch);
+                        gunEntity.setLocationAndAngles((int) this.posX + 0.5f + offset[0], this.posY + 1.8, (int) this.posZ + 0.5f + offset[1],
+                                this.rotationYaw,
+                                this.rotationPitch);
                         gunEntity.issummonbyMob = true;
+                        gunEntity.baserotationYaw = this.rotationYaw;
                         worldObj.spawnEntityInWorld(gunEntity);
                         this.mountEntity(gunEntity);
                         this.setCurrentItemOrArmor(0, null);
@@ -320,6 +350,7 @@ public class EntityGBases extends EntityMob implements IflagBattler,IGVCmob, IFF
             }else{
                 this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(movespeed);
             }
+            this.getEntityData().setBoolean("HMGisUsingItem",false);
         }
     
         if(!worldObj.isRemote &&
@@ -339,6 +370,7 @@ public class EntityGBases extends EntityMob implements IflagBattler,IGVCmob, IFF
                 ((PlacedGunEntity) ridingEntity).firing = false;
             }
         }
+        if(modifiedPathNavigater.getSpeed() < 0 && rand.nextInt(10)==0 && this.getAttackTarget() == null)modifiedPathNavigater.setSpeed(1);
         this.getEntityData().setBoolean("HMGisUsingItem",false);
     }
     
@@ -403,7 +435,12 @@ public class EntityGBases extends EntityMob implements IflagBattler,IGVCmob, IFF
     @Override
     public boolean canEntityBeSeen(Entity p_70685_1_)
     {
-        return canSeeTarget(p_70685_1_);
+
+        Vec3 vec3 = Vec3.createVectorHelper(this.posX, this.posY + this.getEyeHeight(), this.posZ);
+        Vec3 vec31 = Vec3.createVectorHelper(p_70685_1_.posX, p_70685_1_.posY + p_70685_1_.getEyeHeight(), p_70685_1_.posZ);
+
+        MovingObjectPosition movingobjectposition = handmadeguns.Util.Utils.getmovingobjectPosition_forBlock(worldObj,vec3, vec31, false, true, false);//衝突するブロックを調べる
+        return movingobjectposition == null && canSeeTarget(p_70685_1_);
     }
     /**
      * returns a (normalized) vector of where this entity is looking
@@ -496,8 +533,13 @@ public class EntityGBases extends EntityMob implements IflagBattler,IGVCmob, IFF
     }
 
     @Override
+    public AIAttackGun getAttackGun() {
+        return aiAttackGun;
+    }
+
+    @Override
     public boolean is_this_entity_friend(Entity entity) {
-        return false;
+        return entity instanceof EntityGBases;
     }
     
     public boolean canPickUpLoot(){
@@ -528,22 +570,12 @@ public class EntityGBases extends EntityMob implements IflagBattler,IGVCmob, IFF
     @Override
     public boolean getCanSpawnHere()
     {
-        flaginvensionmode = false;
-        for(int i = 0;i<worldObj.loadedTileEntityList.size();i++) {
-            TileEntity tileentity;
-            Object aLoadedTileEntityList = worldObj.loadedTileEntityList.get(i);
-            if(aLoadedTileEntityList != null) {
-                tileentity = (TileEntity) aLoadedTileEntityList;
-                flaginvensionmode = (tileentity.getBlockType() == GVCMobPlus.fn_Supplyflag);
-                if (flaginvensionmode) break;
-            }
-        }
         return super.getCanSpawnHere();
     }
     @Override
     public float getBlockPathWeight(int p_70783_1_, int p_70783_2_, int p_70783_3_)
     {
-        return flaginvensionmode ? 0.0F : (0.5F - this.worldObj.getLightBrightness(p_70783_1_, p_70783_2_, p_70783_3_));
+        return (0.5F - this.worldObj.getLightBrightness(p_70783_1_, p_70783_2_, p_70783_3_));
     }
     @Override
     protected boolean isValidLightLevel()
@@ -551,7 +583,7 @@ public class EntityGBases extends EntityMob implements IflagBattler,IGVCmob, IFF
         int i = MathHelper.floor_double(this.posX);
         int j = MathHelper.floor_double(this.boundingBox.minY);
         int k = MathHelper.floor_double(this.posZ);
-        if(!flaginvensionmode || !worldObj.canBlockSeeTheSky(i, j, k)) return super.isValidLightLevel();
+        if(!worldObj.canBlockSeeTheSky(i, j, k)) return super.isValidLightLevel();
         
         
         if (this.worldObj.getSavedLightValue(EnumSkyBlock.Sky, i, j, k) <= this.rand.nextInt(32))
@@ -560,18 +592,17 @@ public class EntityGBases extends EntityMob implements IflagBattler,IGVCmob, IFF
         }
         else
         {
-            int l = this.worldObj.getSavedLightValue(EnumSkyBlock.Block,i, j, k);
-            int l2= this.worldObj.getBlockLightValue(i, j, k);
-            
+            int l = this.worldObj.getBlockLightValue(i, j, k);
+
             if (this.worldObj.isThundering())
             {
                 int i1 = this.worldObj.skylightSubtracted;
                 this.worldObj.skylightSubtracted = 10;
-                l2 = this.worldObj.getBlockLightValue(i, j, k);
+                l = this.worldObj.getBlockLightValue(i, j, k);
                 this.worldObj.skylightSubtracted = i1;
             }
-            
-            return l < this.rand.nextInt(6) && l2>9 + this.rand.nextInt(8);
+
+            return l <= this.rand.nextInt(8);
         }
     }
     
@@ -594,6 +625,7 @@ public class EntityGBases extends EntityMob implements IflagBattler,IGVCmob, IFF
     }
 
 
+    public boolean canRideVehicle;
     protected void collideWithNearbyEntities()
     {
         if(!worldObj.isRemote) {
@@ -606,11 +638,24 @@ public class EntityGBases extends EntityMob implements IflagBattler,IGVCmob, IFF
                     if (entity.canBePushed()) {
                         this.collideWithEntity(entity);
                     }
-                    if (!entity.isDead && entity instanceof EntityVehicle && ((EntityVehicle) entity).canUseByMob) {
-                        Entity pilot = ((EntityVehicle) entity).getBaseLogic().getRiddenEntityList()[((EntityVehicle) entity).getpilotseatid()];
-                        if ((pilot == null || is_this_entity_friend(pilot)) && !((EntityVehicle) entity).getBaseLogic().isRidingEntity(this)) {
-                            if (((EntityVehicle) entity).pickupEntity(this, 0)) {
-                                isridingVehicle = true;
+                    if (this.ridingEntity == null && !entity.isDead) {
+                        if (entity instanceof EntityVehicle && ((EntityVehicle) entity).canUseByMob) {
+                            Entity pilot = ((EntityVehicle) entity).getBaseLogic().getRiddenEntityList()[((EntityVehicle) entity).getpilotseatid()];
+                            if ((pilot == null || is_this_entity_friend(pilot)) && !((EntityVehicle) entity).getBaseLogic().isRidingEntity(this)) {
+//                            System.out.println("" + );
+                                ((EntityVehicle) entity).pickupEntity(this, seatID);
+                            }
+                        }else {
+                            if(cfg_guerrillacanusePlacedGun && canuseAlreadyPlacedGun && !worldObj.isRemote && this.getAttackTarget() != null) {
+                                if (entity.riddenByEntity == null && entity instanceof PlacedGunEntity) {
+                                    placing++;
+                                    if (placing > 60) {
+                                        placing = 0;
+                                        this.mountEntity((PlacedGunEntity) entity);
+                                    }
+                                    this.setCurrentItemOrArmor(0, null);
+                                    break;
+                                }
                             }
                         }
                     }
@@ -674,7 +719,7 @@ public class EntityGBases extends EntityMob implements IflagBattler,IGVCmob, IFF
         return getCampObj();
     }
 
-    private byte state;
+    private byte state = -1;
     @Override
     public byte getState() {
         return state;
@@ -685,7 +730,7 @@ public class EntityGBases extends EntityMob implements IflagBattler,IGVCmob, IFF
         this.state = state;
     }
 
-    private int[] flagPos = new int[3];
+    private int[] flagPos;
     @Override
     public int[] getTargetCampPosition() {
         return flagPos;
@@ -693,6 +738,11 @@ public class EntityGBases extends EntityMob implements IflagBattler,IGVCmob, IFF
 
     @Override
     public void setTargetCampPosition(int[] ints) {
+        if(ints == null){
+            flag = null;
+            return;
+        }
+        if(flagPos == null)flagPos = new int[3];
         flagPos[0] = ints[0];
         flagPos[1] = ints[1];
         flagPos[2] = ints[2];
@@ -703,7 +753,7 @@ public class EntityGBases extends EntityMob implements IflagBattler,IGVCmob, IFF
 
     @Override
     public void makePlatoon() {
-        if(platoon == null){
+        if(canMoveEntity(this) && platoon == null){
             platoon = new ArrayList<>();
             platoonLeader = this;
 
@@ -713,7 +763,7 @@ public class EntityGBases extends EntityMob implements IflagBattler,IGVCmob, IFF
             while (iterator.hasNext())
             {
                 Entity entitycreature = (Entity)iterator.next();
-                if(entitycreature instanceof EntityGBases){
+                if(entitycreature instanceof EntityGBases && canMoveEntity(this)){
                     platoon.add(entitycreature);
                     ((EntityGBases) entitycreature).joinPlatoon(this);
                 }

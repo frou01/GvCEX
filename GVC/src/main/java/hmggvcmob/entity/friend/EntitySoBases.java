@@ -1,13 +1,16 @@
 package hmggvcmob.entity.friend;
 
+import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import handmadeguns.entity.IFF;
+import handmadeguns.entity.PlacedGunEntity;
 import handmadeguns.items.guns.HMGItem_Unified_Guns;
 import handmadevehicle.SlowPathFinder.WorldForPathfind;
 import handmadevehicle.entity.EntityVehicle;
 import handmadevehicle.entity.parts.ITurretUser;
 import handmadevehicle.entity.parts.turrets.TurretObj;
+import handmadevehicle.entity.prefab.Prefab_Vehicle_Base;
 import hmggvcmob.IflagBattler;
 import handmadevehicle.SlowPathFinder.ModifiedPathNavigater;
 import hmggvcmob.ai.*;
@@ -22,6 +25,8 @@ import net.minecraft.entity.*;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.scoreboard.Team;
@@ -38,14 +43,15 @@ import java.util.List;
 
 import static handmadeguns.HandmadeGunsCore.islmmloaded;
 import static handmadeguns.Util.Utils.getmovingobjectPosition_forBlock;
+import static handmadevehicle.Utils.canMoveEntity;
 import static handmadevehicle.entity.EntityVehicle.EntityVehicle_spawnByMob;
 import static hmggvcmob.GVCMobPlus.*;
 import static java.lang.Math.abs;
 
 public class EntitySoBases extends EntityCreature implements INpc , IflagBattler ,  IFF, IGVCmob, ITurretUser {
 	private EntityBodyHelper_modified bodyHelper;
-	public String summoningVehicle = null;//null‚Í–³‚µB©‘R—N‚«‚ÍLivingSpawnEvent.SpecialSpawn‚Åİ’è‚·‚é
-	//“Áê–î‚Åiƒ_ƒ“ƒWƒ‡ƒ“‚Æ‚©‚Åj©—R‚È–ğE‚Ì•ºm‚ğÚ‚¹‚½‚¢‚Æ‚«‚Ì‚½‚ß‚ÉƒtƒB[ƒ‹ƒh‚Íc‚µ‚Ä‚¨‚±‚¤
+	public String summoningVehicle = null;//nullï¿½Í–ï¿½ï¿½ï¿½ï¿½Bï¿½ï¿½ï¿½Rï¿½Nï¿½ï¿½ï¿½ï¿½LivingSpawnEvent.SpecialSpawnï¿½Åİ’è‚·ï¿½ï¿½
+	//ï¿½ï¿½ï¿½ê–ï¿½ï¿½Åiï¿½_ï¿½ï¿½ï¿½Wï¿½ï¿½ï¿½ï¿½ï¿½Æ‚ï¿½ï¿½Åjï¿½ï¿½ï¿½Rï¿½È–ï¿½Eï¿½Ì•ï¿½ï¿½mï¿½ï¿½ï¿½Ú‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ‚ï¿½ï¿½Ì‚ï¿½ï¿½ß‚Éƒtï¿½Bï¿½[ï¿½ï¿½ï¿½hï¿½Ícï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ï¿½ï¿½
 
 	private ModifiedPathNavigater modifiedPathNavigater;
 	WorldForPathfind worldForPathfind;
@@ -56,36 +62,36 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
 	public double rndyaw;
 	public double rndpitch;
 	public EntityAISwimming aiSwimming;
-	AIAttackGun aiAttackGun;
+	public AIAttackGun aiAttackGun;
+	public AIAttackFlag aiAttackFlag;
+	public AITargetFlag aiTargetFlag;
 	public static int spawnedcount;
 	public TileEntity spawnedtile = null;
-	public boolean isridingVehicle;
 	public EntitySoBases(World par1World) {
 		super(par1World);
+		this.moveHelper = new EntityMoveHelper(this);
 		this.bodyHelper = new EntityBodyHelper_modified(this);
 		renderDistanceWeight = 16384;
 		this.worldForPathfind = new WorldForPathfind(worldObj);
 		this.modifiedPathNavigater = new ModifiedPathNavigater(this, worldObj,worldForPathfind);
 		
 		this.getNavigator().setBreakDoors(true);
-		aiSwimming = new EntityAISwimming(this);
-		this.tasks.addTask(0, aiSwimming);
+		this.tasks.addTask(0, aiSwimming = new EntityAISwimming(this));
 		this.tasks.addTask(0, new AIAttackByTank(this, null, worldForPathfind, this));
 		this.tasks.addTask(3, new AIattackOnCollide(this, EntityLiving.class, 1.0D, true));
 		this.tasks.addTask(3, new AIattackOnCollide(this, EntityGBases.class, 1.0D, true));
-		this.tasks.addTask(3, new AIAttackFlag(this,this,worldForPathfind));
+		this.tasks.addTask(3, new AIDriveTank(this, null, worldForPathfind));
 		this.tasks.addTask(5, new EntityAIRestrictOpenDoor(this));
 		this.tasks.addTask(6, new EntityAIOpenDoor(this, true));
 		this.tasks.addTask(7, new EntityAIMoveTowardsRestriction(this, 1.0D));
-		//‚±‚Á‚©‚çæ‚Í‘Ò‹@iHj
+		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í‘Ò‹@ï¿½ï¿½ï¿½iï¿½Hï¿½j
 		this.tasks.addTask(8, new EntityAIWander(this, 1.0D));
 		this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
 		this.tasks.addTask(8, new EntityAILookIdle(this));
-		//ƒ^[ƒQƒeƒBƒ“ƒO
+		//ï¿½^ï¿½[ï¿½Qï¿½eï¿½Bï¿½ï¿½ï¿½O
 		this.targetTasks.addTask(1, new AIHurtByTarget(this, true));
 		this.targetTasks.addTask(2, new AINearestAttackableTarget(this, EntityGBase.class, 0, true));
 		this.targetTasks.addTask(3, new AINearestAttackableTarget(this, EntityLiving.class, 0, true, false, IMob.mobSelector));
-		this.targetTasks.addTask(4, new AITargetFlag(this,this,this));
 		
 	}
 
@@ -104,29 +110,25 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
 
 	protected void entityInit() {
 		super.entityInit();
-		this.dataWatcher.addObject(22, new Integer((int)0));
-	}
-	
-	public void setMobMode(int integer) {
-		this.dataWatcher.updateObject(22, Integer.valueOf(integer));
-	}
-	public int getMobMode() {
-		return this.dataWatcher.getWatchableObjectInt(22);
 	}
 	
     public void readEntityFromNBT(NBTTagCompound p_70037_1_)
     {
         super.readEntityFromNBT(p_70037_1_);
-        
-        setMobMode(p_70037_1_.getInteger("MobMode"));
+		seatID = p_70037_1_.getInteger("seatID");
+		flagPos = p_70037_1_.getIntArray("flagPos");
+		if(flagPos.length != 3)flagPos = null;
+		else makePlatoon();
     }
     public void writeEntityToNBT(NBTTagCompound p_70014_1_)
     {
         super.writeEntityToNBT(p_70014_1_);
 	    spawnedcount--;
 //	    if(ridingEntity instanceof ImultiRidable)ridingEntity = null;
-        
-        p_70014_1_.setInteger("MobMode", getMobMode());
+		p_70014_1_.setInteger("seatID",seatID);
+        if(flagPos!=null) {
+			p_70014_1_.setIntArray("flagPos", flagPos);
+		}
     }
 	
     public IEntityLivingData onSpawnWithEgg(IEntityLivingData par1EntityLivingData)
@@ -199,7 +201,7 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
 		return getCampObj();
 	}
 
-	private byte state;
+	private byte state = -1;
 	@Override
 	public byte getState() {
 		return state;
@@ -211,7 +213,7 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
 	}
 
 
-	private int[] flagPos = new int[3];
+	private int[] flagPos;
 	@Override
 	public int[] getTargetCampPosition() {
 		return flagPos;
@@ -219,6 +221,11 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
 
 	@Override
 	public void setTargetCampPosition(int[] ints) {
+		if(ints == null){
+			flagPos = null;
+			return;
+		}
+		if(flagPos == null)flagPos = new int[3];
 		flagPos[0] = ints[0];
 		flagPos[1] = ints[1];
 		flagPos[2] = ints[2];
@@ -229,7 +236,7 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
 
 	@Override
 	public void makePlatoon() {
-		if(platoon == null){
+		if(canMoveEntity(this) && platoon == null){
 			platoon = new ArrayList<>();
 			platoonLeader = this;
 
@@ -239,7 +246,7 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
 			while (iterator.hasNext())
 			{
 				Entity entitycreature = (Entity)iterator.next();
-				if(entitycreature instanceof EntitySoBases){
+				if(entitycreature instanceof EntitySoBases && canMoveEntity(this)){
 					platoon.add(entitycreature);
 					((EntitySoBases) entitycreature).joinPlatoon(this);
 				}
@@ -257,6 +264,7 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
 	public void joinPlatoon(IflagBattler iflagBattler) {
 		platoonLeader = iflagBattler;
 		if(platoonLeader != null)platoon = iflagBattler.getPlatoon();
+		else platoon = null;
 	}
 
 	@Override
@@ -277,12 +285,12 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
 
 	@Override
 	public boolean isThisFriendCamp(CampObj campObj) {
-		return campObj == soldiers || campObj == boxes;
+		return campObj == soldiers || campObj == forPlayer;
 	}
 
 	@Override
 	public boolean isThisIgnoreSpawnCamp(CampObj campObj) {
-		return campObj == guerrillas;
+		return campObj != soldiers;
 	}
 
 	public boolean isCreatureType(EnumCreatureType type, boolean forSpawnCount)
@@ -335,7 +343,20 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
 			if(bespawningEntity.checkObstacle()) {
 				worldObj.spawnEntityInWorld(bespawningEntity);
 				if(bespawningEntity.pickupEntity(this,0)) {
-					isridingVehicle = true;
+				}
+				Prefab_Vehicle_Base prefab_vehicle = bespawningEntity.getBaseLogic().prefab_vehicle;
+				int randUsingSlot = prefab_vehicle.weaponSlotNum > 0 ? rand.nextInt(prefab_vehicle.weaponSlotNum):0;
+				for(int slotID = 0 ;slotID < randUsingSlot;slotID++) {
+					for(String whiteList: prefab_vehicle.weaponSlot_linkedTurret_StackWhiteList.get(slotID)) {
+						Item check = GameRegistry.findItem("HandmadeGuns",whiteList);
+						if(check instanceof HMGItem_Unified_Guns){
+							bespawningEntity.getBaseLogic().inventoryVehicle.setInventorySlotContents(slotID, new ItemStack(check));
+						}
+					}
+				}
+				if(!prefab_vehicle.T_Land_F_Plane){
+					bespawningEntity.setLocationAndAngles(this.posX, 128, this.posZ, var12 , 0.0F);
+					bespawningEntity.getBaseLogic().throttle = prefab_vehicle.throttle_Max;
 				}
 			}
 			summoningVehicle = null;
@@ -355,12 +376,6 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
 				}
 			float backRP = rotationPitch;
 			float backRY = rotationYaw;
-			if (this.rand.nextInt(5) == 0) {
-				rndyaw = this.rand.nextGaussian() * (double) (this.rand.nextBoolean() ? -1 : 1) * spread;
-				rndpitch = this.rand.nextGaussian() * (double) (this.rand.nextBoolean() ? -1 : 1) * spread;
-			}
-			this.rotationPitch += rndyaw;
-			this.rotationYaw += rndpitch;
 			this.getHeldItem().getItem().onUpdate(this.getHeldItem(), worldObj, this, 0, true);
 			rotationPitch = backRP;
 			rotationYaw = backRY;
@@ -370,7 +385,15 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
 				this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(movespeed);
 			}
 		}
+		if(ridingEntity instanceof PlacedGunEntity){
+			if(this.getEntityData().getBoolean("HMGisUsingItem")){
+				((PlacedGunEntity) ridingEntity).firing = true;
+			}else {
+				((PlacedGunEntity) ridingEntity).firing = false;
+			}
+		}
 		this.getEntityData().setBoolean("HMGisUsingItem",false);
+		if(modifiedPathNavigater.getSpeed() < 0 && rand.nextInt(10)==0 && this.getAttackTarget() == null)modifiedPathNavigater.setSpeed(1);
 
 	}
 
@@ -391,10 +414,16 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
 	{
 		return this.modifiedPathNavigater;
 	}
+	private EntityMoveHelper moveHelper;
 	protected void updateAITasks()
 	{
 		super.updateAITasks();
 		modifiedPathNavigater.onUpdateNavigation();
+		this.moveHelper.onUpdateMoveHelper();
+	}
+	public EntityMoveHelper getMoveHelper()
+	{
+		return this.moveHelper;
 	}
 	
 	public void moveFlying(float p_70060_1_, float p_70060_2_, float p_70060_3_)
@@ -445,6 +474,7 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
 	public float getviewWide() {
 		return viewWide;
 	}
+
 	@Override
 	public boolean canSeeTarget(Entity target) {
 		boolean flag;
@@ -461,13 +491,12 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
 	@Override
 	public boolean canEntityBeSeen(Entity p_70685_1_)
 	{
-		Vec3 startpos = Vec3.createVectorHelper(this.posX, this.posY + (double) this.getEyeHeight(), this.posZ);
-		Vec3 targetpos = Vec3.createVectorHelper(p_70685_1_.posX, p_70685_1_.posY + (double) p_70685_1_.getEyeHeight(), p_70685_1_.posZ);
-		MovingObjectPosition movingobjectposition = getmovingobjectPosition_forBlock(worldObj,startpos, targetpos, false, true, false);
-		if(movingobjectposition!=null) {
-			return false;
-		}
-		return canSeeTarget(p_70685_1_) && !((this.isInWater() || p_70685_1_.isInWater()) && getDistanceSqToEntity(p_70685_1_) > 256);
+
+		Vec3 vec3 = Vec3.createVectorHelper(this.posX, this.posY + this.getEyeHeight(), this.posZ);
+		Vec3 vec31 = Vec3.createVectorHelper(p_70685_1_.posX, p_70685_1_.posY + p_70685_1_.getEyeHeight(), p_70685_1_.posZ);
+
+		MovingObjectPosition movingobjectposition = handmadeguns.Util.Utils.getmovingobjectPosition_forBlock(worldObj,vec3, vec31, false, true, false);//ï¿½Õ“Ë‚ï¿½ï¿½ï¿½uï¿½ï¿½ï¿½bï¿½Nï¿½ğ’²‚×‚ï¿½
+		return movingobjectposition == null && canSeeTarget(p_70685_1_);
 	}
 
 	@Override
@@ -478,7 +507,14 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
 		return flag;
 	}
 
+	@Override
+	public AIAttackGun getAttackGun() {
+		return aiAttackGun;
+	}
 
+
+	public boolean canuseAlreadyPlacedGun = true;
+	public int placing;
 	protected void collideWithNearbyEntities()
 	{
 		if(!worldObj.isRemote) {
@@ -491,14 +527,27 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
 					if (entity.canBePushed()) {
 						this.collideWithEntity(entity);
 					}
-					if (!entity.isDead && entity instanceof EntityVehicle && ((EntityVehicle) entity).canUseByMob) {
-						Entity pilot = ((EntityVehicle) entity).getBaseLogic().getRiddenEntityList()[((EntityVehicle) entity).getpilotseatid()];
-						if ((pilot == null || is_this_entity_friend(pilot)) && !((EntityVehicle) entity).getBaseLogic().isRidingEntity(this)) {
-							if (((EntityVehicle) entity).pickupEntity(this, 0)) {
-								isridingVehicle = true;
+
+					if (this.ridingEntity == null && !entity.isDead) {
+						if (entity instanceof EntityVehicle && ((EntityVehicle) entity).canUseByMob) {
+							Entity pilot = ((EntityVehicle) entity).getBaseLogic().getRiddenEntityList()[((EntityVehicle) entity).getpilotseatid()];
+							if ((pilot == null || is_this_entity_friend(pilot)) && !((EntityVehicle) entity).getBaseLogic().isRidingEntity(this)) {
+//                            System.out.println("" + );
+								((EntityVehicle) entity).pickupEntity(this, seatID);
 							}
+							((EntityVehicle) entity).getBaseLogic().health += 0.01;
 						}else {
-							((EntityVehicle) entity).getBaseLogic().health += 0.1;
+							if(cfg_guerrillacanusePlacedGun && canuseAlreadyPlacedGun && !worldObj.isRemote && this.getAttackTarget() != null) {
+								if (entity.riddenByEntity == null && entity instanceof PlacedGunEntity) {
+									placing++;
+									if (placing > 60) {
+										placing = 0;
+										this.mountEntity((PlacedGunEntity) entity);
+									}
+									this.setCurrentItemOrArmor(0, null);
+									break;
+								}
+							}
 						}
 					}
 					if(entity instanceof EntityLivingBase && is_this_entity_friend(entity)){
@@ -509,7 +558,7 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
 		}
 	}
 
-	public int seatID;
+	public int seatID = 0;
 	public TurretObj currentMainTurret;
 	public TurretObj currentSubTurret;
     @Override

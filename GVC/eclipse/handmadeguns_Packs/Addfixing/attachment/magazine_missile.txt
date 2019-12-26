@@ -1,0 +1,6 @@
+Texture,missile
+Stack,64
+Tabname,HMG_Ammo
+Name,Missile
+Magazine,missile
+addRecipe,bullet_rr_hmg,2,abc,def,000,289,265,289,289,265,289,289,289,289

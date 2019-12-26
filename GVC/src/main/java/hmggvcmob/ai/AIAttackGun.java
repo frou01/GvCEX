@@ -85,8 +85,16 @@ public class AIAttackGun extends EntityAIBase {
         this(guerrilla,range,minrange,bursttime,ismoveable,worldForPathfind);
         shoot_avoid_checkline = sac;
     }
+    public boolean forceStop = false;
     @Override
     public boolean shouldExecute() {
+        if(forceStop){
+            forceStop = false;
+            return false;
+        }
+        return setUp();
+    }
+    public boolean setUp(){
         EntityLivingBase entityliving = shooter.getAttackTarget();
         if(shooter instanceof EntityGBases && entityliving instanceof EntityGBases){
             entityliving = null;
@@ -110,7 +118,6 @@ public class AIAttackGun extends EntityAIBase {
         if(shouldExecute()){
             return true;
         }else {
-            shooter.getNavigator().clearPathEntity();
             return false;
         }
     }
@@ -143,7 +150,7 @@ public class AIAttackGun extends EntityAIBase {
                     }else {
                         lookAround();
                     }
-                    if(refindpath < 0){
+                    if(refindpath < 0 || (shooter.getHeldItem() == null || !(shooter.getHeldItem().getItem() instanceof HMGItem_Unified_Guns))){
                         setPath(currentAttackToPosition,tocurrentAttackToPosition,canSee);
                         refindpath = 10;
                     }
@@ -229,9 +236,10 @@ public class AIAttackGun extends EntityAIBase {
     private void setPath(Vector3d currentAttackToPosition,double tocurrentAttackToPosition,boolean canSee){
         double maxrange = maxshootrange * maxshootrange;
         double minrange = minshootrange * minshootrange;
-        if (shooter.ridingEntity == null && !(shooter.getHeldItem() != null && shooter.getHeldItem().getItem() instanceof HMGItem_Unified_Guns)) {
+        if (shooter.ridingEntity == null && (shooter.getHeldItem() == null || !(shooter.getHeldItem().getItem() instanceof HMGItem_Unified_Guns))) {
             maxrange = 0;
             minrange = 0;
+            moveRound = false;
         }
 //        Vector3d reCurToTargetPosition = new Vector3d(currentAttackToPosition);
 //        Vector3d moveTo = new Vector3d(shooter.posX, shooter.posY, shooter.posZ);
@@ -385,12 +393,12 @@ public class AIAttackGun extends EntityAIBase {
             isSelectorChecked = true;
         }
     }
-    private boolean canNavigate()
-    {
-        return this.shooter.onGround || shooter.isInWater() || this.shooter.isRiding() && this.shooter.ridingEntity instanceof EntityChicken;
-    }
+//    private boolean canNavigate()
+//    {
+//        return this.shooter.onGround || shooter.isInWater() || this.shooter.isRiding() && this.shooter.ridingEntity instanceof EntityChicken;
+//    }
     public Vector3d getSeeingPosition(){
-        if(shooter.canEntityBeSeen(target)){
+        if(target != null && shooter.canEntityBeSeen(target)){
             if(lastSeenPosition == null)lastSeenPosition = new Vector3d();
             lastSeenPosition.set(target.posX,target.posY,target.posZ);
         }
