@@ -25,8 +25,8 @@ Texture,M134
 GunSound,handmadeguns.fire,handmadeguns.supu
 GunSoundReload,handmadeguns.reload
 CanObj,true
-ObjModel,gatlinggun.mqo
-ObjTexture,gatlinggun.png
+ObjModel,m134.mqo
+ObjTexture,m134.png
 ModelScala,0.5f
 CustomFlash,arrow,1
 

@@ -1,0 +1,35 @@
+BulletPower,0
+BulletSpeed,0.0f
+BlletSpread,0.0f
+Recoil,0.0d
+ReloadTime,100
+RemainingBullet,500
+Attacking,10.0f
+Zoom,-1.0f,2.0f,4.0f
+Texture,m1943
+GunSound,handmadeguns.firebow,handmadeguns.supu
+GunSoundReload,handmadeguns.reload
+CanObj,true
+ObjModel,m1943.obj
+ObjTexture,paret.png
+ModelScala,0.5f
+ModelHigh,1.03f,0.85f,0.85f
+RenderCross,true
+UnderBarrelWeapon,0
+RightType,0
+
+SWORD,M1943 Shovel
+
+Recipe1, b 
+Recipe2,def
+Recipe3, h 
+ItemA,null
+ItemB,minecraft,iron_ingot
+ItemC,null
+ItemD,minecraft,iron_ingot
+ItemE,minecraft,stick
+ItemF,minecraft,iron_ingot
+ItemG,null
+ItemH,minecraft,stick
+ItemI,null
+addNewRecipe,HandmadeGuns,M1943 Shovel,1

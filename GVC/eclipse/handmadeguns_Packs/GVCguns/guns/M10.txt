@@ -26,8 +26,8 @@ GunSound,handmadeguns.firehg,handmadeguns.firehg
 GunSoundLV,4,4
 GunSoundReload,handmadeguns.reload
 CanObj,true
-ObjModel,M10.obj
-ObjTexture,M10.png
+ObjModel,m10.mqo
+ObjTexture,m10.png
 ModelScala,0.5f
 CustomFlash,arrow,1
 Bursts,1,-1

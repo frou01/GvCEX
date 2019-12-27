@@ -18,7 +18,7 @@ stability_roll,0;
 stability_roll_onGround,0;
 stability_motion,0.3;
 stability_motion2,0;
-speedfactor,0.007;
+speedfactor,0.0052;
 liftfactor,0.04;
 speedfactor_af,0;
 forced_rudder_effect,0.1;

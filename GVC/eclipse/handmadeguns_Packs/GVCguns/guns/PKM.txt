@@ -27,8 +27,8 @@ Texture,PKM
 GunSound,handmadeguns.fire,handmadeguns.supu
 GunSoundReload,handmadeguns.reload
 CanObj,true
-ObjModel,PKM.obj
-ObjTexture,PKM.png
+ObjModel,pkm.mqo
+ObjTexture,pkm.png
 ModelScala,0.5f
 CustomFlash,arrow,1
 Bursts,1,-1

@@ -79,28 +79,30 @@ public class AICommandedEntity extends EntityAIBase {
 	}
 	Random random = new Random();
 	int changeMoveModeCNT = 0;
+	int rePathCNT = 10;
 	boolean moveRound = false;
 	boolean roundDir = random.nextBoolean();
 
 	@Override
 	public void updateTask(){
 
-		changeMoveModeCNT--;
 		{
-			if(changeMoveModeCNT<0){
-				moveRound = random.nextBoolean();
-				roundDir = random.nextBoolean();
-				if(moveRound)
-					changeMoveModeCNT = 40 + random.nextInt(40);
-				else
-					changeMoveModeCNT = 60 + random.nextInt(40);
-			}
-			commandedEntity.getNavigator().clearPathEntity();
+			rePathCNT--;
+			if(rePathCNT<0 || commandedEntity.getNavigator().noPath()){
+				rePathCNT = 10;
+				changeMoveModeCNT--;
+				if(changeMoveModeCNT<0){
+					moveRound = random.nextBoolean();
+					roundDir = random.nextBoolean();
+					if(moveRound)
+						changeMoveModeCNT = 40 + random.nextInt(40);
+					else
+						changeMoveModeCNT = 60 + random.nextInt(40);
+				}
+				commandedEntity.getNavigator().clearPathEntity();
 
-			double meToTDist = commandedEntity.getDistanceSq(targetPos[0], targetPos[1], targetPos[2]);
-			double meToLeaderDist = commandedEntity.getDistanceSqToEntity(leaderEntity);
-
-			{
+				double meToTDist = commandedEntity.getDistanceSq(targetPos[0], targetPos[1], targetPos[2]);
+				double meToLeaderDist = commandedEntity.getDistanceSqToEntity(leaderEntity);
 				Vector3d reCurToTargetPosition;
 				if (meToLeaderDist > 256) {
 					reCurToTargetPosition = new Vector3d(leaderEntity.posX,

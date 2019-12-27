@@ -2,7 +2,7 @@ sourceSets.main {
     java.srcDirs project.projectDir.name
     resources.srcDirs project.projectDir.name
 }
-version = "EX13.1"
+version = "EX13.2"
 
 
 

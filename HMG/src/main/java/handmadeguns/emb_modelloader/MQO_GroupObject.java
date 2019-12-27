@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.Vec3;
 import org.lwjgl.opengl.GL11;
@@ -21,6 +22,7 @@ public class MQO_GroupObject
 
 	public MQO_Material currentMaterial;
 	public MQO_MetasequoiaObject mqo_metasequoiaObject;
+	private int displayList = -1;
 
 	public MQO_GroupObject()
 	{
@@ -39,9 +41,23 @@ public class MQO_GroupObject
 		this.glDrawingMode = glDrawingMode;
 	}
 
+
+	public void initDisplay(){
+		this.displayList = GLAllocation.generateDisplayLists(1);
+		GL11.glNewList(this.displayList, GL11.GL_COMPILE);
+		render_init();
+		GL11.glEndList();
+	}
+
 	public void render()
 	{
+		if(displayList == -1)initDisplay();
+		else if(displayList != 0) GL11.glCallList(this.displayList);
+		else initDisplay();
+	}
 
+	public void render_init()
+	{
 		for(int i = 0;i < faces.length;i++) {
 			if (faces[i].size() > 0) {
 				currentMaterial = null;
@@ -86,10 +102,5 @@ public class MQO_GroupObject
 				}
 			}
 		}
-	}
-
-	public void render(Tessellator tessellator)
-	{
-
 	}
 }

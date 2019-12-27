@@ -91,8 +91,8 @@ key_throttle Down:31
 key_Yaw Left:30
 key_Yaw Right:32
 key_Throttle Brake:57
-key_Fire1:-99
-key_Fire2:-100
+key_Fire1:0
+key_Fire2:0
 key_Flap:33
 key_Air Brake:45
 key_Change to Next Seat:21

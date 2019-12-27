@@ -15,7 +15,7 @@ ZoomRenderType,true,true,true
 ZoomRenderTypeTxture,false,false,false
 Explosion,5
 Texture,M26
-GunSound,handmadeguns.null,handmadeguns.null
+GunSound,handmadeguns.grenade,handmadeguns.null
 GunSoundReload,handmadeguns.null
 CanObj,true
 ObjModel,M26_full.obj

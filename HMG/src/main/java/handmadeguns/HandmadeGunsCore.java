@@ -155,8 +155,6 @@ public class HandmadeGunsCore {
 	//@net.minecraftforge.fml.common.Mod.EventHandler
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent pEvent) {
-		
-		
 		configFile = pEvent.getSuggestedConfigurationFile();
 		Configuration lconf = new Configuration(configFile);
 		lconf.load();
@@ -225,6 +223,10 @@ public class HandmadeGunsCore {
 		readPack(packdir,pEvent.getSide().isClient());
 
 
+		packdir = new File(HMG_proxy.ProxyFile(), "handmadeguns_Packs");
+		packdir.mkdirs();
+
+
 		//TODO:INJECT_FUNCTION
 		File[] packlist = packdir.listFiles();
 		Arrays.sort(packlist, new Comparator<File>() {
@@ -234,17 +236,17 @@ public class HandmadeGunsCore {
 		});
 		for (File aPacklist : packlist) {
 			if (aPacklist.isDirectory()) {
-				File[] recipelist = getFileList(aPacklist, "addscripts");
-				if (recipelist != null && recipelist.length > 0) {
-					for (File aRecipelist : recipelist) {
-						System.out.println("debug" + aRecipelist);
+				File[] addscripts = getFileList(aPacklist, "addscripts");
+				if (addscripts != null && addscripts.length > 0) {
+					for (File aScript : addscripts) {
+						System.out.println("debug" + aScript);
 						try {
 							ScriptEngine script = (new ScriptEngineManager(null)).getEngineByName("js");
 							try {
 								if (script.toString().contains("Nashorn")) {
 									script.eval("load(\"nashorn:mozilla_compat.js\");");
 								}
-								script.eval(new FileReader(aRecipelist));
+								script.eval(new FileReader(aScript));
 								try {
 									((Invocable) script).invokeFunction("preInit", pEvent);
 								} catch (ScriptException e) {

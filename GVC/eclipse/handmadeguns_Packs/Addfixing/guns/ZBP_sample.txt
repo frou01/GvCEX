@@ -1,5 +1,5 @@
 Texture,BP_sample
 BPItemStack,4
-BPItems,AR_sample,HG_sample,SMG_sample,SR_sample
+BPItems,SVD,AK74,AK74,PKM
 
 BP,BP_sample

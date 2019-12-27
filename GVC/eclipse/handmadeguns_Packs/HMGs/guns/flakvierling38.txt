@@ -3,7 +3,7 @@ BulletSpeed,6
 BulletGravity,0.485
 BlletSpreadDiffusion,0,0,0.1,0,2,0.05
 BlletSpread,15.0f
-Recoil,20
+Recoil,0
 ReloadTime,150
 RemainingBullet,80
 Attacking,0.0f
@@ -35,7 +35,6 @@ FixAsEntity,true
 NeedFix,true
 UserOnBarrel,false
 Magazine,0,HandmadeGuns,20mm Magazine
-restrictTurretMoveSpeed,5,3
 MagazineItemCount,4
 guntype,2
 Explosion,1

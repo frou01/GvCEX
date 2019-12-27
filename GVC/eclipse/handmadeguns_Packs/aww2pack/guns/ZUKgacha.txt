@@ -1,0 +1,21 @@
+Texture,ukgacha
+BPItemStack,8
+BPItems,BoysMk1,Sten Mk.‡U,LeeEnfield,BrenGunMk.2,Enfield Revolver,SMLE,Rieder Automatic Rifle,Rieder Automatic Rifle Short Magazine
+
+Name,ƒCƒMƒŠƒX’P”­ƒKƒ`ƒƒ
+BP,U.K._Gatcha
+
+Recipe1,  c
+Recipe2, ef
+Recipe3,ghi
+ItemA,null
+ItemB,null
+ItemC,HandmadeGuns,gunpyo
+ItemD,null
+ItemE,HandmadeGuns,gunpyo
+ItemF,HandmadeGuns,gunpyo
+ItemG,HandmadeGuns,gunpyo
+ItemH,HandmadeGuns,gunpyo
+ItemI,HandmadeGuns,gunpyo
+
+addNewRecipe,HandmadeGuns,U.K._Gatcha,1

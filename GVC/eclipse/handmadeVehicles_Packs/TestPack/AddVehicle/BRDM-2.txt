@@ -23,7 +23,7 @@ torque_inWater,0.1;
 yawspeed_Inwater,0.2;
 speedfactor,0;
 speedfactor_af,0;
-speedfactor_onGround,0.4;
+speedfactor_onGround,0.6;
 rotmotion_reduceSpeed,0.1;
 //•‘•’Ç‰Á;
 ParentWeapons_NUM,1;

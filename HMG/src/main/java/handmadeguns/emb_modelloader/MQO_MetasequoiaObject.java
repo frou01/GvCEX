@@ -401,7 +401,6 @@ public class MQO_MetasequoiaObject implements IModelCustom
 						this.faceNum   += group.faces[id].size();
 					}
 					this.vertices.clear();
-
 					groupObjects.add(group);
 				}else if(isValidMaterialLine(currentLine)){
 					materials = parseMaterial(currentLine,reader);

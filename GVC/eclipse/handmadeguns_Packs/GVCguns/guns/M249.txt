@@ -27,8 +27,8 @@ Texture,M249
 GunSound,handmadeguns.fire,handmadeguns.supu
 GunSoundReload,handmadeguns.reload
 CanObj,true
-ObjModel,M249.obj
-ObjTexture,M249.png
+ObjModel,m249.mqo
+ObjTexture,m249.png
 ModelScala,0.5f
 CustomFlash,arrow,1
 Bursts,1,-1

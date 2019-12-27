@@ -1,5 +1,6 @@
 package hmggvcmob.entity.guerrilla;
 
+import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.common.registry.GameRegistry;
 import handmadeguns.HMGGunMaker;
 import handmadeguns.entity.IFF;
@@ -17,6 +18,7 @@ import handmadevehicle.SlowPathFinder.ModifiedPathNavigater;
 import hmggvcmob.ai.*;
 import hmggvcmob.camp.CampObj;
 import hmggvcmob.entity.EntityBodyHelper_modified;
+import hmggvcmob.entity.EntityMoveHelperModified;
 import hmggvcmob.entity.IGVCmob;
 import hmggvcmob.entity.VehicleSpawnGachaOBJ;
 import hmggvcmob.entity.friend.EntitySoBases;
@@ -91,9 +93,16 @@ public class EntityGBases extends EntityMob implements IflagBattler,IGVCmob, IFF
         super(par1World);
         canRideVehicle = true;
         this.bodyHelper = new EntityBodyHelper_modified(this);
+        this.moveHelper = new EntityMoveHelperModified(this);
         renderDistanceWeight = 16384;
         this.worldForPathfind = new WorldForPathfind(worldObj);
         this.modifiedPathNavigater = new ModifiedPathNavigater(this, worldObj,worldForPathfind);
+
+
+
+        ObfuscationReflectionHelper.setPrivateValue(EntityLiving.class, this, moveHelper, "moveHelper", "field_70765_h");
+        ObfuscationReflectionHelper.setPrivateValue(EntityLiving.class, this, modifiedPathNavigater, "navigator", "field_70699_by");
+
         aiSwimming =new EntityAISwimming(this);
         AIattackOncollidetoPlayer  =new AIattackOnCollide(this, EntityPlayer.class, 1.0D, true);
         AIattackOncollidetoVillager= new AIattackOnCollide(this, EntityVillager.class, 1.0D, true);
@@ -184,10 +193,48 @@ public class EntityGBases extends EntityMob implements IflagBattler,IGVCmob, IFF
     {
         return this.modifiedPathNavigater;
     }
+    private EntityMoveHelperModified moveHelper;
     protected void updateAITasks()
     {
         super.updateAITasks();
-        modifiedPathNavigater.onUpdateNavigation();
+    }
+    public float moveToDir = 0;
+    public void setAIMoveSpeed(float p_70659_1_)
+    {
+        super.setAIMoveSpeed(p_70659_1_);
+        this.setMoveForward(p_70659_1_);
+        moveToDir = this.rotationYaw;
+    }
+    public void moveEntityWithHeading(float p_70612_1_, float p_70612_2_){
+        this.rotationYaw = moveToDir;
+        super.moveEntityWithHeading(p_70612_1_,p_70612_2_);
+    }
+
+    public void moveFlying(float p_70060_1_, float p_70060_2_, float p_70060_3_)
+    {
+        float f3 = p_70060_1_ * p_70060_1_ + p_70060_2_ * p_70060_2_;
+
+        if (f3 >= 1.0E-4F)
+        {
+            f3 = MathHelper.sqrt_float(f3);
+
+            if (f3 < 1.0F)
+            {
+                f3 = 1.0F;
+            }
+            f3 = p_70060_3_ / f3;
+            f3 = abs(f3);
+            p_70060_1_ *= f3;
+            p_70060_2_ *= f3;
+            float f4 = MathHelper.sin(this.rotationYaw * (float)Math.PI / 180.0F);
+            float f5 = MathHelper.cos(this.rotationYaw * (float)Math.PI / 180.0F);
+            this.motionX += (double)(-p_70060_2_ * f4 + p_70060_1_ * f5);
+            this.motionZ += (double)( p_70060_2_ * f5 + p_70060_1_ * f4);
+        }
+    }
+    public EntityMoveHelper getMoveHelper()
+    {
+        return this.moveHelper;
     }
 	/**
      * (abstract) Protected helper method to read subclass entity data from NBT.
@@ -477,29 +524,6 @@ public class EntityGBases extends EntityMob implements IflagBattler,IGVCmob, IFF
             float f5 = -MathHelper.cos(-f1 * 0.017453292F);
             float f6 = MathHelper.sin(-f1 * 0.017453292F);
             return Vec3.createVectorHelper((double)(f4 * f5), (double)f6, (double)(f3 * f5));
-        }
-    }
-
-    public void moveFlying(float p_70060_1_, float p_70060_2_, float p_70060_3_)
-    {
-        float f3 = p_70060_1_ * p_70060_1_ + p_70060_2_ * p_70060_2_;
-
-        if (f3 >= 1.0E-4F)
-        {
-            f3 = MathHelper.sqrt_float(f3);
-
-            if (f3 < 1.0F)
-            {
-                f3 = 1.0F;
-            }
-            f3 = p_70060_3_ / f3;
-            f3 = abs(f3);
-            p_70060_1_ *= f3;
-            p_70060_2_ *= f3;
-            float f4 = MathHelper.sin(this.rotationYaw * (float)Math.PI / 180.0F);
-            float f5 = MathHelper.cos(this.rotationYaw * (float)Math.PI / 180.0F);
-            this.motionX += (double)(-p_70060_2_ * f4 + p_70060_1_ * f5);
-            this.motionZ += (double)( p_70060_2_ * f5 + p_70060_1_ * f4);
         }
     }
     

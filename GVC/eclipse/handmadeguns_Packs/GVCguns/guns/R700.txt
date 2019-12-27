@@ -27,8 +27,8 @@ GunSound,handmadeguns.fireRifle,handmadeguns.fireRifle
 GunSoundReload,handmadeguns.reload
 GunSoundCooking,handmadeguns.cooking
 CanObj,true
-ObjModel,R700.obj
-ObjTexture,R700.png
+ObjModel,r700.mqo
+ObjTexture,r700.png
 ModelScala,0.5f
 CustomFlash,arrow,1
 Bursts,1

@@ -25,8 +25,8 @@ Texture,M82A3
 GunSound,handmadeguns.HeavyGun,handmadeguns.supu
 GunSoundReload,handmadeguns.reload
 CanObj,true
-ObjModel,M82A3.obj
-ObjTexture,M82A3.png
+ObjModel,m82a3.mqo
+ObjTexture,m82a3.png
 ModelScala,0.5f
 CustomFlash,arrow,1
 Bursts,1

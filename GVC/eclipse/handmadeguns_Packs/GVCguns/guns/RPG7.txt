@@ -1,9 +1,9 @@
 BulletPower,300
-BulletSpeed,1
+BulletSpeed,1.375
 BlletSpread,10.0f
 ADS_Spread_coefficient,0.5
 BlletSpreadDiffusion,10,0,1.8,0.2,3,0.6
-Acceleration,0.2f
+Acceleration,0.5f
 Recoil,2.0d
 ReloadTime,50
 RemainingBullet,1
@@ -17,7 +17,7 @@ ScopeTexture,rr.png,redPoint.png,rr.png
 Explosion,1.5f
 BlockDestory,true
 Texture,RR_sample
-GunSound,handmadeguns.fire,handmadeguns.supu
+GunSound,handmadeguns.missileLaunch,handmadeguns.missileLaunch
 GunSoundReload,handmadeguns.reload
 CanObj,true
 ObjModel,rpg7.obj

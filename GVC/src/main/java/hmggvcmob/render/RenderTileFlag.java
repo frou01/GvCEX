@@ -14,11 +14,13 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 
 import static handmadeguns.HandmadeGunsCore.textureOffsetU;
 import static java.lang.StrictMath.atan;
 import static java.lang.StrictMath.atan2;
 import static java.lang.StrictMath.toDegrees;
+import static org.lwjgl.opengl.GL11.*;
 
 public class RenderTileFlag extends TileEntitySpecialRenderer {
     
@@ -38,15 +40,15 @@ public class RenderTileFlag extends TileEntitySpecialRenderer {
             flagmodel.renderPart("obj2");
             flagmodel.renderPart("obj4");
             flagmodel.renderPart("obj5");
-            textureOffsetU = (float)(tileEntity.campObj.maxFlagHeight - tileEntity.flagHeight)/(float)tileEntity.campObj.maxFlagHeight * 0.156f;
             flagmodel.renderPart("obj5a");
-            textureOffsetU = 0;
             GL11.glScalef(1f/4, 1f/4, 1f/4);
             GL11.glTranslatef(0.7f, 0.8f, 0.5f);
             GL11.glRotatef(-90, 0, 1, 0);
             GL11.glRotatef(180, 0, 0, 1);
             GL11.glScalef(1f/128, 1f/128, 1f/128);
             renderString("next Spawn : " + tileEntity.respawncycle/20);
+            GL11.glTranslatef(0, -16, 0);
+            renderString("capture progress : " + (tileEntity.campObj.maxFlagHeight - tileEntity.flagHeight) + " / " + tileEntity.campObj.maxFlagHeight);
             GL11.glTranslatef(0, -16, 0);
             renderString(tileEntity.campObj.campName);
             GL11.glPopMatrix();
@@ -67,7 +69,9 @@ public class RenderTileFlag extends TileEntitySpecialRenderer {
     }
 
     public void renderString(String renderObj){
-
+        GL11.glDisable(GL_BLEND);
+        GL11.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glDisable(GL12.GL_RESCALE_NORMAL);
         Minecraft minecraft = FMLClientHandler.instance().getClient();
         FontRenderer fontrenderer = minecraft.fontRenderer;
         Tessellator tessellator = Tessellator.instance;

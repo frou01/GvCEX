@@ -1,5 +1,6 @@
 package hmggvcmob.entity.friend;
 
+import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -16,6 +17,7 @@ import handmadevehicle.SlowPathFinder.ModifiedPathNavigater;
 import hmggvcmob.ai.*;
 import hmggvcmob.camp.CampObj;
 import hmggvcmob.entity.EntityBodyHelper_modified;
+import hmggvcmob.entity.EntityMoveHelperModified;
 import hmggvcmob.entity.IGVCmob;
 import hmggvcmob.entity.guerrilla.EntityGBase;
 import hmggvcmob.entity.guerrilla.EntityGBases;
@@ -59,22 +61,22 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
 	public float viewWide = 1.14f;
 	public double movespeed = 0.3d;
 	public float spread = 1;
-	public double rndyaw;
-	public double rndpitch;
 	public EntityAISwimming aiSwimming;
 	public AIAttackGun aiAttackGun;
 	public AIAttackFlag aiAttackFlag;
 	public AITargetFlag aiTargetFlag;
 	public static int spawnedcount;
-	public TileEntity spawnedtile = null;
 	public EntitySoBases(World par1World) {
 		super(par1World);
-		this.moveHelper = new EntityMoveHelper(this);
+		this.moveHelper = new EntityMoveHelperModified(this);
 		this.bodyHelper = new EntityBodyHelper_modified(this);
 		renderDistanceWeight = 16384;
 		this.worldForPathfind = new WorldForPathfind(worldObj);
 		this.modifiedPathNavigater = new ModifiedPathNavigater(this, worldObj,worldForPathfind);
-		
+
+		ObfuscationReflectionHelper.setPrivateValue(EntityLiving.class, this, moveHelper, "moveHelper", "field_70765_h");
+		ObfuscationReflectionHelper.setPrivateValue(EntityLiving.class, this, modifiedPathNavigater, "navigator", "field_70699_by");
+
 		this.getNavigator().setBreakDoors(true);
 		this.tasks.addTask(0, aiSwimming = new EntityAISwimming(this));
 		this.tasks.addTask(0, new AIAttackByTank(this, null, worldForPathfind, this));
@@ -334,6 +336,7 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
 	}
 	
 	public void onUpdate() {
+		super.onUpdate();
 		if(summoningVehicle != null) {
 
 			int var12 = MathHelper.floor_double((double) (this.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
@@ -362,7 +365,6 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
 			summoningVehicle = null;
 		}
 		if(this.getAttackTarget() != null && this.getAttackTarget().isDead)this.setAttackTarget(null);
-		super.onUpdate();
 		if(this.getAttackTarget() != null && (this.getAttackTarget() instanceof EntitySoBases || this.getAttackTarget() instanceof EntityPlayer || (islmmloaded && this.getAttackTarget() instanceof LMM_EntityLittleMaid)))this.setAttackTarget(null);
 		if(this.getHeldItem() != null) {
 			if(this.getHeldItem().hasTagCompound()){
@@ -414,16 +416,25 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
 	{
 		return this.modifiedPathNavigater;
 	}
-	private EntityMoveHelper moveHelper;
+	private EntityMoveHelperModified moveHelper;
 	protected void updateAITasks()
 	{
 		super.updateAITasks();
-		modifiedPathNavigater.onUpdateNavigation();
-		this.moveHelper.onUpdateMoveHelper();
 	}
 	public EntityMoveHelper getMoveHelper()
 	{
 		return this.moveHelper;
+	}
+	public float moveToDir = 0;
+	public void setAIMoveSpeed(float p_70659_1_)
+	{
+		super.setAIMoveSpeed(p_70659_1_);
+		this.setMoveForward(p_70659_1_);
+		moveToDir = this.rotationYaw;
+	}
+	public void moveEntityWithHeading(float p_70612_1_, float p_70612_2_){
+		this.rotationYaw = moveToDir;
+		super.moveEntityWithHeading(p_70612_1_,p_70612_2_);
 	}
 	
 	public void moveFlying(float p_70060_1_, float p_70060_2_, float p_70060_3_)

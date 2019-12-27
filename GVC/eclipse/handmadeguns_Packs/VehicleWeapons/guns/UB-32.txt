@@ -1,7 +1,7 @@
 guerrila_cant_use_this
 Dont_Be_Inside_Root_Chest
 BulletPower,70
-BulletSpeed,0.5
+BulletSpeed,0.2
 Acceleration,0.5f
 ReloadTime,-1
 Bursts,-1

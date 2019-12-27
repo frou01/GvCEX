@@ -15,7 +15,7 @@ ZoomRenderTypeTxture,false,false,false
 Cycle,2
 Texture,ZID_KORD
 GunSound,handmadeguns.dshk38Fire,handmadeguns.dshk38Fire
-SoundSpeed,0.8f
+SoundSpeed,1f
 GunSoundReload,handmadeguns.reload
 CanObj,true
 ObjModel,ZID_KORD.mqo

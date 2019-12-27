@@ -3,7 +3,7 @@ BulletSpeed,4
 BulletGravity,0.485
 BlletSpreadDiffusion,0,0,0.1,0,2,0.05
 BlletSpread,15.0f
-Recoil,30
+Recoil,0
 ReloadTime,10
 RemainingBullet,8
 Attacking,0.0f
@@ -90,9 +90,9 @@ AddParts,obj10
         BackParts
     BackParts
 
-restrictTurretMoveSpeed,4,4
 
 Name,AAGun_bofors40mm
+restrictTurretMoveSpeed,4,4
 TurretHP,200
 LMG,bofors_40mm
 

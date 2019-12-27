@@ -15,7 +15,7 @@ import handmadeguns.entity.bullets.*;
 import handmadeguns.items.guns.HMGItem_Unified_Guns;
 import handmadeguns.network.PacketSpawnParticle;
 import handmadeguns.client.render.*;
-import handmadeguns.obj_modelloaderMod.obj.ObjModelLoader;
+import handmadeguns.obj_modelloaderMod.obj.HMGObjModelLoader;
 import handmadeguns.tcn_modelloaderMod.TechneModelLoader;
 import handmadeguns.tile.TileMounter;
 import net.minecraft.block.Block;
@@ -108,7 +108,7 @@ public class ClientProxyHMG extends CommonSideProxyHMG {
 
 		AdvancedModelLoader.registerModelHandler(new MQO_ModelLoader());
 		AdvancedModelLoader.registerModelHandler(new TechneModelLoader());
-		AdvancedModelLoader.registerModelHandler(new ObjModelLoader());//怒りのオーバーライド
+		AdvancedModelLoader.registerModelHandler(new HMGObjModelLoader());//怒りのオーバーライド
 	}
 	@Override
 	public void playsoundat(String sound, float soundLV, float soundSP, float tempsp, double posX, double posY, double posZ){

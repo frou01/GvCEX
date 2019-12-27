@@ -43,7 +43,7 @@ public class GVCEntityFriendGK extends EntityPMCBase implements IIRVING
         this.setSize(2.5F, 4F);
         //this.tasks.addTask(1, new AIEntityInvasionFlag(this, 1.0D));
         //  this.tasks.addTask(2, new AIEntityAIWander(this, 1.0D));
-        this.targetTasks.removeTask(aiSwimming);
+        this.tasks.removeTask(aiSwimming);
         this.tasks.addTask(1,new AIGKkick(this,this,3.5f));
         this.tasks.addTask(2,new AIGKHighJump(this,this,3.5f,new WorldForPathfind(worldObj)));
         this.tasks.addTask(3,new AIGKFire(this,10f,new WorldForPathfind(worldObj)));

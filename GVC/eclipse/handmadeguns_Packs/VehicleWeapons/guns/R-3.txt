@@ -2,7 +2,7 @@ guerrila_cant_use_this
 Dont_Be_Inside_Root_Chest
 BulletPower,500
 BulletSpeed,0.5
-Acceleration,0.2f
+Acceleration,0.5f
 ReloadTime,-1
 RemainingBullet,1
 lookDown,20
