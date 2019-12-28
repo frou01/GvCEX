@@ -1,3 +1,0 @@
-//name,HMG_GVCGuns_Newer
-//Icon,HandmadeGuns:UZI
-//End

@@ -63,7 +63,7 @@ public class EntityPMCBase extends EntitySoBases implements IFF,IGVCmob, IComman
 						Entity entity = (Entity) list.get(i);
 
 						if (this.ridingEntity == null && !entity.isDead) {
-							if(cfg_guerrillacanusePlacedGun && canuseAlreadyPlacedGun && !worldObj.isRemote && this.getAttackTarget() != null) {
+							if(cfg_guerrillacanusePlacedGun && canuseAlreadyPlacedGun && !worldObj.isRemote) {
 								if (entity.riddenByEntity == null && entity instanceof PlacedGunEntity) {
 									this.mountEntity((PlacedGunEntity) entity);
 									this.setCurrentItemOrArmor(0, null);

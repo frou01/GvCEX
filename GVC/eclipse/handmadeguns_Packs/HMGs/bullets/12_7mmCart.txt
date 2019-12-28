@@ -1,4 +1,0 @@
-ObjModel,12_7mm_Cart.mqo
-ObjTexture,12_7mmbullet&Cart.png
-Objscale,1
-Name,12_7mmCart

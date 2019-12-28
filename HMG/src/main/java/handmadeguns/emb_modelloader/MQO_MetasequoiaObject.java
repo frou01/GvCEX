@@ -162,82 +162,57 @@ public class MQO_MetasequoiaObject implements IModelCustom
 	}
 
 
-//	public void renderAllLine(int startLine, int maxLine)
-//	{
-//		Tessellator tessellator = Tessellator.instance;
-//
-//		tessellator.startDrawing(1);
-//
-//		renderAllLine(tessellator, startLine, maxLine);
-//
-//		tessellator.draw();
-//	}
-//
-//	public void renderAllLine(Tessellator tessellator, int startLine, int maxLine)
-//	{
-//		int lineCnt = 0;
-//		for (MQO_GroupObject groupObject : groupObjects)
-//		{
-//			if (groupObject.faces.size() > 0)
-//			{
-//				for (MQO_Face face : groupObject.faces)
-//				{
-//					for (int i = 0; i < face.vertices.length/3; ++i)
-//					{
-//						MQO_Vertex v1 = face.vertices[i*3 + 0];
-//						MQO_Vertex v2 = face.vertices[i*3 + 1];
-//						MQO_Vertex v3 = face.vertices[i*3 + 2];
-//
-//						lineCnt++;
-//						if(lineCnt > maxLine) return;
-//						tessellator.addVertex(v1.x, v1.y, v1.z);
-//						tessellator.addVertex(v2.x, v2.y, v2.z);
-//
-//						lineCnt++;
-//						if(lineCnt > maxLine) return;
-//						tessellator.addVertex(v2.x, v2.y, v2.z);
-//						tessellator.addVertex(v3.x, v3.y, v3.z);
-//
-//						lineCnt++;
-//						if(lineCnt > maxLine) return;
-//						tessellator.addVertex(v3.x, v3.y, v3.z);
-//						tessellator.addVertex(v1.x, v1.y, v1.z);
-//					}
-//				}
-//			}
-//		}
-//	}
+	public void renderAllLine(int startLine, int maxLine)
+	{
+		Tessellator tessellator = Tessellator.instance;
 
-//	public void renderAll(int startFace, int maxFace)
-//	{
-//		if(startFace < 0) startFace = 0;
-//
-//		Tessellator tessellator = Tessellator.instance;
-//
-//		tessellator.startDrawing(GL11.GL_TRIANGLES);
-//
-//		renderAll(tessellator, startFace, maxFace);
-//
-//		tessellator.draw();
-//	}
-//
-//	public void renderAll(Tessellator tessellator, int startFace, int maxLine)
-//	{
-//		int faceCnt = 0;
-//		for (MQO_GroupObject groupObject : groupObjects)
-//		{
-//			if (groupObject.faces.size() > 0)
-//			{
-//				for (MQO_Face face : groupObject.faces)
-//				{
-//					faceCnt++;
-//					if(faceCnt < startFace) continue;
-//					if(faceCnt > maxLine) return;
-//					face.addFaceForRender(tessellator);
-//				}
-//			}
-//		}
-//	}
+		tessellator.startDrawing(1);
+
+		renderAllLine(tessellator, startLine, maxLine);
+
+		tessellator.draw();
+	}
+
+	public void renderAllLine(Tessellator tessellator, int startLine, int maxLine)
+	{
+		int lineCnt = 0;
+		for (MQO_GroupObject groupObject : groupObjects)
+		{
+			if (groupObject.faces[0].size() > 0)
+			{
+				for (Object obj : groupObject.faces[0])
+				{
+					MQO_Face face = (MQO_Face) obj;
+					for (int i = 0; i < face.vertices.length/3; ++i)
+					{
+						MQO_Vertex v1 = face.vertices[i*3 + 0];
+						MQO_Vertex v2 = face.vertices[i*3 + 1];
+						MQO_Vertex v3 = face.vertices[i*3 + 2];
+
+						lineCnt++;
+						if(lineCnt > maxLine) return;
+						tessellator.addVertex(v1.x, v1.y, v1.z);
+						tessellator.addVertex(v2.x, v2.y, v2.z);
+
+						lineCnt++;
+						if(lineCnt > maxLine) return;
+						tessellator.addVertex(v2.x, v2.y, v2.z);
+						tessellator.addVertex(v3.x, v3.y, v3.z);
+
+						lineCnt++;
+						if(lineCnt > maxLine) return;
+						tessellator.addVertex(v3.x, v3.y, v3.z);
+						tessellator.addVertex(v1.x, v1.y, v1.z);
+					}
+				}
+			}
+		}
+	}
+
+	public void renderAll(int startFace, int maxFace)
+	{
+		renderAll();
+	}
 
 
 
