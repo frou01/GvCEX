@@ -1,5 +1,6 @@
 package handmadeguns.client.render;
 
+import cpw.mods.fml.relauncher.ReflectionHelper;
 import handmadeguns.HandmadeGunsCore;
 import handmadeguns.event.RenderTickSmoothing;
 import handmadeguns.items.*;
@@ -16,11 +17,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.model.IModelCustom;
 import org.lwjgl.opengl.GL11;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 
@@ -248,6 +252,7 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 	int pass = 0;
 	@Override
 	public void renderItem(ItemRenderType type, ItemStack gunstack, Object... data) {
+
 		GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
 		GL11.glShadeModel(GL11.GL_SMOOTH);
 		GL11.glPushMatrix();

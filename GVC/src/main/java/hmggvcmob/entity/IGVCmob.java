@@ -12,7 +12,9 @@ public interface IGVCmob {
     boolean canSeeTarget(Entity target);
     boolean canhearsound(Entity target);
     default Vector3d getSeeingPosition(){
+        if(getAttackGun() != null)
         return getAttackGun().getSeeingPosition();
+        return null;
     }
     AIAttackGun getAttackGun();
 }

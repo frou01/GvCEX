@@ -16,7 +16,7 @@ public class HMVVehicleParts extends HMGGunParts {
 	private HMGGunParts_Motion_PosAndRotation peraPosAndRotation;
 	private HMGGunParts_Motions trackPositions = new HMGGunParts_Motions();
 	private HMGGunParts_Motion_PosAndRotation[] somethingPosAndRotation = new HMGGunParts_Motion_PosAndRotation[12];//x,y,z,z2,yaw,pitch,roll,gear,flap,brake,speed
-	private HMGGunParts_Motions[] somethingMotionKey = new HMGGunParts_Motions[12];//TODO å„ì˙é¿ëïÅI
+	private HMGGunParts_Motions[] somethingMotionKey = new HMGGunParts_Motions[12];
 	public boolean isTrack;
 	public boolean isPera;
 	

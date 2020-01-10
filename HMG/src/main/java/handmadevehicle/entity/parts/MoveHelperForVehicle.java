@@ -259,8 +259,8 @@ public class MoveHelperForVehicle {
 						}
 //					if(targetpitch < 0 && istarget_onGround)targetpitch = 0;
 						if (!istarget_onGround) {
-							handle_Yaw(AngulardifferenceYaw, targetpitch, alt);
 							pitchHandle_considerYaw(targetpitch, AngulardifferenceYaw,AngulardifferenceYaw > 0);
+							handle_Yaw(AngulardifferenceYaw, targetpitch, alt);
 							if(prefab_vehicle.type_F_Plane_T_Heli)
 								rollHandle(0);
 						} else {
@@ -836,7 +836,7 @@ public class MoveHelperForVehicle {
 	}
 	public float rollSens = 2;
 	public void rollHandle(double targetRoll){
-		targetRoll += baseLogic.localMotionVec.x*10;
+		if(prefab_vehicle.type_F_Plane_T_Heli)targetRoll += baseLogic.localMotionVec.x*10;
 		double AngulardifferenceRoll = baseLogic.bodyrotationRoll - targetRoll;
 		double amount = abs(AngulardifferenceRoll)/rollSens;
 		if(amount>16)amount = 16;

@@ -8,6 +8,7 @@ package handmadeguns;
 
 import java.io.*;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.nio.channels.FileChannel;
 import java.util.*;
 
@@ -18,6 +19,7 @@ import cpw.mods.fml.common.discovery.ModCandidate;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
+import cpw.mods.fml.relauncher.ReflectionHelper;
 import handmadeguns.blocks.HMGBlockMounter;
 import handmadeguns.command.HMG_CommandReloadparm;
 import handmadeguns.entity.*;
@@ -28,6 +30,8 @@ import handmadeguns.event.RenderTickSmoothing;
 import handmadeguns.items.HMGItemBullet;
 import handmadeguns.items.guns.HMGItem_Unified_Guns;
 import net.minecraft.block.Block;
+import net.minecraftforge.client.ForgeHooksClient;
+import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.model.ModelFormatException;
 import org.apache.commons.io.FileUtils;
 
@@ -371,7 +375,9 @@ public class HandmadeGunsCore {
 					System.out.println("Loaded content pack resource : " + file.getName());
 				}
 			}
-			if(isClient)Minecraft.getMinecraft().refreshResources();
+			if(isClient){
+				Minecraft.getMinecraft().refreshResources();
+			}
 			Arrays.sort(packlist);
 			for (File apack : packlist) {
 				if (apack.isDirectory()) {

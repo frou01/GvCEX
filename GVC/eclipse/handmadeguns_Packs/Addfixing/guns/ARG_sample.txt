@@ -16,7 +16,7 @@ Texture,AR_sample
 GunSound,handmadeguns.fire,handmadeguns.supu
 GunSoundReload,handmadeguns.reload
 CanObj,true
-ObjModel,gatlinggun.obj
+ObjModel,gatlinggun.mqo
 ObjTexture,gatlinggun.png
 ModelScala,0.5f
 

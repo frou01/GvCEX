@@ -20,7 +20,7 @@ public class Prefab_AttachedWeapon {
 		turretObjs_all[nonprimitiveID[0]] = current;
 		nonprimitiveID[0]++;
 		current.linkedGunStackID = linkedGunStackID;
-		current.motherRotCenter = new Vector3d(motherEntity.getBaseLogic().prefab_vehicle.rotcenter);
+		current.motherRotCenter = motherEntity.getBaseLogic().prefab_vehicle.rotcenterVec;
 		current.onMotherPos = turretsPos;
 		if(prefab_turret.useVehicleInventory){
 			current.connectedInventory = motherEntity.getBaseLogic().inventoryVehicle;

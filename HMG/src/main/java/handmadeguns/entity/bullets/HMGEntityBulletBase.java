@@ -48,6 +48,7 @@ import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Quat4d;
 import javax.vecmath.Vector3d;
 
+import static handmadeguns.HMGAddBullets.soundRicochetlist;
 import static handmadeguns.HMGAddBullets.soundlist;
 import static handmadeguns.HandmadeGunsCore.*;
 import static handmadeguns.Util.Utils.getmovingobjectPosition_forBlock;
@@ -397,9 +398,9 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
         if(worldObj.isRemote && !isDead){
             if(trail) {
                 PacketSpawnParticle packetSpawnParticle = new PacketSpawnParticle(lastTickPosX, lastTickPosY, lastTickPosZ,
-                                                                                         posX - lastTickPosX,
-                                                                                         posY - lastTickPosY,
-                                                                                         posZ - lastTickPosZ, 3);
+                                                                                         posX,
+                                                                                         posY,
+                                                                                         posZ, 3);
                 packetSpawnParticle.trailwidth = trailWidth;
                 packetSpawnParticle.name = trailtexture;
                 packetSpawnParticle.fuse = traillength;
@@ -622,7 +623,7 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
                 if(tempsoundinfo != null) {
                     flyingSoundInfo = tempsoundinfo;
                 }
-                SoundInfo tempSoundRicochet = soundlist.get(modelid);
+                SoundInfo tempSoundRicochet = soundRicochetlist.get(modelid);
                 if(tempSoundRicochet != null) {
                     ricochetSoundInfo = tempSoundRicochet;
                 }
@@ -1041,7 +1042,7 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
             Vector3d PredictedTargetPos =
             LinePrediction(new Vector3d(this.posX,this.posY,this.posZ),
                     new Vector3d(homingEntity.posX, homingEntity.posY + (homingEntity.height/2), homingEntity.posZ),
-                    new Vector3d(homingEntity.motionX, homingEntity.motionY, homingEntity.motionZ),
+                    new Vector3d(homingEntity.motionX - this.motionX, homingEntity.motionY - this.motionY, homingEntity.motionZ - this.motionZ),
                     this.getTerminalspeed());
             towardToPos(PredictedTargetPos.x,
                     PredictedTargetPos.y,

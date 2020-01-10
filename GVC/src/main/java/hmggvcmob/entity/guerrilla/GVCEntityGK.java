@@ -73,6 +73,7 @@ public class GVCEntityGK extends EntityGBase implements IIRVING
 		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true));
 		this.jumpCycle3 = 120;
 		canuseAlreadyPlacedGun = false;
+		canuseVehicle = false;
 	}
 
 

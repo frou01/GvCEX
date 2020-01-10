@@ -27,6 +27,8 @@ public class AddNewVehicle extends HMGGunMaker {
 	private static final HashMap<String,Prefab_Vehicle_Base> prefabBaseHashMap = new HashMap<>();
 	private static Prefab_Vehicle_Base currentVehicleData;
 	public void load( boolean isClient, File file){
+		String str_Debug = null;
+		int l = 0;
 		try {
 			String dataName = null;
 			currentVehicleData = new Prefab_Vehicle_Base();
@@ -43,10 +45,12 @@ public class AddNewVehicle extends HMGGunMaker {
 				String str = "";
 				String str_line = "";
 				while((str_line = br.readLine()) != null) {
+					l++;
 					str = str.concat(str_line);
 					//System.out.println(str);
 					if(str.contains(";")) {
 						str = str.concat(" ");
+						str_Debug = str;
 						String[] str_temp = str.split(";");
 						for(String a_calm:str_temp) {
 							str = a_calm;
@@ -98,9 +102,6 @@ public class AddNewVehicle extends HMGGunMaker {
 									break;
 								case "floatOnWater":
 									currentVehicleData.floatOnWater = parseBoolean(type[1]);
-									break;
-								case "thirdDist":
-									currentVehicleData.thirdDist = parseFloat(type[1]);
 									break;
 								case "splashsound":
 									currentVehicleData.splashsound = type[1];
@@ -247,6 +248,8 @@ public class AddNewVehicle extends HMGGunMaker {
 			
 			}
 		} catch (Exception e){
+			System.out.println("Failed in Line " + l);
+			System.out.println("" + str_Debug);
 			e.printStackTrace();
 		}
 	}

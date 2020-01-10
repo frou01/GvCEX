@@ -1,3 +1,0 @@
-name,VehicleWeapons
-Icon,HandmadeGuns:R-3
-End

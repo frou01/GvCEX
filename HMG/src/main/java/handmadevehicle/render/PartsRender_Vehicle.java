@@ -349,14 +349,15 @@ public class PartsRender_Vehicle extends PartsRender {
 			if (gunrender instanceof HMGRenderItemGun_U_NEW) {
 				GL11.glScalef(0.5f, 0.5f, 0.5f);
 				HMGRenderItemGun_U_NEW.isPlacedGun = true;
-				HMGRenderItemGun_U_NEW.turretYaw = (float) -(turretObj.prevturretrotationYaw);
-				HMGRenderItemGun_U_NEW.turretPitch = (float) (turretObj.prevturretrotationPitch);
+				HMGRenderItemGun_U_NEW.turretYaw = (float) -(turretObj.prevturretrotationYaw +
+						(turretObj.turretrotationYaw - turretObj.prevturretrotationYaw) * smooth);
+				HMGRenderItemGun_U_NEW.turretPitch = (float) (turretObj.prevturretrotationPitch +
+						(turretObj.turretrotationPitch - turretObj.prevturretrotationPitch) * smooth);
 
 				gunrender.renderItem(IItemRenderer.ItemRenderType.ENTITY, gunStack);
 
 				HMGRenderItemGun_U_NEW.isPlacedGun = false;
 			} else if (gunrender instanceof HMGRenderItemGun_U) {
-				//base は matbase を利用してそれらしく描画可能
 				GL11.glScalef(0.5f, 0.5f, 0.5f);
 				GL11.glRotatef((float) -(turretObj.prevturretrotationYaw +
 						(turretObj.turretrotationYaw - turretObj.prevturretrotationYaw) * smooth), 0.0F, 1.0F, 0.0F);

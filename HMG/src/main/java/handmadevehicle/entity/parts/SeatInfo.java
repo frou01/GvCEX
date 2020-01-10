@@ -30,5 +30,6 @@ public class SeatInfo {
     public int currentWeaponMode = 0;
     public TurretObj subgun;
     public Vector3d currentSeatOffset_fromV = new Vector3d();
+    public Vector3d prevSeatOffset_fromV = new Vector3d();
 
 }

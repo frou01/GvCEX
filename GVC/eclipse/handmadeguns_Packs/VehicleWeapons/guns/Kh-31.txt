@@ -15,7 +15,7 @@ ObjTexture,kh-31.png
 ModelScala,0.5f
 GunSound,handmadeguns.null,handmadeguns.null
 GunSoundReload,handmadeguns.null
-Weight,200
+Weight,610
 
 BulletNameALL,Kh-31AGM
 

@@ -42,10 +42,8 @@ public class TurretSyncData {
 		childAndBrotherNum = id;
 	}
 	public void setTurretData(TurretObj target){
-		target.prevturretrotationYaw = target.turretrotationYaw;
-		target.prevturretrotationPitch = target.turretrotationPitch;
-		target.turretrotationYaw = yaw;
-		target.turretrotationPitch = pitch;
+		target.targetTurretrotationYaw = yaw;
+		target.targetTurretrotationPitch = pitch;
 		if(target.gunStack != null) {
 			target.gunStack.setTagCompound(gunState);
 			target.gunStack.setItemDamage(gunDamaged);

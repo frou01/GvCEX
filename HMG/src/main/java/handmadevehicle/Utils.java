@@ -472,9 +472,9 @@ public class Utils {
     }
     public static Vector3d vector_interior_division(Vector3d var1,Vector3d var2,double coefficient) {
         Vector3d returnvec = new Vector3d();
-        returnvec.x = var1.x * (1 - abs(coefficient)) + var2.x * coefficient;
-        returnvec.y = var1.y * (1 - abs(coefficient)) + var2.y * coefficient;
-        returnvec.z = var1.z * (1 - abs(coefficient)) + var2.z * coefficient;
+        returnvec.x = var1.x * (1 - coefficient) + var2.x * coefficient;
+        returnvec.y = var1.y * (1 - coefficient) + var2.y * coefficient;
+        returnvec.z = var1.z * (1 - coefficient) + var2.z * coefficient;
         return returnvec;
     }
 

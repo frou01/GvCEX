@@ -1327,6 +1327,8 @@ public class HMGGunMaker {
 
 	//TODO:INJECTING
 	public static void addRecipe(File file1){
+		String str_Debug = null;
+		int l = 0;
 		boolean[] onslot = {false,false,false,false,false,false,false,false,false};
 		Item[] items = new Item[9];
 		ItemStack[] itemstacks = new ItemStack[9];
@@ -1341,6 +1343,8 @@ public class HMGGunMaker {
 
 				String str;
 				while ((str = br.readLine()) != null){
+					str_Debug = str;
+					l++;
 					String[] type = str.split(",");
 					int index;
 					if(type[0] == null){
@@ -1475,6 +1479,8 @@ public class HMGGunMaker {
 				br.close();
 			}
 		}catch(FileNotFoundException e){
+			System.out.println("Failed in Line " + l);
+			System.out.println("" + str_Debug);
 			e.printStackTrace();
 		}catch(IOException e){
 			e.printStackTrace();

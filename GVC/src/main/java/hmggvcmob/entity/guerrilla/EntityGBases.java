@@ -63,6 +63,7 @@ public class EntityGBases extends EntityMob implements IflagBattler,IGVCmob, IFF
     int placing;
     boolean canuseAlreadyPlacedGun = true;
     boolean canusePlacedGun = true;
+    boolean canuseVehicle = true;
     public String summoningVehicle;//nullは無し。自然湧きはLivingSpawnEvent.SpecialSpawnで設定する
     public static VehicleSpawnGachaOBJ[] vehicleSpawnGachaOBJ;
     public static int vehilceGacha_rate_sum;
@@ -662,7 +663,7 @@ public class EntityGBases extends EntityMob implements IflagBattler,IGVCmob, IFF
                     if (entity.canBePushed()) {
                         this.collideWithEntity(entity);
                     }
-                    if (this.ridingEntity == null && !entity.isDead) {
+                    if (canuseVehicle && this.ridingEntity == null && !entity.isDead) {
                         if (entity instanceof EntityVehicle && ((EntityVehicle) entity).canUseByMob) {
                             Entity pilot = ((EntityVehicle) entity).getBaseLogic().getRiddenEntityList()[((EntityVehicle) entity).getpilotseatid()];
                             if ((pilot == null || is_this_entity_friend(pilot)) && !((EntityVehicle) entity).getBaseLogic().isRidingEntity(this)) {

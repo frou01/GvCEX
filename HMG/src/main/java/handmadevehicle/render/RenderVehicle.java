@@ -73,7 +73,7 @@ public class RenderVehicle extends Render {
 			GL11.glTranslatef((float) p_76986_2_, (float) p_76986_4_, (float) p_76986_6_);
 			GL11.glRotatef(180F, 0.0F, 1.0F, 0.0F);
 			GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-			GL11.glTranslatef((float) currentBaseLogic.prefab_vehicle.rotcenter[0], (float) currentBaseLogic.prefab_vehicle.rotcenter[1], (float) currentBaseLogic.prefab_vehicle.rotcenter[2]);
+			GL11.glTranslatef((float) currentBaseLogic.prefab_vehicle.rotcenterVec.x, (float) currentBaseLogic.prefab_vehicle.rotcenterVec.y, (float) currentBaseLogic.prefab_vehicle.rotcenterVec.z);
 			
 			Quat4d currentquat = new Quat4d();
 			currentquat.interpolate(currentBaseLogic.prevbodyRot,currentBaseLogic.bodyRot, (double) partialTicks);
@@ -85,14 +85,13 @@ public class RenderVehicle extends Render {
 			GL11.glRotatef(180 - (float)xyz[1], 0.0F, 1.0F, 0.0F);
 			GL11.glRotatef((float) xyz[0], 1.0F, 0.0F, 0.0F);
 			GL11.glRotatef((float) xyz[2], 0.0F, 0.0F, 1.0F);
-			GL11.glTranslatef(-(float) currentBaseLogic.prefab_vehicle.rotcenter[0], -(float) currentBaseLogic.prefab_vehicle.rotcenter[1], -(float) currentBaseLogic.prefab_vehicle.rotcenter[2]);
-
+			GL11.glTranslatef((float)-currentBaseLogic.prefab_vehicle.rotcenterVec.x, (float)-currentBaseLogic.prefab_vehicle.rotcenterVec.y, (float)-currentBaseLogic.prefab_vehicle.rotcenterVec.z);
 
 			Vector3d nowPos = new Vector3d();
 			nowPos.interpolate(new Vector3d(currentEntity.prevPosX ,
 					currentEntity.prevPosY,
 					currentEntity.prevPosZ),new Vector3d(currentEntity.posX,currentEntity.posY,currentEntity.posZ),in_partialTicks);
-			currentBaseLogic.riderPosUpdate_forRender_withoutPlayer(nowPos,currentquat);
+			currentBaseLogic.riderPosUpdate_forRender_withoutPlayer(nowPos,currentquat,partialTicks);
 			GL11.glPushMatrix();
 			GL11.glScalef((float) currentBaseLogic.prefab_vehicle.scale, (float) currentBaseLogic.prefab_vehicle.scale, (float) currentBaseLogic.prefab_vehicle.scale);
 			if(currentBaseLogic.prefab_vehicle.partslist != null){

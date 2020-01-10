@@ -49,6 +49,8 @@ public class TurretObj implements HasLoopSound{
     
     public double turretrotationYaw;
     public double turretrotationPitch;
+    public double targetTurretrotationYaw;
+    public double targetTurretrotationPitch;
     public double prevturretrotationYaw;
     public double prevturretrotationPitch;
     
@@ -122,7 +124,9 @@ public class TurretObj implements HasLoopSound{
             global = transformVecByQuat(global, turretyawrot);
             global.add(gunItem.gunInfo.posGetter.turretYawCenterpos);
         }
+        global.sub(motherRotCenter);
         global = transformVecByQuat(global, motherRot);
+        global.add(motherRotCenter);
 //        Vector3d transformedVecYawCenter;
 //        Vector3d transformedVecPitchCenter;
 //        {
@@ -239,7 +243,7 @@ public class TurretObj implements HasLoopSound{
 
     public Vector3d seatVec(){
         double[] sightingpos = gunItem.getSeatpos(gunStack);
-        Vector3d vec =new Vector3d(sightingpos[0],sightingpos[1],sightingpos[2]);
+        Vector3d vec =new Vector3d(-sightingpos[0],sightingpos[1],sightingpos[2]);
         if(gunItem.gunInfo.userOnBarrel) {
             vec.sub(gunItem.gunInfo.posGetter.turretPitchCenterpos);
             RotateVectorAroundX(vec,-turretrotationPitch);
@@ -258,7 +262,7 @@ public class TurretObj implements HasLoopSound{
             local.add(this.motherPos);
         }else {
             local.sub(this.motherRotCenter);
-            local = transformVecByQuat(new Vector3d(local), motherRot);
+            local = transformVecByQuat(local, motherRot);
             local.add(this.motherRotCenter);
             local.add(this.motherPos);
         }
@@ -326,7 +330,7 @@ public class TurretObj implements HasLoopSound{
         temp.inverse();
         lookVec = transformVecByQuat(lookVec,temp);
         
-        return turretMove(toDegrees(atan2(lookVec.x,lookVec.z)) , toDegrees(asin(lookVec.y)));
+        return setTurretTarget(toDegrees(atan2(lookVec.x,lookVec.z)) , toDegrees(asin(lookVec.y)));
     }
     
     public void lock(){
@@ -423,54 +427,59 @@ public class TurretObj implements HasLoopSound{
         return true;
     }
     
-    public boolean turretMove(double targetyaw, double targetpitch){
+    public boolean setTurretTarget(double targetyaw, double targetpitch){
+        targetTurretrotationYaw = targetyaw;
+        targetTurretrotationPitch = targetpitch;
+        return readyaim;
+    }
+    public void moveTurret(){
         if(gunItem != null) {
-            targetyaw = wrapAngleTo180_double(targetyaw);
-            targetpitch = wrapAngleTo180_double(targetpitch);
+            targetTurretrotationYaw = wrapAngleTo180_double(targetTurretrotationYaw);
+            targetTurretrotationPitch = wrapAngleTo180_double(targetTurretrotationPitch);
             turretrotationYaw = wrapAngleTo180_double(turretrotationYaw);
             turretrotationPitch = wrapAngleTo180_double(turretrotationPitch);
             boolean inrange = true;
             if (gunItem.gunInfo.turretanglelimtPitchMax != gunItem.gunInfo.turretanglelimtPitchmin) {
-                if (targetpitch > gunItem.gunInfo.turretanglelimtPitchMax) {
-                    targetpitch = gunItem.gunInfo.turretanglelimtPitchMax;
+                if (targetTurretrotationPitch > gunItem.gunInfo.turretanglelimtPitchMax) {
+                    targetTurretrotationPitch = gunItem.gunInfo.turretanglelimtPitchMax;
                     inrange = false;
-                } else if (targetpitch < gunItem.gunInfo.turretanglelimtPitchmin) {
-                    targetpitch = gunItem.gunInfo.turretanglelimtPitchmin;
+                } else if (targetTurretrotationPitch < gunItem.gunInfo.turretanglelimtPitchmin) {
+                    targetTurretrotationPitch = gunItem.gunInfo.turretanglelimtPitchmin;
                     inrange = false;
                 }
             } else {
-                targetpitch = gunItem.gunInfo.turretanglelimtPitchmin;
+                targetTurretrotationPitch = gunItem.gunInfo.turretanglelimtPitchmin;
             }
             if (gunItem.gunInfo.turretanglelimtYawMax != gunItem.gunInfo.turretanglelimtYawmin) {
                 if (gunItem.gunInfo.turretanglelimtYawMax < gunItem.gunInfo.turretanglelimtYawmin) {
-                    if (targetyaw < 0 && targetyaw > gunItem.gunInfo.turretanglelimtYawMax) {
-                        targetyaw = gunItem.gunInfo.turretanglelimtYawMax;
+                    if (targetTurretrotationYaw < 0 && targetTurretrotationYaw > gunItem.gunInfo.turretanglelimtYawMax) {
+                        targetTurretrotationYaw = gunItem.gunInfo.turretanglelimtYawMax;
                         inrange = false;
-                    } else if (targetyaw > 0 && targetyaw < gunItem.gunInfo.turretanglelimtYawmin) {
-                        targetyaw = gunItem.gunInfo.turretanglelimtYawmin;
+                    } else if (targetTurretrotationYaw > 0 && targetTurretrotationYaw < gunItem.gunInfo.turretanglelimtYawmin) {
+                        targetTurretrotationYaw = gunItem.gunInfo.turretanglelimtYawmin;
                         inrange = false;
                     }
                 } else {
-                    if (targetyaw > gunItem.gunInfo.turretanglelimtYawMax) {
-                        targetyaw = gunItem.gunInfo.turretanglelimtYawMax;
+                    if (targetTurretrotationYaw > gunItem.gunInfo.turretanglelimtYawMax) {
+                        targetTurretrotationYaw = gunItem.gunInfo.turretanglelimtYawMax;
                         inrange = false;
-                    } else if (targetyaw < gunItem.gunInfo.turretanglelimtYawmin) {
-                        targetyaw = gunItem.gunInfo.turretanglelimtYawmin;
+                    } else if (targetTurretrotationYaw < gunItem.gunInfo.turretanglelimtYawmin) {
+                        targetTurretrotationYaw = gunItem.gunInfo.turretanglelimtYawmin;
                         inrange = false;
                     }
                 }
             } else {
-                targetyaw = gunItem.gunInfo.turretanglelimtYawmin;
+                targetTurretrotationYaw = gunItem.gunInfo.turretanglelimtYawmin;
             }
-            if (gunItem.gunInfo.turretspeedY == -1) turretrotationYaw = targetyaw;
-            if (gunItem.gunInfo.turretspeedP == -1) turretrotationPitch = targetpitch;
+            if (gunItem.gunInfo.turretspeedY == -1) turretrotationYaw = targetTurretrotationYaw;
+            if (gunItem.gunInfo.turretspeedP == -1) turretrotationPitch = targetTurretrotationPitch;
 
 
             boolean result1 = false;
             if (gunItem.gunInfo.turretspeedY > 0) {
-                double AngulardifferenceYaw = targetyaw - this.turretrotationYaw;
+                double AngulardifferenceYaw = targetTurretrotationYaw - this.turretrotationYaw;
                 AngulardifferenceYaw = wrapAngleTo180_double(AngulardifferenceYaw);
-                if (Double.isNaN(targetyaw)) AngulardifferenceYaw = 0;
+                if (Double.isNaN(targetTurretrotationYaw)) AngulardifferenceYaw = 0;
 
                 float out_rangeCenter_yaw = (gunItem.gunInfo.turretanglelimtYawMax + gunItem.gunInfo.turretanglelimtYawmin) / 2;
                 if (gunItem.gunInfo.turretanglelimtYawMax > gunItem.gunInfo.turretanglelimtYawmin)
@@ -499,8 +508,8 @@ public class TurretObj implements HasLoopSound{
 
             boolean result2 = false;
             if (gunItem.gunInfo.turretspeedP > 0) {
-                double AngulardifferencePitch = targetpitch - this.turretrotationPitch;
-                if (Double.isNaN(targetpitch)) AngulardifferencePitch = 0;
+                double AngulardifferencePitch = targetTurretrotationPitch - this.turretrotationPitch;
+                if (Double.isNaN(targetTurretrotationPitch)) AngulardifferencePitch = 0;
                 AngulardifferencePitch = wrapAngleTo180_double(AngulardifferencePitch);
 
                 if (AngulardifferencePitch > gunItem.gunInfo.turretspeedP) {
@@ -528,15 +537,15 @@ public class TurretObj implements HasLoopSound{
             if (prefab_turret.fireRists != null) {
                 for (FireRist afirRist : prefab_turret.fireRists) {
                     boolean temp = true;
-                    if (targetyaw > afirRist.YawMax) {
+                    if (targetTurretrotationYaw > afirRist.YawMax) {
                         temp = false;
-                    } else if (targetyaw < afirRist.YawMin) {
+                    } else if (targetTurretrotationYaw < afirRist.YawMin) {
                         temp = false;
                     }
 
-                    if (targetpitch > afirRist.PitchMax) {
+                    if (targetTurretrotationPitch > afirRist.PitchMax) {
                         temp = false;
-                    } else if (targetpitch < afirRist.PitchMin) {
+                    } else if (targetTurretrotationPitch < afirRist.PitchMin) {
                         temp = false;
                     }
                     canfire |= temp;
@@ -552,11 +561,13 @@ public class TurretObj implements HasLoopSound{
                 this.prevturretrotationYaw += 360.0F;
             }
 
-            return readyaim = result1 && result2 && inrange && canfire;
-        }else return false;
+            readyaim = result1 && result2 && inrange && canfire;
+        }
     }
     boolean isOnBarrel = false;
     public void calculatePos(){
+        Vector3d backUpMotherRotCenter = motherRotCenter;
+        motherRotCenter = new Vector3d();
         Vector3d tempOnMotherPos = new Vector3d(onMotherPos);
         if(gunItem != null)tempOnMotherPos.y += gunItem.gunInfo.yoffset;
         if(isOnBarrel) {
@@ -567,10 +578,12 @@ public class TurretObj implements HasLoopSound{
         else {
             this.pos = getGlobalVector_fromLocalVector_onMother(tempOnMotherPos);
         }
+        motherRotCenter = backUpMotherRotCenter;
     }
     public void update(Quat4d motherRot,Vector3d motherPos){
         prevturretrotationYaw = turretrotationYaw;
         prevturretrotationPitch = turretrotationPitch;
+        moveTurret();
         if(motherEntity instanceof HasBaseLogic) {
             connectedInventory = ((HasBaseLogic) motherEntity).getBaseLogic().inventoryVehicle;
         }

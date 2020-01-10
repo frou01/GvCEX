@@ -16,6 +16,7 @@ public class PacketSpawnParticle implements IMessage {
     public int fuse = 1;
     public float scale = 1;
     public int id;//
+    public float animationspeed = 1;//
     public boolean is3d;
     public float trailwidth;
     public PacketSpawnParticle(){ }
@@ -70,6 +71,7 @@ public class PacketSpawnParticle implements IMessage {
         this.id = buf.readInt();
         this.fuse = buf.readInt();
         this.scale = buf.readFloat();
+        this.animationspeed = buf.readFloat();
         this.is3d = buf.readBoolean();
         name = ByteBufUtils.readUTF8String(buf);
     }
@@ -85,6 +87,7 @@ public class PacketSpawnParticle implements IMessage {
         buf.writeInt(id);
         buf.writeInt(fuse);
         buf.writeFloat(scale);
+        buf.writeFloat(animationspeed);
         buf.writeBoolean(is3d);
         ByteBufUtils.writeUTF8String(buf,name);
     }

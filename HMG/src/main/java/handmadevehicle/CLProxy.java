@@ -79,6 +79,8 @@ public class CLProxy extends CMProxy {
 			ClientRegistry.registerKeyBinding(Yaw_Left);
 			ClientRegistry.registerKeyBinding(Yaw_Right);
 			ClientRegistry.registerKeyBinding(Throttle_Brake);
+			ClientRegistry.registerKeyBinding(RButton);
+			ClientRegistry.registerKeyBinding(LButton);
 			FMLClientHandler.instance().getClient().gameSettings.keyBindForward = new KeyBinding("key.forward", 17, "key.categories.movement");
 			FMLClientHandler.instance().getClient().gameSettings.keyBindLeft = new KeyBinding("key.left", 30, "key.categories.movement");
 			FMLClientHandler.instance().getClient().gameSettings.keyBindBack = new KeyBinding("key.back", 31, "key.categories.movement");
@@ -86,8 +88,6 @@ public class CLProxy extends CMProxy {
 			FMLClientHandler.instance().getClient().gameSettings.keyBindUseItem = new KeyBinding("key.use", -99, "key.categories.gameplay");
 			FMLClientHandler.instance().getClient().gameSettings.keyBindAttack = new KeyBinding("key.attack", -100, "key.categories.gameplay");
 			FMLClientHandler.instance().getClient().gameSettings.keyBindJump = new KeyBinding("key.jump", 57, "key.categories.movement");
-			ClientRegistry.registerKeyBinding(RButton);
-			ClientRegistry.registerKeyBinding(LButton);
 			ClientRegistry.registerKeyBinding(Flap.keyBinding);
 			ClientRegistry.registerKeyBinding(Air_Brake);
 			ClientRegistry.registerKeyBinding(Next_Seat.keyBinding);

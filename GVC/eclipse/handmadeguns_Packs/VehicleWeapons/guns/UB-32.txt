@@ -16,7 +16,7 @@ ObjTexture,UB-32.png
 ModelScala,0.5f
 GunSound,handmadeguns.null,handmadeguns.null
 GunSoundReload,handmadeguns.null
-Weight,80
+Weight,264
 
 BulletNameALL,S-5
 

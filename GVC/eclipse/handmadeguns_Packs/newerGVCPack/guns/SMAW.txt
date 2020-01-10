@@ -1,0 +1,69 @@
+BulletPower,200
+BulletSpeed,1.375
+BlletSpread,4.0f
+ADS_Spread_coefficient,0.5
+BlletSpreadDiffusion,3,0,0.3,0.2,2,0.1
+Acceleration,0.5f
+Recoil,2.0d
+ReloadTime,120
+RemainingBullet,1
+Attacking,2.0f
+Zoom,4.0f,4.0f,4.0f
+ZoomRender,true
+ZoomRenderType,false,false,false
+ZoomRenderTypeTxture,true,true,true
+Explosion,4.5f
+BlockDestory,true
+Texture,smaw
+GunSound,handmadeguns.missileLaunch,handmadeguns.missileLaunch
+GunSoundReload,handmadeguns.reload
+CanObj,true
+ObjModel,smaw.mqo
+ObjTexture,smaw.png
+ModelScala,0.5f
+
+Motion,0.6
+
+ModelEquipped,-0.7f,0.7f,1.0f
+ModelHigh,0.775f,0.50f,0.85f
+ModelWidthX,0.694f,0.694f,0.694f
+ModelWidthZ,0.8f,0.8f,0.8f
+ModelRotationX,180f,180f,180f
+ModelRotationY,45f,45f,45
+ModelRotationZ,180f,180f,180f
+
+ModelArm,true
+ModelArmRotationR,-1.57f,0,-1.57f
+ModelArmOffsetR,0.6f,0.3f,0.5f
+ModelArmRotationL,-0.0f,-2.3f,2.0f
+ModelArmOffsetL,0.1f,-0.2f,-1.2f
+SprintingPoint,-0.1f,0.0f,-0.1f
+SprintingRotation,20f,60f,0f
+
+BulletNameALL,byfrou01_Rocket
+//0307
+BulletGravity,0.02f
+
+ScopeTexture,scope_smaw.png,scope_smaw.png,scope_smaw.png
+RenderCross,false
+Induction_precision,10
+Canlock,true
+UnderBarrelWeapon,0
+RightType,0
+Magazine,0,HandmadeGuns,missile
+
+
+ReloadMotion
+{
+0,      0f ,0f,0f, -0.3f, -0.3f, 0f , 0f, 0f,0f,-0.2f, 1.2f , 4.2f, 0f, -1.27f, 0f,0f,0f, 0f, 0f, 0f,0f,0f,0f,-2f,-1f,0f, 0f, 0f, 0f, 0f, 0f
+1,     20f ,0f,0f, -0.3f, -0.3f, 0f , 0f, 0f,0f,-0.2f, 0.4f , 4.2f, 0f, -1.27f, 0f,0f,0f, 0f, 0f, 0f,0f,0f,0f,-1f,-1f,0f, 0f, 0f, 0f, 0f, 0f
+2,     40f ,0f,0f, -0.3f, -0.3f, 40f, 0f, 0f,0f,-0.2f, -1.0f, 4.2f, 0f, -1.27f, 0f,0f,0f, 0f, 0f, 0f,0f,0f,0f,0f ,-0.5f,0f, 0f, 0f, 0f, 0f, 0f
+3,     80f ,0f,0f, -0.3f, -0.3f, 40f, 0f, 0f,0f,0f   , 0f   , 1.5f, 0f, -1.27f, 0f,0f,0f, 0f, 0f, 0f,0f,0f,0f,0f ,0f ,0f, 0f, 0f, 0f, 0f, 0f
+4,     100f,0f,0f, -0.3f, -0.3f, 0f , 0f, 0f,1f,0f   , 0f   , 0f  , 0f, 0f    , 0f,0f,0f, 0f, 0f, 0f,0f,0f,0f,0f ,0f ,0f, 0f, 0f, 0f, 0f, 0f
+5,     120f,0f,0f, 0f   , 0f   , 0f , 0f, 0f,1f,0f   , 0f   , 0f  , 0f, 0f    , 0f,0f,0f, 0f, 0f, 0f,0f,0f,0f,0f ,0f ,0f, 0f, 0f, 0f, 0f, 0f
+}
+
+
+Tabname,HMG_GVCGuns
+Name,SMAW
+RR,SMAW

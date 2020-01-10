@@ -15,7 +15,7 @@ ObjTexture,9K114.png
 ModelScala,0.5f
 GunSound,handmadeguns.null,handmadeguns.null
 GunSoundReload,handmadeguns.null
-Weight,30
+Weight,31.4
 BulletNameALL,S-5
 
 Induction_precision,10

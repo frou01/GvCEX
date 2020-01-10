@@ -72,9 +72,32 @@ public class GVCItemPMCEgg extends Item
                 int var12 = MathHelper.floor_double((double)(par2EntityPlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
                 GVCEntityPMCRPG entityskeleton = new GVCEntityPMCRPG(par3World);
                 entityskeleton.setLocationAndAngles(par4+0.5, par5, par6+0.5, par2EntityPlayer.rotationYaw, 0.0F);
-                entityskeleton.setCurrentItemOrArmor(0, new ItemStack(GVCUtils.fn_smaw));
-                par3World.spawnEntityInWorld(entityskeleton);
+                entityskeleton.addRandomArmor();
                 --par1ItemStack.stackSize;
+                entityskeleton.onSpawnWithEgg(null);
+                par3World.spawnEntityInWorld(entityskeleton);
+                return true;
+            }else
+            if(this.mob == 4){
+                ++par5;
+                int var12 = MathHelper.floor_double((double)(par2EntityPlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+                GVCEntityPMCRPG entityskeleton = new GVCEntityPMCRPG(par3World);
+                entityskeleton.setLocationAndAngles(par4+0.5, par5, par6+0.5, par2EntityPlayer.rotationYaw, 0.0F);
+                --par1ItemStack.stackSize;
+                entityskeleton.summoningVehicle = "KPZ-70";
+                entityskeleton.onSpawnWithEgg(null);
+                par3World.spawnEntityInWorld(entityskeleton);
+                return true;
+            }else
+            if(this.mob == 5){
+                ++par5;
+                int var12 = MathHelper.floor_double((double)(par2EntityPlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+                GVCEntityPMCRPG entityskeleton = new GVCEntityPMCRPG(par3World);
+                entityskeleton.setLocationAndAngles(par4+0.5, par5, par6+0.5, par2EntityPlayer.rotationYaw, 0.0F);
+                --par1ItemStack.stackSize;
+                entityskeleton.summoningVehicle = "Mi-24";
+                entityskeleton.onSpawnWithEgg(null);
+                par3World.spawnEntityInWorld(entityskeleton);
                 return true;
             }else
             if(this.mob == 6){
@@ -85,6 +108,16 @@ public class GVCItemPMCEgg extends Item
                 par3World.spawnEntityInWorld(entityskeleton);
                 --par1ItemStack.stackSize;
                 return true;
+            }else if(this.mob == 7){
+                ++par5;
+                int var12 = MathHelper.floor_double((double)(par2EntityPlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+                GVCEntityPMCRPG entityskeleton = new GVCEntityPMCRPG(par3World);
+                entityskeleton.setLocationAndAngles(par4+0.5, par5, par6+0.5, par2EntityPlayer.rotationYaw, 0.0F);
+                --par1ItemStack.stackSize;
+                entityskeleton.summoningVehicle = "KPZ-70";
+                entityskeleton.onSpawnWithEgg(null);
+                par3World.spawnEntityInWorld(entityskeleton);
+                return true;
             }else if(this.mob == 8){
                 ++par5;
                 EntityMGAX55 entityskeleton = new EntityMGAX55(par3World);
@@ -92,6 +125,16 @@ public class GVCItemPMCEgg extends Item
                 entityskeleton.bodyrotationYaw = par2EntityPlayer.rotationYaw;
                 par3World.spawnEntityInWorld(entityskeleton);
                 --par1ItemStack.stackSize;
+                return true;
+            }else if(this.mob == 10) {
+                ++par5;
+                int var12 = MathHelper.floor_double((double)(par2EntityPlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+                GVCEntityPMCRPG entityskeleton = new GVCEntityPMCRPG(par3World);
+                entityskeleton.setLocationAndAngles(par4+0.5, par5, par6+0.5, par2EntityPlayer.rotationYaw, 0.0F);
+                --par1ItemStack.stackSize;
+                entityskeleton.summoningVehicle = "BMP-1";
+                entityskeleton.onSpawnWithEgg(null);
+                par3World.spawnEntityInWorld(entityskeleton);
                 return true;
             }else {
                 return false;

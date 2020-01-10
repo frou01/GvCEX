@@ -1,5 +1,0 @@
-Texture,bullet_sub_frag
-Stack,1
-Name,Frag Bullet
-BulletFrag,Bullet_Frag
-addRecipe,Bullet_Frag,2,ab0,de0,000,46,339,0,339,289,0,0,0,0

@@ -27,7 +27,6 @@ public class HMV_Event {
 					linkedBaseLogic.prefab_vehicle.
 					prefab_seats[((EntityDummy_rider) entity.ridingEntity).linkedSeatID]
 					.userProtect_maxDamageLevel;
-			System.out.println("userProtect" + userProtect);
 			if (userProtect < 0) {
 				if (entity instanceof EntityPlayer) {
 					event.ammount = 0;

@@ -153,7 +153,6 @@ public class HMVRenderSomeEvent {
 				}
 				{
 					if(entityplayer.ridingEntity instanceof IVehicle){
-						ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer, ((IVehicle) entityplayer.ridingEntity).getBaseLogic().prefab_vehicle.thirdDist, "thirdPersonDistance", "E", "field_78490_B");
 						needrest = true;
 						BaseLogic logic = ((IVehicle) entityplayer.ridingEntity).getBaseLogic();
 						Entity vehicleBody = entityplayer.ridingEntity;
@@ -242,7 +241,7 @@ public class HMVRenderSomeEvent {
 												vehicleBody.prevPosZ + (vehicleBody.posZ - vehicleBody.prevPosZ) * renderTickTime + cameraPos_Global.z,
 												(float) cameraxyz[1], (float) cameraxyz[0]);
 									}else {
-										logic.riderPosUpdate_camera(nowPos, currentquat);
+										logic.riderPosUpdate_camera(nowPos, currentquat,renderTickTime);
 //										logic.camera.setLocationAndAngles(
 //												entityplayer.posX,
 //												entityplayer.posY - entityplayer.yOffset,
@@ -272,7 +271,7 @@ public class HMVRenderSomeEvent {
 							vehicleBody.prevRotationPitch = (float) xyz[0];
 							logic.bodyrotationRoll = (float) xyz[2];
 							logic.prevbodyrotationRoll = (float) xyz[2];
-							ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer, 24, "thirdPersonDistance", "E", "field_78490_B");
+							ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer, logic.prefab_vehicle.thirdPersonDistance, "thirdPersonDistance", "E", "field_78490_B");
 							needrest = true;
 							
 						}
@@ -325,8 +324,8 @@ public class HMVRenderSomeEvent {
 				if(!logic.prefab_vehicle.T_Land_F_Plane ) {
 					Entity planebody = entityplayer.ridingEntity;
 					if (logic.prefab_vehicle.displayModernHud)
-						displayFlyersHUD_AftGen2(logic,logic.prevbodyRot, logic.bodyRot, planebody, logic.prevmotionVec, event);
-					else displayFlyersHUD(logic,logic.prevbodyRot, logic.bodyRot, planebody, logic.prevmotionVec, event);
+						displayFlyersHUD_AftGen2(logic,logic.prevbodyRot, logic.bodyRot, planebody, logic.forVapour_PrevMotionVec, event);
+					else displayFlyersHUD(logic,logic.prevbodyRot, logic.bodyRot, planebody, logic.forVapour_PrevMotionVec, event);
 //				Quat4d tempquat = new Quat4d(
 //						logic.prevbodyRot.x * (1-event.partialTicks) + logic.bodyRot.x * event.partialTicks ,
 //						logic.prevbodyRot.y * (1-event.partialTicks) + logic.bodyRot.y * event.partialTicks ,
@@ -423,7 +422,11 @@ public class HMVRenderSomeEvent {
 							if(playerSeatInfo.currentWeaponMode >= playerSeatInfo.maingun.length)playerSeatInfo.currentWeaponMode = 0;
 							TurretObj turretObj = playerSeatInfo.maingun[playerSeatInfo.currentWeaponMode];
 							turretObj = getActiveTurret(turretObj);
-							if(turretObj != null)displayGunState(turretObj,fontrenderer,i,j,240,60,"MAIN");
+							String name = "MAIN";
+							if(playerSeatInfo.maingun.length > 1){
+								name = name.concat("-"+playerSeatInfo.currentWeaponMode);
+							}
+							if(turretObj != null)displayGunState(turretObj,fontrenderer,i,j,240,60,name);
 						}
 						if (playerSeatInfo.subgun != null) {
 							TurretObj turretObj = playerSeatInfo.subgun;

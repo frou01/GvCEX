@@ -15,7 +15,7 @@ ObjTexture,R-3.png
 ModelScala,0.5f
 GunSound,handmadeguns.null,handmadeguns.null
 GunSoundReload,handmadeguns.null
-Weight,120
+Weight,80
 
 BulletNameALL,R-3AAM
 

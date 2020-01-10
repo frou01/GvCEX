@@ -93,7 +93,7 @@ public class ClientProxyHMG extends CommonSideProxyHMG {
 			modifiersField.setInt(stencilBits_F,
 					stencilBits_F.getModifiers() & ~Modifier.PRIVATE); // 更新対象アクセス用のFieldオブジェクトのmodifiersからprivateとfinalを外す。
 			stencilBits_F.set(null, 8);
-			System.out.println("" + MinecraftForgeClient.getStencilBits());
+			System.out.println("Debug stencil is " + MinecraftForgeClient.getStencilBits());
 //			net.minecraftforge.client.ForgeHooksClient.createDisplay();
 
 //			OpenGlHelper.initializeTextures();
@@ -468,9 +468,9 @@ public class ClientProxyHMG extends CommonSideProxyHMG {
 						break;
 					case 1:
 						var10.setParticleIcon(HMGParticles.getInstance().getIcon("handmadeguns:smoke"));
-						var10.motionX = message.motionX;
-						var10.motionY = message.motionY;
-						var10.motionZ = message.motionZ;
+						var10.thisMotionX = message.motionX;
+						var10.thisMotionY = message.motionY;
+						var10.thisMotionZ = message.motionZ;
 						var10.fuse = 5;
 						var10.animationspeed = 2;
 						var10.setIcon("handmadeguns:textures/items/smoke",10);
@@ -496,9 +496,9 @@ public class ClientProxyHMG extends CommonSideProxyHMG {
 						break;
 					case 3:
 						var10.setParticleIcon(HMGParticles.getInstance().getIcon("handmadeguns:smoke"));
-						var10.motionX = message.motionX;
-						var10.motionY = message.motionY;
-						var10.motionZ = message.motionZ;
+						var10.thisMotionX = message.motionX;
+						var10.thisMotionY = message.motionY;
+						var10.thisMotionZ = message.motionZ;
 						var10.fuse = message.fuse;
 						var10.animationspeed = 2;
 						var10.setIcon(trailtexture,10);
@@ -530,11 +530,10 @@ public class ClientProxyHMG extends CommonSideProxyHMG {
 			}else {
 				if(message.id % 100== 3 || message.id == 3){
 					var10.setParticleIcon(HMGParticles.getInstance().getIcon("handmadeguns:smoke"));
-					var10.motionX = message.motionX;
-					var10.motionY = message.motionY;
-					var10.motionZ = message.motionZ;
-					var10.fuse = 5;
-					var10.animationspeed = 2;
+					var10.thisMotionX = message.motionX;
+					var10.thisMotionY = message.motionY;
+					var10.thisMotionZ = message.motionZ;
+					var10.fuse = message.fuse;
 					var10.istrail = true;
 					var10.trailwidth = message.trailwidth;
 					var10.setIcon("handmadeguns:textures/items/" + message.name,10);
@@ -559,7 +558,12 @@ public class ClientProxyHMG extends CommonSideProxyHMG {
 					var10.is3d = message.is3d;
 				}
 			}
+
+			var10.prevPosX = message.posx;
+			var10.prevPosY = message.posy;
+			var10.prevPosZ = message.posz;
 			var10.isrenderglow = message.id/100 ==1;
+			var10.animationspeed = message.animationspeed;
 
 			FMLClientHandler.instance().getClient().effectRenderer.addEffect(var10);
 		} catch (ClassCastException e) {

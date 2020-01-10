@@ -15,7 +15,8 @@ ObjTexture,UPK-23.png
 ModelScala,0.5f
 GunSound,handmadeguns.23mmFire,handmadeguns.23mmFire
 GunSoundReload,handmadeguns.null
-Weight,30
+Weight,218
+BulletNameALL,byfrou01_GreenTracer
 
 NeedFix,true
 

@@ -548,9 +548,9 @@ Object "obj1" {
 	facet 59.5
 	color 0.898 0.498 0.698
 	color_type 0
-	HMGVertex 0 {
+	vertex 0 {
 	}
-	HMGFace 0 {
+	face 0 {
 	}
 }
 Eof
