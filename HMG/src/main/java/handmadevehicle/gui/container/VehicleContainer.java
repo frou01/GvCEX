@@ -1,5 +1,6 @@
 package handmadevehicle.gui.container;
 
+import handmadevehicle.entity.EntityDummy_rider;
 import handmadevehicle.entity.EntityVehicle;
 import handmadevehicle.inventory.InventoryVehicle;
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,9 +19,16 @@ public class VehicleContainer extends Container {
 	public int yoffset_Cargo;
 	public int yoffset_playerInventory;
 	public VehicleContainer(EntityPlayer player){
-		if(player.ridingEntity instanceof EntityVehicle) {
+		if(player.ridingEntity instanceof EntityDummy_rider) {
+			userInventory = player.inventory;
+			inventoryVehicle = ((EntityDummy_rider) player.ridingEntity).linkedBaseLogic.inventoryVehicle;
+		}else if(player.ridingEntity instanceof EntityVehicle){
 			userInventory = player.inventory;
 			inventoryVehicle = ((EntityVehicle) player.ridingEntity).getBaseLogic().inventoryVehicle;
+		}else {
+			System.out.println("failed:open vehicle Inventory by " + player);
+		}
+		if(userInventory != null && inventoryVehicle != null){
 
 			numRowsWeapon = inventoryVehicle.baseLogic.prefab_vehicle.weaponSlotNum / 9;
 			int raw;
@@ -72,8 +80,6 @@ public class VehicleContainer extends Container {
 			{
 				this.addSlotToContainer(new SlotModded(userInventory, line, 8 + line * 18, 161 + yoffset_playerInventory));
 			}
-		}else {
-			System.out.println("failed:open vehicle Inventory by " + player);
 		}
 	}
 	@Override

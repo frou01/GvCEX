@@ -12,7 +12,7 @@ advancedOpengl:false
 maxFps:60
 fboEnable:true
 difficulty:0
-fancyGraphics:true
+fancyGraphics:false
 ao:0
 clouds:true
 resourcePacks:[]
@@ -28,7 +28,7 @@ fullscreen:false
 enableVsync:true
 hideServerAddress:false
 advancedItemTooltips:false
-pauseOnLostFocus:true
+pauseOnLostFocus:false
 showCape:true
 touchscreen:false
 overrideWidth:0
@@ -85,16 +85,17 @@ key_key.hotbar.6:7
 key_key.hotbar.7:8
 key_key.hotbar.8:9
 key_key.hotbar.9:10
+key_throttle UP:0
+key_throttle Down:0
+key_Yaw Left:0
+key_Yaw Right:0
+key_Throttle Brake:0
+key_Fire1:0
+key_Fire2:0
 key_CannonCamera:44
-key_throttle UP:17
-key_throttle Down:31
-key_Yaw Left:30
-key_Yaw Right:32
-key_Throttle Brake:57
-key_Fire1:-99
-key_Fire2:-100
 key_Flap:33
 key_Air Brake:45
+key_Flare/Smoke:13
 key_Change to Next Seat:21
 key_Change to Previous Seat:35
 key_Pitch Up:23
@@ -104,6 +105,7 @@ key_Roll Left:36
 key_Weapon Mode:78
 key_Allow Entity to Ride:56
 key_Change Control:49
+key_Change to Easy/Normal Control:27
 key_Reset Camera Rotation:47
 key_Reload Config Settings:0
 key_Open Vehicle Gui:39
@@ -116,7 +118,7 @@ key_Fire AttachedGun:33
 key_ADS_Key:47
 key_Mode_Key:41
 key_Fix Gun:35
-soundCategory_master:0.34437087
+soundCategory_master:1.0
 soundCategory_music:0.0
 soundCategory_record:1.0
 soundCategory_weather:1.0

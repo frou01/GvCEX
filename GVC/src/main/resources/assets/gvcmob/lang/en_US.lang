@@ -65,7 +65,7 @@ item.defsetter.name=Command device
 
 tile.BaseFlagBlock.name=Flag of Soldiers
 tile.GuerrillaBaseFlagBlock.name=Flag of Guerrillas
-tile.SupplyFlagBlock.name=Supply Beacon
+tile.SupplyFlagBlock.name=Flag of Player
 
 achievement.No_place_to_HIDE=No place to HIDE
 achievement.killedGuerrilla=providence

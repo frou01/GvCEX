@@ -5,6 +5,7 @@ public class TrailInfo {
     public float   trailProbability   = 0.2f;
     public int     traillength          = 3;
     public float   trailWidth         = 0.2f;
+    public float   animationspeed         = 1;
     public String  trailtexture      = null;
     public String  smoketexture      = null;
     public float   smokeWidth         = 1f;
@@ -12,7 +13,7 @@ public class TrailInfo {
     public boolean  trailglow      = true;
     public boolean  smokeglow      = true;
 
-    public TrailInfo(boolean enable,float prob,int length,float width,String texture,String smoke,float smokeW,int smoketime,boolean trailglow,boolean smokeglow){
+    public TrailInfo(boolean enable,float prob,int length,float width,String texture,String smoke,float smokeW,int smoketime,boolean trailglow,boolean smokeglow,float animationspeed){
         this.enabletrai = enable;
         this.trailProbability = prob;
         this.traillength = length;
@@ -23,5 +24,6 @@ public class TrailInfo {
         this.smoketime = smoketime;
         this.trailglow = trailglow;
         this.smokeglow = smokeglow;
+        this.animationspeed = animationspeed;
     }
 }

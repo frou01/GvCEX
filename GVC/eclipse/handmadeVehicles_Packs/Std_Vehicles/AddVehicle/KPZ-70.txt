@@ -8,12 +8,13 @@ LandPreset;
 soundpitch,1;
 throttle_Max,5;
 throttle_min,-3;
-yawspeed_ground,2;
+yawspeed_ground,1.25;
 speedfactor_onGround,0.14;
 torque_ground,0.7;
 forced_rudder_effect_OnGround,0.2;
 rotmotion_reduceSpeed,0.1;
 recoilResist,40000;
+brakefactor_ground,0.3;
 
 ParentWeapons_NUM,1;
 AllWeapons_NUM,2;

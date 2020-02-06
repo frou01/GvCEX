@@ -9,6 +9,7 @@ import handmadevehicle.network.HMVPacketHandler;
 import handmadevehicle.network.packets.HMVPacketOpenVehicleGui;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.DamageSource;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 
 import static handmadevehicle.HMVehicle.HMV_Proxy;
@@ -23,6 +24,11 @@ public class HMV_Event {
 		EntityLivingBase entity = event.entityLiving;
 
 		if ((entity != null && entity.ridingEntity instanceof EntityDummy_rider)) {
+			if(event.source.isExplosion()){
+				event.ammount = 0;
+				event.setCanceled(true);
+				return;
+			}
 			float userProtect = ((EntityDummy_rider) entity.ridingEntity).
 					linkedBaseLogic.prefab_vehicle.
 					prefab_seats[((EntityDummy_rider) entity.ridingEntity).linkedSeatID]
@@ -44,8 +50,8 @@ public class HMV_Event {
 		if (HMV_Proxy.reloadConfigclick()) {
 			loadConfig();
 		}
-		if (HMV_Proxy.openGUIKeyDown() && HMV_Proxy.getEntityPlayerInstance() != null && HMV_Proxy.getEntityPlayerInstance().ridingEntity !=null) {
-			HMVPacketHandler.INSTANCE.sendToServer(new HMVPacketOpenVehicleGui(0,HMV_Proxy.getEntityPlayerInstance().getEntityId(),HMV_Proxy.getEntityPlayerInstance().ridingEntity.getEntityId()));
-		}
+//		if (HMV_Proxy.openGUIKeyDown() && HMV_Proxy.getEntityPlayerInstance() != null && HMV_Proxy.getEntityPlayerInstance().ridingEntity !=null) {
+//			HMVPacketHandler.INSTANCE.sendToServer(new HMVPacketOpenVehicleGui(0,HMV_Proxy.getEntityPlayerInstance().getEntityId(),HMV_Proxy.getEntityPlayerInstance().ridingEntity.getEntityId()));
+//		}
 	}
 }

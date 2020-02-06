@@ -43,18 +43,20 @@ public class EntityMoveHelperModified extends EntityMoveHelper
 	 */
 	public void setMoveTo(double p_75642_1_, double p_75642_3_, double p_75642_5_, double p_75642_7_)
 	{
-		this.posX = p_75642_1_;
-		this.posY = p_75642_3_;
-		this.posZ = p_75642_5_;
-		this.speed = p_75642_7_;
-		this.update = true;
+		if(this.entity.onGround || this.entity.isInWater()) {
+			this.posX = p_75642_1_;
+			this.posY = p_75642_3_;
+			this.posZ = p_75642_5_;
+			this.speed = p_75642_7_;
+			this.update = true;
+		}
 	}
 
 	public void onUpdateMoveHelper()
 	{
 		this.entity.setMoveForward(0.0F);
 
-		if (this.update)
+		if (this.update || (!this.entity.onGround && !this.entity.isInWater()))
 		{
 			this.update = false;
 			int i = MathHelper.floor_double(this.entity.boundingBox.minY);

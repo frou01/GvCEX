@@ -208,13 +208,6 @@ public class HMGEntityBulletExprode extends HMGEntityBulletBase implements IEnti
 				{
 					onBreakBlock(var1, var1.blockX, var1.blockY, var1.blockZ, lblock, lmeta);
 				}
-			} else {
-				for (int i = 0; i < 8; ++i) {
-//					worldObj.spawnParticle("snowballpoof", this.posX, this.posY,
-					worldObj.spawnParticle("smoke",
-							var1.hitVec.xCoord, var1.hitVec.yCoord+0.125, var1.hitVec.zCoord,
-							0.0D, 0.0D, 0.0D);
-				}
 			}
 			if (!this.worldObj.isRemote && (!canbounce||fuse<=0))
 			{

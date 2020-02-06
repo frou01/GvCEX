@@ -35,6 +35,7 @@ public class AddNewVehicle extends HMGGunMaker {
 			VehicleType vehicleType = null;
 			Prefab_AttachedWeapon current = null;
 			int turretId_current = 0;
+			int rootTurretID_current = -1;
 			String tabname = null;
 			ArrayList<HMGGunParts> partslist = new ArrayList<HMGGunParts>();
 			//File file = new File(configfile,"hmg_handmadeguns.txt");
@@ -94,6 +95,9 @@ public class AddNewVehicle extends HMGGunMaker {
 								case "throttle_speed":
 									currentVehicleData.throttle_speed = parseFloat(type[1]);
 									break;
+								case "rudderSpeed":
+									currentVehicleData.rudderSpeed = parseFloat(type[1]);
+									break;
 								case "draft":
 									currentVehicleData.draft = parseFloat(type[1]);
 									break;
@@ -121,6 +125,7 @@ public class AddNewVehicle extends HMGGunMaker {
 									currentVehicleData.prefab_attachedWeapons_all[turretId_current] = currentVehicleData.prefab_attachedWeapons[parseInt(type[1])] = new Prefab_AttachedWeapon();
 									current = currentVehicleData.prefab_attachedWeapons[parseInt(type[1])];
 									turretId_current++;
+									rootTurretID_current++;
 									if(prefab_turretHashMap.containsKey(type[2]))current.prefab_turret = prefab_turretHashMap.get(type[2]);
 									else {
 										Item check = GameRegistry.findItem("HandmadeGuns",type[2]);
@@ -141,13 +146,18 @@ public class AddNewVehicle extends HMGGunMaker {
 								case "addChildWeapon":
 									currentVehicleData.prefab_attachedWeapons_all[turretId_current] = current.prefab_Childturrets[parseInt(type[1])] = new Prefab_AttachedWeapon();
 									current.prefab_Childturrets[parseInt(type[1])].motherTurret = current;
+									current.prefab_Childturrets[parseInt(type[1])].motherTurretID = rootTurretID_current;
 									current = current.prefab_Childturrets[parseInt(type[1])];
 									turretId_current++;
+									rootTurretID_current++;
 									if(prefab_turretHashMap.containsKey(type[2]))current.prefab_turret = prefab_turretHashMap.get(type[2]);
 									else {
 										Item check = GameRegistry.findItem("HandmadeGuns",type[2]);
 										if(check instanceof HMGItem_Unified_Guns){
 											current.prefab_turret = new Prefab_Turret(((HMGItem_Unified_Guns) check));
+											current.prefab_turret.syncTurretAngle = false;
+											current.prefab_turret.linked_MotherTrigger = false;
+											current.prefab_turret.useGunSight = true;
 										}
 									}
 									if(current.prefab_turret.needGunStack){
@@ -157,17 +167,24 @@ public class AddNewVehicle extends HMGGunMaker {
 
 									current.turretsPos = new Vector3d(parseDouble(type[3]), parseDouble(type[4]), parseDouble(type[5]));
 									current.prefab_Childturrets = new Prefab_AttachedWeapon[parseInt(type[6])];
+									if(type.length >= 8)current.prefab_ChildOnBarrel = new Prefab_AttachedWeapon[parseInt(type[7])];
 									break;
 								case "addBarrelChildWeapon":
 									currentVehicleData.prefab_attachedWeapons_all[turretId_current] = current.prefab_ChildOnBarrel[parseInt(type[1])] = new Prefab_AttachedWeapon();
 									current.prefab_ChildOnBarrel[parseInt(type[1])].motherTurret = current;
+									current.prefab_ChildOnBarrel[parseInt(type[1])].motherTurretID = rootTurretID_current;
 									current = current.prefab_ChildOnBarrel[parseInt(type[1])];
+									current.onBarrel = true;
 									turretId_current++;
+									rootTurretID_current++;
 									if(prefab_turretHashMap.containsKey(type[2]))current.prefab_turret = prefab_turretHashMap.get(type[2]);
 									else {
 										Item check = GameRegistry.findItem("HandmadeGuns",type[2]);
 										if(check instanceof HMGItem_Unified_Guns){
 											current.prefab_turret = new Prefab_Turret(((HMGItem_Unified_Guns) check));
+											current.prefab_turret.syncTurretAngle = false;
+											current.prefab_turret.linked_MotherTrigger = false;
+											current.prefab_turret.useGunSight = true;
 										}
 									}
 									if(current.prefab_turret.needGunStack){
@@ -177,9 +194,12 @@ public class AddNewVehicle extends HMGGunMaker {
 
 									current.turretsPos = new Vector3d(parseDouble(type[3]), parseDouble(type[4]), parseDouble(type[5]));
 									current.prefab_Childturrets = new Prefab_AttachedWeapon[parseInt(type[6])];
+									if(type.length >= 8)current.prefab_ChildOnBarrel = new Prefab_AttachedWeapon[parseInt(type[7])];
 									break;
 								case "Set_CurrentTurret_to_Mother":
+									System.out.println("debug");
 									current = current.motherTurret;
+									rootTurretID_current--;
 									break;
 								
 								case "SetUpSeat1_NUM":
@@ -200,18 +220,24 @@ public class AddNewVehicle extends HMGGunMaker {
 											new Prefab_Seat(new double[]{parseDouble(type[2]), parseDouble(type[3]), parseDouble(type[4])}, parseBoolean(type[5]), parseBoolean(type[6]), parseBoolean(type[7]),parseBoolean(type[8]), parseInt(type[9]), parseInt(type[10]));
 
 									break;
-								case "SetUpSeat4_AddSeat_AdditionalTurret":
+								case "SetUpSeat4_AddSeat_AdditionalTurret": {
 									currentVehicleData.prefab_seats[parseInt(type[1])].mainid = new int[type.length - 2];
 									int cnt = -2;
-									for(String column:type){
-										if(cnt < 0){
+									for (String column : type) {
+										if (cnt < 0) {
 											cnt++;
 											continue;
 										}
 										currentVehicleData.prefab_seats[parseInt(type[1])].mainid[cnt] = parseInt(column);
 										cnt++;
 									}
-									break;
+								}
+								break;
+								case "SetUpSeat5_AddSeat_ExtraSettings": {
+									currentVehicleData.prefab_seats[parseInt(type[1])].aimingMainTurret = parseInt(type[2]);
+									currentVehicleData.prefab_seats[parseInt(type[1])].sittingMainTurret = parseInt(type[3]);
+								}
+								break;
 								case "back":
 									current = current.motherTurret;
 									break;

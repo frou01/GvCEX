@@ -33,14 +33,16 @@ import static java.lang.Math.toDegrees;
 import static org.lwjgl.input.Keyboard.isKeyDown;
 
 public class CLProxy extends CMProxy {
+	public static final KeyBinding RButton = new KeyBinding("Fire1", Keyboard.KEY_NONE, "HMVehicle");
+	public static final KeyBinding LButton = new KeyBinding("Fire2", Keyboard.KEY_NONE, "HMVehicle");
+	public static final KeyBinding Throttle_up = new KeyBinding("throttle UP", Keyboard.KEY_NONE, "HMVehicle");
+	public static final KeyBinding Throttle_down = new KeyBinding("throttle Down", Keyboard.KEY_NONE, "HMVehicle");
+	public static final KeyBinding Yaw_Left = new KeyBinding("Yaw Left", Keyboard.KEY_NONE, "HMVehicle");
+	public static final KeyBinding Yaw_Right = new KeyBinding("Yaw Right", Keyboard.KEY_NONE, "HMVehicle");
+	public static final KeyBinding Throttle_Brake = new KeyBinding("Throttle Brake", Keyboard.KEY_NONE, "HMVehicle");
+
+
 	public static final KeyBinding Zoom = new KeyBinding("CannonCamera", Keyboard.KEY_Z, "HMVehicle");
-	public static final KeyBinding RButton = new KeyBinding("Fire1", -99 , "HMVehicle");
-	public static final KeyBinding LButton = new KeyBinding("Fire2", -100, "HMVehicle");
-	public static final KeyBinding Throttle_up = new KeyBinding("throttle UP", Keyboard.KEY_W, "HMVehicle");
-	public static final KeyBinding Throttle_down = new KeyBinding("throttle Down", Keyboard.KEY_S, "HMVehicle");
-	public static final KeyBinding Yaw_Left = new KeyBinding("Yaw Left", Keyboard.KEY_A, "HMVehicle");
-	public static final KeyBinding Yaw_Right = new KeyBinding("Yaw Right", Keyboard.KEY_D, "HMVehicle");
-	public static final KeyBinding Throttle_Brake = new KeyBinding("Throttle Brake", Keyboard.KEY_SPACE, "HMVehicle");
 	
 	public static final KeyBinding_withStopper Flap = new KeyBinding_withStopper("Flap", Keyboard.KEY_F, "HMVehicle");
 	public static final KeyBinding Air_Brake = new KeyBinding("Air Brake", Keyboard.KEY_X, "HMVehicle");
@@ -53,6 +55,7 @@ public class CLProxy extends CMProxy {
 	public static final KeyBinding_withStopper Next_Seat = new KeyBinding_withStopper("Change to Next Seat", Keyboard.KEY_Y, "HMVehicle");
 	public static final KeyBinding_withStopper Previous_Seat = new KeyBinding_withStopper("Change to Previous Seat", Keyboard.KEY_H, "HMVehicle");
 	public static final KeyBinding_withStopper ChangeControl = new KeyBinding_withStopper("Change Control", Keyboard.KEY_N, "HMVehicle");
+	public static final KeyBinding_withStopper ChangeEasyControl = new KeyBinding_withStopper("Change to Easy/Normal Control", Keyboard.KEY_NONE, "HMVehicle");
 	public static final KeyBinding_withStopper resetCamrot = new KeyBinding_withStopper("Reset Camera Rotation", Keyboard.KEY_V, "HMVehicle");
 	public static final KeyBinding_withStopper reloadConfig = new KeyBinding_withStopper("Reload Config Settings", Keyboard.KEY_NONE, "HMVehicle");
 	public static final KeyBinding_withStopper openGUI = new KeyBinding_withStopper("Open Vehicle Gui", Keyboard.KEY_COLON, "HMVehicle");
@@ -73,7 +76,6 @@ public class CLProxy extends CMProxy {
 	public CLProxy() {
 		if(!inited) {
 			net.minecraftforge.client.ClientCommandHandler.instance.registerCommand(hmv_commandReloadparm);
-			ClientRegistry.registerKeyBinding(Zoom);
 			ClientRegistry.registerKeyBinding(Throttle_up);
 			ClientRegistry.registerKeyBinding(Throttle_down);
 			ClientRegistry.registerKeyBinding(Yaw_Left);
@@ -81,15 +83,10 @@ public class CLProxy extends CMProxy {
 			ClientRegistry.registerKeyBinding(Throttle_Brake);
 			ClientRegistry.registerKeyBinding(RButton);
 			ClientRegistry.registerKeyBinding(LButton);
-			FMLClientHandler.instance().getClient().gameSettings.keyBindForward = new KeyBinding("key.forward", 17, "key.categories.movement");
-			FMLClientHandler.instance().getClient().gameSettings.keyBindLeft = new KeyBinding("key.left", 30, "key.categories.movement");
-			FMLClientHandler.instance().getClient().gameSettings.keyBindBack = new KeyBinding("key.back", 31, "key.categories.movement");
-			FMLClientHandler.instance().getClient().gameSettings.keyBindRight = new KeyBinding("key.right", 32, "key.categories.movement");
-			FMLClientHandler.instance().getClient().gameSettings.keyBindUseItem = new KeyBinding("key.use", -99, "key.categories.gameplay");
-			FMLClientHandler.instance().getClient().gameSettings.keyBindAttack = new KeyBinding("key.attack", -100, "key.categories.gameplay");
-			FMLClientHandler.instance().getClient().gameSettings.keyBindJump = new KeyBinding("key.jump", 57, "key.categories.movement");
+			ClientRegistry.registerKeyBinding(Zoom);
 			ClientRegistry.registerKeyBinding(Flap.keyBinding);
 			ClientRegistry.registerKeyBinding(Air_Brake);
+			ClientRegistry.registerKeyBinding(Flare_Smoke);
 			ClientRegistry.registerKeyBinding(Next_Seat.keyBinding);
 			ClientRegistry.registerKeyBinding(Previous_Seat.keyBinding);
 			ClientRegistry.registerKeyBinding(pitchUp);
@@ -99,6 +96,7 @@ public class CLProxy extends CMProxy {
 			ClientRegistry.registerKeyBinding(Weapon_Mode.keyBinding);
 			ClientRegistry.registerKeyBinding(Allow_Entity_Ride.keyBinding);
 			ClientRegistry.registerKeyBinding(ChangeControl.keyBinding);
+			ClientRegistry.registerKeyBinding(ChangeEasyControl.keyBinding);
 			ClientRegistry.registerKeyBinding(resetCamrot.keyBinding);
 			ClientRegistry.registerKeyBinding(reloadConfig.keyBinding);
 			ClientRegistry.registerKeyBinding(openGUI.keyBinding);
@@ -204,39 +202,58 @@ public class CLProxy extends CMProxy {
 	}
 	@Override
 	public boolean throttle_BrakeKeyDown(){
+		if(Keyboard.KEY_NONE == Throttle_Brake.getKeyCode()){
+			return isKeyDown(Minecraft.getMinecraft().gameSettings.keyBindJump.getKeyCode());
+		}
 		return isKeyDown(Throttle_Brake.getKeyCode());
 		//return false;
 	}
 	
 	@Override
 	public boolean leftclick(){
-		boolean flag = FMLClientHandler.instance().getClient().gameSettings.keyBindAttack.getKeyCode() == LButton.getKeyCode();
-		return (flag ? FMLClientHandler.instance().getClient().gameSettings.keyBindAttack.getIsKeyPressed():isKeyDown(LButton.getKeyCode()));
+		if(Keyboard.KEY_NONE == LButton.getKeyCode()){
+			return Minecraft.getMinecraft().gameSettings.keyBindAttack.getIsKeyPressed();
+		}
+		return isKeyDown(LButton.getKeyCode());
 		//return false;
 	}
 	@Override
 	public boolean rightclick(){
-		boolean flag = FMLClientHandler.instance().getClient().gameSettings.keyBindUseItem.getKeyCode() == RButton.getKeyCode();
-		return (flag ? FMLClientHandler.instance().getClient().gameSettings.keyBindUseItem.getIsKeyPressed():isKeyDown(RButton.getKeyCode()));
+		if(Keyboard.KEY_NONE == RButton.getKeyCode()){
+			return Minecraft.getMinecraft().gameSettings.keyBindUseItem.getIsKeyPressed();
+		}
+		return isKeyDown(RButton.getKeyCode());
 		//return false;
 	}
 	@Override
 	public boolean throttle_up_click(){
+		if(Keyboard.KEY_NONE == Throttle_up.getKeyCode()){
+			return Minecraft.getMinecraft().gameSettings.keyBindForward.getIsKeyPressed();
+		}
 		return isKeyDown(Throttle_up.getKeyCode());
 		//return false;
 	}
 	@Override
 	public boolean yaw_Left_click(){
+		if(Keyboard.KEY_NONE == Yaw_Left.getKeyCode()){
+			return Minecraft.getMinecraft().gameSettings.keyBindLeft.getIsKeyPressed();
+		}
 		return isKeyDown(Yaw_Left.getKeyCode());
 		//return false;
 	}
 	@Override
 	public boolean throttle_down_click(){
+		if(Keyboard.KEY_NONE == Throttle_down.getKeyCode()){
+			return Minecraft.getMinecraft().gameSettings.keyBindBack.getIsKeyPressed();
+		}
 		return isKeyDown(Throttle_down.getKeyCode());
 		//return false;
 	}
 	@Override
 	public boolean yaw_Right_click(){
+		if(Keyboard.KEY_NONE == Yaw_Right.getKeyCode()){
+			return Minecraft.getMinecraft().gameSettings.keyBindRight.getIsKeyPressed();
+		}
 		return isKeyDown(Yaw_Right.getKeyCode());
 		//return false;
 	}
@@ -293,6 +310,10 @@ public class CLProxy extends CMProxy {
 	@Override
 	public boolean changeControlclick(){
 		return ChangeControl.isKeyDown();
+	}
+	@Override
+	public boolean changeEasyControlMode(){
+		return ChangeEasyControl.isKeyDown();
 	}
 	@Override
 	public boolean resetCamrotclick(){

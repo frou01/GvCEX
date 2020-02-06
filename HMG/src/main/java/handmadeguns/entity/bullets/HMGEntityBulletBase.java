@@ -33,6 +33,7 @@ import mmmlibx.lib.guns.EntityBulletBase;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IProjectile;
 import net.minecraft.entity.player.EntityPlayer;
@@ -76,13 +77,15 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
     public float resistance = 0.99f;
     public float resistanceinwater = 0.4f;
     public float acceleration = 0f;
-    public SoundInfo flyingSoundInfo = new SoundInfo("handmadeguns:handmadeguns.bulletflyby",
-                                                            2f,
-                                                            1f,
-                                                            4f,
-                                                            4f
-    );
-    public SoundInfo ricochetSoundInfo = new SoundInfo("handmadeguns:handmadeguns.Ricochet",1,1,1,4);
+    public SoundInfo flyingSoundInfo = null;
+//            new SoundInfo("handmadeguns:handmadeguns.bulletflyby",
+//                                                            1f,
+//                                                            1f,
+//                                                            5f,
+//                                                            1f
+//    );
+    public SoundInfo ricochetSoundInfo = null;
+//    public SoundInfo ricochetSoundInfo = new SoundInfo("handmadeguns:handmadeguns.Ricochet",1,1,1,16);
     public float firstSpeed;
     public int canPenerate_entity = 1;
     
@@ -122,6 +125,7 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
     public boolean trail = false;
     public int traillength;
     public float   trailWidth         = 0.2f;
+    public float   animationspeed         = 1;
     public String  trailtexture      = null;
     public String smoketexture = null;
     public float  smokeWidth         = 1f;
@@ -131,10 +135,16 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
     
     public boolean soundstoped = true;
 
-    public EntityBulletBase[] childBullets;
+    public HMGEntityBulletBase[] childBullets;
+    public float childSpread;
+    public float childSpeed;
+    public float childRotationOffset_Circle;
+    public float childRotationOffset_Pop;
 
     public boolean hasVT;
-    
+    public double VTRange;
+    public double VTWidth;
+
     
     //int i = mod_IFN_GuerrillaVsCommandGuns.RPGExplosiontime;
     protected void entityInit() {
@@ -174,7 +184,7 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
         this.Bdamege = damege;
         //this.Bspeed = bspeed;
         //this.Bure = bure;
-        setHeadingFromThrower(thrower,thrower.rotationPitch,(thrower instanceof EntityLivingBase ? ((EntityLivingBase)thrower).rotationYawHead : thrower.rotationYaw),0,bspeed,bure);
+        setHeadingFromThrower(thrower,bspeed,bure);
         this.bulletTypeName = bulletTypeName;
     };
     public void setdamage(int value){
@@ -263,19 +273,7 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
         }
     }
     
-    public void setHeadingFromThrower(Entity entityThrower, float rotationPitchIn, float rotationYawIn, float pitchOffset, float velocity, float inaccuracy)
-    {
-        Vec3 look = Utils.getLook(1.0f,entityThrower);
-        if(look == null) {
-        }else {
-//            this.motionX = (look.xCoord+this.rand.nextGaussian() * (double)(this.rand.nextBoolean() ? -1 : 1) * 0.00249999994 * (double)inaccuracy) * velocity;
-//            this.motionY = (look.yCoord+this.rand.nextGaussian() * (double)(this.rand.nextBoolean() ? -1 : 1) * 0.00249999994 * (double)inaccuracy) * velocity;
-//            this.motionZ = (look.zCoord+this.rand.nextGaussian() * (double)(this.rand.nextBoolean() ? -1 : 1) * 0.00249999994 * (double)inaccuracy) * velocity;
-            this.setThrowableHeading(look.xCoord, look.yCoord, look.zCoord, velocity, inaccuracy);
-        }
-    }
-    
-    public void setHeadingFromThrower(EntityLivingBase entityThrower, float velocity, float inaccuracy)
+    public void setHeadingFromThrower(Entity entityThrower, float velocity, float inaccuracy)
     {
         Vec3 look = Utils.getLook(1.0f,entityThrower);
         if(look == null) {
@@ -402,6 +400,7 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
                                                                                          posY,
                                                                                          posZ, 3);
                 packetSpawnParticle.trailwidth = trailWidth;
+                packetSpawnParticle.animationspeed = animationspeed;
                 packetSpawnParticle.name = trailtexture;
                 packetSpawnParticle.fuse = traillength;
                 if (trailglow) packetSpawnParticle.id += 100;
@@ -421,9 +420,9 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
      */
     protected void onImpact(MovingObjectPosition var1)
     {
-        if(worldObj.isRemote && ticksInAir>0 && ricochetSoundInfo != null &&
+        if(worldObj.isRemote && ticksInAir>0 && ricochetSoundInfo != null && var1.hitVec != null &&
                    motionX * motionX + motionY * motionY + motionZ * motionZ > ricochetSoundInfo.MinBltSP * ricochetSoundInfo.MinBltSP && getDistanceSqToEntity(HMG_proxy.getEntityPlayerInstance()) < ricochetSoundInfo.MaxDist*ricochetSoundInfo.MaxDist){
-            worldObj.playSoundAtEntity(this,ricochetSoundInfo.sound,ricochetSoundInfo.LV,ricochetSoundInfo.SP);
+            worldObj.playSound(var1.hitVec.xCoord,var1.hitVec.yCoord,var1.hitVec.zCoord,ricochetSoundInfo.sound,ricochetSoundInfo.LV,ricochetSoundInfo.SP,false);
         }
     }
     
@@ -431,14 +430,14 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
     @Override
     public void setDead() {
         if(damageRange>0){
-            List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox.expand(damageRange, damageRange, damageRange));
+            List list = worldObj.loadedEntityList;
             for (int j = 0; j < list.size(); ++j) {
                 Entity entity1 = (Entity) list.get(j);
                 if ((this.isInWater() == entity1.isInWater()) && entity1.canBeCollidedWith() && (ticksInAir > 20 ||
                                                             (iscandamageentity(entity1)))) {
                     double f = this.getDistanceSq(entity1.posX,entity1.posY + entity1.height/2,entity1.posZ);
                     if(f < damageRange * damageRange){
-                        if(f<1)f = 1;
+                        f = damageRange * damageRange-f;
                         Vec3 vec3 = Vec3.createVectorHelper(this.posX, this.posY, this.posZ);
                         Vec3 vec31 = Vec3.createVectorHelper(entity1.posX,entity1.posY + entity1.height/2,entity1.posZ);
                         MovingObjectPosition movingobjectposition = getmovingobjectPosition_forBlock(worldObj,vec3, vec31, false, true, false);//衝突するブロックを調べる
@@ -467,10 +466,10 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
                             accelVec.sub(new Vector3d(this.posX,this.posY,this.posZ));
                             accelVec.normalize();
                             entity1.hurtResistantTime = 0;
-                            entity1.attackEntityFrom((new EntityDamageSourceIndirect("explosion", this, this.getThrower())).setProjectile(), (float) (var2/f));
-                            entity1.motionX +=accelVec.x *  var2/f/10;
-                            entity1.motionY +=accelVec.y *  var2/f/10;
-                            entity1.motionZ +=accelVec.z *  var2/f/10;
+                            entity1.attackEntityFrom((new EntityDamageSourceIndirect("explosion", this, this.getThrower())).setProjectile(), (float) (var2*f));
+                            entity1.motionX +=accelVec.x *  var2/12000 * f /(damageRange * damageRange);
+                            entity1.motionY +=accelVec.y *  var2/12000 * f /(damageRange * damageRange);
+                            entity1.motionZ +=accelVec.z *  var2/12000 * f /(damageRange * damageRange);
                         }
                     }
                 }
@@ -632,6 +631,7 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
                     trail = temptrailinfo.enabletrai && rand.nextFloat()<=temptrailinfo.trailProbability;
                     traillength = temptrailinfo.traillength;
                     trailWidth = temptrailinfo.trailWidth;
+                    animationspeed = temptrailinfo.animationspeed;
                     trailtexture = temptrailinfo.trailtexture;
                     smoketexture  = temptrailinfo.smoketexture;
                     smokeWidth = temptrailinfo.smokeWidth;
@@ -738,9 +738,9 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
         if(ticksInAir>0 && flyingSoundInfo != null && soundstoped &&
                 this.getspeed() > flyingSoundInfo.MinBltSP * flyingSoundInfo.MinBltSP &&
                 getDistanceSq(
-                        HMG_proxy.getEntityPlayerInstance().posX + motionX,
-                        HMG_proxy.getEntityPlayerInstance().posY + motionY,
-                        HMG_proxy.getEntityPlayerInstance().posZ + motionZ)
+                        HMG_proxy.getMCInstance().renderViewEntity.posX,
+                        HMG_proxy.getMCInstance().renderViewEntity.posY,
+                        HMG_proxy.getMCInstance().renderViewEntity.posZ)
                         < flyingSoundInfo.MaxDist*flyingSoundInfo.MaxDist){
             HMG_proxy.playsoundatBullet(flyingSoundInfo.sound,flyingSoundInfo.LV,flyingSoundInfo.SP,flyingSoundInfo.MinBltSP,flyingSoundInfo.MaxDist,this,true);
             soundstoped = false;
@@ -830,6 +830,26 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
 //                System.out.println("debug2" + lastpos);
 //                System.out.println("debug3" + motionVec);
 //            }
+
+        if(hasVT){
+            List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this,
+                    this.boundingBox.expand(VTRange + abs(this.motionX), VTRange + abs(this.motionY), VTRange + abs(this.motionZ)));
+            for (int j = 0; j < list.size(); ++j) {
+                Entity entity1 = (Entity) list.get(j);
+                if (entity1.width > 1 && entity1.height > 1 && iscandamageentity(entity1) && getDistanceSqToEntity(entity1) < VTRange) {
+                    Vector3d toTGT = new Vector3d(entity1.posX - this.posX, entity1.posY - this.posY, entity1.posZ - this.posZ);
+                    Vector3d motion = new Vector3d(motionX, motionY, motionZ);
+                    toTGT.normalize();
+                    motion.normalize();
+                    double angle = acos(motion.dot(toTGT));
+                    if (angle < toRadians(VTWidth)) {
+                        this.explode(this.posX, this.posY, this.posZ, ex, cfg_blockdestroy && canex);
+                        break;
+                    }
+                }
+            }
+        }
+
         vec3 = Vec3.createVectorHelper(this.posX, this.posY, this.posZ);
         vec31 = Vec3.createVectorHelper(this.posX + motionVec.xCoord, this.posY + motionVec.yCoord, this.posZ + motionVec.zCoord);
         if (movingobjectposition != null) {
@@ -934,10 +954,6 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
                             break;
                     }
                 }
-                float f2 = (float) motionVec.lengthVector();
-                hitedpos.xCoord = hitedpos.xCoord - motionVec.xCoord / f2 * 0.26;
-                hitedpos.yCoord = hitedpos.yCoord - motionVec.yCoord / f2 * 0.26;
-                hitedpos.zCoord = hitedpos.zCoord - motionVec.zCoord / f2 * 0.26;
                 if(!canbounce) {
                     this.inGround = true;
                     lockedpos = movingobjectposition.hitVec;
@@ -948,10 +964,16 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
             }
             if (canbounce) {
                 switch (hitside) {
-                    case 0:
                     case 1:
                         if(motionY < 0)
                             onGround = true;
+                        motionY = -motionY * bouncerate;
+                        if(onGround && motionY<0){
+                            motionY = 0;
+                        }
+                        changemotionflag = true;
+                        break;
+                    case 0:
                         motionY = -motionY * bouncerate;
                         changemotionflag = true;
                         break;
@@ -1003,7 +1025,7 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
 //                hitedpos = null;
 //            }
         float f2 = (float) getspeed();
-        this.rotationYaw = this.rotationYaw + ((float) (atan2(this.motionX, this.motionZ) * 180.0D / Math.PI) - this.rotationYaw)*(1-1/(1+f2/100))*0.01f;
+        this.rotationYaw = this.rotationYaw + ((float) (atan2(this.motionX, this.motionZ) * 180.0D / Math.PI) - this.rotationYaw)*(1-1/(1+f2/10))*0.01f;
         this.rotationPitch = this.rotationPitch + ((float) (atan2(this.motionY, (double) sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ)) * 180.0D / Math.PI) - this.rotationPitch)*(1-1/(1+f2/100))*0.01f;
         
         changemotionflag |= changeVector();
@@ -1039,15 +1061,22 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
         this.motionY *= (double) f3;
         this.motionZ *= (double) f3;
         if(homingEntity != null) {
+            NBTTagCompound targetnbt = homingEntity.getEntityData();
             Vector3d PredictedTargetPos =
             LinePrediction(new Vector3d(this.posX,this.posY,this.posZ),
                     new Vector3d(homingEntity.posX, homingEntity.posY + (homingEntity.height/2), homingEntity.posZ),
                     new Vector3d(homingEntity.motionX - this.motionX, homingEntity.motionY - this.motionY, homingEntity.motionZ - this.motionZ),
                     this.getTerminalspeed());
+
             towardToPos(PredictedTargetPos.x,
                     PredictedTargetPos.y,
                     PredictedTargetPos.z);
             ismotionupdate = true;
+
+            targetnbt.setBoolean("behome", true);
+            if (targetnbt.getBoolean("flare")) homingEntity = null;
+
+
         }
         if(lockedBlockPos != null){
             towardToPos(lockedBlockPos.xCoord,lockedBlockPos.yCoord,lockedBlockPos.zCoord);
@@ -1088,14 +1117,6 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
         rotationPitch = (float) toDegrees(xyz[0]);
         if (!Double.isNaN(xyz[1])) {
             rotationYaw = (float) toDegrees(xyz[1]);
-        }
-
-        if(homingEntity != null) {
-            NBTTagCompound targetnbt = homingEntity.getEntityData();
-            if (targetnbt != null) {
-                targetnbt.setBoolean("behome", true);
-                if (targetnbt.getBoolean("flare")) homingEntity = null;
-            }
         }
 
     }

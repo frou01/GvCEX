@@ -251,7 +251,6 @@ public class TileEntityFlag extends TileEntity
 //                            System.out.println("hegiht" + hegiht);
                             newEntity.setLocationAndAngles(spawningLocation.x + getRandomPos(), hegiht + 3, spawningLocation.z + getRandomPos()
                                     , rnd.nextFloat() * 360, 0);
-                            newEntity.setRotationYawHead(rnd.nextFloat() * 360);
                             if (newEntity instanceof EntityLiving) {
                                 ((EntityLiving) newEntity).onSpawnWithEgg(null);
                             }
@@ -288,7 +287,6 @@ public class TileEntityFlag extends TileEntity
                     newEntity = campObj.teamEntityClasses[entityType].getConstructor(World.class).newInstance(worldObj);
                     newEntity.setLocationAndAngles(this.xCoord + getRandomPos(), this.yCoord + 1, this.zCoord + getRandomPos()
                             , rnd.nextFloat() * 360, 0);
-                    newEntity.setRotationYawHead(rnd.nextFloat() * 360);
                     if (newEntity instanceof EntityLiving) {
                         ((EntityLiving) newEntity).onSpawnWithEgg(null);
                     }

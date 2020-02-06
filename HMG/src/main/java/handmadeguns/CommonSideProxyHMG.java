@@ -39,6 +39,9 @@ public class CommonSideProxyHMG {
 	public Minecraft getMCInstance() {
 		return null;
 	}
+	public void playGUISound(String sound,float level){
+
+	}
 
 	public void setRightclicktimer(){
 	}
@@ -47,6 +50,11 @@ public class CommonSideProxyHMG {
 	}
 
 	public void playsoundat(String sound, float soundLV, float soundSP, float tempsp, double posX, double posY, double posZ){
+	}
+	public void playsound_Gun(String sound, float soundLV, float soundSP,float maxdist,Entity attached,
+	                          double posX,
+	                          double posY,
+	                          double posZ){
 	}
 	public void playsoundatEntity(String sound, float soundLV, float soundSP,Entity attached,boolean repeat,int time){
 	
@@ -72,6 +80,12 @@ public class CommonSideProxyHMG {
 		return false;
 	}
 	public boolean fixkeydown(){
+		return false;
+	}
+	public boolean upElevationKeyDown(){
+		return false;
+	}
+	public boolean downElevationKeyDown(){
 		return false;
 	}
 	public boolean Lightkeyispressed_no_stopper(){

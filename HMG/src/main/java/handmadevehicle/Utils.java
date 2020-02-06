@@ -252,11 +252,14 @@ public class Utils {
     public static void getVector_local_inRotatedObj(Vector3d in,Vector3d out,Quat4d rot){
         Quat4d invertRot = new Quat4d();
         invertRot.inverse(rot);
+        NaNCheck(invertRot);
         transformVecforMinecraft(in);
         out.set(transformVecByQuat(in, invertRot));
         if(in != out){
             transformVecforMinecraft(in);
         }
+        NaNCheck(in);
+        NaNCheck(out);
     }
 
     public static Vector3d LinePrediction(Vector3d shotPosition, Vector3d targetPosition, Vector3d v3_Mv, double bulletSpeed)
@@ -300,10 +303,8 @@ public class Utils {
     }
     public static Vector3d transformVecByQuat(Vector3d vec, Quat4d qua)
     {
-        if(Double.isNaN(qua.x))qua.x = 0;
-        if(Double.isNaN(qua.y))qua.y = 0;
-        if(Double.isNaN(qua.z))qua.z = 0;
-        if(Double.isNaN(qua.w))qua.w = 1;
+        if(vec.lengthSquared() == 0)return new Vector3d(vec);
+        NaNCheck(qua);
         double x = qua.x + qua.x;
         double y = qua.y + qua.y;
         double z = qua.z + qua.z;
@@ -316,11 +317,32 @@ public class Utils {
         double yy = qua.y * y;
         double yz = qua.y * z;
         double zz = qua.z * z;
-
-        return new Vector3d(
+        Vector3d temp = new Vector3d(
                 ((vec.x * ((1.0f - yy) - zz)) + (vec.y * (xy - wz))) + (vec.z * (xz + wy)),
                 ((vec.x * (xy + wz)) + (vec.y * ((1.0f - xx) - zz))) + (vec.z * (yz - wx)),
                 ((vec.x * (xz - wy)) + (vec.y * (yz + wx))) + (vec.z * ((1.0f - xx) - yy)));
+        NaNCheck(temp,vec);
+        return temp;
+    }
+    public static void NaNCheck(Vector3d inVec){
+        if (!Double.isNaN(inVec.x) && !Double.isNaN(inVec.y) && !Double.isNaN(inVec.z)) {
+        }else {
+            inVec.set(0,0,0);
+        }
+
+    }
+    public static void NaNCheck(Vector3d inVec,Vector3d before){
+        if (!Double.isNaN(inVec.x) && !Double.isNaN(inVec.y) && !Double.isNaN(inVec.z)) {
+        }else {
+            inVec.set(before);
+        }
+
+    }
+    public static void NaNCheck(Quat4d inVec){
+        if (!Double.isNaN(inVec.x) && !Double.isNaN(inVec.y) && !Double.isNaN(inVec.z) && !Double.isNaN(inVec.w)) {
+        }else {
+            inVec.set(0,0,0,1);
+        }
     }
     public static Vec3 transformVecByQuat(Vec3 vec, Quat4d qua)
     {
@@ -364,14 +386,15 @@ public class Utils {
                           2*xz+2*wy ,   2*yz-2*wx , 1-2*x2-2*y2);
     }
     public static double[] eulerfrommatrix(Matrix3d matrix3d){
-        //1:Y
         //0:P
+        //1:Y
         //2:R
         double[] xyz = new double[3];
         if(matrix3d.m21>1)matrix3d.m21 = 1;
         if(matrix3d.m21<-1)matrix3d.m21 = -1;
         xyz[0] = asin(matrix3d.m21);
         if(Double.isNaN(xyz[0])){
+            xyz[0] = 0;
             System.out.println("debug matrix " + matrix3d);
         }
         if(cos(xyz[0]) == 0){
@@ -380,6 +403,14 @@ public class Utils {
         }else {
             xyz[1] = atan2(matrix3d.m20, matrix3d.m22);
             xyz[2] = atan2(matrix3d.m01, matrix3d.m11);
+        }
+        if(Double.isNaN(xyz[1])){
+            xyz[1] = 0;
+            System.out.println("debug matrix " + matrix3d);
+        }
+        if(Double.isNaN(xyz[2])){
+            xyz[2] = 0;
+            System.out.println("debug matrix " + matrix3d);
         }
         return xyz;
     }
@@ -466,6 +497,9 @@ public class Utils {
 
         if (ret > 1.0D) {
             ret = 1.0D;
+        }
+        if(Double.isNaN(ret)){
+            ret = 1;
         }
 
         return ret;

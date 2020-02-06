@@ -12,6 +12,7 @@ import handmadevehicle.entity.EntityVehicle;
 import handmadevehicle.entity.parts.ITurretUser;
 import handmadevehicle.entity.parts.turrets.TurretObj;
 import handmadevehicle.entity.prefab.Prefab_Vehicle_Base;
+import hmggvcmob.GVCMobPlus;
 import hmggvcmob.IflagBattler;
 import handmadevehicle.SlowPathFinder.ModifiedPathNavigater;
 import hmggvcmob.ai.*;
@@ -344,23 +345,32 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
 			EntityVehicle bespawningEntity = EntityVehicle_spawnByMob(worldObj,summoningVehicle);
 			bespawningEntity.setLocationAndAngles(this.posX, this.posY, this.posZ, var12 , 0.0F);
 			if(bespawningEntity.checkObstacle()) {
-				worldObj.spawnEntityInWorld(bespawningEntity);
 				if(bespawningEntity.pickupEntity(this,0)) {
+					this.setCurrentItemOrArmor(0,null);
 				}
+				bespawningEntity.canUseByMob = true;
+				bespawningEntity.despawn = true;
 				Prefab_Vehicle_Base prefab_vehicle = bespawningEntity.getBaseLogic().prefab_vehicle;
-				int randUsingSlot = prefab_vehicle.weaponSlotNum > 0 ? rand.nextInt(prefab_vehicle.weaponSlotNum):0;
-				for(int slotID = 0 ;slotID < randUsingSlot;slotID++) {
-					for(String whiteList: prefab_vehicle.weaponSlot_linkedTurret_StackWhiteList.get(slotID)) {
-						Item check = GameRegistry.findItem("HandmadeGuns",whiteList);
-						if(check instanceof HMGItem_Unified_Guns){
+				for(int slotID = 0 ;slotID < prefab_vehicle.weaponSlotNum;slotID++) {
+					if(prefab_vehicle.weaponSlot_linkedTurret_StackWhiteList.get(slotID) != null) {
+						int randUsingSlot = rand.nextInt(prefab_vehicle.weaponSlot_linkedTurret_StackWhiteList.get(slotID).length);
+						String whiteList = prefab_vehicle.weaponSlot_linkedTurret_StackWhiteList.get(slotID)[randUsingSlot];
+						System.out.println("" + whiteList);
+						Item check = GameRegistry.findItem("HandmadeGuns", whiteList);
+						if (check instanceof HMGItem_Unified_Guns && ((HMGItem_Unified_Guns) check).gunInfo.guerrila_can_use) {
 							bespawningEntity.getBaseLogic().inventoryVehicle.setInventorySlotContents(slotID, new ItemStack(check));
 						}
+					}else{
+						int randUsingSlot = rand.nextInt(GVCMobPlus.Guns_CanUse.size());
+						Item choosenGun = GVCMobPlus.Guns_CanUse.get(randUsingSlot);
+						bespawningEntity.getBaseLogic().inventoryVehicle.setInventorySlotContents(slotID, new ItemStack(choosenGun));
 					}
 				}
 				if(!prefab_vehicle.T_Land_F_Plane){
 					bespawningEntity.setLocationAndAngles(this.posX, 128, this.posZ, var12 , 0.0F);
 					bespawningEntity.getBaseLogic().throttle = prefab_vehicle.throttle_Max;
 				}
+				worldObj.spawnEntityInWorld(bespawningEntity);
 			}
 			summoningVehicle = null;
 		}

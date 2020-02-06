@@ -48,14 +48,14 @@ addBarrelChildWeapon,0,HardPoint_ATM,0,1.5,0.5,0,0;
 
 //ç¿ê»í«â¡;
 SetUpSeat1_NUM,7;
-SetUpSeat2_AddSeat_Normal,	0 , 0.2 , 2.0,0,  true,true,false,true,0,1;
-SetUpSeat3_AddSeat_Zoom,	0 , 0.2 , 2.0,0,   true,true,true,0,-1;
-SetUpSeat2_AddSeat_Normal, 	1 , 0.75 , 2.5,	3   ,false,false,false,-1,-1;
-SetUpSeat2_AddSeat_Normal, 	2 , -0.75 , 2.5,	3   ,false,false,false,-1,-1;
-SetUpSeat2_AddSeat_Normal, 	3 , 0.75 , 2.5,	2   ,false,false,false,-1,-1;
-SetUpSeat2_AddSeat_Normal, 	4 , -0.75 , 2.5,	2   ,false,false,false,-1,-1;
-SetUpSeat2_AddSeat_Normal, 	5 , 0.75 , 2.5,	1   ,false,false,false,-1,-1;
-SetUpSeat2_AddSeat_Normal, 	6 , -0.75 , 2.5,	1   ,false,false,false,-1,-1;
+SetUpSeat2_AddSeat_Normal,	0 , 0.2		,2.0	,	0	,  			true,true,false,true,0,1;
+SetUpSeat3_AddSeat_Zoom,	0 , 0.2		,2.0	,	0	,   			true,true,true,0,-1;
+SetUpSeat2_AddSeat_Normal, 	1 , 0.75	,1.5	,	2	,		false,false,false,-1,-1;
+SetUpSeat2_AddSeat_Normal, 	2 , -0.75	,1.5	,	2	,	false,false,false,-1,-1;
+SetUpSeat2_AddSeat_Normal, 	3 , 0.75 	,1.5	,	1.5	,		false,false,false,-1,-1;
+SetUpSeat2_AddSeat_Normal, 	4 , -0.75 	,1.5	,	1.5	,		false,false,false,-1,-1;
+SetUpSeat2_AddSeat_Normal, 	5 , 0.75 	,1.5	,	1	,		false,false,false,-1,-1;
+SetUpSeat2_AddSeat_Normal, 	6 , -0.75 	,1.5	,	1	,	false,false,false,-1,-1;
 
 userProtect_maxDamageLevel,0,-1;
 userProtect_maxDamageLevel,1,20;

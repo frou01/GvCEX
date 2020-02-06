@@ -13,5 +13,13 @@
  "handmadevehicle.BRDM-2": {"category":"ambient","sounds": ["BRDM-2"]},
  "handmadevehicle.Gsh-30-1": {"category":"ambient","sounds": ["Gsh-30-1"]},
  "handmadevehicle.weaponChange": {"category":"ambient","sounds": ["weaponChange"]},
+ "handmadevehicle.MissileAlert": {"category":"ambient","sounds": ["MissileAlert"]},
+ "handmadevehicle.BTRSeries": {"category":"ambient","sounds": ["BTRSeries"]},
+ "handmadevehicle.T-34traverse": {"category":"ambient","sounds": ["T-34traverse"]},
+ "handmadevehicle.LiquidCoolEngineSound": {"category":"ambient","sounds": ["LiquidCoolEngineSound"]},
+ "handmadevehicle.AirCoolEngineSound": {"category":"ambient","sounds": ["AirCoolEngineSound"]},
+ "handmadevehicle.T-72": {"category":"ambient","sounds": ["T-72"]},
+ "handmadevehicle.125mmFire": {"category":"ambient","sounds": ["125mmFire"]},
+ "handmadevehicle.flare": {"category":"ambient","sounds": ["flare"]},
  "handmadevehicle.nulls": {"category":"ambient","sounds": ["nulls"]}
 }

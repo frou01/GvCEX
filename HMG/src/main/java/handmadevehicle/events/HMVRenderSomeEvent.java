@@ -782,7 +782,7 @@ public class HMVRenderSomeEvent {
 		return turretObj;
 	}
 
-	private TurretObj getActiveTurret(TurretObj turretObj){
+	private static TurretObj getActiveTurret(TurretObj turretObj){
 		if(turretObj.gunStack == null){
 			if(!turretObj.getChilds().isEmpty())for(TurretObj child:turretObj.getChilds()){
 				turretObj = getActiveTurret(child);

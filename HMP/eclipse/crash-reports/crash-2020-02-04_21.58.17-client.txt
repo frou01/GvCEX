@@ -1,0 +1,125 @@
+---- Minecraft Crash Report ----
+// Hi. I'm Minecraft, and I'm a crashaholic.
+
+Time: 20/02/04 21:58
+Description: Rendering Block Entity
+
+java.lang.NumberFormatException: For input string: "c"
+	at java.lang.NumberFormatException.forInputString(NumberFormatException.java:65)
+	at java.lang.Integer.parseInt(Integer.java:580)
+	at java.lang.Integer.parseInt(Integer.java:615)
+	at hm_pvpmod.tile.render.RenderTilePVPFlag.renderTileEntityAt(RenderTilePVPFlag.java:57)
+	at hm_pvpmod.tile.render.RenderTilePVPFlag.renderTileEntityAt(RenderTilePVPFlag.java:98)
+	at net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher.renderTileEntityAt(TileEntityRendererDispatcher.java:141)
+	at net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher.renderTileEntity(TileEntityRendererDispatcher.java:126)
+	at net.minecraft.client.renderer.RenderGlobal.renderEntities(RenderGlobal.java:539)
+	at net.minecraft.client.renderer.EntityRenderer.renderWorld(EntityRenderer.java:1300)
+	at net.minecraft.client.renderer.EntityRenderer.updateCameraAndRender(EntityRenderer.java:1087)
+	at net.minecraft.client.Minecraft.runGameLoop(Minecraft.java:1067)
+	at net.minecraft.client.Minecraft.run(Minecraft.java:962)
+	at net.minecraft.client.main.Main.main(Main.java:164)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at net.minecraft.launchwrapper.Launch.launch(Launch.java:135)
+	at net.minecraft.launchwrapper.Launch.main(Launch.java:28)
+	at net.minecraftforge.gradle.GradleStartCommon.launch(Unknown Source)
+	at GradleStart.main(Unknown Source)
+
+
+A detailed walkthrough of the error, its code path and all known details is as follows:
+---------------------------------------------------------------------------------------
+
+-- Head --
+Stacktrace:
+	at java.lang.NumberFormatException.forInputString(NumberFormatException.java:65)
+	at java.lang.Integer.parseInt(Integer.java:580)
+	at java.lang.Integer.parseInt(Integer.java:615)
+	at hm_pvpmod.tile.render.RenderTilePVPFlag.renderTileEntityAt(RenderTilePVPFlag.java:57)
+	at hm_pvpmod.tile.render.RenderTilePVPFlag.renderTileEntityAt(RenderTilePVPFlag.java:98)
+
+-- Block Entity Details --
+Details:
+	Name: TileEntityPVPFlag // hm_pvpmod.tile.TileEntityPVPFlag
+	Block type: ID #165 (tile.PVPFlagBlock // hm_pvpmod.block.PVPFlagBlock)
+	Block data value: 0 / 0x0 / 0b0000
+	Block location: World: (-56,75,215), Chunk: (at 8,4,7 in -4,13; contains blocks -64,0,208 to -49,255,223), Region: (-1,0; contains chunks -32,0 to -1,31, blocks -512,0,0 to -1,255,511)
+	Actual block type: ID #165 (tile.PVPFlagBlock // hm_pvpmod.block.PVPFlagBlock)
+	Actual block data value: 0 / 0x0 / 0b0000
+Stacktrace:
+	at net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher.renderTileEntityAt(TileEntityRendererDispatcher.java:141)
+	at net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher.renderTileEntity(TileEntityRendererDispatcher.java:126)
+	at net.minecraft.client.renderer.RenderGlobal.renderEntities(RenderGlobal.java:539)
+	at net.minecraft.client.renderer.EntityRenderer.renderWorld(EntityRenderer.java:1300)
+
+-- Affected level --
+Details:
+	Level name: MpServer
+	All players: 1 total; [EntityClientPlayerMP['Player391'/332, l='MpServer', x=-54.08, y=77.03, z=212.62]]
+	Chunk stats: MultiplayerChunkCache: 585, 585
+	Level seed: 0
+	Level generator: ID 00 - default, ver 1. Features enabled: false
+	Level generator options: 
+	Level spawn location: World: (-24,64,240), Chunk: (at 8,4,0 in -2,15; contains blocks -32,0,240 to -17,255,255), Region: (-1,0; contains chunks -32,0 to -1,31, blocks -512,0,0 to -1,255,511)
+	Level time: 9255 game time, 9255 day time
+	Level dimension: 0
+	Level storage version: 0x00000 - Unknown?
+	Level weather: Rain time: 0 (now: false), thunder time: 0 (now: false)
+	Level game mode: Game mode: creative (ID 1). Hardcore: false. Cheats: false
+	Forced entities: 74 total; [EntitySheep['Sheep'/139, l='MpServer', x=-68.88, y=68.00, z=183.25], EntityPig['Pig'/141, l='MpServer', x=-70.47, y=72.00, z=216.66], EntityPig['Pig'/142, l='MpServer', x=-66.81, y=63.00, z=279.59], EntityPig['Pig'/143, l='MpServer', x=-66.50, y=66.00, z=273.31], EntityPig['Pig'/155, l='MpServer', x=-50.50, y=64.00, z=180.31], EntitySheep['Sheep'/156, l='MpServer', x=-45.53, y=64.00, z=185.41], EntityPig['Pig'/157, l='MpServer', x=-56.47, y=76.00, z=222.38], EntityPig['Pig'/158, l='MpServer', x=-61.84, y=69.00, z=264.03], EntityPig['Pig'/159, l='MpServer', x=-61.44, y=63.00, z=275.81], EntitySheep['Sheep'/169, l='MpServer', x=-45.50, y=66.00, z=182.47], EntitySheep['Sheep'/170, l='MpServer', x=-36.94, y=66.00, z=203.09], EntityBat['Bat'/176, l='MpServer', x=-17.00, y=46.92, z=166.50], EntitySkeleton['Skeleton'/177, l='MpServer', x=-17.50, y=40.00, z=201.09], EntitySkeleton['Skeleton'/178, l='MpServer', x=-23.50, y=19.00, z=239.50], EntitySkeleton['Skeleton'/179, l='MpServer', x=-29.03, y=19.00, z=238.50], EntityZombie['Zombie'/182, l='MpServer', x=-5.59, y=29.00, z=164.03], EntityBat['Bat'/183, l='MpServer', x=-13.91, y=23.05, z=167.06], EntityBat['Bat'/184, l='MpServer', x=5.75, y=31.39, z=162.47], EntityBat['Bat'/185, l='MpServer', x=-10.25, y=49.10, z=163.03], EntitySkeleton['Skeleton'/62, l='MpServer', x=-133.50, y=44.00, z=140.50], EntitySkeleton['Skeleton'/63, l='MpServer', x=-134.50, y=45.00, z=142.50], EntityPig['Pig'/65, l='MpServer', x=-130.41, y=65.00, z=142.28], EntityCreeper['Creeper'/194, l='MpServer', x=5.13, y=31.00, z=162.88], EntitySkeleton['Skeleton'/66, l='MpServer', x=-132.50, y=61.00, z=155.50], EntityPig['Pig'/195, l='MpServer', x=8.53, y=68.00, z=252.31], EntityCreeper['Creeper'/67, l='MpServer', x=-134.50, y=32.00, z=168.50], EntityCreeper['Creeper'/196, l='MpServer', x=8.03, y=26.00, z=258.34], EntityCreeper['Creeper'/68, l='MpServer', x=-132.63, y=33.00, z=185.03], EntityPig['Pig'/197, l='MpServer', x=10.81, y=67.00, z=256.91], EntityCreeper['Creeper'/69, l='MpServer', x=-134.34, y=61.00, z=228.47], EntityPig['Pig'/198, l='MpServer', x=11.75, y=70.00, z=256.53], EntityPig['Pig'/199, l='MpServer', x=9.50, y=64.00, z=287.50], EntityPig['Pig'/200, l='MpServer', x=11.03, y=66.00, z=279.97], EntitySkeleton['Skeleton'/72, l='MpServer', x=-129.50, y=54.00, z=290.50], EntitySkeleton['Skeleton'/204, l='MpServer', x=23.50, y=56.00, z=167.50], EntitySheep['Sheep'/205, l='MpServer', x=25.34, y=71.00, z=175.41], EntityClientPlayerMP['Player391'/332, l='MpServer', x=-54.08, y=77.03, z=212.62], EntityPig['Pig'/209, l='MpServer', x=22.94, y=63.00, z=258.59], EntityPig['Pig'/210, l='MpServer', x=18.19, y=64.00, z=274.06], EntityPig['Pig'/82, l='MpServer', x=-120.19, y=72.00, z=138.34], EntityPig['Pig'/211, l='MpServer', x=25.50, y=68.00, z=281.16], EntityPig['Pig'/83, l='MpServer', x=-129.97, y=64.00, z=140.28], EntityBat['Bat'/84, l='MpServer', x=-118.75, y=33.10, z=147.88], EntityWitch['Witch'/85, l='MpServer', x=-117.50, y=32.00, z=158.50], EntityZombie['Zombie'/86, l='MpServer', x=-116.91, y=32.00, z=145.59], EntityPig['Pig'/87, l='MpServer', x=-117.50, y=74.00, z=151.50], EntityPig['Pig'/88, l='MpServer', x=-123.50, y=73.00, z=154.78], EntityPig['Pig'/89, l='MpServer', x=-116.69, y=73.00, z=149.75], EntityPig['Pig'/90, l='MpServer', x=-117.81, y=73.00, z=150.50], EntityBat['Bat'/91, l='MpServer', x=-118.75, y=32.00, z=170.75], EntityMinecartChest['entity.MinecartChest.name'/92, l='MpServer', x=-112.50, y=24.50, z=177.50], EntityZombie['Zombie'/93, l='MpServer', x=-114.44, y=24.00, z=185.00], EntityBat['Bat'/94, l='MpServer', x=-110.50, y=44.73, z=225.34], EntityCreeper['Creeper'/95, l='MpServer', x=-117.94, y=47.00, z=237.41], EntitySkeleton['Skeleton'/96, l='MpServer', x=-118.50, y=58.00, z=261.84], EntitySkeleton['Skeleton'/97, l='MpServer', x=-127.31, y=51.00, z=269.75], EntityWitch['Witch'/98, l='MpServer', x=-122.91, y=53.00, z=280.59], EntityCreeper['Creeper'/99, l='MpServer', x=-126.22, y=53.00, z=284.44], EntityCreeper['Creeper'/100, l='MpServer', x=-124.41, y=52.00, z=280.88], EntityBat['Bat'/101, l='MpServer', x=-121.25, y=56.10, z=283.25], EntityBat['Bat'/102, l='MpServer', x=-127.09, y=54.42, z=281.00], EntityBat['Bat'/113, l='MpServer', x=-96.88, y=30.10, z=151.34], EntitySpider['Spider'/114, l='MpServer', x=-110.50, y=32.00, z=167.50], EntityZombie['Zombie'/115, l='MpServer', x=-108.50, y=32.00, z=191.50], EntityPig['Pig'/118, l='MpServer', x=-89.91, y=66.00, z=190.91], EntitySkeleton['Skeleton'/119, l='MpServer', x=-91.69, y=18.00, z=239.84], EntityCreeper['Creeper'/120, l='MpServer', x=-89.28, y=18.00, z=242.00], EntityCreeper['Creeper'/121, l='MpServer', x=-92.41, y=18.00, z=240.94], EntityCreeper['Creeper'/122, l='MpServer', x=-87.38, y=16.00, z=243.97], EntityCreeper['Creeper'/123, l='MpServer', x=-89.75, y=18.00, z=246.13], EntityCreeper['Creeper'/124, l='MpServer', x=-92.66, y=18.00, z=246.97], EntitySkeleton['Skeleton'/125, l='MpServer', x=-91.00, y=18.00, z=246.69], EntitySkeleton['Skeleton'/126, l='MpServer', x=-88.50, y=15.00, z=248.84], EntitySkeleton['Skeleton'/127, l='MpServer', x=-89.34, y=18.00, z=242.91]]
+	Retry entities: 0 total; []
+	Server brand: fml,forge
+	Server type: Integrated singleplayer server
+Stacktrace:
+	at net.minecraft.client.multiplayer.WorldClient.addWorldInfoToCrashReport(WorldClient.java:415)
+	at net.minecraft.client.Minecraft.addGraphicsAndWorldToCrashReport(Minecraft.java:2566)
+	at net.minecraft.client.Minecraft.run(Minecraft.java:984)
+	at net.minecraft.client.main.Main.main(Main.java:164)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at net.minecraft.launchwrapper.Launch.launch(Launch.java:135)
+	at net.minecraft.launchwrapper.Launch.main(Launch.java:28)
+	at net.minecraftforge.gradle.GradleStartCommon.launch(Unknown Source)
+	at GradleStart.main(Unknown Source)
+
+-- System Details --
+Details:
+	Minecraft Version: 1.7.10
+	Operating System: Windows 10 (amd64) version 10.0
+	Java Version: 1.8.0_231, Oracle Corporation
+	Java VM Version: Java HotSpot(TM) 64-Bit Server VM (mixed mode), Oracle Corporation
+	Memory: 393035688 bytes (374 MB) / 788529152 bytes (752 MB) up to 3803185152 bytes (3627 MB)
+	JVM Flags: 0 total; 
+	AABB Pool Size: 0 (0 bytes; 0 MB) allocated, 0 (0 bytes; 0 MB) used
+	IntCache: cache: 0, tcache: 0, allocated: 12, tallocated: 94
+	FML: MCP v9.05 FML v7.10.99.99 Minecraft Forge 10.13.4.1614 10 mods loaded, 10 mods active
+	States: 'U' = Unloaded 'L' = Loaded 'C' = Constructed 'H' = Pre-initialized 'I' = Initialized 'J' = Post-initialized 'A' = Available 'D' = Disabled 'E' = Errored
+	UCHIJAAAA	mcp{9.05} [Minecraft Coder Pack] (minecraft.jar) 
+	UCHIJAAAA	FML{7.10.99.99} [Forge Mod Loader] (forgeSrc-1.7.10-10.13.4.1614-1.7.10.jar) 
+	UCHIJAAAA	Forge{10.13.4.1614} [Minecraft Forge] (forgeSrc-1.7.10-10.13.4.1614-1.7.10.jar) 
+	UCHIJAAAA	HandmadeGuns{1.7.x-srg-1} [HandMadeGuns&VehicleModEX] (HMG-EX13.4.jar) 
+	UCHIJAAAA	HMVehicle{1.7.x-srg-1} [HMVehicle] (HMG-EX13.4.jar) 
+	UCHIJAAAA	lmmx{1.0} [lmmx] (Depend-1.0.jar) 
+	UCHIJAAAA	MMMLibX{1.7.x-srg-1} [MMMLibX] (Depend-1.0.jar) 
+	UCHIJAAAA	Sokoniyatugairuzo{1.7.x} [Sokoniyatugairuzo] (Depend-1.0.jar) 
+	UCHIJAAAA	zabuton{1.0} [zabuton] (Depend-1.0.jar) 
+	UCHIJAAAA	HMPVP{1.7.x-srg-1} [HMPVP] (HMP-1.0.jar) 
+	GL info: ' Vendor: 'NVIDIA Corporation' Version: '4.6.0 NVIDIA 441.87' Renderer: 'GeForce GTX 960/PCIe/SSE2'
+	Launched Version: 1.7.10
+	LWJGL: 2.9.1
+	OpenGL: GeForce GTX 960/PCIe/SSE2 GL version 4.6.0 NVIDIA 441.87, NVIDIA Corporation
+	GL Caps: Using GL 1.3 multitexturing.
+Using framebuffer objects because OpenGL 3.0 is supported and separate blending is supported.
+Anisotropic filtering is supported and maximum anisotropy is 16.
+Shaders are available because OpenGL 2.1 is supported.
+
+	Is Modded: Definitely; Client brand changed to 'fml,forge'
+	Type: Client (map_client.txt)
+	Resource Packs: []
+	Current Language: English (US)
+	Profiler Position: N/A (disabled)
+	Vec3 Pool Size: 0 (0 bytes; 0 MB) allocated, 0 (0 bytes; 0 MB) used
+	Anisotropic Filtering: Off (1)

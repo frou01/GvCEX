@@ -56,7 +56,7 @@ import static net.minecraft.util.MathHelper.wrapAngleTo180_float;
 
 public class EntityGBases extends EntityMob implements IflagBattler,IGVCmob, IFF , ITurretUser {
     private EntityBodyHelper_modified bodyHelper;
-    public float viewWide = 0.75f;
+    public float viewWide = 0.78f;
     public int staningtime;
     public float spread = 10;
     public double movespeed = 0.3d;
@@ -265,15 +265,14 @@ public class EntityGBases extends EntityMob implements IflagBattler,IGVCmob, IFF
     {
         super.onUpdate();
         if(summoningVehicle != null) {
-            //todo 車両スポーン処理を入れる
 
             int var12 = MathHelper.floor_double((double) (this.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
             System.out.println(summoningVehicle);
             EntityVehicle bespawningEntity = EntityVehicle_spawnByMob(worldObj,summoningVehicle);
             bespawningEntity.setLocationAndAngles(this.posX, this.posY, this.posZ, var12 , 0.0F);
             if(bespawningEntity.checkObstacle()) {
-                worldObj.spawnEntityInWorld(bespawningEntity);
                 if(bespawningEntity.pickupEntity(this,0)) {
+                    this.setCurrentItemOrArmor(0,null);
                 }
                 bespawningEntity.canUseByMob = true;
                 bespawningEntity.despawn = true;
@@ -281,12 +280,11 @@ public class EntityGBases extends EntityMob implements IflagBattler,IGVCmob, IFF
                 for(int slotID = 0 ;slotID < prefab_vehicle.weaponSlotNum;slotID++) {
                     if(prefab_vehicle.weaponSlot_linkedTurret_StackWhiteList.get(slotID) != null) {
                         int randUsingSlot = rand.nextInt(prefab_vehicle.weaponSlot_linkedTurret_StackWhiteList.get(slotID).length);
-                        {
-                            String whiteList = prefab_vehicle.weaponSlot_linkedTurret_StackWhiteList.get(slotID)[randUsingSlot];
-                            Item check = GameRegistry.findItem("HandmadeGuns", whiteList);
-                            if (check instanceof HMGItem_Unified_Guns && ((HMGItem_Unified_Guns) check).gunInfo.guerrila_can_use) {
-                                bespawningEntity.getBaseLogic().inventoryVehicle.setInventorySlotContents(slotID, new ItemStack(check));
-                            }
+                        String whiteList = prefab_vehicle.weaponSlot_linkedTurret_StackWhiteList.get(slotID)[randUsingSlot];
+                        System.out.println("" + whiteList);
+                        Item check = GameRegistry.findItem("HandmadeGuns", whiteList);
+                        if (check instanceof HMGItem_Unified_Guns && ((HMGItem_Unified_Guns) check).gunInfo.guerrila_can_use) {
+                            bespawningEntity.getBaseLogic().inventoryVehicle.setInventorySlotContents(slotID, new ItemStack(check));
                         }
                     }else{
                         int randUsingSlot = rand.nextInt(GVCMobPlus.Guns_CanUse.size());
@@ -298,6 +296,7 @@ public class EntityGBases extends EntityMob implements IflagBattler,IGVCmob, IFF
                     bespawningEntity.setLocationAndAngles(this.posX, 128, this.posZ, var12 , 0.0F);
                     bespawningEntity.getBaseLogic().throttle = prefab_vehicle.throttle_Max;
                 }
+                worldObj.spawnEntityInWorld(bespawningEntity);
             }
             summoningVehicle = null;
         }
@@ -543,7 +542,7 @@ public class EntityGBases extends EntityMob implements IflagBattler,IGVCmob, IFF
             toTGTvec = toTGTvec.normalize();
             float enemylight = target.getBrightness(1.0f);
             float thislight = this.getBrightness(1.0f);
-            return getDistanceSqToEntity(target) < pow(60 * (1 + enemylight - thislight) * (0.1 + thislight*0.9),2)&& lookVec.squareDistanceTo(toTGTvec) < getviewWide()  * (1 + enemylight - thislight) * (0.4 + thislight*0.6)/2;
+            return getDistanceSqToEntity(target) < pow(1024 * (1 + enemylight - thislight) * (0.1 + thislight*0.9),2)&& lookVec.squareDistanceTo(toTGTvec) < getviewWide()  * (1 + enemylight - thislight) * (0.4 + thislight*0.6);
         }else{
             return true;
         }

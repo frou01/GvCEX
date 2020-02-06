@@ -2,7 +2,13 @@ package hmggvcmob.entity.guerrilla;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import handmadeguns.entity.HMGExplosion;
+import handmadeguns.items.guns.HMGItem_Unified_Guns;
+import handmadevehicle.SlowPathFinder.WorldForPathfind;
 import hmggvcmob.GVCMobPlus;
+import hmggvcmob.ai.AIAttackGun;
+import hmggvcmob.ai.KAMIKAZEBommerAI;
+import hmggvcutil.GVCUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackOnCollide;
@@ -20,15 +26,23 @@ import net.minecraft.entity.monster.EntityGolem;
 import net.minecraft.entity.passive.EntityOcelot;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.play.server.S27PacketExplosion;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 
-public class GVCEntityGuerrillaBM extends EntityCreeper
+import java.util.Iterator;
+import java.util.Random;
+
+import static hmggvcmob.GVCMobPlus.*;
+
+public class GVCEntityGuerrillaBM extends EntityGBase
 {
     /**
      * Time when this creeper was last in an active state (Messed up code here, probably causes creeper animation to go
@@ -45,6 +59,51 @@ public class GVCEntityGuerrillaBM extends EntityCreeper
     public GVCEntityGuerrillaBM(World p_i1733_1_)
     {
         super(p_i1733_1_);
+        this.tasks.addTask(2, new KAMIKAZEBommerAI(this));
+        this.tasks.addTask(1,aiAttackGun = new AIAttackGun(this,30,3,10,5,true,true,new WorldForPathfind(worldObj)));
+        spread = 5;
+        canuseAlreadyPlacedGun = false;
+        canusePlacedGun = false;
+    }
+    public void addRandomArmor()
+    {
+        super.addRandomArmor();
+        Random rnd = new Random();
+
+        this.setCurrentItemOrArmor(0, new ItemStack((Item)Guns_GR.get(rnd.nextInt(Guns_GR.size()))));
+    }
+
+    protected void dropFewItems(boolean par1, int par2)
+    {
+        int var3;
+        int var4;
+        var3 = this.rand.nextInt(3 + par2);
+        for (var4 = 0; var4 < var3; ++var4)
+        {
+            this.dropItem(Items.gunpowder, 1);
+        }
+        var3 = this.rand.nextInt(3 + par2);
+
+        for (var4 = 0; var4 < var3; ++var4)
+        {
+            this.dropItem(Items.emerald, 1);
+        }
+        var3 = this.rand.nextInt(3 + par2);
+        for (var4 = 0; var4 < var3; ++var4)
+        {
+            this.dropItem(GVCUtils.fn_cm, 1);
+        }
+        var3 = this.rand.nextInt(3 + par2);
+        if(this.getHeldItem()!=null){
+            this.entityDropItem(this.getHeldItem(), 1);
+            if(this.getHeldItem().getItem() instanceof HMGItem_Unified_Guns){
+                for (var4 = 0; var4 < var3; ++var4)
+                {
+                    dropMagazine();
+                }
+            }
+        }
+        this.setCurrentItemOrArmor(0,null);
     }
 
     protected void applyEntityAttributes()
@@ -86,7 +145,14 @@ public class GVCEntityGuerrillaBM extends EntityCreeper
         }
     }
 
-    
+
+    protected void entityInit()
+    {
+        super.entityInit();
+        this.dataWatcher.addObject(16, Byte.valueOf((byte) - 1));
+        this.dataWatcher.addObject(17, Byte.valueOf((byte)0));
+        this.dataWatcher.addObject(18, Byte.valueOf((byte)0));
+    }
 
     /**
      * (abstract) Protected helper method to write subclass entity data to NBT.
@@ -168,29 +234,11 @@ public class GVCEntityGuerrillaBM extends EntityCreeper
     }
 
     /**
-     * Returns the sound this mob makes when it is hurt.
-     */
-    protected String getHurtSound()
-    {
-        return "mob.creeper.say";
-    }
-
-    /**
-     * Returns the sound this mob makes on death.
-     */
-    protected String getDeathSound()
-    {
-        return "mob.creeper.death";
-    }
-
-    /**
      * Called when the mob's health reaches 0.
      */
     public void onDeath(DamageSource p_70645_1_)
     {
         super.onDeath(p_70645_1_);
-
-        this.worldObj.createExplosion(this, this.posX, this.posY, this.posZ, 2.0F, false);
     }
 
     public boolean attackEntityAsMob(Entity p_70652_1_)
@@ -276,15 +324,46 @@ public class GVCEntityGuerrillaBM extends EntityCreeper
 
             if (this.getPowered())
             {
-                this.worldObj.createExplosion(this, this.posX, this.posY, this.posZ, 7.0F, true);
+                explode(this.posX, this.posY, this.posZ,7, cfg_blockdestory);
             }
             else
             {
-                this.worldObj.createExplosion(this, this.posX, this.posY, this.posZ, 3.5F, true);
+                explode(this.posX, this.posY, this.posZ,3.5f, cfg_blockdestory);
             }
 
             this.setDead();
         }
+    }
+    public void explode(double x,double y,double z,float level,boolean candestroy)
+    {
+        if(!worldObj.isRemote){
+            HMGExplosion explosion = new HMGExplosion(worldObj,this,x,y,z, level);
+            explosion.isFlaming = false;
+            explosion.isSmoking = candestroy;
+            if (net.minecraftforge.event.ForgeEventFactory.onExplosionStart(worldObj, explosion)) return;
+            explosion.doExplosionA();
+            explosion.doExplosionB(false);
+
+            if (!candestroy)
+            {
+                explosion.affectedBlockPositions.clear();
+            }
+
+            Iterator iterator = worldObj.playerEntities.iterator();
+
+            while (iterator.hasNext())
+            {
+                EntityPlayer entityplayer = (EntityPlayer)iterator.next();
+
+                if (entityplayer.getDistanceSq(x, y, z) < 4096.0D)
+                {
+                    ((EntityPlayerMP)entityplayer).playerNetServerHandler.sendPacket(new S27PacketExplosion(x, y, z, level, explosion.affectedBlockPositions, (Vec3)explosion.func_77277_b().get(entityplayer)));
+                }
+            }
+//            this.worldObj.createExplosion(thrower,x,y,z, level, candestroy);
+        }
+
+
     }
 
     public boolean func_146078_ca()

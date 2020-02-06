@@ -317,9 +317,9 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 					partsRender_gun.pass = pass;
 					isfirstperson = true;
 					EntityLivingBase entity = (EntityLivingBase) data[1];
-					boolean recoiled = this.getbooleanfromnbt("Recoiled");//���R�C�������ǂ����i�e������u���˂�l�ɕ`�悷�邽�߂̃t���O�j
-					boolean isreloading = this.getbooleanfromnbt("IsReloading");//�����[�h�����ǂ���
-					int remainbullets = gunitem.remain_Bullet(gunstack);//�����[�h�����ǂ���
+					boolean recoiled = this.getbooleanfromnbt("Recoiled");
+					boolean isreloading = this.getbooleanfromnbt("IsReloading");
+					int remainbullets = gunitem.remain_Bullet(gunstack);
 					Minecraft.getMinecraft().renderEngine.bindTexture(guntexture);
 					GL11.glPushMatrix();
 					ItemStack itemstackSight = items[1];
@@ -624,17 +624,20 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 
 	//ADS
 	public void glMatrixForRenderInEquippedADS(float reco) {
-		GL11.glRotatef(onads_modelRotationX, 1.0F, 0.0F, 0.0F);
-		GL11.glRotatef(onads_modelRotationY, 0.0F, 1.0F, 0.0F);
-		GL11.glRotatef(onads_modelRotationZ, 0.0F, 0.0F, 1.0F);
+		GL11.glRotatef(180f, 1.0F, 0.0F, 0.0F);
+		GL11.glRotatef(45f, 0.0F, 1.0F, 0.0F);
+		GL11.glRotatef(180f, 0.0F, 0.0F, 1.0F);
 		GL11.glTranslatef(onads_modelPosX, onads_modelPosY, -1.4f + onads_modelPosZ);// 0.694,1.03,-1.0//-1.4F
+		GL11.glRotatef(onads_modelRotationY, 0.0F, 1.0F, 0.0F);
+		GL11.glRotatef(onads_modelRotationX, 1.0F, 0.0F, 0.0F);
+		GL11.glRotatef(onads_modelRotationZ, 0.0F, 0.0F, 1.0F);
 	}
 
 	public void glMatrixForRenderInEntity(float reco) {
 		GL11.glRotatef(190F, 1.0F, 0.0F, 0.0F);
 		GL11.glRotatef(45F, 0.0F, 1.0F, 0.0F);
 		GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
-		GL11.glTranslatef(-1.3f +  + thirdmodelPosX, 1.55f + thirdmodelPosY, reco + thirdmodelPosZ);//-0.4
+		GL11.glTranslatef(-1.3f +  + thirdmodelPosX, 1.55f + thirdmodelPosY, 0.3f + reco + thirdmodelPosZ);//-0.4
 	}
 
 	public void glMatrixForRenderInEntityPlayer(float reco) {

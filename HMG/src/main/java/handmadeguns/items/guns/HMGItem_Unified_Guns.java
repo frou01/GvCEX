@@ -10,6 +10,7 @@ import handmadeguns.entity.PlacedGunEntity;
 import handmadeguns.entity.bullets.*;
 import handmadeguns.items.*;
 import handmadeguns.network.*;
+import handmadevehicle.entity.EntityDummy_rider;
 import handmadevehicle.entity.parts.turrets.TurretObj;
 import littleMaidMobX.LMM_EntityLittleMaid;
 import littleMaidMobX.LMM_IEntityLittleMaidAvatarBase;
@@ -252,7 +253,7 @@ public class HMGItem_Unified_Guns extends Item {
                             {
                                 HMG_proxy.force_render_item_position(itemstack, i);
                             }
-                            if (HMG_proxy.Reloadkeyispressed()) {
+                            if (!gunInfo.isOneuse && HMG_proxy.Reloadkeyispressed()) {
                                 HMGPacketHandler.INSTANCE.sendToServer(new PacketreturnMgazineItem(entity.getEntityId()));
                                 nbt.setInteger("RloadTime", 0);
                             }
@@ -266,6 +267,10 @@ public class HMGItem_Unified_Guns extends Item {
                             if (canFixflag && HMG_proxy.fixkeydown()) {
                                 nbt.setBoolean("HMGfixed", !nbt.getBoolean("HMGfixed"));
                                 HMGPacketHandler.INSTANCE.sendToServer(new PacketFixGun(entity.getEntityId()));
+                            }
+                            guntemp.currentElevation++;
+                            if(guntemp.currentElevation > gunInfo.elevationOffsets.size()){
+                                guntemp.currentElevation = 0;
                             }
                             try {
                                 if (guntemp.items != null && guntemp.items[4] != null && guntemp.items[4].getItem() instanceof HMGItem_Unified_Guns) {
@@ -329,9 +334,9 @@ public class HMGItem_Unified_Guns extends Item {
                     if (!gunInfo.canceler) {
                         nbt.setBoolean("SeekerOpened", false);
                         if (gunInfo.canlock) {
-                            guntemp.TGT = ((EntityLiving) entity).getAttackTarget();
-                            if (guntemp.TGT != null) {
-                                guntemp.islockingentity = true;
+                            guntemp.TGT = null;
+                            if(((EntityLiving) entity).getAttackTarget() != null) {
+                                lockon(itemstack, world, entity, nbt);
                             }
                         }
                     }
@@ -360,19 +365,7 @@ public class HMGItem_Unified_Guns extends Item {
                 } catch (NoSuchMethodException e) {
                     e.printStackTrace();
                 }
-                if (remain_Bullet(itemstack) <= 0 && nbt.getBoolean("Recoiled")) {
-                    try {
-                        if (guntemp.invocable != null)
-                            guntemp.invocable.invokeFunction("startreload", this, itemstack, nbt, entity);
-                    } catch (ScriptException e) {
-                        e.printStackTrace();
-                    } catch (NoSuchMethodException e) {
-                        e.printStackTrace();
-                    }
-                    nbt.setBoolean("IsReloading", true);
-                    if (!nbt.getBoolean("detached")) returnInternalMagazines(itemstack, entity);
-                    proceedreload(itemstack, world, entity, nbt, i);
-                }else {
+                {
                     if (!gunInfo.rates.isEmpty() && gunInfo.rates.size() > mode)
                         gunInfo.cycle = gunInfo.rates.get(mode);
                     boolean cocking = nbt.getBoolean("Cocking");
@@ -449,6 +442,21 @@ public class HMGItem_Unified_Guns extends Item {
                         }
                     }
                 }
+                if (remain_Bullet(itemstack) <= 0) {
+                    nbt.setInteger("CockingTime", 0);
+                    nbt.setBoolean("Cocking", true);
+                    try {
+                        if (guntemp.invocable != null)
+                            guntemp.invocable.invokeFunction("startreload", this, itemstack, nbt, entity);
+                    } catch (ScriptException e) {
+                        e.printStackTrace();
+                    } catch (NoSuchMethodException e) {
+                        e.printStackTrace();
+                    }
+                    nbt.setBoolean("IsReloading", true);
+                    if (!nbt.getBoolean("detached")) returnInternalMagazines(itemstack, entity);
+                    proceedreload(itemstack, world, entity, nbt, i);
+                }
                 nbt.setBoolean("IsTriggered", false);
                 if (nbt.getInteger("set_up_cnt") > 0) {
                     nbt.setInteger("set_up_cnt", nbt.getInteger("set_up_cnt") - 1);
@@ -461,6 +469,7 @@ public class HMGItem_Unified_Guns extends Item {
                 if (!world.isRemote && gunInfo.canlock && nbt.getBoolean("SeekerOpened")) {
                     nbt.setBoolean("islockedentity", guntemp.islockingentity);
                     if (guntemp.TGT != null) nbt.setInteger("TGT", guntemp.TGT.getEntityId());
+                    else nbt.setInteger("TGT", -1);
                     if (guntemp.islockingblock) {
                         nbt.setInteger("LockedPosX", guntemp.LockedPosX);
                         nbt.setInteger("LockedPosY", guntemp.LockedPosY);
@@ -538,13 +547,17 @@ public class HMGItem_Unified_Guns extends Item {
             if(guntemp.TGT != null)
                 guntemp.islockingentity = true;
         }else {
+            if(gunInfo.lockSound_NoStop){
+                guntemp.TGT = null;
+                guntemp.islockingentity = false;
+            }
             try {
                 Vector3d frontVec = getjavaxVecObj(getLook(1,entity.getRotationYawHead(),entity.rotationPitch));
                 frontVec.scale(-1);
                 Entity prevTarget = guntemp.TGT;
                 guntemp.TGT = null;
                 double predeg = -1;
-                if(gunInfo.canlockEntity) {
+                if(gunInfo.canlockEntity && remain_Bullet(itemstack)>0) {
                     for (Object obj : worldObj.loadedEntityList) {
                         Entity aEntity = (Entity) obj;
                         if (!aEntity.isDead) {
@@ -574,7 +587,14 @@ public class HMGItem_Unified_Guns extends Item {
                         }
                     }
                 }
-                if(guntemp.TGT != null && guntemp.TGT != prevTarget){
+                if(guntemp.TGT != null){
+                    if(guntemp.TGT.ridingEntity != null)guntemp.TGT = guntemp.TGT.ridingEntity;
+                    if(guntemp.TGT instanceof EntityDummy_rider){
+                        guntemp.TGT = ((EntityDummy_rider) guntemp.TGT).linkedBaseLogic.mc_Entity;
+                    }
+                    guntemp.TGT.getEntityData().setBoolean("behome",true);
+                }
+                if(guntemp.TGT != null && (gunInfo.lockSound_NoStop || guntemp.TGT != prevTarget)){
                     entity.worldObj.playSoundAtEntity(entity, gunInfo.lockSound_entity, 1f, gunInfo.lockpitch_entity);
                 }
                 if(gunInfo.canlockBlock){
@@ -696,7 +716,7 @@ public class HMGItem_Unified_Guns extends Item {
 	    }
     	for(int fired = 0;fired < fireLoop;fired ++) {
 		    if (!world.isRemote) {
-			    guntemp.tempspreadDiffusion += gunInfo.spreadDiffusionRate;
+			    guntemp.tempspreadDiffusion += gunInfo.spreadDiffusionRate * (guntemp.currentConnectedTurret == null && entity instanceof EntityLiving && entity.rotationPitch < 0 ? sin(entity.rotationPitch):1);
 			    try {
 				    if (guntemp.invocable != null)
 					    guntemp.invocable.invokeFunction("prefire", this, itemstack, nbt, entity);
@@ -708,7 +728,6 @@ public class HMGItem_Unified_Guns extends Item {
 			    entity.getEntityData().setFloat("GunshotLevel", guntemp.soundlevel);
 			    HMG_proxy.playerSounded(entity);
 //            world.playSoundEffect(entity.posX,entity.posY,entity.posZ, sound, soundlevel, soundspeed);
-			    HMGPacketHandler.INSTANCE.sendToAll(new PacketPlaysound(entity, guntemp.sound, gunInfo.soundspeed, guntemp.soundlevel));
 			
 			
 			    damageMagazine(itemstack, entity);
@@ -752,6 +771,15 @@ public class HMGItem_Unified_Guns extends Item {
 			    firetemp = new FireTemp(gunInfo);
 			    int magazineBulletOption = get_Type_Option_of_currentMagzine_and_apply_magazine_Option(itemstack);
 			    if (magazineBulletOption != -1) currentBulletType = magazineBulletOption;
+			    float backUpRotationPitch = entity.rotationPitch;
+			    if(!gunInfo.elevationOffsets.isEmpty()){
+			        entity.rotationPitch += gunInfo.elevationOffsets.get(guntemp.currentElevation);
+			        if(entity.rotationPitch > 90){
+                        entity.rotationPitch = 180-entity.rotationPitch;
+                    }else if(entity.rotationPitch < -90){
+                        entity.rotationPitch = -180-entity.rotationPitch;
+                    }
+                }
 			    switch (currentBulletType) {
 				    case 0:
 				    case 1:
@@ -804,9 +832,15 @@ public class HMGItem_Unified_Guns extends Item {
 					    bulletBase.canex = firetemp.destroyBlock;
 					    if(bulletBase instanceof HMGEntityBulletTorp)((HMGEntityBulletTorp) bulletBase).draft = gunInfo.torpdraft;
 					    bulletBase.damageRange = gunInfo.damagerange;
+					    bulletBase.hasVT   = gunInfo.hasVT  ;
+					    bulletBase.VTRange = gunInfo.VTRange;
+					    bulletBase.VTWidth = gunInfo.VTWidth;
+                        bulletBase.seekerwidth = gunInfo.seekerSize_bullet;
 					    bulletBase.resistanceinwater = gunInfo.resistanceinWater;
-                        bulletBase.prevRotationYaw = bulletBase.rotationYaw = -entity.getRotationYawHead();
-                        bulletBase.prevRotationPitch = bulletBase.rotationPitch = -entity.rotationPitch;
+                        if (guntemp.currentConnectedTurret == null) {
+                            bulletBase.prevRotationYaw = bulletBase.rotationYaw = -entity.getRotationYawHead();
+                            bulletBase.prevRotationPitch = bulletBase.rotationPitch = -entity.rotationPitch;
+                        }
 
                         if (guntemp.currentConnectedTurret == null) {
                             if (guntemp.islockingentity) {
@@ -835,6 +869,8 @@ public class HMGItem_Unified_Guns extends Item {
 					    world.spawnEntityInWorld(bulletBase);
 				    }
 			    }
+			    entity.rotationPitch = backUpRotationPitch;
+                HMGPacketHandler.INSTANCE.sendToAll(new PacketPlaysound(entity, guntemp.sound, gunInfo.soundspeed, guntemp.soundlevel,entity.posX,entity.posY,entity.posZ));
 		    }
 		
 		    if (!nbt.getBoolean("HMGfixed"))
@@ -1191,7 +1227,7 @@ public class HMGItem_Unified_Guns extends Item {
             }
             ++reloadti;
         }else {
-            nbt.setBoolean("CannotReload", false);
+            nbt.setBoolean("IsReloading", false);
             reloadti = 0;
         }
         if (reloadti >= reloadTime(itemstack)) {
@@ -1210,11 +1246,16 @@ public class HMGItem_Unified_Guns extends Item {
         }
     }
     public void resetReload(ItemStack par1ItemStack, World par2World, Entity entity, int i) {
-        if(gunInfo.isOneuse) {
-            consumeInventoryItem(this, getInventory_fromEntity(entity));
-        }
         guntemp.items[5] = null;//撃ち終わりに特殊弾を消去
-        reloadBullets(par1ItemStack,par2World,entity);
+        if(getInventory_fromEntity(entity) != null && gunInfo.isOneuse) {
+            consumeInventoryItem(this, getInventory_fromEntity(entity),i);
+        }
+        if(par1ItemStack.stackSize > 0){
+            if(gunInfo.isOneuse && getInventory_fromEntity(entity) == null){
+                par1ItemStack.getTagCompound().setByte("Bolt", (byte)100);
+            }
+            reloadBullets(par1ItemStack, par2World, entity);
+        }
 //        int l;
 //        for(l = 0; l< gunInfo.magazineItemCount; l++) {
 //            if( entity instanceof EntityPlayer) {
@@ -1235,18 +1276,38 @@ public class HMGItem_Unified_Guns extends Item {
 //        }
     
     }
+    public double getTerminalspeed(){
+        if(gunInfo.acceleration > 0){
+            //A*0.9 + 0.1 = A
+            //(1.0 - 0.9) * A = 0.1
+            //A = 0.1 * (1.0 - 0.9)
+            //Terminal = acceleration * (1 - resistance)
+            return gunInfo.acceleration/(1-gunInfo.resistance);
+        }
+        return 0;
+    }
     
-    public boolean consumeInventoryItem(Item p_146026_1_,IInventory iInventory)
+    public boolean consumeInventoryItem(Item p_146026_1_,IInventory iInventory,int i)
     {
         if(iInventory != null) {
-            int i = this.func_146029_c(p_146026_1_, iInventory);
+            if(i>0){
+                ItemStack stackOnSlot =  iInventory.getStackInSlot(i);
+                if(stackOnSlot != null && stackOnSlot.getItem() == p_146026_1_) {
+                    stackOnSlot.stackSize--;
+                    if (stackOnSlot.stackSize <= 0) {
+                        iInventory.setInventorySlotContents(i, null);
+                    }
+                    return true;
+                }
+            }
+            int i2 = this.func_146029_c(p_146026_1_, iInventory);
 
-            if (i < 0) {
+            if (i2 < 0) {
                 return false;
             } else {
-                iInventory.getStackInSlot(i).stackSize--;
-                if (iInventory.getStackInSlot(i).stackSize <= 0) {
-                    iInventory.setInventorySlotContents(i, null);
+                iInventory.getStackInSlot(i2).stackSize--;
+                if (iInventory.getStackInSlot(i2).stackSize <= 0) {
+                    iInventory.setInventorySlotContents(i2, null);
                 }
 
                 return true;

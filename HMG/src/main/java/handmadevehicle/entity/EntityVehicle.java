@@ -69,6 +69,7 @@ public class EntityVehicle extends Entity implements IFF,IVehicle,IMultiTurretVe
 	public EntityVehicle(World par1World,String typename) {
 		this(par1World);
 		this.init_2(typename);
+		this.forceSpawn = true;
 	}
 	static public EntityVehicle EntityVehicle_spawnByMob(World par1World,String typename) {
 		EntityVehicle bespawningEntity = new EntityVehicle(par1World,typename);
@@ -113,7 +114,12 @@ public class EntityVehicle extends Entity implements IFF,IVehicle,IMultiTurretVe
 	public double getMountedYOffset() {
 		return 0.0D;
 	}
-	
+
+
+	public float getEyeHeight()
+	{
+		return this.height/2;
+	}
 	
 	public void onUpdate() {
 		modifiedPathNavigater.onUpdateNavigation();
@@ -319,6 +325,9 @@ public class EntityVehicle extends Entity implements IFF,IVehicle,IMultiTurretVe
 
 		if(source.isExplosion()){
 			par2 *= baseLogic.prefab_vehicle.antiExplosionCof;
+		}
+		if(source.getEntity() != null && source.getDamageType().equals("player") && baseLogic.isRidingEntity(source.getEntity())){
+			par2 = 0;
 		}
 
 		if(par2 < 0)par2 = 0;
@@ -536,7 +545,7 @@ public class EntityVehicle extends Entity implements IFF,IVehicle,IMultiTurretVe
 	
 	@Override
 	public void yourSoundIsremain(String playingSound) {
-		getBaseLogic().needStartSound = false;
+		getBaseLogic().yourSoundIsremain(playingSound);
 	}
 	
 	/**

@@ -126,6 +126,9 @@ public class CMProxy {
 	public boolean changeControlclick(){
 		return false;
 	}
+	public boolean changeEasyControlMode(){
+		return false;
+	}
 	public boolean resetCamrotclick(){
 		return false;
 	}

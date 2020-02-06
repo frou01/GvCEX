@@ -1,12 +1,13 @@
 WeaponName,ZiS-S-53_85mm_T-34-85_turret_modernized
 WeaponDisplayName,ZiS-S-53_85mm
 turretYawCenterpos,0,1.5625,-0.4488
-turretPitchCenterpos,0,2.050,-1.550
+turretPitchCenterpos,0,2.050,1.550
 cannonPos,0,2.07,-2.08
-turretspeedY,3
+turretspeedY,2
 turretspeedP,1
 syncTurretAngle,true
 Recoil,100
+traverseSound,handmadevehicle:handmadevehicle.T-34traverse
 linked_MotherTrigger,false
 turretanglelimtPitchMax,5
 turretanglelimtPitchmin,-20

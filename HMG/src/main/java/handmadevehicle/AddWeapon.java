@@ -20,6 +20,8 @@ import static java.lang.Integer.parseInt;
 public class AddWeapon {
 	public static final HashMap<String,Prefab_Turret> prefab_turretHashMap = new HashMap<>();
 	public static void load( boolean isClient, File file){
+		int line = 0;
+		String current = "";
 		try {
 			//File file = new File(configfile,"hmg_handmadeguns.txt");
 			if (checkBeforeReadfile(file))
@@ -30,7 +32,8 @@ public class AddWeapon {
 				Prefab_Turret prefab_turret = new Prefab_Turret();
 				String name = null;
 				while((str = br.readLine()) != null) {
-					
+					current = str;
+					line++;
 					String[] type = str.split(",");
 					switch (type[0]){
 						case "WeaponName":
@@ -42,9 +45,11 @@ public class AddWeapon {
 							prefab_turret.turretName = type[1];
 							break;
 						case "turretYawCenterpos":
+							prefab_turret.gunInfo.posGetter.turretRotationYawPoint = new double[]{parseDouble(type[1]), parseDouble(type[2]), parseDouble(type[3])};
 							prefab_turret.gunInfo.posGetter.turretYawCenterpos = new Vector3d(parseDouble(type[1]),parseDouble(type[2]),parseDouble(type[3]));
 							break;
 						case "turretPitchCenterpos":
+							prefab_turret.gunInfo.posGetter.turretRotationPitchPoint = new double[]{parseDouble(type[1]), parseDouble(type[2]), parseDouble(type[3])};
 							prefab_turret.gunInfo.posGetter.turretPitchCenterpos = new Vector3d(parseDouble(type[1]),parseDouble(type[2]),parseDouble(type[3]));
 							break;
 						case "cannonPos":
@@ -150,9 +155,12 @@ public class AddWeapon {
 			}
 			else
 			{
-			
+				System.out.println("Failed in Line " + line);
+				System.out.println("" + current);
 			}
 		} catch (Exception e){
+			System.out.println("Failed in Line " + line);
+			System.out.println("" + current);
 			e.printStackTrace();
 		}
 	}

@@ -51,5 +51,7 @@ public class HMGPacketHandler {
                 Side.CLIENT);
         INSTANCE.registerMessage(MessageCatcher_ChangeMagazineType.class, PacketChangeMagazineType.class, ++id,
                 Side.SERVER);
+        INSTANCE.registerMessage(MessageCatch_PlaySound_Gui.class, PacketPlaySound_Gui.class, ++id,
+                Side.CLIENT);
     }
 }

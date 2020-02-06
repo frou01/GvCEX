@@ -42,10 +42,6 @@ public class GVCEntityGuerrillaSG extends EntityGBase
             this.setCurrentItemOrArmor(0, new ItemStack((Item) Guns_SG.get(rnd.nextInt(Guns_SG.size()))));
         }
     }
-    protected Item func_146068_u()
-    {
-        return GVCUtils.fn_shell;
-    }
 
     /**
      * Drop 0-2 items of this living's type

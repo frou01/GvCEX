@@ -1894,17 +1894,20 @@ public class HMGRenderItemGun_U implements IItemRenderer {
 
 	//ADS
 	public void glMatrixForRenderInEquippedADS(float reco) {
-		GL11.glRotatef(rotationx, 1.0F, 0.0F, 0.0F);
-		GL11.glRotatef(rotationy, 0.0F, 1.0F, 0.0F);
-		GL11.glRotatef(rotationz, 0.0F, 0.0F, 1.0F);
+		GL11.glRotatef(180f, 1.0F, 0.0F, 0.0F);
+		GL11.glRotatef(45f, 0.0F, 1.0F, 0.0F);
+		GL11.glRotatef(180f, 0.0F, 0.0F, 1.0F);
 		GL11.glTranslatef(modelx, modely, modelz + reco);// 0.694,1.03,-1.0//-1.4F
+		GL11.glRotatef(rotationy, 0.0F, 1.0F, 0.0F);
+		GL11.glRotatef(rotationx, 1.0F, 0.0F, 0.0F);
+		GL11.glRotatef(rotationz, 0.0F, 0.0F, 1.0F);
 	}
 
 	public void glMatrixForRenderInEntity(float reco) {
 		GL11.glRotatef(190F, 1.0F, 0.0F, 0.0F);
 		GL11.glRotatef(45F, 0.0F, 1.0F, 0.0F);
 		GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
-		GL11.glTranslatef(-1.3f, 1.55f, reco);//-0.4
+		GL11.glTranslatef(-1.3f, 1.65f, 0.1f+reco);//-0.4
 		GL11.glScalef(1.0F, 1.0F, 1.0F);
 	}
 
@@ -1912,7 +1915,7 @@ public class HMGRenderItemGun_U implements IItemRenderer {
 		GL11.glRotatef(110F, 1.0F, 0.0F, 0.0F);// 90//110
 		GL11.glRotatef(-0F, 0.0F, 1.0F, 0.0F);// 0
 		GL11.glRotatef(120F, 0.0F, 0.0F, 1.0F);// 130
-		GL11.glTranslatef(0.2F, -1.75F, -0.8f + reco);
+		GL11.glTranslatef(0.2F, -1.85F, -0.5f + reco);
 		GL11.glRotatef(10F, 0.0F, 0.0F, 1.0F);
 		GL11.glRotatef(10F, 0.0F, 1.0F, 0.0F);
 		GL11.glRotatef(-10F, 1.0F, 0.0F, 0.0F);

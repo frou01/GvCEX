@@ -18,7 +18,7 @@ public class GunTemp {
 	public ItemStack magazineStack;
 	public boolean muzzle = true;
 	public Invocable invocable;
-	public Entity  TGT;
+	public Entity TGT;
 	public int LockedPosX;
 	public int LockedPosY;
 	public int LockedPosZ;
@@ -27,7 +27,8 @@ public class GunTemp {
 	
 	public int selectingMagazine;
 	public int currentMgazine;
-	
+	public int currentElevation;
+
 	public TurretObj currentConnectedTurret;
 	public boolean connectedTurret;
 }

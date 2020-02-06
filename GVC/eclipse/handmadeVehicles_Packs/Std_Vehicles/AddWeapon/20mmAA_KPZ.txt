@@ -1,13 +1,13 @@
 WeaponName,20mmAA_KPZ
 turretYawCenterpos,1.2300,2.6356,0.08640
-turretPitchCenterpos,1.2300,2.726,0.2678
-cannonPos,1.2300,2.7419,-0.7805
+turretPitchCenterpos,1.2300,2.726,-0.2678
+cannonPos,1.2300,2.7419,0.7805
 linked_MotherTrigger,false
 Recoil,3
-turretspeedY,3
-turretspeedP,1
+turretspeedY,4
+turretspeedP,4
 
-turretanglelimtPitchmin,-85
+turretanglelimtPitchmin,-45
 BulletPower,40
 BulletSpeed,10
 Explosion,1

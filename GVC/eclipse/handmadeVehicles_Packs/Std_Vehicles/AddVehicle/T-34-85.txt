@@ -8,7 +8,7 @@ LandPreset;
 soundpitch,1;
 throttle_Max,3;
 throttle_min,-1;
-yawspeed_ground,4;
+yawspeed_ground,6;
 speedfactor,0;
 speedfactor_af,0;
 speedfactor_onGround,0.08;

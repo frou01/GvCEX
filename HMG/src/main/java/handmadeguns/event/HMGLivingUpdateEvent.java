@@ -4,7 +4,6 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import handmadeguns.entity.bullets.HMGEntityBulletBase;
 import handmadevehicle.entity.EntityVehicle;
 import net.minecraftforge.event.entity.EntityEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
 
 public class HMGLivingUpdateEvent {
     @SubscribeEvent

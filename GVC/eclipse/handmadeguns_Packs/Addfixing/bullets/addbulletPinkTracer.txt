@@ -7,6 +7,7 @@ TrailLength,3
 TrailWidth,0.1
 //幅
 Trailtexture,trailPink
+
 //テクスチャはaddtexture下に置くこと
 //アニメーションも一応出来る。
 //名前はここで設定したもの + 数字 + .png

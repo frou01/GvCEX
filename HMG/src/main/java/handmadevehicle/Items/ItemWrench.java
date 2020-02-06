@@ -1,6 +1,7 @@
 package handmadevehicle.Items;
 
 import handmadevehicle.entity.EntityVehicle;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -25,5 +26,8 @@ public class ItemWrench extends Item {
 //		}
 		return false;
 	}
-	
+	public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity)
+	{
+		return false;
+	}
 }

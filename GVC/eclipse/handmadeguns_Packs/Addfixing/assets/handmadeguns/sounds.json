@@ -28,5 +28,7 @@
 "handmadeguns.supu": {"category": "neutral","sounds": ["supu"]},
 "handmadeguns.fire_30mm": {"category": "neutral","sounds": ["fire_30mm"]},
 "handmadeguns.dshk38Fire": {"category": "neutral","sounds": ["dshk38Fire"]},
+"handmadeguns.9k38Launch": {"category": "neutral","sounds": ["9k38Launch"]},
+"handmadeguns.9k38Lock": {"category": "neutral","sounds": ["9k38Lock"]},
 "handmadeguns.nulls": {"category": "neutral","sounds": ["nulls"]}
 }

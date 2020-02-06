@@ -1,0 +1,99 @@
+BulletPower,80
+BulletSpeed,0.1
+BlletSpread,4.0f
+BulletGravity,0.485
+ADS_Spread_coefficient,0.5
+BlletSpreadDiffusion,3,0,0.3,0.2,2,0.1
+Acceleration,0.35f
+resistance,0.9f
+Recoil,0.0d
+ReloadTime,0
+RemainingBullet,1
+isOneuse,true
+Attacking,2.0f
+Zoom,1.0f,1.0f,4.0f
+ZoomRender,true
+ZoomRenderType,true,true,false
+ZoomRenderTypeTxture,false,false,true
+ElevationOffsets,-13
+Explosion,4.5f
+BlockDestory,true
+Texture,9k38
+GunSound,handmadeguns.9k38Launch,handmadeguns.9k38Launch
+lockSound_entity,handmadeguns:handmadeguns.9k38Lock
+lockSound_NoStop,true
+GunSoundReload,handmadeguns.reload
+CanObj,true
+ObjModel,9k38.mqo
+ObjTexture,9k38.png
+ModelScala,0.5f
+
+Motion,0.6
+
+ModelEquipped,-0.7f,2f,-1.5f
+ThirdModelEquipped,0.5,1,-1.5
+SimpleADSOffsetX,0.4266,0.4266,0.4266
+SimpleADSOffsetY,0.612,0.614,0.614
+SimpleADSOffsetZ,-0.4,-0.4,-0.4
+ModelRotationX2,-13,-10,-10
+ModelRotationY2,0,0,0
+ModelRotationZ2,0,0,0
+
+ModelArm,true
+ModelArmRotationR,-1.57f,-0.9f,-1.57f
+ModelArmOffsetR,0.0f,1.2f,-1.35f
+ModelArmRotationL,-0.0f,-2.3f,2.0f
+ModelArmOffsetL,0.1f,1.2f,-2.4f
+SprintingPoint,0,-0.2,-0.2
+SprintingRotation,30f,45,0f
+
+BulletNameALL,S-5
+
+ScopeTexture,scope_smaw.png,scope_smaw.png,scope_smaw.png
+RenderCross,false
+Induction_precision,90
+Canlock,true
+lock_to_Vehicle,true
+seekerSize,5
+seekerSize_bullet,45
+hasVT,true
+VTRange,25
+VTWidth,180
+damagerange,10
+UnderBarrelWeapon,0
+RightType,0
+Magazine,0,HandmadeGuns,missile
+
+AddParts,obj1
+    AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+    RenderOnNormal
+    SetAsNormalParts
+
+    AddChildParts,obj2
+    	AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+    	RenderOnNormal
+    	SetAsNormalParts
+    BackParts
+
+    AddChildParts,obj3
+    	AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+    	RenderOnNormal
+    	SetAsNormalParts
+    BackParts
+
+    AddChildParts,Larm
+    	AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+    	RenderOnNormal
+    	SetAsNormalParts
+    BackParts
+
+    AddChildParts,Rarm
+    	AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+    	RenderOnNormal
+    	SetAsNormalParts
+    BackParts
+BackParts
+
+Tabname,HMG_GVCGuns
+Name,9K38 „I„s„|„p
+RR,9k38

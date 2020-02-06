@@ -25,7 +25,6 @@ public class HandleOpenVehicleGui implements IMessageHandler<HMVPacketOpenVehicl
 			if(world != null){
 				Entity opener = world.getEntityByID(message.playerID);
 				if(opener instanceof EntityPlayer) {
-					opener.ridingEntity = world.getEntityByID(message.vehicleID);
 					((EntityPlayer) opener).openGui(HMVehicle.INSTANCE, message.ID, opener.worldObj, (int)opener.posX, (int)opener.posY, (int)opener.posZ);
 				}
 			}

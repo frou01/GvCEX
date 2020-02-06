@@ -57,6 +57,7 @@ public class GVCItemGuerrillaEgg extends Item
                 int var12 = MathHelper.floor_double((double)(par2EntityPlayer.rotationYaw));
                 GVCEntityGuerrillaBM entityskeleton = new GVCEntityGuerrillaBM(par3World);
                 entityskeleton.setLocationAndAngles(par4+0.5, par5, par6+0.5, var12, 0.0F);
+                entityskeleton.addRandomArmor();
                 //entityskeleton.setCurrentItemOrArmor(0, new ItemStack(GVCUtils.fn_ak74));
                 par3World.spawnEntityInWorld(entityskeleton);
                 --par1ItemStack.stackSize;
@@ -66,7 +67,7 @@ public class GVCItemGuerrillaEgg extends Item
                 int var12 = MathHelper.floor_double((double)(par2EntityPlayer.rotationYaw));
                 GVCEntityGuerrillaSP entityskeleton = new GVCEntityGuerrillaSP(par3World);
                 entityskeleton.setLocationAndAngles(par4+0.5, par5, par6+0.5, var12, 0.0F);
-                entityskeleton.setCurrentItemOrArmor(0,new ItemStack((Item)Guns_SR.get(new Random().nextInt(Guns_SR.size()))));
+                entityskeleton.addRandomArmor();
                 par3World.spawnEntityInWorld(entityskeleton);
                 --par1ItemStack.stackSize;
                 return true;

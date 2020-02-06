@@ -7,6 +7,7 @@ import java.lang.reflect.Modifier;
 
 import cpw.mods.fml.relauncher.ReflectionHelper;
 import handmadeguns.client.audio.BulletSoundHMG;
+import handmadeguns.client.audio.GunSoundHMG;
 import handmadeguns.client.audio.MovingSoundHMG;
 import handmadeguns.client.audio.ReloadSoundHMG;
 import handmadeguns.emb_modelloader.MQO_ModelLoader;
@@ -115,6 +116,16 @@ public class ClientProxyHMG extends CommonSideProxyHMG {
 		Minecraft.getMinecraft().getSoundHandler().playSound(new PositionedSoundRecord(new ResourceLocation(sound),soundLV,soundSP*tempsp,(float)posX,(float)posY,(float)posZ));
 	}
 	@Override
+	public void playsound_Gun(String sound, float soundLV, float soundSP,float maxdist,Entity attached,
+	                          double posX,
+	                          double posY,
+	                          double posZ){
+		Minecraft.getMinecraft().getSoundHandler().playSound(new GunSoundHMG(attached,sound,soundLV,soundSP,maxdist,
+				posX,
+				posY,
+				posZ));
+	}
+	@Override
 	public void playsoundatEntity(String sound, float soundLV, float soundSP,Entity attached,boolean repeat,int time){
 		Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundHMG(attached,sound,repeat,soundLV,soundSP,time));
 	}
@@ -133,6 +144,10 @@ public class ClientProxyHMG extends CommonSideProxyHMG {
 	@Override
 	public Minecraft getMCInstance() {
 		return Minecraft.getMinecraft();
+	}
+	@Override
+	public void playGUISound(String sound,float speed){
+		getMCInstance().getSoundHandler().playSound(PositionedSoundRecord.func_147673_a(new ResourceLocation(sound)));
 	}
     @Override
 	public World getCilentWorld(){
@@ -376,6 +391,15 @@ public class ClientProxyHMG extends CommonSideProxyHMG {
 		}
 		return flag;
 		//return false;
+	}
+
+	@Override
+	public boolean upElevationKeyDown(){
+		return false;
+	}
+	@Override
+	public boolean downElevationKeyDown(){
+		return false;
 	}
 	@Override
 	public boolean Lightkeyispressed_no_stopper(){

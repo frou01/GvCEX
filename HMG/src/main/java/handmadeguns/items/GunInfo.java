@@ -63,6 +63,7 @@ public class GunInfo {
 	public String soundsu= "handmadeguns:handmadeguns.supu";
 	public float soundsuplevel = 1.0f;
 	public String lockSound_entity = "handmadeguns:handmadeguns.lockon";
+	public boolean lockSound_NoStop = false;
 	public String lockSound_block = "handmadeguns:handmadeguns.lockon";
 	public float lockpitch_entity = 1;
 	public float lockpitch_block = 0.5f;
@@ -164,6 +165,8 @@ public class GunInfo {
 //			add(1);
 //		}
 	};
+
+	public ArrayList<Float> elevationOffsets = new ArrayList<>();
 	public boolean userenderscript = false;
 	public ScriptEngine renderscript;
 	public ScriptEngine script;
@@ -179,6 +182,7 @@ public class GunInfo {
 	public boolean canlockBlock = false;
 	public boolean canlockEntity = false;
 	public double seekerSize = 60;
+	public float seekerSize_bullet = 15;
 	public boolean semiActive = false;
 	public boolean lock_to_Vehicle = false;
 	public double lookDown = 1;
@@ -206,6 +210,11 @@ public class GunInfo {
 	public float turretanglelimtYawmin = -360;
 	public double torpdraft;
 	public float damagerange;
+
+	public boolean hasVT   = false;
+	public double  VTRange = 10;
+	public double  VTWidth = 30;
+
 	public float resistanceinWater;
 	
 	public static Vec3 getLook(float p_70676_1_, Entity entity)

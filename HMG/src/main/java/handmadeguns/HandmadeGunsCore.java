@@ -30,8 +30,6 @@ import handmadeguns.event.RenderTickSmoothing;
 import handmadeguns.items.HMGItemBullet;
 import handmadeguns.items.guns.HMGItem_Unified_Guns;
 import net.minecraft.block.Block;
-import net.minecraftforge.client.ForgeHooksClient;
-import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.model.ModelFormatException;
 import org.apache.commons.io.FileUtils;
 
@@ -589,7 +587,7 @@ public class HandmadeGunsCore {
 		//EntityRegistry.registerModEntity(HMGEntityHand.class, "HMGEntityHand", 268, this, 128, 5, true);
 
 		//MinecraftForge.EVENT_BUS.register(new GGEventZoom());
-		MinecraftForge.EVENT_BUS.register(new HMGEventZoom());
+		if(pEvent.getSide().isClient())MinecraftForge.EVENT_BUS.register(new HMGEventZoom());
 
 		HMGLivingUpdateEvent hmgLivingUpdateEvent = new HMGLivingUpdateEvent();
 		FMLCommonHandler.instance().bus().register(hmgLivingUpdateEvent);

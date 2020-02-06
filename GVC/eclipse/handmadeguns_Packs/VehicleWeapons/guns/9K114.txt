@@ -1,4 +1,3 @@
-guerrila_cant_use_this
 Dont_Be_Inside_Root_Chest
 BulletPower,500
 BulletSpeed,0.1

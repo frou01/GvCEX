@@ -68,14 +68,86 @@ MagazineGL,0,HandmadeGuns,bullet_rr_hmg
 
 MuzzleJump,-10
 
-ReloadMotion
-{
-0,     0f , 0f , 0f,-0.3f,0.3f , 0f  ,0f,0f , 0f , 0.2f,1f,1.10f   , 0f  ,0f,0f , 0f,0f,0f , 0f,0f,0f , 0f , 2f,-2f,0f , 0f,0f,0f , 0f,0f,40f
-1,     10f, 0f , 0f,-0.3f,0.3f , 0f  ,0f,0f , 0f , 0.2f,0.8f,1.10f , 0f  ,0f,0f , 0f,0f,0f , 0f,0f,0f , 0f , 0f,-1f,0f , 0f,0f,0f , 0f,0f,40f
-2,     15f, 0f , 0f,-0.3f,0.3f , -20f,0f,0f , 0f , 0.2f,0.8f,1.10f , 0f  ,0f,0f , 0f,0f,0f , 0f,0f,0f , 0f , 0f,-1f,0f , 0f,0f,0f , 0f,0f,40f
-3,     20f, 0f , 0f,-0.3f,0.3f , -20f,0f,0f , 0f , 0.2f,0.3f,1.10f , 0.7f,0f,0f , 0f,0f,0f , 0f,0f,0f , 0f , 0f, 0f,0f , 0f,0f,0f , 0f,0f,0f
-4,     30f, 0f , 0f,-0.3f,0.3f , 0f  ,0f,0f , 1f , 0f  ,0f  ,0f    , 0f ,0f,0f , 0f,0f,0f , 0f,0f,0f , 0f , 0f, 0f,0f , 0f,0f,0f , 0f,0f,0f
-}
+AddParts,mat1
+    AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+    AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+    RenderOnNormal
+    AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+
+    AddReloadMotionKey,0,0,0,0,0,0,0,             5,0,0,0,0,0,0
+    AddReloadMotionKey,5,0,0,0,0,0,0,             10,0,0,0,-15,0,45
+    AddReloadMotionKey,10,0,0,0,-15,0,45,            25,0,0,0,-15,0,45
+    AddReloadMotionKey,25,0,0,0,-15,0,45,           30,0,0,0,0,0,0
+
+    AddChildParts,Larm
+    	AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+    	AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+    	RenderOnNormal
+    	AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+    	AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+    	AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+    	AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+
+    	AddReloadMotionKey,0,0,0,0,0,0,0,            5,0,0,0,0,0,0
+    	AddReloadMotionKey,5,0,0,0,0,0,0,            10,0,-2,-1,0,0,0
+    	AddReloadMotionKey,10,0,-2,-1,0,0,0,            15,0,-0.5,0,0,0,0
+
+    	AddReloadMotionKey,15,0,-0.5,0,0,0,0,           17,0,-0.5,0,0,0,0
+    	AddReloadMotionKey,17,0,-0.5,0,0,0,0,           20,0,0.75,-0.5,0,0,0
+    	AddReloadMotionKey,20,0,0.75,-0.5,0,0,0,           22,0,0.75,-0.9,0,0,0
+    	AddReloadMotionKey,22,0,0.75,-0.9,0,0,0,           24,0,0.75,-0.5,0,0,0
+    	AddReloadMotionKey,24,0,0.75,-0.5,0,0,0,           30,0,0,0,0,0,0
+    BackParts
+    AddChildParts,Rarm
+    	AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+    	AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+    	RenderOnNormal
+    	AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+    	AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+    	AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+    	AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+
+    	AddReloadMotionKey,0,0,0,0,0,0,0,            5,0,0,0,0,0,0
+    	AddReloadMotionKey,5,0,0,0,0,0,0,            25,0,0,0,0,0,0
+    	AddReloadMotionKey,25,0,0,0,0,0,0,           30,0,0,0,0,0,0
+    BackParts
+
+
+
+
+    AddChildParts,mat3
+        AddPartsRotationCenterAndRotationAmount,0,0,0.0,0,0,0
+        RenderOnNormal
+        AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+
+        AddReloadMotionKey,0,0,0,0,0,0,0,           5,0,-5,-1,0,0,0
+        AddReloadMotionKey,5,false,          10
+        AddReloadMotionKey,10,0,-2,-0.5,0,0,0,          15,0,0,0,0,0,0
+        AddReloadMotionKey,25,0,0,0,0,0,0,          30,0,0,0,0,0,0
+    BackParts
+
+    AddChildParts,mat2
+        AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+        RenderOnNormal
+        AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+        AddRecoilMotionKey,0,0,0,0,0,0,0,           5,0,0,-0.4,0,0,0
+        AddRecoilMotionKey,5,0,0,-0.40,0,0,0,       10,0,0,0,0,0,0
+        AddRecoilMotionKey,10,0,0,-0.40,0,0,0,       12,0,0,0,0,0,0
+
+        AddReloadMotionKey,0,0,0,0,0,0,0,           20,0,0,0,0,0,0
+        AddReloadMotionKey,20,0,0,0,0,0,0,          22,0,0,-0.4,0,0,0
+        AddReloadMotionKey,22,0,0,-0.4,0,0,0,       24,0,0,0,0,0,0
+        AddReloadMotionKey,24,0,0,0,0,0,0,          30,0,0,0,0,0,0
+    BackParts
 
 Tabname,HMG_GVCGuns
 Name,„P„y„ƒ„„„€„|„u„„ „M„p„{„p„‚„€„r„p

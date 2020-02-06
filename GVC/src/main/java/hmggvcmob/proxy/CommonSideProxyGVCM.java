@@ -37,7 +37,6 @@ public class CommonSideProxyGVCM {
 //		GameRegistry.registerTileEntity(GVCTileEntityMobSpawner.class, "GVCTile_MobSpawner");
 		GameRegistry.registerTileEntity(TileEntityFlag.class, "FlagTile");
 		GameRegistry.registerTileEntity(TileEntityMobSpawner_Extend.class, "MobspawnerEX");
-		//������
 	}
 	public void setNextstepdistance(Entity instance, int value){
 		try {

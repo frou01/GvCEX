@@ -3,7 +3,7 @@ rotcenter,0,1,0;
 modelName,BRDM-2.mqo;
 modelName_texture,BRDM-2.png;
 health,200;
-soundname,handmadevehicle:handmadevehicle.BRDM-2;
+soundname,handmadevehicle:handmadevehicle.BTRSeries;
 soundpitch,1;
 LandPreset;
 draft,1.2;
@@ -45,8 +45,8 @@ SetUpSeat1_NUM,4;
 SetUpSeat2_AddSeat_Normal	,0,	 0.2625,1.633,-0.9761,false,false,false,-1,-1;
 SetUpSeat3_AddSeat_Zoom		,0,	 0.2625,2.024,-1.229 ,false,false,false,-1,-1;
 
-SetUpSeat2_AddSeat_Normal	,1,	 0.3019,1.98 , 0.3561,true,true,true,0,1;
-SetUpSeat3_AddSeat_Zoom		,1,	 0.1453,2.136,-0.5399,true,true,true,0,1;
+SetUpSeat2_AddSeat_Normal	,1,	 0.2,1.98 , 0.1,true,true,true,0,1;
+SetUpSeat3_AddSeat_Zoom		,1,	 0.2,2.165,-0.6,true,true,true,0,1;
 
 SetUpSeat2_AddSeat_Normal	,2,	-0.2625,1.633,-0.9761,false,false,false,-1,-1;
 SetUpSeat3_AddSeat_Zoom		,2,	-0.2625,2.024,-1.229 ,false,false,false,-1,-1;

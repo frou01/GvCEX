@@ -297,7 +297,9 @@ public class PartsRender_Vehicle extends PartsRender {
 
 					GL11.glDepthFunc(GL11.GL_ALWAYS);//強制描画
 					model.renderPart(parts.partsname_reticle);
-					if(parts.reticleChild != null)partSidentification(parts.reticleChild,state,flame,remainbullets);
+					if(parts.reticleChild != null){
+						partSidentification(parts.reticleChild,state,flame,remainbullets);
+					}
 					GL11.glDepthFunc(GL11.GL_LEQUAL);
 					GL11.glDepthMask(true);
 					glDisable(GL_STENCIL_TEST);

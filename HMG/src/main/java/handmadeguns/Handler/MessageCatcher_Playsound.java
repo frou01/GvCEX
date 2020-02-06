@@ -32,7 +32,7 @@ public class MessageCatcher_Playsound implements IMessageHandler<PacketPlaysound
                         else if(message.time != -1)
                             HMG_proxy.playsoundatEntity(message.sound, message.level, message.speed, shooter, false, message.time);
                         else
-                            HMG_proxy.playsoundat(message.sound, message.level, message.speed, message.speed, shooter.posX, shooter.posY , shooter.posZ);
+                            HMG_proxy.playsound_Gun(message.sound, message.level, message.speed,message.level * 256, shooter,message.posX,message.posY,message.posZ);
                     }
                 }
             }

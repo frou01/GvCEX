@@ -2,10 +2,12 @@ package hmggvcmob.ai;
 
 import handmadeguns.entity.PlacedGunEntity;
 import handmadeguns.items.guns.HMGItem_Unified_Guns;
+import handmadevehicle.entity.EntityDummy_rider;
 import hmggvcmob.IflagBattler;
 import handmadevehicle.SlowPathFinder.WorldForPathfind;
 import hmggvcmob.entity.friend.EntitySoBases;
 import hmggvcmob.entity.guerrilla.EntityGBases;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
@@ -140,13 +142,13 @@ public class AIAttackGun extends EntityAIBase {
                 }
                 Vector3d currentAttackToPosition = getSeeingPosition();
                 if (currentAttackToPosition != null) {
-                    double tocurrentAttackToPosition = shooter.getDistanceSq(currentAttackToPosition.x, currentAttackToPosition.y + target.getEyeHeight(), currentAttackToPosition.z);
+                    double tocurrentAttackToPosition = shooter.getDistanceSq(currentAttackToPosition.x, currentAttackToPosition.y, currentAttackToPosition.z);
                     boolean see = shooter.canEntityBeSeen(target);
                     boolean isnotblinded;
                     boolean canSee = isnotblinded = !shooter.isPotionActive(Potion.blindness);
                     canSee &= see;
                     if (canSee) {
-                        shooter.getLookHelper().setLookPosition(currentAttackToPosition.x, currentAttackToPosition.y + target.getEyeHeight(), currentAttackToPosition.z, 1000000, 1000000);
+                        shooter.getLookHelper().setLookPosition(currentAttackToPosition.x, currentAttackToPosition.y, currentAttackToPosition.z, 1000000, 1000000);
                     }else {
                         lookAround();
                     }
@@ -216,22 +218,7 @@ public class AIAttackGun extends EntityAIBase {
         }
     }
     private void lookAround(){
-        changesearchdircool--;
-        if (changesearchdircool < 0) {
-            searchdirY = rnd.nextBoolean();
-            searchdirP = rnd.nextBoolean();
-            changesearchdircool = rnd.nextInt(10) * 50;
-        }
-        float f1;
-        float f2;
-        float f3;
-        float f4;
-        f1 = MathHelper.cos(-(shooter.rotationYawHead + (searchdirY ? 8 : -8)) * 0.017453292F - (float) Math.PI);
-        f2 = MathHelper.sin(-(shooter.rotationYawHead + (searchdirY ? 8 : -8)) * 0.017453292F - (float) Math.PI);
-        f3 = -MathHelper.cos(-(shooter.rotationPitch + (searchdirP ? 0 : -0)) * 0.017453292F);
-        f4 = MathHelper.sin(-(shooter.rotationPitch + (searchdirP ? 0 : -0)) * 0.017453292F);
-        Vec3 look = Vec3.createVectorHelper((double) (f2 * f3), (double) f4, (double) (f1 * f3));
-        shooter.getLookHelper().setLookPosition(shooter.posX + look.xCoord, shooter.posY + shooter.getEyeHeight() + look.yCoord, shooter.posZ + look.zCoord, 90F, 18000000);
+
     }
     private void setPath(Vector3d currentAttackToPosition,double tocurrentAttackToPosition,boolean canSee){
         double maxrange = maxshootrange * maxshootrange;
@@ -400,7 +387,15 @@ public class AIAttackGun extends EntityAIBase {
     public Vector3d getSeeingPosition(){
         if(target != null && shooter.canEntityBeSeen(target)){
             if(lastSeenPosition == null)lastSeenPosition = new Vector3d();
-            lastSeenPosition.set(target.posX,target.posY,target.posZ);
+            Entity aimTo = target;
+            if(target.ridingEntity != null){
+                if(target.ridingEntity instanceof EntityDummy_rider){
+                    aimTo = ((EntityDummy_rider) target.ridingEntity).linkedBaseLogic.mc_Entity;
+                }else {
+                    aimTo = target.ridingEntity;
+                }
+            }
+            lastSeenPosition.set(aimTo.posX,aimTo.posY + aimTo.height/2,aimTo.posZ);
         }
         return lastSeenPosition;
     }

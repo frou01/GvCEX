@@ -56,6 +56,7 @@ public class HMGAddBullets {
                 String  trailtexture      = null;
                 String  smoketexture      = null;
                 float  smokeWidth         = 1f;
+                float  animationspeed         = 1f;
                 int     smoketime          = 5;
                 boolean  trailglow      = true;
                 boolean  smokeglow      = true;
@@ -137,6 +138,9 @@ public class HMGAddBullets {
                             case "SmokeGlow":
                                 smokeglow = Boolean.parseBoolean(type[1]);
                                 break;
+                            case "animationspeed":
+                                animationspeed = Float.parseFloat(type[1]);
+                                break;
                             case "Name":
             
                                 ResourceLocation model = new ResourceLocation("handmadeguns:textures/model/" + objmodel);
@@ -152,7 +156,7 @@ public class HMGAddBullets {
                                     }
                                     if (trailtexture != null || smoketexture != null) {
                                         System.out.println("debug " + trailtexture);
-                                        trailsettings.put(cnt, new TrailInfo(enabletrai, trailProbability, traillength, trailWidth, trailtexture, smoketexture, smokeWidth, smoketime, trailglow, smokeglow));
+                                        trailsettings.put(cnt, new TrailInfo(enabletrai, trailProbability, traillength, trailWidth, trailtexture, smoketexture, smokeWidth, smoketime, trailglow, smokeglow,animationspeed));
                                     }
                                 }
                                 if (flyingsoundname != null)

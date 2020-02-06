@@ -153,8 +153,9 @@ public class GVCMobPlus
     public static List Guns_SR = new ArrayList();
     public static List Guns_LMG = new ArrayList();
     public static List Guns_RR = new ArrayList();
+    public static List Guns_GR = new ArrayList();
     public static List Guns_FL = new ArrayList();
-    public static List Guns_HVG = new ArrayList();
+    public static List Guns_HMG = new ArrayList();
     public static List Guns_BoltR = new ArrayList();
     public static List<HMGItem_Unified_Guns> Guns_CanUse = new ArrayList<HMGItem_Unified_Guns>();
     public static List Guns_SWORD = new ArrayList();
@@ -652,7 +653,7 @@ public class GVCMobPlus
         {
             if ((((List)guns).get(i) instanceof HMGItem_Unified_Guns)) {
                 HMGItem_Unified_Guns unified_guns = (HMGItem_Unified_Guns)((List)guns).get(i);
-                if (unified_guns.gunInfo.guerrila_can_use) {
+                if (unified_guns.gunInfo.guerrila_can_use && (!unified_guns.gunInfo.needfix || unified_guns.gunInfo.canfix)) {
                     switch (unified_guns.gunInfo.canuseclass)
                     {
                         case 0:
@@ -668,7 +669,7 @@ public class GVCMobPlus
                             Guns_LMG.add(unified_guns);
                             break;
                         case 4:
-                            Guns_RR.add(unified_guns);
+                            if(!unified_guns.gunInfo.needfix)Guns_RR.add(unified_guns);
                             break;
                         case 5:
                             Guns_FL.add(unified_guns);
@@ -678,9 +679,10 @@ public class GVCMobPlus
                     if(unified_guns.gunInfo.guntype == 0 && unified_guns.gunInfo.needcock){
                         Guns_BoltR.add(unified_guns);
                     }
-                    if(unified_guns.gunInfo.canfix){
-                        Guns_HVG.add(unified_guns);
+                    if(unified_guns.gunInfo.needfix && unified_guns.gunInfo.canfix){
+                        Guns_HMG.add(unified_guns);
                     }
+                    if(unified_guns.gunInfo.guntype==2)Guns_GR.add(unified_guns);
                     Debug("Listing HMG guns." + unified_guns.getUnlocalizedName(), new Object[0]);
                 }
             }

@@ -3,7 +3,7 @@ turretYawCenterpos,0,1.4430,-0.6638
 turretPitchCenterpos,0,1.8943,2.2619
 cannonPos,0,1.8847,-1
 Recoil,150
-turretspeedY,5
+turretspeedY,4
 turretspeedP,3
 linked_MotherTrigger,false
 turretanglelimtPitchMax,5
@@ -14,7 +14,7 @@ Explosion,3
 BlockDestory,false
 guntype,3
 BulletSpread,1
-ReloadTime,50
+ReloadTime,150
 RemainingBullet,1
 Rates,4
 GunSound_FullName,handmadevehicle:handmadevehicle.120mmFire,handmadeguns:handmadeguns.HeavyMachineGun

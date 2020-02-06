@@ -96,6 +96,7 @@ AddParts,mat1
     	AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
         attachpart
         dot
+        reticleAndPlate
     BackParts
     AddChildParts,mat5
     	AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
@@ -151,7 +152,7 @@ AddParts,mat1
 ModelEquipped,-0.7f,0.7f,0.0f
 ModelHigh,1.10415f,0.9520,0.85f
 ModelWidthX,0.697f,0.697f,0.697f
-ModelWidthZ,0.8f,0.8f,0.8f
+ModelWidthZ,0.8f,0.3f,0.8f
 ModelRotationX,180f,180f,180f
 ModelRotationY,45f,45f,45
 ModelRotationZ,180f,180f,180f

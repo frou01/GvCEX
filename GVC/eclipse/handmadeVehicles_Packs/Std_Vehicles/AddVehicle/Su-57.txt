@@ -10,44 +10,53 @@ dragfactor_front,0.01;
 throttle_AF,9.5;
 slipresist,0.1;
 displayModernHud,true;
-yawspeed,0.03;
-rollspeed,0.03;
-pitchspeed,0.02;
-stability_motion,0.1;
-stability_motion2,0.7;
-stability_roll,1200;
+yawspeed,0.01;
+rollspeed,0.04;
+pitchspeed,0.01;
+stability_motion,0.8;
+stability_motion2,0.0;
+stability_roll,0.001;
 off_road_followability,0.5;
-liftfactor,0.01;
-forced_rudder_effect,0.07;
-forced_rudder_effect_OnGround,0.1;
+liftfactor,0.02;
+flapliftfactor,0.0000025;
+flapdragfactor,0.000001;
+forced_rudder_effect,0.02;
+forced_rudder_effect_OnGround,0.01;
 soundname,handmadevehicle:handmadevehicle.jetplane;
 soundpitch,1;
 //ïêëïí«â¡;
 ParentWeapons_NUM,7;
 AllWeapons_NUM,7;
 autoflap,false;
-addParentWeapon,0,Gsh-30-1,0,2.4,-3,0;
-addParentWeapon,1,	MiG-HardPoint,	-3.518,		2.355,	5.535,0;
-addParentWeapon,2,	MiG-HardPoint,	3.518,		2.355,	5.535,0;
-addParentWeapon,3,	MiG-HardPoint,	-0.3808,	2.160,	5.042,0;
-addParentWeapon,4,	MiG-HardPoint,	0.3808,		2.160,	5.042,0;
-addParentWeapon,5,	MiG-HardPoint,	-0.3808,	2.160,	11.64,0;
-addParentWeapon,6,	MiG-HardPoint,	0.3808,		2.160,	11.64,0;
 
-camerapos,0,3.687,-3.704;
+
+maxbank,90;
+minALT,50;
+maxClimb,-60;
+cruiseALT,130;
+
+addParentWeapon,0,Gsh-30-1,0,2.4,-8,0;
+addParentWeapon,1,	MiG-HardPoint,	-3.518,		2.355,	0.535,0;
+addParentWeapon,2,	MiG-HardPoint,	3.518,		2.355,	0.535,0;
+addParentWeapon,3,	MiG-HardPoint,	-0.3808,	2.160,	0.042,0;
+addParentWeapon,4,	MiG-HardPoint,	0.3808,		2.160,	0.042,0;
+addParentWeapon,5,	MiG-HardPoint,	-0.3808,	2.160,	6.64,0;
+addParentWeapon,6,	MiG-HardPoint,	0.3808,		2.160,	6.64,0;
+
+camerapos,0,3.687,-8.704;
 //ç¿ê»í«â¡;
 SetUpSeat1_NUM,1;
-SetUpSeat2_AddSeat_Normal,0,0,4.1,-2.6,true,false,false,1,0;
+SetUpSeat2_AddSeat_Normal,0,0,4.1,-7.6,true,false,false,1,0;
 SetUpSeat4_AddSeat_AdditionalTurret,0,	1,2,3,4,5,6;
 
 userProtect_maxDamageLevel,0,8;
 
 //top,bottom,front,back,left,right;
 boxes_withInfo,4,
-0,1.654,0.6718,	0,0,0,	1.1783,1.4313,12.7371,	1,0,0,0,	12,12,0,0,12,12,-1,
-0,1.564,1.9,	0,0,0,	7,0.2,1,	1,0,0,0,	3,3,50,50,50,50,-1,
-0,1.564,0.9,	0,0,0,	5,0.2,2,	1,0,0,0,	3,3,50,50,50,50,-1,
-0,1.564,-1.1,	0,0,0,	3,0.2,2,	1,0,0,0,	3,3,50,50,50,50,-1;
+0,3,-7.7,			0,0,0,	2.8,2.5,11.2,	1,0,0,0,	12,12,0,0,12,12,-1,
+0,2.8,3.5,		0,0,0,	8,2.5,18,	1,0,0,0,	3,3,50,50,50,50,-1,
+6,2.6,5,	0,0,0,	6,0.5,12.25,	1,0,0,0,	3,3,50,50,50,50,-1,
+-6,2.6,5,	0,0,0,	6,0.5,12.25,	1,0,0,0,	3,3,50,50,50,50,-1;
 
 
 wingVapourTrailPoint_num,2;
@@ -62,6 +71,7 @@ AddParts,$body;
 	AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0;
 	RenderOnNormal;
 	SetAsNormalParts;
+	AddPartsRotationDefOffset,0,0,2.5,0,0,0;
 	AddChildParts,$canopy;
 		RenderOnNormal;
 		SetAsNormalParts;

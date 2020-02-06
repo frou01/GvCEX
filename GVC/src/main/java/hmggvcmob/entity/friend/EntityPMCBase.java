@@ -2,6 +2,7 @@ package hmggvcmob.entity.friend;
 
 import handmadeguns.entity.IFF;
 import handmadeguns.entity.PlacedGunEntity;
+import handmadevehicle.entity.EntityDummy_rider;
 import handmadevehicle.entity.EntityVehicle;
 import hmggvcmob.IflagBattler;
 import hmggvcmob.ai.AICommandedEntity;
@@ -172,7 +173,7 @@ public class EntityPMCBase extends EntitySoBases implements IFF,IGVCmob, IComman
 			while (iterator.hasNext())
 			{
 				Entity entitycreature = (Entity)iterator.next();
-				if(entitycreature instanceof ICommandedEntity && canMoveEntity(this)){
+				if(entitycreature instanceof ICommandedEntity && canMoveEntity(this) && !(entitycreature.ridingEntity instanceof EntityDummy_rider)){
 					platoon.add(entitycreature);
 					((ICommandedEntity) entitycreature).joinPlatoon(this);
 				}

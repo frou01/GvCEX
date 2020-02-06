@@ -1,1 +1,1 @@
-include 'Depend','HMG',"GVC","GVCDangeonsBase","GVCDangeons","DCreator","Linker","WW2"
+include 'Depend','HMG','HMP',"GVC","GVCDangeonsBase","GVCDangeons","DCreator","Linker","WW2"

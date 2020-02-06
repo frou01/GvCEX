@@ -19,6 +19,7 @@ public class BulletSoundHMG extends MovingSound
 	private float savedfield_147663_c;
 	private float minspeed;
 	private float maxdist;
+	protected float primeVolume = 1.0F;
 	
 	public BulletSoundHMG(Entity p_i45105_1_, String soundName, boolean repeat, float soundLV, float soundSP,float minspeed,float maxdist)
 	{
@@ -28,8 +29,12 @@ public class BulletSoundHMG extends MovingSound
 		this.field_147665_h = 0;
 		this.savedfield_147663_c = this.field_147663_c = soundSP;
 		this.volume = soundLV;
+		this.primeVolume = soundLV;
 		this.minspeed = minspeed;
 		this.maxdist = maxdist;
+
+		update();
+		disttoPlayer = -1;
 	}
 	
 	/**
@@ -44,24 +49,30 @@ public class BulletSoundHMG extends MovingSound
 		}
 		else
 		{
-			this.xPosF = (float) this.attachedEntity.posX;
-			this.yPosF = (float) this.attachedEntity.posY;
-			this.zPosF = (float) this.attachedEntity.posZ;
+			this.volume = this.primeVolume;
+			Entity renderViewEntity = HMG_proxy.getMCInstance().renderViewEntity;
 			double prevdisttoPlayer = disttoPlayer;
 			disttoPlayer = attachedEntity.getDistanceSqToEntity(HMG_proxy.getMCInstance().renderViewEntity);
+			this.xPosF = (float)(renderViewEntity.posX + (this.attachedEntity.posX - renderViewEntity.posX)/sqrt(disttoPlayer)*8);
+			this.yPosF = (float)(renderViewEntity.posY + renderViewEntity.getEyeHeight() + (this.attachedEntity.posY + attachedEntity.getEyeHeight() - renderViewEntity.posY - renderViewEntity.getEyeHeight())/sqrt(disttoPlayer)*8);
+			this.zPosF = (float)(renderViewEntity.posZ + (this.attachedEntity.posZ - renderViewEntity.posZ)/sqrt(disttoPlayer)*8);
 			if(attachedEntity.motionX * attachedEntity.motionX + attachedEntity.motionY * attachedEntity.motionY + attachedEntity.motionZ * attachedEntity.motionZ < minspeed)
 				this.repeat = false;
-			else {
-				if (disttoPlayer < maxdist * maxdist) {
-					if(disttoPlayer > volume*16 * volume*16)volume = (float) (sqrt(disttoPlayer)/16);
-					if (prevdisttoPlayer != -1) {
-						float doppler = (float) (sqrt(prevdisttoPlayer) - sqrt(disttoPlayer));
-						float tempsp = (318.8f / (318.8f - doppler * 20f));
-						field_147663_c = savedfield_147663_c * tempsp;
-					}
-				}else {
-					this.repeat = false;
+
+			if (disttoPlayer < maxdist * maxdist) {
+				if(disttoPlayer > 256){
+					volume /=disttoPlayer/256;
 				}
+				if (!HMG_proxy.getMCInstance().renderViewEntity.canEntityBeSeen(attachedEntity)) volume /= 32;
+				if (prevdisttoPlayer != -1) {
+					float doppler = (float) (sqrt(prevdisttoPlayer) - sqrt(disttoPlayer));
+					float tempsp = (318.8f / (318.8f - doppler * 20f));
+					field_147663_c = savedfield_147663_c * tempsp;
+				}
+			}else {
+				this.donePlaying = true;
+				this.repeat = false;
+				this.volume = 0;
 			}
 		}
 		if(!this.repeat && attachedEntity instanceof HMGEntityBulletBase)((HMGEntityBulletBase) attachedEntity).soundstoped = true;
