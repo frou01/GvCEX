@@ -20,8 +20,11 @@ BulletSpeed,4
 BlockDestory,false
 guntype,0
 BulletSpread,2
-ReloadTime,1200
+canReloadAirBone,false
+ReloadTime,100
 RemainingBullet,200
+Magazine,0,HandmadeGuns,12.7mmx108mmBox
+MagazineItemCount,4
 Rates,0
 GunSound,handmadeguns.dshk38Fire,handmadeguns.dshk38Fire
 SoundSpeed,1

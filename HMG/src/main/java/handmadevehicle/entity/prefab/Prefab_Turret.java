@@ -26,6 +26,8 @@ public class Prefab_Turret {
 	public float traversesoundPitch = 1;
 	public boolean hasReflexSight;
 	public boolean useVehicleInventory;
+
+	public boolean canReloadAirBone = true;
 	
 	public FireRist[] fireRists;
 	
@@ -64,6 +66,7 @@ public class Prefab_Turret {
 			}else {
 				turretObj.gunItem.gunInfo = this.gunInfo;
 				turretObj.gunItem.setMaxDamage(gunInfo.bulletRound);
+				turretObj.gunStack.setItemDamage(turretObj.gunStack.getMaxDamage());
 			}
 		}else {
 			turretObj.gunStack = null;

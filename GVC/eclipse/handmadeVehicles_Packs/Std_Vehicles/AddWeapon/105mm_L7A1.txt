@@ -1,0 +1,27 @@
+WeaponName,105mm_L7A1
+turretYawCenterpos,0,2.2,0
+turretPitchCenterpos,0.0,    1.70224, 1.272
+cannonPos,0.0,1.77168,-1.27672
+Recoil,70
+turretspeedY,4
+turretspeedP,3
+linked_MotherTrigger,false
+turretanglelimtPitchMax,5
+turretanglelimtPitchmin,-20
+BulletPower,700
+BulletSpeed,10
+Explosion,2
+BlockDestory,true
+guntype,3
+BulletSpread,1
+ReloadTime,100
+RemainingBullet,1
+Magazine,0,HandmadeGuns,L7A1Ammo
+Rates,4
+GunSound_FullName,handmadevehicle:handmadevehicle.105mmL7A1Fire,handmadevehicle:handmadevehicle.105mmL7A1Fire
+SoundSpeed,1
+GunSoundLV,8,8
+GunSoundReload_FullPath,handmadevehicle:handmadevehicle.CannonLoad
+GunSoundReloadLV,8
+Zoom,4,4,4
+End

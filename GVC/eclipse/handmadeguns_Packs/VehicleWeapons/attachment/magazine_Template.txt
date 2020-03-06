@@ -1,0 +1,6 @@
+//Texture,bullet_2A78
+//Stack,64
+//Tabname,VehicleWeapons
+//Name,2A78Ammo
+//Magazine,2A78Ammo
+//

@@ -7,6 +7,8 @@ import javafx.scene.paint.Material;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.Vec3;
 
+import javax.vecmath.Vector3d;
+
 @SideOnly(Side.CLIENT)
 public class MQO_Face
 {
@@ -90,13 +92,19 @@ public class MQO_Face
 	public MQO_Vertex calculateFaceNormal()
 	{
 		if(oldVertex == null) {
-			Vec3 v1 = Vec3.createVectorHelper(vertices[1].x - vertices[0].x, vertices[1].y - vertices[0].y, vertices[1].z - vertices[0].z);
-			Vec3 v2 = Vec3.createVectorHelper(vertices[2].x - vertices[0].x, vertices[2].y - vertices[0].y, vertices[2].z - vertices[0].z);
-			Vec3 normalVector = null;
+			Vector3d v1 = new Vector3d(vertices[1].x - vertices[0].x, vertices[1].y - vertices[0].y, vertices[1].z - vertices[0].z);
+			Vector3d v2 = new Vector3d(vertices[2].x - vertices[0].x, vertices[2].y - vertices[0].y, vertices[2].z - vertices[0].z);
+			Vector3d normalVector = new Vector3d();
 
-			normalVector = v1.crossProduct(v2).normalize();
+			v1.scale(10);
+			v2.scale(10);
+			v1.normalize();
+			v2.normalize();
 
-			return oldVertex = new MQO_Vertex((float) normalVector.xCoord, (float) normalVector.yCoord, (float) normalVector.zCoord);
+			normalVector.cross(v1,v2);
+			normalVector.normalize();
+
+			return oldVertex = new MQO_Vertex((float) normalVector.x, (float) normalVector.y, (float) normalVector.z);
 		}else {
 			return oldVertex;
 		}

@@ -1,7 +1,7 @@
 package hmggvcmob.item;
 
+import handmadeguns.Util.GunsUtils;
 import handmadevehicle.entity.EntityDummy_rider;
-import hmggvcmob.entity.ICommandedEntity;
 import hmggvcmob.entity.friend.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -108,7 +108,7 @@ public class GVCItemPMCDefSetter extends Item {
                     playerlook = Vec3.createVectorHelper(playerlook.xCoord * 256, playerlook.yCoord * 256, playerlook.zCoord * 256);
 
                     Vec3 vec31 = Vec3.createVectorHelper(entityPlayer.posX + playerlook.xCoord, entityPlayer.posY + entityPlayer.getEyeHeight() + playerlook.yCoord, entityPlayer.posZ + playerlook.zCoord);
-                    MovingObjectPosition movingobjectposition = handmadeguns.Util.Utils.getmovingobjectPosition_forBlock(world,vec3, vec31, false, true, false);//衝突するブロックを調べる
+                    MovingObjectPosition movingobjectposition = GunsUtils.getmovingobjectPosition_forBlock(world,vec3, vec31, false, true, false);//衝突するブロックを調べる
                     if(movingobjectposition != null && movingobjectposition.hitVec != null){
                         setTargetPos(itemStack,entityPlayer,world,
                                 movingobjectposition.blockX,

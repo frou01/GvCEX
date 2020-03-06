@@ -1,6 +1,8 @@
 package handmadevehicle.entity.parts;
 
+import handmadeguns.HandmadeGunsCore;
 import handmadevehicle.Utils;
+import handmadevehicle.entity.EntityDummy_rider;
 import handmadevehicle.entity.parts.logics.BaseLogic;
 import handmadevehicle.entity.parts.turrets.TurretObj;
 import handmadevehicle.entity.prefab.Prefab_Vehicle_Base;
@@ -14,8 +16,7 @@ import javax.vecmath.Vector3d;
 
 import java.util.Random;
 
-import static handmadevehicle.Utils.CalculateGunElevationAngle;
-import static handmadevehicle.Utils.unitZ;
+import static handmadevehicle.Utils.*;
 import static java.lang.Math.*;
 import static java.lang.Math.min;
 import static net.minecraft.util.MathHelper.wrapAngleTo180_double;
@@ -66,6 +67,11 @@ public class MoveHelperForVehicle {
 			if (!entity.worldObj.isRemote) {
 				float f = (float) (Math.atan2(d1, d0) * 180.0D / Math.PI) - 90.0F;
 				prefab_vehicle = baseLogic.prefab_vehicle;
+
+				baseLogic.setControl_Flare(false);
+				if(baseLogic.mc_Entity.getEntityData().getBoolean("behome") && rand.nextInt(100) == 0){
+					baseLogic.setControl_Flare(true);
+				}
 				this.setToLogic(this.baseLogic.bodyrotationYaw, f);
 			}
 		}
@@ -85,14 +91,14 @@ public class MoveHelperForVehicle {
 					float yawspeed = abs(prefab_vehicle.yawspeed_taxing * baseLogic.throttle) * 20 * prefab_vehicle.gravity;
 					if (yawspeed > 30) yawspeed = 30;
 					boolean insight = false;
-					if (dif> yawspeed * 5) {
+					if (dif> yawspeed) {
 						if (speed > 0) baseLogic.setControl_yaw_Right(true);
 						else baseLogic.setControl_yaw_Left(true);
 
 						if (prefab_vehicle.forced_rudder_effect_OnGround > 0) {
 							baseLogic.setControl_brake(true);
 						}
-					} else if (dif< -yawspeed * 5 ) {
+					} else if (dif< -yawspeed ) {
 
 						if (speed > 0) baseLogic.setControl_yaw_Left(true);
 						else baseLogic.setControl_yaw_Right(true);
@@ -102,7 +108,7 @@ public class MoveHelperForVehicle {
 						}
 					} else {
 
-						double[] xyz = Utils.eulerfrommatrix(Utils.matrixfromQuat(baseLogic.rotationmotion));
+						double[] xyz = eulerfromQuat((baseLogic.rotationmotion));
 						if(xyz[1]>dif / yawspeed / 1000){
 							baseLogic.setControl_yaw_Right(false);
 							baseLogic.setControl_yaw_Left(false);
@@ -117,7 +123,7 @@ public class MoveHelperForVehicle {
 						insight = true;
 					}
 					if(!insight){
-						double[] xyz = Utils.eulerfrommatrix(Utils.matrixfromQuat(baseLogic.rotationmotion));
+						double[] xyz = eulerfromQuat((baseLogic.rotationmotion));
 						if(xyz[1]>dif / yawspeed / 250){
 							baseLogic.setControl_yaw_Right(false);
 							baseLogic.setControl_yaw_Left(false);
@@ -157,14 +163,15 @@ public class MoveHelperForVehicle {
 		} else {
 			baseLogic.setControl_brake(false);
 			baseLogic.setControl_Space(false);
-			Vector3d bodyvector = Utils.transformVecByQuat(new Vector3d(unitZ), baseLogic.bodyRot);
+			Vector3d bodyvector = transformVecByQuat(new Vector3d(unitZ), baseLogic.bodyRot);
 			bodyvector.normalize();
-			Utils.transformVecforMinecraft(bodyvector);
+			transformVecforMinecraft(bodyvector);
 			autocontrol(bodyvector);
 		}
 	}
 	public boolean T_useMain_F_useSub = true;
 	public boolean climbing;
+	public boolean diveStart = false;
 	public int outSightCnt = 0;
 	public int reChaseCool = 0;
 	public boolean climbYawDir=new Random().nextBoolean();
@@ -176,7 +183,7 @@ public class MoveHelperForVehicle {
 
 	void autocontrol(Vector3d bodyvector){
 		if(baseLogic.health>0 && baseLogic.riddenByEntities[0] instanceof EntityLiving){
-			if(rand.nextInt(500) == 0)climbYawDir = !climbYawDir;
+			if(rand.nextInt(10000) == 0)climbYawDir = !climbYawDir;
 			EntityLiving pilot = (EntityLiving) baseLogic.riddenByEntities[0];
 			bodyvector = new Vector3d(bodyvector);//copy
 			bodyvector.scale(-1);
@@ -187,7 +194,9 @@ public class MoveHelperForVehicle {
 			baseLogic.seatInfos[0].gunTrigger2 = false;
 			EntityLivingBase target = (pilot).getAttackTarget();
 			Vector3d targetPos = getSeeingPosition(target);
-			subTurret = baseLogic.seatInfos[0].subgun.getAvailableTurret();
+			if(baseLogic.seatInfos[0].subgun != null) {
+				subTurret = baseLogic.seatInfos[0].subgun.getAvailableTurret();
+			}
 			if(baseLogic.seatInfos[0].maingun != null) {
 				mainTurret = baseLogic.seatInfos[0].maingun[baseLogic.seatInfos[0].currentWeaponMode].getAvailableTurret();
 				if (mainTurret == null){
@@ -203,26 +212,63 @@ public class MoveHelperForVehicle {
 				double targetyaw = 0;
 				double targetpitch = 0;
 				boolean ATG = prefab_vehicle.type_F_Plane_T_Heli || ((pilot).getAttackTarget().posY<100 && (pilot).getAttackTarget().onGround);
+				if(target.ridingEntity != null){
+					ATG |= target.ridingEntity.onGround;
+					if(target.ridingEntity instanceof EntityDummy_rider){
+						BaseLogic targetVehicle = ((EntityDummy_rider) target.ridingEntity).linkedBaseLogic;
+						ATG |= targetVehicle.mc_Entity.onGround;
+						ATG |= targetVehicle.prefab_vehicle.T_Land_F_Plane;
+					}
+				}
 				Vector3d courseVec = new Vector3d(targetPos);
-				courseVec.sub(new Vector3d(baseLogic.mc_Entity.posX, baseLogic.mc_Entity.posY+prefab_vehicle.rotcenterVec.y, baseLogic.mc_Entity.posZ));
+				Vector3d thisPos = new Vector3d(baseLogic.mc_Entity.posX, baseLogic.mc_Entity.posY+prefab_vehicle.rotcenterVec.y, baseLogic.mc_Entity.posZ);
+				courseVec.sub(thisPos);
+				double terminalSpeed = 0;
+				if(mainTurret != null && mainTurret.gunItem != null){
+					terminalSpeed = mainTurret.gunItem.getTerminalspeed();
+				}
 				if(!noWeapon){
-					if(mainTurret != null && mainTurret.gunItem != null){
-						double terminalSpeed = mainTurret.gunItem.getTerminalspeed();
+					if(prefab_vehicle.type_F_Plane_T_Heli && mainTurret != null && mainTurret.gunItem != null){
 						Vector3d motionVec = new Vector3d(baseLogic.mc_Entity.motionX,baseLogic.mc_Entity.motionY,baseLogic.mc_Entity.motionZ);
-						if(terminalSpeed != 0){
-							motionVec.scale(courseVec.length()/terminalSpeed * 2);
-							courseVec.sub(motionVec);
-						}else if(mainTurret.gunItem.gunInfo.speed != 0){
-							motionVec.scale(courseVec.length()/mainTurret.gunItem.gunInfo.speed * 2);
-							courseVec.sub(motionVec);
+
+						if (terminalSpeed != 0) {
+							Vector3d PredictedOffset = LinePrediction(new Vector3d(baseLogic.mc_Entity.posX,baseLogic.mc_Entity.posY,baseLogic.mc_Entity.posZ),
+									new Vector3d(targetPos),
+									new Vector3d(-baseLogic.mc_Entity.motionX, -baseLogic.mc_Entity.motionY, -baseLogic.mc_Entity.motionZ),
+									terminalSpeed);
+							PredictedOffset.sub(targetPos);
+							courseVec.add(PredictedOffset);
+						} else if (mainTurret.gunItem.gunInfo.speed != 0) {
+
+							Vector3d PredictedOffset = LinePrediction(new Vector3d(baseLogic.mc_Entity.posX,baseLogic.mc_Entity.posY,baseLogic.mc_Entity.posZ),
+									new Vector3d(targetPos),
+									new Vector3d(-baseLogic.mc_Entity.motionX, -baseLogic.mc_Entity.motionY, -baseLogic.mc_Entity.motionZ),
+									mainTurret.gunItem.gunInfo.speed);
+							PredictedOffset.sub(targetPos);
+							courseVec.add(PredictedOffset);
 						}
 					}
 				}
-				courseVec.normalize();
 //						double angletocourse = toDegrees(bodyvector.angle(courseVec));
 //						System.out.println("" + angletocourse);
 				targetyaw = wrapAngleTo180_float(-(float) toDegrees(atan2(courseVec.x, courseVec.z)));
-				targetpitch = noWeapon?(prefab_vehicle.type_F_Plane_T_Heli?prefab_vehicle.cruiseNoseDown:0):-toDegrees(asin(courseVec.y));
+				targetpitch = noWeapon?(prefab_vehicle.type_F_Plane_T_Heli?prefab_vehicle.cruiseNoseDown:0):-toDegrees(asin(courseVec.y/courseVec.length()));
+				if(noWeapon){
+					targetpitch = prefab_vehicle.type_F_Plane_T_Heli?prefab_vehicle.cruiseNoseDown:0;
+				}else
+				if(mainTurret != null && mainTurret.gunItem != null && terminalSpeed == 0){
+					courseVec.add(thisPos);
+					Vector3d cannonPos = mainTurret.forAim_getCannonPosGlobal();
+
+					targetpitch = -(CalculateGunElevationAngle(
+							cannonPos.x,
+							cannonPos.y,
+							cannonPos.z,
+
+							courseVec.x,
+							courseVec.y,
+							courseVec.z,mainTurret.gunItem.gunInfo.gravity * (float) HandmadeGunsCore.cfg_defgravitycof,mainTurret.gunItem.gunInfo.speed)[0]);
+				}
 				double angularDifferenceYaw = wrapAngleTo180_double(targetyaw + (noWeapon ? (climbYawDir ? 90 : -90) : 0) - baseLogic.bodyrotationYaw);
 				double angularDifferencePitch = wrapAngleTo180_double(targetpitch - baseLogic.bodyrotationPitch);
 				boolean insight =
@@ -271,43 +317,47 @@ public class MoveHelperForVehicle {
 					}
 					baseLogic.setControl_throttle_up(true);
 				} else {
-					if (alt < prefab_vehicle.minALT || climbing || targetPos.y > baseLogic.mc_Entity.posY) {
+					if(alt < prefab_vehicle.minALT)climbing = true;
+					reChaseCool--;
+					if ((climbing || targetPos.y > baseLogic.mc_Entity.posY) || reChaseCool>0 || (!diveStart)) {
 						if(alt < prefab_vehicle.minALT)baseLogic.server_easyMode_pitchTarget = !prefab_vehicle.type_F_Plane_T_Heli ? prefab_vehicle.maxClimb : 0;
-						else baseLogic.server_easyMode_pitchTarget = !prefab_vehicle.type_F_Plane_T_Heli ? 0:(prefab_vehicle.cruiseNoseDown - (baseLogic.mc_Entity.motionY<0?baseLogic.mc_Entity.motionY*4:0));
-						if(alt > prefab_vehicle.cruiseALT)climbing = false;
+						else if(alt < prefab_vehicle.cruiseALT)baseLogic.server_easyMode_pitchTarget = !prefab_vehicle.type_F_Plane_T_Heli ? prefab_vehicle.maxClimb:(prefab_vehicle.cruiseNoseDown/2);
+						else if(alt > prefab_vehicle.cruiseALT + 10)baseLogic.server_easyMode_pitchTarget = !prefab_vehicle.type_F_Plane_T_Heli ? 10:(prefab_vehicle.cruiseNoseDown);
+						else baseLogic.server_easyMode_pitchTarget = !prefab_vehicle.type_F_Plane_T_Heli ? 0:(prefab_vehicle.cruiseNoseDown);
+						if(alt >= prefab_vehicle.cruiseALT)climbing = false;
 						baseLogic.setControl_throttle_up(true);
 						if(alt < prefab_vehicle.minALT)baseLogic.setControl_flap(true);
-					} else {
-						if(reChaseCool>0){
-							reChaseCool--;
-							if(!prefab_vehicle.type_F_Plane_T_Heli){
-								if (alt < prefab_vehicle.cruiseALT)
-									baseLogic.server_easyMode_pitchTarget = prefab_vehicle.maxClimb;
-								else
-									baseLogic.server_easyMode_pitchTarget = 0;
-							}else {
-								if (alt < prefab_vehicle.cruiseALT)
-									baseLogic.server_easyMode_pitchTarget = prefab_vehicle.maxClimb*baseLogic.localMotionVec.z;
-								else
-									baseLogic.server_easyMode_pitchTarget = prefab_vehicle.cruiseNoseDown;
-							}
-							baseLogic.setControl_throttle_up(true);
+//						System.out.println("debug1 " + targetpitch);
+//						System.out.println("debug2 " + climbing);
+//						System.out.println("debug3 " + reChaseCool);
+//						System.out.println("debug4 " + diveStart);
+
+						diveStart = targetpitch < prefab_vehicle.startDive;
+						if(diveStart && alt < prefab_vehicle.minALT){
+							baseLogic.server_easyMode_yawTarget = baseLogic.bodyrotationYaw + (climbYawDir ? 25 : -25);
 						}else {
-							if(targetpitch>prefab_vehicle.maxDive && alt < prefab_vehicle.minALT*3){
-								reChaseCool=300;
-							}
-							baseLogic.server_easyMode_yawTarget = targetyaw;
-							baseLogic.server_easyMode_pitchTarget = targetpitch;
-							if (abs(angularDifferenceYaw) > 45) {
-								baseLogic.server_easyMode_pitchTarget = targetpitch*(1-(abs(angularDifferenceYaw)-45)/45) - ((abs(angularDifferenceYaw)-45)/45 * 10);
-							}
-							if(!prefab_vehicle.type_F_Plane_T_Heli && baseLogic.throttle>prefab_vehicle.throttle_Max * 0.8){
-								baseLogic.setControl_throttle_up(false);
-								baseLogic.setControl_brake(true);
-							}else
-							if(prefab_vehicle.type_F_Plane_T_Heli || baseLogic.throttle<prefab_vehicle.throttle_Max * 0.6) {
-								baseLogic.setControl_throttle_up(true);
-							}
+							baseLogic.server_easyMode_yawTarget = baseLogic.bodyrotationYaw;
+						}
+					} else {
+						if(targetpitch>prefab_vehicle.maxDive || alt < prefab_vehicle.minALT){
+							reChaseCool=100;
+							diveStart = false;
+						}
+						baseLogic.server_easyMode_yawTarget = targetyaw;
+						baseLogic.server_easyMode_pitchTarget = targetpitch;
+						if (abs(angularDifferenceYaw) > 45) {
+							baseLogic.server_easyMode_pitchTarget = targetpitch*(1-(abs(angularDifferenceYaw)-45)/45);
+//							baseLogic.server_easyMode_yawTarget = targetyaw * (5/abs(targetyaw));
+						}
+						if(!prefab_vehicle.type_F_Plane_T_Heli && baseLogic.throttle>prefab_vehicle.throttle_Max * 0.8){
+							baseLogic.setControl_throttle_up(false);
+							baseLogic.setControl_throttle_down(true);
+							baseLogic.setControl_brake(true);
+						}else
+						if(prefab_vehicle.type_F_Plane_T_Heli || baseLogic.throttle<prefab_vehicle.throttle_Max * 0.6) {
+							baseLogic.setControl_throttle_up(true);
+							baseLogic.setControl_throttle_down(false);
+							baseLogic.setControl_brake(false);
 						}
 					}
 				}
@@ -729,7 +779,7 @@ public class MoveHelperForVehicle {
 				switch (mode) {
 					case 0://wait
 					{
-						baseLogic.server_easyMode_yawTarget = climbYawDir ? 12 : -12;
+						baseLogic.server_easyMode_yawTarget = baseLogic.bodyrotationYaw + (climbYawDir ? 25 : -25);
 						Vector3d motionvec = new Vector3d(baseLogic.mc_Entity.motionX, baseLogic.mc_Entity.motionY, baseLogic.mc_Entity.motionZ);
 						if(prefab_vehicle.type_F_Plane_T_Heli){
 							baseLogic.server_easyMode_pitchTarget = 3;
@@ -877,7 +927,7 @@ public class MoveHelperForVehicle {
 	public Vector3d getSeeingPosition(Entity target){
 		if(target != null){
 			if(lastSeenPosition == null)lastSeenPosition = new Vector3d();
-			lastSeenPosition.set(target.posX,target.posY,target.posZ);
+			lastSeenPosition.set(target.posX,target.posY + target.height/2,target.posZ);
 		}
 		return lastSeenPosition;
 	}

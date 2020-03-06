@@ -95,19 +95,19 @@ key_Fire2:0
 key_CannonCamera:44
 key_Flap:33
 key_Air Brake:45
-key_Flare/Smoke:13
+key_Flare/Smoke:74
 key_Change to Next Seat:21
 key_Change to Previous Seat:35
-key_Pitch Up:23
-key_Pitch Down:37
-key_Roll Right:38
-key_Roll Left:36
+key_Pitch Up/Sus Up:23
+key_Pitch Down/Sus Down:37
+key_Roll Right/Sus Right:38
+key_Roll Left/Sus Right:36
 key_Weapon Mode:78
 key_Allow Entity to Ride:56
 key_Change Control:49
 key_Change to Easy/Normal Control:27
 key_Reset Camera Rotation:47
-key_Reload Config Settings:0
+key_Reload Config Settings:40
 key_Open Vehicle Gui:39
 key_Gear Down/Up:34
 key_Reload Magazine:19
@@ -118,7 +118,7 @@ key_Fire AttachedGun:33
 key_ADS_Key:47
 key_Mode_Key:41
 key_Fix Gun:35
-soundCategory_master:1.0
+soundCategory_master:0.42384106
 soundCategory_music:0.0
 soundCategory_record:1.0
 soundCategory_weather:1.0

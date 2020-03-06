@@ -91,7 +91,7 @@
 //        riderPosUpdate();
 //    }
 //    public void updateClient(){
-//        double[] xyz = Utils.eulerfrommatrix(Utils.matrixfromQuat(bodyRot));
+//        double[] xyz = Utils.eulerfromQuat(Utils.(bodyRot));
 //        bodyrotationPitch = (float) toDegrees(xyz[0]);
 //        if(!Double.isNaN(xyz[1])){
 //            bodyrotationYaw = (float) toDegrees(xyz[1]);

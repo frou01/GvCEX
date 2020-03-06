@@ -18,6 +18,7 @@ import net.minecraftforge.client.MinecraftForgeClient;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+import static handmadeguns.event.RenderTickSmoothing.smooth;
 import static net.minecraft.util.MathHelper.wrapAngleTo180_float;
 
 public class PlacedGun_Render extends Render {
@@ -78,17 +79,17 @@ public class PlacedGun_Render extends Render {
             GL11.glEnable(GL12.GL_RESCALE_NORMAL);
             IItemRenderer gunrender = MinecraftForgeClient.getItemRenderer(entity.gunStack, IItemRenderer.ItemRenderType.EQUIPPED);
             if (gunrender instanceof HMGRenderItemGun_U_NEW) {
-                GL11.glRotatef(-(entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * p_180551_9_), 0.0F, 1.0F, 0.0F);
-                ((HMGRenderItemGun_U_NEW) gunrender).isPlacedGun = true;
-                ((HMGRenderItemGun_U_NEW) gunrender).turretYaw = wrapAngleTo180_float((entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * p_180551_9_) - (entity.prevrotationYawGun + (entity.rotationYawGun - entity.prevrotationYawGun) * p_180551_9_));
-                ((HMGRenderItemGun_U_NEW) gunrender).turretPitch = wrapAngleTo180_float((entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * p_180551_9_));
+                GL11.glRotatef(-(entity.rotationYaw), 0.0F, 1.0F, 0.0F);
+                HMGRenderItemGun_U_NEW.isPlacedGun = true;
+                HMGRenderItemGun_U_NEW.turretYaw = wrapAngleTo180_float(entity.rotationYaw - (entity.prevrotationYawGun + (entity.rotationYawGun - entity.prevrotationYawGun) * smooth));
+                HMGRenderItemGun_U_NEW.turretPitch = wrapAngleTo180_float((entity.prevRotationPitch + wrapAngleTo180_float(entity.rotationPitch - entity.prevRotationPitch) * smooth));
                 GL11.glScalef(0.5f, 0.5f, 0.5f);
                 gunrender.renderItem(IItemRenderer.ItemRenderType.ENTITY, entity.gunStack);
-                ((HMGRenderItemGun_U_NEW) gunrender).isPlacedGun = false;
+                HMGRenderItemGun_U_NEW.isPlacedGun = false;
             } else if (gunrender instanceof HMGRenderItemGun_U) {
                 //base は matbase を利用してそれらしく描画可能
-                GL11.glRotatef(-(entity.prevrotationYawGun + (entity.rotationYawGun - entity.prevrotationYawGun) * p_180551_9_), 0.0F, 1.0F, 0.0F);
-                GL11.glRotatef(-(-entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * p_180551_9_), 1.0F, 0.0F, 0.0F);
+                GL11.glRotatef(-(entity.prevrotationYawGun + (entity.rotationYawGun - entity.prevrotationYawGun) * smooth), 0.0F, 1.0F, 0.0F);
+                GL11.glRotatef(-(-entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * smooth), 1.0F, 0.0F, 0.0F);
                 GL11.glScalef(0.5f, 0.5f, 0.5f);
                 gunrender.renderItem(IItemRenderer.ItemRenderType.ENTITY, entity.gunStack);
             }

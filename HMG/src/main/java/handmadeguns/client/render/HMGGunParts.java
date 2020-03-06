@@ -19,6 +19,7 @@ public class HMGGunParts {
 
     private HMGGunParts_Motion_PosAndRotation rotCenterAndRotation;
     private HMGGunParts_Motion_PosAndRotation defaultPosAndRotation_ForOffset = new HMGGunParts_Motion_PosAndRotation(0,0,0,0,0,0);
+    private HMGGunParts_Motion_PosAndRotation defaultPosAndRotation_None = new HMGGunParts_Motion_PosAndRotation(0,0,0,0,0,0);
 
     public boolean rendering_Def = false;
     public boolean rendering_Ads = false;
@@ -112,6 +113,9 @@ public class HMGGunParts {
     
     public HMGGunParts_Motion_PosAndRotation getRenderinfDefault_offset(){
         return defaultPosAndRotation_ForOffset;
+    }
+    public HMGGunParts_Motion_PosAndRotation getRenderinf_None(){
+        return defaultPosAndRotation_None;
     }
     public HMGGunParts_Motion_PosAndRotation getRenderinfCenter(){
         return rotCenterAndRotation;
@@ -430,6 +434,18 @@ public class HMGGunParts {
         motion.endrotationX =     endrotationX;
         motion.endrotationY =     endrotationY;
         motion.endrotationZ =     endrotationZ;
+        motion.setup();
+        bulletpositions.addmotion(motion);
+        isbelt = true;
+    }
+
+    public void AddBulletPositions(int   startflame,
+                                   boolean isrendering,
+                                   int   endflame){
+        HMGGunParts_Motion motion = new HMGGunParts_Motion();
+        motion.startflame =         startflame;
+        motion.isrendering =         isrendering;
+        motion.endflame =         endflame;
         motion.setup();
         bulletpositions.addmotion(motion);
         isbelt = true;

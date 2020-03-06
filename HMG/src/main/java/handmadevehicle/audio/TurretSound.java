@@ -38,7 +38,7 @@ public class TurretSound extends MovingSound
 	 */
 	public void update()
 	{
-		if (killer || attachedturret.currentEntity ==null || this.attachedturret.currentEntity.isDead || (this.attachedturret.motherEntity != null && this.attachedturret.motherEntity.isDead))
+		if (killer || attachedturret.motherEntity == null || this.attachedturret.motherEntity.isDead || attachedturret.turretMoving == 0 ||!(this.attachedturret.gunItem != null && this.attachedturret.gunItem.gunInfo.turretspeedY > 0 && this.attachedturret.gunItem.gunInfo.turretspeedP > 0))
 		{
 			this.donePlaying = true;
 		}

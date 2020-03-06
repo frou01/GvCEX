@@ -1,3 +1,0 @@
-name,HMG_Ammo
-Icon,HandmadeGuns:bullet_hmg
-End

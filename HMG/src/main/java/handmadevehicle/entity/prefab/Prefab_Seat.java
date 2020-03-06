@@ -16,6 +16,9 @@ public class Prefab_Seat {
 	public int subid;
 	public float userProtect_maxDamageLevel = 0;
 	public float zoomLevel = 1.0f;
+
+	public boolean isBlindedSeat = false;
+
 	public Prefab_Seat(){
 	}
 	public Prefab_Seat(double[] pos, boolean hasGun, boolean aimMainGun,boolean aimSubGun, boolean seatOnTurret, int mainid, int subid){

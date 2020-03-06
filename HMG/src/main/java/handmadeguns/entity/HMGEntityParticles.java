@@ -107,7 +107,7 @@ public class HMGEntityParticles extends EntityFX
                 xTile = (int) this.posX - 1;
                 yTile = (int) this.posY - 1;
                 zTile = (int) this.posZ - 1;
-                if(worldObj.getChunkFromBlockCoords(xTile,zTile).isChunkLoaded) {
+                if(HMG_proxy.getEntityPlayerInstance().getDistanceSqToEntity(this) < 256 && worldObj.getChunkFromBlockCoords(xTile,zTile).isChunkLoaded) {
                     worldObj.setLightValue(EnumSkyBlock.Block, xTile, yTile, zTile, 0x99);
                     worldObj.func_147451_t(xTile - 1, yTile, zTile);
                     worldObj.func_147451_t(xTile + 1, yTile, zTile);

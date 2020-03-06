@@ -1,0 +1,5 @@
+Texture,bullet_M39
+Stack,64
+Tabname,VehicleWeapons
+Name,M39Ammo
+Magazine,M39Ammo

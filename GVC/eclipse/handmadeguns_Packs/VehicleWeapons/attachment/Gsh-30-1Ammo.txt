@@ -1,0 +1,5 @@
+Texture,bullet_Gsh-30-1
+Stack,64
+Tabname,VehicleWeapons
+Name,Gsh-30-1Ammo
+Magazine,Gsh-30-1Ammo

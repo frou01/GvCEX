@@ -15,7 +15,9 @@ BlockDestory,false
 guntype,10
 BulletSpread,5
 ReloadTime,300
-RemainingBullet,50
+RemainingBullet,40
+Magazine,0,HandmadeGuns,20mm Magazine
+MagazineItemCount,2
 Rates,6
 GunSound,handmadeguns.20mmfire,handmadeguns.20mmfire
 SoundSpeed,1

@@ -26,14 +26,14 @@ public class HMGRenderBulletExplode extends Render
      * (Render<T extends Entity) and this method has signature public void func_76986_a(T entity, double d, double d1,
      * double d2, float f, float f1). But JAD is pre 1.5 so doesn't do that.
      */
-    public void doRender(HMGEntityBulletBase entity, double p_180551_2_, double p_180551_4_, double p_180551_6_, float p_180551_8_, float p_180551_9_)
+    public void doRender(HMGEntityBulletBase entity, double p_180551_2_, double p_180551_4_, double p_180551_6_, float p_180551_8_, float partialTicks)
     {
         GL11.glPushMatrix();
         if(entity.modelid == -1) {
             this.bindEntityTexture(entity);
             GL11.glTranslatef((float)p_180551_2_, (float)p_180551_4_, (float)p_180551_6_);
-            GL11.glRotatef(entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * p_180551_9_ - 90.0F, 0.0F, 1.0F, 0.0F);
-            GL11.glRotatef(entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch), 0.0F, 0.0F, 1.0F);
+            GL11.glRotatef(-90 - (entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * partialTicks), 0.0F, 1.0F, 0.0F);
+            GL11.glRotatef(-(entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch)), 0.0F, 0.0F, 1.0F);
             Tessellator tessellator = Tessellator.instance;
             byte b0 = 0;
             float f2 = 0.0F;
@@ -83,8 +83,8 @@ public class HMGRenderBulletExplode extends Render
             ModelSetAndData modelSetAndData = modellist.get(entity.modelid);
             if (modelSetAndData != null) {
                 GL11.glTranslatef((float)p_180551_2_, (float)p_180551_4_, (float)p_180551_6_);
-                GL11.glRotatef(entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * p_180551_9_ , 0.0F, 1.0F, 0.0F);
-                GL11.glRotatef(-entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch), 1.0F, 0.0F, 0.0F);
+                GL11.glRotatef( - (entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * partialTicks), 0.0F, 1.0F, 0.0F);
+                GL11.glRotatef(entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks, 1.0F, 0.0F, 0.0F);
                 GL11.glScalef(0.1f,0.1f,0.1f);
                 this.bindTexture(modelSetAndData.texture);
                 IModelCustom custom = modelSetAndData.model;
@@ -95,8 +95,8 @@ public class HMGRenderBulletExplode extends Render
             }else{
                 GL11.glTranslatef((float)p_180551_2_, (float)p_180551_4_, (float)p_180551_6_);
                 this.bindEntityTexture(entity);
-                GL11.glRotatef(entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * p_180551_9_ - 90.0F, 0.0F, 1.0F, 0.0F);
-                GL11.glRotatef(entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch), 0.0F, 0.0F, 1.0F);
+                GL11.glRotatef( - (entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * partialTicks), 0.0F, 1.0F, 0.0F);
+                GL11.glRotatef(entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks, 1.0F, 0.0F, 0.0F);
                 Tessellator tessellator = Tessellator.instance;
                 byte b0 = 0;
                 float f2 = 0.0F;

@@ -1,6 +1,7 @@
 package handmadevehicle.entity;
 
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
+import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -13,11 +14,17 @@ import handmadevehicle.SlowPathFinder.WorldForPathfind;
 import handmadevehicle.entity.parts.*;
 import handmadevehicle.entity.parts.logics.BaseLogic;
 import handmadevehicle.entity.parts.turrets.TurretObj;
+import handmadevehicle.entity.prefab.DropItemData;
 import handmadevehicle.entity.prefab.Prefab_Vehicle_Base;
+import handmadevehicle.network.HMVPacketHandler;
+import handmadevehicle.network.packets.HMVPacketPickNewEntity;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.entity.*;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
@@ -27,9 +34,11 @@ import javax.vecmath.Vector3d;
 
 import static cpw.mods.fml.common.network.ByteBufUtils.readTag;
 import static cpw.mods.fml.common.network.ByteBufUtils.writeTag;
-import static handmadeguns.Util.Utils.getmovingobjectPosition_forBlock;
+import static handmadeguns.Util.GunsUtils.getmovingobjectPosition_forBlock;
 import static handmadevehicle.HMVehicle.HMV_Proxy;
-import static handmadevehicle.Utils.transformVecByQuat;
+import static handmadevehicle.HMVehicle.itemWrench;
+import static handmadevehicle.Utils.*;
+import static java.lang.Integer.parseInt;
 import static java.lang.Math.abs;
 
 public class EntityVehicle extends Entity implements IFF,IVehicle,IMultiTurretVehicle,IEntityAdditionalSpawnData, I_SPdamageHandle ,IhasMoveHelper {
@@ -58,7 +67,6 @@ public class EntityVehicle extends Entity implements IFF,IVehicle,IMultiTurretVe
 			EntityTracker entitytracker = ((WorldServer) this.worldObj).getEntityTracker();
 			ObfuscationReflectionHelper.setPrivateValue(EntityTracker.class, entitytracker, 1048576, "entityViewDistance", "E", "field_72792_d");
 		}
-		this.setSize(3f, 3f);
 	}
 	
 	@Override
@@ -69,7 +77,6 @@ public class EntityVehicle extends Entity implements IFF,IVehicle,IMultiTurretVe
 	public EntityVehicle(World par1World,String typename) {
 		this(par1World);
 		this.init_2(typename);
-		this.forceSpawn = true;
 	}
 	static public EntityVehicle EntityVehicle_spawnByMob(World par1World,String typename) {
 		EntityVehicle bespawningEntity = new EntityVehicle(par1World,typename);
@@ -105,6 +112,7 @@ public class EntityVehicle extends Entity implements IFF,IVehicle,IMultiTurretVe
 		nboundingbox.calculateMax_And_Min();
 		HMV_Proxy.replaceBoundingbox(this,nboundingbox);
 //		this.applyEntityAttributes2();
+		this.setSize(baseLogic.prefab_vehicle.boundingBoxSizeX, baseLogic.prefab_vehicle.boundingBoxSizeY);
 	}
 	public ModifiedPathNavigater getNavigator()
 	{
@@ -146,6 +154,8 @@ public class EntityVehicle extends Entity implements IFF,IVehicle,IMultiTurretVe
 
 		this.onGround = onground;
 		baseLogic.onUpdate();
+
+		if(baseLogic.health<0)onDeathUpdate();
 		if (!this.worldObj.isRemote)
 		{
 			this.collideWithNearbyEntities();
@@ -236,9 +246,6 @@ public class EntityVehicle extends Entity implements IFF,IVehicle,IMultiTurretVe
 		float temparomor = 0;
 		if (source.getEntity() != null) {
 			temp = ((HasBaseLogic) this).getBaseLogic();
-			Vector3d TankFrontVec = new Vector3d(0, 0, -1);
-			TankFrontVec = transformVecByQuat(TankFrontVec, temp.bodyRot);
-			TankFrontVec.z *= -1;
 //			double angle_position = abs(toDegrees(TankFrontVec.angle(shooterPositionVec)));
 			Vector3d TankRighttVec = new Vector3d(-1, 0, 0);
 			TankRighttVec = transformVecByQuat(TankRighttVec, temp.bodyRot);
@@ -294,9 +301,9 @@ public class EntityVehicle extends Entity implements IFF,IVehicle,IMultiTurretVe
 		return this.attackEntityFrom(source,level);
 	}
 	public int invalidateCnt = 0;
-	protected void despawnEntity()
+	public void despawnEntity()
 	{
-		if (worldObj instanceof WorldServer)
+		if (!worldObj.isRemote && worldObj instanceof WorldServer)
 		{
 			EntityPlayer entityplayer = this.worldObj.getClosestPlayerToEntity(this, -1.0D);
 			if(entityplayer != null) {
@@ -304,9 +311,11 @@ public class EntityVehicle extends Entity implements IFF,IVehicle,IMultiTurretVe
 				double d1 = entityplayer.posY - this.posY;
 				double d2 = entityplayer.posZ - this.posZ;
 				double d3 = d0 * d0 + d1 * d1 + d2 * d2;
-				if (this.canDespawn() && (invalidateCnt++ > 1200 || (d3 > ((WorldServer)worldObj).func_73046_m().getConfigurationManager().getViewDistance()*16 *
+				if (this.canDespawn() && (!this.baseLogic.prefab_vehicle.T_Land_F_Plane || invalidateCnt++ > 1200 || (d3 > ((WorldServer)worldObj).func_73046_m().getConfigurationManager().getViewDistance()*16 *
 						((WorldServer)worldObj).func_73046_m().getConfigurationManager().getViewDistance()*16))) {
 //					System.out.println("debug");
+
+					noDrop = true;
 					this.setDead();
 				}
 			}
@@ -326,8 +335,56 @@ public class EntityVehicle extends Entity implements IFF,IVehicle,IMultiTurretVe
 		if(source.isExplosion()){
 			par2 *= baseLogic.prefab_vehicle.antiExplosionCof;
 		}
-		if(source.getEntity() != null && source.getDamageType().equals("player") && baseLogic.isRidingEntity(source.getEntity())){
-			par2 = 0;
+		if(source.getEntity() != null && source.getDamageType().equals("player")){
+			if(baseLogic.isRidingEntity(source.getEntity())) par2 = 0;
+			else if (!worldObj.isRemote && ((EntityPlayer)source.getSourceOfDamage()).getHeldItem() != null &&
+					((EntityPlayer)source.getSourceOfDamage()).getHeldItem().getItem() == itemWrench){
+
+				Entity pilot = baseLogic.riddenByEntities[baseLogic.getpilotseatid()];
+				if(baseLogic.health == baseLogic.prefab_vehicle.maxhealth) {
+					Item check = GameRegistry.findItem("HMVehicle", typename);
+					if (check != null) {
+						if (pilot instanceof EntityPlayer) {
+							if (((EntityPlayer) pilot).isOnSameTeam((EntityLivingBase) source.getEntity())) {
+								noDrop = true;
+								this.setDead();
+								this.dropItem(check, 1);
+
+								for (int i = 0; i < baseLogic.inventoryVehicle.items.length; ++i) {
+									if (baseLogic.inventoryVehicle.items[i] != null) {
+										this.func_146097_a(baseLogic.inventoryVehicle.items[i], true, false);
+										baseLogic.inventoryVehicle.items[i] = null;
+									}
+								}
+							}
+						} else if (pilot == null) {
+							noDrop = true;
+							this.setDead();
+							this.dropItem(check, 1);
+
+							for (int i = 0; i < baseLogic.inventoryVehicle.items.length; ++i) {
+								if (baseLogic.inventoryVehicle.items[i] != null) {
+									this.func_146097_a(baseLogic.inventoryVehicle.items[i], true, false);
+									baseLogic.inventoryVehicle.items[i] = null;
+								}
+							}
+						}
+					}
+				}
+				if(!(pilot instanceof EntityPlayer) && (!(pilot instanceof IFF) || ((IFF) pilot).is_this_entity_friend(source.getEntity()))){
+					Entity[] entitylist = baseLogic.riddenByEntities;
+					for (Entity picked : entitylist) {
+						if(picked != null){
+							baseLogic.disMountEntity(picked);
+							System.out.println("-----------------------------------");
+
+							System.out.println("debug           " + picked);
+							System.out.println("debug   riding  " + picked.ridingEntity);
+						}
+					}
+					HMVPacketHandler.INSTANCE.sendToAll(new HMVPacketPickNewEntity(baseLogic.mc_Entity.getEntityId(), baseLogic.riddenByEntities));
+				}
+			}
 		}
 
 		if(par2 < 0)par2 = 0;
@@ -335,7 +392,12 @@ public class EntityVehicle extends Entity implements IFF,IVehicle,IMultiTurretVe
 		baseLogic.health -= par2;
 		return true;
 	}
+
+	public void mountEntity(Entity p_70078_1_){
+		pickupEntity(p_70078_1_,0);
+	}
 	public void heal(float par2){
+		if(deathTicks != 0)return;
 		baseLogic.health += par2;
 		if(baseLogic.health > baseLogic.prefab_vehicle.maxhealth)baseLogic.health = baseLogic.prefab_vehicle.maxhealth;
 	}
@@ -391,14 +453,12 @@ public class EntityVehicle extends Entity implements IFF,IVehicle,IMultiTurretVe
 	public boolean interactFirst(EntityPlayer p_70085_1_) {
 		if(p_70085_1_.getHeldItem() != null &&
 				p_70085_1_.getHeldItem().getItem() instanceof ItemWrench){
-
 			if (((ItemWrench) p_70085_1_.getHeldItem().getItem()).itemInteractionForEntity2(p_70085_1_.getHeldItem(),p_70085_1_,this))
 			{
-
 			}
 		}
 		if (!this.worldObj.isRemote && (this.riddenByEntity == null || this.riddenByEntity != p_70085_1_)) {
-			if(!p_70085_1_.isSneaking()&&!p_70085_1_.isRiding()){
+			if(!p_70085_1_.isSneaking()&&!p_70085_1_.isRiding() && !((baseLogic.riddenByEntities[baseLogic.getpilotseatid()] instanceof EntityPlayer) && ((EntityPlayer)baseLogic.riddenByEntities[baseLogic.getpilotseatid()]).isOnSameTeam(p_70085_1_))){
 				pickupEntity(p_70085_1_,0);
 			}
 			return true;
@@ -479,7 +539,6 @@ public class EntityVehicle extends Entity implements IFF,IVehicle,IMultiTurretVe
 		canUseByMob = p_70037_1_.getBoolean("canUseByMob");
 		despawn = p_70037_1_.getBoolean("despawn");
 		init_2(typename);
-		this.setSize(3f, 3f);
 //		super.readEntityFromNBT(p_70037_1_);
 		baseLogic.readFromTag(p_70037_1_);
 	}
@@ -569,73 +628,243 @@ public class EntityVehicle extends Entity implements IFF,IVehicle,IMultiTurretVe
 	
 	protected void onDeathUpdate() {
 		++this.deathTicks;
-		if(this.deathTicks == 3){
-			//this.worldObj.createExplosion(this, this.posX, this.posY, this.posZ, 0F, false);
-			ExplodeEffect ex = new ExplodeEffect(this, 3F);
-			ex.offset[0] = (float) (rand.nextInt(30) - 15)/10;
-			ex.offset[1] = (float) (rand.nextInt(30) - 15)/10 + 1.5f;
-			ex.offset[2] = (float) (rand.nextInt(30) - 15)/10;
-			ex.Ex();
-		}
-		if(this.deathTicks > 40) {
-			if (worldObj.isRemote) {
-				for (int i = 0; i < 5; i++) {
+		if(baseLogic.prefab_vehicle.deathType == 0)setDead();
+		if(baseLogic.prefab_vehicle.deathType == 1) {
+			if (this.deathTicks == 3) {
+				//this.worldObj.createExplosion(this, this.posX, this.posY, this.posZ, 0F, false);
+				ExplodeEffect ex = new ExplodeEffect(this, 3F);
+				ex.offset[0] = (float) (rand.nextInt(30) - 15) / 10;
+				ex.offset[1] = (float) (rand.nextInt(30) - 15) / 10 + 1.5f;
+				ex.offset[2] = (float) (rand.nextInt(30) - 15) / 10;
+				ex.Ex();
+
+			}
+			if (this.deathTicks > 40) {
+				if (worldObj.isRemote) {
+					for (int i = 0; i < 5; i++) {
+						worldObj.spawnParticle("flame",
+								this.posX + (float) (rand.nextInt(20) - 10) / 10,
+								this.posY + (float) (rand.nextInt(20) - 10) / 10 + 1.5f,
+								this.posZ + (float) (rand.nextInt(20) - 10) / 10,
+								0.0D, 0.5D, 0.0D);
+						worldObj.spawnParticle("smoke",
+								this.posX + (float) (rand.nextInt(30) - 15) / 10,
+								this.posY + (float) (rand.nextInt(30) - 15) / 10 + 1.5f,
+								this.posZ + (float) (rand.nextInt(30) - 15) / 10,
+								0.0D, 0.2D, 0.0D);
+						worldObj.spawnParticle("cloud",
+								this.posX + (float) (rand.nextInt(30) - 15) / 10,
+								this.posY + (float) (rand.nextInt(30) - 15) / 10 + 1.5f,
+								this.posZ + (float) (rand.nextInt(30) - 15) / 10,
+								0.0D, 0.3D, 0.0D);
+					}
+				}
+//			this.playSound("handmadeguns:handmadeguns.fireee", 1.20F, 0.8F);
+			} else if (rand.nextInt(3) == 0) {
+				ExplodeEffect ex = new ExplodeEffect(this, 1F);
+				ex.offset[0] = (float) (rand.nextInt(30) - 15) / 10;
+				ex.offset[1] = (float) (rand.nextInt(30) - 15) / 10;
+				ex.offset[2] = (float) (rand.nextInt(30) - 15) / 10;
+				ex.Ex();
+
+			}
+			if (this.deathTicks >= 140) {
+				ExplodeEffect ex = new ExplodeEffect(this, 8F);
+				ex.Ex();
+				for (int i = 0; i < 15; i++) {
 					worldObj.spawnParticle("flame",
 							this.posX + (float) (rand.nextInt(20) - 10) / 10,
-							this.posY + (float) (rand.nextInt(20) - 10) / 10 + 1.5f,
+							this.posY + (float) (rand.nextInt(20) - 10) / 10,
 							this.posZ + (float) (rand.nextInt(20) - 10) / 10,
-							0.0D, 0.5D, 0.0D);
+							(rand.nextInt(20) - 10) / 100f,
+							(rand.nextInt(20) - 10) / 100f,
+							(rand.nextInt(20) - 10) / 100f);
 					worldObj.spawnParticle("smoke",
 							this.posX + (float) (rand.nextInt(30) - 15) / 10,
-							this.posY + (float) (rand.nextInt(30) - 15) / 10 + 1.5f,
+							this.posY + (float) (rand.nextInt(30) - 15) / 10,
 							this.posZ + (float) (rand.nextInt(30) - 15) / 10,
-							0.0D, 0.2D, 0.0D);
+							(rand.nextInt(20) - 10) / 100f,
+							(rand.nextInt(20) - 10) / 100f,
+							(rand.nextInt(20) - 10) / 100f);
 					worldObj.spawnParticle("cloud",
 							this.posX + (float) (rand.nextInt(30) - 15) / 10,
-							this.posY + (float) (rand.nextInt(30) - 15) / 10 + 1.5f,
+							this.posY + (float) (rand.nextInt(30) - 15) / 10,
 							this.posZ + (float) (rand.nextInt(30) - 15) / 10,
-							0.0D, 0.3D, 0.0D);
+							(rand.nextInt(20) - 10) / 100f,
+							(rand.nextInt(20) - 10) / 100f,
+							(rand.nextInt(20) - 10) / 100f);
 				}
+				if (this.deathTicks == 150)
+					this.setDead();
 			}
-			this.playSound("handmadeguns.handmadeguns.fireee", 1.20F, 0.8F);
-		}else
-		if (rand.nextInt(3) == 0) {
-			ExplodeEffect ex = new ExplodeEffect(this, 1F);
-			ex.offset[0] = (float) (rand.nextInt(30) - 15) / 10;
-			ex.offset[1] = (float) (rand.nextInt(30) - 15) / 10;
-			ex.offset[2] = (float) (rand.nextInt(30) - 15) / 10;
-			ex.Ex();
-		}
-		if (this.deathTicks >= 140) {
-			ExplodeEffect ex = new ExplodeEffect(this, 8F);
-			ex.Ex();
-			for (int i = 0; i < 15; i++) {
-				worldObj.spawnParticle("flame",
-						this.posX + (float) (rand.nextInt(20) - 10) / 10,
-						this.posY + (float) (rand.nextInt(20) - 10) / 10,
-						this.posZ + (float) (rand.nextInt(20) - 10) / 10,
-						(rand.nextInt(20) - 10) / 100,
-						(rand.nextInt(20) - 10) / 100,
-						(rand.nextInt(20) - 10) / 100 );
-				worldObj.spawnParticle("smoke",
-						this.posX + (float) (rand.nextInt(30) - 15) / 10,
-						this.posY + (float) (rand.nextInt(30) - 15) / 10,
-						this.posZ + (float) (rand.nextInt(30) - 15) / 10,
-						(rand.nextInt(20) - 10) / 100,
-						(rand.nextInt(20) - 10) / 100,
-						(rand.nextInt(20) - 10) / 100 );
-				worldObj.spawnParticle("cloud",
-						this.posX + (float) (rand.nextInt(30) - 15) / 10,
-						this.posY + (float) (rand.nextInt(30) - 15) / 10,
-						this.posZ + (float) (rand.nextInt(30) - 15) / 10,
-						(rand.nextInt(20) - 10) / 100,
-						(rand.nextInt(20) - 10) / 100,
-						(rand.nextInt(20) - 10) / 100 );
+		}else if(baseLogic.prefab_vehicle.deathType == 2) {
+			if (this.deathTicks == 3) {
+				//this.worldObj.createExplosion(this, this.posX, this.posY, this.posZ, 0F, false);
+				ExplodeEffect ex = new ExplodeEffect(this, 3F);
+				ex.offset[0] = (float) (rand.nextInt(30) - 15) / 10;
+				ex.offset[1] = (float) (rand.nextInt(30) - 15) / 10 + 1.5f;
+				ex.offset[2] = (float) (rand.nextInt(30) - 15) / 10;
+				ex.Ex();
+
 			}
-			if(this.deathTicks == 150)
-				this.setDead();
+			if (this.deathTicks > 40) {
+				if (worldObj.isRemote) {
+					for (int i = 0; i < 5; i++) {
+						worldObj.spawnParticle("flame",
+								this.posX + (float) (rand.nextInt(20) - 10) / 10,
+								this.posY + (float) (rand.nextInt(20) - 10) / 10 + 1.5f,
+								this.posZ + (float) (rand.nextInt(20) - 10) / 10,
+								0.0D, 0.5D, 0.0D);
+						worldObj.spawnParticle("smoke",
+								this.posX + (float) (rand.nextInt(30) - 15) / 10,
+								this.posY + (float) (rand.nextInt(30) - 15) / 10 + 1.5f,
+								this.posZ + (float) (rand.nextInt(30) - 15) / 10,
+								0.0D, 0.2D, 0.0D);
+						worldObj.spawnParticle("cloud",
+								this.posX + (float) (rand.nextInt(30) - 15) / 10,
+								this.posY + (float) (rand.nextInt(30) - 15) / 10 + 1.5f,
+								this.posZ + (float) (rand.nextInt(30) - 15) / 10,
+								0.0D, 0.3D, 0.0D);
+					}
+				}
+//			this.playSound("handmadeguns:handmadeguns.fireee", 1.20F, 0.8F);
+			}
+			if (this.deathTicks >= 140) {
+				ExplodeEffect ex = new ExplodeEffect(this, 8F);
+				ex.Ex();
+				for (int i = 0; i < 15; i++) {
+					worldObj.spawnParticle("flame",
+							this.posX + (float) (rand.nextInt(20) - 10) / 10,
+							this.posY + (float) (rand.nextInt(20) - 10) / 10,
+							this.posZ + (float) (rand.nextInt(20) - 10) / 10,
+							(rand.nextInt(20) - 10) / 100f,
+							(rand.nextInt(20) - 10) / 100f,
+							(rand.nextInt(20) - 10) / 100f);
+					worldObj.spawnParticle("smoke",
+							this.posX + (float) (rand.nextInt(30) - 15) / 10,
+							this.posY + (float) (rand.nextInt(30) - 15) / 10,
+							this.posZ + (float) (rand.nextInt(30) - 15) / 10,
+							(rand.nextInt(20) - 10) / 100f,
+							(rand.nextInt(20) - 10) / 100f,
+							(rand.nextInt(20) - 10) / 100f);
+					worldObj.spawnParticle("cloud",
+							this.posX + (float) (rand.nextInt(30) - 15) / 10,
+							this.posY + (float) (rand.nextInt(30) - 15) / 10,
+							this.posZ + (float) (rand.nextInt(30) - 15) / 10,
+							(rand.nextInt(20) - 10) / 100f,
+							(rand.nextInt(20) - 10) / 100f,
+							(rand.nextInt(20) - 10) / 100f);
+				}
+				if (this.deathTicks == 150)
+					this.setDead();
+			}
 		}
 	}
+
+	/**
+	 * Will get destroyed next tick.
+	 */
+	public boolean noDrop = false;
+	public void setDead()
+	{
+
+		int i;
+
+		if(!worldObj.isRemote && !noDrop) {
+			for (i = 0; i < baseLogic.inventoryVehicle.items.length; ++i) {
+				if (baseLogic.inventoryVehicle.items[i] != null) {
+					this.func_146097_a(baseLogic.inventoryVehicle.items[i], true, false);
+					baseLogic.inventoryVehicle.items[i] = null;
+				}
+			}
+
+			if (!baseLogic.prefab_vehicle.dropItems.isEmpty())
+				for (DropItemData dropItemData : baseLogic.prefab_vehicle.dropItems) {
+					if (dropItemData.rate > rand.nextFloat()) {
+						String[] itemids = dropItemData.name.split(":");
+						ItemStack willDrop = null;
+						if (itemids.length == 2) {
+							Item willDropItem = GameRegistry.findItem(itemids[0], itemids[1]);
+							if (willDropItem == null) {
+								willDrop = new ItemStack(GameRegistry.findBlock(itemids[0], itemids[1]), dropItemData.num);
+							} else {
+								willDrop = new ItemStack(willDropItem, dropItemData.num);
+							}
+						} else if (itemids.length == 3) {
+							Item willDropItem = GameRegistry.findItem(itemids[0], itemids[1]);
+							if (willDropItem != null)
+								willDrop = new ItemStack(willDropItem, dropItemData.num, parseInt(itemids[2]));
+							else
+								willDrop = new ItemStack(GameRegistry.findBlock(itemids[0], itemids[1]), dropItemData.num, parseInt(itemids[2]));
+						}
+						if (willDrop != null) {
+							EntityItem entityItem = new EntityItem(worldObj, this.posX, this.posY, this.posZ, willDrop);
+							worldObj.spawnEntityInWorld(entityItem);
+						}
+					}
+				}
+		}
+
+
+		this.isDead = true;
+	}
+
+	public void func_146097_a(ItemStack p_146097_1_, boolean p_146097_2_, boolean p_146097_3_)
+	{
+		if (p_146097_1_ == null)
+		{
+		}
+		else if (p_146097_1_.stackSize == 0)
+		{
+		}
+		else
+		{
+			EntityItem entityitem = new EntityItem(this.worldObj, this.posX, this.posY - 0.30000001192092896D + (double)this.getEyeHeight(), this.posZ, p_146097_1_);
+			entityitem.delayBeforeCanPickup = 40;
+
+			if (p_146097_3_)
+			{
+				entityitem.func_145799_b(this.getCommandSenderName());
+			}
+
+			float f = 0.1F;
+			float f1;
+
+			if (p_146097_2_)
+			{
+				f1 = this.rand.nextFloat() * 0.5F;
+				float f2 = this.rand.nextFloat() * (float)Math.PI * 2.0F;
+				entityitem.motionX = (double)(-MathHelper.sin(f2) * f1);
+				entityitem.motionZ = (double)(MathHelper.cos(f2) * f1);
+				entityitem.motionY = 0.20000000298023224D;
+			}
+			else
+			{
+				f = 0.3F;
+				entityitem.motionX = (double)(-MathHelper.sin(this.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI) * f);
+				entityitem.motionZ = (double)(MathHelper.cos(this.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI) * f);
+				entityitem.motionY = (double)(-MathHelper.sin(this.rotationPitch / 180.0F * (float)Math.PI) * f + 0.1F);
+				f = 0.02F;
+				f1 = this.rand.nextFloat() * (float)Math.PI * 2.0F;
+				f *= this.rand.nextFloat();
+				entityitem.motionX += Math.cos((double)f1) * (double)f;
+				entityitem.motionY += (double)((this.rand.nextFloat() - this.rand.nextFloat()) * 0.1F);
+				entityitem.motionZ += Math.sin((double)f1) * (double)f;
+			}
+
+			this.joinEntityItemWithWorld(entityitem);
+		}
+	}
+	public void joinEntityItemWithWorld(EntityItem p_71012_1_)
+	{
+		if (captureDrops)
+		{
+			capturedDrops.add(p_71012_1_);
+			return;
+		}
+		this.worldObj.spawnEntityInWorld(p_71012_1_);
+	}
+
 
 	public void updateRiderPosition()
 	{

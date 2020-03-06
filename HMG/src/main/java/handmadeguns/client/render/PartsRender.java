@@ -10,6 +10,7 @@ import static org.lwjgl.opengl.GL11.*;
 public abstract class PartsRender {
 	public IModelCustom model;
 	public ResourceLocation texture;
+	public float gunPartsScale = 1;
 	public int pass;
 	
 	public abstract void partSidentification(Object... data);
@@ -29,17 +30,17 @@ public abstract class PartsRender {
 							   HMGGunParts_Motion_PosAndRotation posAndRotation,
 							   HMGGunParts parts){
 		if (posAndRotation != null) {
-			GL11.glTranslatef(posAndRotation.posX, posAndRotation.posY, posAndRotation.posZ);
+			GL11.glTranslatef(posAndRotation.posX * gunPartsScale, posAndRotation.posY * gunPartsScale, posAndRotation.posZ * gunPartsScale);
 			if(parts.rotateTypeIsVector){
-				GL11.glTranslatef(rotationCenterAndRotation.posX, rotationCenterAndRotation.posY, rotationCenterAndRotation.posZ);
+				GL11.glTranslatef(rotationCenterAndRotation.posX * gunPartsScale, rotationCenterAndRotation.posY * gunPartsScale, rotationCenterAndRotation.posZ * gunPartsScale);
 				GL11.glRotatef(posAndRotation.rotationX, rotationCenterAndRotation.rotateVec.x, rotationCenterAndRotation.rotateVec.y, rotationCenterAndRotation.rotateVec.z);
-				GL11.glTranslatef(-rotationCenterAndRotation.posX, -rotationCenterAndRotation.posY, -rotationCenterAndRotation.posZ);
+				GL11.glTranslatef(-rotationCenterAndRotation.posX * gunPartsScale, -rotationCenterAndRotation.posY * gunPartsScale, -rotationCenterAndRotation.posZ * gunPartsScale);
 			}else {
-				GL11.glTranslatef(rotationCenterAndRotation.posX, rotationCenterAndRotation.posY, rotationCenterAndRotation.posZ);
+				GL11.glTranslatef(rotationCenterAndRotation.posX * gunPartsScale, rotationCenterAndRotation.posY * gunPartsScale, rotationCenterAndRotation.posZ * gunPartsScale);
 				GL11.glRotatef(posAndRotation.rotationY, 0, 1, 0);
 				GL11.glRotatef(posAndRotation.rotationX, 1, 0, 0);
 				GL11.glRotatef(posAndRotation.rotationZ, 0, 0, 1);
-				GL11.glTranslatef(-rotationCenterAndRotation.posX, -rotationCenterAndRotation.posY, -rotationCenterAndRotation.posZ);
+				GL11.glTranslatef(-rotationCenterAndRotation.posX * gunPartsScale, -rotationCenterAndRotation.posY * gunPartsScale, -rotationCenterAndRotation.posZ * gunPartsScale);
 			}
 		}
 	}
@@ -152,12 +153,12 @@ public abstract class PartsRender {
 			}else {
 				HMGGunParts_Motion_PosAndRotation bulletoffset = parts.getRenderinfOfBullet();
 				if(bulletoffset != null && bulletoffset.renderOnOff) {
-					GL11.glTranslatef(bulletoffset.posX * -flame, bulletoffset.posY * -flame, bulletoffset.posZ * -flame);
-					GL11.glTranslatef(rotationCenterAndRotation.posX, rotationCenterAndRotation.posY, rotationCenterAndRotation.posZ);
+					GL11.glTranslatef(bulletoffset.posX * -flame * gunPartsScale, bulletoffset.posY * -flame * gunPartsScale, bulletoffset.posZ * -flame * gunPartsScale);
+					GL11.glTranslatef(rotationCenterAndRotation.posX * gunPartsScale, rotationCenterAndRotation.posY * gunPartsScale, rotationCenterAndRotation.posZ * gunPartsScale);
 					GL11.glRotatef(bulletoffset.rotationY * -flame, 0, 1, 0);
 					GL11.glRotatef(bulletoffset.rotationX * -flame, 1, 0, 0);
 					GL11.glRotatef(bulletoffset.rotationZ * -flame, 0, 0, 1);
-					GL11.glTranslatef(-rotationCenterAndRotation.posX, -rotationCenterAndRotation.posY, -rotationCenterAndRotation.posZ);
+					GL11.glTranslatef(-rotationCenterAndRotation.posX * gunPartsScale, -rotationCenterAndRotation.posY * gunPartsScale, -rotationCenterAndRotation.posZ * gunPartsScale);
 					for (int i = 0; (i < parts.Maximum_number_of_bullets && i < remainbullets); i++) {
 						transformParts(rotationCenterAndRotation,bulletoffset,parts);
 						model.renderPart(parts.partsname);
@@ -186,12 +187,12 @@ public abstract class PartsRender {
 			}else {
 				HMGGunParts_Motion_PosAndRotation bulletoffset = parts.getRenderinfOfBullet();
 				if(bulletoffset != null && bulletoffset.renderOnOff) {
-					GL11.glTranslatef(bulletoffset.posX * flame, bulletoffset.posY * flame, bulletoffset.posZ * flame);
-					GL11.glTranslatef(rotationCenterAndRotation.posX, rotationCenterAndRotation.posY, rotationCenterAndRotation.posZ);
+					GL11.glTranslatef(bulletoffset.posX * flame * gunPartsScale, bulletoffset.posY * flame * gunPartsScale, bulletoffset.posZ * flame * gunPartsScale);
+					GL11.glTranslatef(rotationCenterAndRotation.posX * gunPartsScale, rotationCenterAndRotation.posY * gunPartsScale, rotationCenterAndRotation.posZ * gunPartsScale);
 					GL11.glRotatef(bulletoffset.rotationY * flame, 0, 1, 0);
 					GL11.glRotatef(bulletoffset.rotationX * flame, 1, 0, 0);
 					GL11.glRotatef(bulletoffset.rotationZ * flame, 0, 0, 1);
-					GL11.glTranslatef(-rotationCenterAndRotation.posX, -rotationCenterAndRotation.posY, -rotationCenterAndRotation.posZ);
+					GL11.glTranslatef(-rotationCenterAndRotation.posX * gunPartsScale, -rotationCenterAndRotation.posY * gunPartsScale, -rotationCenterAndRotation.posZ * gunPartsScale);
 					for (int i = 0; (i < parts.Maximum_number_of_bullets && i < remainbullets); i++) {
 						transformParts(rotationCenterAndRotation,bulletoffset,parts);
 					}

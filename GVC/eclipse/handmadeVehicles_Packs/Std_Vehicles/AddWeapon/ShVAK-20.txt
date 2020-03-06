@@ -20,8 +20,10 @@ BulletSpeed,4
 BlockDestory,false
 guntype,0
 BulletSpread,2
-ReloadTime,1200
+canReloadAirBone,false
+ReloadTime,100
 RemainingBullet,120
+Magazine,0,HandmadeGuns,ShVAKAmmo
 Rates,2
 GunSound,handmadeguns.23mmFire,handmadeguns.23mmFire
 SoundSpeed,1

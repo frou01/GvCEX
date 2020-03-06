@@ -1,0 +1,5 @@
+Texture,bullet_2A28
+Stack,64
+Tabname,VehicleWeapons
+Name,2A28Ammo
+Magazine,2A28Ammo

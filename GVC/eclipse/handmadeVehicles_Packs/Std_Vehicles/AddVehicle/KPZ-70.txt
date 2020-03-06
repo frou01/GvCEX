@@ -9,20 +9,27 @@ soundpitch,1;
 throttle_Max,5;
 throttle_min,-3;
 yawspeed_ground,1.25;
-speedfactor_onGround,0.14;
-torque_ground,0.7;
+speedfactor_onGround,0.11;
+torque_ground,0.3;
 forced_rudder_effect_OnGround,0.2;
 rotmotion_reduceSpeed,0.1;
-recoilResist,40000;
+recoilResist,4000;
 brakefactor_ground,0.3;
 
 ParentWeapons_NUM,1;
-AllWeapons_NUM,2;
-addParentWeapon,0,120mm_L44,0,0,0,1;
-addChildWeapon,0,20mmAA_KPZ,0,0,0,0;
+AllWeapons_NUM,3;
+
+addParentWeapon,0,120mm_L44,0,0,0,1,1;
+	addChildWeapon,0,20mmAA_KPZ,0,0,0,0;
+Set_CurrentTurret_to_Mother;
+	addBarrelChildWeapon,0,M240B,0.1,1.4943,-2.2619,0;
+
 SetUpSeat1_NUM,3;
-SetUpSeat2_AddSeat_Normal,0,0.6598,2.7661,-0.8310,true,true,true,0,1;
-SetUpSeat3_AddSeat_Zoom,0,1.534,2.342,-1.228,true,true,true,0,1;
+SetUpSeat2_AddSeat_Normal,0,0.6598,2.7661,-0.8310,true,true,false,true,0,2;
+SetUpSeat3_AddSeat_Zoom,0,-0.6,2,-1.9,true,true,false,true,0,2;
+SetUpSeat4_AddSeat_AdditionalTurret,0,	0,1;
+SetUpSeat5_AddSeat_ExtraSettings,0,0,0;
+
 SetUpSeat2_AddSeat_Normal,1,1.669,2.767,3.062,false,false,false,-1,-1;
 SetUpSeat2_AddSeat_Normal,2,-1.669,2.767,3.062,false,false,false,-1,-1;
 

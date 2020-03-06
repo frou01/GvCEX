@@ -30,7 +30,7 @@ public class MessageCatcher_ChangeMagazineType implements IMessageHandler<Packet
         try {
             if(world != null){
                 Entity shooter = world.getEntityByID(message.shooterid);
-                if(shooter != null && shooter instanceof EntityLivingBase && ((EntityLivingBase) shooter).getHeldItem().getItem() instanceof HMGItem_Unified_Guns) {
+                if(shooter instanceof EntityLivingBase && ((EntityLivingBase) shooter).getHeldItem() != null && ((EntityLivingBase) shooter).getHeldItem().getItem() instanceof HMGItem_Unified_Guns) {
                     System.out.println("debug" + message.value);
                     ((EntityLivingBase) shooter).getHeldItem().getTagCompound().setInteger("get_selectingMagazine",message.value);
                 }

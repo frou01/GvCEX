@@ -10,6 +10,7 @@ fireAll_child,true
 //ÄË®
 positionLinked,false
 //ˆÊ’uƒŠƒ“ƒN‚ğØ‚Á‚Ä‚¨‚­
+canReloadAirBone,false
 
 needGunStack,true
 useVehicleInventory,true

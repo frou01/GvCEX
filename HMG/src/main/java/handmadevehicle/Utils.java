@@ -1,5 +1,7 @@
 package handmadevehicle;
 
+import handmadeguns.entity.EntityHasMaster;
+import handmadeguns.entity.SpHitCheckEntity;
 import handmadevehicle.entity.EntityDummy_rider;
 import handmadevehicle.entity.parts.turrets.TurretObj;
 import net.minecraft.block.Block;
@@ -23,7 +25,7 @@ public class Utils {
     public static Vector3d unitY = new Vector3d(0,1,0);
     public static Vector3d unitZ = new Vector3d(0,0,1);
     public static double[] CalculateGunElevationAngle(Entity shooter, Entity target, float m_gravity, float energy){
-        //http://www.sousakuba.com/Programming/algo_dandoukeisan.htmlにて配布されているプログラムより転用(え？作れって？ﾁｶﾚﾀ…)
+        
         m_gravity *=-1;
         double dist_y = ((target.posY + target.getEyeHeight())-(shooter.posY + shooter.getEyeHeight()));
         double dist_x = shooter.getDistance(target.posX,shooter.posY,target.posZ);
@@ -70,7 +72,7 @@ public class Utils {
         invec.set(x,y,z);
     }
     public static double[] CalculateGunElevationAngle(EntityLivingBase shooter, Entity target, float m_gravity, float energy ,float yoffset){
-        //http://www.sousakuba.com/Programming/algo_dandoukeisan.htmlにて配布されているプログラムより転用(え？作れって？ﾁｶﾚﾀ…)
+        
         m_gravity *=-1;
         double dist_y = ((target.posY + target.getEyeHeight())-(shooter.posY + shooter.getEyeHeight() + yoffset));
         double dist_x = shooter.getDistance(target.posX,shooter.posY,target.posZ);
@@ -89,7 +91,7 @@ public class Utils {
         return agl;
     }
     public static double[] CalculateGunElevationAngle(double posX,double posY,double posZ, Entity target, float m_gravity, float energy){
-        //http://www.sousakuba.com/Programming/algo_dandoukeisan.htmlにて配布されているプログラムより転用(え？作れって？ﾁｶﾚﾀ…)
+        
         m_gravity *=-1;
         double dist_y = ((target.posY + target.getEyeHeight())-(posY));
         double dist_x = target.getDistance(posX,target.posY,posZ);
@@ -108,7 +110,7 @@ public class Utils {
         return agl;
     }
     public static double[] CalculateGunElevationAngle(double posX,double posY,double posZ, double targetX,double targetY,double targetZ, float m_gravity, float energy){
-        //http://www.sousakuba.com/Programming/algo_dandoukeisan.htmlにて配布されているプログラムより転用(え？作れって？ﾁｶﾚﾀ…)
+        
         m_gravity *=-1;
         double dist_y = ((targetY)-(posY));
         double dist_x = sqrt((posX - targetX) * (posX - targetX) + (posZ - targetZ) * (posZ - targetZ));
@@ -127,7 +129,7 @@ public class Utils {
         return agl;
     }
     public static double[] CalculateGunElevationAngle(EntityLivingBase shooter, Entity target, float m_gravity, float energy ,float xoffset , float yoffset){
-        //http://www.sousakuba.com/Programming/algo_dandoukeisan.htmlにて配布されているプログラムより転用(え？作れって？ﾁｶﾚﾀ…)
+        
         m_gravity *=-1;
         double dist_y = ((target.posY + target.getEyeHeight())-(shooter.posY + shooter.getEyeHeight() + yoffset));
         double dist_x = shooter.getDistance(target.posX,shooter.posY,target.posZ) + xoffset;
@@ -145,49 +147,49 @@ public class Utils {
         }
         return agl;
     }
-    public static void rotateaxisbymatrix4(Matrix4d src, Vector3d axis, float angle){
-        //任意の軸で回転する。
-        double c = Math.cos(angle);
-        double s = Math.sin(angle);
-        double a = 1.0f - c;
-        double xy = axis.x*axis.y;
-        double yz = axis.y*axis.z;
-        double xz = axis.x*axis.z;
-        double xs = axis.x*s;
-        double ys = axis.y*s;
-        double zs = axis.z*s;
-
-        double f00 = axis.x*axis.x*a+c;
-        double f01 = xy*a+zs;
-        double f02 = xz*a-ys;
-        double f10 = xy*a-zs;
-        double f11 = axis.y*axis.y*a+c;
-        double f12 = yz*a+xs;
-        double f20 = xz*a+ys;
-        double f21 = yz*a-xs;
-        double f22 = axis.z*axis.z*a+c;
-
-        double t00 = src.m00 * f00 + src.m10 * f01 + src.m20 * f02;
-        double t01 = src.m01 * f00 + src.m11 * f01 + src.m21 * f02;
-        double t02 = src.m02 * f00 + src.m12 * f01 + src.m22 * f02;
-        double t03 = src.m03 * f00 + src.m13 * f01 + src.m23 * f02;
-        double t10 = src.m00 * f10 + src.m10 * f11 + src.m20 * f12;
-        double t11 = src.m01 * f10 + src.m11 * f11 + src.m21 * f12;
-        double t12 = src.m02 * f10 + src.m12 * f11 + src.m22 * f12;
-        double t13 = src.m03 * f10 + src.m13 * f11 + src.m23 * f12;
-        src.m20 = src.m00 * f20 + src.m10 * f21 + src.m20 * f22;
-        src.m21 = src.m01 * f20 + src.m11 * f21 + src.m21 * f22;
-        src.m22 = src.m02 * f20 + src.m12 * f21 + src.m22 * f22;
-        src.m23 = src.m03 * f20 + src.m13 * f21 + src.m23 * f22;
-        src.m00 = t00;
-        src.m01 = t01;
-        src.m02 = t02;
-        src.m03 = t03;
-        src.m10 = t10;
-        src.m11 = t11;
-        src.m12 = t12;
-        src.m13 = t13;
-    }
+//    public static void rotateaxisbymatrix4(Matrix4d src, Vector3d axis, float angle){
+//        //任意の軸で回転する。
+//        double c = Math.cos(angle);
+//        double s = Math.sin(angle);
+//        double a = 1.0f - c;
+//        double xy = axis.x*axis.y;
+//        double yz = axis.y*axis.z;
+//        double xz = axis.x*axis.z;
+//        double xs = axis.x*s;
+//        double ys = axis.y*s;
+//        double zs = axis.z*s;
+//
+//        double f00 = axis.x*axis.x*a+c;
+//        double f01 = xy*a+zs;
+//        double f02 = xz*a-ys;
+//        double f10 = xy*a-zs;
+//        double f11 = axis.y*axis.y*a+c;
+//        double f12 = yz*a+xs;
+//        double f20 = xz*a+ys;
+//        double f21 = yz*a-xs;
+//        double f22 = axis.z*axis.z*a+c;
+//
+//        double t00 = src.m00 * f00 + src.m10 * f01 + src.m20 * f02;
+//        double t01 = src.m01 * f00 + src.m11 * f01 + src.m21 * f02;
+//        double t02 = src.m02 * f00 + src.m12 * f01 + src.m22 * f02;
+//        double t03 = src.m03 * f00 + src.m13 * f01 + src.m23 * f02;
+//        double t10 = src.m00 * f10 + src.m10 * f11 + src.m20 * f12;
+//        double t11 = src.m01 * f10 + src.m11 * f11 + src.m21 * f12;
+//        double t12 = src.m02 * f10 + src.m12 * f11 + src.m22 * f12;
+//        double t13 = src.m03 * f10 + src.m13 * f11 + src.m23 * f12;
+//        src.m20 = src.m00 * f20 + src.m10 * f21 + src.m20 * f22;
+//        src.m21 = src.m01 * f20 + src.m11 * f21 + src.m21 * f22;
+//        src.m22 = src.m02 * f20 + src.m12 * f21 + src.m22 * f22;
+//        src.m23 = src.m03 * f20 + src.m13 * f21 + src.m23 * f22;
+//        src.m00 = t00;
+//        src.m01 = t01;
+//        src.m02 = t02;
+//        src.m03 = t03;
+//        src.m10 = t10;
+//        src.m11 = t11;
+//        src.m12 = t12;
+//        src.m13 = t13;
+//    }
     public static Vec3 getLook(float p_70676_1_, float rotationYawin, float rotationPitchin)
     {
         float f1;
@@ -229,8 +231,12 @@ public class Utils {
 
         return Vec3.createVectorHelper(returnVectorX, returnVectorY, returnVectorZ);
     }
+
+
+
+
     public static Quat4d quatRotateAxis(Quat4d quat4d , AxisAngle4d angle4d){
-        Quat4d temp = new Quat4d();
+        Quat4d temp = new Quat4d(0,0,0,1);
         quatsetFromVec4(temp,angle4d);
         temp.mul(quat4d);
         return temp;
@@ -250,8 +256,11 @@ public class Utils {
     }
 
     public static void getVector_local_inRotatedObj(Vector3d in,Vector3d out,Quat4d rot){
-        Quat4d invertRot = new Quat4d();
-        invertRot.inverse(rot);
+        NaNCheck(rot);
+        NaNCheck(in);
+
+        Quat4d invertRot = new Quat4d(rot);
+        inverse_safe(invertRot);
         NaNCheck(invertRot);
         transformVecforMinecraft(in);
         out.set(transformVecByQuat(in, invertRot));
@@ -260,6 +269,33 @@ public class Utils {
         }
         NaNCheck(in);
         NaNCheck(out);
+    }
+
+    public static double getQuat4DLength(Quat4d in){
+        return (in.w*in.w + in.x*in.x + in.y*in.y + in.z*in.z);
+    }
+
+    public static void inverse_safe(Quat4d in , Quat4d out){
+        double length;
+
+        length = getQuat4DLength(in);
+        if(length > 0){
+            out.inverse(in);
+        } else {
+            out.set(0,0,0,0);
+        }
+        NaNCheck(out);
+    }
+    public static void inverse_safe(Quat4d in){
+        double length;
+
+        length = getQuat4DLength(in);
+        if(length > 0){
+            in.inverse();
+        } else {
+            in.set(0,0,0,0);
+        }
+        NaNCheck(in);
     }
 
     public static Vector3d LinePrediction(Vector3d shotPosition, Vector3d targetPosition, Vector3d v3_Mv, double bulletSpeed)
@@ -299,10 +335,82 @@ public class Utils {
     }
 
     public static void transformVecforMinecraft(Vector3d vec){
-        vec.z = -vec.z;
+        NaNCheck(vec);
+        vec.z *= -1;
+    }
+    public static Quat4d genQuat4d(final double x, final double y, final double z, final double w) {
+        Quat4d tmp = new Quat4d();
+        tmp.setX(x);
+        tmp.setY(y);
+        tmp.setZ(z);
+        tmp.setW(w);
+
+        return tmp;
     }
     public static Vector3d transformVecByQuat(Vector3d vec, Quat4d qua)
     {
+//        try {
+//            if(NaNCheck(vec)){
+//                throw new NanMadeException("Nan Vector appeared!");
+//            }
+//            if(NaNCheck(qua)){
+//                throw new NanMadeException("Nan Vector appeared!");
+//            }
+//            Quat4d point = genQuat4d(-vec.x, -vec.y, -vec.z, 0);       // 回転させたい座標
+//            Quat4d rot = new Quat4d(qua);    // 回転クォータニオンを作成
+//            Quat4d conj = new Quat4d(rot);
+//
+//            conj.conjugate();
+//            conj.mul(point);
+//            conj.mul(rot);
+//
+//            Vector3d temp = new Vector3d(
+//                    -conj.x,
+//                    -conj.y,
+//                    -conj.z);
+////            try{
+////                throw new NanMadeException("debug" + temp);
+////            }catch (Exception e){
+////                e.printStackTrace();
+////            }
+//            if(NaNCheck(temp)){
+//                throw new NanMadeException("Nan Vector appeared!");
+//            }
+//            return temp;
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
+//        try {
+//            if(NaNCheck(vec)){
+//                throw new NanMadeException("Nan Vector appeared!");
+//            }
+//            if(NaNCheck(qua)){
+//                throw new NanMadeException("Nan Vector appeared!");
+//            }
+//            double x = qua.x + qua.x;
+//            double y = qua.y + qua.y;
+//            double z = qua.z + qua.z;
+//            double wx = qua.w * x;
+//            double wy = qua.w * y;
+//            double wz = qua.w * z;
+//            double xx = qua.x * x;
+//            double xy = qua.x * y;
+//            double xz = qua.x * z;
+//            double yy = qua.y * y;
+//            double yz = qua.y * z;
+//            double zz = qua.z * z;
+//            Vector3d temp = new Vector3d(
+//                    ((vec.x * ((1.0f - yy) - zz)) + (vec.y * (xy - wz))) - (vec.z * (xz + wy)),
+//                    ((vec.x * (xy + wz)) + (vec.y * ((1.0f - xx) - zz))) - (vec.z * (yz - wx)),
+//                    -((vec.x * (xz - wy)) - (vec.y * (yz + wx))) + (vec.z * ((1.0f - xx) - yy)));
+//            if(NaNCheck(temp)){
+//                throw new NanMadeException("Nan Vector appeared!");
+//            }
+//            return temp;
+//        }catch (NanMadeException e){
+//            e.printStackTrace();
+//        }
+//        return new Vector3d();
         if(vec.lengthSquared() == 0)return new Vector3d(vec);
         NaNCheck(qua);
         double x = qua.x + qua.x;
@@ -320,49 +428,84 @@ public class Utils {
         Vector3d temp = new Vector3d(
                 ((vec.x * ((1.0f - yy) - zz)) + (vec.y * (xy - wz))) + (vec.z * (xz + wy)),
                 ((vec.x * (xy + wz)) + (vec.y * ((1.0f - xx) - zz))) + (vec.z * (yz - wx)),
-                ((vec.x * (xz - wy)) + (vec.y * (yz + wx))) + (vec.z * ((1.0f - xx) - yy)));
+                (((vec.x * (xz - wy)) + (vec.y * (yz + wx))) + (vec.z * ((1.0f - xx) - yy))));
         NaNCheck(temp,vec);
         return temp;
     }
-    public static void NaNCheck(Vector3d inVec){
+    public static Vec3 transformVecByQuat(Vec3 vec, Quat4d qua)
+    {
+        Vector3d temp = transformVecByQuat(getjavaxVecObj(vec),qua);
+        return Vec3.createVectorHelper(temp.x,temp.y,temp.z);
+//        double x = qua.x + qua.x;
+//        double y = qua.y + qua.y;
+//        double z = qua.z + qua.z;
+//        double wx = qua.w * x;
+//        double wy = qua.w * y;
+//        double wz = qua.w * z;
+//        double xx = qua.x * x;
+//        double xy = qua.x * y;
+//        double xz = qua.x * z;
+//        double yy = qua.y * y;
+//        double yz = qua.y * z;
+//        double zz = qua.z * z;
+//
+//        return Vec3.createVectorHelper(
+//                ((vec.xCoord * ((1.0f - yy) - zz)) + (vec.yCoord * (xy - wz))) - (vec.zCoord * (xz + wy)),
+//                ((vec.xCoord * (xy + wz)) + (vec.yCoord * ((1.0f - xx) - zz))) - (vec.zCoord * (yz - wx)),
+//                -((vec.xCoord * (xz - wy)) - (vec.yCoord * (yz + wx))) + (vec.zCoord * ((1.0f - xx) - yy)));
+    }
+//    public static void mul2(Quat4d to,Quat4d q1)
+//    {
+//        double     x, y, w;
+//
+//        w = to.w*q1.w - to.x*q1.x - to.y*q1.y - to.z*q1.z;
+////        x = to.w*q1.x + q1.w*to.x + to.y*q1.z - to.z*q1.y;
+//        x = -to.w*q1.x - q1.w*to.x - to.y*q1.z + to.z*q1.y;
+//        y = to.w*q1.y + q1.w*to.y - to.x*q1.z + to.z*q1.x;
+////        to.z = to.w*q1.z + q1.w*to.z + to.x*q1.y - to.y*q1.x;
+//        to.z = -to.w*q1.z - q1.w*to.z - to.x*q1.y + to.y*q1.x;
+//        to.w = w;
+//        to.x = x;
+//        to.y = y;
+//    }
+    public static boolean NaNCheck(Vector3d inVec){
         if (!Double.isNaN(inVec.x) && !Double.isNaN(inVec.y) && !Double.isNaN(inVec.z)) {
+            return false;
         }else {
             inVec.set(0,0,0);
+            try{
+                throw new NanMadeException("Nan Vector appeared!");
+            }catch (NanMadeException e){
+                e.printStackTrace();
+            }
+            return true;
         }
 
     }
     public static void NaNCheck(Vector3d inVec,Vector3d before){
         if (!Double.isNaN(inVec.x) && !Double.isNaN(inVec.y) && !Double.isNaN(inVec.z)) {
         }else {
+            try{
+                throw new NanMadeException("Nan Vector appeared!");
+            }catch (NanMadeException e){
+                e.printStackTrace();
+            }
             inVec.set(before);
         }
 
     }
-    public static void NaNCheck(Quat4d inVec){
+    public static boolean NaNCheck(Quat4d inVec){
         if (!Double.isNaN(inVec.x) && !Double.isNaN(inVec.y) && !Double.isNaN(inVec.z) && !Double.isNaN(inVec.w)) {
+            return false;
         }else {
-            inVec.set(0,0,0,1);
+            inVec.set(0,0,0,0);
+            try{
+                throw new NanMadeException("Nan Quaternion appeared!");
+            }catch (NanMadeException e){
+                e.printStackTrace();
+            }
+            return true;
         }
-    }
-    public static Vec3 transformVecByQuat(Vec3 vec, Quat4d qua)
-    {
-        double x = qua.x + qua.x;
-        double y = qua.y + qua.y;
-        double z = qua.z + qua.z;
-        double wx = qua.w * x;
-        double wy = qua.w * y;
-        double wz = qua.w * z;
-        double xx = qua.x * x;
-        double xy = qua.x * y;
-        double xz = qua.x * z;
-        double yy = qua.y * y;
-        double yz = qua.y * z;
-        double zz = qua.z * z;
-
-        return Vec3.createVectorHelper(
-                ((vec.xCoord * ((1.0f - yy) - zz)) + (vec.yCoord * (xy - wz))) - (vec.zCoord * (xz + wy)),
-                ((vec.xCoord * (xy + wz)) + (vec.yCoord * ((1.0f - xx) - zz))) - (vec.zCoord * (yz - wx)),
-                -((vec.xCoord * (xz - wy)) - (vec.yCoord * (yz + wx))) + (vec.zCoord * ((1.0f - xx) - yy)));
     }
     public static Matrix3d matrixfromQuat(Quat4d qua){
         double x = qua.x;
@@ -380,12 +523,16 @@ public class Utils {
         double wx = w * x;
         double wy = w * y;
         double wz = w * z;
+
+
         return new Matrix3d
                 (       1-2*y2-2*z2 ,   2*xy+2*wz ,   2*xz-2*wy ,
                           2*xy-2*wz , 1-2*x2-2*z2 ,   2*yz+2*wx ,
                           2*xz+2*wy ,   2*yz-2*wx , 1-2*x2-2*y2);
     }
     public static double[] eulerfrommatrix(Matrix3d matrix3d){
+
+
         //0:P
         //1:Y
         //2:R
@@ -412,6 +559,27 @@ public class Utils {
             xyz[2] = 0;
             System.out.println("debug matrix " + matrix3d);
         }
+        return xyz;
+    }
+    public static double[] eulerfromQuat(Quat4d quat){
+
+        //0:P
+        //1:Y
+        //2:R
+        double ww = quat.w * quat.w;
+        double wz = quat.w * quat.z;
+        double wx = quat.w * quat.x;
+        double wy = quat.w * quat.y;
+        double zz = quat.z * quat.z;
+        double zx = quat.z * quat.x;
+        double zy = quat.z * quat.y;
+        double xx = quat.x * quat.x;
+        double xy = quat.x * quat.y;
+        double yy = quat.y * quat.y;
+        double[] xyz = new double[3];
+        xyz[0] = asin(2*(zy-wx));
+        xyz[1] = atan2(2*(zx+wy), 1-2*(xx+yy));
+        xyz[2] = atan2(2*(xy+wz), 1-2*(xx+zz));
         return xyz;
     }
 
@@ -627,5 +795,27 @@ public class Utils {
         if(entity.ridingEntity instanceof EntityDummy_rider && ((EntityDummy_rider) entity.ridingEntity).linkedBaseLogic.ispilot(entity))return true;
         if(entity.ridingEntity == null)return true;
         return false;
+    }
+
+    public static boolean iscandamageentity(Entity attacker , Entity entity){
+        if(entity != attacker) {
+            if(entity instanceof SpHitCheckEntity){
+                if (((SpHitCheckEntity)entity).isRidingEntity(attacker))
+                    return false;
+            }
+            if(entity.ridingEntity instanceof SpHitCheckEntity){
+                if (((SpHitCheckEntity)entity.ridingEntity).isRidingEntity(attacker))
+                    return false;
+            }
+            if(entity instanceof EntityHasMaster && ((EntityHasMaster) entity).getmaster() instanceof SpHitCheckEntity && (((SpHitCheckEntity) ((EntityHasMaster) entity).getmaster()).isRidingEntity(entity) || ((SpHitCheckEntity) ((EntityHasMaster) entity).getmaster()).isRidingEntity(attacker)))return false;
+            if(entity.riddenByEntity == attacker
+                    || entity.ridingEntity == attacker){
+                return false;
+            }
+            if(entity.riddenByEntity != null && entity.riddenByEntity.riddenByEntity == attacker)return false;
+        }else {
+            return false;
+        }
+        return true;
     }
 }

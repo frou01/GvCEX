@@ -88,6 +88,7 @@ public class HandmadeGunsCore {
 
 	public static boolean cfg_exprotion = true;
 	public static boolean cfg_FriendFireLMM;
+	public static boolean cfg_FriendFirePlayerToLMM;
 	public static boolean cfg_RenderGunSizeLMM;
 	public static boolean cfg_RenderGunAttachmentLMM;
 

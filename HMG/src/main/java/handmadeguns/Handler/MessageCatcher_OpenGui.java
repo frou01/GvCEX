@@ -4,6 +4,7 @@ import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import handmadeguns.HandmadeGunsCore;
+import handmadeguns.items.guns.HMGItem_Unified_Guns;
 import handmadeguns.network.PacketOpenGui;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -24,7 +25,7 @@ public class MessageCatcher_OpenGui implements IMessageHandler<PacketOpenGui, IM
         try {
             if(world != null){
                 Entity opener = world.getEntityByID(message.entityID);
-                if(opener != null && opener instanceof EntityPlayer) {
+                if(opener != null && opener instanceof EntityPlayer && ((EntityPlayer) opener).getHeldItem() != null && ((EntityPlayer) opener).getHeldItem().getItem() instanceof HMGItem_Unified_Guns) {
                     ((EntityPlayer) opener).openGui(HandmadeGunsCore.INSTANCE, message.guiID, opener.worldObj, (int)opener.posX, (int)opener.posY, (int)opener.posZ);
                 }
             }

@@ -1,15 +1,14 @@
 package hmggvcmob.ai;
 
 import handmadeguns.entity.IFF;
+import handmadevehicle.entity.EntityDummy_rider;
 import handmadevehicle.entity.parts.ITank;
+import handmadevehicle.entity.parts.logics.BaseLogic;
 import hmggvcutil.entity.GVCEntityBox;
 import hmggvcmob.entity.IGVCmob;
 import hmggvcmob.entity.friend.EntitySoBases;
 import net.minecraft.command.IEntitySelector;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityList;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAITarget;
 import net.minecraft.util.Vec3;
@@ -127,6 +126,15 @@ public class AINearestAttackableTarget extends EntityAITarget {
             if(flag) {
                 if (targetEntity != null && (targetEntity.riddenByEntity == null || !(targetEntity.riddenByEntity instanceof GVCEntityBox && targetEntity.distanceWalkedModified - targetEntity.prevDistanceWalkedModified < dist / 10))) {
                     this.taskOwner.setAttackTarget(this.targetEntity);
+                    if(this.taskOwner.ridingEntity instanceof EntityDummy_rider){
+                        BaseLogic riding = ((EntityDummy_rider) this.taskOwner.ridingEntity).linkedBaseLogic;
+                        for(Entity entity:riding.riddenByEntities){
+                            if(entity instanceof EntityCreature){
+                                ((EntityCreature) entity).setAttackTarget(this.targetEntity);
+                                ((EntityCreature) entity).setTarget(this.targetEntity);
+                            }
+                        }
+                    }
                     this.taskOwner.setTarget(this.targetEntity);
                 }
             }

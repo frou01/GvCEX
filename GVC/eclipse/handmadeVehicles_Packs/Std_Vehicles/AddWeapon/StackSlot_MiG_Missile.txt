@@ -10,6 +10,7 @@ linked_MotherTrigger,true
 positionLinked,false
 //ˆÊ’uƒŠƒ“ƒN‚ğØ‚Á‚Ä‚¨‚­
 seekerSize,30
+canReloadAirBone,false
 
 needGunStack,true
 useVehicleInventory,true

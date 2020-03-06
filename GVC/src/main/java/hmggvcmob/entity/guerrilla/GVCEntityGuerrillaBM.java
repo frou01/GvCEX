@@ -9,6 +9,7 @@ import hmggvcmob.GVCMobPlus;
 import hmggvcmob.ai.AIAttackGun;
 import hmggvcmob.ai.KAMIKAZEBommerAI;
 import hmggvcutil.GVCUtils;
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackOnCollide;
@@ -59,8 +60,8 @@ public class GVCEntityGuerrillaBM extends EntityGBase
     public GVCEntityGuerrillaBM(World p_i1733_1_)
     {
         super(p_i1733_1_);
-        this.tasks.addTask(2, new KAMIKAZEBommerAI(this));
-        this.tasks.addTask(1,aiAttackGun = new AIAttackGun(this,30,3,10,5,true,true,new WorldForPathfind(worldObj)));
+        this.tasks.addTask(1, new KAMIKAZEBommerAI(this));
+        this.tasks.addTask(2,aiAttackGun = new AIAttackGun(this,30,3,10,5,true,true,new WorldForPathfind(worldObj)));
         spread = 5;
         canuseAlreadyPlacedGun = false;
         canusePlacedGun = false;
@@ -374,5 +375,26 @@ public class GVCEntityGuerrillaBM extends EntityGBase
     public void func_146079_cb()
     {
         this.dataWatcher.updateObject(18, Byte.valueOf((byte)1));
+    }
+
+
+    protected String getLivingSound()
+    {
+        return "mob.skeleton.say";
+    }
+
+    protected String getHurtSound()
+    {
+        return "mob.skeleton.hurt";
+    }
+
+    protected String getDeathSound()
+    {
+        return "mob.skeleton.death";
+    }
+
+    protected void func_145780_a(int p_145780_1_, int p_145780_2_, int p_145780_3_, Block p_145780_4_)
+    {
+        this.playSound("mob.skeleton.step", 0.15F, 1.0F);
     }
 }

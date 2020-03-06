@@ -45,7 +45,7 @@ public class GunInfo {
 	public boolean restrictTurretAngle = false;
 	public int canuseclass = -1;
 	public int guntype = -1;
-	public int cycle = 2;
+	public float cycle = 1;
 	public float ex = 2.5F;
 	public boolean destroyBlock = true;
 	public String[] soundre= {"handmadeguns:handmadeguns.reload"};
@@ -160,7 +160,7 @@ public class GunInfo {
 //			add(-1);
 //		}
 	};
-	public ArrayList<Integer> rates = new ArrayList<Integer>(){
+	public ArrayList<Float> rates = new ArrayList<Float>(){
 //		{
 //			add(1);
 //		}
@@ -181,13 +181,18 @@ public class GunInfo {
 	public boolean canlock = false;
 	public boolean canlockBlock = false;
 	public boolean canlockEntity = false;
+	public boolean displayPredicate = false;
 	public double seekerSize = 60;
-	public float seekerSize_bullet = 15;
+	public float seekerSize_bullet = 50;
 	public boolean semiActive = false;
 	public boolean lock_to_Vehicle = false;
 	public double lookDown = 1;
 	public double radarRange = 1200 * 1200;
 	public float induction_precision;
+	public float lockOn_MaxSpeed = -1;
+	public float lockOn_minSpeed = -1;
+	public float lockOn_MaxThrottle = -1;
+	public float lockOn_minThrottle = -1;
 	public String flashname = null;
 	public int flashfuse = 1;
 	public float flashScale = 1;

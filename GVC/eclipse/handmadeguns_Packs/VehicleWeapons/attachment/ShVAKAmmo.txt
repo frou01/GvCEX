@@ -1,0 +1,5 @@
+Texture,bullet_ShVAK
+Stack,64
+Tabname,VehicleWeapons
+Name,ShVAKAmmo
+Magazine,ShVAKAmmo

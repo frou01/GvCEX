@@ -1,0 +1,5 @@
+Texture,bullet_L7A1
+Stack,64
+Tabname,VehicleWeapons
+Name,L7A1Ammo
+Magazine,L7A1Ammo

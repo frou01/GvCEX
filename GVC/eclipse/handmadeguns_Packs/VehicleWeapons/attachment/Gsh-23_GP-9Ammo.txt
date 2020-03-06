@@ -1,0 +1,5 @@
+Texture,bullet_Gsh-23_GP-9
+Stack,64
+Tabname,VehicleWeapons
+Name,Gsh-23_GP-9Ammo
+Magazine,Gsh-23_GP-9Ammo

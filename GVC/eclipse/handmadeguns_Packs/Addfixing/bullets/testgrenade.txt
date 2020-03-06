@@ -1,3 +1,0 @@
-ObjModel,M26_noPin.mqo
-ObjTexture,M26.png
-Name,M26grenade

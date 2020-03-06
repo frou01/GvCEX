@@ -54,6 +54,7 @@ RenderCross,false
 Induction_precision,90
 Canlock,true
 lock_to_Vehicle,true
+lockOn_minThrottle,2.5
 seekerSize,5
 seekerSize_bullet,45
 hasVT,true

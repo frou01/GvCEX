@@ -5,10 +5,10 @@ BulletGravity,0.485
 BlletSpread,4.0f
 ADS_Spread_coefficient,0.5
 BlletSpreadDiffusion,10,0,1.8,0.1,2,0.8
-Cycle,2
+Cycle,1.6
 
 Recoil,3
-Recoil_sneaking,1.8
+Recoil_sneaking,1.4
 
 ReloadTime,50
 
@@ -32,7 +32,7 @@ ObjTexture,G36.png
 ModelScala,0.5f
 CustomFlash,arrow,1
 Bursts,1,-1
-Rates,2,2
+Rates,1.6,1.6
 
 
 

@@ -241,6 +241,7 @@ public class HMGGunMaker {
 		reloadanimation = new ArrayList<Float[]>();
 		maxstacksize = 1;
 		float armscale = 1;
+		float gunPartsScale = 1;
 //		boolean g_can_use = true;
 //		boolean can_be_Root = true;
 //		boolean soldiercanstorage = true;
@@ -583,6 +584,10 @@ public class HMGGunMaker {
 							
 							case "OnEntity_PlayerPosOffset":
 								seatoffset = new double[]{parseDouble(type[1]), parseDouble(type[2]), parseDouble(type[3])};
+								break;
+
+							case "Gunparts_offsetScale":
+								if(isClient)gunPartsScale = parseFloat(type[1]);
 								break;
 						}
 						if(isClient) {
@@ -1053,6 +1058,7 @@ public class HMGGunMaker {
 											((HMGRenderItemGun_U_NEW)gunrender).setSprintOffsetAndRotation(spposx, spposy, spposz, sprotex, sprotey, sprotez);
 											
 											((HMGRenderItemGun_U_NEW)gunrender).partsRender_gun.partslist = partslist;
+											((HMGRenderItemGun_U_NEW)gunrender).partsRender_gun.gunPartsScale = gunPartsScale;
 											((HMGRenderItemGun_U_NEW)gunrender).partsRender_gun.muzzleattachoffset = barrelattachoffset;
 											((HMGRenderItemGun_U_NEW)gunrender).partsRender_gun.muzzleattachrotation = barrelattachrotation;
 											((HMGRenderItemGun_U_NEW)gunrender).partsRender_gun.sightattachoffset = sightattachoffset;
@@ -1081,6 +1087,7 @@ public class HMGGunMaker {
 											renderItemGun_u_new.setSprintOffsetAndRotation(spposx, spposy, spposz, sprotex, sprotey, sprotez);
 											
 											renderItemGun_u_new.partsRender_gun.partslist = partslist;
+											renderItemGun_u_new.partsRender_gun.gunPartsScale = gunPartsScale;
 											renderItemGun_u_new.partsRender_gun.muzzleattachoffset = barrelattachoffset;
 											renderItemGun_u_new.partsRender_gun.muzzleattachrotation = barrelattachrotation;
 											renderItemGun_u_new.partsRender_gun.sightattachoffset = sightattachoffset;
@@ -1612,6 +1619,7 @@ public class HMGGunMaker {
 	public static int readerCnt = 0;
 	public void readParts(String[] type,ArrayList<HMGGunParts> partslist){
 		switch (type[0]) {
+
 			case "AddParts":
 				currentIndex = partslist.size();
 				partslist.add(currentParts = createGunPart(type));
@@ -1690,7 +1698,12 @@ public class HMGGunMaker {
 				}
 				break;
 			case "AddBulletPositions":
-				currentParts.AddBulletPositions(parseInt(type[1]), parseFloat(type[2]), parseFloat(type[3]), parseFloat(type[4]), parseFloat(type[5]), parseFloat(type[6]), parseFloat(type[7]), parseInt(type[8]), parseFloat(type[9]), parseFloat(type[10]), parseFloat(type[11]), parseFloat(type[12]), parseFloat(type[13]), parseFloat(type[14]));
+
+				if (type.length > 4) {
+					currentParts.AddBulletPositions(parseInt(type[1]), parseFloat(type[2]), parseFloat(type[3]), parseFloat(type[4]), parseFloat(type[5]), parseFloat(type[6]), parseFloat(type[7]), parseInt(type[8]), parseFloat(type[9]), parseFloat(type[10]), parseFloat(type[11]), parseFloat(type[12]), parseFloat(type[13]), parseFloat(type[14]));
+				} else {
+					currentParts.AddBulletPositions(parseInt(type[1]), parseBoolean(type[2]), parseInt(type[3]));
+				}
 				break;
 			case "NeedDraw_Current_Magazine_ID_List":
 				currentParts.current_magazineType = new ArrayList<Boolean>();
@@ -1815,6 +1828,18 @@ public class HMGGunMaker {
 			case "Induction_precision":
 				gunInfo.induction_precision = parseFloat(type[1]);
 				break;
+			case "lockOn_MaxSpeed":
+				gunInfo.lockOn_MaxSpeed = parseFloat(type[1]);
+				break;
+			case "lockOn_minSpeed":
+				gunInfo.lockOn_minSpeed = parseFloat(type[1]);
+				break;
+			case "lockOn_MaxThrottle":
+				gunInfo.lockOn_MaxThrottle = parseFloat(type[1]);
+				break;
+			case "lockOn_minThrottle":
+				gunInfo.lockOn_minThrottle = parseFloat(type[1]);
+				break;
 			case "canBounce":
 				gunInfo.canbounce = parseBoolean(type[1]);
 				break;
@@ -1909,7 +1934,7 @@ public class HMGGunMaker {
 				gunInfo.hasNightVision[2] = parseBoolean(type[3]);
 				break;
 			case "Cycle":
-				gunInfo.cycle = parseInt(type[1]);
+				gunInfo.cycle = parseFloat(type[1]);
 				break;
 			case "Bursts":
 				gunInfo.burstcount.clear();
@@ -1919,7 +1944,7 @@ public class HMGGunMaker {
 			case "Rates":
 				gunInfo.rates.clear();
 				for (int i = 1; i < type.length; i++)
-					gunInfo.rates.add(parseInt(type[i]));
+					gunInfo.rates.add(parseFloat(type[i]));
 				break;
 			case "ElevationOffsets":{
 				gunInfo.elevationOffsets.clear();
@@ -1955,8 +1980,16 @@ public class HMGGunMaker {
 				for (int i = 1; i < type.length; i++)
 					gunInfo.soundre[i-1] = "handmadeguns:" + type[1];
 				break;
+			case "GunSoundReload_FullPath":
+				gunInfo.soundre = new String[type.length-1];
+				for (int i = 1; i < type.length; i++)
+					gunInfo.soundre[i-1] = type[1];
+				break;
 			case "GunSoundReloadLV":
 				gunInfo.soundrelevel = parseFloat(type[1]);
+				break;
+			case "GunSoundReloadSP":
+				gunInfo.soundrespeed = parseFloat(type[1]);
 				break;
 			case "GunSoundCooking":
 				gunInfo.soundco = "handmadeguns:" + type[1];
@@ -1968,6 +2001,9 @@ public class HMGGunMaker {
 					gunInfo.magazine[0] = GameRegistry.findItem(type[2], type[3]);
 				} else {
 					gunInfo.magazine[0] = Item.getItemById(ii);
+				}
+				if(gunInfo.magazine[0] == null){
+					System.out.println("debug : No Magazine Item");
 				}
 				break;
 			}

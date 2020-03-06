@@ -294,9 +294,21 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 				}
 			}
 		}
-		rotex = nbt.getFloat("rotex");
-		rotey = nbt.getFloat("rotey");
-		rotez = nbt.getFloat("rotez");
+		boolean recoiled = this.getbooleanfromnbt("Recoiled");
+		int mode = nbt.getInteger("HMGMode");
+		if (!gunitem.gunInfo.rates.isEmpty() && gunitem.gunInfo.rates.size() > mode)
+			gunitem.gunInfo.cycle = gunitem.gunInfo.rates.get(mode);
+		float boltPos = nbt.getByte("Bolt");
+		float recoileprogress = 10 - 10 * (boltPos - smoothing) / (gunitem.gunInfo.cycle);
+		if(boltPos == 0){
+			recoiled = true;
+		}
+		if(recoileprogress > 10){
+			recoiled = true;
+		}
+		if(recoileprogress < 0){
+			recoiled = true;
+		}
 		switch (type) {
 			case INVENTORY:
 				glMatrixForRenderInInventory();
@@ -317,7 +329,6 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 					partsRender_gun.pass = pass;
 					isfirstperson = true;
 					EntityLivingBase entity = (EntityLivingBase) data[1];
-					boolean recoiled = this.getbooleanfromnbt("Recoiled");
 					boolean isreloading = this.getbooleanfromnbt("IsReloading");
 					int remainbullets = gunitem.remain_Bullet(gunstack);
 					Minecraft.getMinecraft().renderEngine.bindTexture(guntexture);
@@ -436,7 +447,6 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 						} else if (!recoiled) {
 							this.glMatrixForRenderInEquippedADS(-1.4f);
 							GL11.glRotatef(jump * (1 - this.getSmoothing()), 1.0f, 0.0f, 0.0f);//�e�����ˏオ��B���̏�Ԃ��ƃ��f����0,0,0�𒆐S�ɉ�]�B
-							float recoileprogress = 10 * ((float) nbt.getByte("Bolt") + smoothing) / gunitem.gunInfo.cycle;
 							state[0] = GunState.Recoil;
 							GL11.glScalef(scala, scala, scala);
 							partsRender_gun.partSidentification(state, recoileprogress, remainbullets);
@@ -466,7 +476,6 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 								//�ˌ����1tick���̂݌Ă΂�܂�
 								this.glMatrixForRenderInEquipped(-0.2f);
 								GL11.glRotatef(jump * (1 - this.getSmoothing()), 1.0f, 0.0f, 0.0f);//�e�����ˏオ��B���̏�Ԃ��ƃ��f����0,0,0�𒆐S�ɉ�]�B
-								float recoileprogress = 10 * (nbt.getByte("Bolt") + smoothing) / gunitem.gunInfo.cycle;
 								GL11.glScalef(scala, scala, scala);
 								partsRender_gun.partSidentification(new GunState[]{GunState.Recoil}, recoileprogress, remainbullets);
 							} else {
@@ -497,7 +506,6 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 				partsRender_gun.pass = pass;
 				isfirstperson = false;
 				EntityLivingBase entity = (EntityLivingBase) data[1];
-				boolean recoiled = this.getbooleanfromnbt("Recoiled");//���R�C�������ǂ����i�e������u���˂�l�ɕ`�悷�邽�߂̃t���O�j
 				boolean isreloading = this.getbooleanfromnbt("IsReloading");//�����[�h�����ǂ���
 				int remainbullets = gunitem.getMaxDamage() - gunstack.getItemDamage();//�����[�h�����ǂ���
 				Minecraft.getMinecraft().renderEngine.bindTexture(guntexture);
@@ -521,7 +529,6 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 						partsRender_gun.partSidentification(new GunState[]{GunState.Cock}, cockingprogress, remainbullets);
 					} else if (!recoiled) {
 						GL11.glRotatef(jump * (1 - this.getSmoothing()), 1.0f, 0.0f, 0.0f);
-						float recoileprogress = 10 * (nbt.getByte("Bolt") + smoothing) / gunitem.gunInfo.cycle;
 						partsRender_gun.partSidentification(new GunState[]{GunState.ADS,GunState.Recoil}, recoileprogress, remainbullets);
 					} else {
 						partsRender_gun.partSidentification(new GunState[]{GunState.ADS}, (float)0, remainbullets);
@@ -537,7 +544,6 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 						} else if (!recoiled) {
 							//�ˌ����1tick���̂݌Ă΂�܂�
 							GL11.glRotatef(jump * (1 - this.getSmoothing()), 1.0f, 0.0f, 0.0f);
-							float recoileprogress = 10 * (nbt.getByte("Bolt") + smoothing) / gunitem.gunInfo.cycle;
 							partsRender_gun.partSidentification(new GunState[]{GunState.Recoil}, recoileprogress, remainbullets);
 						} else {
 							partsRender_gun.partSidentification(new GunState[]{GunState.Default}, (float)0, remainbullets);
@@ -561,7 +567,6 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 				}
 				partsRender_gun.pass = pass;
 				isfirstperson = false;
-				boolean recoiled = this.getbooleanfromnbt("Recoiled");//���R�C�������ǂ����i�e������u���˂�l�ɕ`�悷�邽�߂̃t���O�j
 				boolean isreloading = this.getbooleanfromnbt("IsReloading");//�����[�h�����ǂ���
 				int remainbullets = gunitem.getMaxDamage() - gunstack.getItemDamage();//�����[�h�����ǂ���
 				smoothing = isPlacedGun ? RenderTickSmoothing.smooth : 0;
@@ -579,7 +584,6 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 					} else if (!recoiled) {
 						//�ˌ����1tick���̂݌Ă΂�܂�
 						GL11.glRotatef(jump * (1 - this.getSmoothing()), 1.0f, 0.0f, 0.0f);
-						float recoileprogress = 10 * (nbt.getByte("Bolt") + smoothing) / gunitem.gunInfo.cycle;
 						partsRender_gun.partSidentification(new GunState[]{GunState.Recoil}, recoileprogress, remainbullets);
 					} else {
 						partsRender_gun.partSidentification(new GunState[]{GunState.Default}, (float)0, remainbullets);

@@ -3,17 +3,19 @@ package handmadeguns.client.render;
 import static handmadeguns.HMGGunMaker.*;
 import static java.lang.Boolean.parseBoolean;
 import static java.lang.Integer.parseInt;
+import static java.lang.Math.abs;
+import static net.minecraft.util.MathHelper.wrapAngleTo180_float;
 
 public class HMGGunParts_Motion {
-    public int startflame;
-    public int endflame;
+    public float startflame;
+    public float endflame;
     public float startrotationX;
     public float startrotationY;
     public float startrotationZ;
     public float startposX;
     public float startposY;
     public float startposZ;
-    public int size_flame;
+    public float size_flame;
     public float size_rotationX;
     public float size_rotationY;
     public float size_rotationZ;
@@ -76,6 +78,15 @@ public class HMGGunParts_Motion {
         size_rotationX = endrotationX -startrotationX;
         size_rotationY = endrotationY -startrotationY;
         size_rotationZ = endrotationZ -startrotationZ;
+        size_posX = endposX -startposX;
+        size_posY = endposY -startposY;
+        size_posZ = endposZ -startposZ;
+        size_flame = endflame - startflame;
+    }
+    public void setup2(){
+        size_rotationX = wrapAngleTo180_float(endrotationX -startrotationX);
+        size_rotationY = wrapAngleTo180_float(endrotationY -startrotationY);
+        size_rotationZ = wrapAngleTo180_float(endrotationZ -startrotationZ);
         size_posX = endposX -startposX;
         size_posY = endposY -startposY;
         size_posZ = endposZ -startposZ;

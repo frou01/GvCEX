@@ -1,16 +1,21 @@
 package hmggvcmob.entity.friend;
 
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
+import cpw.mods.fml.common.eventhandler.Event;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import handmadeguns.Util.GunsUtils;
 import handmadeguns.entity.IFF;
 import handmadeguns.entity.PlacedGunEntity;
 import handmadeguns.items.guns.HMGItem_Unified_Guns;
 import handmadevehicle.SlowPathFinder.WorldForPathfind;
+import handmadevehicle.entity.EntityDummy_rider;
 import handmadevehicle.entity.EntityVehicle;
 import handmadevehicle.entity.parts.ITurretUser;
+import handmadevehicle.entity.parts.logics.BaseLogic;
 import handmadevehicle.entity.parts.turrets.TurretObj;
+import handmadevehicle.entity.prefab.Prefab_Seat;
 import handmadevehicle.entity.prefab.Prefab_Vehicle_Base;
 import hmggvcmob.GVCMobPlus;
 import hmggvcmob.IflagBattler;
@@ -22,6 +27,7 @@ import hmggvcmob.entity.EntityMoveHelperModified;
 import hmggvcmob.entity.IGVCmob;
 import hmggvcmob.entity.guerrilla.EntityGBase;
 import hmggvcmob.entity.guerrilla.EntityGBases;
+import hmggvcmob.entity.guerrilla.GVCEntityGuerrilla;
 import littleMaidMobX.LMM_EntityLittleMaid;
 import net.minecraft.block.Block;
 import net.minecraft.entity.*;
@@ -33,19 +39,20 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.scoreboard.Team;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import net.minecraftforge.event.ForgeEventFactory;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import static handmadeguns.HandmadeGunsCore.islmmloaded;
-import static handmadeguns.Util.Utils.getmovingobjectPosition_forBlock;
+import static handmadeguns.Util.GunsUtils.getmovingobjectPosition_forBlock;
 import static handmadevehicle.Utils.canMoveEntity;
 import static handmadevehicle.entity.EntityVehicle.EntityVehicle_spawnByMob;
 import static hmggvcmob.GVCMobPlus.*;
@@ -53,8 +60,7 @@ import static java.lang.Math.abs;
 
 public class EntitySoBases extends EntityCreature implements INpc , IflagBattler ,  IFF, IGVCmob, ITurretUser {
 	private EntityBodyHelper_modified bodyHelper;
-	public String summoningVehicle = null;//null�͖����B���R�N����LivingSpawnEvent.SpecialSpawn�Őݒ肷��
-	//���ꎖ��Łi�_���W�����Ƃ��Łj���R�Ȗ�E�̕��m���ڂ������Ƃ��̂��߂Ƀt�B�[���h�͎c���Ă�����
+	public String summoningVehicle = null;
 
 	private ModifiedPathNavigater modifiedPathNavigater;
 	WorldForPathfind worldForPathfind;
@@ -67,6 +73,9 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
 	public AIAttackFlag aiAttackFlag;
 	public AITargetFlag aiTargetFlag;
 	public static int spawnedcount;
+
+	public int rideCool = 0;
+
 	public EntitySoBases(World par1World) {
 		super(par1World);
 		this.moveHelper = new EntityMoveHelperModified(this);
@@ -87,11 +96,9 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
 		this.tasks.addTask(5, new EntityAIRestrictOpenDoor(this));
 		this.tasks.addTask(6, new EntityAIOpenDoor(this, true));
 		this.tasks.addTask(7, new EntityAIMoveTowardsRestriction(this, 1.0D));
-		//���������͑ҋ@���i�H�j
 		this.tasks.addTask(8, new EntityAIWander(this, 1.0D));
 		this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
 		this.tasks.addTask(8, new EntityAILookIdle(this));
-		//�^�[�Q�e�B���O
 		this.targetTasks.addTask(1, new AIHurtByTarget(this, true));
 		this.targetTasks.addTask(2, new AINearestAttackableTarget(this, EntityGBase.class, 0, true));
 		this.targetTasks.addTask(3, new AINearestAttackableTarget(this, EntityLiving.class, 0, true, false, IMob.mobSelector));
@@ -343,6 +350,7 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
 			int var12 = MathHelper.floor_double((double) (this.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
 			System.out.println(summoningVehicle);
 			EntityVehicle bespawningEntity = EntityVehicle_spawnByMob(worldObj,summoningVehicle);
+			bespawningEntity.noDrop = true;
 			bespawningEntity.setLocationAndAngles(this.posX, this.posY, this.posZ, var12 , 0.0F);
 			if(bespawningEntity.checkObstacle()) {
 				if(bespawningEntity.pickupEntity(this,0)) {
@@ -366,9 +374,27 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
 						bespawningEntity.getBaseLogic().inventoryVehicle.setInventorySlotContents(slotID, new ItemStack(choosenGun));
 					}
 				}
-				if(!prefab_vehicle.T_Land_F_Plane){
-					bespawningEntity.setLocationAndAngles(this.posX, 128, this.posZ, var12 , 0.0F);
+				if(!prefab_vehicle.T_Land_F_Plane) {
+					bespawningEntity.setLocationAndAngles(this.posX, 128, this.posZ, var12, 0.0F);
 					bespawningEntity.getBaseLogic().throttle = prefab_vehicle.throttle_Max;
+				}
+				for (int cnt = 0;cnt < bespawningEntity.getBaseLogic().riddenByEntities.length;cnt++) {
+					EntityLiving entity = new GVCEntitySoldier(worldObj);
+					entity.copyLocationAndAnglesFrom(this);
+					entity.onSpawnWithEgg(null);
+					if(bespawningEntity.pickupEntity(entity,cnt)) {
+						Prefab_Seat sittingSeat = bespawningEntity.getBaseLogic().seatInfos[((EntityDummy_rider)entity.ridingEntity).linkedSeatID].prefab_seat;
+						if(sittingSeat.isBlindedSeat || sittingSeat.hasGun){
+							this.setCurrentItemOrArmor(0,null);
+						}
+						worldObj.spawnEntityInWorld(entity);
+					}
+				}
+				for(TurretObj turretObj : bespawningEntity.getBaseLogic().allturrets){
+					if(turretObj.gunItem != null && turretObj.gunStack != null){
+						turretObj.gunItem.checkTags(turretObj.gunStack);
+						turretObj.gunItem.resetReload(turretObj.gunStack,worldObj,this,0);
+					}
 				}
 				worldObj.spawnEntityInWorld(bespawningEntity);
 			}
@@ -403,6 +429,9 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
 			}else {
 				((PlacedGunEntity) ridingEntity).firing = false;
 			}
+		}
+		if(ridingEntity == null){
+			rideCool --;
 		}
 		this.getEntityData().setBoolean("HMGisUsingItem",false);
 		if(modifiedPathNavigater.getSpeed() < 0 && rand.nextInt(10)==0 && this.getAttackTarget() == null)modifiedPathNavigater.setSpeed(1);
@@ -513,10 +542,15 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
 	public boolean canEntityBeSeen(Entity p_70685_1_)
 	{
 
+		if(ridingEntity instanceof EntityDummy_rider){
+			BaseLogic connected = ((EntityDummy_rider) ridingEntity).linkedBaseLogic;
+			if(connected.seatInfos[((EntityDummy_rider) ridingEntity).linkedSeatID].prefab_seat.isBlindedSeat)return false;
+		}
+
 		Vec3 vec3 = Vec3.createVectorHelper(this.posX, this.posY + this.getEyeHeight(), this.posZ);
 		Vec3 vec31 = Vec3.createVectorHelper(p_70685_1_.posX, p_70685_1_.posY + p_70685_1_.getEyeHeight(), p_70685_1_.posZ);
 
-		MovingObjectPosition movingobjectposition = handmadeguns.Util.Utils.getmovingobjectPosition_forBlock(worldObj,vec3, vec31, false, true, false);//�Փ˂���u���b�N�𒲂ׂ�
+		MovingObjectPosition movingobjectposition = GunsUtils.getmovingobjectPosition_forBlock(worldObj,vec3, vec31, false, true, false);
 		return movingobjectposition == null && canSeeTarget(p_70685_1_);
 	}
 
@@ -549,11 +583,12 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
 						this.collideWithEntity(entity);
 					}
 
-					if (this.ridingEntity == null && !entity.isDead) {
+					if (this.ridingEntity == null && rideCool < 0 && !entity.isDead) {
 						if (entity instanceof EntityVehicle && ((EntityVehicle) entity).canUseByMob) {
 							Entity pilot = ((EntityVehicle) entity).getBaseLogic().getRiddenEntityList()[((EntityVehicle) entity).getpilotseatid()];
 							if ((pilot == null || is_this_entity_friend(pilot)) && !((EntityVehicle) entity).getBaseLogic().isRidingEntity(this)) {
 //                            System.out.println("" + );
+								rideCool = 200;
 								((EntityVehicle) entity).pickupEntity(this, seatID);
 							}
 							((EntityVehicle) entity).getBaseLogic().health += 0.01;
@@ -563,6 +598,7 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
 									placing++;
 									if (placing > 60) {
 										placing = 0;
+										rideCool = 200;
 										this.mountEntity((PlacedGunEntity) entity);
 									}
 									this.setCurrentItemOrArmor(0, null);
@@ -611,4 +647,45 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
     public TurretObj getTurretSub() {
         return currentSubTurret;
     }
+
+
+	protected void despawnEntity()
+	{
+		Event.Result result = null;
+		if (this.isNoDespawnRequired())
+		{
+			this.entityAge = 0;
+		}
+		else if ((this.entityAge & 0x1F) == 0x1F && (result = ForgeEventFactory.canEntityDespawn(this)) != Event.Result.DEFAULT)
+		{
+			if (result == Event.Result.DENY || this.ridingEntity instanceof EntityDummy_rider)
+			{
+				this.entityAge = 0;
+			}
+			else
+			{
+				this.setDead();
+			}
+		}
+		else
+		{
+			EntityPlayer entityplayer = this.worldObj.getClosestPlayerToEntity(this, -1.0D);
+
+			if (entityplayer != null)
+			{
+				double d0 = entityplayer.posX - this.posX;
+				double d1 = entityplayer.posY - this.posY;
+				double d2 = entityplayer.posZ - this.posZ;
+				double d3 = d0 * d0 + d1 * d1 + d2 * d2;
+
+				if (this.canDespawn() && d3 > 16384.0D)
+				{
+					if(this.ridingEntity instanceof EntityDummy_rider){
+						((EntityDummy_rider) this.ridingEntity).linkedBaseLogic.mc_Entity.despawnEntity();
+					}
+					this.setDead();
+				}
+			}
+		}
+	}
 }

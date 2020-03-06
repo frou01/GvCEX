@@ -26,13 +26,13 @@ public class HMGRenderBullet extends Render
 
    
 
-    public void doRender(HMGEntityBulletBase entity, double p_180551_2_, double p_180551_4_, double p_180551_6_, float p_180551_8_, float p_180551_9_)
+    public void doRender(HMGEntityBulletBase entity, double p_180551_2_, double p_180551_4_, double p_180551_6_, float p_180551_8_, float partialTicks)
     {
         if(entity!=null) {
             GL11.glPushMatrix();
             GL11.glTranslatef((float) p_180551_2_, (float) p_180551_4_+0.1f, (float) p_180551_6_);
-            GL11.glRotatef(entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * p_180551_9_ , 0.0F, 1.0F, 0.0F);
-            GL11.glRotatef(-entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch), 1.0F, 0.0F, 0.0F);
+            GL11.glRotatef( - (entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * partialTicks), 0.0F, 1.0F, 0.0F);
+            GL11.glRotatef(entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks, 1.0F, 0.0F, 0.0F);
 //            System.out.println("debug " + p_180551_1_.rotationPitch);
             GL11.glEnable(GL12.GL_RESCALE_NORMAL);
             GL11.glScalef(1.0F, 1.0F, 1.0F);

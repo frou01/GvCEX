@@ -23,7 +23,7 @@ import static java.lang.Math.abs;
 
 public class AIDriveTank extends EntityAIBase {
 	public EntityVehicle vehicle;
-	public boolean Limited_turning_turret = false;//Ô—¼İ’è‚Æ“¯Šú‚³‚¹‚é@‚Ç‚¤‚â‚Á‚ÄŒŸo‚µ‚æ‚¤Bè“®‚Å‚¢‚¢‚©‚È
+	public boolean Limited_turning_turret = false;//ï¿½Ô—ï¿½ï¿½İ’ï¿½Æ“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½@ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ÄŒï¿½ï¿½oï¿½ï¿½ï¿½æ‚¤ï¿½Bï¿½è“®ï¿½Å‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	public boolean combatSituation = false;
 	public EntityLiving driverBody;
 
@@ -72,9 +72,9 @@ public class AIDriveTank extends EntityAIBase {
 			vehicle.getNavigator().clearPathEntity();
 		}
 //
-//		//todo ‚±‚Á‚¿‚ÅíÔ‚ğ“®‚©‚·B
-//		//ËŒ‚‚Æ‚©‚ÍƒAƒ^ƒbƒN‚Å
-//		//ƒpƒX‚ğİ’è‚·‚é‚Æ‚«‚Í•K‚¸Ô—¼‘¤‚É
+//		//todo ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Åï¿½Ô‚ğ“®‚ï¿½ï¿½ï¿½ï¿½B
+//		//ï¿½ËŒï¿½ï¿½Æ‚ï¿½ï¿½ÍƒAï¿½^ï¿½bï¿½Nï¿½ï¿½
+//		//ï¿½pï¿½Xï¿½ï¿½İ’è‚·ï¿½ï¿½Æ‚ï¿½ï¿½Í•Kï¿½ï¿½ï¿½Ô—ï¿½ï¿½ï¿½ï¿½ï¿½
 //
 //
 //
@@ -97,19 +97,19 @@ public class AIDriveTank extends EntityAIBase {
 //			baseLogic.setControl_yaw_Left(false);
 //			baseLogic.setControl_Space(false);
 //			baseLogic.setControl_brake(false);
-//			double[] rollXYZ = Utils.eulerfrommatrix(Utils.matrixfromQuat(baseLogic.rotationmotion));
+//			double[] rollXYZ = Utils.eulerfromQuat(Utils.(baseLogic.rotationmotion));
 //			double yawing = -rollXYZ[1]*10;
 //			if (nextPos != null) {
 //				Vector3d vecToNextPos = new Vector3d(nextPos);
 ////				System.out.println("vecToNextPos global	" + vecToNextPos);
-//				vecToNextPos.sub(new Vector3d(vehicle.posX, vehicle.posY, vehicle.posZ));//‘Š‘ÎˆÊ’u
+//				vecToNextPos.sub(new Vector3d(vehicle.posX, vehicle.posY, vehicle.posZ));//ï¿½ï¿½ï¿½ÎˆÊ’u
 //				vecToNextPos.scale(vehicle.getNavigator().getSpeed());
 //				double dist = vecToNextPos.lengthSquared();
 //
 //				double[] lastPos = lastPosition();
 //				if(lastPos != null){
 //					Vector3d vecToLastPos = new Vector3d(lastPos);
-//					vecToLastPos.sub(new Vector3d(vehicle.posX, vehicle.posY, vehicle.posZ));//‘Š‘ÎˆÊ’u
+//					vecToLastPos.sub(new Vector3d(vehicle.posX, vehicle.posY, vehicle.posZ));//ï¿½ï¿½ï¿½ÎˆÊ’u
 //					dist = vecToLastPos.lengthSquared();
 //				}
 //
@@ -130,8 +130,8 @@ public class AIDriveTank extends EntityAIBase {
 //						if(abs(vecToNextPos.x)>0.2){
 //							baseLogic.setControl_brake(true);
 //						}
-//						//’´M’nù‰ñ
-//					} else if (baseLogic.localMotionVec.z < 0) {//‘Oi’†
+//						//ï¿½ï¿½ï¿½Mï¿½nï¿½ï¿½ï¿½ï¿½
+//					} else if (baseLogic.localMotionVec.z < 0) {//ï¿½Oï¿½iï¿½ï¿½
 //						if (vecToNextPos.x < 0) {
 //							if(vecToNextPos.x < yawing)
 //								baseLogic.setControl_yaw_Right(true);
@@ -200,7 +200,7 @@ public class AIDriveTank extends EntityAIBase {
 //			}
 //		}
 	}
-	public double[] nextPosition(){//Ÿ‚ÉˆÚ“®‚·‚×‚«êŠ‚ğ•Ô‚·
+	public double[] nextPosition(){//ï¿½ï¿½ï¿½ÉˆÚ“ï¿½ï¿½ï¿½ï¿½×‚ï¿½ï¿½êŠï¿½ï¿½Ô‚ï¿½
 		PathEntity currentPath = vehicle.getNavigator().getPath();
 		if(currentPath != null && !currentPath.isFinished()){
 			Vec3 nextPos = currentPath.getPosition(vehicle);

@@ -509,7 +509,7 @@ public class ModifiedBoundingBox extends AxisAlignedBB {
         endVec.sub(posVec);
 
         Quat4d temp = new Quat4d(rot);
-        temp.inverse();
+        inverse_safe(temp);
 
         transformVecforMinecraft(startVec);
         transformVecforMinecraft(endVec);

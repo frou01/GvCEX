@@ -12,11 +12,11 @@ public class HMVVehicleParts extends HMGGunParts {
 	public int linkedTurretID;
 	public boolean isTurretParts = false;
 	public boolean isTurret_linkedGunMount = false;
-	public int trackPieceCount;
+	public float trackPieceCount;
 	private HMGGunParts_Motion_PosAndRotation peraPosAndRotation;
-	private HMGGunParts_Motions trackPositions = new HMGGunParts_Motions();
+	public HMGGunParts_Motions trackPositions = new HMGGunParts_Motions();
 	private HMGGunParts_Motion_PosAndRotation[] somethingPosAndRotation = new HMGGunParts_Motion_PosAndRotation[12];//x,y,z,z2,yaw,pitch,roll,gear,flap,brake,speed
-	private HMGGunParts_Motions[] somethingMotionKey = new HMGGunParts_Motions[12];
+	private HMGGunParts_Motions[] somethingMotionKey = new HMGGunParts_Motions[13];
 	public boolean isTrack;
 	public boolean isPera;
 	

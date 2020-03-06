@@ -9,6 +9,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import handmadeguns.Util.EntityLinkedPos_Motion;
 import handmadevehicle.Utils;
 import handmadevehicle.entity.EntityCameraDummy;
+import handmadevehicle.entity.EntityDummy_rider;
 import handmadevehicle.entity.parts.IVehicle;
 import handmadevehicle.entity.parts.SeatInfo;
 import handmadevehicle.entity.parts.logics.BaseLogic;
@@ -71,7 +72,7 @@ public class HMVRenderSomeEvent {
 		Minecraft minecraft = FMLClientHandler.instance().getClient();
 		EntityPlayer entityplayer = minecraft.thePlayer;
 		if (entityplayer.ridingEntity != null) {
-			if(entityplayer.ridingEntity instanceof IVehicle){
+			if(entityplayer.ridingEntity instanceof EntityDummy_rider){
 				boolean rc = HMV_Proxy.zoomclick();
 				if(rc) zooming = !zooming;
 
@@ -81,8 +82,8 @@ public class HMVRenderSomeEvent {
 					if(turretObj != null) {
 						if (turretObj.gunItem != null && turretObj.gunItem.gunInfo.scopezoombase != 1) {
 							event.newfov = event.fov / turretObj.gunItem.gunInfo.scopezoombase;
-						} else if (((IVehicle) entityplayer.ridingEntity).getBaseLogic().prefab_vehicle.prefab_seats.length > playerSeatID) {
-							event.newfov = event.fov / ((IVehicle) entityplayer.ridingEntity).getBaseLogic().prefab_vehicle.prefab_seats[playerSeatID].zoomLevel;
+						} else if (((EntityDummy_rider) entityplayer.ridingEntity).linkedBaseLogic.prefab_vehicle.prefab_seats.length > playerSeatID) {
+							event.newfov = event.fov / ((EntityDummy_rider) entityplayer.ridingEntity).linkedBaseLogic.prefab_vehicle.prefab_seats[playerSeatID].zoomLevel;
 						}
 					}
 				}
@@ -169,25 +170,26 @@ public class HMVRenderSomeEvent {
 											vehicleBody.posZ),
 									renderTickTime);
 
-							Quat4d currentquat = new Quat4d();
-							currentquat.interpolate(logic.prevbodyRot,logic.bodyRot, (double) renderTickTime);
+							Quat4d currentquat = new Quat4d(0,0,0,1);
+							if(getQuat4DLength(logic.prevbodyRot)>0 && getQuat4DLength(logic.bodyRot)>0)
+								currentquat.interpolate(logic.prevbodyRot,logic.bodyRot, (double) renderTickTime);
 //									if (abs(logic.pitchladder) > 0.001) {
-//										Vector3d axisx = Utils.transformVecByQuat(new Vector3d(1, 0, 0), currentquat);
+//										Vector3d axisx = transformVecByQuat(new Vector3d(1, 0, 0), currentquat);
 //										AxisAngle4d axisxangled = new AxisAngle4d(axisx, toRadians(-logic.pitchladder * renderTickTime / 4));
-//										currentquat = Utils.quatRotateAxis(currentquat, axisxangled);
+//										currentquat = quatRotateAxis(currentquat, axisxangled);
 //									}
 //									if (abs(logic.yawladder) > 0.001) {
-//										Vector3d axisy = Utils.transformVecByQuat(new Vector3d(0, 1, 0), currentquat);
+//										Vector3d axisy = transformVecByQuat(new Vector3d(0, 1, 0), currentquat);
 //										AxisAngle4d axisyangled = new AxisAngle4d(axisy, toRadians(logic.yawladder * renderTickTime / 4));
-//										currentquat = Utils.quatRotateAxis(currentquat, axisyangled);
+//										currentquat = quatRotateAxis(currentquat, axisyangled);
 //									}
 //									if (abs(logic.rollladder) > 0.001) {
-//										Vector3d axisz = Utils.transformVecByQuat(new Vector3d(0, 0, 1), currentquat);
+//										Vector3d axisz = transformVecByQuat(new Vector3d(0, 0, 1), currentquat);
 //										AxisAngle4d axiszangled = new AxisAngle4d(axisz, toRadians(logic.rollladder * renderTickTime / 4));
-//										currentquat = Utils.quatRotateAxis(currentquat, axiszangled);
+//										currentquat = quatRotateAxis(currentquat, axiszangled);
 //									}
 
-							double[] xyz = Utils.eulerfrommatrix(Utils.matrixfromQuat(currentquat));
+							double[] xyz = eulerfromQuat((currentquat));
 							xyz[0] = toDegrees(xyz[0]);
 							xyz[1] = toDegrees(xyz[1]);
 							xyz[2] = toDegrees(xyz[2]);
@@ -204,7 +206,7 @@ public class HMVRenderSomeEvent {
 									if (logic.cameraPitch < -90) logic.cameraPitch = -90;
 								}
 
-								Quat4d Headrot = new Quat4d(0, 0, 0, 1);
+								Quat4d Headrot = new Quat4d(0,0,0,1);
 								Headrot = quatRotateAxis(Headrot, new AxisAngle4d(unitX, toRadians(logic.cameraPitch) / 2));
 								Headrot = quatRotateAxis(Headrot, new AxisAngle4d(unitY, toRadians(logic.cameraYaw) / 2));
 								logic.camerarot.set(Headrot);
@@ -212,29 +214,29 @@ public class HMVRenderSomeEvent {
 
 //							System.out.println("y" + xyz[0] + " , x" + xyz[1] + " , z" + xyz[2] + " , renderTickTime" + renderTickTime);
 
-//								Vector3d bodyvector = Utils.transformVecByQuat(new Vector3d(0, 0, 1), currentquat);
-//								Vector3d tailwingvector = Utils.transformVecByQuat(new Vector3d(0, 1, 0), currentquat);
-//								Vector3d mainwingvector = Utils.transformVecByQuat(new Vector3d(1, 0, 0), currentquat);
+//								Vector3d bodyvector = transformVecByQuat(new Vector3d(0, 0, 1), currentquat);
+//								Vector3d tailwingvector = transformVecByQuat(new Vector3d(0, 1, 0), currentquat);
+//								Vector3d mainwingvector = transformVecByQuat(new Vector3d(1, 0, 0), currentquat);
 //
-//								Utils.transformVecforMinecraft(tailwingvector);
-//								Utils.transformVecforMinecraft(bodyvector);
-//								Utils.transformVecforMinecraft(mainwingvector);
+//								transformVecforMinecraft(tailwingvector);
+//								transformVecforMinecraft(bodyvector);
+//								transformVecforMinecraft(mainwingvector);
 //								mainwingvector.scale(logic.getCamerapos()[0]-logic.prefab_vehicle.rotcenter[0]);
 //								tailwingvector.scale(logic.getCamerapos()[1]-logic.prefab_vehicle.rotcenter[1]);
 //								bodyvector.scale(logic.getCamerapos()[2]-logic.prefab_vehicle.rotcenter[2]);
 								if (logic.camera != null) {
 									Quat4d currentcamRot = new Quat4d(currentquat);
 									currentcamRot.mul(zooming && logic.prefab_vehicle.camerarot_zoom != null ?logic.prefab_vehicle.camerarot_zoom: logic.camerarot_current);
-									double[] cameraxyz = Utils.eulerfrommatrix(Utils.matrixfromQuat(currentcamRot));
+									double[] cameraxyz = eulerfromQuat((currentcamRot));
 									cameraxyz[0] = toDegrees(cameraxyz[0]);
 									cameraxyz[1] = toDegrees(cameraxyz[1]);
 									cameraxyz[2] = toDegrees(cameraxyz[2]);
 									if(!logic.seatInfos[logic.getpilotseatid()].prefab_seat.seatOnTurret) {
 										Vector3d cameraPos_Global = new Vector3d(logic.getCamerapos());
 										cameraPos_Global.sub(new Vector3d(logic.prefab_vehicle.rotcenter));
-										cameraPos_Global = Utils.transformVecByQuat(cameraPos_Global, currentquat);
+										cameraPos_Global = transformVecByQuat(cameraPos_Global, currentquat);
 										cameraPos_Global.add(new Vector3d(logic.prefab_vehicle.rotcenter));
-										cameraPos_Global.z *= -1;
+										transformVecforMinecraft(cameraPos_Global);
 										logic.camera.setLocationAndAngles(
 												vehicleBody.prevPosX + (vehicleBody.posX - vehicleBody.prevPosX) * renderTickTime + cameraPos_Global.x,
 												vehicleBody.prevPosY + (vehicleBody.posY - vehicleBody.prevPosY) * renderTickTime + cameraPos_Global.y - entityplayer.yOffset,
@@ -332,19 +334,19 @@ public class HMVRenderSomeEvent {
 //						logic.prevbodyRot.z * (1-event.partialTicks) + logic.bodyRot.z * event.partialTicks ,
 //						logic.prevbodyRot.w * (1-event.partialTicks) + logic.bodyRot.w * event.partialTicks );
 ////									if (abs(logic.pitchladder) > 0.001) {
-////										Vector3d axisx = Utils.transformVecByQuat(new Vector3d(1, 0, 0), tempquat);
+////										Vector3d axisx = transformVecByQuat(new Vector3d(1, 0, 0), tempquat);
 ////										AxisAngle4d axisxangled = new AxisAngle4d(axisx, toRadians(-logic.pitchladder * renderTickTime / 4));
-////										tempquat = Utils.quatRotateAxis(tempquat, axisxangled);
+////										tempquat = quatRotateAxis(tempquat, axisxangled);
 ////									}
 ////									if (abs(logic.yawladder) > 0.001) {
-////										Vector3d axisy = Utils.transformVecByQuat(new Vector3d(0, 1, 0), tempquat);
+////										Vector3d axisy = transformVecByQuat(new Vector3d(0, 1, 0), tempquat);
 ////										AxisAngle4d axisyangled = new AxisAngle4d(axisy, toRadians(logic.yawladder * renderTickTime / 4));
-////										tempquat = Utils.quatRotateAxis(tempquat, axisyangled);
+////										tempquat = quatRotateAxis(tempquat, axisyangled);
 ////									}
 ////									if (abs(logic.rollladder) > 0.001) {
-////										Vector3d axisz = Utils.transformVecByQuat(new Vector3d(0, 0, 1), tempquat);
+////										Vector3d axisz = transformVecByQuat(new Vector3d(0, 0, 1), tempquat);
 ////										AxisAngle4d axiszangled = new AxisAngle4d(axisz, toRadians(logic.rollladder * renderTickTime / 4));
-////										tempquat = Utils.quatRotateAxis(tempquat, axiszangled);
+////										tempquat = quatRotateAxis(tempquat, axiszangled);
 ////									}
 //
 //				GL11.glPushMatrix();
@@ -356,7 +358,7 @@ public class HMVRenderSomeEvent {
 //				double scale = width/300;
 //				double sizeW = width;
 //				double sizeH = sizeW * 650/300;
-//				double[] xyz = Utils.eulerfrommatrix(Utils.matrixfromQuat(tempquat));
+//				double[] xyz = eulerfromQuat((tempquat));
 //				xyz[0] = toDegrees(xyz[0]);
 //				xyz[1] = toDegrees(xyz[1]);
 //				xyz[2] = toDegrees(xyz[2]);
@@ -385,9 +387,9 @@ public class HMVRenderSomeEvent {
 //						logic.posY - logic.prevPosY,
 //						-(logic.posZ - logic.prevPosZ));
 //
-//				Quat4d quat4d = new Quat4d();
+//				Quat4d quat4d = new Quat4d(0,0,0,1);
 //				quat4d.inverse(tempquat);
-//				forDisplayPlaneMotion = Utils.transformVecByQuat(forDisplayPlaneMotion,quat4d);
+//				forDisplayPlaneMotion = transformVecByQuat(forDisplayPlaneMotion,quat4d);
 //				forDisplayPlaneMotion.scale(-1);
 //				double angle = toDegrees(forDisplayPlaneMotion.angle(new Vector3d(0,0,1)));
 //
@@ -555,7 +557,7 @@ public class HMVRenderSomeEvent {
 				                            prevbodyRot.y * (1-event.partialTicks) + bodyRot.y * event.partialTicks ,
 				                            prevbodyRot.z * (1-event.partialTicks) + bodyRot.z * event.partialTicks ,
 				                            prevbodyRot.w * (1-event.partialTicks) + bodyRot.w * event.partialTicks );
-		double[] xyz = Utils.eulerfrommatrix(Utils.matrixfromQuat(tempquat));
+		double[] xyz = eulerfromQuat((tempquat));
 		xyz[0] = toDegrees(xyz[0]);
 		xyz[1] = toDegrees(xyz[1]);
 		xyz[2] = toDegrees(xyz[2]);
@@ -613,7 +615,7 @@ public class HMVRenderSomeEvent {
 		double scale = width/300;
 		double sizeW = width;
 		double sizeH = sizeW * 650/300;
-		double[] xyz = Utils.eulerfrommatrix(Utils.matrixfromQuat(tempquat));
+		double[] xyz = eulerfromQuat((tempquat));
 		xyz[0] = toDegrees(xyz[0]);
 		xyz[1] = toDegrees(xyz[1]);
 		xyz[2] = toDegrees(xyz[2]);

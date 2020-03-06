@@ -19,6 +19,8 @@ guntype,10
 BulletSpread,1
 ReloadTime,250
 RemainingBullet,40
+Magazine,0,HandmadeGuns,14.5mm Ammo HE
+MagazineItemCount,40
 Rates,2
 GunSound,handmadeguns.14.5mmFire,handmadeguns.14.5mmFire
 SoundSpeed,1

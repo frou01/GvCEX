@@ -8,8 +8,8 @@ import javax.vecmath.Vector3d;
 
 public class HMVPakcetVehicleState implements IMessage {
     public int targetID;
-    public Quat4d rot = new Quat4d();
-    public Quat4d rotmotion = new Quat4d();
+    public Quat4d rot = new Quat4d(0,0,0,1);
+    public Quat4d rotmotion = new Quat4d(0,0,0,1);
     public Vector3d motionVec = new Vector3d();
     public Vector3d posVec = new Vector3d();
     public float th;
@@ -18,7 +18,7 @@ public class HMVPakcetVehicleState implements IMessage {
 
     public HMVPakcetVehicleState(){
     }
-    public HMVPakcetVehicleState(int tgtid , Quat4d tgtrot , Quat4d tgtrotmotion , Vector3d tgtmotion ,Vector3d posVec , float t , float health,boolean onGround){
+    public HMVPakcetVehicleState(int tgtid , Quat4d tgtrot , Quat4d tgtrotmotion , Vector3d tgtmotion ,Vector3d posVec , float t , float health,boolean onGround,boolean mouseMode){
         this.targetID = tgtid;
         this.rot = tgtrot;
         this.rotmotion = tgtrotmotion;

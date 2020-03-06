@@ -5,10 +5,10 @@ BulletGravity,0.485
 BlletSpread,2.5F
 ADS_Spread_coefficient,0.4F
 BlletSpreadDiffusion,10,0,1.8,0.2,3,0.6
-Cycle,2
+Cycle,1.5
 
-Recoil,4
-Recoil_sneaking,1.8
+Recoil,2
+Recoil_sneaking,1.2
 
 ReloadTime,50
 
@@ -30,7 +30,7 @@ ObjTexture,M16A4.png
 ModelScala,0.5f
 CustomFlash,arrow,1
 Bursts,1,3,-1
-Rates,2,2,2
+Rates,1.5,1.5,1.5
 
 attachRestriction,true
 allowattach,reddot
@@ -59,8 +59,6 @@ ScopeTexture,null.png,null.png,scope.png
 RenderCross,false
 
 MultiMagazine,HandmadeGuns:5.56mm magazine,HandmadeGuns:bullet_lmg_hmg_CMag
-MagazineSG,0,HandmadeGuns,bullet_shell_hmg
-MagazineGL,0,HandmadeGuns,bullet_rr_hmg
 
 //ReloadMotion
 //{

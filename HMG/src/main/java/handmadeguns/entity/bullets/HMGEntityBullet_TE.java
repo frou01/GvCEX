@@ -95,56 +95,6 @@ public class HMGEntityBullet_TE extends HMGEntityBulletBase
 		super.onImpact(var1);
 		if (var1.entityHit != null)
 		{
-			int var2 = this.Bdamege;
-
-			if(islmmloaded&&(this.thrower instanceof LMM_EntityLittleMaid || this.thrower instanceof LMM_EntityLittleMaidAvatar || this.thrower instanceof LMM_EntityLittleMaidAvatarMP) && HandmadeGunsCore.cfg_FriendFireLMM){
-				if (var1.entityHit instanceof LMM_EntityLittleMaid)
-				{
-					var2 = 0;
-				}
-				if (var1.entityHit instanceof LMM_EntityLittleMaidAvatar)
-				{
-					var2 = 0;
-				}
-				if (var1.entityHit instanceof EntityPlayer)
-				{
-					var2 = 0;
-				}
-			}
-			if(this.thrower instanceof IFF){
-				if(((IFF) this.thrower).is_this_entity_friend(var1.entityHit)){
-					var2 = 0;
-				}
-			}
-			var1.entityHit.hurtResistantTime = 0;
-
-			if (var1.entityHit != null && var1.entityHit != this.getThrower() && (noex || this.canbounce)) {
-				var1.entityHit.hurtResistantTime = 0;
-				double moXback = var1.entityHit.motionX;//�m�b�N�o�b�N�������p
-				double moYback = var1.entityHit.motionY;//���ˏオ�薳�����p
-				double moZback = var1.entityHit.motionZ;//�m�b�N�o�b�N�������p
-
-				boolean flag;
-				if(var1.entityHit instanceof I_SPdamageHandle){
-					flag = ((I_SPdamageHandle)var1.entityHit).attackEntityFrom_with_Info(var1,(new EntityDamageSourceIndirect("arrow", this, this.getThrower())).setProjectile(),var2);
-				}else {
-					flag = var1.entityHit.attackEntityFrom((new EntityDamageSourceIndirect("arrow", this, this.getThrower())).setProjectile(),var2);
-				}
-				if(flag){
-					var1.entityHit.motionX = moXback;
-					var1.entityHit.motionY = moYback;
-					var1.entityHit.motionZ = moZback;
-					Vec3 knockvec = this.getLook((float) knockbackXZ,-this.rotationYaw,-this.rotationPitch);
-					if(var1.entityHit instanceof EntityLivingBase){
-						if(this.rand.nextDouble() >= ((EntityLivingBase)var1.entityHit).getEntityAttribute(SharedMonsterAttributes.knockbackResistance).getAttributeValue()){
-							var1.entityHit.isAirBorne =true;
-							var1.entityHit.motionX += knockvec.xCoord;
-							var1.entityHit.motionY += knockvec.yCoord + knockbackY;
-							var1.entityHit.motionZ += knockvec.zCoord;
-						}
-					}
-				}
-			}
 			var1.entityHit.setFire(5);
             /*Entity lel = (Entity)var1.entityHit;
 
@@ -160,34 +110,6 @@ public class HMGEntityBullet_TE extends HMGEntityBulletBase
 				if(!this.canbounce) this.setDead();
 			}
 		}else {
-			Block lblock = worldObj.getBlock(var1.blockX, var1.blockY, var1.blockZ);
-			int lmeta = worldObj.getBlockMetadata(var1.blockX, var1.blockY, var1.blockZ);
-			if (checkDestroyBlock(var1, var1.blockX, var1.blockY, var1.blockZ, lblock, lmeta)) {
-				if (!this.worldObj.isRemote)
-				{
-					onBreakBlock(var1, var1.blockX, var1.blockY, var1.blockZ, lblock, lmeta);
-				}
-			} else {
-				for (int i = 0; i < 8; ++i) {
-//					worldObj.spawnParticle("snowballpoof", this.posX, this.posY,
-					worldObj.spawnParticle("smoke",
-							var1.hitVec.xCoord, var1.hitVec.yCoord, var1.hitVec.zCoord,
-							0.0D, 0.0D, 0.0D);
-				}
-			}
-			Block block = this.worldObj.getBlock(var1.blockX,
-					var1.blockY,
-					var1.blockZ);
-			if(!block.isAir(worldObj,var1.blockX,
-					var1.blockY,
-					var1.blockZ)) {
-				worldObj.playSoundEffect((float) var1.hitVec.xCoord, (float) var1.hitVec.yCoord, (float) var1.hitVec.zCoord, new ResourceLocation(block.stepSound.getStepResourcePath()).getResourcePath(), (block.stepSound.getVolume() + 1.0F) / 2.0F, block.stepSound.getPitch() * 0.8F);
-				this.worldObj.spawnParticle("blockcrack_" + Block.getIdFromBlock(block) + "_" +
-								this.worldObj.getBlockMetadata(var1.blockX,
-										var1.blockY,
-										var1.blockZ)
-						, var1.hitVec.xCoord, var1.hitVec.yCoord, var1.hitVec.zCoord, 4.0D * ((double) this.rand.nextFloat() - 0.5D), 0.5D, ((double) this.rand.nextFloat() - 0.5D) * 4.0D);
-			}
 			if (!this.worldObj.isRemote)
 			{
 				if(!this.canbounce) this.setDead();

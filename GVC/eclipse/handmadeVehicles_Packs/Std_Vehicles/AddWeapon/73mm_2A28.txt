@@ -17,6 +17,7 @@ guntype,2
 BulletSpread,1
 ReloadTime,50
 RemainingBullet,1
+Magazine,0,HandmadeGuns,2A28Ammo
 Rates,4
 GunSound_FullName,handmadevehicle:handmadevehicle.73mmLowPresureGunFire,handmadeguns:handmadeguns.73mmLowPresureGunFire
 SoundSpeed,1

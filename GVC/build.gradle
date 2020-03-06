@@ -1,6 +1,6 @@
 
 
-version = "HD13.42"
+version = "HD13.46"
 tasks.withType(Jar) {compileJava.options.encoding = 'UTF-8'}
 tasks.withType(Jar) {compileApiJava.options.encoding = 'UTF-8'}
 dependencies { compile project(':HMG')}

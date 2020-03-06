@@ -1,0 +1,241 @@
+Name,Type74;
+rotcenter,0,1,0;
+modelName,Type74.mqo;
+modelName_texture,Type741.png;
+scale,0.8;
+health,700;
+soundname,handmadevehicle:handmadevehicle.74moving;
+LandPreset;
+soundpitch,1;
+throttle_Max,5;
+throttle_min,-3;
+yawspeed_ground,1.25;
+speedfactor_onGround,0.11;
+torque_ground,0.3;
+forced_rudder_effect_OnGround,0.2;
+rotmotion_reduceSpeed,0.1;
+recoilResist,2000;
+brakefactor_ground,0.3;
+
+susPitch_up,-5;
+susPitch_down,5;
+
+susRoll_right,-5;
+susRoll_left,5;
+
+ParentWeapons_NUM,1;
+AllWeapons_NUM,3;
+
+addParentWeapon,0,105mm_L7A1,0,0,0,1,1;
+	addChildWeapon,0,M2_OnGunMount,-0.0336,2.5776,-0.0336,0;
+Set_CurrentTurret_to_Mother;
+	addBarrelChildWeapon,0,M240B,0.3169,1.458,-1.429,0;
+
+SetUpSeat1_NUM,3;
+SetUpSeat2_AddSeat_Normal,0,-0.4001,2.652,0.7018,true,true,false,true,0,2;
+SetUpSeat3_AddSeat_Zoom,0,-0.3169,1.833,-1.605,true,true,false,true,0,2;
+SetUpSeat4_AddSeat_AdditionalTurret,0,	0,1;
+SetUpSeat5_AddSeat_ExtraSettings,0,0,0;
+
+SetUpSeat2_AddSeat_Normal,1,0.4489,2.749,0.4170,false,false,false,-1,-1;
+SetUpSeat2_AddSeat_Normal,2,0.5370,1.567,-1.655,false,false,false,-1,-1;
+
+
+//userProtect_maxDamageLevel,0,-1;
+userProtect_maxDamageLevel,0,-1;
+userProtect_maxDamageLevel,1,0;
+userProtect_maxDamageLevel,2,0;
+
+boxes_withInfo,4,
+0,0.85,0,	0,0,0,	2.4,1.3,7,	1,0,0,0,	20,40,90,25,50,50,-1,
+1.6,0.75,0,	0,0,0,	0.8,1.5,7,	1,0,0,0,	20,40,90,25,50,50,-1,
+-1.6,0.75,0,	0,0,0,	0.8,1.5,7,	1,0,0,0,	20,40,90,25,50,50,-1,
+0,2.2,0,	0,0,0,	3.5,1.5,4,	1,0,0,0,	20,40,90,25,50,50,0;
+
+max_pera_trackPos,15;
+cargoSlotNum,18;
+
+AddParts,body1;
+	SetAsNormalParts;
+	AddPartsRotationDefOffset,0,0.30,0,0,0,0;
+
+	AddChildParts,body2;
+		SetAsNormalParts;
+	BackParts;
+
+	AddChildParts,body3;
+		SetAsNormalParts;
+	BackParts;
+
+	AddChildParts,body4;
+		SetAsNormalParts;
+	BackParts;
+
+	AddChildParts,$track_roller0;
+		SetAsNormalParts;
+		AddPartsRotationCenterAndRotationAmount,0,0.6756,2.963,0,0,0;
+		AddPartsRenderAsTrackInf,0,0,0,45,0,0;
+		IsTrack,true,1;
+	BackParts;
+	AddChildParts,$track_roller7;
+		SetAsNormalParts;
+		AddPartsRotationCenterAndRotationAmount,0,0.6756,2.963,0,0,0;
+		AddPartsRenderAsTrackInf,0,0,0,45,0,0;
+		IsTrack,true,1;
+	BackParts;
+
+	AddChildParts,$track_roller1;
+		SetAsNormalParts;
+		AddPartsRotationCenterAndRotationAmount,0,0.2127,1.658,0,0,0;
+		AddPartsRenderAsTrackInf,0,0,0,45,0,0;
+		IsTrack,true,1;
+	BackParts;
+	AddChildParts,$track_roller8;
+		SetAsNormalParts;
+		AddPartsRotationCenterAndRotationAmount,0,0.2127,1.658,0,0,0;
+		AddPartsRenderAsTrackInf,0,0,0,45,0,0;
+		IsTrack,true,1;
+	BackParts;
+
+	AddChildParts,$track_roller2;
+		SetAsNormalParts;
+		AddPartsRotationCenterAndRotationAmount,0,0.2127,0.4942,0,0,0;
+		AddPartsRenderAsTrackInf,0,0,0,45,0,0;
+		IsTrack,true,1;
+	BackParts;
+	AddChildParts,$track_roller9;
+		SetAsNormalParts;
+		AddPartsRotationCenterAndRotationAmount,0,0.2127,0.4942,0,0,0;
+		AddPartsRenderAsTrackInf,0,0,0,45,0,0;
+		IsTrack,true,1;
+	BackParts;
+
+	AddChildParts,$track_roller3;
+		SetAsNormalParts;
+		AddPartsRotationCenterAndRotationAmount,0,0.2127,-0.7193,0,0,0;
+		AddPartsRenderAsTrackInf,0,0,0,45,0,0;
+		IsTrack,true,1;
+	BackParts;
+	AddChildParts,$track_roller10;
+		SetAsNormalParts;
+		AddPartsRotationCenterAndRotationAmount,0,0.2127,-0.7193,0,0,0;
+		AddPartsRenderAsTrackInf,0,0,0,45,0,0;
+		IsTrack,true,1;
+	BackParts;
+
+	AddChildParts,$track_roller4;
+		SetAsNormalParts;
+		AddPartsRotationCenterAndRotationAmount,0,0.2127,-1.883,0,0,0;
+		AddPartsRenderAsTrackInf,0,0,0,45,0,0;
+		IsTrack,true,1;
+	BackParts;
+	AddChildParts,$track_roller11;
+		SetAsNormalParts;
+		AddPartsRotationCenterAndRotationAmount,0,0.2127,-1.883,0,0,0;
+		AddPartsRenderAsTrackInf,0,0,0,45,0,0;
+		IsTrack,true,1;
+	BackParts;
+
+	AddChildParts,$track_roller5;
+		SetAsNormalParts;
+		AddPartsRotationCenterAndRotationAmount,0,0.2127,-3.046,0,0,0;
+		AddPartsRenderAsTrackInf,0,0,0,45,0,0;
+		IsTrack,true,1;
+	BackParts;
+	AddChildParts,$track_roller12;
+		SetAsNormalParts;
+		AddPartsRotationCenterAndRotationAmount,0,0.2127,-3.046,0,0,0;
+		AddPartsRenderAsTrackInf,0,0,0,45,0,0;
+		IsTrack,true,1;
+	BackParts;
+
+	AddChildParts,$track_roller6;
+		SetAsNormalParts;
+		AddPartsRotationCenterAndRotationAmount,0,0.6756,-4.290,0,0,0;
+		AddPartsRenderAsTrackInf,0,0,0,45,0,0;
+		IsTrack,true,1;
+	BackParts;
+	AddChildParts,$track_roller13;
+		SetAsNormalParts;
+		AddPartsRotationCenterAndRotationAmount,0,0.6756,-4.290,0,0,0;
+		AddPartsRenderAsTrackInf,0,0,0,45,0,0;
+		IsTrack,true,1;
+	BackParts;
+
+	AddChildParts,$crawler_track1;
+		AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0;
+		RenderOnNormal;
+		AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0;
+		AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0;
+		AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0;
+		AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0;
+
+		AddCrawlerTrack=false, 0.37, -1.8,   1.0/ 2.96, 0.91/ 3.2, 0.67/ 3.3, 0.44/ 3.2, -0.15/ 2.1, -0.35/ 1.71, -0.35/ -3.04, -0.15/ -3.41, 0.39/ -4.57, 0.67/ -4.69, 0.96/ -4.57, 1.08/ -4.29, 0.96/ -4.0, 0.726/ -3.04, 0.726/ 1.71, 0.91/ 2.73;
+
+
+	BackParts;
+
+	AddChildParts,$crawler_track0;
+		AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0;
+		RenderOnNormal;
+		AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0;
+		AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0;
+		AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0;
+		AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0;
+
+		AddCrawlerTrack=false, 0.37, -1.8,   1.0/ 2.96, 0.91/ 3.2, 0.67/ 3.3, 0.44/ 3.2, -0.15/ 2.1, -0.35/ 1.71, -0.35/ -3.04, -0.15/ -3.41, 0.39/ -4.57, 0.67/ -4.69, 0.96/ -4.57, 1.08/ -4.29, 0.96/ -4.0, 0.726/ -3.04, 0.726/ 1.71, 0.91/ 2.73;
+
+
+	BackParts;
+;
+;
+	AddChildParts,$weapon0;
+		TurretParts,0;
+		AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0;
+		RenderOnNormal;
+		AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0;
+		AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0;
+		AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0;
+		AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0;
+		AddYawInfoKey,-360,0,0,0,0,-360,0        ,360,0,0,0,0,360,0;
+		AddChildParts,accessory;
+			SetAsNormalParts;
+		BackParts;
+;
+		AddChildParts,$weapon0_0;
+			TurretParts,0;
+			AddPartsRotationCenterAndRotationAmount,0.0,    1.8278, 1.59,0,0,0;
+			RenderOnNormal;
+			AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0;
+			AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0;
+			AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0;
+			AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0;
+			AddPitchInfoKey,-360,0,0,0,-360,0,0        ,360,0,0,0,360,0,0;
+
+			AddChildParts,$weapon0_1;
+				SetAsNormalParts;
+			BackParts;
+		BackParts;
+		AddChildParts,$weapon1;
+			TurretParts,1;
+			AddPartsRotationDefOffset,0,0,0,0,0,0;
+			AddPartsRotationCenterAndRotationAmount, -0.042, 2.922, -0.042,0,0,0;
+			RenderOnNormal;
+			AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0;
+			AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0;
+			AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0;
+			AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0;
+			AddYawInfoKey,-360,0,0,0,0,-360,0        ,360,0,0,0,0,360,0;
+;
+			AddChildParts,$weapon2;
+				TurretParts,1;
+				AddPartsRotationDefOffset,0,0,0,0,0,0;
+				AddPartsRotationCenterAndRotationAmount, -0.042, 2.922, -0.042,0,0,0;
+				RenderOnNormal;
+				AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0;
+				AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0;
+				AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0;
+				AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0;
+				AddPitchInfoKey,-360,0,0,0,-360,0,0        ,360,0,0,0,360,0,0;
+;
+End;

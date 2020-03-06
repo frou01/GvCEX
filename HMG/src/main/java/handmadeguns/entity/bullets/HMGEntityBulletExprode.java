@@ -135,61 +135,6 @@ public class HMGEntityBulletExprode extends HMGEntityBulletBase implements IEnti
 		super.onImpact(var1);
 		if (var1.entityHit != null)
 		{
-			int var2 = this.Bdamege;
-
-			if(islmmloaded&&(this.thrower instanceof LMM_EntityLittleMaid || this.thrower instanceof LMM_EntityLittleMaidAvatar || this.thrower instanceof LMM_EntityLittleMaidAvatarMP) && HandmadeGunsCore.cfg_FriendFireLMM){
-				if (var1.entityHit instanceof LMM_EntityLittleMaid)
-				{
-					var2 = 0;
-				}
-				if (var1.entityHit instanceof LMM_EntityLittleMaidAvatar)
-				{
-					var2 = 0;
-				}
-				if (var1.entityHit instanceof EntityPlayer)
-				{
-					var2 = 0;
-				}
-			}
-			if(this.thrower instanceof IFF){
-				if(((IFF) this.thrower).is_this_entity_friend(var1.entityHit)){
-					var2 = 0;
-				}
-			}
-
-			if (var1.entityHit != null && var1.entityHit != this.getThrower() && (noex || this.canbounce)) {
-				if(!this.canbounce)var1.entityHit.hurtResistantTime = 0;
-				double moXback = var1.entityHit.motionX;//ノックバック無効化用
-				double moYback = var1.entityHit.motionY;//跳ね上がり無効化用
-				double moZback = var1.entityHit.motionZ;//ノックバック無効化用
-
-				boolean flag;
-				if(var1.entityHit instanceof I_SPdamageHandle){
-					flag = ((I_SPdamageHandle)var1.entityHit).attackEntityFrom_with_Info(var1,(new EntityDamageSourceIndirect("arrow", this, this.getThrower())).setProjectile(),var2);
-				}else {
-					flag = var1.entityHit.attackEntityFrom((new EntityDamageSourceIndirect("arrow", this, this.getThrower())).setProjectile(),var2);
-				}
-				if(flag){
-					var1.entityHit.motionX = moXback;
-					var1.entityHit.motionY = moYback;
-					var1.entityHit.motionZ = moZback;
-					Vec3 knockvec = this.getLook((float) knockbackXZ,-this.rotationYaw,-this.rotationPitch);
-					if(var1.entityHit instanceof EntityLivingBase){
-						if(this.rand.nextDouble() >= ((EntityLivingBase)var1.entityHit).getEntityAttribute(SharedMonsterAttributes.knockbackResistance).getAttributeValue()){
-							var1.entityHit.isAirBorne =true;
-							var1.entityHit.motionX += knockvec.xCoord;
-							var1.entityHit.motionY += knockvec.yCoord + knockbackY;
-							var1.entityHit.motionZ += knockvec.zCoord;
-						}
-					}
-				}
-			}
-
-            /*Entity lel = (Entity)var1.entityHit;
-
-			lel.addVelocity((motionX/20D),
-							(-motionY-2D),
-							(motionZ/20D));*/
 			if(!noex && !canbounce){
 				this.explode(var1.hitVec.xCoord,var1.hitVec.yCoord+0.125,var1.hitVec.zCoord, this.exlevel, this.canex && cfg_blockdestroy);
 				hitedentity = var1.entityHit;
@@ -201,14 +146,6 @@ public class HMGEntityBulletExprode extends HMGEntityBulletBase implements IEnti
 				this.setDead();
 			}
 		}else {
-			Block lblock = worldObj.getBlock(var1.blockX, var1.blockY, var1.blockZ);
-			int lmeta = worldObj.getBlockMetadata(var1.blockX, var1.blockY, var1.blockZ);
-			if (checkDestroyBlock(var1, var1.blockX, var1.blockY, var1.blockZ, lblock, lmeta)) {
-				if (!this.worldObj.isRemote)
-				{
-					onBreakBlock(var1, var1.blockX, var1.blockY, var1.blockZ, lblock, lmeta);
-				}
-			}
 			if (!this.worldObj.isRemote && (!canbounce||fuse<=0))
 			{
 				this.setDead();

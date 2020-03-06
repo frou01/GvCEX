@@ -121,7 +121,7 @@ public class PartsRender_Vehicle extends PartsRender {
 						break;
 					case Default:
 						if (parts.rendering_Def) {
-							PartSidentification_Vehicle(parts, state, flame, remainbullets, parts.getRenderinfDefault_offset());
+							PartSidentification_Vehicle(parts, state, flame, remainbullets, parts.getRenderinf_None());
 							break breakpoint;
 						}
 						break;
@@ -216,6 +216,11 @@ public class PartsRender_Vehicle extends PartsRender {
 			if (motionInfoz != null) {
 				if(!motionInfoz.renderOnOff)return;
 				transformParts(rotationCenterAndRotation,motionInfoz,parts);
+			}
+			HMGGunParts_Motion_PosAndRotation brakeMotion = ((HMVVehicleParts) parts).getSomethingPositions((float) currentBaseLogic.brakeLevel,12);
+			if (brakeMotion != null) {
+				if(!brakeMotion.renderOnOff)return;
+				transformParts(rotationCenterAndRotation,brakeMotion,parts);
 			}
 
 			if (((HMVVehicleParts) parts).isPera){
@@ -373,9 +378,16 @@ public class PartsRender_Vehicle extends PartsRender {
 	
 	public void renderParts_Track(HMVVehicleParts parts,float flame,int remainbullets,HMGGunParts_Motion_PosAndRotation rotationCenterAndRotation){
 		flame = (currentBaseLogic.prev_pera_trackPos + (currentBaseLogic.pera_trackPos - currentBaseLogic.prev_pera_trackPos) * smooth)/currentBaseLogic.prefab_vehicle.max_pera_trackPos;
+		if(flame<=0){
+			flame = flame+1;
+		}else if(flame>1){
+			flame = flame-1;
+		}
 		if(parts.isavatar){
 			if(parts.isbelt){
-				for (int i = 0; (i < parts.trackPieceCount); i++) {
+				int trackPieceCount = (int) parts.trackPieceCount;
+				if(trackPieceCount < parts.trackPieceCount)trackPieceCount ++;
+				for (int i = 0; (i < trackPieceCount); i++) {
 					HMGGunParts_Motion_PosAndRotation trackoffset = parts.getTrackPositions(i + flame);
 					if(trackoffset != null && trackoffset.renderOnOff) {
 						GL11.glPushMatrix();

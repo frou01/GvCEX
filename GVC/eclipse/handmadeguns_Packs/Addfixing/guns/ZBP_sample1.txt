@@ -1,5 +1,0 @@
-Texture,BP_sample1
-BPItemStack,5
-BPItems,SG_sample,SGF_sample,AMR_sample,RR_sample,LMG_sample
-
-BP,BP_sample1

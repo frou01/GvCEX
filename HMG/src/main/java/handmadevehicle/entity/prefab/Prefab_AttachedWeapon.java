@@ -44,12 +44,10 @@ public class Prefab_AttachedWeapon {
 			current.connectedInventory = motherEntity.getBaseLogic().inventoryVehicle;
 		}
 		if(motherTurretID != -1) {
-			System.out.println("debug" + motherTurretID);
 			if(onBarrel)turretObjs_all[motherTurretID].addchildonBarrel(current);
 			else turretObjs_all[motherTurretID].addchild_triggerLinked(current);
 			current.isMother = false;
 		}else {
-			System.out.println("debug" + motherTurretID);
 			current.isMother = true;
 		}
 		return current;

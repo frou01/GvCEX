@@ -9,17 +9,22 @@ import handmadeguns.HMGPacketHandler;
 import handmadeguns.items.guns.HMGItem_Unified_Guns;
 import handmadeguns.network.PacketPlacedGunShot;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
+import net.minecraft.crash.CrashReport;
+import net.minecraft.crash.CrashReportCategory;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
 import org.lwjgl.Sys;
+
+import java.util.List;
 
 import static handmadeguns.HandmadeGunsCore.HMG_proxy;
 import static java.lang.Math.abs;
@@ -99,13 +104,16 @@ public class PlacedGunEntity extends Entity implements IEntityAdditionalSpawnDat
 //                prevRiddenByEntityPosY = riddenByEntity.posY;
 //                prevRiddenByEntityPosZ = riddenByEntity.posZ;
 //            }
+            AxisAlignedBB backUp = this.riddenByEntity.boundingBox.copy();
+            this.riddenByEntity.boundingBox.minY += this.riddenByEntity.getEyeHeight() + this.riddenByEntity.yOffset - 0.4;
+            this.riddenByEntity.boundingBox.maxY = this.riddenByEntity.boundingBox.minY + 1;
             if(worldObj.isRemote) {
-                if(riddenByEntity == HMG_proxy.getEntityPlayerInstance())
+                if(riddenByEntity == HMG_proxy.getEntityPlayerInstance()) {
                     this.riddenByEntity.moveEntity(
                             this.posX + seatVec.xCoord - riddenByEntity.posX,
                             this.posY + this.gunyoffset + seatVec.yCoord - riddenByEntity.posY,
                             this.posZ + seatVec.zCoord - riddenByEntity.posZ);
-                else
+                }else
                     this.riddenByEntity.moveEntity(
                             this.posX + seatVec.xCoord - riddenByEntity.posX,
                             this.posY + this.gunyoffset - riddenByEntity.getEyeHeight() + seatVec.yCoord - riddenByEntity.posY,
@@ -116,13 +124,17 @@ public class PlacedGunEntity extends Entity implements IEntityAdditionalSpawnDat
                         this.posY + this.gunyoffset - riddenByEntity.getEyeHeight() + seatVec.yCoord - riddenByEntity.posY,
                         this.posZ + seatVec.zCoord - riddenByEntity.posZ);
             }
+            this.riddenByEntity.boundingBox.minY = this.riddenByEntity.boundingBox.maxY - (backUp.maxY - backUp.minY);
+            riddenByEntity.posY     -= this.riddenByEntity.getEyeHeight() + this.riddenByEntity.yOffset - 0.4;
             prevRiddenByEntityPosX = riddenByEntity.posX;
             prevRiddenByEntityPosY = riddenByEntity.posY;
             prevRiddenByEntityPosZ = riddenByEntity.posZ;
         }
     }
+
     public void onUpdate(){
         prevrotationYawGun = rotationYawGun;
+        this.prevRotationPitch = this.rotationPitch;
 
         if(!worldObj.isRemote){
             if(gunStack == null)setDead();
@@ -258,7 +270,11 @@ public class PlacedGunEntity extends Entity implements IEntityAdditionalSpawnDat
             }
         }
         setPosition(posX,posY,posZ);
+        float prevRotationPitch = this.prevRotationPitch;
+        float rotationPitch = this.rotationPitch;
         super.onUpdate();
+        this.prevRotationPitch = prevRotationPitch;
+        this.rotationPitch = rotationPitch;
     }
 
     private int stanCnt = 0;

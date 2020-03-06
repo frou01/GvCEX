@@ -21,5 +21,13 @@
  "handmadevehicle.T-72": {"category":"ambient","sounds": ["T-72"]},
  "handmadevehicle.125mmFire": {"category":"ambient","sounds": ["125mmFire"]},
  "handmadevehicle.flare": {"category":"ambient","sounds": ["flare"]},
+ "handmadevehicle.74moving": {"category":"ambient","sounds": ["74moving"]},
+ "handmadevehicle.105mmL7A1Fire": {"category":"ambient","sounds": ["105mmL7A1Fire"]},
+ "handmadevehicle.F-86": {"category":"ambient","sounds": ["F-86"]},
+ "handmadevehicle.F-86AF": {"category":"ambient","sounds": ["F-86AF"]},
+ "handmadevehicle.2A46Loading": {"category":"ambient","sounds": ["2A46Loading"]},
+ "handmadevehicle.CannonLoad": {"category":"ambient","sounds": ["CannonLoad"]},
+ "handmadevehicle.CannonLoad_9sec": {"category":"ambient","sounds": ["CannonLoad_9sec"]},
+ "handmadevehicle.SU-25": {"category":"ambient","sounds": ["SU-25"]},
  "handmadevehicle.nulls": {"category":"ambient","sounds": ["nulls"]}
 }

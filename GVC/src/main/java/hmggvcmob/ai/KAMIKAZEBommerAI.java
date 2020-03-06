@@ -25,7 +25,7 @@ public class KAMIKAZEBommerAI extends EntityAIBase
 	public boolean shouldExecute()
 	{
 		EntityLivingBase entitylivingbase = this.swellingCreeper.getAttackTarget();
-		return this.swellingCreeper.getCreeperState() > 0 || entitylivingbase != null && swellingCreeper.getDistanceSqToEntity(entitylivingbase)<256 && this.swellingCreeper.getDistanceSqToEntity(entitylivingbase) < 9.0D;
+		return this.swellingCreeper.getCreeperState() > 0 || entitylivingbase != null && this.swellingCreeper.getDistanceSqToEntity(entitylivingbase) < 9.0D;
 	}
 
 	/**

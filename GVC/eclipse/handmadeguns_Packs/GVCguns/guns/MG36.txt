@@ -5,10 +5,10 @@ BulletGravity,0.485
 BlletSpread,2.0f
 ADS_Spread_coefficient,0.8
 BlletSpreadDiffusion,5,0,0.7,0.3,3,0.3
-Cycle,2
+Cycle,1.6
 
-Recoil,2
-Recoil_sneaking,1.0
+Recoil,1
+Recoil_sneaking,0.7
 
 Motion,0.8
 
@@ -34,7 +34,7 @@ ObjTexture,G36.png
 ModelScala,0.5f
 CustomFlash,arrow,1
 Bursts,1,-1
-Rates,2,2
+Rates,1.6,1.6
 
 attachRestriction,true
 allowattach,reddot
@@ -52,6 +52,8 @@ ModelRotationY,45f,45f,45
 ModelRotationZ,180f,180f,180f
 
 OnEntity_PlayerPosOffset,0,0,3
+
+OnEntity_Yoffset,0.2
 
 ModelArm,true
 ModelArmRotationR,-1.57f,0f,-1.57f
@@ -81,6 +83,7 @@ AddParts,Base_Sys
 	AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
 	AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
 	AddYawInfoKey,-360,0,0,0,0,-360,0        ,360,0,0,0,0,360,0
+	AddPitchInfoKey,-360,0,0,0,-360,0,0        ,360,0,0,0,360,0,0
 
 	
 	
@@ -106,7 +109,6 @@ AddParts,Base_Sys
 			AddReloadMotionKey,10 ,0,0,0,0,0,0,           30,0,0,0,15,0,30
 			AddReloadMotionKey,30,0,0,0,15,0,30,          70,0,0,0,15,0,30
 			AddReloadMotionKey,70,0,0,0,15,0,30,          75,0,0,0,0,0,0
-			AddPitchInfoKey,-360,0,0,0,-360,0,0        ,360,0,0,0,360,0,0
 
     			AddChildParts,NightVision
 				AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0

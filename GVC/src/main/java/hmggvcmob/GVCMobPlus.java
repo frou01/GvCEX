@@ -40,6 +40,7 @@ import handmadevehicle.HMVehicle;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.entity.monster.*;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -74,6 +75,7 @@ public class GVCMobPlus
     public static boolean cfg_guerrillaspawndrawn;
     public static float cfg_soldierspawnnormal;
     public static float cfg_soldierspawntank;
+    public static boolean cfg_noVanillaMob;
     public static int cfg_flagspawnlevel;
     public static int cfg_flagspawninterval;
     public static boolean cfg_canspawnguerrilla;
@@ -201,15 +203,14 @@ public class GVCMobPlus
         cfg_setCamp = lconf.get("world", "cfg_setCamp", true).getBoolean(true);
         cfg_mob_setCamp = lconf.get("world", "cfg_mob_setCamp", true).getBoolean(true);
         cfg_creatCamp = lconf.get("world", "cfg_creatCamp", 160).getInt(160);
+        cfg_noVanillaMob = lconf.get("world", "cfg_noVanillaMob", false).getBoolean(false);
         cfg_modeGorC = lconf.get("render", "cfg_ModeGorC", true).getBoolean(true);
         cfg_guerrillasrach = lconf.get("Guerrilla", "cfg_GuerrillaMobSrach", 60).getDouble(60.0D);
         cfg_guerrillaspawnnomal = lconf.get("Guerrilla", "cfg_GuerrillaSpawnNomal", 5).getInt(5);
-        cfg_guerrillaspawntank = lconf.get("Guerrilla", "cfg_GuerrillaSpawntank", 2).getInt(2);
         cfg_guerrillaspawndrawn = lconf.get("Guerrilla", "cfg_CanSpawndrawn", true).getBoolean(true);
         cfg_guerrillacanusePlacedGun = lconf.get("Guerrilla", "cfg_CanusePlacedGun", true).getBoolean(true);
 
         cfg_soldierspawnnormal = (float)lconf.get("Soldier", "cfg_SoldierSpawnNormal", 2).getDouble(2.0D);
-        cfg_soldierspawntank = (float)lconf.get("Soldier", "cfg_SoldierSpawntank", 1).getDouble(1.0D);
         String ignoretgtmobs = lconf.get("Soldier", "ignoreSoldierTargetEntityClass", "").getString();
         String[] ignoretgtmob = ignoretgtmobs.split(",");
         for (int i = 0; i < ignoretgtmob.length; i++) {
@@ -217,7 +218,7 @@ public class GVCMobPlus
         }
         {
 
-            String[] types = lconf.get("Vehicle", "cfg_Soldier_VehicleType",new String[]{"50","KPZ-70:10","BMP-1:20","BRDM-2:20","Mi-24:10"}).getStringList();
+            String[] types = lconf.get("Vehicle", "cfg_Soldier_VehicleType",new String[]{"10","T-90A:15","BMP-1:20","BRDM-2:5","Mi-24:15","MiG-21:1","SU-25:10"}).getStringList();
             GVCEntitySoldierRPG.vehicleSpawnGachaOBJ = new VehicleSpawnGachaOBJ[types.length];
             int cnt = 0;
             for(String atype:types){
@@ -227,7 +228,7 @@ public class GVCMobPlus
             }
         }
         {
-            String[] types = lconf.get("Vehicle", "cfg_Guerrilla_VehicleType",new String[]{"50","T-34-85_mod:10","TOYOTA:30"}).getStringList();
+            String[] types = lconf.get("Vehicle", "cfg_Guerrilla_VehicleType",new String[]{"50","T-34-85_mod:10","TOYOTA:30","F-86K:5"}).getStringList();
             GVCEntityGuerrillaRPG.vehicleSpawnGachaOBJ = new VehicleSpawnGachaOBJ[types.length];
             int cnt = 0;
             for(String atype:types){
@@ -653,7 +654,7 @@ public class GVCMobPlus
         {
             if ((((List)guns).get(i) instanceof HMGItem_Unified_Guns)) {
                 HMGItem_Unified_Guns unified_guns = (HMGItem_Unified_Guns)((List)guns).get(i);
-                if (unified_guns.gunInfo.guerrila_can_use && (!unified_guns.gunInfo.needfix || unified_guns.gunInfo.canfix)) {
+                if (unified_guns.gunInfo.guerrila_can_use && (!unified_guns.gunInfo.needfix)) {
                     switch (unified_guns.gunInfo.canuseclass)
                     {
                         case 0:
@@ -669,7 +670,7 @@ public class GVCMobPlus
                             Guns_LMG.add(unified_guns);
                             break;
                         case 4:
-                            if(!unified_guns.gunInfo.needfix)Guns_RR.add(unified_guns);
+                            Guns_RR.add(unified_guns);
                             break;
                         case 5:
                             Guns_FL.add(unified_guns);
@@ -774,6 +775,16 @@ public class GVCMobPlus
 //            EntityRegistry.addSpawn(GVCEntitySoldierBMP.class, (int)(cfg_soldierspawntank * 6.0F), 1, 1, EnumCreatureType.monster, new BiomeGenBase[] { biome });
 
 //            EntityRegistry.addSpawn(GVCEntitySoldierHeli.class, (int)(cfg_soldierspawntank * 2.0F), 1, 1, EnumCreatureType.monster, new BiomeGenBase[] { biome });
+        }
+
+        if(cfg_noVanillaMob){
+            EntityRegistry.removeSpawn(EntityZombie.class, EnumCreatureType.monster, biome);
+            EntityRegistry.removeSpawn(EntityCreeper.class, EnumCreatureType.monster, biome);
+            EntityRegistry.removeSpawn(EntityEnderman.class, EnumCreatureType.monster, biome);
+            EntityRegistry.removeSpawn(EntitySkeleton.class, EnumCreatureType.monster, biome);
+            EntityRegistry.removeSpawn(EntitySlime.class, EnumCreatureType.monster, biome);
+            EntityRegistry.removeSpawn(EntitySpider.class, EnumCreatureType.monster, biome);
+            EntityRegistry.removeSpawn(EntityWitch.class, EnumCreatureType.monster, biome);
         }
     }
     public void addspawnHell(BiomeGenBase biome)

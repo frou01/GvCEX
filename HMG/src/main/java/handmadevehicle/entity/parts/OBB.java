@@ -115,7 +115,7 @@ public class OBB {
     public VectorAndHitSide getIntercept(ModifiedBoundingBox modifiedBoundingBox,Vector3d startVec,Vector3d endVec,Vector3d posVec,Vector3d rotcenterVec){
         {
             Quat4d temp = new Quat4d(turretRotation);
-            temp.inverse();
+            inverse_safe(temp);
 
             startVec.sub(turretRotCenter);
             endVec.sub(turretRotCenter);
@@ -130,7 +130,7 @@ public class OBB {
         }
         {
             Quat4d temp = new Quat4d(info.boxRotation);
-            temp.inverse();
+            inverse_safe(temp);
 
             startVec.sub(info.boxRotCenter);
             endVec.sub(info.boxRotCenter);

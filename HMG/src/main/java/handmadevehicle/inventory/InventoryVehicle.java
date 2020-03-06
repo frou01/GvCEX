@@ -136,9 +136,14 @@ public class InventoryVehicle implements IInventory {
 	public boolean isItemValidForSlot(int slotID, ItemStack checkingStack)
 	{
 		if(slotID<baseLogic.prefab_vehicle.weaponSlotNum && checkingStack != null){
+			TurretObj turretObj = baseLogic.allturrets[baseLogic.prefab_vehicle.weaponSlot_linkedTurretID.get(slotID)];
+			if(!turretObj.prefab_turret.canReloadAirBone && !baseLogic.mc_Entity.onGround)
+				return false;
 			String itemName = checkingStack.getUnlocalizedName();
 			if(baseLogic.prefab_vehicle.weaponSlot_linkedTurret_StackWhiteList.get(slotID) == null)return true;
+//			System.out.println("itemName " + itemName);
 			for(String whiteList: baseLogic.prefab_vehicle.weaponSlot_linkedTurret_StackWhiteList.get(slotID)) {
+//				System.out.println("whiteList " + whiteList);
 				if("item.".concat(whiteList).equals(itemName)){
 					return true;
 				}

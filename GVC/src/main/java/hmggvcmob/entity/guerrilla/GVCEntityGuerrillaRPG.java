@@ -13,8 +13,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-import static hmggvcmob.GVCMobPlus.Guns_RR;
-import static hmggvcmob.GVCMobPlus.cfg_guerrillasrach;
+import static hmggvcmob.GVCMobPlus.*;
 
 public class GVCEntityGuerrillaRPG extends EntityGBase implements IHasVehicleGacha
 {
@@ -23,7 +22,7 @@ public class GVCEntityGuerrillaRPG extends EntityGBase implements IHasVehicleGac
     {
         super(par1World);
         this.setSize(0.6F, 1.8F);
-        this.tasks.addTask(1,new AIBuilder(this,worldForPathfind));
+        if(cfg_blockdestory)this.tasks.addTask(1,new AIBuilder(this,worldForPathfind));
         this.tasks.addTask(2,aiAttackGun = new AIAttackGun(this,40,5,10,15,true,true,new WorldForPathfind(worldObj)));
         spread = 3;
         canuseAlreadyPlacedGun = false;
@@ -95,7 +94,7 @@ public class GVCEntityGuerrillaRPG extends EntityGBase implements IHasVehicleGac
             } else {
                 this.setSneaking(false);
             }
-            if (getHeldItem() == null && this.ridingEntity == null && this.getAttackTarget() == null && rnd.nextInt(100) == 1) {
+            if (cfg_cansetIED && getHeldItem() == null && this.ridingEntity == null && this.getAttackTarget() == null && rnd.nextInt(100) == 1) {
 //            worldObj.getBlock((int)(this.posX + this.getLookVec().xCoord),(int)(this.posY + this.getLookVec().yCoord),(int)(this.posZ + this.getLookVec().zCoord));
                 if (worldObj.isAirBlock((int) (this.posX - this.getLookVec().xCoord), (int) (this.posY - this.getLookVec().yCoord), (int) (this.posZ - this.getLookVec().zCoord)) && !worldObj.isAirBlock((int) (this.posX - this.getLookVec().xCoord), (int) (this.posY - this.getLookVec().yCoord)-1, (int) (this.posZ - this.getLookVec().zCoord))) {
                     worldObj.setBlock((int) (this.posX - this.getLookVec().xCoord), (int) (this.posY - this.getLookVec().yCoord), (int) (this.posZ - this.getLookVec().zCoord), GVCUtils.fn_ied);

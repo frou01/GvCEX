@@ -1,15 +1,15 @@
 package handmadevehicle.render;
 
-import handmadevehicle.Utils;
 import handmadevehicle.entity.parts.IMultiTurretVehicle;
 import handmadevehicle.entity.parts.IVehicle;
 import handmadevehicle.entity.parts.ModifiedBoundingBox;
 import handmadevehicle.entity.parts.logics.BaseLogic;
 import handmadevehicle.entity.parts.turrets.TurretObj;
+import handmadevehicle.entity.prefab.Prefab_AdditionalBoundingBox;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.model.IModelCustom;
@@ -21,10 +21,11 @@ import javax.vecmath.Vector3d;
 import java.util.ArrayList;
 
 import static handmadevehicle.CLProxy.drawOutlinedBoundingBox;
-import static handmadevehicle.HMVehicle.HMV_Proxy;
+import static handmadevehicle.CLProxy.drawOutlinedOBB;
 import static java.lang.Math.toDegrees;
 import static net.minecraft.client.renderer.entity.RenderManager.debugBoundingBox;
 import static org.lwjgl.opengl.GL11.*;
+import static handmadevehicle.Utils.*;
 
 public class RenderVehicle extends Render {
 	
@@ -75,9 +76,9 @@ public class RenderVehicle extends Render {
 			GL11.glEnable(GL12.GL_RESCALE_NORMAL);
 			GL11.glTranslatef((float) currentBaseLogic.prefab_vehicle.rotcenterVec.x, (float) currentBaseLogic.prefab_vehicle.rotcenterVec.y, (float) currentBaseLogic.prefab_vehicle.rotcenterVec.z);
 			
-			Quat4d currentquat = new Quat4d();
+			Quat4d currentquat = new Quat4d(0,0,0,1);
 			currentquat.interpolate(currentBaseLogic.prevbodyRot,currentBaseLogic.bodyRot, (double) partialTicks);
-			double[] xyz = Utils.eulerfrommatrix(Utils.matrixfromQuat(currentquat));
+			double[] xyz = eulerfromQuat((currentquat));
 			xyz[0] = toDegrees(xyz[0]);
 			xyz[1] = toDegrees(xyz[1]);
 			xyz[2] = toDegrees(xyz[2]);
@@ -154,6 +155,14 @@ public class RenderVehicle extends Render {
 				GL11.glDisable(GL11.GL_BLEND);
 				ModifiedBoundingBox axisalignedbb = (ModifiedBoundingBox) entity.boundingBox;
 				drawOutlinedBoundingBox(axisalignedbb, 16777215);
+
+
+				Vector3d thisposVec = new Vector3d(currentBaseLogic.mc_Entity.posX,
+						currentBaseLogic.mc_Entity.posY,
+						currentBaseLogic.mc_Entity.posZ);
+				for(Prefab_AdditionalBoundingBox box : currentBaseLogic.prefab_vehicle.additionalBoundingBoxes) {
+					drawOutlinedOBB(box,16777215);
+				}
 				GL11.glEnable(GL11.GL_TEXTURE_2D);
 				GL11.glEnable(GL11.GL_LIGHTING);
 				GL11.glEnable(GL11.GL_CULL_FACE);

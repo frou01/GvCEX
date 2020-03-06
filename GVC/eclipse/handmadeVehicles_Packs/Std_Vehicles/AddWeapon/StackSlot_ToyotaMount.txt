@@ -6,5 +6,5 @@ linked_MotherTrigger,false
 needGunStack,true
 useVehicleInventory,false
 useGunSight,true
-gunStackwhitelist,AAGun_bofors40mm,Dshk38
+gunStackwhitelist,bofors_40mm,Dshk38
 End

@@ -13,7 +13,7 @@ import net.minecraft.world.World;
 
 import javax.vecmath.Vector3d;
 
-import static handmadeguns.Util.Utils.getmovingobjectPosition_forBlock;
+import static handmadeguns.Util.GunsUtils.getmovingobjectPosition_forBlock;
 import static handmadevehicle.HMVehicle.HMV_Proxy;
 
 public abstract class EntityBases_Ship extends EntityBases_Tank implements IShip , ITank , ImultiRidable

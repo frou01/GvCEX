@@ -10,7 +10,10 @@ LandPreset;
 off_road_followability_inwater,0.05;
 throttle_Max,4;
 throttle_min,-3;
-yawspeed_ground,3.5;
+yawspeed_ground,4.5;
+recoilResist,800;
+boundingBoxSizeX,2;
+boundingBoxSizeY,2;
 
 speedfactor_onGround,0.2;
 speedfactor_inWater,0.01;

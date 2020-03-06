@@ -60,10 +60,10 @@ public class CLProxy extends CMProxy {
 	public static final KeyBinding_withStopper reloadConfig = new KeyBinding_withStopper("Reload Config Settings", Keyboard.KEY_NONE, "HMVehicle");
 	public static final KeyBinding_withStopper openGUI = new KeyBinding_withStopper("Open Vehicle Gui", Keyboard.KEY_COLON, "HMVehicle");
 	
-	public static final KeyBinding pitchUp = new KeyBinding("Pitch Up", Keyboard.KEY_I, "HMVehicle");
-	public static final KeyBinding pitchDown = new KeyBinding("Pitch Down", Keyboard.KEY_K, "HMVehicle");
-	public static final KeyBinding RollRight = new KeyBinding("Roll Right", Keyboard.KEY_L, "HMVehicle");
-	public static final KeyBinding RollLeft = new KeyBinding("Roll Left", Keyboard.KEY_J, "HMVehicle");
+	public static final KeyBinding pitchUp = new KeyBinding("Pitch Up/Sus Up", Keyboard.KEY_I, "HMVehicle");
+	public static final KeyBinding pitchDown = new KeyBinding("Pitch Down/Sus Down", Keyboard.KEY_K, "HMVehicle");
+	public static final KeyBinding RollRight = new KeyBinding("Roll Right/Sus Right", Keyboard.KEY_L, "HMVehicle");
+	public static final KeyBinding RollLeft = new KeyBinding("Roll Left/Sus Right", Keyboard.KEY_J, "HMVehicle");
 	public static boolean zooming;
 	static boolean zoomkey_stopper;
 	static boolean fkey_stopper;
@@ -357,7 +357,7 @@ public class CLProxy extends CMProxy {
 		GL11.glPushMatrix();
 
 		{
-			double[] xyz = Utils.eulerfrommatrix(Utils.matrixfromQuat(p_147590_0_.turretRotation));
+			double[] xyz = Utils.eulerfromQuat(p_147590_0_.turretRotation);
 			xyz[0] = toDegrees(xyz[0]);
 			xyz[1] = toDegrees(xyz[1]);
 			xyz[2] = toDegrees(xyz[2]);
@@ -371,7 +371,7 @@ public class CLProxy extends CMProxy {
 		}
 
 		{
-			double[] xyz = Utils.eulerfrommatrix(Utils.matrixfromQuat(p_147590_0_.info.boxRotation));
+			double[] xyz = Utils.eulerfromQuat((p_147590_0_.info.boxRotation));
 			xyz[0] = toDegrees(xyz[0]);
 			xyz[1] = toDegrees(xyz[1]);
 			xyz[2] = toDegrees(xyz[2]);

@@ -64,9 +64,9 @@ public class RenderPlane extends Render {
 			GL11.glEnable(GL12.GL_RESCALE_NORMAL);
 			GL11.glTranslatef((float) baseLogic.prefab_vehicle.rotcenter[0], (float) baseLogic.prefab_vehicle.rotcenter[1], (float) baseLogic.prefab_vehicle.rotcenter[2]);
 			
-			Quat4d tempquat = new Quat4d();
+			Quat4d tempquat = new Quat4d(0,0,0,1);
 			tempquat.interpolate(baseLogic.prevbodyRot,baseLogic.bodyRot, partialTicks);
-			double[] xyz = Utils.eulerfrommatrix(Utils.matrixfromQuat(tempquat));
+			double[] xyz = Utils.eulerfromQuat(Utils.(tempquat));
 //			baseLogic.riderPosUpdate_forRender(new Vector3d(entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * partialTicks,
 //					                                               entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * partialTicks,
 //					                                               entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * partialTicks));

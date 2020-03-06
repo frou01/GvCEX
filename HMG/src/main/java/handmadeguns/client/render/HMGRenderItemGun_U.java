@@ -469,7 +469,7 @@ public class HMGRenderItemGun_U implements IItemRenderer {
 					byte boltprogress = nbt.getByte("Bolt");
 //					System.out.println("" + boltprogress);
 					boltprogress -= smoothing;
-					int cycle = gun.gunInfo.cycle;
+					int cycle = (int)gun.gunInfo.cycle;
 					float boltoffsetcof;
 					if (boltprogress <= cycle / 2)//�{���g��ޒ�
 						boltoffsetcof = cycle - boltprogress;
@@ -1173,7 +1173,7 @@ public class HMGRenderItemGun_U implements IItemRenderer {
 					int mode = nbt.getInteger("HMGMode");
 					byte boltprogress = nbt.getByte("Bolt");
 					boltprogress -= smoothing;
-					int cycle = gun.gunInfo.cycle;
+					int cycle = (int)gun.gunInfo.cycle;
 					float boltoffsetcof;
 					if (boltprogress < cycle / 2)//�{���g��ޒ�
 						boltoffsetcof = cycle - boltprogress;
@@ -1316,7 +1316,7 @@ public class HMGRenderItemGun_U implements IItemRenderer {
 					int mode = nbt.getInteger("HMGMode");
 					byte boltprogress = nbt.getByte("Bolt");
 					boltprogress -= smoothing;
-					int cycle = gun.gunInfo.cycle;
+					int cycle = (int)gun.gunInfo.cycle;
 					float boltoffsetcof;
 					if (boltprogress < cycle / 2)//�{���g��ޒ�
 						boltoffsetcof = cycle - boltprogress;

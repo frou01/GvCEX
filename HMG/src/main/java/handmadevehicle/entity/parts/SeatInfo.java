@@ -19,13 +19,15 @@ public class SeatInfo {
         this.pos = pos;
     }
     public SeatInfo(Vector3d pos){
-        this.pos = new double[]{pos.x,pos.y,pos.z};
+        this.pos = new double[]{pos.x,pos.y,-pos.z};
     }
     public double[] pos = new double[]{0,1.5,0};
     public Prefab_Seat prefab_seat;
-    public boolean hasParentGun = false;
     public boolean gunTrigger1;
     public boolean gunTrigger2;
+
+    public boolean syncToPlayerAngle = true;
+
     public TurretObj[] maingun;
     public int currentWeaponMode = 0;
     public TurretObj subgun;

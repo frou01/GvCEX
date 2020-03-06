@@ -1,0 +1,14 @@
+EnableTrail,true
+//‰gŒõ‚ğ—LŒø‰»
+TrailProbability,0.333333333333
+//–ñ‚R”­‚Éˆê‰ñ‰gŒõ’e
+TrailLength,3
+//3tick•ª‰gŒõ
+TrailWidth,0.1
+//•
+Trailtexture,trailGreen
+
+ObjModel,12_7mm_bullet.mqo
+ObjTexture,12_7mmbullet&Cart.png
+Objscale,1
+Name,12_7mmBullet_Green

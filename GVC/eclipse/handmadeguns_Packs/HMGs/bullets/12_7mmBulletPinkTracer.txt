@@ -1,0 +1,13 @@
+EnableTrail,true
+//‰gŒõ‚ğ—LŒø‰»
+TrailProbability,0.5
+TrailLength,3
+//3tick•ª‰gŒõ
+TrailWidth,0.1
+//•
+Trailtexture,trailPink
+
+ObjModel,12_7mm_bullet.mqo
+ObjTexture,12_7mmbullet&Cart.png
+Objscale,1
+Name,12_7mmBullet_Pink

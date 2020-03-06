@@ -29,7 +29,7 @@ brakedragfactor_ground,0.9;
 yawspeed,0.04;
 rollspeed,0.08;
 pitchspeed,0.025;
-yawspeed_taxing,5;
+yawspeed_taxing,10;
 off_road_followability,3;
 soundname,handmadevehicle:handmadevehicle.LiquidCoolEngineSound;
 soundpitch,1;
@@ -37,6 +37,8 @@ soundpitch,1;
 ParentWeapons_NUM,2;
 AllWeapons_NUM,2;
 autoflap,false;
+boundingBoxSizeX,2;
+boundingBoxSizeY,2;
 
 maxbank,80;
 minALT,30;

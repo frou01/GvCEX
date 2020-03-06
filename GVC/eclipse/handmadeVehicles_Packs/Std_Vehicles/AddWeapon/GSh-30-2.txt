@@ -1,0 +1,26 @@
+WeaponName,GSh-30-2
+turretYawCenterpos,0,0,0
+turretPitchCenterpos,0,0,0
+multicannonPos,-0.04,0,0,	0.04,0,0
+linked_MotherTrigger,true
+Recoil,10
+BulletNameALL,byfrou01_GreenTracer
+
+BulletPower,70
+BulletSpeed,8.6
+Explosion,2
+BlockDestory,true
+canReloadAirBone,false
+guntype,10
+BulletSpread,3
+ReloadTime,200
+RemainingBullet,250
+Magazine,0,HandmadeGuns,Gsh-30-1Ammo
+MagazineItemCount,5
+Rates,0
+GunSound_FullName,handmadevehicle:handmadevehicle.Gsh-30-1,handmadevehicle:handmadevehicle.Gsh-30-1
+SoundSpeed,1
+GunSoundLV,16,16
+GunSoundReload,handmadeguns.null
+GunSoundReloadLV,8
+End

@@ -25,34 +25,6 @@ public class HMGEntityBullet_Flame extends HMGEntityBulletBase {
     protected void onImpact(MovingObjectPosition var1)
     {
         super.onImpact(var1);
-        if (var1.entityHit != null)
-        {
-            int var2 = this.Bdamege;
-
-            if(islmmloaded&&(this.thrower instanceof LMM_EntityLittleMaid || this.thrower instanceof LMM_EntityLittleMaidAvatar || this.thrower instanceof LMM_EntityLittleMaidAvatarMP) && HandmadeGunsCore.cfg_FriendFireLMM){
-                if (var1.entityHit instanceof LMM_EntityLittleMaid)
-                {
-                    var2 = 0;
-                }
-                if (var1.entityHit instanceof LMM_EntityLittleMaidAvatar)
-                {
-                    var2 = 0;
-                }
-                if (var1.entityHit instanceof EntityPlayer)
-                {
-                    var2 = 0;
-                }
-            }
-            if(this.thrower instanceof IFF){
-                if(((IFF) this.thrower).is_this_entity_friend(var1.entityHit)){
-                    var2 = 0;
-                }
-            }
-            if(var2 != 0)
-                var1.entityHit.setFire(5);
-        }else {
-            this.setDead();
-        }
         if(!worldObj.isRemote && var1.hitVec!=null) {
             for (int x = -1; x < 1; x++) {
                 for (int y = -1; y < 1; y++) {

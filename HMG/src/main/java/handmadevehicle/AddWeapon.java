@@ -127,6 +127,9 @@ public class AddWeapon {
 						case "useVehicleInventory":
 							prefab_turret.useVehicleInventory = parseBoolean(type[1]);
 							break;
+						case "canReloadAirBone":
+							prefab_turret.canReloadAirBone = parseBoolean(type[1]);
+							break;
 						case "needGunStack":
 							prefab_turret.needGunStack = parseBoolean(type[1]);
 							break;

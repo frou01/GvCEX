@@ -30,8 +30,7 @@ public class MessageCatcher_FixGun implements IMessageHandler<PacketFixGun, IMes
             if(world != null){
                 Entity shooter = world.getEntityByID(message.shooterid);
                 if(shooter != null && shooter instanceof EntityLivingBase && ((EntityLivingBase) shooter).getHeldItem().getItem() instanceof HMGItem_Unified_Guns) {
-                    NBTTagCompound nbt = ((EntityLivingBase) shooter).getHeldItem().getTagCompound();
-                    nbt.setBoolean("HMGfixed",!nbt.getBoolean("HMGfixed"));
+
                     if(((HMGItem_Unified_Guns) ((EntityLivingBase) shooter).getHeldItem().getItem()).gunInfo.fixAsEntity){
                         Vec3 vec3 = Vec3.createVectorHelper(shooter.posX, shooter.posY + shooter.getEyeHeight(), shooter.posZ);
                         Vec3 playerlook = ((EntityLivingBase) shooter).getLook(1.0f);

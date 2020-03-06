@@ -65,14 +65,14 @@ public class PartsRender_Gun extends PartsRender {
 				break;
 			case Default:
 				if (parts.rendering_Def) {
-					PartSidentification_Attach(parts, state, flame, remainbullets, parts.getRenderinfDefault_offset());
+					PartSidentification_Attach(parts, state, flame, remainbullets,parts.getRenderinf_None());
 					return true;
 				}
 				break;
 			case Recoil:
 				if (parts.rendering_Recoil) {
 					if (parts.hasMotionRecoil) {
-						HMGGunParts_Motion_PosAndRotation OffsetAndRotation = parts.getRecoilmotion(flame + smooth);
+						HMGGunParts_Motion_PosAndRotation OffsetAndRotation = parts.getRecoilmotion(flame);
 						
 						PartSidentification_Attach(parts, state, flame, remainbullets, OffsetAndRotation);
 						return true;
@@ -189,7 +189,7 @@ public class PartsRender_Gun extends PartsRender {
 						if (attachrender != null) {
 							GL11.glPushMatrix();
 							part_Render(parts, state, flame, remainbullets, OffsetAndRotation);
-							glTranslatef(gunitem.gunInfo.underoffsetpx, gunitem.gunInfo.underoffsetpy, gunitem.gunInfo.underoffsetpz);
+							glTranslatef(gunitem.gunInfo.underoffsetpx * gunPartsScale, gunitem.gunInfo.underoffsetpy * gunPartsScale, gunitem.gunInfo.underoffsetpz * gunPartsScale);
 							GL11.glRotatef(gunitem.gunInfo.underrotationy, 0, 1, 0);
 							GL11.glRotatef(gunitem.gunInfo.underrotationx, 1, 0, 0);
 							GL11.glRotatef(gunitem.gunInfo.underrotationz, 0, 0, 1);
@@ -217,7 +217,7 @@ public class PartsRender_Gun extends PartsRender {
 						if (attachrender != null) {
 							GL11.glPushMatrix();
 							part_Render(parts, state, flame, remainbullets, OffsetAndRotation);
-							glTranslatef(gunitem.gunInfo.underoffsetpx, gunitem.gunInfo.underoffsetpy, gunitem.gunInfo.underoffsetpz);
+							glTranslatef(gunitem.gunInfo.underoffsetpx * gunPartsScale, gunitem.gunInfo.underoffsetpy * gunPartsScale, gunitem.gunInfo.underoffsetpz * gunPartsScale);
 							GL11.glRotatef(gunitem.gunInfo.underrotationy, 0, 1, 0);
 							GL11.glRotatef(gunitem.gunInfo.underrotationx, 1, 0, 0);
 							GL11.glRotatef(gunitem.gunInfo.underrotationz, 0, 0, 1);
@@ -239,12 +239,12 @@ public class PartsRender_Gun extends PartsRender {
 
 								transformParts(rotationCenterAndRotation,OffsetAndRotation,parts);
 								part_Render(parts, state, flame, remainbullets, OffsetAndRotation);
-								glTranslatef(gunitem.gunInfo.underoffsetpx, gunitem.gunInfo.underoffsetpy, gunitem.gunInfo.underoffsetpz);
+								glTranslatef(gunitem.gunInfo.underoffsetpx * gunPartsScale, gunitem.gunInfo.underoffsetpy * gunPartsScale, gunitem.gunInfo.underoffsetpz * gunPartsScale);
 								GL11.glRotatef(gunitem.gunInfo.underrotationy, 0, 1, 0);
 								GL11.glRotatef(gunitem.gunInfo.underrotationx, 1, 0, 0);
 								GL11.glRotatef(gunitem.gunInfo.underrotationz, 0, 0, 1);
 								HMGItem_Unified_Guns undergun = (HMGItem_Unified_Guns) items[4].getItem();
-								glTranslatef(undergun.gunInfo.onunderoffsetpx, undergun.gunInfo.onunderoffsetpy, undergun.gunInfo.onunderoffsetpz);
+								glTranslatef(undergun.gunInfo.onunderoffsetpx * gunPartsScale, undergun.gunInfo.onunderoffsetpy * gunPartsScale, undergun.gunInfo.onunderoffsetpz * gunPartsScale);
 								GL11.glRotatef(gunitem.gunInfo.onunderrotationy, 0, 1, 0);
 								GL11.glRotatef(gunitem.gunInfo.onunderrotationx, 1, 0, 0);
 								GL11.glRotatef(gunitem.gunInfo.onunderrotationz, 0, 0, 1);
@@ -281,7 +281,7 @@ public class PartsRender_Gun extends PartsRender {
 	}
 	public void GunPart_Render_attach(HMGGunParts parts, GunState state, float flame, int remainbullets, HMGGunParts_Motion_PosAndRotation OffsetAndRotation,float[] attachoffset,float[] attachrotation,HMGRenderItemCustom attachrender){
 		GL11.glPushMatrix();
-		glTranslatef(attachoffset[0], attachoffset[1], attachoffset[2]);
+		glTranslatef(attachoffset[0] * gunPartsScale, attachoffset[1] * gunPartsScale, attachoffset[2] * gunPartsScale);
 		GL11.glRotatef(attachrotation[0], 0, 1, 0);
 		GL11.glRotatef(attachrotation[1], 1, 0, 0);
 		GL11.glRotatef(attachrotation[2], 0, 0, 1);

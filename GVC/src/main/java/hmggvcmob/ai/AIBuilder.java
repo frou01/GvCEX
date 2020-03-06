@@ -88,7 +88,7 @@ public class AIBuilder extends EntityAIBase {
 					Vector3d temporary = new Vector3d(toTargetPos);
 					temporary.scale(length);
 					temporary.add(entityPos);
-					setBlock(worldObj, temporary, Blocks.planks, false);
+					setBlock(worldObj, temporary, Blocks.dirt, false);
 				}
 				Vector3d temporary = new Vector3d(toTargetPos);
 				temporary.scale(3);

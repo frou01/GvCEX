@@ -41,7 +41,7 @@ import javax.vecmath.Vector3d;
 import java.util.List;
 
 import static handmadeguns.HandmadeGunsCore.islmmloaded;
-import static handmadeguns.Util.Utils.getmovingobjectPosition_forBlock;
+import static handmadeguns.Util.GunsUtils.getmovingobjectPosition_forBlock;
 import static handmadevehicle.Utils.*;
 import static hmgww2.mod_GVCWW2.cfg_candespawn;
 import static hmgww2.mod_GVCWW2.cfg_canusePlacedGun;

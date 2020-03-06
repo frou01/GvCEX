@@ -12,6 +12,7 @@ public class KeyBinding_withStopper {
     }
 
     public boolean isKeyDown(){
+        if(keyBinding.getKeyCode() == Keyboard.KEY_NONE)return false;
         boolean flag = Keyboard.isKeyDown(keyBinding.getKeyCode());
         if (!flag) stopper = false;
         if (stopper) {
