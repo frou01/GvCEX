@@ -5,7 +5,6 @@ import handmadeguns.items.guns.HMGItem_Unified_Guns;
 import handmadeguns.items.guns.HMGXItemGun_Sword;
 import hmggvcutil.entity.GVCEntityBox;
 import hmggvcmob.GVCMobPlus;
-import hmggvcmob.tile.TileEntityFlag;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentData;
 import net.minecraft.entity.Entity;
@@ -148,7 +147,7 @@ public class EntitySupplyBox extends GVCEntityBox{
             case 7:
             case 8:
                 Item gun = (Item) HMGGunMaker.Guns.get(new Random().nextInt(HMGGunMaker.Guns.size()));
-                while ((gun instanceof HMGItem_Unified_Guns && !((HMGItem_Unified_Guns) gun).gunInfo.isinRoot) || (gun instanceof HMGXItemGun_Sword && !((HMGXItemGun_Sword) gun).isinRoot)){
+                while ((gun instanceof HMGItem_Unified_Guns && !((HMGItem_Unified_Guns) gun).gunInfo.canInRoot) || (gun instanceof HMGXItemGun_Sword && !((HMGXItemGun_Sword) gun).isinRoot)){
                     gun = (Item) HMGGunMaker.Guns.get(new Random().nextInt(HMGGunMaker.Guns.size()));
                 }
                 itemStack = new ItemStack(gun,1);
@@ -173,7 +172,7 @@ public class EntitySupplyBox extends GVCEntityBox{
                 break;
             case 13:
                 gun = (Item) GVCMobPlus.Guns_RR.get(new Random().nextInt(GVCMobPlus.Guns_RR.size()));
-                while (!((HMGItem_Unified_Guns)gun).gunInfo.isinRoot){
+                while (!((HMGItem_Unified_Guns)gun).gunInfo.canInRoot){
                     gun = (Item) GVCMobPlus.Guns_RR.get(new Random().nextInt(GVCMobPlus.Guns_RR.size()));
                 }
                 itemStack = new ItemStack(gun,1);

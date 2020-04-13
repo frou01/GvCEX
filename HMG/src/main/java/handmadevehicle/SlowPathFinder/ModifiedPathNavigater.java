@@ -146,7 +146,7 @@ public class ModifiedPathNavigater extends PathNavigate{
 	 */
 	public float getPathSearchRange()
 	{
-		return 100;
+		return 400;
 	}
 	
 	/**
@@ -385,7 +385,7 @@ public class ModifiedPathNavigater extends PathNavigate{
 	 */
 	private boolean canNavigate()
 	{
-		return this.theEntity.onGround || this.canSwim && this.isInLiquid() || this.theEntity.isRiding() && this.theEntity instanceof EntityZombie && this.theEntity.ridingEntity instanceof EntityChicken;
+		return this.theEntity.onGround || this.canSwim && this.isInLiquid();
 	}
 	
 	/**

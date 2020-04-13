@@ -2,6 +2,7 @@ package hmggvcutil;
 
 
 import cpw.mods.fml.common.registry.VillagerRegistry;
+import hmggvcmob.entity.friend.EntityPMCBase;
 import hmggvcutil.Item.*;
 import hmggvcutil.entity.*;
 
@@ -690,4 +691,12 @@ public class GVCUtils {
 
 	}
 
+
+	public static boolean platoonMatched(String platoonName, EntityPMCBase PMC){
+		return (
+				(platoonName == null&&PMC.platoonName == null)
+						||
+						(PMC.platoonName != null && PMC.platoonName.equals(platoonName))
+		);
+	}
 }

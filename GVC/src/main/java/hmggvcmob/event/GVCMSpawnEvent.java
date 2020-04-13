@@ -2,8 +2,7 @@ package hmggvcmob.event;
 
 import cpw.mods.fml.common.eventhandler.Event;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import hmggvcmob.IflagBattler;
-import hmggvcmob.camp.CampObj;
+import hmggvcmob.entity.IflagBattler;
 import hmggvcmob.camp.CampObjAndPos;
 import hmggvcmob.entity.IHasVehicleGacha;
 import hmggvcmob.entity.VehicleSpawnGachaOBJ;
@@ -81,7 +80,7 @@ public class GVCMSpawnEvent {
     }
     @SubscribeEvent
     public void specialSpawnevent(LivingSpawnEvent.SpecialSpawn event) {
-        if(event.entityLiving instanceof IHasVehicleGacha){//ŽÔ—¼ƒKƒ`ƒƒ‚Ì‚¨ŽžŠÔ
+        if(event.entityLiving instanceof IHasVehicleGacha){//ï¿½Ô—ï¿½ï¿½Kï¿½`ï¿½ï¿½ï¿½Ì‚ï¿½ï¿½ï¿½ï¿½ï¿½
             Random rand = new Random();
             if(((IHasVehicleGacha) event.entityLiving).getVehicleGacha_rate_sum() >0) {
                 int currentRate = rand.nextInt(((IHasVehicleGacha) event.entityLiving).getVehicleGacha_rate_sum());

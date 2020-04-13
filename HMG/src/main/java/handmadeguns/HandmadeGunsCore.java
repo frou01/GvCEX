@@ -162,6 +162,7 @@ public class HandmadeGunsCore {
 		Configuration lconf = new Configuration(configFile);
 		lconf.load();
 		cfg_FriendFireLMM	= lconf.get("LMM", "cfg_FriendFireLMM", true).getBoolean(true);
+		cfg_FriendFirePlayerToLMM	= lconf.get("LMM", "cfg_FriendFirePlayerToLMM", true).getBoolean(true);
 		cfg_RenderGunSizeLMM	= lconf.get("LMM", "cfg_RenderGunSizeLMM", false).getBoolean(false);
 		cfg_RenderGunAttachmentLMM	= lconf.get("LMM", "cfg_RenderGunAttachmentLMM", false).getBoolean(false);
 		cfg_ZoomRender	= lconf.get("Render", "cfg_ZoomRender", true).getBoolean(true);

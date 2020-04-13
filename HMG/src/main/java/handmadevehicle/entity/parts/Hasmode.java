@@ -2,8 +2,10 @@ package handmadevehicle.entity.parts;
 
 import net.minecraft.entity.Entity;
 
+import javax.vecmath.Vector3d;
+
 public interface Hasmode {
-	int getMobMode();
+	Modes getMobMode();
 	double[] getTargetpos();
-	boolean standalone();
+	Vector3d getMoveToPos();
 }

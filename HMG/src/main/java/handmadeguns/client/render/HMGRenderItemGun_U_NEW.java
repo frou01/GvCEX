@@ -641,7 +641,7 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 		GL11.glRotatef(190F, 1.0F, 0.0F, 0.0F);
 		GL11.glRotatef(45F, 0.0F, 1.0F, 0.0F);
 		GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
-		GL11.glTranslatef(-1.3f +  + thirdmodelPosX, 1.55f + thirdmodelPosY, 0.3f + reco + thirdmodelPosZ);//-0.4
+		GL11.glTranslatef(-1.3f +  + thirdmodelPosX/2, 1.55f + thirdmodelPosY/2, 0.3f + reco + thirdmodelPosZ/2);//-0.4
 	}
 
 	public void glMatrixForRenderInEntityPlayer(float reco) {

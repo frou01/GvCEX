@@ -658,7 +658,7 @@ public class BaseLogic implements IbaseLogic,IneedMouseTrack,MultiRiderLogics {
 	
 	
 	private void destroyNearBlocks(AxisAlignedBB boundingBox,double inMotionX, double inMotionY, double inMotionZ){
-		
+		if(prefab_vehicle.destroyGroundBlockCof < 0)return;
 		float destroy_counter = 0;
 		inMotionY *= prefab_vehicle.antiGroundHitCof_Y;
 		double speed = inMotionX * inMotionX + inMotionY * inMotionY + inMotionZ * inMotionZ;
@@ -677,7 +677,7 @@ public class BaseLogic implements IbaseLogic,IneedMouseTrack,MultiRiderLogics {
 		boundingBox = boundingBox.addCoord(inMotionX,inMotionY,inMotionZ);
 		for (int x = floor_double(boundingBox.minX); x <= floor_double(boundingBox.maxX); x++) for (int y = floor_double(boundingBox.minY); y <= floor_double(boundingBox.maxY); y++) for (int z = floor_double(boundingBox.minZ); z <= floor_double(boundingBox.maxZ); z++) {
 			Block collidingblock = worldObj.getBlock(x, y, z);
-			if ((speed > collidingblock.getBlockHardness(null, 0, 0, 0)  && collidingblock.getBlockHardness(null, 0, 0, 0) > 0
+			if ((speed > collidingblock.getBlockHardness(worldObj, 0, 0, 0)  && collidingblock.getBlockHardness(null, 0, 0, 0) > 0
 					&& isCollidableBlock(worldObj.getBlock(x, y, z)))||
 					is_forceBrakeBrock(collidingblock)) {
 				worldObj.setBlockToAir(x, y, z);
@@ -697,6 +697,7 @@ public class BaseLogic implements IbaseLogic,IneedMouseTrack,MultiRiderLogics {
 		
 	}
 	private boolean is_forceBrakeBrock(Block collidingblock){
+		//TODO https://twitter.com/BUMPKEY4423/status/1245889077150240769
 		return collidingblock.getMaterial() == Material.leaves ||
 				collidingblock.getMaterial() == Material.wood ||
 				collidingblock.getMaterial() == Material.cloth ||

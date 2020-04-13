@@ -8,8 +8,6 @@ import hmggvcmob.GVCMobPlus;
 import hmggvcmob.entity.guerrilla.EntityGBase;
 import hmggvcmob.entity.guerrilla.EntityGBases;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockLadder;
-import net.minecraft.block.BlockStairs;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
@@ -512,7 +510,7 @@ public class ComponentDungeonBase extends StructureComponent {
             for (int s = 0; s < 9; ++s) {
                 Item gun = (Item) HMGGunMaker.Guns.get(random.nextInt(HMGGunMaker.Guns.size()));
                 if (gun instanceof HMGItem_Unified_Guns) {
-                    if (!((HMGItem_Unified_Guns) gun).gunInfo.isinRoot) gun = null;
+                    if (!((HMGItem_Unified_Guns) gun).gunInfo.canInRoot) gun = null;
                     if (gun != null) {
                         Chest.setInventorySlotContents(s, new ItemStack(gun));
                         if (((HMGItem_Unified_Guns) gun).getcurrentMagazine(null) != null)

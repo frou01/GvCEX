@@ -148,6 +148,9 @@ public class RenderVehicle extends Render {
 			GL11.glPopMatrix();
 			GL11.glPushMatrix();
 			if (debugBoundingBox && entity.boundingBox instanceof ModifiedBoundingBox) {
+
+
+
 				GL11.glDepthMask(false);
 				GL11.glDisable(GL11.GL_TEXTURE_2D);
 				GL11.glDisable(GL11.GL_LIGHTING);

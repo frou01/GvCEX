@@ -11,6 +11,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import handmadeguns.HMGGunMaker;
 import handmadeguns.items.guns.HMGItem_Unified_Guns;
 import hmggvcmob.camp.CampObj;
+import hmggvcmob.event.EventRenderPlatoonInfo;
 import hmggvcmob.item.*;
 import hmggvcmob.item.GVCItemPMCEgg;
 import hmggvcmob.block.GVCBlockFlag;
@@ -643,6 +644,9 @@ public class GVCMobPlus
             GVCMRenderSomeEvent event = new GVCMRenderSomeEvent();
             MinecraftForge.EVENT_BUS.register(event);
             FMLCommonHandler.instance().bus().register(event);
+
+
+            MinecraftForge.EVENT_BUS.register(new EventRenderPlatoonInfo());
         }
         MinecraftForge.EVENT_BUS.register(new GVCMSpawnEvent());
 

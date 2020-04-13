@@ -45,7 +45,7 @@ public class CLProxy extends CMProxy {
 	public static final KeyBinding Zoom = new KeyBinding("CannonCamera", Keyboard.KEY_Z, "HMVehicle");
 	
 	public static final KeyBinding_withStopper Flap = new KeyBinding_withStopper("Flap", Keyboard.KEY_F, "HMVehicle");
-	public static final KeyBinding Air_Brake = new KeyBinding("Air Brake", Keyboard.KEY_X, "HMVehicle");
+	public static final KeyBinding Air_Brake = new KeyBinding("Air Brake/Wheel Brake", Keyboard.KEY_X, "HMVehicle");
 	public static final KeyBinding Flare_Smoke = new KeyBinding("Flare/Smoke", Keyboard.KEY_COLON, "HMVehicle");
 	public static final KeyBinding_withStopper Gear_Down_Up = new KeyBinding_withStopper("Gear Down/Up", Keyboard.KEY_G, "HMVehicle");
 	public static final KeyBinding_withStopper Weapon_Mode = new KeyBinding_withStopper("Weapon Mode", Keyboard.KEY_ADD, "HMVehicle");

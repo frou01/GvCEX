@@ -297,6 +297,7 @@ public class PlacedGunEntity extends Entity implements IEntityAdditionalSpawnDat
                 return true;
             }
             if(riddenByEntity != null && !(riddenByEntity instanceof EntityPlayer)){
+                riddenByEntity.mountEntity(null);
                 stanCnt = 20;
             }
         }

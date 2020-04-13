@@ -41,6 +41,7 @@ public class GVCEntityGuerrillaRPG extends EntityGBase implements IHasVehicleGac
     {
         super.addRandomArmor();
         if(rnd.nextInt(10)!=-0) {
+            //TODO AAミソを対地で使うと強すぎる
             this.setCurrentItemOrArmor(0, new ItemStack((Item) Guns_RR.get(rnd.nextInt(Guns_RR.size()))));
         }
     }

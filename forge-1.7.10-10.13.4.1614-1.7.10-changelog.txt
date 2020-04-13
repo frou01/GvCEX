@@ -128,7 +128,7 @@ Build 1.8.8-11.14.4.1580-1.8.8:
 	LexManos: Update universal manifest for 1.8.8's json.
 
 Build 1.8.8-11.14.4.1579-1.8.8:
-	fry: Fixed NPE is B3D loader caused by the missing HMGVertex normal; updated the example chest model - it's now has 2 meshes; Updated ModelAnimationDebug - it now uses the new chest model, renders the base with the static world renderer, and only the lid with the TESR.
+	fry: Fixed NPE is B3D loader caused by the missing vertex normal; updated the example chest model - it's now has 2 meshes; Updated ModelAnimationDebug - it now uses the new chest model, renders the base with the static world renderer, and only the lid with the TESR.
 	LexManos: Fix incorrect position passes to Block.getExplosionResistance from entities.
 	LexManos: Moved client side Block.onBlockDestroyed to after Item.onBlockDestroyed to match server order.
 	LexManos: Enable the normal ModList GUI in game. Use GL_SCISSOR to support the transparent in-game GUI.
@@ -139,7 +139,7 @@ Build 1.8.8-11.14.4.1579-1.8.8:
 	fry: Implemented interpolation of TRSR transformations; B3D: added interpolation capabilities to B3DState, animated TESR example in ModelAnimationTest (pure TESR right now, no separation inside the example model between the static and dynamic parts right now).
 	fry: B3D loader: removed 2 redundand null checks, changed constructor args to final to fix (java6?) inner arg error.
 	fry: Fix holes in generated item models.
-	fry: Removed HMGFace doubles from item models.
+	fry: Removed face doubles from item models.
 	fry: Fixed forge lighting working incorrectly outside 0x1000000 coordinates.
 	cpw: Update mappings to 20151122.
 
@@ -147,7 +147,7 @@ Build 1.8-11.14.4.1577:
 	fry: Implemented interpolation of TRSR transformations; B3D: added interpolation capabilities to B3DState, animated TESR example in ModelAnimationTest (pure TESR right now, no separation inside the example model between the static and dynamic parts right now).
 	fry: B3D loader: removed 2 redundand null checks, changed constructor args to final to fix (java6?) inner arg error.
 	fry: Fix holes in generated item models.
-	fry: Removed HMGFace doubles from item models.
+	fry: Removed face doubles from item models.
 	fry: Fixed forge lighting working incorrectly outside 0x1000000 coordinates.
 
 Build 1.8.8-11.14.4.1576-1.8.8:
@@ -260,7 +260,7 @@ Build 1.8-11.14.3.1550:
 Build 1.8-11.14.3.1549:
 	fry: Obj loader: fix vertices shared between faces having the same attributed (uvs/normals).
 	the.f1repl4ce: Fixed a bug that caused the config option name to overlap with the selectable values when using GuiConfigEntries.SelectValueEntry, fixes #2114
-	fry: OBJ model: use original HMGVertex material when defining HMGFace.
+	fry: OBJ model: use original vertex material when defining face.
 	fry: Fixed block color multiplier not being cached properly in the forge renderer, performance improvement.
 	LexManos: Merge FML and Forge lang file, and update crowdin project.
 	LexManos:
@@ -290,7 +290,7 @@ Build Build Artifacts:<ul><li><a href="scp://files.minecraftforge.net/home/files
 	Abrar Syed: Update FG version to 2.0.2
 	fry: Changed how the forge lighting system handles holey models for opaque blocks; it now mimics vanilla behaviour, which allows light to pass through them.
 	fry: Fix for the previous commit - transparent blocks were handled improperly.
-	glstillman: OBJLoader: Quick bandages to support/fix the new way that HMGFace/HMGVertex normals are calculated, a very quick bandage to patch TextureCoordinates for the time being, and the Parser now uses a Pattern to split strings on whitespace instead of only splitting on " ".
+	glstillman: OBJLoader: Quick bandages to support/fix the new way that face/vertex normals are calculated, a very quick bandage to patch TextureCoordinates for the time being, and the Parser now uses a Pattern to split strings on whitespace instead of only splitting on " ".
 	cpw: Fix substitutions for recipes and oredict recipes. Should mean that substitutions start working properly.
 
 Build 1.8-11.14.3.1532:
@@ -336,7 +336,7 @@ Build 1.8-11.14.3.1519:
 	fry: '#' is now added automatically to the beginning of the texture names in B3D models, and the remapping is expected via the blockstate JSON, since it's more reasonable than adding it to the file name in the modelling program or matching the resource location with the filename.
 
 Build 1.8-11.14.3.1518:
-	fry: Fixes Attributes.transform affecting only 1 HMGVertex.
+	fry: Fixes Attributes.transform affecting only 1 vertex.
 
 Build 1.7.10-10.13.4.1517-1.7.10:
 	bjoern:
@@ -4312,7 +4312,7 @@ Build 1.6.2-9.10.0.777:
 		MinecraftForge/FML@c47d08c89dfcacb96e36c427593174e08dcb4224 Tweak debug data on patched classes
 		MinecraftForge/FML@dbf5fe38cee04288e92d57f8782114b452245bce We now generate an adler32 checksum for each patched file and verify at load time that they match. Mismatch won't crash, but will emit a big warning..
 		MinecraftForge/FML@e88a0cd13f63904f7317e1a73880611f58820389 Update for stealth update. Thanks mojang!
-		MinecraftForge/FML@2336002f20e9412a7663781b23c51de0eff6a692 The game is going to exit in HMGFace of patch mismatch, unless you force it to run with fml.ignorePatchDiscrepancies in the system properties.
+		MinecraftForge/FML@2336002f20e9412a7663781b23c51de0eff6a692 The game is going to exit in face of patch mismatch, unless you force it to run with fml.ignorePatchDiscrepancies in the system properties.
 
 Build 1.6.2-9.10.0.776:
 	LexManos:
@@ -5016,7 +5016,7 @@ Build 1.5.1-7.7.1.653:
 	LexManos: Fix AIOOB in crash report stack trimming.
 
 Build 1.5.1-7.7.1.652:
-	pahimar: Fix a derp in that we provision the various arrays for a HMGFace, even if we are not going to parse data into it. Solves NPEs for when obj models that don't have texture coordinates attempt to render.
+	pahimar: Fix a derp in that we provision the various arrays for a face, even if we are not going to parse data into it. Solves NPEs for when obj models that don't have texture coordinates attempt to render.
 	pahimar: Missed a bit
 
 Build 1.5.1-7.7.1.651:
@@ -5699,7 +5699,7 @@ Build 13w05b-7.7.0.537-snapshot15:
 
 Build 13w02b-7.7.0.536-snapshot15:
 	mehvids: Gave entities and tile entities access to the second render pass for translucency.
-	Christian: Attempt to fix a possible NPE in the HMGFace of ChickenBones' hackery. ChickenBones. stop it!
+	Christian: Attempt to fix a possible NPE in the face of ChickenBones' hackery. ChickenBones. stop it!
 	Christian:
 		Fix a potential problem with "Entity already added" when using the dormant
 		chunk cache capability. The entities in the dormant chunk cache will get new
@@ -5933,7 +5933,7 @@ Build 1.4.7-6.6.0.510:
 		IDs prior to the cached chunk returning.
 
 Build 1.4.7-6.6.0.509:
-	Christian: Attempt to fix a possible NPE in the HMGFace of ChickenBones' hackery. ChickenBones. stop it!
+	Christian: Attempt to fix a possible NPE in the face of ChickenBones' hackery. ChickenBones. stop it!
 
 Build 13w02b-7.7.0.508-snapshot15:
 	scott: Add ability to WorldTypes to display the 'Customize' button and react to it

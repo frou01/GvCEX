@@ -401,7 +401,6 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
 //        System.out.println(" " + this + "  " + inGround);
         if(worldObj.isRemote && !isDead){
             if(trail) {
-                if((posX - lastTickPosX2) > 10) System.out.println("debug" + lastTickPosX2);
                 PacketSpawnParticle packetSpawnParticle = new PacketSpawnParticle(lastTickPosX2, lastTickPosY2, lastTickPosZ2,
                                                                                          posX,
                                                                                          posY,

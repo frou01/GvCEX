@@ -3,7 +3,7 @@ package hmggvcmob.ai;
 import handmadeguns.entity.PlacedGunEntity;
 import handmadeguns.items.guns.HMGItem_Unified_Guns;
 import handmadevehicle.entity.EntityDummy_rider;
-import hmggvcmob.IflagBattler;
+import hmggvcmob.entity.IflagBattler;
 import handmadevehicle.SlowPathFinder.WorldForPathfind;
 import hmggvcmob.entity.friend.EntitySoBases;
 import hmggvcmob.entity.guerrilla.EntityGBases;
@@ -11,11 +11,9 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.MathHelper;
-import net.minecraft.util.Vec3;
 
 import javax.vecmath.Vector3d;
 import java.util.List;
@@ -316,11 +314,7 @@ public class AIAttackGun extends EntityAIBase {
         reCurToTargetPosition.sub(moveToVec);
         byte state = -1;//stop
 
-
-        if(shooter instanceof IflagBattler) {
-            state = ((IflagBattler) shooter).getState();
-        }
-        if(state == -1) {
+        {
             if (!canSee || maxrange < tocurrentAttackToPosition)
                 state = 1;//go
             else if (minrange > tocurrentAttackToPosition)

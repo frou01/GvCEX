@@ -1,7 +1,7 @@
 package hmggvcmob.ai;
 
 import handmadevehicle.SlowPathFinder.WorldForPathfind;
-import hmggvcmob.IflagBattler;
+import hmggvcmob.entity.IflagBattler;
 import hmggvcmob.entity.IGVCmob;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLiving;
@@ -104,7 +104,7 @@ public class AIBuilder extends EntityAIBase {
 					entityPos = new Vector3d(entityBuilder.posX, entityBuilder.posY - 1, entityBuilder.posZ);
 				entityBuilder.getNavigator().clearPathEntity();
 				if (entityBuilder.getHeldItem() == null)
-					entityBuilder.setCurrentItemOrArmor(0, new ItemStack(Item.getItemFromBlock(Blocks.planks)));
+					entityBuilder.setCurrentItemOrArmor(0, new ItemStack(Item.getItemFromBlock(Blocks.dirt)));
 				entityBuilder.setSneaking(true);
 				if(making % 10 == 0)entityBuilder.swingItem();
 			}

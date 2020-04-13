@@ -1,5 +1,6 @@
 package handmadevehicle.SlowPathFinder;
 
+import handmadevehicle.entity.parts.IVehicle;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
@@ -9,8 +10,6 @@ import net.minecraft.pathfinding.PathPoint;
 import net.minecraft.util.IntHashMap;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
-
-import java.util.Random;
 
 public class SlowPathfinder {
 
@@ -24,10 +23,10 @@ public class SlowPathfinder {
     private PathPoint_slow[] pathOptions = new PathPoint_slow[32];
     public boolean isserchingpath;
     Entity theEntity;
-    PathPoint_slow pathpoint2;
-    PathPoint_slow pathpoint;
+    PathPoint_slow start;
+    PathPoint_slow end;
     PathPoint_slow pathpoint1;
-    PathPoint_slow pathpoint3;
+    PathPoint_slow current;
     int count = 0;
     int retrycount = 0;
 
@@ -48,6 +47,10 @@ public class SlowPathfinder {
     public PathEntity createEntityPathTo(Entity p_75859_1_, int p_75859_2_, int p_75859_3_, int p_75859_4_, float p_75859_5_)
     {
         return this.createEntityPathTo(p_75859_1_, (double)((float)p_75859_2_ + 0.5F), (double)((float)p_75859_3_ + 0.5F), (double)((float)p_75859_4_ + 0.5F), p_75859_5_);
+    }
+    public PathEntity createEntityPathTo(Entity p_75856_1_, Entity p_75856_2_, float p_75856_3_)
+    {
+        return this.createEntityPathTo(p_75856_1_, p_75856_2_.posX, p_75856_2_.boundingBox.minY, p_75856_2_.posZ, p_75856_3_);
     }
 
     private PathEntity createEntityPathTo(Entity p_75857_1_, double p_75857_2_, double p_75857_4_, double p_75857_6_, float p_75857_8_)
@@ -74,9 +77,18 @@ public class SlowPathfinder {
             i = MathHelper.floor_double(p_75857_1_.boundingBox.minY + 0.5D);
         }
 
-        PathPoint_slow pathpoint2 = this.openPoint(MathHelper.floor_double(p_75857_1_.boundingBox.minX), i, MathHelper.floor_double(p_75857_1_.boundingBox.minZ));
-        PathPoint_slow pathpoint = this.openPoint(MathHelper.floor_double(p_75857_2_ - (double)(p_75857_1_.width / 2.0F)), MathHelper.floor_double(p_75857_4_), MathHelper.floor_double(p_75857_6_ - (double)(p_75857_1_.width / 2.0F)));
-        PathPoint_slow pathpoint1 = new PathPoint_slow(MathHelper.floor_float(p_75857_1_.width + 1.0F), MathHelper.floor_float(p_75857_1_.height + 1.0F), MathHelper.floor_float(p_75857_1_.width + 1.0F));
+        PathPoint_slow pathpoint2;
+        PathPoint_slow pathpoint;
+        PathPoint_slow pathpoint1;
+        if(p_75857_1_ instanceof IVehicle){
+            pathpoint2 = this.openPoint(MathHelper.floor_double(p_75857_1_.boundingBox.minX), i, MathHelper.floor_double(p_75857_1_.boundingBox.minZ));
+            pathpoint = this.openPoint(MathHelper.floor_double(p_75857_2_ - (double)(p_75857_1_.width / 2.0F + 2.5)), MathHelper.floor_double(p_75857_4_), MathHelper.floor_double(p_75857_6_ - (double)(p_75857_1_.width / 2.0F + 2.5)));
+            pathpoint1 = new PathPoint_slow(MathHelper.floor_float(p_75857_1_.width + 5.0F), MathHelper.floor_float(p_75857_1_.height + 5.0F), MathHelper.floor_float(p_75857_1_.width + 5.0F));
+        }else {
+            pathpoint2 = this.openPoint(MathHelper.floor_double(p_75857_1_.boundingBox.minX), i, MathHelper.floor_double(p_75857_1_.boundingBox.minZ));
+            pathpoint = this.openPoint(MathHelper.floor_double(p_75857_2_ - (double)(p_75857_1_.width / 2.0F)), MathHelper.floor_double(p_75857_4_), MathHelper.floor_double(p_75857_6_ - (double)(p_75857_1_.width / 2.0F)));
+            pathpoint1 = new PathPoint_slow(MathHelper.floor_float(p_75857_1_.width + 1.0F), MathHelper.floor_float(p_75857_1_.height + 1.0F), MathHelper.floor_float(p_75857_1_.width + 1.0F));
+        }
 
         PathEntity pathentity = this.addToPath(p_75857_1_, pathpoint2, pathpoint, pathpoint1, p_75857_8_);
         this.isPathingInWater = flag;
@@ -96,24 +108,25 @@ public class SlowPathfinder {
 
         return pathpoint;
     }
-    private PathEntity addToPath(Entity p_75861_1_, PathPoint_slow p_75861_2_, PathPoint_slow p_75861_3_, PathPoint_slow p_75861_4_, float p_75861_5_)
+    private PathEntity addToPath(Entity p_75861_1_, PathPoint_slow start, PathPoint_slow end, PathPoint_slow p_75861_4_, float p_75861_5_)
     {
         theEntity = p_75861_1_;
-        p_75861_2_.totalPathDistance = 0.0F;
-        p_75861_2_.distanceToNext = p_75861_2_.distanceToSquared(p_75861_3_);
-        p_75861_2_.distanceToTarget = p_75861_2_.distanceToNext;
+        start.totalPathDistance = 0.0F;
+        start.distanceToNext = start.distanceToSquared(end);
+        start.distanceToTarget = start.distanceToNext;
         this.path.clearPath();
-        this.path.addPoint(p_75861_2_);
-        pathpoint3 = p_75861_2_;
-        pathpoint2 = p_75861_2_;
-        pathpoint = p_75861_3_;
+        this.path.addPoint(start);
+        current = start;
+        this.start = start;
+        this.end = end;
         pathpoint1 = p_75861_4_;
         this.count = 0;
         return serchPath();
     }
+    public PathEntity currentReturnVal;
     public PathEntity serchPath(){
         retrycount++;
-        int cntmax = 64;
+        int cntmax = 32;
         for(int cnt = 0; cnt<cntmax; cnt++) {
             if (!this.path.isPathEmpty()) {
 //                System.out.println("debug" + path);
@@ -121,17 +134,17 @@ public class SlowPathfinder {
 //                System.out.println("debug" + (path));
 //                System.out.println("debug" + (pathpoint4));
 //                System.out.println("debug" + (path.count));
-                if (pathpoint4.equals(pathpoint)) {
+                if (pathpoint4.equals(end)) {
                     isserchingpath = false;
-                    return this.createEntityPath(pathpoint2, pathpoint);
+                    return this.createEntityPath(start, end);
                 }
 
-                if (pathpoint4.distanceToSquared(pathpoint) < pathpoint3.distanceToSquared(pathpoint)) {
-                    pathpoint3 = pathpoint4;
+                if (pathpoint4.distanceToSquared(end) < current.distanceToSquared(end)) {
+                    current = pathpoint4;
                 }
 
                 pathpoint4.isFirst = true;
-                int i = this.findPathOptions(theEntity, pathpoint4, pathpoint1, pathpoint, 120);
+                int i = this.findPathOptions(theEntity, pathpoint4, pathpoint1, end, 512);
 
                 for (int j = 0; j < i; ++j) {
 //                    System.out.println("debug j = " + j);
@@ -141,7 +154,7 @@ public class SlowPathfinder {
                     if (!pathpoint5.isAssigned() || f1 < pathpoint5.totalPathDistance) {
                         pathpoint5.previous = pathpoint4;
                         pathpoint5.totalPathDistance = f1;
-                        pathpoint5.distanceToNext = pathpoint5.distanceToSquared(pathpoint);
+                        pathpoint5.distanceToNext = pathpoint5.distanceToSquared(end);
 
                         if (pathpoint5.isAssigned()) {
                             this.path.changeDistance(pathpoint5, pathpoint5.totalPathDistance + pathpoint5.distanceToNext);
@@ -151,28 +164,27 @@ public class SlowPathfinder {
                         }
                     }
                 }
-            }
-            if (this.path.isPathEmpty())break;
+            }else break;
         }
 
-        if(this.path.isPathEmpty()) {
+        if(this.path.isPathEmpty()) {//検索終了
             isserchingpath = false;
-            if (pathpoint3 == pathpoint2) {
+            if (current == start) {
                 return null;
             } else {
-                return this.createEntityPath(pathpoint2, pathpoint3);
+                return currentReturnVal = this.createEntityPath(start, current);
             }
-        }else if(this.retrycount>0) {//1週目でアボート、とっとと歩いてこい
-            PathEntity returnval = this.createEntityPath(pathpoint2, pathpoint3);
+        }else if(this.retrycount>8) {
 //            System.out.println("debug" + returnval);
             isserchingpath = false;
-            if (pathpoint3 == pathpoint2) {
+            if (current == start) {
                 return null;
             } else {
-                return returnval;
+                return currentReturnVal = this.createEntityPath(start, current);
             }
         }else {
-            return null;
+            isserchingpath = true;
+            return currentReturnVal;
         }
     }
     private PathEntity createEntityPath(PathPoint_slow p_75853_1_, PathPoint_slow p_75853_2_)

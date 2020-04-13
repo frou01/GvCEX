@@ -19,7 +19,8 @@ public class GVCMPacketHandler {
 //        INSTANCE.registerMessage(GVCMHandleHeliGunnerTriger.class, GVCPakcetHeliGunnerTrigger.class, ++id, Side.SERVER);
         INSTANCE.registerMessage(GVCHandleMGControl.class, GVCPacketMGControl.class, ++id, Side.SERVER);
         INSTANCE.registerMessage(GVCHandleMGControl.class, GVCPacketMGControl.class, ++id, Side.CLIENT);
-        
+        INSTANCE.registerMessage(GVCPacket_PlatoonInfoSync.class, GVCPacket_PlatoonInfoSync.class, ++id, Side.CLIENT);
+
         
     	
     }

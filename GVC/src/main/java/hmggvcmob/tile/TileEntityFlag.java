@@ -2,7 +2,7 @@ package hmggvcmob.tile;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import hmggvcmob.IflagBattler;
+import hmggvcmob.entity.IflagBattler;
 import hmggvcmob.block.GVCBlockFlag;
 import hmggvcmob.camp.CampObj;
 import hmggvcmob.camp.CampObjAndPos;
@@ -12,15 +12,11 @@ import hmggvcmob.network.GVCMPacketHandler;
 import hmggvcmob.network.GVCMPacketSyncFlagdata;
 import hmggvcmob.world.WorldSavedData_Flag;
 import littleMaidMobX.LMM_LittleMaidMobX;
-import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
@@ -31,7 +27,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 
 import javax.vecmath.Vector3d;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 

@@ -1,20 +1,28 @@
 package hmggvcmob.entity.friend;
 
 import hmggvcmob.GVCMobPlus;
-import hmggvcmob.ai.AIAttackFlag;
 import hmggvcmob.ai.AITargetFlag;
+import hmggvcmob.ai.PlatoonOBJ;
+import hmggvcmob.camp.CampObj;
+import hmggvcmob.entity.IPlatoonable;
+import hmggvcmob.entity.IflagBattler;
+import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 
-public class EntitySoBase extends EntitySoBases {
+import java.util.List;
+
+import static handmadevehicle.Utils.canMoveEntity;
+import static hmggvcmob.GVCMobPlus.*;
+
+public class EntitySoBase extends EntitySoBases implements IflagBattler {
 
 
 	public EntitySoBase(World par1World) {
 		super(par1World);
-		this.tasks.addTask(3, aiAttackFlag = new AIAttackFlag(this,this,worldForPathfind));
 		this.targetTasks.addTask(4, aiTargetFlag = new AITargetFlag(this,this,this));
 	}
 	
@@ -69,4 +77,53 @@ public class EntitySoBase extends EntitySoBases {
 	{
 		return true;
 	}
+
+	@Override
+	public CampObj getCampObj() {
+		return soldiers;
+	}
+
+	@Override
+	public boolean isThisAttackAbleCamp(CampObj campObj) {
+		return campObj == guerrillas;
+	}
+
+	@Override
+	public boolean isThisFriendCamp(CampObj campObj) {
+		return campObj == forPlayer || campObj == soldiers;
+	}
+
+	@Override
+	public boolean isThisIgnoreSpawnCamp(CampObj campObj) {
+		return campObj == forPlayer || campObj == guerrillas;
+	}
+
+	@Override
+	public void makePlatoon() {
+		platoonOBJ = new PlatoonOBJ();
+		this.setPlatoon(this.platoonOBJ);
+
+
+		this.enlistPlatoon();
+	}
+
+	@Override
+	public void enlistPlatoon() {
+		List nearEntities = worldObj.getEntitiesWithinAABBExcludingEntity(this,boundingBox.expand(32,32,32));
+		for(Object obj:nearEntities){
+			Entity entity = (Entity)obj;
+			if(entity instanceof EntitySoBase && canMoveEntity(entity) && ((IPlatoonable) entity).getPlatoon() == null){
+				((EntitySoBase) entity).setPlatoon(this.platoonOBJ);
+			}
+		}
+
+		List onVehicleEntity = worldObj.getEntitiesWithinAABBExcludingEntity(this,boundingBox.expand(512,512,512));
+		for(Object obj:onVehicleEntity){
+			Entity entity = (Entity)obj;
+			if(entity instanceof EntitySoBase && canMoveEntity(entity) && ((IPlatoonable) entity).getPlatoon() == null){
+				((EntitySoBase) entity).setPlatoon(this.platoonOBJ);
+			}
+		}
+	}
+
 }

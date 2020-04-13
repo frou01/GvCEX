@@ -679,7 +679,7 @@ public class GVCXBlockFriendCamp extends Block{
                 int suro = s;
                 Item gun = (Item) HMGGunMaker.Guns.get(new Random().nextInt(HMGGunMaker.Guns.size()));
                 if(cfg_forceunifiedguns){
-                    if(gun instanceof HMGItem_Unified_Guns && !((HMGItem_Unified_Guns) gun).gunInfo.isinRoot){
+                    if(gun instanceof HMGItem_Unified_Guns && !((HMGItem_Unified_Guns) gun).gunInfo.canInRoot){
                         gun = null;
                     }
                 }
@@ -689,7 +689,7 @@ public class GVCXBlockFriendCamp extends Block{
                 int suro = s;
                 Item gun = (Item) HMGGunMaker.Guns.get(new Random().nextInt(HMGGunMaker.Guns.size()));
                 if(cfg_forceunifiedguns){
-                    if(gun instanceof HMGItem_Unified_Guns && !((HMGItem_Unified_Guns) gun).gunInfo.isinRoot){
+                    if(gun instanceof HMGItem_Unified_Guns && !((HMGItem_Unified_Guns) gun).gunInfo.canInRoot){
                         gun = null;
                     }
                 }

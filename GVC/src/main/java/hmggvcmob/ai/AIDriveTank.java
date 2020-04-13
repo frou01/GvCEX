@@ -72,10 +72,6 @@ public class AIDriveTank extends EntityAIBase {
 			vehicle.getNavigator().clearPathEntity();
 		}
 //
-//		//todo �������Ő�Ԃ𓮂����B
-//		//�ˌ��Ƃ��̓A�^�b�N��
-//		//�p�X��ݒ肷��Ƃ��͕K���ԗ�����
-//
 //
 //
 //

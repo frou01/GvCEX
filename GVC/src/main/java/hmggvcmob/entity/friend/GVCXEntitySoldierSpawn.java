@@ -1,5 +1,6 @@
 package hmggvcmob.entity.friend;
 
+import handmadevehicle.entity.parts.Modes;
 import hmggvcutil.GVCUtils;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.item.ItemStack;
@@ -64,5 +65,20 @@ public class GVCXEntitySoldierSpawn extends EntitySoBases
 
             }
         }
+    }
+
+    @Override
+    public void makePlatoon() {
+
+    }
+
+    @Override
+    public void enlistPlatoon() {
+
+    }
+
+    @Override
+    public Modes getMobMode() {
+        return null;
     }
 }

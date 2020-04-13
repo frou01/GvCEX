@@ -1,6 +1,6 @@
 invertYMouse:false
 mouseSensitivity:0.5
-fov:0.0
+fov:-1.0
 gamma:1.0
 saturation:0.0
 renderDistance:16
@@ -11,7 +11,7 @@ anaglyph3d:false
 advancedOpengl:false
 maxFps:60
 fboEnable:true
-difficulty:0
+difficulty:2
 fancyGraphics:false
 ao:0
 clouds:true
@@ -94,7 +94,7 @@ key_Fire1:0
 key_Fire2:0
 key_CannonCamera:44
 key_Flap:33
-key_Air Brake:45
+key_Air Brake/Wheel Brake:45
 key_Flare/Smoke:74
 key_Change to Next Seat:21
 key_Change to Previous Seat:35
@@ -118,7 +118,7 @@ key_Fire AttachedGun:33
 key_ADS_Key:47
 key_Mode_Key:41
 key_Fix Gun:35
-soundCategory_master:0.42384106
+soundCategory_master:0.09602649
 soundCategory_music:0.0
 soundCategory_record:1.0
 soundCategory_weather:1.0

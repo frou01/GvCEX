@@ -793,8 +793,7 @@ public class Utils {
     }
     public static boolean canMoveEntity(Entity entity){
         if(entity.ridingEntity instanceof EntityDummy_rider && ((EntityDummy_rider) entity.ridingEntity).linkedBaseLogic.ispilot(entity))return true;
-        if(entity.ridingEntity == null)return true;
-        return false;
+        return entity.ridingEntity == null;
     }
 
     public static boolean iscandamageentity(Entity attacker , Entity entity){

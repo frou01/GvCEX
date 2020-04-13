@@ -1,37 +1,8 @@
 package hmggvcmob.entity.guerrilla;
 
-import handmadeguns.entity.IMGGunner;
-import handmadeguns.entity.PlacedGunEntity;
-import handmadeguns.items.guns.HMGItem_Unified_Guns;
-import hmggvcmob.GVCMobPlus;
-import hmggvcmob.IflagBattler;
-import hmggvcmob.ai.*;
-import handmadeguns.entity.IFF;
-import hmggvcmob.ai.AIHurtByTarget;
-import hmggvcmob.entity.IGVCmob;
-import hmggvcmob.entity.friend.EntitySoBases;
-import hmggvcmob.entity.friend.GVCEntityFlag;
-import hmggvcmob.tile.TileEntityFlag;
-import net.minecraft.block.Block;
-import net.minecraft.entity.*;
-import net.minecraft.entity.ai.*;
-import net.minecraft.entity.monster.EntityGolem;
-import net.minecraft.entity.passive.EntityVillager;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.Vec3;
-import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 
-import java.util.List;
 import java.util.Random;
-
-import static hmggvcmob.GVCMobPlus.cfg_guerrillacanusePlacedGun;
-import static java.lang.Math.pow;
-import static net.minecraft.util.MathHelper.wrapAngleTo180_float;
 
 public class EntityGBase extends EntityGBases {
 	//AI等行動関係を共通化しておくクラス

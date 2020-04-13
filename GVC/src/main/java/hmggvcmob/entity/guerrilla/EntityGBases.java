@@ -11,22 +11,21 @@ import handmadevehicle.SlowPathFinder.WorldForPathfind;
 import handmadevehicle.entity.EntityDummy_rider;
 import handmadevehicle.entity.EntityVehicle;
 import handmadevehicle.entity.parts.ITurretUser;
+import handmadevehicle.entity.parts.Modes;
 import handmadevehicle.entity.parts.logics.BaseLogic;
 import handmadevehicle.entity.parts.turrets.TurretObj;
 import handmadevehicle.entity.prefab.Prefab_Seat;
 import handmadevehicle.entity.prefab.Prefab_Vehicle_Base;
 import hmggvcmob.GVCMobPlus;
-import hmggvcmob.IflagBattler;
+import hmggvcmob.entity.*;
 import handmadevehicle.SlowPathFinder.ModifiedPathNavigater;
 import hmggvcmob.ai.*;
 import hmggvcmob.camp.CampObj;
-import hmggvcmob.entity.EntityBodyHelper_modified;
-import hmggvcmob.entity.EntityMoveHelperModified;
-import hmggvcmob.entity.IGVCmob;
-import hmggvcmob.entity.VehicleSpawnGachaOBJ;
+import hmggvcmob.entity.friend.EntitySoBase;
 import hmggvcmob.entity.friend.EntitySoBases;
 import hmggvcmob.entity.friend.GVCEntityFlag;
-import hmggvcmob.entity.friend.GVCEntitySoldier;
+import hmggvcmob.network.GVCMPacketHandler;
+import hmggvcmob.network.GVCPacket_PlatoonInfoSync;
 import net.minecraft.block.Block;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.*;
@@ -44,11 +43,9 @@ import net.minecraft.util.*;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.event.ForgeEventFactory;
-import scala.xml.dtd.impl.Base;
 
-import java.util.ArrayList;
+import javax.vecmath.Vector3d;
 import java.util.Iterator;
 import java.util.List;
 
@@ -60,7 +57,7 @@ import static java.lang.Math.abs;
 import static java.lang.Math.pow;
 import static net.minecraft.util.MathHelper.wrapAngleTo180_float;
 
-public class EntityGBases extends EntityMob implements IflagBattler,IGVCmob, IFF , ITurretUser {
+public class EntityGBases extends EntityMob implements IGVCmob, IFF , ITurretUser,IflagBattler {
     private EntityBodyHelper_modified bodyHelper;
     public float viewWide = 0.78f;
     public int staningtime;
@@ -122,7 +119,6 @@ public class EntityGBases extends EntityMob implements IflagBattler,IGVCmob, IFF
         this.tasks.addTask(3, AIattackOncollidetoPlayer);
         this.tasks.addTask(3, AIattackOncollidetoVillager);
         this.tasks.addTask(3, AIattackOncollidetoSoldier);
-        this.tasks.addTask(3, new AIAttackFlag(this, this,worldForPathfind));
         this.tasks.addTask(3, new AIDriveTank(this, null, worldForPathfind));
         this.tasks.addTask(4, AIRestrictOpenDoor);
         this.tasks.addTask(5, EntityAIOpenDoor);
@@ -267,6 +263,14 @@ public class EntityGBases extends EntityMob implements IflagBattler,IGVCmob, IFF
     }
 	public void onUpdate()
     {
+
+        if(!worldObj.isRemote && getPlatoon()!=null){
+            platoonInfoData.isLeader = isPlatoonLeader();
+            platoonInfoData.isOnPlatoon = true;
+            platoonInfoData.target = new double[]{myPos.getPos().x,myPos.getPos().y,myPos.getPos().z};
+            platoonInfoData.mode = getPlatoon().platoonMode;
+            GVCMPacketHandler.INSTANCE.sendToAll(new GVCPacket_PlatoonInfoSync(platoonInfoData,this));
+        }
         super.onUpdate();
         if(summoningVehicle != null) {
 
@@ -444,6 +448,16 @@ public class EntityGBases extends EntityMob implements IflagBattler,IGVCmob, IFF
         }
         if(modifiedPathNavigater.getSpeed() < 0 && rand.nextInt(10)==0 && this.getAttackTarget() == null)modifiedPathNavigater.setSpeed(1);
         this.getEntityData().setBoolean("HMGisUsingItem",false);
+
+
+        if(platoonOBJ != null){
+            if(isPlatoonLeader())platoonOBJ.SetPlatoonFormationUpdate();
+
+            if(platoonOBJ.leader.entity.isDead) {
+                platoonOBJ = null;
+                myPos = null;
+            }
+        }
     }
     
     
@@ -492,7 +506,7 @@ public class EntityGBases extends EntityMob implements IflagBattler,IGVCmob, IFF
     
     protected boolean canDespawn()
     {
-        return candespawn && getAttackTarget() == null;
+        return candespawn && getAttackTarget() == null && !isPlatoonLeader();
     }
     
     /**
@@ -763,105 +777,6 @@ public class EntityGBases extends EntityMob implements IflagBattler,IGVCmob, IFF
     public TurretObj getTurretSub() {
         return currentSubTurret;
     }
-//TODO
-    @Override
-    public CampObj getCampObj() {
-        return guerrillas;
-    }
-
-    public Team getTeam()
-    {
-        return getCampObj();
-    }
-
-    private byte state = -1;
-    @Override
-    public byte getState() {
-        return state;
-    }
-
-    @Override
-    public void setState(byte state) {
-        this.state = state;
-    }
-
-    private int[] flagPos;
-    @Override
-    public int[] getTargetCampPosition() {
-        return flagPos;
-    }
-
-    @Override
-    public void setTargetCampPosition(int[] ints) {
-        if(ints == null){
-            flag = null;
-            return;
-        }
-        if(flagPos == null)flagPos = new int[3];
-        flagPos[0] = ints[0];
-        flagPos[1] = ints[1];
-        flagPos[2] = ints[2];
-    }
-
-    ArrayList<Entity> platoon;
-    IflagBattler platoonLeader;
-
-    @Override
-    public void makePlatoon() {
-        if(canMoveEntity(this) && platoon == null){
-            platoon = new ArrayList<>();
-            platoonLeader = this;
-
-            List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, AxisAlignedBB.getBoundingBox(this.posX, this.posY, this.posZ, this.posX + 1.0D, this.posY + 1.0D, this.posZ + 1.0D).expand(32, 32, 32));
-            Iterator iterator = list.iterator();
-
-            while (iterator.hasNext())
-            {
-                Entity entitycreature = (Entity)iterator.next();
-                if(entitycreature instanceof EntityGBases && canMoveEntity(this)){
-                    platoon.add(entitycreature);
-                    ((EntityGBases) entitycreature).joinPlatoon(this);
-                }
-
-            }
-        }
-    }
-
-    @Override
-    public void setPlatoon(ArrayList<Entity> entities) {
-        platoon = entities;
-    }
-
-    @Override
-    public void joinPlatoon(IflagBattler iflagBattler) {
-        platoonLeader = iflagBattler;
-        if(platoonLeader != null)platoon = iflagBattler.getPlatoon();
-    }
-
-    @Override
-    public ArrayList<Entity> getPlatoon() {
-        return platoon;
-    }
-
-    @Override
-    public IflagBattler getPlatoonLeader() {
-        return platoonLeader;
-    }
-
-    @Override
-    public boolean isThisAttackAbleCamp(CampObj campObj) {
-        return campObj != guerrillas;
-    }
-
-    @Override
-    public boolean isThisFriendCamp(CampObj campObj) {
-        return campObj == guerrillas;
-    }
-
-    @Override
-    public boolean isThisIgnoreSpawnCamp(CampObj campObj) {
-        return campObj != guerrillas;
-    }
 
 
     protected void despawnEntity()
@@ -916,5 +831,92 @@ public class EntityGBases extends EntityMob implements IflagBattler,IGVCmob, IFF
                 }
             }
         }
+    }
+
+
+    @Override
+    public CampObj getCampObj() {
+        return guerrillas;
+    }
+
+    @Override
+    public boolean isThisAttackAbleCamp(CampObj campObj) {
+        return campObj == forPlayer || campObj == soldiers;
+    }
+
+    @Override
+    public boolean isThisFriendCamp(CampObj campObj) {
+        return campObj == guerrillas;
+    }
+
+    @Override
+    public boolean isThisIgnoreSpawnCamp(CampObj campObj) {
+        return campObj == forPlayer || campObj == soldiers;
+    }
+
+    PlatoonOBJ platoonOBJ;
+    EntityAndPos myPos;
+
+    @Override
+    public void setPlatoon(PlatoonOBJ entities) {
+        this.platoonOBJ = entities;
+        this.platoonOBJ.addMember(this);
+    }
+
+    @Override
+    public PlatoonOBJ getPlatoon() {
+        return this.platoonOBJ;
+    }
+
+    @Override
+    public void setPosObj(EntityAndPos entityAndPos) {
+        myPos = entityAndPos;
+    }
+
+
+    @Override
+    public double[] getTargetpos() {
+        return new double[]{platoonOBJ.PlatoonTargetPos.x,platoonOBJ.PlatoonTargetPos.y,platoonOBJ.PlatoonTargetPos.z};
+    }
+
+    @Override
+    public Vector3d getMoveToPos() {
+        return myPos.getPos();
+    }
+
+
+    @Override
+    public void makePlatoon() {
+        platoonOBJ = new PlatoonOBJ();
+        this.setPlatoon(this.platoonOBJ);
+
+        this.enlistPlatoon();
+    }
+
+    @Override
+    public void enlistPlatoon() {
+
+        List nearEntities = worldObj.getEntitiesWithinAABBExcludingEntity(this,boundingBox.expand(32,32,32));
+        for(Object obj:nearEntities){
+            Entity entity = (Entity)obj;
+            if(entity instanceof EntityGBase && canMoveEntity(entity) && ((IPlatoonable) entity).getPlatoon() == null){
+                ((EntityGBase) entity).setPlatoon(this.platoonOBJ);
+            }
+        }
+
+        List onVehicleEntity = worldObj.getEntitiesWithinAABBExcludingEntity(this,boundingBox.expand(512,512,512));
+        for(Object obj:onVehicleEntity){
+            Entity entity = (Entity)obj;
+            if(entity instanceof EntityGBase && canMoveEntity(entity) && ((IPlatoonable) entity).getPlatoon() == null){
+                ((EntityGBase) entity).setPlatoon(this.platoonOBJ);
+            }
+        }
+    }
+
+    final PlatoonInfoData platoonInfoData = new PlatoonInfoData();
+
+    @Override
+    public PlatoonInfoData getPlatoonMemberInfo(){
+        return null;//disable!
     }
 }

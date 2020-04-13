@@ -16,13 +16,13 @@ public class HMGParts {
 
     public boolean rendering_Def;
 
-    private HMGGunParts_Motion_PosAndRotation spPosAndRotation;
+    private HMGGunParts_Motion_PosAndRotation adsPosAndRotation;
 
-    private HMGGunParts_Motion_PosAndRotation forwardPosAndRotation;
+    private HMGGunParts_Motion_PosAndRotation recoilPosAndRotation;
 
-    private HMGGunParts_Motion_PosAndRotation rightPosAndRotation;
+    private HMGGunParts_Motion_PosAndRotation cockPosAndRotation;
 
-    private HMGGunParts_Motion_PosAndRotation leftPosAndRotation;
+    private HMGGunParts_Motion_PosAndRotation reloadPosAndRotation;
 
     private HMGGunParts_Motion_PosAndRotation backPosAndRotation;
     private HMGGunParts_Motion_PosAndRotation sneakPosAndRotation;
@@ -53,16 +53,16 @@ public class HMGParts {
         return defaultPosAndRotation;
     }
     public HMGGunParts_Motion_PosAndRotation getRenderinfOfADS(){
-        return spPosAndRotation;
+        return adsPosAndRotation;
     }
     HMGGunParts_Motion_PosAndRotation getRenderinfOfRecoil(){
-        return forwardPosAndRotation;
+        return recoilPosAndRotation;
     }
     HMGGunParts_Motion_PosAndRotation getRenderinfOfCock(){
-        return rightPosAndRotation;
+        return cockPosAndRotation;
     }
     HMGGunParts_Motion_PosAndRotation getRenderinfOfReload(){
-        return leftPosAndRotation;
+        return reloadPosAndRotation;
     }
     HMGGunParts_Motion_PosAndRotation getRenderinfOfBullet(){
         return backPosAndRotation;
@@ -95,16 +95,16 @@ public class HMGParts {
         defaultPosAndRotation = new HMGGunParts_Motion_PosAndRotation(centerX,centerY,centerZ,rotationX,rotationY,rotationZ);
     }
     public void AddRenderinfSP(float centerX, float centerY, float centerZ, float rotationX, float rotationY, float rotationZ){
-        spPosAndRotation = new HMGGunParts_Motion_PosAndRotation(centerX,centerY,centerZ,rotationX,rotationY,rotationZ);
+        adsPosAndRotation = new HMGGunParts_Motion_PosAndRotation(centerX,centerY,centerZ,rotationX,rotationY,rotationZ);
     }
     public void AddRenderinfright(float centerX, float centerY, float centerZ, float rotationX, float rotationY, float rotationZ){
-        rightPosAndRotation = new HMGGunParts_Motion_PosAndRotation(centerX,centerY,centerZ,rotationX,rotationY,rotationZ);
+        cockPosAndRotation = new HMGGunParts_Motion_PosAndRotation(centerX,centerY,centerZ,rotationX,rotationY,rotationZ);
     }
     public void AddRenderinfleft(float centerX, float centerY, float centerZ, float rotationX, float rotationY, float rotationZ){
-        leftPosAndRotation = new HMGGunParts_Motion_PosAndRotation(centerX,centerY,centerZ,rotationX,rotationY,rotationZ);
+        reloadPosAndRotation = new HMGGunParts_Motion_PosAndRotation(centerX,centerY,centerZ,rotationX,rotationY,rotationZ);
     }
     public void AddRenderinfforward(float centerX, float centerY, float centerZ, float rotationX, float rotationY, float rotationZ){
-        forwardPosAndRotation = new HMGGunParts_Motion_PosAndRotation(centerX,centerY,centerZ,rotationX,rotationY,rotationZ);
+        recoilPosAndRotation = new HMGGunParts_Motion_PosAndRotation(centerX,centerY,centerZ,rotationX,rotationY,rotationZ);
     }
     public void AddRenderinfback(float centerX, float centerY, float centerZ, float rotationX, float rotationY, float rotationZ){
         backPosAndRotation = new HMGGunParts_Motion_PosAndRotation(centerX,centerY,centerZ,rotationX,rotationY,rotationZ);

@@ -175,7 +175,7 @@ public class GunInfo {
 	public float mat31rotez;
 	public boolean isOneuse = false;
 	public boolean guerrila_can_use = true;
-	public boolean isinRoot = true;
+	public boolean canInRoot = true;
 	public boolean soldiercanstorage = true;
 	public boolean use_internal_secondary;
 	public boolean canlock = false;

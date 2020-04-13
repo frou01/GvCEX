@@ -127,23 +127,26 @@ public class GVCEntityBoxSpawner extends EntityMob
 
 
         var3 = this.rand.nextInt(3 + par2);
-        if(!worldObj.isRemote && this.rand.nextInt(8) == 0){
-            int var12 = MathHelper.floor_double((double)(this.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+        int infLoopDetector = 0;
+        if (!worldObj.isRemote && this.rand.nextInt(8) == 0) {
+            int var12 = MathHelper.floor_double((double) (this.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
             GVCEntityGuerrilla entityskeleton = new GVCEntityGuerrilla(worldObj);
             entityskeleton.setLocationAndAngles(this.posX, this.posY, this.posZ, var12, 0.0F);
             Random rnd = new Random();
-            entityskeleton.setCurrentItemOrArmor(0, new ItemStack((Item)Guns_AR.get(rnd.nextInt(Guns_AR.size()))));
+            entityskeleton.setCurrentItemOrArmor(0, new ItemStack((Item) Guns_AR.get(rnd.nextInt(Guns_AR.size()))));
             worldObj.spawnEntityInWorld(entityskeleton);
-        }else {
+        } else for(;infLoopDetector < 100;infLoopDetector++) {
             this.dropItem(GVCUtils.fn_box, 1);
             if (hasItems) {
                 Item gun = (Item) Guns.get(new Random().nextInt(Guns.size()));
                 if (gun instanceof HMGItem_Unified_Guns && ((HMGItem_Unified_Guns) gun).getcurrentMagazine(null) != null) {
+                    if(!((HMGItem_Unified_Guns) gun).gunInfo.canInRoot)continue;
                     for (var4 = 0; var4 < var3; ++var4) {
                         this.dropItem(((HMGItem_Unified_Guns) gun).getcurrentMagazine(null), 3);
                     }
                 }
                 this.dropItem(gun, 1);
+                return;
             }
         }
     }

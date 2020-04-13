@@ -13,21 +13,18 @@ import handmadevehicle.SlowPathFinder.WorldForPathfind;
 import handmadevehicle.entity.EntityDummy_rider;
 import handmadevehicle.entity.EntityVehicle;
 import handmadevehicle.entity.parts.ITurretUser;
+import handmadevehicle.entity.parts.Modes;
 import handmadevehicle.entity.parts.logics.BaseLogic;
 import handmadevehicle.entity.parts.turrets.TurretObj;
 import handmadevehicle.entity.prefab.Prefab_Seat;
 import handmadevehicle.entity.prefab.Prefab_Vehicle_Base;
 import hmggvcmob.GVCMobPlus;
-import hmggvcmob.IflagBattler;
+import hmggvcmob.entity.*;
 import handmadevehicle.SlowPathFinder.ModifiedPathNavigater;
 import hmggvcmob.ai.*;
 import hmggvcmob.camp.CampObj;
-import hmggvcmob.entity.EntityBodyHelper_modified;
-import hmggvcmob.entity.EntityMoveHelperModified;
-import hmggvcmob.entity.IGVCmob;
 import hmggvcmob.entity.guerrilla.EntityGBase;
 import hmggvcmob.entity.guerrilla.EntityGBases;
-import hmggvcmob.entity.guerrilla.GVCEntityGuerrilla;
 import littleMaidMobX.LMM_EntityLittleMaid;
 import net.minecraft.block.Block;
 import net.minecraft.entity.*;
@@ -46,8 +43,7 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeEventFactory;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
+import javax.vecmath.Vector3d;
 import java.util.Iterator;
 import java.util.List;
 
@@ -58,7 +54,7 @@ import static handmadevehicle.entity.EntityVehicle.EntityVehicle_spawnByMob;
 import static hmggvcmob.GVCMobPlus.*;
 import static java.lang.Math.abs;
 
-public class EntitySoBases extends EntityCreature implements INpc , IflagBattler ,  IFF, IGVCmob, ITurretUser {
+public abstract class EntitySoBases extends EntityCreature implements INpc ,  IFF, IGVCmob, ITurretUser , IPlatoonable {
 	private EntityBodyHelper_modified bodyHelper;
 	public String summoningVehicle = null;
 
@@ -70,7 +66,6 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
 	public float spread = 1;
 	public EntityAISwimming aiSwimming;
 	public AIAttackGun aiAttackGun;
-	public AIAttackFlag aiAttackFlag;
 	public AITargetFlag aiTargetFlag;
 	public static int spawnedcount;
 
@@ -126,19 +121,16 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
     {
         super.readEntityFromNBT(p_70037_1_);
 		seatID = p_70037_1_.getInteger("seatID");
-		flagPos = p_70037_1_.getIntArray("flagPos");
-		if(flagPos.length != 3)flagPos = null;
-		else makePlatoon();
+	    if(p_70037_1_.hasKey("platoonTargetPos")){
+	    	makePlatoon();
+	    	platoonOBJ.setPlatoonTargetPos(p_70037_1_.getIntArray("platoonTargetPos"));
+	    }
     }
     public void writeEntityToNBT(NBTTagCompound p_70014_1_)
     {
         super.writeEntityToNBT(p_70014_1_);
+        if(platoonOBJ != null)p_70014_1_.setIntArray("platoonTargetPos",new int[]{(int) platoonOBJ.PlatoonTargetPos.x,(int) platoonOBJ.PlatoonTargetPos.y,(int) platoonOBJ.PlatoonTargetPos.z});
 	    spawnedcount--;
-//	    if(ridingEntity instanceof ImultiRidable)ridingEntity = null;
-		p_70014_1_.setInteger("seatID",seatID);
-        if(flagPos!=null) {
-			p_70014_1_.setIntArray("flagPos", flagPos);
-		}
     }
 	
     public IEntityLivingData onSpawnWithEgg(IEntityLivingData par1EntityLivingData)
@@ -201,108 +193,6 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
 	public void addRandomArmor() {
 	}
 
-	@Override
-	public CampObj getCampObj() {
-		return soldiers;
-	}
-
-	public Team getTeam()
-	{
-		return getCampObj();
-	}
-
-	private byte state = -1;
-	@Override
-	public byte getState() {
-		return state;
-	}
-
-	@Override
-	public void setState(byte state) {
-		this.state = state;
-	}
-
-
-	private int[] flagPos;
-	@Override
-	public int[] getTargetCampPosition() {
-		return flagPos;
-	}
-
-	@Override
-	public void setTargetCampPosition(int[] ints) {
-		if(ints == null){
-			flagPos = null;
-			return;
-		}
-		if(flagPos == null)flagPos = new int[3];
-		flagPos[0] = ints[0];
-		flagPos[1] = ints[1];
-		flagPos[2] = ints[2];
-	}
-
-	ArrayList<Entity> platoon;
-	IflagBattler platoonLeader;
-
-	@Override
-	public void makePlatoon() {
-		if(canMoveEntity(this) && platoon == null){
-			platoon = new ArrayList<>();
-			platoonLeader = this;
-
-			List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, AxisAlignedBB.getBoundingBox(this.posX, this.posY, this.posZ, this.posX + 1.0D, this.posY + 1.0D, this.posZ + 1.0D).expand(32, 32, 32));
-			Iterator iterator = list.iterator();
-
-			while (iterator.hasNext())
-			{
-				Entity entitycreature = (Entity)iterator.next();
-				if(entitycreature instanceof EntitySoBases && canMoveEntity(this)){
-					platoon.add(entitycreature);
-					((EntitySoBases) entitycreature).joinPlatoon(this);
-				}
-
-			}
-		}
-	}
-
-	@Override
-	public void setPlatoon(ArrayList<Entity> entities) {
-		platoon = entities;
-	}
-
-	@Override
-	public void joinPlatoon(IflagBattler iflagBattler) {
-		platoonLeader = iflagBattler;
-		if(platoonLeader != null)platoon = iflagBattler.getPlatoon();
-		else platoon = null;
-	}
-
-	@Override
-	public ArrayList<Entity> getPlatoon() {
-		return platoon;
-	}
-
-	@Override
-	public IflagBattler getPlatoonLeader() {
-		return platoonLeader;
-	}
-
-
-	@Override
-	public boolean isThisAttackAbleCamp(CampObj campObj) {
-		return campObj == guerrillas;
-	}
-
-	@Override
-	public boolean isThisFriendCamp(CampObj campObj) {
-		return campObj == soldiers || campObj == forPlayer;
-	}
-
-	@Override
-	public boolean isThisIgnoreSpawnCamp(CampObj campObj) {
-		return campObj != soldiers;
-	}
-
 	public boolean isCreatureType(EnumCreatureType type, boolean forSpawnCount)
 	{
 		return type.getCreatureClass() == EntitySoBases.class;
@@ -344,6 +234,24 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
 	}
 	
 	public void onUpdate() {
+
+		if(!worldObj.isRemote && getPlatoon() != null){
+
+			if(isPlatoonLeader()){
+				if(platoonOBJ.platoonMode == Modes.Follow){
+					if(followTargetEntity == null){
+						platoonOBJ.platoonMode = Modes.Wait;
+					}else {
+						platoonOBJ.setPlatoonTargetPos(followTargetEntity);
+					}
+				}
+				platoonOBJ.SetPlatoonFormationUpdate();
+			}
+
+			if(platoonOBJ.leader.entity.isDead) {
+				platoonOBJ.leader.entity = this;//落ち着け、ジーン！指揮を引き継げ！
+			}
+		}
 		super.onUpdate();
 		if(summoningVehicle != null) {
 
@@ -437,6 +345,7 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
 		if(modifiedPathNavigater.getSpeed() < 0 && rand.nextInt(10)==0 && this.getAttackTarget() == null)modifiedPathNavigater.setSpeed(1);
 
 	}
+
 
 	public void onLivingUpdate()
 	{
@@ -687,5 +596,37 @@ public class EntitySoBases extends EntityCreature implements INpc , IflagBattler
 				}
 			}
 		}
+	}
+
+
+	public Entity followTargetEntity;
+
+	PlatoonOBJ platoonOBJ;
+    EntityAndPos myPos;
+
+	@Override
+	public void setPlatoon(PlatoonOBJ entities) {
+		this.platoonOBJ = entities;
+		this.platoonOBJ.addMember(this);
+	}
+
+	@Override
+	public PlatoonOBJ getPlatoon() {
+		return this.platoonOBJ;
+	}
+
+	@Override
+	public void setPosObj(EntityAndPos entityAndPos) {
+		myPos = entityAndPos;
+	}
+
+	@Override
+	public double[] getTargetpos() {
+		return new double[]{platoonOBJ.PlatoonTargetPos.x,platoonOBJ.PlatoonTargetPos.y,platoonOBJ.PlatoonTargetPos.z};
+	}
+
+	@Override
+	public Vector3d getMoveToPos() {
+		return myPos.getPos();
 	}
 }

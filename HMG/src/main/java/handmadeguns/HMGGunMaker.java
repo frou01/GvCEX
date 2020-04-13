@@ -2223,7 +2223,7 @@ public class HMGGunMaker {
 				gunInfo.guerrila_can_use = false;
 				break;
 			case "Dont_Be_Inside_Root_Chest":
-				gunInfo.isinRoot = false;
+				gunInfo.canInRoot = false;
 				break;
 			case "soldier_cant_storage_this":
 				gunInfo.soldiercanstorage = false;
