@@ -385,14 +385,21 @@ public class PlacedGunEntity extends Entity implements IEntityAdditionalSpawnDat
     }
 
     public boolean interactFirst(EntityPlayer p_70085_1_) {
+        if(riddenByEntity != null){
+            if(riddenByEntity.ridingEntity != this){
+                this.mountEntity(null);
+                preRiddenByEntity = null;
+            }
+        }
         if (riddenByEntity == null && !worldObj.isRemote) {
             p_70085_1_.mountEntity(this);
             prevRiddenByEntityPosX = riddenByEntity.posX;
             prevRiddenByEntityPosY = riddenByEntity.posY;
             prevRiddenByEntityPosZ = riddenByEntity.posZ;
             torideclick = true;
+            return true;
         }
-        return true;
+        return false;
     }
     @SideOnly(Side.CLIENT)
     public boolean isInRangeToRender3d(double p_145770_1_, double p_145770_3_, double p_145770_5_)
@@ -428,8 +435,25 @@ public class PlacedGunEntity extends Entity implements IEntityAdditionalSpawnDat
     }
 
     public Vec3 seatVec(){
+        float rotationYaw = this.rotationYaw;
+        float rotationPitch = this.rotationPitch;
+        int currentElevation = gunStack.getTagCompound().getInteger("currentElevation");
+        if(currentElevation < 0)currentElevation = 0;
+        if(currentElevation >= gunItem.gunInfo.sightOffset_zeroIn.length)currentElevation = gunItem.gunInfo.sightOffset_zeroIn.length;
+        if(!gunItem.gunInfo.elevationOffsets.isEmpty()){
+            rotationPitch += gunItem.gunInfo.elevationOffsets.get(currentElevation);
+        }
+        if(rotationPitch>90 || rotationPitch<-90){
+            rotationYaw += 180;
+            rotationPitch = (180 - abs(rotationPitch)) * (rotationPitch>0 ? 1 : -1);
+        }
         double[] sightingpos = gunItem.getSeatpos(gunStack);
         Vec3 vec = Vec3.createVectorHelper(sightingpos[0],sightingpos[1],sightingpos[2]);
+        if(gunItem.gunInfo.sightOffset_zeroIn != null) {
+            vec = vec.addVector(gunItem.gunInfo.sightOffset_zeroIn[currentElevation].x,
+                    gunItem.gunInfo.sightOffset_zeroIn[currentElevation].y,
+                    gunItem.gunInfo.sightOffset_zeroIn[currentElevation].z);
+        }
         if(gunItem.gunInfo.userOnBarrel) {
             vec = vec.addVector(-gunItem.gunInfo.posGetter.turretRotationPitchPoint[0], -gunItem.gunInfo.posGetter.turretRotationPitchPoint[1], -gunItem.gunInfo.posGetter.turretRotationPitchPoint[2]);
             vec.rotateAroundX(-(float) toRadians(rotationPitch));

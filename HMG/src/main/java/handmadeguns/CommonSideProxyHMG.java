@@ -32,7 +32,7 @@ public class CommonSideProxyHMG {
 	
 	public void IGuiHandler(){}
 	
-    public void reisterRenderers(){}
+    public void reisterSomething(){}
 	
 	public World getCilentWorld(){
 		return null;}
@@ -69,14 +69,7 @@ public class CommonSideProxyHMG {
 		GameRegistry.registerTileEntity(TileMounter.class, "TileItemMounter");
 		//GameRegistry.registerTileEntity(GVCTileEntityItemG36.class, "GVCTileEntitysample");
 	}
-	public boolean jumped(){
-		return false;
-	}
-	
-	public boolean leftclick(){
-		return false;
-	}
-	public boolean lightkeydown(){
+	public boolean seekerOpenClose(){
 		return false;
 	}
 	public boolean fixkeydown(){
@@ -88,7 +81,7 @@ public class CommonSideProxyHMG {
 	public boolean downElevationKeyDown(){
 		return false;
 	}
-	public boolean Lightkeyispressed_no_stopper(){
+	public boolean resetElevationKeyDown(){
 		return false;
 	}
 	public boolean Fclick(){
@@ -106,16 +99,10 @@ public class CommonSideProxyHMG {
 	public boolean Reloadkeyispressed(){
 		return false;
 	}
-	public boolean Rightkeyispressed(){
-		return false;
-	}
 	public boolean Attachmentkeyispressed(){
 		return false;
 	}
 	public boolean Modekeyispressed(){
-		return false;
-	}
-	public boolean Secondarykeyispressed(){
 		return false;
 	}
 	public boolean keyDown(int keyCode)
@@ -127,8 +114,6 @@ public class CommonSideProxyHMG {
 	public void resetRightclicktimer(){
 	}
 	public void spawnParticles(PacketSpawnParticle message) {
-	}
-	public void fixitemEquippedprogress(){
 	}
 	public boolean rightclick(){
 		return false;

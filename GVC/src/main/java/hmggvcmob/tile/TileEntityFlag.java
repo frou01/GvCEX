@@ -27,6 +27,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 
 import javax.vecmath.Vector3d;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -102,18 +103,7 @@ public class TileEntityFlag extends TileEntity
             }
             {
 
-                int k = MathHelper.floor_double(yCoord / 16.0D);
-
-                if (k < 0)
-                {
-                    k = 0;
-                }
-
-                if (k >= flagChunk.entityLists.length)
-                {
-                    k = flagChunk.entityLists.length - 1;
-                }
-                List nearEntitys = flagChunk.entityLists[k];
+                List nearEntitys = getNearbyEntities(flagChunk);
                 int friendEntityNum = 0;
                 int enemyEntityNum = 0;
                 CampObj nextCamp = this.campObj;
@@ -180,6 +170,54 @@ public class TileEntityFlag extends TileEntity
             packet.campChanged = campChanged;
             packet.campName = this.campObj.campName;
             GVCMPacketHandler.INSTANCE.sendToAll(packet);
+        }
+    }
+    public List getNearbyEntities(Chunk flagChunk){
+        int k = MathHelper.floor_double(yCoord / 16.0D);
+
+        if (k < 0)
+        {
+            k = 0;
+        }
+
+        if (k >= flagChunk.entityLists.length)
+        {
+            k = flagChunk.entityLists.length - 1;
+        }
+        ArrayList nearEntitys = getSameALTEntities(flagChunk , null , k);
+        getSameALTEntities(flagChunk , nearEntitys , k-1);
+        getSameALTEntities(flagChunk , nearEntitys , k+1);
+        return nearEntitys;
+    }
+    public ArrayList getSameALTEntities(Chunk flagChunk,ArrayList nearEntitys,int k){
+        if(nearEntitys == null)nearEntitys = new ArrayList();
+        addAllListToArray(nearEntitys, (ArrayList) flagChunk.entityLists[k]);
+        addAllListToArray(nearEntitys, (ArrayList) flagChunk.worldObj.getChunkFromChunkCoords(flagChunk.getChunkCoordIntPair().chunkXPos-1,
+                flagChunk.getChunkCoordIntPair().chunkZPos+1).entityLists[k]);
+        addAllListToArray(nearEntitys, (ArrayList) flagChunk.worldObj.getChunkFromChunkCoords(flagChunk.getChunkCoordIntPair().chunkXPos,
+                flagChunk.getChunkCoordIntPair().chunkZPos+1).entityLists[k]);
+        addAllListToArray(nearEntitys, (ArrayList) flagChunk.worldObj.getChunkFromChunkCoords(flagChunk.getChunkCoordIntPair().chunkXPos+1,
+                flagChunk.getChunkCoordIntPair().chunkZPos+1).entityLists[k]);
+
+        addAllListToArray(nearEntitys, (ArrayList) flagChunk.worldObj.getChunkFromChunkCoords(flagChunk.getChunkCoordIntPair().chunkXPos-1,
+                flagChunk.getChunkCoordIntPair().chunkZPos).entityLists[k]);
+        addAllListToArray(nearEntitys, (ArrayList) flagChunk.worldObj.getChunkFromChunkCoords(flagChunk.getChunkCoordIntPair().chunkXPos,
+                flagChunk.getChunkCoordIntPair().chunkZPos).entityLists[k]);
+        addAllListToArray(nearEntitys, (ArrayList) flagChunk.worldObj.getChunkFromChunkCoords(flagChunk.getChunkCoordIntPair().chunkXPos+1,
+                flagChunk.getChunkCoordIntPair().chunkZPos).entityLists[k]);
+
+        addAllListToArray(nearEntitys, (ArrayList) flagChunk.worldObj.getChunkFromChunkCoords(flagChunk.getChunkCoordIntPair().chunkXPos-1,
+                flagChunk.getChunkCoordIntPair().chunkZPos-1).entityLists[k]);
+        addAllListToArray(nearEntitys, (ArrayList) flagChunk.worldObj.getChunkFromChunkCoords(flagChunk.getChunkCoordIntPair().chunkXPos,
+                flagChunk.getChunkCoordIntPair().chunkZPos-1).entityLists[k]);
+        addAllListToArray(nearEntitys, (ArrayList) flagChunk.worldObj.getChunkFromChunkCoords(flagChunk.getChunkCoordIntPair().chunkXPos+1,
+                flagChunk.getChunkCoordIntPair().chunkZPos-1).entityLists[k]);
+        return nearEntitys;
+    }
+
+    public void addAllListToArray(ArrayList to , ArrayList from){
+        for(Object a_from : from){
+            if(a_from != null)to.add(a_from);
         }
     }
 

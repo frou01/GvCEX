@@ -1,5 +1,6 @@
 package hmggvcmob.entity.guerrilla;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.common.eventhandler.Event;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -264,7 +265,16 @@ public class EntityGBases extends EntityMob implements IGVCmob, IFF , ITurretUse
 	public void onUpdate()
     {
 
-        if(!worldObj.isRemote && getPlatoon()!=null){
+        if(!worldObj.isRemote && getPlatoon() != null){
+
+            if(abs(platoonOBJ.lastUpdatedTick - FMLCommonHandler.instance().getMinecraftServerInstance().getTickCounter()) > 1 || platoonOBJ.leader.entity.isDead || !worldObj.checkChunksExist((int)platoonOBJ.leader.entity.posX,(int)platoonOBJ.leader.entity.posY,(int)platoonOBJ.leader.entity.posZ,(int)platoonOBJ.leader.entity.posX,(int)platoonOBJ.leader.entity.posY,(int)platoonOBJ.leader.entity.posZ)) {
+                System.out.println("debug");
+                platoonOBJ.leader.entity = this;//落ち着け、ジーン！指揮を引き継げ！
+            }
+            if(isPlatoonLeader())platoonOBJ.update();
+        }
+//        if(!worldObj.isRemote && getPlatoon()!=null){
+        if(false){
             platoonInfoData.isLeader = isPlatoonLeader();
             platoonInfoData.isOnPlatoon = true;
             platoonInfoData.target = new double[]{myPos.getPos().x,myPos.getPos().y,myPos.getPos().z};
@@ -278,7 +288,7 @@ public class EntityGBases extends EntityMob implements IGVCmob, IFF , ITurretUse
             System.out.println(summoningVehicle);
             EntityVehicle bespawningEntity = EntityVehicle_spawnByMob(worldObj,summoningVehicle);
             bespawningEntity.setLocationAndAngles(this.posX, this.posY, this.posZ, var12 , 0.0F);
-            if(bespawningEntity.checkObstacle()) {
+            if((!bespawningEntity.getBaseLogic().prefab_vehicle.T_Land_F_Plane && this.worldObj.canBlockSeeTheSky(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ))) || bespawningEntity.checkObstacle()) {
                 if(bespawningEntity.pickupEntity(this,0)) {
                     this.setCurrentItemOrArmor(0,null);
                 }
@@ -449,15 +459,6 @@ public class EntityGBases extends EntityMob implements IGVCmob, IFF , ITurretUse
         if(modifiedPathNavigater.getSpeed() < 0 && rand.nextInt(10)==0 && this.getAttackTarget() == null)modifiedPathNavigater.setSpeed(1);
         this.getEntityData().setBoolean("HMGisUsingItem",false);
 
-
-        if(platoonOBJ != null){
-            if(isPlatoonLeader())platoonOBJ.SetPlatoonFormationUpdate();
-
-            if(platoonOBJ.leader.entity.isDead) {
-                platoonOBJ = null;
-                myPos = null;
-            }
-        }
     }
     
     
@@ -503,7 +504,7 @@ public class EntityGBases extends EntityMob implements IGVCmob, IFF , ITurretUse
     {
         this.playSound("mob.irongolem.walk", 1F, 1.0F);
     }
-    
+
     protected boolean canDespawn()
     {
         return candespawn && getAttackTarget() == null && !isPlatoonLeader();
@@ -615,7 +616,7 @@ public class EntityGBases extends EntityMob implements IGVCmob, IFF , ITurretUse
     public boolean isAIEnabled() {
         return true;
     }
-    
+
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
     }
@@ -627,7 +628,7 @@ public class EntityGBases extends EntityMob implements IGVCmob, IFF , ITurretUse
     public boolean isConverting() {
         return false;
     }
-    
+
     public void setDead(){
         super.setDead();
     }
@@ -851,7 +852,7 @@ public class EntityGBases extends EntityMob implements IGVCmob, IFF , ITurretUse
 
     @Override
     public boolean isThisIgnoreSpawnCamp(CampObj campObj) {
-        return campObj == forPlayer || campObj == soldiers;
+        return campObj == forPlayer || campObj == soldiers || campObj == guerrillas;
     }
 
     PlatoonOBJ platoonOBJ;
@@ -859,8 +860,12 @@ public class EntityGBases extends EntityMob implements IGVCmob, IFF , ITurretUse
 
     @Override
     public void setPlatoon(PlatoonOBJ entities) {
-        this.platoonOBJ = entities;
-        this.platoonOBJ.addMember(this);
+        if(!this.isDead) {
+            if(platoonOBJ != entities) {
+                this.platoonOBJ = entities;
+                this.platoonOBJ.addMember(this);
+            }
+        }
     }
 
     @Override
@@ -887,8 +892,7 @@ public class EntityGBases extends EntityMob implements IGVCmob, IFF , ITurretUse
 
     @Override
     public void makePlatoon() {
-        platoonOBJ = new PlatoonOBJ();
-        this.setPlatoon(this.platoonOBJ);
+        this.setPlatoon(new PlatoonOBJ());
 
         this.enlistPlatoon();
     }

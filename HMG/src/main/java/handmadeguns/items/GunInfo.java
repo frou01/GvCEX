@@ -12,6 +12,7 @@ import net.minecraft.util.Vec3;
 
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
+import javax.vecmath.Vector3d;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -167,6 +168,7 @@ public class GunInfo {
 	};
 
 	public ArrayList<Float> elevationOffsets = new ArrayList<>();
+	public ArrayList<String> elevationOffsets_info = null;
 	public boolean userenderscript = false;
 	public ScriptEngine renderscript;
 	public ScriptEngine script;
@@ -206,6 +208,7 @@ public class GunInfo {
 	public double[] sightPosN = new double[3];
 	public double[] sightPosR = new double[3];
 	public double[] sightPosS = new double[3];
+	public Vector3d[] sightOffset_zeroIn = new Vector3d[]{new Vector3d()};
 	public boolean canceler;
 	public boolean chargeType;
 	public boolean[] hasNightVision = new boolean[]{false,false,false};

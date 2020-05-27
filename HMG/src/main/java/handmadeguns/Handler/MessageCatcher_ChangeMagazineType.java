@@ -3,10 +3,12 @@ package handmadeguns.Handler;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import handmadeguns.entity.PlacedGunEntity;
 import handmadeguns.items.guns.HMGItem_Unified_Guns;
 import handmadeguns.network.PacketChangeMagazineType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
 import static handmadeguns.HandmadeGunsCore.HMG_proxy;
@@ -33,6 +35,13 @@ public class MessageCatcher_ChangeMagazineType implements IMessageHandler<Packet
                 if(shooter instanceof EntityLivingBase && ((EntityLivingBase) shooter).getHeldItem() != null && ((EntityLivingBase) shooter).getHeldItem().getItem() instanceof HMGItem_Unified_Guns) {
                     System.out.println("debug" + message.value);
                     ((EntityLivingBase) shooter).getHeldItem().getTagCompound().setInteger("get_selectingMagazine",message.value);
+                }
+                if(shooter != null && shooter.ridingEntity instanceof PlacedGunEntity){
+                    HMGItem_Unified_Guns gunitem = ((PlacedGunEntity) shooter.ridingEntity).gunItem;
+                    ItemStack itemStack = ((PlacedGunEntity) shooter.ridingEntity).gunStack;
+                    if(gunitem != null && itemStack != null){
+                        itemStack.getTagCompound().setInteger("get_selectingMagazine",message.value);
+                    }
                 }
             }
 //        bullet = message.bullet.setdata(bullet);

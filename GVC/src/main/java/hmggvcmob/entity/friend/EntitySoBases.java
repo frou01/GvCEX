@@ -1,5 +1,6 @@
 package hmggvcmob.entity.friend;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.common.eventhandler.Event;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -237,19 +238,19 @@ public abstract class EntitySoBases extends EntityCreature implements INpc ,  IF
 
 		if(!worldObj.isRemote && getPlatoon() != null){
 
-			if(isPlatoonLeader()){
-				if(platoonOBJ.platoonMode == Modes.Follow){
-					if(followTargetEntity == null){
-						platoonOBJ.platoonMode = Modes.Wait;
-					}else {
-						platoonOBJ.setPlatoonTargetPos(followTargetEntity);
-					}
-				}
-				platoonOBJ.SetPlatoonFormationUpdate();
+			if(abs(platoonOBJ.lastUpdatedTick - FMLCommonHandler.instance().getMinecraftServerInstance().getTickCounter()) > 2 || platoonOBJ.leader.entity.isDead || !worldObj.checkChunksExist((int)platoonOBJ.leader.entity.posX,(int)platoonOBJ.leader.entity.posY,(int)platoonOBJ.leader.entity.posZ,(int)platoonOBJ.leader.entity.posX,(int)platoonOBJ.leader.entity.posY,(int)platoonOBJ.leader.entity.posZ)) {
+				platoonOBJ.leader.entity = this;//落ち着け、ジーン！指揮を引き継げ！
 			}
 
-			if(platoonOBJ.leader.entity.isDead) {
-				platoonOBJ.leader.entity = this;//落ち着け、ジーン！指揮を引き継げ！
+			if(isPlatoonLeader()){
+				if(platoonOBJ.platoonMode == Modes.Follow){
+					if(platoonOBJ.platoonTargetEntity == null){//やっぱり飛んでる…
+						platoonOBJ.platoonMode = Modes.Wait;
+					}else {
+						platoonOBJ.setPlatoonTargetPos(platoonOBJ.platoonTargetEntity);
+					}
+				}
+				platoonOBJ.update();
 			}
 		}
 		super.onUpdate();
@@ -260,7 +261,7 @@ public abstract class EntitySoBases extends EntityCreature implements INpc ,  IF
 			EntityVehicle bespawningEntity = EntityVehicle_spawnByMob(worldObj,summoningVehicle);
 			bespawningEntity.noDrop = true;
 			bespawningEntity.setLocationAndAngles(this.posX, this.posY, this.posZ, var12 , 0.0F);
-			if(bespawningEntity.checkObstacle()) {
+			if((!bespawningEntity.getBaseLogic().prefab_vehicle.T_Land_F_Plane && this.worldObj.canBlockSeeTheSky(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ))) || bespawningEntity.checkObstacle()) {
 				if(bespawningEntity.pickupEntity(this,0)) {
 					this.setCurrentItemOrArmor(0,null);
 				}
@@ -599,15 +600,18 @@ public abstract class EntitySoBases extends EntityCreature implements INpc ,  IF
 	}
 
 
-	public Entity followTargetEntity;
 
 	PlatoonOBJ platoonOBJ;
     EntityAndPos myPos;
 
 	@Override
 	public void setPlatoon(PlatoonOBJ entities) {
-		this.platoonOBJ = entities;
-		this.platoonOBJ.addMember(this);
+		if(!this.isDead) {
+			if(platoonOBJ != entities) {
+				this.platoonOBJ = entities;
+				this.platoonOBJ.addMember(this);
+			}
+		}
 	}
 
 	@Override

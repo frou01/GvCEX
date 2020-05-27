@@ -57,7 +57,7 @@ public class GVCItemPMCDefSetter extends Item {
                     }
                     switch (mode) {
                         case 1:
-                            target.followTargetEntity = entityPlayer;
+                            target.getPlatoon().platoonTargetEntity = entityPlayer;
                             target.leaderEntity_name = entityPlayer.getCommandSenderName();
                             target.changePlatoonOrder(Modes.Follow);
                             entityPlayer.addChatComponentMessage(new ChatComponentTranslation(

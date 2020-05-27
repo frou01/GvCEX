@@ -23,10 +23,12 @@ import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.model.IModelCustom;
 import org.lwjgl.opengl.GL11;
 
+import javax.vecmath.Vector3d;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
+import java.util.Vector;
 
 import static handmadeguns.event.RenderTickSmoothing.smooth;
 import static handmadeguns.HandmadeGunsCore.HMG_proxy;
@@ -275,6 +277,7 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 		}
 		nbt = gunstack.getTagCompound();
 		if (nbt == null) gunitem.checkTags(gunstack);
+
 		this.gunitem = gunitem;
 		nbt = gunstack.getTagCompound();
 		items[0] = null;
@@ -329,6 +332,7 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 					partsRender_gun.pass = pass;
 					isfirstperson = true;
 					EntityLivingBase entity = (EntityLivingBase) data[1];
+					PartsRender_Gun.curretnEntity = entity;
 					boolean isreloading = this.getbooleanfromnbt("IsReloading");
 					int remainbullets = gunitem.remain_Bullet(gunstack);
 					Minecraft.getMinecraft().renderEngine.bindTexture(guntexture);
@@ -506,6 +510,7 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 				partsRender_gun.pass = pass;
 				isfirstperson = false;
 				EntityLivingBase entity = (EntityLivingBase) data[1];
+				PartsRender_Gun.curretnEntity = entity;
 				boolean isreloading = this.getbooleanfromnbt("IsReloading");//�����[�h�����ǂ���
 				int remainbullets = gunitem.getMaxDamage() - gunstack.getItemDamage();//�����[�h�����ǂ���
 				Minecraft.getMinecraft().renderEngine.bindTexture(guntexture);
@@ -631,7 +636,15 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 		GL11.glRotatef(180f, 1.0F, 0.0F, 0.0F);
 		GL11.glRotatef(45f, 0.0F, 1.0F, 0.0F);
 		GL11.glRotatef(180f, 0.0F, 0.0F, 1.0F);
-		GL11.glTranslatef(onads_modelPosX, onads_modelPosY, -1.4f + onads_modelPosZ);// 0.694,1.03,-1.0//-1.4F
+		if(gunitem != null && nbt != null && gunitem.gunInfo.sightOffset_zeroIn != null && nbt.getInteger("currentElevation") >= 0 && gunitem.gunInfo.sightOffset_zeroIn.length>nbt.getInteger("currentElevation")) {
+			Vector3d sightOffset_zeroIn = gunitem.gunInfo.sightOffset_zeroIn[nbt.getInteger("currentElevation")];
+			GL11.glTranslatef((float) sightOffset_zeroIn.x / modelscala,
+					(float) sightOffset_zeroIn.y / modelscala,
+					(float) sightOffset_zeroIn.z / modelscala);// 0.694,1.03,-1.0//-1.4F
+		}
+		GL11.glTranslatef(onads_modelPosX,
+				onads_modelPosY,
+				-1.4f + onads_modelPosZ);// 0.694,1.03,-1.0//-1.4F
 		GL11.glRotatef(onads_modelRotationY, 0.0F, 1.0F, 0.0F);
 		GL11.glRotatef(onads_modelRotationX, 1.0F, 0.0F, 0.0F);
 		GL11.glRotatef(onads_modelRotationZ, 0.0F, 0.0F, 1.0F);

@@ -281,6 +281,7 @@ public class GVCMobPlus
         soldiers = new CampObj();
         soldiers.campName = "UNION";
         soldiers.campBlockTextureModel= "gvcmob:textures/model/pflagtexture.png";
+        soldiers.playerIsFriend = true;
         campsHash.put(soldiers.campName,soldiers);
         soldiers.teamEntityClasses = new Class[]{ GVCEntitySoldier.class,GVCEntitySoldier.class,GVCEntitySoldier.class,GVCEntitySoldier.class, GVCEntitySoldierMG.class, GVCEntitySoldierRPG.class, GVCEntitySoldierSP.class };
         fn_SoldierFlag = new GVCBlockFlag(soldiers);

@@ -49,6 +49,7 @@ import static handmadevehicle.Utils.RotateVectorAroundX;
 import static handmadevehicle.Utils.RotateVectorAroundY;
 import static java.lang.Math.sin;
 import static net.minecraft.client.gui.Gui.icons;
+import static org.lwjgl.opengl.GL11.*;
 
 public class HMGEventZoom {
 	static boolean updated = false;
@@ -463,6 +464,7 @@ public class HMGEventZoom {
 	@SideOnly(Side.CLIENT)
 	protected void renderBullet(FontRenderer fontrenderer, int i, int j, ItemStack itemstack) {
 		String sss = "null";
+		String l2 = "null";
 		if (itemstack != null && itemstack.getItem() instanceof HMGItem_Unified_Guns) {
 			HMGItem_Unified_Guns gunbase = (HMGItem_Unified_Guns) itemstack.getItem();
 			ItemStack[] items = new ItemStack[6];
@@ -582,12 +584,19 @@ public class HMGEventZoom {
 				if(gunbase.gunInfo.needcock) {
 					sss += " : cocking time " + gunbase.gunInfo.cocktime;
 				}else{
-					sss += " : rate " + gunbase.gunInfo.rates.get(mode);
+					sss += " : rate " + (int)(1200/gunbase.gunInfo.rates.get(mode));
 				}
+			}
+			try {
+				if (gunbase.gunInfo.elevationOffsets_info != null && itemstack.getTagCompound().getInteger("currentElevation")>=0 && itemstack.getTagCompound().getInteger("currentElevation")<gunbase.gunInfo.elevationOffsets_info.size())
+					l2 = " Zero " + gunbase.gunInfo.elevationOffsets_info.get(itemstack.getTagCompound().getInteger("currentElevation"));
+			}catch (Exception e){
+				e.printStackTrace();
 			}
 		}
 
 		fontrenderer.drawStringWithShadow(sss, i - fontrenderer.getStringWidth(sss)-5, j - fontrenderer.FONT_HEIGHT*3, 0xFFFFFF);
+		fontrenderer.drawStringWithShadow(l2, i - fontrenderer.getStringWidth(sss)-5, j - fontrenderer.FONT_HEIGHT, 0xFFFFFF);
 	}
 
 
@@ -683,14 +692,16 @@ public class HMGEventZoom {
 
 	@SideOnly(Side.CLIENT)
 	protected void renderCrossHair(Minecraft minecraft, int i, int j, float bure) {
-		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
 		GL11.glPushMatrix();
 		GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
 		GL11.glDepthMask(false);
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		GL11.glDisable(GL11.GL_ALPHA_TEST);
-		OpenGlHelper.glBlendFunc(GL11.GL_ONE_MINUS_DST_COLOR, GL11.GL_ONE_MINUS_SRC_COLOR, 1, 0);
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glEnable(GL11.GL_ALPHA_TEST);
+//		OpenGlHelper.glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_COLOR, 1, 0);
+		GL11.glAlphaFunc(GL11.GL_GREATER, 0);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		minecraft.getTextureManager().bindTexture(crosstex);
 //		GL11.glTranslatef(i/2f, j/2f,0);
 		double x =bure*2d/10d;

@@ -185,7 +185,7 @@ public class HMGEntityParticles extends EntityFX
                 glAlphaFunc(GL_GEQUAL, 1);
             }else {
                 GL11.glDepthMask(false);
-                glAlphaFunc(GL_LESS, 1);
+                glAlphaFunc(GL_GREATER, 0);
             }
             GL11.glPushMatrix();
             GL11.glEnable(GL11.GL_CULL_FACE);

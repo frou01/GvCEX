@@ -1,5 +1,6 @@
 package hmggvcmob.entity.friend;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import handmadeguns.entity.IFF;
 import handmadevehicle.entity.parts.Modes;
 import hmggvcmob.ai.PlatoonOBJ;
@@ -51,8 +52,8 @@ public class EntityPMCBase extends EntitySoBases implements IFF,IGVCmob, IflagBa
 
 	public void onUpdate()
 	{
-		if (followTargetEntity == null && leaderEntity_name != null) {
-			followTargetEntity = worldObj.getPlayerEntityByName(leaderEntity_name);
+		if (platoonOBJ != null && platoonOBJ.platoonTargetEntity == null && leaderEntity_name != null) {
+			platoonOBJ.platoonTargetEntity = worldObj.getPlayerEntityByName(leaderEntity_name);
 		}
 
 		if(!worldObj.isRemote && getPlatoon()!=null){
@@ -111,8 +112,8 @@ public class EntityPMCBase extends EntitySoBases implements IFF,IGVCmob, IflagBa
 
 	@Override
 	public void makePlatoon() {
-		platoonOBJ = new PlatoonOBJ();
-		this.setPlatoon(this.platoonOBJ);
+		System.out.println("debug");
+		setPlatoon(new PlatoonOBJ());
 		enlistPlatoon();
 	}
 	@Override

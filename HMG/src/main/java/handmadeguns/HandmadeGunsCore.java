@@ -8,7 +8,6 @@ package handmadeguns;
 
 import java.io.*;
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.nio.channels.FileChannel;
 import java.util.*;
 
@@ -19,7 +18,6 @@ import cpw.mods.fml.common.discovery.ModCandidate;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.relauncher.ReflectionHelper;
 import handmadeguns.blocks.HMGBlockMounter;
 import handmadeguns.command.HMG_CommandReloadparm;
 import handmadeguns.entity.*;
@@ -110,6 +108,7 @@ public class HandmadeGunsCore {
 	public static boolean cfg_Flash;
 	public static double cfg_defaultknockback;
 	public static double cfg_defaultknockbacky;
+	public static boolean cfgRender_useStencil = true;
 
 
 	public static Item hmg_bullet;
@@ -168,6 +167,7 @@ public class HandmadeGunsCore {
 		cfg_ZoomRender	= lconf.get("Render", "cfg_ZoomRender", true).getBoolean(true);
 		cfg_FOV	= lconf.get("Render", "cfg_FOV", 70).getInt(70);
 		cfg_RenderPlayer	= lconf.get("Render", "cfg_RenderPlayer", false).getBoolean(false);
+		cfgRender_useStencil = lconf.get("Render", "cfg_useStencil", false).getBoolean(false);
 		cfg_canEjectCartridge	= lconf.get("Cartridge", "cfg_canEjectCartridge", true).getBoolean(true);
 		cfg_Cartridgetime	= lconf.get("Cartridge", "cfg_Cartridgetime", 200).getInt(200);
 		cfg_muzzleflash	= lconf.get("Gun", "cfg_MuzzleFlash", true).getBoolean(true);
@@ -620,13 +620,9 @@ public class HandmadeGunsCore {
 		//TODO:END_INJECT_FUNCTION--------------------------------------------------------------------------------------------------------------------------------
 
 
-		HMG_proxy.reisterRenderers();
+		HMG_proxy.reisterSomething();
 		HMG_proxy.registerTileEntity();
 		HMG_proxy.InitRendering();
-		HMG_proxy.leftclick();
-		HMG_proxy.jumped();
-		HMG_proxy.Fclick();
-		HMG_proxy.ADSclick();
 		HMG_proxy.getEntityPlayerInstance();
 	}
 
@@ -669,6 +665,7 @@ public class HandmadeGunsCore {
 	}
 
 	public static boolean Key_ADS(Entity entityplayer){
+		if(entityplayer == null)return false;
 		if(entityplayer instanceof EntityPlayer){
 			if(((EntityPlayer) entityplayer).getHeldItem() != null
 					&& ((EntityPlayer) entityplayer).getHeldItem().getItem() instanceof HMGItem_Unified_Guns

@@ -8,6 +8,8 @@ import handmadeguns.client.render.HMGRenderItemGun_U_NEW;
 
 public class RenderTickSmoothing {
     public static float smooth = 0;
+
+    public static boolean test_ReCreate = false;
     @SubscribeEvent
     public void renderTick(TickEvent.RenderTickEvent event)
     {
@@ -21,6 +23,10 @@ public class RenderTickSmoothing {
                 smooth = event.renderTickTime;
                 break;
             case END :
+                if(test_ReCreate) {
+                    test_ReCreate = false;
+
+                }
                 break;
         }
     }

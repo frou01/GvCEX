@@ -137,43 +137,18 @@ public class GVCEntityGuerrillaM extends EntityMob
         this.worldObj.setBlock(par1+3, par2+2, par3+3, Blocks.fence);
 
         this.worldObj.setBlock(par1+2, par2+2, par3-3, Blocks.fence);
-        this.worldObj.setBlock(par1+2, par2+2, par3-2, Blocks.wool,13,2);
-        this.worldObj.setBlock(par1+2, par2+2, par3-1, Blocks.wool,13,2);
-        this.worldObj.setBlock(par1+2, par2+2, par3, Blocks.wool,13,2);
-        this.worldObj.setBlock(par1+2, par2+2, par3+1, Blocks.wool,13,2);
-        this.worldObj.setBlock(par1+2, par2+2, par3+2, Blocks.wool,13,2);
         this.worldObj.setBlock(par1+2, par2+2, par3+3, Blocks.fence);
 
         this.worldObj.setBlock(par1+1, par2+2, par3-3, Blocks.fence);
-        this.worldObj.setBlock(par1+1, par2+2, par3-2, Blocks.wool,13,2);
-        this.worldObj.setBlock(par1+1, par2+2, par3-1, Blocks.wool,13,2);
-        this.worldObj.setBlock(par1+1, par2+2, par3, Blocks.wool,13,2);
-        this.worldObj.setBlock(par1+1, par2+2, par3+1, Blocks.wool,13,2);
-        this.worldObj.setBlock(par1+1, par2+2, par3+2, Blocks.wool,13,2);
         this.worldObj.setBlock(par1+1, par2+2, par3+3, Blocks.fence);
 
         this.worldObj.setBlock(par1, par2+2, par3-3, Blocks.fence);
-        this.worldObj.setBlock(par1, par2+2, par3-2, Blocks.wool,13,2);
-        this.worldObj.setBlock(par1, par2+2, par3-1, Blocks.wool,13,2);
-        this.worldObj.setBlock(par1, par2+2, par3, Blocks.wool,13,2);
-        this.worldObj.setBlock(par1, par2+2, par3+1, Blocks.wool,13,2);
-        this.worldObj.setBlock(par1, par2+2, par3+2, Blocks.wool,13,2);
         this.worldObj.setBlock(par1, par2+2, par3+3, Blocks.fence);
 
         this.worldObj.setBlock(par1-1, par2+2, par3-3, Blocks.fence);
-        this.worldObj.setBlock(par1-1, par2+2, par3-2, Blocks.wool,13,2);
-        this.worldObj.setBlock(par1-1, par2+2, par3-1, Blocks.wool,13,2);
-        this.worldObj.setBlock(par1-1, par2+2, par3, Blocks.wool,13,2);
-        this.worldObj.setBlock(par1-1, par2+2, par3+1, Blocks.wool,13,2);
-        this.worldObj.setBlock(par1-1, par2+2, par3+2, Blocks.wool,13,2);
         this.worldObj.setBlock(par1-1, par2+2, par3+3, Blocks.fence);
 
         this.worldObj.setBlock(par1-2, par2+2, par3-3, Blocks.fence);
-        this.worldObj.setBlock(par1-2, par2+2, par3-2, Blocks.wool,13,2);
-        this.worldObj.setBlock(par1-2, par2+2, par3-1, Blocks.wool,13,2);
-        this.worldObj.setBlock(par1-2, par2+2, par3, Blocks.wool,13,2);
-        this.worldObj.setBlock(par1-2, par2+2, par3+1, Blocks.wool,13,2);
-        this.worldObj.setBlock(par1-2, par2+2, par3+2, Blocks.wool,13,2);
         this.worldObj.setBlock(par1-2, par2+2, par3+3, Blocks.fence);
 
         this.worldObj.setBlock(par1-3, par2+2, par3-3, Blocks.fence);

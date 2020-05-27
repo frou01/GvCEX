@@ -11,6 +11,7 @@ import java.util.List;
 import handmadeguns.items.*;
 import handmadeguns.items.guns.*;
 import handmadeguns.client.render.*;
+import handmadevehicle.render.HMVVehicleParts;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -150,6 +151,7 @@ public class HMGGunMaker {
 		String  re2 = "def";
 		String  re3 = "ghi";
 		boolean remat31;
+		boolean remat3 = true;
 		boolean reloadanim = true;
 		ArrayList<Float[]> reloadanimation = new ArrayList<Float[]>();
 		int maxstacksize = 1;
@@ -523,6 +525,9 @@ public class HMGGunMaker {
 							case "ReloadMat31":
 								remat31 = parseBoolean(type[1]);
 								break;
+							case "ReloadMat3":
+								remat3 = parseBoolean(type[1]);
+								break;
 							case "GripSetPoint":
 								for (int i = 0; i < 3; i++)
 									gripattachoffset[i] = parseFloat(type[i + 1]);
@@ -592,6 +597,7 @@ public class HMGGunMaker {
 						}
 						if(isClient) {
 							readParts(type,partslist);
+							readParts_spgun(type,partslist);
 						}
 						
 						if(cfg_forceunifiedguns) {
@@ -991,6 +997,7 @@ public class HMGGunMaker {
 											((HMGRenderItemGun_U)gunrender).cock_left = cockleft;
 											((HMGRenderItemGun_U)gunrender).all_jump = alljump;
 											((HMGRenderItemGun_U)gunrender).remat31 = remat31;
+											((HMGRenderItemGun_U)gunrender).remat3 = remat3;
 											((HMGRenderItemGun_U)gunrender).reloadanim = reloadanim;
 											((HMGRenderItemGun_U)gunrender).reloadanimation = reloadanimation;
 										}else {
@@ -1144,6 +1151,10 @@ public class HMGGunMaker {
 										, armrotationxl, armrotationyl, armrotationzl, armoffsetxl, armoffsetyl, armoffsetzl,
 										nox, noy, noz, mat31posx, mat31posy, mat31posz, 	mat31rotex, mat31rotey, mat31rotez
 										,mat32posx, mat32posy, mat32posz, mat32rotex, mat32rotey, mat32rotez));
+							}
+							if(tabname == null) newgun.setCreativeTab(HandmadeGunsCore.tabhmg);
+							else if(tabshmg.containsKey(tabname)){
+								newgun.setCreativeTab(tabshmg.get(tabname));
 							}
 							Guns.add(newgun);
 						} else if (type[0].equals("BP")) {
@@ -1617,6 +1628,19 @@ public class HMGGunMaker {
 		}
 	}
 	public static int readerCnt = 0;
+	//TODO ソード系のタブ機能追加
+	public void readParts_spgun(String[] type,ArrayList<HMGGunParts> partslist) {
+		readerCnt = 0;
+		switch (type[readerCnt++]) {
+
+			case "AddSomeMotion":
+				currentParts.AddSomethingMotionKey(type);
+				break;
+			case "AddSomeInfo":
+				((HMVVehicleParts)currentParts).AddRenderinfSomething(Float.parseFloat(type[readerCnt++]), Float.parseFloat(type[readerCnt++]), Float.parseFloat(type[readerCnt++]), Float.parseFloat(type[readerCnt++]), Float.parseFloat(type[readerCnt++]), Float.parseFloat(type[readerCnt++]),parseInt(type[readerCnt]));
+				break;
+		}
+	}
 	public void readParts(String[] type,ArrayList<HMGGunParts> partslist){
 		switch (type[0]) {
 
@@ -1951,6 +1975,12 @@ public class HMGGunMaker {
 				for (int i = 1; i < type.length; i++)
 					gunInfo.elevationOffsets.add(parseFloat(type[i]));
 			}
+			case "elevationOffsets_info":{
+				gunInfo.elevationOffsets_info = new ArrayList<>();
+				for (int i = 1; i < type.length; i++)
+					gunInfo.elevationOffsets_info.add(type[i]);
+			}
+			break;
 			case "Texture":
 				gunInfo.texture = type[1];
 				break;
@@ -2339,6 +2369,13 @@ public class HMGGunMaker {
 				break;
 			case "TurretHP":
 				gunInfo.turretMaxHP = parseInt(type[1]);
+				break;
+			case "sightOffset_zeroIn_setUp":
+				gunInfo.sightOffset_zeroIn = new Vector3d[parseInt(type[1])];
+				break;
+			case "sightOffset_zeroIn_add":
+				int i = parseInt(type[1]);
+				gunInfo.sightOffset_zeroIn[i] = new Vector3d(parseDouble(type[2]),parseDouble(type[3]),parseDouble(type[4]));
 				break;
 		}
 	}

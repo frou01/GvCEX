@@ -1,11 +1,13 @@
 package handmadeguns.client.render;
 
+import handmadeguns.HandmadeGunsCore;
 import handmadeguns.items.*;
 import handmadeguns.items.guns.HMGItemSwordBase;
 import handmadeguns.items.guns.HMGItem_Unified_Guns;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.MinecraftForgeClient;
@@ -20,6 +22,8 @@ import static org.lwjgl.opengl.GL11.glTranslatef;
 
 public class PartsRender_Gun extends PartsRender {
 	public ArrayList<HMGGunParts> partslist = new ArrayList<HMGGunParts>();
+	public static Entity curretnEntity;
+	public GunTemp guntemp = new GunTemp();//TODO readPropertyFromNBTで銃の状態に同期
 	public float modelscala;
 	private static ModelBiped modelBipedMain = new ModelBiped(0.5F);;
 	
@@ -33,6 +37,7 @@ public class PartsRender_Gun extends PartsRender {
 	public float overbarrelattachrotation[] = new float[3];
 	
 	public void partSidentification(Object... data){
+		guntemp.readPropertyFromNBT(gunitem.gunInfo,nbt, HandmadeGunsCore.Key_ADS(curretnEntity),HMG_proxy.getCilentWorld());
 		GunState[] states;
 		float flame;
 		int remainbullets;
@@ -296,6 +301,16 @@ public class PartsRender_Gun extends PartsRender {
 			renderarmL();
 		}else if(parts.isRarm){
 			renderarmR();
+		}
+		HMGGunParts_Motion_PosAndRotation yawLadderInfo = parts.getSomethingPositions(guntemp.currentElevation,0);
+		if (yawLadderInfo != null) {
+			if(!yawLadderInfo.renderOnOff)return;
+			transformParts(rotationCenterAndRotation,yawLadderInfo,parts);
+		}
+		HMGGunParts_Motion_PosAndRotation pitchLadderInfo = parts.getSomethingPositions(guntemp.selector,1);
+		if (pitchLadderInfo != null) {
+			if(!pitchLadderInfo.renderOnOff)return;
+			transformParts(rotationCenterAndRotation,pitchLadderInfo,parts);
 		}
 		
 		if(isPlacedGun && parts.hasbaseYawInfo) {

@@ -204,7 +204,6 @@ public class AddNewVehicle extends HMGGunMaker {
 									if(type.length >= 8)current.prefab_ChildOnBarrel = new Prefab_AttachedWeapon[parseInt(type[7])];
 									break;
 								case "Set_CurrentTurret_to_Mother":
-									System.out.println("debug");
 									current = current.motherTurret;
 									rootTurretID_current--;
 									break;

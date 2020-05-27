@@ -1,0 +1,257 @@
+OptiFine 1.7.10_HD_U_E7
+ - extended shaders custom uniforms to access vector components
+ - fixed shader configuration parsing (vsh, comments)
+ - added Custom Sky options: biomes, heights and transition (#892)
+ - fixed Custom Sky resetting at time 6000 when rotation speed is not an integer (#804)
+ - removed render distance check for vanilla stars when custom sky layers are available
+ - added shaders options tooltips (#980)
+ - extended shaders configuration to re-enable program disabled in parent profile
+ - added custom shader uniforms (#924)
+ - added CTM property "linked" for double plants and doors
+ - reset shadowmap configuration on shader pack reload  
+ - fixed crash when username contains ASCII 0 (#999) 
+ - relaxed shaders configuration syntax for DRAWBUFFERS, SHADOWRES, etc.
+ - fixed shaders program gbuffers_spidereyes resetting the entity fog color 
+ - added shaders programs deferred_last and composite_last to reset the flipped ping-pong buffers 
+ - added Random Mobs check by name (#620)
+ - added CTM property "heights" (#931)
+ - added shaders block mapping for Forge mods
+ - added shaders program "gbuffers_hand_water" for handheld translucent objects
+ - fixed shaders option to skip framebuffer clear
+ - added deferred shader programs
+ - fixed shaders normal/specular animations
+ (HD_U_E6)
+ - fixed string width calculation for HD fonts
+ - fixed custom texture animations not working in main menu (#920)
+ - updated shaders, added custom noise texture
+ - optimized shader option parsing
+ - added shader macros for user options (FXAA, Normal Map, Specular Map, Render Quality, etc.)
+ (HD_U_E5)
+ - updated shader options, added configurable screen columns
+ - added shader options value formatting (prefix and suffix)
+ - added support for local player models
+ - enabled shaders program "gbuffers_beaconbeam"
+ - fixed memory leak in cape download
+ - fixed shaders to load files only from the shader pack
+ - added font alpha blending
+ - fixed shader options crash on right click
+ - compatible with Forge #1614
+(28.12.2017)
+
+OptiFine 1.7.10_HD_U_E3
+ - fixed ghost blocks in chunk cache
+ - fixed shaders block ID remapping
+ - fixed Mipmap Type slider
+ - fixed potion glint with Fast Render on NVidia 
+ - added Custom Sky option "weather=clear|rain|thunder"
+ - fixed Custom Sky not visible for Render Distance below 8 chunks
+ - fixed detection of maximum texture size for modern GPUs 
+ - fixed custom animations to check for invalid coordinates
+ - fixed conflict with Emojiful
+ - added shader option sliders
+ - added shader texture formats R16F, RG16F, RGB16F, RGBA16F and RGB9_E5
+ - fixed CTM, Custom Colors and Shaders block matching to better handle missing blocks
+ - updated installer to use launchwrapper 1.12
+ - extended shaders uniform isEyeInWater, added value 2 when the camera is in lava  
+ - fixed tall grass rendering in the End when mipmaps are enabled
+ - fixed item pickup animation using wrong shaders program
+ - added shaders compatible rendering for end portals
+ - compatible with Forge #1614
+(26.10.2017)
+	
+OptiFine 1.7.10_HD_U_D8
+ - fixed shaders loading "block.properties" (#569) 
+ - added shaders uniforms "nightVision", "blindness" and "screenBrightness"
+ - added shaders property "vignette"
+ - added shader macro MC_VERSION
+ - compatible with Forge #1614
+(04.05.2017)
+
+OptiFine 1.7.10_HD_U_D7
+ (189_H7)
+ - updated shaders: added gbuffers uniforms gaux1 to gaux4, only used as custom textures
+ - fixed Forge RenderHandEvent to work with shaders 
+ - updated shaders: fixed depth of translucent handheld objects
+ - updated shaders: added support for custom textures
+ - updated shader options: added non-numerical values "#define SHADOW_MODE HARD // [HARD SOFT REAL]"
+ - updated shader options: added user friendly values from resources
+ - updated shader options: right click = previous value, Shift + click = reset
+ - added shader macros for OpenGL extensions
+ - added shader macros for OS, OpenGL version, GLSL version, GPU vendor and GPU renderer 
+ - added shader uniform "worldDay"
+ - fixed shader uniform "worldTime" overflow for very old worlds
+ - fixed shaders to save options on ESC 
+ - added fix for MC-98707
+ - fixed NPE in shaders when renderViewEntity is NULL
+ - fixed transparent hand with shaders when the world border is visible
+ - added support for animated normal and specular textures
+ - added shaders uniforms "frameCounter" and "frameTime" 
+ - added shaders option to skip framebuffer texture clear
+ - fixed shaders bug: centerDepthSmooth not working when gaux4 is active
+ - fixed shaders using upPosition from previous frame
+ - added block ID mapping for shaders
+ - updated shaders to use "gbuffers_armor_glint" for enchanted handheld and dropped items
+ - extended the shaders "#include" parser to add "#line" directives with file and line numbers
+ - fixed detection of maximum texture size for modern GPUs 
+ - added shader options for back-face rendering per layer
+ - enabled shader variable "ambientOcclusionLevel"
+ - fixed Fast Render default to OFF
+ - added shader properties "sun=true|false" and "moon=true|false"
+ - added check for 3D Anaglyph + Shaders
+ - added support for shader formats R3_G3_B2, RGB5_A1, RGB10_A2, R11F_G11F_B10F
+ - fixed fullscreen mode to show all available resolutions 
+ (188_H6)
+ - added shaders option dynamicHandLight - can be used to disable the dynamic hand light if the shader implements its own hand light
+ - fixed world border to use program gbuffers_textured_lit
+ - fixed clouds to use program gbuffers_clouds
+ - replaced shader uniforms entityHurt and entityFlash with entityColor (rgba)
+ - fixed enchanted armor to use program gbuffers_armor_glint
+ - added shader uniforms entityId and tileEntityId
+ - updated shaders documentation
+ - added shader suppot for more texture formats (signed normalized, integer, unsigned integer)
+ - fixed shader uniform "entityHurt" to not affect other entities
+ - fixed "#include" for vertex shaders
+ (188_H5)
+ - removed shaders hand depth 4x and 8x values - broken and not needed
+ - removed shaders option Cloud Shadows, not working and disabled in 1.8
+ (188_H2)
+ - added option "-Dshaders.debug.save=true", saves active shaders in "shaderpacks/debug"
+ - fixed shader initialization in nether/end
+ - added shader profiles
+ - added resources - /assets/minecraft/optifine/lang/en_US.lang
+ - added shader resources
+ - fixed shader shadow flickering (like it was in G6), performance may suffer a bit
+ - added support for shader variables
+ - added configurable shaders options screen
+ - fixed leash rendering with shaders to use program basic
+ - right click on a shader option resets it to default
+ - added parsing of predefined shader const options (bool, float and int)
+ - fixed hand held translucent items with shaders 
+ - added shaders per world dimension - "/shaders/world-1" for nether
+ - the dimension shaders are scanned for shader options
+ - removed chat message when loading shaders
+ - updated shader profiles to allow program deactivation
+ - added support for "#include" in shaders
+ - fixed black screen with shaders when starting in the nether / end
+ - added hotkey F3+R to reload current shaders (ninja update)
+ (188_G9)
+ - fixed compass and clock to work when animations are off 
+ - added shader options
+ - the options are parsed from the shader files, searching for "#define", "#ifdef" and "#ifndef"
+ - commented defines are with default state OFF
+ - ambiguous options (both ON and OFF state found) are disabled and can not be changed
+ - option names are global for all shader files in a shader pack
+ - one option can be present in several shader files and it will be switched simultaneously in all of them
+ - only ON/OFF options are supported for now, variables may be added later with range syntax
+ - comments on the same line after the "#define" are shown as tooltips
+ - added support for "shaders.properties": http://pastebin.com/g2E4NqPM
+ - the shader option comments are split by sentences in the tooltip
+ (188_G7)
+ - optimized shader shadows generation
+ (188_G6)
+ - fixed shader shadow flickering and incorrect shadow rendering (minimal FPS drop is possible for shader packs with shadows)
+ (188_F4)
+ - fixed shaders to use correct block light levels (option Classic Lighting)
+ - updated shader options
+ (188_F3)
+ - reset video settings also resets shaders and FXAA
+ (188_F2)
+ - merged shaders from 1.8.8_HD_U_F2
+ - compatible with Forge #1614
+ (20.02.2017)
+
+OptiFine 1.7.10_HD_U_D6
+ - fixed dynamic lights: blaze rod, blaze powder, glowstone dust, prismarine crystals, magma cream, spectator mode, tnt, creeper
+ - fixed unicode font rendering with HD resource packs
+ - added Dynamic Lights (off, fast, fancy)
+ - added option "Details -> Dynamic FOV" - enables or disables the FOV change when flying or sprinting
+ - added "offsetBold" in font properties (assets/minecraft/textures/font/ascii.properties), default is 1.0 for 16x and 0.5 for 32x and above
+ - added folder selection in installer
+ - added build number
+ - fixed unicode font shadow
+ - compatible with Forge #1614
+ (06.06.2016)
+
+OptiFine 1.7.10_HD_U_D4
+ - fixed Forge Block.hasTileEntity() for Immersive Engineering
+ - compatible with Forge #1614
+ (28.04.2016)
+
+OptiFine 1.7.10_HD_U_D3
+ - removed all Mojang content from final JAR  
+ - added support for class patches
+ - compatible with Forge #1614
+ (15.03.2016)
+
+OptiFine 1.7.10_HD_U_D2
+ - added support for preview versions
+ - fixed entity updates - MoCreature insects
+ - compatible with Forge #1614
+ (23.02.2016)
+ 
+OptiFine 1.7.10_HD_U_D1
+ - fixed Random Mobs in multiplayer worlds
+ - added support for RandomMobs property files (biome, height, weight) 
+ - fixed transparent textures with alpha < 16
+ - fixed logo "mojang.png" to be loaded from resource packs
+ - fixed compass and clock to work when animations are off
+ - extended "mcpatcher/color.properties", added support for "clouds=off"
+ - added custom text colors
+ - added blend method overlay for custom sky
+ - fixed overlapping transitions for custom sky
+ - fixed connected textures to check for server resource pack
+ - fixed rendering of custom unicode fonts
+ - extended crash report
+ - fixed bold text with HD font
+ - unicode character widths are reloaded with the resource pack
+ - optimized remote resource loading with http pipelining
+ - added notification for 32-bit Java running on 64-bit OS
+ - added option Show FPS - displays compact rendering information
+ - added option Vignette: Fast = FPS + 10%
+ - extended option Fast Render with new optimizations: ON = FPS + 10%
+ - fixed Animated Textures to load textures only when enabled
+ - compatible with Forge #1614
+ (21.01.2016)
+
+OptiFine 1.7.10_HD_U_C1 
+ - enabled Forge loading screen
+ - compatible with Forge #1481
+ (02.07.2015)
+
+OptiFine 1.7.10_HD_U_B8 
+ - updated Forge compatibility
+ - compatible with Forge #1481
+ (30.06.2015)
+ 
+OptiFine 1.7.10_HD_U_B7 
+ - updated to work with Forge loading screen
+ - compatible with Forge #1395
+ (27.04.2015)
+
+OptiFine 1.7.10_HD_U_B6 
+ - removed reference to MinecraftProfileTexture
+ - fixed "java.lang.NoSuchMethodError: com.mojang.authlib.minecraft.MinecraftProfileTexture" when Authlib is silently updated to 1.5.21
+ (17.04.2015)
+
+OptiFine 1.7.10_HD_U_B5
+ - optimized chunk rendering, FPS +30% is possible
+ - report OpenGL errors in chat
+ - updated Forge compatibility
+ - compatible with Forge #1291
+ (30.01.2015)
+
+OptiFine 1.7.10_HD_U_B4
+ - various bugfixes
+ - updated Forge compatibility
+ - compatible with Forge #1240
+ (19.12.2014)
+
+OptiFine 1.7.10_HD_U_B1
+ - fixed Forge compatibility
+ - compatible with Forge #1240
+ (05.12.2014)
+
+OptiFine 1.7.10_HD_U_A4
+ - fixed compatibility with Railcraft and IC2
+ - compatible with Forge #1180
+ (07.07.2014)

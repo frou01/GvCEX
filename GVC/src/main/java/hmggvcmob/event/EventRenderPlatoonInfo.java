@@ -55,7 +55,7 @@ public class EventRenderPlatoonInfo {
 			GL11.glTranslatef((float)-entity.posX,(float)-entity.posY,(float)-entity.posZ);
 			GL11.glTranslatef((float)platoonInfoData.target[0],(float)platoonInfoData.target[1] + 2,(float)platoonInfoData.target[2]);
 			GL11.glRotatef(180-entityplayer.rotationYawHead,0,1,0);
-			renderString(platoonInfoData.target[0] + " , " + platoonInfoData.target[1] + " , " + platoonInfoData.target[2]);
+			renderString("v");
 			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)lastBrightnessX, (float)lastBrightnessY);
 		}
 		GL11.glPopMatrix();

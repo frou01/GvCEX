@@ -1,0 +1,41 @@
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ public class GuiOptionSliderOF
+/*    */   extends bcn
+/*    */   implements IOptionControl
+/*    */ {
+/* 14 */   private bbm option = null;
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */   
+/*    */   public GuiOptionSliderOF(int id, int x, int y, bbm option) {
+/* 24 */     super(id, x, y, option);
+/* 25 */     this.option = option;
+/*    */   }
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */   
+/*    */   public bbm getOption() {
+/* 33 */     return this.option;
+/*    */   }
+/*    */ }
+
+
+/* Location:              C:\Minecraft\.minecraft1.7.10.forge_test_HMG_release_4_13\mods\OptiFine_1.7.10_HD_U_E7.jar!\GuiOptionSliderOF.class
+ * Java compiler version: 6 (50.0)
+ * JD-Core Version:       1.1.3
+ */

@@ -13,6 +13,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 import static handmadeguns.HMGAddBullets.modellist;
+import static net.minecraft.util.MathHelper.wrapAngleTo180_float;
 
 @SideOnly(Side.CLIENT)
 public class HMGRenderBullet extends Render
@@ -31,8 +32,8 @@ public class HMGRenderBullet extends Render
         if(entity!=null) {
             GL11.glPushMatrix();
             GL11.glTranslatef((float) p_180551_2_, (float) p_180551_4_+0.1f, (float) p_180551_6_);
-            GL11.glRotatef( - (entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * partialTicks), 0.0F, 1.0F, 0.0F);
-            GL11.glRotatef(entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks, 1.0F, 0.0F, 0.0F);
+            GL11.glRotatef( - (entity.prevRotationYaw + wrapAngleTo180_float(entity.rotationYaw - entity.prevRotationYaw) * partialTicks), 0.0F, 1.0F, 0.0F);
+            GL11.glRotatef(entity.prevRotationPitch + wrapAngleTo180_float(entity.rotationPitch - entity.prevRotationPitch) * partialTicks, 1.0F, 0.0F, 0.0F);
 //            System.out.println("debug " + p_180551_1_.rotationPitch);
             GL11.glEnable(GL12.GL_RESCALE_NORMAL);
             GL11.glScalef(1.0F, 1.0F, 1.0F);

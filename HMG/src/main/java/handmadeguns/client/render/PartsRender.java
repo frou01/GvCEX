@@ -5,6 +5,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.IModelCustom;
 import org.lwjgl.opengl.GL11;
 
+import static handmadeguns.HandmadeGunsCore.cfgRender_useStencil;
 import static org.lwjgl.opengl.GL11.*;
 
 public abstract class PartsRender {
@@ -55,7 +56,7 @@ public abstract class PartsRender {
 			else
 				renderParts_Bullet(parts,flame,remainbullets,rotationCenterAndRotation);
 		}else {
-			if(parts.reticleAndPlate){
+			if(parts.reticleAndPlate && cfgRender_useStencil){
 				glClear(GL_STENCIL_BUFFER_BIT);
 				glEnable(GL_STENCIL_TEST);
 				glStencilMask(1);

@@ -144,6 +144,7 @@ public class HMGWavefrontObject extends WavefrontObject implements IModelCustom
             }
 
             HMGGroupObjects.add(currentHMGGroupObject);
+            renderAll();
         }
         catch (IOException e)
         {

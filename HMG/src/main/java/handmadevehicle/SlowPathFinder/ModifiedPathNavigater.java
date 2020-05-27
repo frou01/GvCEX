@@ -146,7 +146,7 @@ public class ModifiedPathNavigater extends PathNavigate{
 	 */
 	public float getPathSearchRange()
 	{
-		return 400;
+		return 120;
 	}
 	
 	/**
@@ -154,6 +154,10 @@ public class ModifiedPathNavigater extends PathNavigate{
 	 */
 	public PathEntity getPathToXYZ(double p_75488_1_, double p_75488_3_, double p_75488_5_)
 	{
+		if(currentPath != null && currentPath.getFinalPathPoint() != null){
+			PathPoint finalPoint = currentPath.getFinalPathPoint();
+			if(finalPoint.xCoord == MathHelper.floor_double(p_75488_1_) &&  finalPoint.yCoord == (int)p_75488_3_&& finalPoint.yCoord == MathHelper.floor_double(p_75488_5_))return null;
+		}
 		return !this.canNavigate() ? null : this.worldForPathfind.getEntityPathToXYZ(this.theEntity, MathHelper.floor_double(p_75488_1_), (int)p_75488_3_, MathHelper.floor_double(p_75488_5_), this.getPathSearchRange(), this.canPassOpenWoodenDoors, this.canPassClosedWoodenDoors, this.avoidsWater, this.canSwim);
 	}
 	
@@ -162,7 +166,7 @@ public class ModifiedPathNavigater extends PathNavigate{
 	 */
 	public boolean tryMoveToXYZ(double p_75492_1_, double p_75492_3_, double p_75492_5_, double p_75492_7_)
 	{
-		PathEntity pathentity = this.getPathToXYZ((double)MathHelper.floor_double(p_75492_1_), (double)((int)p_75492_3_), (double)MathHelper.floor_double(p_75492_5_));
+		PathEntity pathentity = this.getPathToXYZ(MathHelper.floor_double(p_75492_1_), ((int)p_75492_3_), MathHelper.floor_double(p_75492_5_));
 		return this.setPath(pathentity, p_75492_7_);
 	}
 	

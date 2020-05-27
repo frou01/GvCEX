@@ -25,7 +25,6 @@ public class HMVVehicleParts extends HMGGunParts {
 		int id = parseInt(type[readerCnt++]);
 		if(somethingMotionKey[id] == null) somethingMotionKey[id] = new HMGGunParts_Motions();
 		somethingMotionKey[id].addmotion(motion);
-		isbelt = true;
 	}
 	public void AddTrackPositions(String[] type){
 		HMGGunParts_Motion motion = new HMGGunParts_Motion(type);

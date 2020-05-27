@@ -13,6 +13,7 @@ import handmadeguns.client.audio.ReloadSoundHMG;
 import handmadeguns.emb_modelloader.MQO_ModelLoader;
 import handmadeguns.entity.*;
 import handmadeguns.entity.bullets.*;
+import handmadeguns.event.RenderTickSmoothing;
 import handmadeguns.items.guns.HMGItem_Unified_Guns;
 import handmadeguns.network.PacketSpawnParticle;
 import handmadeguns.client.render.*;
@@ -48,14 +49,23 @@ import org.lwjgl.input.Mouse;
 import static handmadeguns.HandmadeGunsCore.HMG_proxy;
 
 public class ClientProxyHMG extends CommonSideProxyHMG {
-	public static final KeyBinding Reload = new KeyBinding("Reload Magazine", Keyboard.KEY_R, "HandmadeGuns");
-	public static final KeyBinding SeekerOpen_Close = new KeyBinding("Seeker Open/Close", Keyboard.KEY_C, "HandmadeGuns");
-	public static final KeyBinding ChangeMagazineType = new KeyBinding("Change Magazine Type", Keyboard.KEY_B, "HandmadeGuns");
-	public static final KeyBinding Attachment = new KeyBinding("Attachment", Keyboard.KEY_X, "HandmadeGuns");
-	public static final KeyBinding Fire_AttachedGun = new KeyBinding("Fire AttachedGun", Keyboard.KEY_F, "HandmadeGuns");
-	public static final KeyBinding ADS = new KeyBinding("ADS_Key", Keyboard.KEY_V, "HandmadeGuns");
-	public static final KeyBinding Mode = new KeyBinding("Mode_Key", Keyboard.KEY_GRAVE, "HandmadeGuns");
-	public static final KeyBinding Fix = new KeyBinding("Fix Gun", Keyboard.KEY_H, "HandmadeGuns");
+	public static final KeyBinding				Reload				= new KeyBinding("Reload Magazine", Keyboard.KEY_R, "HandmadeGuns");
+	public static final KeyBinding_withStopper	Fire_AttachedGun	= new KeyBinding_withStopper("Fire AttachedGun", Keyboard.KEY_F, "HandmadeGuns");
+	public static final KeyBinding				ADS					= new KeyBinding("ADS_Key", Keyboard.KEY_V, "HandmadeGuns");
+
+	public static final KeyBinding				gunPrepare_modification = new KeyBinding("Gun Prepare Modification Key", Keyboard.KEY_LMENU, "HandmadeGuns");
+	public static final KeyBinding				Attachment			= new KeyBinding("[Gun Prepare]Attachment GUI", Keyboard.KEY_X, "HandmadeGuns");
+	public static final KeyBinding_withStopper	ChangeMagazineType	= new KeyBinding_withStopper("[Gun Prepare]Change Magazine Type", Keyboard.KEY_B, "HandmadeGuns");
+	public static final KeyBinding_withStopper	Fix					= new KeyBinding_withStopper("[Gun Prepare]Fix Gun", Keyboard.KEY_H, "HandmadeGuns");
+
+	public static final KeyBinding				gunSetting_modification = new KeyBinding("Gun Setting Modification", Keyboard.KEY_NONE, "HandmadeGuns");
+	public static final KeyBinding_withStopper	El_Up				= new KeyBinding_withStopper("[Gun Setting]Zero in : increase", Keyboard.KEY_Y, "HandmadeGuns");
+	public static final KeyBinding_withStopper	El_Reset			= new KeyBinding_withStopper("[Gun Setting]Zero in : reset", Keyboard.KEY_H, "HandmadeGuns");
+	public static final KeyBinding_withStopper	El_Down				= new KeyBinding_withStopper("[Gun Setting]Zero in : decrease", Keyboard.KEY_N, "HandmadeGuns");
+	public static final KeyBinding_withStopper	SeekerOpen_Close	= new KeyBinding_withStopper("[Gun Setting]Seeker Open/Close", Keyboard.KEY_C, "HandmadeGuns");
+	public static final KeyBinding_withStopper	Mode				=  new KeyBinding_withStopper("[Gun Setting]Cycle Selector", Keyboard.KEY_GRAVE, "HandmadeGuns");
+
+
 	private static final String trailtexture = ("handmadeguns:textures/entity/trail");
 	private static final String lockonmarker = ("handmadeguns:textures/items/lockonmarker");
 	static boolean stopper_modekey = false;
@@ -88,13 +98,15 @@ public class ClientProxyHMG extends CommonSideProxyHMG {
 	public void setuprender(){
 
 		try {
+			System.setProperty("forge.forceDisplayStencil", "true");
 			Field stencilBits_F = ReflectionHelper.findField(ForgeHooksClient.class, "stencilBits");
 			Field modifiersField = Field.class.getDeclaredField("modifiers");
 			modifiersField.setAccessible(true);
 			modifiersField.setInt(stencilBits_F,
 					stencilBits_F.getModifiers() & ~Modifier.PRIVATE); // 更新対象アクセス用のFieldオブジェクトのmodifiersからprivateとfinalを外す。
 			stencilBits_F.set(null, 8);
-			System.out.println("Debug stencil is " + MinecraftForgeClient.getStencilBits());
+			System.out.println("Debug stencil is    " + MinecraftForgeClient.getStencilBits());
+			System.out.println("Debug stencil state " + Boolean.parseBoolean(System.getProperty("forge.forceDisplayStencil", "false")));
 //			net.minecraftforge.client.ForgeHooksClient.createDisplay();
 
 //			OpenGlHelper.initializeTextures();
@@ -160,19 +172,24 @@ public class ClientProxyHMG extends CommonSideProxyHMG {
     }
 
     @Override
-	public void reisterRenderers(){
+	public void reisterSomething(){
     	Minecraft mc = FMLClientHandler.instance().getClient();
     	//RenderManager rendermanager = new RenderManager(mc.renderEngine, mc.getRenderItem());
     	//RenderItem renderitem = mc.getRenderItem();
 
     	ClientRegistry.registerKeyBinding(Reload);
-	    ClientRegistry.registerKeyBinding(ChangeMagazineType);
-    	ClientRegistry.registerKeyBinding(SeekerOpen_Close);
-    	ClientRegistry.registerKeyBinding(Attachment);
-    	ClientRegistry.registerKeyBinding(Fire_AttachedGun);
+	    ClientRegistry.registerKeyBinding(Fire_AttachedGun.keyBinding);
     	ClientRegistry.registerKeyBinding(ADS);
-		ClientRegistry.registerKeyBinding(Mode);
-		ClientRegistry.registerKeyBinding(Fix);
+    	ClientRegistry.registerKeyBinding(gunPrepare_modification);
+    	ClientRegistry.registerKeyBinding(Attachment);
+    	ClientRegistry.registerKeyBinding(ChangeMagazineType.keyBinding);
+		ClientRegistry.registerKeyBinding(Fix.keyBinding);
+		ClientRegistry.registerKeyBinding(gunSetting_modification);
+		ClientRegistry.registerKeyBinding(El_Up.keyBinding);
+		ClientRegistry.registerKeyBinding(El_Reset.keyBinding);
+		ClientRegistry.registerKeyBinding(El_Down.keyBinding);
+		ClientRegistry.registerKeyBinding(SeekerOpen_Close.keyBinding);
+		ClientRegistry.registerKeyBinding(Mode.keyBinding);
     	MinecraftForge.EVENT_BUS.register(new HMGParticles());
 
     	try {
@@ -350,92 +367,40 @@ public class ClientProxyHMG extends CommonSideProxyHMG {
 		MinecraftForge.EVENT_BUS.register(new HMGParticles());
     	//ClientRegistry.bindTileEntitySpecialRenderer(GVCTileEntityItemG36.class, new GVCRenderItemG36());
     }
-
-    @Override
-    public boolean jumped(){
-		return keyDown(Minecraft.getMinecraft().gameSettings.keyBindJump.getKeyCode());
-		//return false;
-	}
-
-    @Override
-    public boolean leftclick(){
-		return keyDown(Minecraft.getMinecraft().gameSettings.keyBindAttack.getKeyCode());
-		//return false;
-	}
 	@Override
-	public boolean lightkeydown(){
-		boolean flag =  keyDown(SeekerOpen_Close.getKeyCode());
-    	if(flag){
-    		if(!stopper_Lightkey){
-    			stopper_Lightkey = true;
-			}else{
-    			flag = false;
-			}
-		}else {
-    		stopper_Lightkey = false;
-		}
-		return flag;
+	public boolean seekerOpenClose(){
+		return SeekerOpen_Close.isKeyDown() && keyDown_except_null(gunSetting_modification.getKeyCode());
 		//return false;
 	}
 	@Override
 	public boolean fixkeydown(){
-		boolean flag =  keyDown(Fix.getKeyCode());
-    	if(flag){
-    		if(!stopper_Fixkey){
-				stopper_Fixkey = true;
-			}else{
-    			flag = false;
-			}
-		}else {
-			stopper_Fixkey = false;
-		}
-		return flag;
+		return Fix.isKeyDown() && keyDown_except_null(gunPrepare_modification.getKeyCode());
 		//return false;
 	}
 
 	@Override
 	public boolean upElevationKeyDown(){
-		return false;
+		return El_Up.isKeyDown() && keyDown_except_null(gunSetting_modification.getKeyCode());
 	}
 	@Override
 	public boolean downElevationKeyDown(){
-		return false;
+		return El_Down.isKeyDown() && keyDown_except_null(gunSetting_modification.getKeyCode());
 	}
 	@Override
-	public boolean Lightkeyispressed_no_stopper(){
-		return keyDown(SeekerOpen_Close.getKeyCode());
+	public boolean resetElevationKeyDown(){
+		return El_Reset.isKeyDown() && keyDown_except_null(gunSetting_modification.getKeyCode());
 	}
     @Override
     public boolean Fclick(){
-		boolean flag = keyDown(Fire_AttachedGun.getKeyCode());
-		if(flag){
-			if(!stopper_Fkey){
-				stopper_Fkey = true;
-			}else {
-				flag = false;
-			}
-		}else {
-			stopper_Fkey = false;
-		}
-		return flag;
+		return Fire_AttachedGun.isKeyDown();
 	}
     @Override
     public boolean ChangeMagazineTypeclick(){
-		boolean flag = keyDown(ChangeMagazineType.getKeyCode());
-		if(flag){
-			if(!stopper_ChangeMagazineTypekey){
-				stopper_ChangeMagazineTypekey = true;
-			}else {
-				flag = false;
-			}
-		}else {
-			stopper_ChangeMagazineTypekey = false;
-		}
-		return flag;
+		return ChangeMagazineType.isKeyDown() && keyDown_except_null(gunPrepare_modification.getKeyCode());
 	}
 	@Override
 	public boolean Fclick_no_stopper(){
-		boolean flag = keyDown(Fire_AttachedGun.getKeyCode());
+		boolean flag = keyDown(Fire_AttachedGun.keyBinding.getKeyCode());
 		return flag;
 	}
     @Override
@@ -449,21 +414,11 @@ public class ClientProxyHMG extends CommonSideProxyHMG {
 
 	@Override
 	public boolean Attachmentkeyispressed(){
-		return keyDown(Attachment.getKeyCode());
+		return keyDown(Attachment.getKeyCode()) && keyDown_except_null(gunPrepare_modification.getKeyCode());
 	}
 	@Override
 	public boolean Modekeyispressed(){
-		boolean flag = keyDown(Mode.getKeyCode());
-		if(flag){
-			if(!stopper_modekey) {
-				stopper_modekey = true;
-			}else {
-				flag = false;
-			}
-		}else {
-			stopper_modekey = false;
-		}
-		return flag;
+		return Mode.isKeyDown() && keyDown_except_null(gunSetting_modification.getKeyCode());
 	}
 //	@Override
 //	public boolean Secondarykeyispressed(){
@@ -472,6 +427,16 @@ public class ClientProxyHMG extends CommonSideProxyHMG {
 
 	public boolean keyDown(int keyCode)
 	{
+		boolean state = false;
+		if (getMCInstance().currentScreen == null || getMCInstance().currentScreen.allowUserInput) {
+			state = (keyCode < 0 ? Mouse.isButtonDown(keyCode + 100) : Keyboard.isKeyDown(keyCode));
+		}
+		return state;
+	}
+
+	public boolean keyDown_except_null(int keyCode)
+	{
+		if(keyCode == Keyboard.KEY_NONE)return true;
 		boolean state = false;
 		if (getMCInstance().currentScreen == null || getMCInstance().currentScreen.allowUserInput) {
 			state = (keyCode < 0 ? Mouse.isButtonDown(keyCode + 100) : Keyboard.isKeyDown(keyCode));
@@ -606,7 +571,7 @@ public class ClientProxyHMG extends CommonSideProxyHMG {
 	}
 
 	public String getFixkey(){
-		return GameSettings.getKeyDisplayString(Fix.getKeyCode());
+		return GameSettings.getKeyDisplayString(Fix.keyBinding.getKeyCode()) + " + " + GameSettings.getKeyDisplayString(gunPrepare_modification.getKeyCode());
 	}
 
 	public float getFOVModifier(Minecraft mc,float p_78481_1_, boolean p_78481_2_)

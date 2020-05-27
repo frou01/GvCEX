@@ -176,39 +176,44 @@ public class HMGItem_Unified_Guns extends Item {
 
 
 
+                guntemp.readPropertyFromNBT(gunInfo,nbt,HandmadeGunsCore.Key_ADS(entity),world);
+//                if (guntemp.connectedTurret = nbt.getBoolean("IsTurretStack") && guntemp.currentConnectedTurret == null) {
+//                    return;
+//                }
+//                guntemp.tempspread = gunInfo.spread_setting;
+//                if (HandmadeGunsCore.Key_ADS(entity)) {
+//                    guntemp.tempspread = guntemp.tempspread * gunInfo.ads_spread_cof;
+//                }
+//                guntemp.tempspreadDiffusion = nbt.getFloat("Diffusion");
+//                if (guntemp.tempspreadDiffusion > gunInfo.spreadDiffusionMax)
+//                    guntemp.tempspreadDiffusion = gunInfo.spreadDiffusionMax;
+//                guntemp.tempspreadDiffusion -= gunInfo.spreadDiffusionReduceRate;
+//                if (guntemp.tempspreadDiffusion < gunInfo.spreadDiffusionmin)
+//                    guntemp.tempspreadDiffusion = gunInfo.spreadDiffusionmin;
+//                guntemp.tempspread += gunInfo.spread_setting * guntemp.tempspreadDiffusion;
+//
+//
+//                guntemp.sound = gunInfo.soundbase;
+//                guntemp.soundlevel = gunInfo.soundbaselevel;
+//                guntemp.muzzle = gunInfo.muzzleflash;
+//                guntemp.selectingMagazine = nbt.getInteger("get_selectingMagazine");
+//                guntemp.currentMgazine = nbt.getInteger("getcurrentMagazine");
+//
+//
+//                guntemp.islockingentity = nbt.getBoolean("islockedentity");
+//                guntemp.TGT = world.getEntityByID(nbt.getInteger("TGT"));
+//                guntemp.islockingblock = nbt.getBoolean("islockedblock");
+//                guntemp.LockedPosX = nbt.getInteger("LockedPosX");
+//                guntemp.LockedPosY = nbt.getInteger("LockedPosY");
+//                guntemp.LockedPosZ = nbt.getInteger("LockedPosZ");
+//                guntemp.currentElevation = nbt.getInteger("currentElevation");
+//                guntemp.selector = nbt.getInteger("HMGMode");
 
-                if (guntemp.connectedTurret = nbt.getBoolean("IsTurretStack") && guntemp.currentConnectedTurret == null) {
-                    return;
-                }
+
                 if (i != -10) nbt.setBoolean("IsTurretStack", false);
-                guntemp.tempspread = gunInfo.spread_setting;
-                if (HandmadeGunsCore.Key_ADS(entity)) {
-                    guntemp.tempspread = guntemp.tempspread * gunInfo.ads_spread_cof;
-                }
-                guntemp.tempspreadDiffusion = nbt.getFloat("Diffusion");
-                if (guntemp.tempspreadDiffusion > gunInfo.spreadDiffusionMax)
-                    guntemp.tempspreadDiffusion = gunInfo.spreadDiffusionMax;
-                guntemp.tempspreadDiffusion -= gunInfo.spreadDiffusionReduceRate;
-                if (guntemp.tempspreadDiffusion < gunInfo.spreadDiffusionmin)
-                    guntemp.tempspreadDiffusion = gunInfo.spreadDiffusionmin;
-                guntemp.tempspread += gunInfo.spread_setting * guntemp.tempspreadDiffusion;
 
 
-                guntemp.sound = gunInfo.soundbase;
-                guntemp.soundlevel = gunInfo.soundbaselevel;
-                guntemp.muzzle = gunInfo.muzzleflash;
-                guntemp.selectingMagazine = nbt.getInteger("get_selectingMagazine");
-                guntemp.currentMgazine = nbt.getInteger("getcurrentMagazine");
-
-                gunInfo.posGetter.sightPos = gunInfo.sightPosN;
-
-                guntemp.islockingentity = nbt.getBoolean("islockedentity");
-                guntemp.TGT = world.getEntityByID(nbt.getInteger("TGT"));
-                guntemp.islockingblock = nbt.getBoolean("islockedblock");
-                guntemp.LockedPosX = nbt.getInteger("LockedPosX");
-                guntemp.LockedPosY = nbt.getInteger("LockedPosY");
-                guntemp.LockedPosZ = nbt.getInteger("LockedPosZ");
-                int mode = nbt.getInteger("HMGMode");
+                gunInfo.posGetter.curretnSightPos = gunInfo.sightPosN;//tempへの移動めんD
 
                 bindattaches(itemstack, world, entity);
                 boolean canFixflag = gunInfo.canfix;
@@ -264,19 +269,37 @@ public class HMGItem_Unified_Guns extends Item {
                                 HMGPacketHandler.INSTANCE.sendToServer(new PacketreturnMgazineItem(entity.getEntityId()));
                                 nbt.setInteger("RloadTime", 0);
                             }
-                            if (HMG_proxy.Attachmentkeyispressed() && ((EntityPlayer) entity).inventory.getStackInSlot(i) != null && ((EntityPlayer) entity).inventory.getStackInSlot(i).getItem() instanceof HMGItem_Unified_Guns) {
-                                HMGPacketHandler.INSTANCE.sendToServer(new PacketOpenGui(0, entity.getEntityId()));
+                            if(((EntityPlayer) entity).inventory.getStackInSlot(i) != null && ((EntityPlayer) entity).inventory.getStackInSlot(i).getItem() instanceof HMGItem_Unified_Guns) {
+                                if (HMG_proxy.Attachmentkeyispressed()) {
+                                    HMGPacketHandler.INSTANCE.sendToServer(new PacketOpenGui(0, entity.getEntityId()));
+                                }
+
+                                boolean elevation_changed = false;
+                                if (HMG_proxy.resetElevationKeyDown()) {
+                                    guntemp.currentElevation = 0;
+                                    elevation_changed = true;
+                                } else if (HMG_proxy.upElevationKeyDown()) {
+                                    guntemp.currentElevation++;
+                                    elevation_changed = true;
+                                } else if (HMG_proxy.downElevationKeyDown()) {
+                                    guntemp.currentElevation--;
+                                    elevation_changed = true;
+                                }
+                                if (guntemp.currentElevation >= gunInfo.elevationOffsets.size()) {
+                                    guntemp.currentElevation = gunInfo.elevationOffsets.size() - 1;
+                                } else if (guntemp.currentElevation < 0) {
+                                    guntemp.currentElevation = 0;
+                                }
+                                if(elevation_changed) {//サーバーにパケット送信
+                                    HMGPacketHandler.INSTANCE.sendToServer(new PacketSetElevation(entity.getEntityId(),i,guntemp.currentElevation));
+                                }
                             }
-                            if (HMG_proxy.lightkeydown()) {
+                            if (HMG_proxy.seekerOpenClose()) {
                                 nbt.setBoolean("SeekerOpened", !nbt.getBoolean("SeekerOpened"));
                                 HMGPacketHandler.INSTANCE.sendToServer(new PacketSeekerOpen(entity.getEntityId()));
                             }
                             if (canFixflag && HMG_proxy.fixkeydown()) {
                                 HMGPacketHandler.INSTANCE.sendToServer(new PacketFixGun(entity.getEntityId()));
-                            }
-                            guntemp.currentElevation++;
-                            if(guntemp.currentElevation > gunInfo.elevationOffsets.size()){
-                                guntemp.currentElevation = 0;
                             }
                             try {
                                 if (guntemp.items != null && guntemp.items[4] != null && guntemp.items[4].getItem() instanceof HMGItem_Unified_Guns) {
@@ -291,15 +314,15 @@ public class HMGItem_Unified_Guns extends Item {
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-                            if (i != -1 && i != -10 && HMG_proxy.Modekeyispressed()) {
-                                mode++;
-                                if (mode >= gunInfo.burstcount.size() || mode >= gunInfo.rates.size()) {
-                                    mode = 0;
+                            if (HMG_proxy.Modekeyispressed()) {
+                                guntemp.selector++;
+                                if (guntemp.selector >= gunInfo.burstcount.size() || guntemp.selector >= gunInfo.rates.size()) {
+                                    guntemp.selector = 0;
                                 }
-                                nbt.setInteger("HMGMode", mode);
-                                HMGPacketHandler.INSTANCE.sendToServer(new PacketChangeModeHeldItem(entity, mode));
+                                nbt.setInteger("HMGMode", guntemp.selector);
+                                HMGPacketHandler.INSTANCE.sendToServer(new PacketChangeModeHeldItem(entity, guntemp.selector));
                             }
-                            if (i != -1 && i != -10 && HMG_proxy.ChangeMagazineTypeclick()) {
+                            if (HMG_proxy.ChangeMagazineTypeclick()) {
                                 int selecting = nbt.getInteger("get_selectingMagazine");
                                 selecting++;
                                 if (selecting >= gunInfo.magazine.length) {
@@ -357,6 +380,48 @@ public class HMGItem_Unified_Guns extends Item {
                     } catch (NoSuchMethodException e) {
                         e.printStackTrace();
                     }
+
+                    if(world.isRemote && entity.riddenByEntity != null && entity.riddenByEntity == HMG_proxy.getEntityPlayerInstance()){
+                        if (!gunInfo.isOneuse && HMG_proxy.Reloadkeyispressed()) {
+                            HMGPacketHandler.INSTANCE.sendToServer(new PacketreturnMgazineItem(entity.riddenByEntity.getEntityId()));
+                            nbt.setInteger("RloadTime", 0);
+                        }
+                        {
+
+                            if (HMG_proxy.Modekeyispressed()) {
+                                guntemp.selector++;
+                                if (guntemp.selector >= gunInfo.burstcount.size() || guntemp.selector >= gunInfo.rates.size()) {
+                                    guntemp.selector = 0;
+                                }
+                                nbt.setInteger("HMGMode", guntemp.selector);
+                                HMGPacketHandler.INSTANCE.sendToServer(new PacketChangeModeHeldItem(entity.riddenByEntity, guntemp.selector));
+                            }
+                            if (HMG_proxy.Attachmentkeyispressed()) {
+                                HMGPacketHandler.INSTANCE.sendToServer(new PacketOpenGui(0, entity.riddenByEntity.getEntityId()));
+                            }
+
+                            boolean elevation_changed = false;
+                            if (HMG_proxy.resetElevationKeyDown()) {
+                                guntemp.currentElevation = 0;
+                                elevation_changed = true;
+                            } else if (HMG_proxy.upElevationKeyDown()) {
+                                guntemp.currentElevation++;
+                                elevation_changed = true;
+                            } else if (HMG_proxy.downElevationKeyDown()) {
+                                guntemp.currentElevation--;
+                                elevation_changed = true;
+                            }
+                            if (guntemp.currentElevation >= gunInfo.elevationOffsets.size()) {
+                                guntemp.currentElevation = gunInfo.elevationOffsets.size() - 1;
+                            } else if (guntemp.currentElevation < 0) {
+                                guntemp.currentElevation = 0;
+                            }
+                            if(elevation_changed) {//サーバーにパケット送信
+                                HMGPacketHandler.INSTANCE.sendToServer(new PacketSetElevation(entity.riddenByEntity.getEntityId(),i,guntemp.currentElevation));
+                            }
+                        }
+                    }
+
                     if (!gunInfo.canceler) {
                         if (gunInfo.canlock && nbt.getBoolean("SeekerOpened")) {
                             lockon(itemstack, world, entity, nbt);
@@ -372,8 +437,8 @@ public class HMGItem_Unified_Guns extends Item {
                     e.printStackTrace();
                 }
                 {
-                    if (!gunInfo.rates.isEmpty() && gunInfo.rates.size() > mode)
-                        gunInfo.cycle = gunInfo.rates.get(mode);
+                    if (!gunInfo.rates.isEmpty() && gunInfo.rates.size() > guntemp.selector)
+                        gunInfo.cycle = gunInfo.rates.get(guntemp.selector);
                     boolean cocking = nbt.getBoolean("Cocking");
                     int cockingtime = nbt.getInteger("CockingTime");
                     if (!cocking && gunInfo.needcock) {
@@ -403,18 +468,18 @@ public class HMGItem_Unified_Guns extends Item {
                     if (nbt.getBoolean("IsTriggered")) {
                         if (!gunInfo.needfix || nbt.getBoolean("HMGfixed")) {
                             if (!nbt.getBoolean("TriggerBacked")) {
-                                if (getburstCount(mode) == 0) {
+                                if (getburstCount(guntemp.selector) == 0) {
                                     nbt.setBoolean("Bursting", false);
                                 } else {
-                                    if (getburstCount(mode) != -1 && !gunInfo.chargeType) {
+                                    if (getburstCount(guntemp.selector) != -1 && !gunInfo.chargeType) {
                                         if (is_Bolt_shooting_position && !nbt.getBoolean("Bursting")) {
                                             nbt.setBoolean("Bursting", true);
-                                            nbt.setInteger("RemainBurstround", getburstCount(mode));
+                                            nbt.setInteger("RemainBurstround", getburstCount(guntemp.selector));
                                         }
                                         //�Z�~�I�[�gor�o�[�X�g�Ȃ̂ŘA�˒�~
                                         nbt.setBoolean("TriggerBacked", true);
                                     }
-                                    if (getburstCount(mode) != -1 && gunInfo.chargeType) {
+                                    if (getburstCount(guntemp.selector) != -1 && gunInfo.chargeType) {
                                         //�`���[�W�^�C�v�i�������������C�j�Ȃ̂Ńg���K�[���ꂽ�t���O��true
                                         nbt.setBoolean("TriggerBacked", true);
                                     }
@@ -430,7 +495,7 @@ public class HMGItem_Unified_Guns extends Item {
                         if (nbt.getBoolean("TriggerBacked") && gunInfo.chargeType) {
                             if (is_Bolt_shooting_position && !nbt.getBoolean("Bursting")) {
                                 nbt.setBoolean("Bursting", true);
-                                nbt.setInteger("RemainBurstround", getburstCount(mode));
+                                nbt.setInteger("RemainBurstround", getburstCount(guntemp.selector));
                             }
                         }
                         nbt.setBoolean("TriggerBacked", false);
@@ -789,8 +854,13 @@ public class HMGItem_Unified_Guns extends Item {
 			    int magazineBulletOption = get_Type_Option_of_currentMagzine_and_apply_magazine_Option(itemstack);
 			    if (magazineBulletOption != -1) currentBulletType = magazineBulletOption;
 			    float backUpRotationPitch = entity.rotationPitch;
+			    float backUpRotationYaw = entity.rotationYaw;
 			    if(!gunInfo.elevationOffsets.isEmpty()){
 			        entity.rotationPitch += gunInfo.elevationOffsets.get(guntemp.currentElevation);
+                }
+			    if(entity.rotationPitch>90 || entity.rotationPitch<-90){
+                    entity.rotationYaw += 180;
+                    entity.rotationPitch = (180 - abs(entity.rotationPitch)) * (entity.rotationPitch>0 ? 1 : -1);
                 }
 			    switch (currentBulletType) {
 				    case 0:
@@ -864,8 +934,6 @@ public class HMGItem_Unified_Guns extends Item {
                             }
                             if (entity instanceof PlacedGunEntity) {
                                 setBulletPos_PlacedGun(entity, bulletBase, nbt);
-                                bulletBase.prevRotationYaw = bulletBase.rotationYaw = wrapAngleTo180_float(entity.getRotationYawHead());
-                                bulletBase.prevRotationPitch = bulletBase.rotationPitch = entity.rotationPitch;
                             }
                         }else {
                             if(gunInfo.canlock) {
@@ -882,6 +950,7 @@ public class HMGItem_Unified_Guns extends Item {
 				    }
 			    }
 			    entity.rotationPitch = backUpRotationPitch;
+			    entity.rotationYaw = backUpRotationYaw;
                 HMGPacketHandler.INSTANCE.sendToAll(new PacketPlaysound(entity, guntemp.sound, gunInfo.soundspeed, guntemp.soundlevel,entity.posX,entity.posY,entity.posZ));
 		    }
 		
@@ -1470,7 +1539,7 @@ public class HMGItem_Unified_Guns extends Item {
                 ItemStack itemstackattach;
                 itemstackattach = guntemp.items[1];
                 if(itemstackattach == null) {
-                    gunInfo.posGetter.sightPos = gunInfo.sightPosN;
+                    gunInfo.posGetter.curretnSightPos = gunInfo.sightPosN;
                     if(gunInfo.hasNightVision[0]){
                         if(entity instanceof EntityLivingBase && HandmadeGunsCore.Key_ADS(entity))((EntityLivingBase) entity).addPotionEffect(new PotionEffect(Potion.nightVision.id, 1, 1));
                     }
@@ -1485,7 +1554,7 @@ public class HMGItem_Unified_Guns extends Item {
                                 onads_modelPosY = (gunInfo.sightattachoffset[1] + ((HMGItemSightBase) itemstackattach.getItem()).gunoffset[1]) * gunInfo.modelscale * gunInfo.inworldScale * gunInfo.onTurretScale;
                                 onads_modelPosZ = (gunInfo.sightattachoffset[2] + ((HMGItemSightBase) itemstackattach.getItem()).gunoffset[2]) * gunInfo.modelscale * gunInfo.inworldScale * gunInfo.onTurretScale;
                             }
-                            gunInfo.posGetter.sightPos = new double[]{onads_modelPosX, onads_modelPosY, onads_modelPosZ};
+                            gunInfo.posGetter.curretnSightPos = new double[]{onads_modelPosX, onads_modelPosY, onads_modelPosZ};
                             if(((HMGItemSightBase) itemstackattach.getItem()).isnightvision){
                                 if(entity instanceof EntityLivingBase && HandmadeGunsCore.Key_ADS(entity))((EntityLivingBase) entity).addPotionEffect(new PotionEffect(Potion.nightVision.id, 1, 1));
                             }
@@ -1493,12 +1562,12 @@ public class HMGItem_Unified_Guns extends Item {
                             if(gunInfo.hasNightVision[1]){
                                 if(entity instanceof EntityLivingBase && HandmadeGunsCore.Key_ADS(entity))((EntityLivingBase) entity).addPotionEffect(new PotionEffect(Potion.nightVision.id, 1, 1));
                             }
-                            gunInfo.posGetter.sightPos = gunInfo.sightPosR;
+                            gunInfo.posGetter.curretnSightPos = gunInfo.sightPosR;
                         }else if(itemstackattach.getItem() instanceof HMGItemAttachment_scope){
                             if(gunInfo.hasNightVision[2]){
                                 if(entity instanceof EntityLivingBase && HandmadeGunsCore.Key_ADS(entity))((EntityLivingBase) entity).addPotionEffect(new PotionEffect(Potion.nightVision.id, 1, 1));
                             }
-                            gunInfo.posGetter.sightPos = gunInfo.sightPosS;
+                            gunInfo.posGetter.curretnSightPos = gunInfo.sightPosS;
                         }
                     }
                 }

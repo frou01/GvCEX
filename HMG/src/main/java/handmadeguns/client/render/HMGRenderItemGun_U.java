@@ -136,7 +136,8 @@ public class HMGRenderItemGun_U implements IItemRenderer {
 	public boolean mat25 = false;
 	public boolean mat2 = false;
 	public boolean remat31 = true;
-	
+	public boolean remat3 = true;
+
 	public boolean reloadanim = false;
 	public ArrayList<Float[]> reloadanimation = new ArrayList<Float[]>();
 	public boolean nodrawmat35 = false;
@@ -969,13 +970,15 @@ public class HMGRenderItemGun_U implements IItemRenderer {
 						GL11.glPopMatrix();
 
 						ItemStack magstack = items[5];
-						if(magstack != null) {
-							IItemRenderer magrender = MinecraftForgeClient.getItemRenderer(magstack, type);
-							if (magrender instanceof HMGRenderItemCustom && magrender.handleRenderType(magstack, type)) {
-								((HMGRenderItemCustom)magrender).renderaspart();
-								Minecraft.getMinecraft().renderEngine.bindTexture(guntexture);
-							}else renderpartofmodel("mat3");
-						}else renderpartofmodel("mat3");
+						if(gun.remain_Bullet(item)!= 0 || remat3) {
+							if (magstack != null) {
+								IItemRenderer magrender = MinecraftForgeClient.getItemRenderer(magstack, type);
+								if (magrender instanceof HMGRenderItemCustom && magrender.handleRenderType(magstack, type)) {
+									((HMGRenderItemCustom) magrender).renderaspart();
+									Minecraft.getMinecraft().renderEngine.bindTexture(guntexture);
+								} else renderpartofmodel("mat3");
+							} else renderpartofmodel("mat3");
+						}
 						renderpartofmodel("mat22");
 						if (nodrawmat35) {
 							renderpartofmodel("mat35");

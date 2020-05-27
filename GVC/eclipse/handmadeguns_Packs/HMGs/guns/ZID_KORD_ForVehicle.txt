@@ -1,3 +1,5 @@
+guerrila_cant_use_this
+Dont_Be_Inside_Root_Chest
 BulletPower,26
 BulletSpeed,8.6
 BulletGravity,0.485

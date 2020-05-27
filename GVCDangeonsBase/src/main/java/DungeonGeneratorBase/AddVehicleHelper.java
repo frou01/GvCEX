@@ -27,13 +27,13 @@ public class AddVehicleHelper {
 		Prefab_Vehicle_Base prefab_vehicle = bespawningEntity.getBaseLogic().prefab_vehicle;
 		for(int slotID = 0 ;slotID < prefab_vehicle.weaponSlotNum;slotID++) {
 			if(!prefab_vehicle.weaponSlot_linkedTurret_StackWhiteList.isEmpty()) {
-				int randUsingSlot = rand.nextInt(prefab_vehicle.weaponSlot_linkedTurret_StackWhiteList.size());
-				{
-					String whiteList = prefab_vehicle.weaponSlot_linkedTurret_StackWhiteList.get(slotID)[randUsingSlot];
-					Item check = GameRegistry.findItem("HandmadeGuns", whiteList);
-					if (check instanceof HMGItem_Unified_Guns && ((HMGItem_Unified_Guns) check).gunInfo.guerrila_can_use) {
-						bespawningEntity.getBaseLogic().inventoryVehicle.setInventorySlotContents(slotID, new ItemStack(check));
-					}
+
+				int randUsingSlot = rand.nextInt(prefab_vehicle.weaponSlot_linkedTurret_StackWhiteList.get(slotID).length);
+				String whiteList = prefab_vehicle.weaponSlot_linkedTurret_StackWhiteList.get(slotID)[randUsingSlot];
+				System.out.println("" + whiteList);
+				Item check = GameRegistry.findItem("HandmadeGuns", whiteList);
+				if (check instanceof HMGItem_Unified_Guns && ((HMGItem_Unified_Guns) check).gunInfo.guerrila_can_use) {
+					bespawningEntity.getBaseLogic().inventoryVehicle.setInventorySlotContents(slotID, new ItemStack(check));
 				}
 			}else{
 				int randUsingSlot = rand.nextInt(GVCMobPlus.Guns_CanUse.size());

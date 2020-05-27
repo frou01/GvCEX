@@ -2,6 +2,9 @@ package handmadeguns.client.render;
 
 import java.util.ArrayList;
 
+import static handmadeguns.HMGGunMaker.readerCnt;
+import static java.lang.Integer.parseInt;
+
 public class HMGGunParts {
     public boolean rotateTypeIsVector = false;
     public String partsname;
@@ -16,6 +19,7 @@ public class HMGGunParts {
     public ArrayList<Boolean> select_magazineType = null;
     public HMGGunParts mother;
     public int motherIndex;
+    private HMGGunParts_Motions[] somethingMotionKey = new HMGGunParts_Motions[13];
 
     private HMGGunParts_Motion_PosAndRotation rotCenterAndRotation;
     private HMGGunParts_Motion_PosAndRotation defaultPosAndRotation_ForOffset = new HMGGunParts_Motion_PosAndRotation(0,0,0,0,0,0);
@@ -104,13 +108,25 @@ public class HMGGunParts {
         this.partsname_reticle      = partsname + "reticle";
         this.partsname_light        = partsname + "light";
     }
-    
+
     public HMGGunParts(String string, int motherID, HMGGunParts mother) {
         this(string);
         this.mother = mother;
         this.motherIndex = motherID;
     }
-    
+
+    public void AddSomethingMotionKey(String[] type){
+        HMGGunParts_Motion motion = new HMGGunParts_Motion(type);
+        int id = parseInt(type[readerCnt++]);
+        if(somethingMotionKey[id] == null) somethingMotionKey[id] = new HMGGunParts_Motions();
+        somethingMotionKey[id].addmotion(motion);
+        isbelt = true;
+    }
+    public HMGGunParts_Motion_PosAndRotation getSomethingPositions(float flame,int id){
+        if(somethingMotionKey[id] == null)return null;
+        return somethingMotionKey[id].getpartsMotion(flame);
+    }
+
     public HMGGunParts_Motion_PosAndRotation getRenderinfDefault_offset(){
         return defaultPosAndRotation_ForOffset;
     }

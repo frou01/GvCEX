@@ -381,6 +381,8 @@ public class MQO_MetasequoiaObject implements IModelCustom
 					materials = parseMaterial(currentLine,reader);
 				}
 			}
+
+			renderAll();
 		}
 		catch (IOException e)
 		{

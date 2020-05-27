@@ -94,7 +94,7 @@ key_Fire1:0
 key_Fire2:0
 key_CannonCamera:44
 key_Flap:33
-key_Air Brake:45
+key_Air Brake/Wheel Brake:45
 key_Flare/Smoke:146
 key_Change to Next Seat:21
 key_Change to Previous Seat:35

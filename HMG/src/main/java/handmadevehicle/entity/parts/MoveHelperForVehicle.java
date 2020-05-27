@@ -91,7 +91,7 @@ public class MoveHelperForVehicle {
 				baseLogic.setControl_brake(false);
 				baseLogic.setControl_Space(false);
 			}
-			System.out.println("" + dist);
+//			System.out.println("" + dist);
 			if(dist > 36){
 				update = false;
 				if (speed != 0) {
@@ -890,8 +890,9 @@ public class MoveHelperForVehicle {
 //						double angletocourse = toDegrees(bodyvector.angle(courseVec));
 //						System.out.println("" + angletocourse);
 				float targetyaw = wrapAngleTo180_float(-(float) toDegrees(atan2(courseVec.x, courseVec.z)));
+
 				if(alt < prefab_vehicle.minALT){
-					baseLogic.server_easyMode_yawTarget = targetyaw;
+					baseLogic.server_easyMode_yawTarget = baseLogic.bodyrotationYaw;
 					baseLogic.server_easyMode_pitchTarget = !prefab_vehicle.type_F_Plane_T_Heli ? prefab_vehicle.maxClimb : 0;
 				}
 				else {
@@ -912,8 +913,8 @@ public class MoveHelperForVehicle {
 						baseLogic.server_easyMode_pitchTarget = alt < prefab_vehicle.cruiseALT ?
 								prefab_vehicle.maxClimb
 								:
-								((alt > prefab_vehicle.cruiseALT + 60) ?
-										2
+								((alt > prefab_vehicle.cruiseALT + 10) ?
+										min((alt - prefab_vehicle.cruiseALT)/10,45)
 										:
 										0);
 					}

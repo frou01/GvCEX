@@ -33,10 +33,7 @@ import littleMaidMobX.LMM_EntityLittleMaidAvatarMP;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.command.IEntitySelector;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.IProjectile;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -147,6 +144,9 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
     public boolean hasVT;
     public double VTRange;
     public double VTWidth;
+    public double firstX;
+    public double firstY;
+    public double firstZ;
 
     
     //int i = mod_IFN_GuerrillaVsCommandGuns.RPGExplosiontime;
@@ -173,9 +173,9 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
         this.setLocationAndAngles(par2Entity.posX, par2Entity.posY + (double)par2Entity.getEyeHeight()*0.85, par2Entity.posZ, (par2Entity instanceof EntityLivingBase ? ((EntityLivingBase)par2Entity).rotationYawHead : par2Entity.rotationYaw), par2Entity.rotationPitch);
         Vec3 look = GunsUtils.getLook(1.0f,par2Entity);
         if(look != null) {
-            this.posX = par2Entity.posX + look.xCoord;
-            this.posY = par2Entity.posY + look.yCoord + par2Entity.getEyeHeight();
-            this.posZ = par2Entity.posZ + look.zCoord;
+            firstX= this.posX = par2Entity.posX + look.xCoord/2;
+            firstY = this.posY = par2Entity.posY + look.yCoord/2 + par2Entity.getEyeHeight();
+            firstZ = this.posZ = par2Entity.posZ + look.zCoord/2;
             this.motionX = look.xCoord;
             this.motionZ = look.yCoord;
             this.motionY = look.zCoord;
@@ -335,9 +335,10 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
     public double lastTickPosY2;
     /** The entity's Z coordinate at the previous tick, used to calculate position during rendering routines */
     public double lastTickPosZ2;
-    
+
     public void onUpdate() {
         super.onUpdate();
+//        if(!worldObj.isRemote)System.out.println("Y " + (this.posY - firstY) + "\t\tDist " + sqrt(pow(this.posX - firstX,2) + pow(this.posZ - firstZ,2)));
         if(Double.isNaN( this.motionX ) || Double.isNaN( this.motionY ) || Double.isNaN( this.motionZ )){//エラー対応
             this.motionX =this.motionY =this.motionZ =0;
             this.posX = this.posY = this.posZ = 0;
@@ -480,6 +481,7 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
                         var1.entityHit.motionX += knockvec.xCoord;
                         var1.entityHit.motionY += knockvec.yCoord + knockbackY;
                         var1.entityHit.motionZ += knockvec.zCoord;
+                        if(((EntityLivingBase) var1.entityHit).getHealth() < 0)var1.entityHit.hurtResistantTime = 20;
                     }
                 }
             }else if(var1.entityHit.attackEntityFrom((new EntityDamageSourceIndirect("penetrate", this, this.getThrower()).setProjectile()),(float)var2)){
@@ -1129,7 +1131,7 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
 //            }
         float f2 = (float) getspeed();
         rotationYaw = wrapAngleTo180_float(rotationYaw);
-        this.rotationYaw = this.rotationYaw + ((float) (-atan2(this.motionX, this.motionZ) * 180.0D / Math.PI) - this.rotationYaw)* (1-1 / (1 + f2 * 0.05f));
+        this.rotationYaw = this.rotationYaw + wrapAngleTo180_float((float) (-atan2(this.motionX, this.motionZ) * 180.0D / Math.PI) - this.rotationYaw)* (1-1 / (1 + f2 * 0.05f));
         this.rotationPitch = this.rotationPitch + ((float) (-atan2(this.motionY, (double) sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ)) * 180.0D / Math.PI) - this.rotationPitch)* (1-1 / (1 + f2 * 0.05f));
         
         changemotionflag |= changeVector();

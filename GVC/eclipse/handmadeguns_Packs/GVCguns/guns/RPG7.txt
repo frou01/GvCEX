@@ -1,9 +1,9 @@
 BulletPower,300
-BulletSpeed,1.375
+BulletSpeed,4
 BlletSpread,10.0f
 ADS_Spread_coefficient,0.5
 BlletSpreadDiffusion,10,0,1.8,0.2,3,0.6
-Acceleration,0.5f
+Acceleration,0.25f
 Recoil,2.0d
 ReloadTime,50
 RemainingBullet,1
@@ -44,7 +44,7 @@ SprintingRotation,-45f,0f,10f
 
 BulletNameALL,byfrou01_Rocket
 //0307
-BulletGravity,0.02f
+BulletGravity,0.485
 RenderCross,false
 Induction_precision,0.25
 //Canlock,true

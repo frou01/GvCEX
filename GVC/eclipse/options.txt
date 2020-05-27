@@ -1,6 +1,6 @@
 invertYMouse:false
 mouseSensitivity:0.5
-fov:-1.0
+fov:0.0
 gamma:1.0
 saturation:0.0
 renderDistance:16
@@ -95,7 +95,7 @@ key_Fire2:0
 key_CannonCamera:44
 key_Flap:33
 key_Air Brake/Wheel Brake:45
-key_Flare/Smoke:74
+key_Flare/Smoke:146
 key_Change to Next Seat:21
 key_Change to Previous Seat:35
 key_Pitch Up/Sus Up:23
@@ -105,20 +105,25 @@ key_Roll Left/Sus Right:36
 key_Weapon Mode:78
 key_Allow Entity to Ride:56
 key_Change Control:49
-key_Change to Easy/Normal Control:27
+key_Change to Easy/Normal Control:0
 key_Reset Camera Rotation:47
-key_Reload Config Settings:40
-key_Open Vehicle Gui:39
+key_Reload Config Settings:0
+key_Open Vehicle Gui:146
 key_Gear Down/Up:34
 key_Reload Magazine:19
-key_Change Magazine Type:48
-key_Seeker Open/Close:46
-key_Attachment:45
 key_Fire AttachedGun:33
 key_ADS_Key:47
-key_Mode_Key:41
+key_Gun Prepare Modification Key:56
+key_Attachment GUI:45
+key_Change Magazine Type:48
 key_Fix Gun:35
-soundCategory_master:0.09602649
+key_Gun Setting Modification:0
+key_Zero in : increase:21
+key_Zero in : reset:35
+key_Zero in : decrease:49
+key_Seeker Open/Close:46
+key_Cycle Selector:41
+soundCategory_master:0.03311258
 soundCategory_music:0.0
 soundCategory_record:1.0
 soundCategory_weather:1.0

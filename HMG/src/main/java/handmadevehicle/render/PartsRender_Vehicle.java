@@ -11,6 +11,7 @@ import org.lwjgl.opengl.GL11;
 import javax.vecmath.Vector3d;
 import java.util.ArrayList;
 
+import static handmadeguns.HandmadeGunsCore.cfgRender_useStencil;
 import static handmadeguns.event.RenderTickSmoothing.smooth;
 import static handmadevehicle.HMVehicle.HMV_Proxy;
 import static handmadevehicle.render.RenderVehicle.currentBaseLogic;
@@ -225,6 +226,8 @@ public class PartsRender_Vehicle extends PartsRender {
 
 			if (((HMVVehicleParts) parts).isPera){
 				float peraOffset = (currentBaseLogic.prev_pera_trackPos + (currentBaseLogic.pera_trackPos - currentBaseLogic.prev_pera_trackPos) * smooth)/currentBaseLogic.prefab_vehicle.max_pera_trackPos;
+				peraOffset = peraOffset%currentBaseLogic.prefab_vehicle.max_pera_trackPos;
+				if(peraOffset<0)peraOffset = peraOffset + currentBaseLogic.prefab_vehicle.max_pera_trackPos;
 				HMGGunParts_Motion_PosAndRotation peraPosAndRotation = ((HMVVehicleParts) parts).getRenderinfOfPeraPosAndRotation();
 				if(peraPosAndRotation != null) {
 					GL11.glTranslatef(peraPosAndRotation.posX * peraOffset, peraPosAndRotation.posY * peraOffset, peraPosAndRotation.posZ * peraOffset);
@@ -250,7 +253,7 @@ public class PartsRender_Vehicle extends PartsRender {
 			} else if (((HMVVehicleParts) parts).isTrack) {
 				renderParts_Track((HMVVehicleParts) parts, flame, remainbullets, rotationCenterAndRotation);
 			} else {
-				if (parts.reticleAndPlate) {
+				if (parts.reticleAndPlate && cfgRender_useStencil) {
 					glClearStencil(0);
 					glClear(GL_STENCIL_BUFFER_BIT);
 					glEnable(GL_STENCIL_TEST);

@@ -5,9 +5,12 @@ BulletGravity,0.485
 BlletSpread,4.0f
 ADS_Spread_coefficient,0.05
 BlletSpreadDiffusion,8,0,4,0.5,4,2
+ElevationOffsets,     0,-0.2,-0.4,-0.7,-1.0,-1.35,-1.7,-2.2
+elevationOffsets_info,0,20m  ,40m  ,60m ,80m ,100m ,120m,150m
 Cycle,2
 
 Motion,0.95
+
 
 Recoil,6
 Recoil_sneaking,5

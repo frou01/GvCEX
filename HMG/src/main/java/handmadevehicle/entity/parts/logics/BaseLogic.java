@@ -44,6 +44,7 @@ import java.util.List;
 import java.util.Random;
 
 import static handmadeguns.HandmadeGunsCore.HMG_proxy;
+import static handmadeguns.HandmadeGunsCore.cfg_blockdestroy;
 import static handmadeguns.Util.GunsUtils.isCollidableBlock;
 import static handmadevehicle.HMVehicle.*;
 import static handmadevehicle.Utils.*;
@@ -658,7 +659,7 @@ public class BaseLogic implements IbaseLogic,IneedMouseTrack,MultiRiderLogics {
 	
 	
 	private void destroyNearBlocks(AxisAlignedBB boundingBox,double inMotionX, double inMotionY, double inMotionZ){
-		if(prefab_vehicle.destroyGroundBlockCof < 0)return;
+		if(prefab_vehicle.destroyGroundBlockCof < 0 || !cfg_blockdestroy)return;
 		float destroy_counter = 0;
 		inMotionY *= prefab_vehicle.antiGroundHitCof_Y;
 		double speed = inMotionX * inMotionX + inMotionY * inMotionY + inMotionZ * inMotionZ;
@@ -2428,6 +2429,7 @@ public class BaseLogic implements IbaseLogic,IneedMouseTrack,MultiRiderLogics {
 
 
 			setPosition(mc_Entity.posX, mc_Entity.posY, mc_Entity.posZ);
+			boolean prevOnGround = mc_Entity.onGround;
 			moveEntity(mc_Entity.motionX, mc_Entity.motionY, mc_Entity.motionZ);
 			if(worldObj.isRemote && mc_Entity.onGround && mc_Entity.motionY<0)mc_Entity.motionY = 0;
 			motionvec = new Vector3d(mc_Entity.motionX, mc_Entity.motionY, mc_Entity.motionZ);
@@ -2447,6 +2449,18 @@ public class BaseLogic implements IbaseLogic,IneedMouseTrack,MultiRiderLogics {
 //					motionvec.add(powerVec);
 //				}
 //			}
+
+
+			if(mc_Entity.onGround || inWater){
+				followGround(mainwingvector,tailwingvector,bodyvector, (float) abs(motionvec_backUp.y + (motionvec.y - motionYBackUp)));
+			}else if(prevOnGround && prefab_vehicle.T_Land_F_Plane){
+				followGround(mainwingvector,tailwingvector,bodyvector, prefab_vehicle.gravity);
+				if(mc_Entity.onGround){
+					motionvec.y = 0;
+					mc_Entity.motionY = 0;
+				}
+			}
+
 			if (motionvec.lengthSquared() > 0) {//
 				Vector3d drug = new Vector3d(motionvec);
 				drug.normalize();
@@ -2484,18 +2498,21 @@ public class BaseLogic implements IbaseLogic,IneedMouseTrack,MultiRiderLogics {
 						localMotionVec.z *= (abs(localMotionVec.z) - dragFactor) / abs(localMotionVec.z);
 					}
 				}
-				double slipResist = 0;
-				slipResist = (localMotionVec.x > 0 ? 1 : -1) * localMotionVec.x * localMotionVec.x * prefab_vehicle.slipresist;
-				if(inWater)slipResist += (localMotionVec.x > 0 ? 1 : -1) * localMotionVec.x * prefab_vehicle.slipresist_inwater;
-				if(mc_Entity.onGround) {
-					slipResist += (localMotionVec.x > 0 ? 1 : -1) * abs(motionvec_backUp.y) * prefab_vehicle.slipresist_onground;
-				}
-				if (slipResist > 0 && slipResist > localMotionVec.x) {
-					localMotionVec.x = 0;
-				} else if (slipResist < 0 && slipResist < localMotionVec.x) {
-					localMotionVec.x = 0;
-				} else if (slipResist != 0) {
-					localMotionVec.x -= slipResist;
+				{
+					double slipResist = 0;
+					slipResist = (localMotionVec.x > 0 ? 1 : -1) * localMotionVec.x * localMotionVec.x * prefab_vehicle.slipresist;
+					if (inWater)
+						slipResist += (localMotionVec.x > 0 ? 1 : -1) * localMotionVec.x * prefab_vehicle.slipresist_inwater;
+					if (mc_Entity.onGround) {
+						slipResist += (localMotionVec.x > 0 ? 1 : -1) * abs(motionvec_backUp.y) * prefab_vehicle.slipresist_onground;
+					}
+					if (slipResist > 0 && slipResist > localMotionVec.x) {
+						localMotionVec.x = 0;
+					} else if (slipResist < 0 && slipResist < localMotionVec.x) {
+						localMotionVec.x = 0;
+					} else if (slipResist != 0) {
+						localMotionVec.x -= slipResist;
+					}
 				}
 				motionvec = transformVecByQuat(localMotionVec,bodyRot);
 				transformVecforMinecraft(motionvec);
@@ -2543,8 +2560,6 @@ public class BaseLogic implements IbaseLogic,IneedMouseTrack,MultiRiderLogics {
 				mc_Entity.motionY = motionvec.y;
 				mc_Entity.motionZ = motionvec.z;
 			}
-
-			if(mc_Entity.onGround || inWater)followGround(mainwingvector,tailwingvector,bodyvector, (float) abs(motionvec_backUp.y + (motionvec.y - motionYBackUp)));
 
 			if (mc_Entity.motionY > 0) {
 				mc_Entity.isAirBorne = true;

@@ -1,5 +1,6 @@
 package hmggvcmob.entity.friend;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import hmggvcmob.GVCMobPlus;
 import hmggvcmob.ai.AITargetFlag;
 import hmggvcmob.ai.PlatoonOBJ;
@@ -100,8 +101,7 @@ public class EntitySoBase extends EntitySoBases implements IflagBattler {
 
 	@Override
 	public void makePlatoon() {
-		platoonOBJ = new PlatoonOBJ();
-		this.setPlatoon(this.platoonOBJ);
+		this.setPlatoon(new PlatoonOBJ());
 
 
 		this.enlistPlatoon();

@@ -3,6 +3,7 @@ package handmadeguns.Handler;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import handmadeguns.entity.PlacedGunEntity;
 import handmadeguns.items.guns.HMGItem_Unified_Guns;
 import handmadeguns.network.PacketreturnMgazineItem;
 import net.minecraft.entity.Entity;
@@ -27,11 +28,17 @@ public class MessageCatcher_returnMagazineItem implements IMessageHandler<Packet
         try {
             if(world != null){
                 Entity shooter = world.getEntityByID(message.entityid);
-                if(shooter != null && shooter instanceof EntityPlayer && ((EntityLivingBase) shooter).getHeldItem() != null) {
+                if(shooter instanceof EntityPlayer && ((EntityLivingBase) shooter).getHeldItem() != null) {
                     Item gunitem = ((EntityLivingBase) shooter).getHeldItem().getItem();
                     ItemStack itemStack = ((EntityLivingBase) shooter).getHeldItem();
                     if(gunitem instanceof HMGItem_Unified_Guns && ((HMGItem_Unified_Guns) gunitem).remain_Bullet(itemStack) > 0){
                         ((HMGItem_Unified_Guns) gunitem).returnInternalMagazines(itemStack,shooter);
+                    }
+                }else if(shooter != null && shooter.ridingEntity instanceof PlacedGunEntity){
+                    HMGItem_Unified_Guns gunitem = ((PlacedGunEntity) shooter.ridingEntity).gunItem;
+                    ItemStack itemStack = ((PlacedGunEntity) shooter.ridingEntity).gunStack;
+                    if(gunitem != null && itemStack != null && gunitem.remain_Bullet(itemStack) > 0){
+                        gunitem.returnInternalMagazines(itemStack,shooter);
                     }
                 }
             }

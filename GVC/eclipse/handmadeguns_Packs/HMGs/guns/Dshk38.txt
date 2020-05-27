@@ -2,6 +2,22 @@ BulletPower,26
 BulletSpeed,8.6
 BulletGravity,0.485
 BlletSpread,3.0f
+BlletSpread,0.0f
+
+
+ElevationOffsets,     0,-0.4,-0.9,-1.3,-1.8,-2.2,-2.7,-3.2
+elevationOffsets_info,0,40m ,60m ,80m ,100m,120m,140m,160m
+sightOffset_zeroIn_setUp,8
+sightOffset_zeroIn_add,0,   0,0,0
+sightOffset_zeroIn_add,1,   0,0.01148445,0
+sightOffset_zeroIn_add,2,   0,0.02584172,0
+sightOffset_zeroIn_add,3,   0,0.03733027,0
+sightOffset_zeroIn_add,4,   0,0.05169620,0
+sightOffset_zeroIn_add,5,   0,0.06319452,0
+sightOffset_zeroIn_add,6,   0,0.07757623,0
+sightOffset_zeroIn_add,7,   0,0.09196977,0
+
+
 Recoil,5
 ReloadTime,150
 RemainingBullet,50
@@ -48,7 +64,6 @@ OnEntity_Yoffset,1.5
 
 AddParts,SYS_ALL?_Base
     AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
-    AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
     RenderOnNormal
     AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
     AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
@@ -56,7 +71,6 @@ AddParts,SYS_ALL?_Base
     AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
 
     AddChildParts,Tripod
-        AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
         AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
         RenderOnNormal
         AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
@@ -67,7 +81,6 @@ AddParts,SYS_ALL?_Base
     BackParts
 
     AddChildParts,Base
-        AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
         AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
         RenderOnNormal
         AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
@@ -90,6 +103,16 @@ AddParts,SYS_ALL?_Base
             //リローｄ(RY
             AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
             AddPitchInfoKey,-360,0,0,0,-360,0,0        ,360,0,0,0,360,0,0
+
+
+			AddSomeMotion,0,0,0,0     ,0       ,0,0,      0,0,0,0     ,0       ,0,0,   0
+			AddSomeMotion,0,0,0,0     ,-0.4    ,0,0,      1,0,0,0     ,-0.4    ,0,0,   0
+			AddSomeMotion,1,0,0,0     ,-0.9    ,0,0,      2,0,0,0     ,-0.9    ,0,0,   0
+			AddSomeMotion,2,0,0,0     ,-1.3    ,0,0,      3,0,0,0     ,-1.3    ,0,0,   0
+			AddSomeMotion,3,0,0,0     ,-1.8    ,0,0,      4,0,0,0     ,-1.8    ,0,0,   0
+			AddSomeMotion,4,0,0,0     ,-2.2    ,0,0,      5,0,0,0     ,-2.2    ,0,0,   0
+			AddSomeMotion,5,0,0,0     ,-2.7    ,0,0,      6,0,0,0     ,-2.7    ,0,0,   0
+			AddSomeMotion,6,0,0,0     ,-3.2    ,0,0,      7,0,0,0     ,-3.2    ,0,0,   0
 
             //レシーバー
             AddChildParts,Receiver
@@ -233,6 +256,15 @@ AddParts,SYS_ALL?_Base
                     AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
                     AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
                     AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+
+					AddSomeMotion,0,0,0         ,0  ,0,0,0,   0,0,0         ,0  ,0,0,0,      0
+					AddSomeMotion,0,0,0.07650879,0  ,0,0,0,   1,0,0.07650879,0  ,0,0,0,   0
+					AddSomeMotion,1,0,0.17215616,0  ,0,0,0,   2,0,0.17215616,0  ,0,0,0,   0
+					AddSomeMotion,2,0,0.24869223,0  ,0,0,0,   3,0,0.24869223,0  ,0,0,0,   0
+					AddSomeMotion,3,0,0.34439730,0  ,0,0,0,   4,0,0.34439730,0  ,0,0,0,   0
+					AddSomeMotion,4,0,0.42099847,0  ,0,0,0,   5,0,0.42099847,0  ,0,0,0,   0
+					AddSomeMotion,5,0,0.51680860,0  ,0,0,0,   6,0,0.51680860,0  ,0,0,0,   0
+					AddSomeMotion,6,0,0.61269763,0  ,0,0,0,   7,0,0.61269763,0  ,0,0,0,   0
                 BackParts
             BackParts
             AddChildParts,AASight

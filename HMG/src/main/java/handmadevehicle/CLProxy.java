@@ -1,8 +1,8 @@
 package handmadevehicle;
 
-import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
+import handmadeguns.KeyBinding_withStopper;
 import handmadeguns.client.render.ModelSetAndData;
 import handmadevehicle.audio.TurretSound;
 import handmadevehicle.audio.VehicleEngineSound;
