@@ -111,13 +111,18 @@ key_Reload Config Settings:0
 key_Open Vehicle Gui:39
 key_Gear Down/Up:34
 key_Reload Magazine:19
-key_Change Magazine Type:48
-key_Seeker Open/Close:46
-key_Attachment:45
 key_Fire AttachedGun:33
 key_ADS_Key:47
-key_Mode_Key:41
-key_Fix Gun:35
+key_Gun Prepare Modification Key:56
+key_[Gun Prepare]Attachment GUI:45
+key_[Gun Prepare]Change Magazine Type:48
+key_[Gun Prepare]Fix Gun:35
+key_Gun Setting Modification:0
+key_[Gun Setting]Zero in : increase:21
+key_[Gun Setting]Zero in : reset:35
+key_[Gun Setting]Zero in : decrease:49
+key_[Gun Setting]Seeker Open/Close:46
+key_[Gun Setting]Cycle Selector:41
 soundCategory_master:0.307947
 soundCategory_music:0.0
 soundCategory_record:1.0

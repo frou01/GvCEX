@@ -6,12 +6,12 @@ saturation:0.0
 renderDistance:16
 guiScale:0
 particles:0
-bobView:false
+bobView:true
 anaglyph3d:false
 advancedOpengl:false
 maxFps:60
 fboEnable:true
-difficulty:2
+difficulty:0
 fancyGraphics:false
 ao:0
 clouds:true
@@ -114,15 +114,15 @@ key_Reload Magazine:19
 key_Fire AttachedGun:33
 key_ADS_Key:47
 key_Gun Prepare Modification Key:56
-key_Attachment GUI:45
-key_Change Magazine Type:48
-key_Fix Gun:35
+key_[Gun Prepare]Attachment GUI:45
+key_[Gun Prepare]Change Magazine Type:48
+key_[Gun Prepare]Fix Gun:35
 key_Gun Setting Modification:0
-key_Zero in : increase:21
-key_Zero in : reset:35
-key_Zero in : decrease:49
-key_Seeker Open/Close:46
-key_Cycle Selector:41
+key_[Gun Setting]Zero in : increase:21
+key_[Gun Setting]Zero in : reset:35
+key_[Gun Setting]Zero in : decrease:49
+key_[Gun Setting]Seeker Open/Close:46
+key_[Gun Setting]Cycle Selector:41
 soundCategory_master:0.03311258
 soundCategory_music:0.0
 soundCategory_record:1.0
