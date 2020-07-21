@@ -1,0 +1,122 @@
+Name,ReiSiki;
+modelName,type0.mqo;
+modelName_texture,type0.png;
+wingUnit,0,268.39,11.26;
+rotcenter,0,1.02,0;
+powerPos_onGround,0,0,0;
+slipresist_onground,0.8;
+motionRollResist,-20;
+gravity,0.0098f;
+onground_pitch,11;
+health,150;
+throttle_gearDown,5;
+displayModernHud,false;
+speedfactor,0.079;
+turbine_torque,0.0006f;
+torque,0.002f;
+dragfactor_front,0.00001;
+stability_motion,2.2;
+stability_motion3,0.0;
+stability_motion2,0.0;
+stability_roll,0.003;
+rotmotion_reduceSpeed,0.01;
+liftfactor,0.012;
+flapliftfactor,0.000065;
+flapdragfactor,0.000001;
+slipresist,0.2;
+brakedragfactor,0;
+brakedragfactor_ground,0.3;
+yawspeed,0.04;
+rollspeed,0.08;
+pitchspeed,0.027;
+yawspeed_taxing,10;
+off_road_followability,3;
+soundname,handmadevehicle:handmadevehicle.AirCoolEngineSound;
+soundpitch,1.8;
+autoflap,false;
+boundingBoxSizeX,2;
+boundingBoxSizeY,2;
+
+maxbank,80;
+minALT,30;
+maxClimb,-20;
+cruiseALT,40;
+
+//ïêëïí«â¡;
+ParentWeapons_NUM,2;
+AllWeapons_NUM,4;
+
+addParentWeapon,0,Type99_20mm,1.771,1.1433,-1.6385,1;
+addChildWeapon,0,Type99_20mm,-1.771,1.1433,-1.6385,0;
+addParentWeapon,1,Type97_7.7mm_FixedGun,-0.2545,1.869,-2.875,1;
+addChildWeapon,0,Type97_7.7mm_FixedGun,0.2545,1.869,-2.875,0;
+
+//ç¿ê»í«â¡;
+SetUpSeat1_NUM,1;
+SetUpSeat2_AddSeat_Normal,0,0,2.1839,-0.3075,true,false,false,2,0;
+camerapos,0,2.1839,-0.8;
+
+userProtect_maxDamageLevel,0,8;
+
+wingVapourTrailPoint_num,2;
+wingVapourTrailPoint_set,0,4.857,1.019,-1.178;
+wingVapourTrailPoint_set,1,-4.857,1.019,-1.178;
+wingVapourTrailStart,0.08f;
+
+thirdPersonDistance,16;
+
+//top,bottom,front,back,left,right;
+boxes_withInfo,4,
+0,1.0,-0.1,	0,0,0,	0.85,1.2,8,	1,0,0,0,	12,12,0,0,12,12,-1,
+0,0.77,-1,	0,0,0,	9.7,0.4,2,	1,0,0,0,	3,3,50,50,50,50,-1,
+0,1.45,3.2,	0,0,0,	3.4,0.12,1.3,	1,0,0,0,	3,3,50,50,50,50,-1,
+0,1.87,3.4,	0,0,0,	0.03,1.4,1.4,	1,0,0,0,	3,3,50,50,50,50,-1;
+
+AddParts,body;
+	AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0;
+	RenderOnNormal;
+	SetAsNormalParts;
+
+	AddChildParts,pera;
+		RenderOnNormal;
+		SetAsNormalParts;
+		AddPartsRotationCenterAndRotationAmount, 0, 1.4, 0 , 0,0,0;
+
+		IsPera,true;
+		AddPartsRenderAsTrackInf,0,0,0,0,0,2880;
+	BackParts;
+
+
+	AddChildParts,sightPlate;
+		RenderOnNormal;
+		SetAsNormalParts;
+		reticleAndPlate;
+		AddReticleChildParts,sight;
+			RenderOnNormal;
+			SetAsNormalParts;
+		BackParts;
+	BackParts;
+
+	AddChildParts,RearGear;
+		RenderOnNormal;
+		SetAsNormalParts;
+		AddPartsRotationCenterAndRotationAmount_TypeVector, 0, 1.1535, -4.6429 , 1 , 0 , 0 , 0;
+		AddSomeMotion,-1,false       	,1,7;
+		AddSomeMotion,1,0,0,0,120,0,0        	,100,0,0,0,0,0,0	,7;
+	BackParts;
+	AddChildParts,LGear;
+		RenderOnNormal;
+		SetAsNormalParts;
+		AddPartsRotationCenterAndRotationAmount_TypeVector, 1.7377, 1.1170, 1.3726, 0, 0, 1 , 0;
+		AddSomeMotion,-1,false       	,1,7;
+		AddSomeMotion,1,0,0,0,-80,0,0        	,100,0,0,0,0,0,0	,7;
+	BackParts;
+	AddChildParts,RGear;
+		RenderOnNormal;
+		SetAsNormalParts;
+		AddPartsRotationCenterAndRotationAmount_TypeVector, -1.7377, 1.1170, 1.3726, 0, 0, 1 , 0;
+		AddSomeMotion,-1,false       	,1,7;
+		AddSomeMotion,1,0,0,0,80,0,0        	,100,0,0,0,0,0,0	,7;
+	BackParts;
+BackParts;
+End;

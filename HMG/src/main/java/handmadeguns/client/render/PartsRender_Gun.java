@@ -302,15 +302,19 @@ public class PartsRender_Gun extends PartsRender {
 		}else if(parts.isRarm){
 			renderarmR();
 		}
-		HMGGunParts_Motion_PosAndRotation yawLadderInfo = parts.getSomethingPositions(guntemp.currentElevation,0);
-		if (yawLadderInfo != null) {
-			if(!yawLadderInfo.renderOnOff)return;
-			transformParts(rotationCenterAndRotation,yawLadderInfo,parts);
+		HMGGunParts_Motion_PosAndRotation elevationInfo = parts.getSomethingPositions(guntemp.currentElevation,0);
+		if (elevationInfo != null) {
+			if(!elevationInfo.renderOnOff){
+				return;
+			}
+			transformParts(rotationCenterAndRotation,elevationInfo,parts);
 		}
-		HMGGunParts_Motion_PosAndRotation pitchLadderInfo = parts.getSomethingPositions(guntemp.selector,1);
-		if (pitchLadderInfo != null) {
-			if(!pitchLadderInfo.renderOnOff)return;
-			transformParts(rotationCenterAndRotation,pitchLadderInfo,parts);
+		HMGGunParts_Motion_PosAndRotation selectorInfo = parts.getSomethingPositions(guntemp.selector,1);
+		if (selectorInfo != null) {
+			if(!selectorInfo.renderOnOff){
+				return;
+			}
+			transformParts(rotationCenterAndRotation,selectorInfo,parts);
 		}
 		
 		if(isPlacedGun && parts.hasbaseYawInfo) {

@@ -2,6 +2,7 @@ package handmadeguns.client.render;
 
 import static handmadeguns.HMGGunMaker.*;
 import static java.lang.Boolean.parseBoolean;
+import static java.lang.Float.parseFloat;
 import static java.lang.Integer.parseInt;
 import static java.lang.Math.abs;
 import static net.minecraft.util.MathHelper.wrapAngleTo180_float;
@@ -35,7 +36,7 @@ public class HMGGunParts_Motion {
     }
     public HMGGunParts_Motion(String[] type){
         if(type.length>6) {
-            set(parseInt(type[readerCnt++]), Float.parseFloat(type[readerCnt++]), Float.parseFloat(type[readerCnt++]), Float.parseFloat(type[readerCnt++]), Float.parseFloat(type[readerCnt++]), Float.parseFloat(type[readerCnt++]), Float.parseFloat(type[readerCnt++]), parseInt(type[readerCnt++]), Float.parseFloat(type[readerCnt++]), Float.parseFloat(type[readerCnt++]), Float.parseFloat(type[readerCnt++]), Float.parseFloat(type[readerCnt++]), Float.parseFloat(type[readerCnt++]), Float.parseFloat(type[readerCnt++]));
+            set(parseFloat(type[readerCnt++]), parseFloat(type[readerCnt++]), parseFloat(type[readerCnt++]), parseFloat(type[readerCnt++]), parseFloat(type[readerCnt++]), parseFloat(type[readerCnt++]), parseFloat(type[readerCnt++]), parseFloat(type[readerCnt++]), parseFloat(type[readerCnt++]), parseFloat(type[readerCnt++]), parseFloat(type[readerCnt++]), parseFloat(type[readerCnt++]), parseFloat(type[readerCnt++]), parseFloat(type[readerCnt++]));
         }else {
             startflame = parseInt(type[readerCnt++]);
             isrendering = parseBoolean(type[readerCnt++]);
@@ -44,14 +45,14 @@ public class HMGGunParts_Motion {
         }
     }
 
-    public void set(int   startflame,
+    public void set(float  startflame,
                               float startoffsetX,
                               float startoffsetY,
                               float startoffsetZ,
                               float startrotationX,
                               float startrotationY,
                               float startrotationZ,
-                              int   endflame,
+                    float   endflame,
                               float endoffsetX,
                               float endoffsetY,
                               float endoffsetZ,
@@ -82,6 +83,7 @@ public class HMGGunParts_Motion {
         size_posY = endposY -startposY;
         size_posZ = endposZ -startposZ;
         size_flame = endflame - startflame;
+        if(size_flame == 0)size_flame = 1;
     }
     public void setup2(){
         size_rotationX = wrapAngleTo180_float(endrotationX -startrotationX);
@@ -91,8 +93,9 @@ public class HMGGunParts_Motion {
         size_posY = endposY -startposY;
         size_posZ = endposZ -startposZ;
         size_flame = endflame - startflame;
+        if(size_flame == 0)size_flame = 1;
     }
-    public final HMGGunParts_Motion_PosAndRotation temp = new HMGGunParts_Motion_PosAndRotation();
+    public final static HMGGunParts_Motion_PosAndRotation temp = new HMGGunParts_Motion_PosAndRotation();
     public HMGGunParts_Motion_PosAndRotation posAndRotation(float flame){
         float flameforCompletion = flame-startflame;
         temp.set(startposX + size_posX * (flameforCompletion/size_flame),

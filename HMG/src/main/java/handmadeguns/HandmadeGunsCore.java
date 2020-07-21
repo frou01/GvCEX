@@ -267,6 +267,33 @@ public class HandmadeGunsCore {
 						}
 					}
 				}
+				File[] addscripts_2 = getFileList(aPacklist, "scripts");
+				if (addscripts_2 != null && addscripts_2.length > 0) {
+					for (File aScript : addscripts_2) {
+						System.out.println("debug" + aScript);
+						try {
+							ScriptEngine script = (new ScriptEngineManager(null)).getEngineByName("js");
+							try {
+								if (script.toString().contains("Nashorn")) {
+									script.eval("load(\"nashorn:mozilla_compat.js\");");
+								}
+								script.eval(new FileReader(aScript));
+								try {
+									((Invocable) script).invokeFunction("preInit", pEvent);
+								} catch (ScriptException e) {
+									e.printStackTrace();
+								} catch (NoSuchMethodException e) {
+									e.printStackTrace();
+								}
+								scripts.add((Invocable) script);
+							} catch (ScriptException e) {
+								throw new RuntimeException("Script exec error", e);
+							}
+						} catch (FileNotFoundException e) {
+							e.printStackTrace();
+						}
+					}
+				}
 				//fileSetup(filelist1[pack], "addbattlepack", "battlepacks");
 			}
 		}

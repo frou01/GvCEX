@@ -2,6 +2,8 @@ package handmadevehicle.events;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent;
+import handmadeguns.entity.PlacedGunEntity;
+import handmadeguns.items.guns.HMGItem_Unified_Guns;
 import handmadeguns.network.PacketOpenGui;
 import handmadevehicle.entity.EntityDummy_rider;
 import handmadevehicle.entity.parts.IVehicle;
@@ -10,6 +12,7 @@ import handmadevehicle.network.packets.HMVPacketOpenVehicleGui;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.DamageSource;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 
 import static handmadevehicle.HMVehicle.HMV_Proxy;
@@ -42,6 +45,17 @@ public class HMV_Event {
 				}
 			} else {
 				event.ammount -= userProtect;
+			}
+		}
+	}
+	@SubscribeEvent
+	public void livingAttackEvent(LivingAttackEvent event){
+		EntityLivingBase entity = event.entityLiving;
+
+		if ((entity != null && entity.ridingEntity instanceof EntityDummy_rider)) {
+			if(event.source == inWall){
+				event.setCanceled(true);
+				entity.hurtTime = 0;
 			}
 		}
 	}

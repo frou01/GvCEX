@@ -1,12 +1,14 @@
 package hmggvcmob.entity.friend;
 
 import cpw.mods.fml.common.FMLCommonHandler;
+import handmadevehicle.entity.EntityDummy_rider;
 import hmggvcmob.GVCMobPlus;
 import hmggvcmob.ai.AITargetFlag;
 import hmggvcmob.ai.PlatoonOBJ;
 import hmggvcmob.camp.CampObj;
 import hmggvcmob.entity.IPlatoonable;
 import hmggvcmob.entity.IflagBattler;
+import hmggvcmob.entity.guerrilla.EntityGBase;
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
@@ -14,10 +16,12 @@ import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static handmadevehicle.Utils.canMoveEntity;
 import static hmggvcmob.GVCMobPlus.*;
+import static hmggvcutil.GVCUtils.platoonMatched;
 
 public class EntitySoBase extends EntitySoBases implements IflagBattler {
 
@@ -103,25 +107,38 @@ public class EntitySoBase extends EntitySoBases implements IflagBattler {
 	public void makePlatoon() {
 		this.setPlatoon(new PlatoonOBJ());
 
+		this.enlistPlatoon(false);
+	}
+	@Override
+	public void makePlatoon_OnLoading() {
+		this.setPlatoon(new PlatoonOBJ());
 
-		this.enlistPlatoon();
+		this.enlistPlatoon(true);
 	}
 
 	@Override
-	public void enlistPlatoon() {
+	public void enlistPlatoon(boolean force) {
+		ArrayList<EntitySoBase> newComer = new ArrayList<>();
 		List nearEntities = worldObj.getEntitiesWithinAABBExcludingEntity(this,boundingBox.expand(32,32,32));
+
 		for(Object obj:nearEntities){
 			Entity entity = (Entity)obj;
-			if(entity instanceof EntitySoBase && canMoveEntity(entity) && ((IPlatoonable) entity).getPlatoon() == null){
-				((EntitySoBase) entity).setPlatoon(this.platoonOBJ);
+			if(entity instanceof EntitySoBase && canMoveEntity(entity)){
+				newComer.add((EntitySoBase) entity);
 			}
 		}
-
 		List onVehicleEntity = worldObj.getEntitiesWithinAABBExcludingEntity(this,boundingBox.expand(512,512,512));
+
 		for(Object obj:onVehicleEntity){
 			Entity entity = (Entity)obj;
-			if(entity instanceof EntitySoBase && canMoveEntity(entity) && ((IPlatoonable) entity).getPlatoon() == null){
-				((EntitySoBase) entity).setPlatoon(this.platoonOBJ);
+			if(entity instanceof EntitySoBase && entity.ridingEntity instanceof EntityDummy_rider && canMoveEntity(entity)){
+				newComer.add((EntitySoBase) entity);
+			}
+		}
+		for(EntitySoBase entitySoBase : newComer){
+			//対象の分隊が同名or分隊に未所属時に徴発
+			if(canMoveEntity(entitySoBase) && (((EntitySoBase) entitySoBase).getPlatoon() == null || force)){
+				((EntitySoBase) entitySoBase).setPlatoon(this.platoonOBJ);
 			}
 		}
 	}

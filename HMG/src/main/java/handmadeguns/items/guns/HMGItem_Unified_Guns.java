@@ -60,40 +60,10 @@ import static net.minecraft.world.World.MAX_ENTITY_RADIUS;
 
 public class HMGItem_Unified_Guns extends Item {
     public GunInfo gunInfo = new GunInfo();
-    public GunTemp guntemp;
+    public GunTemp guntemp = new GunTemp();
     public FireTemp firetemp;
     public HMGItem_Unified_Guns(){
     }
-    
-//    public HMGItem_Unified_Guns(int p, float s, float b, double r, int rt, float at, float cz, float czr, float czs, int cy, String sd, String sds, String sdre,
-//                                boolean rc, int ri, ResourceLocation tx, String aads, String aadsr, String aadss, Item ma, Item masg, Item magl, boolean cano) {
-//        this();
-//        this.maxStackSize = 1;
-//        gunInfo.attackDamage = at;
-//        // this.retime = 30;
-//        gunInfo.power = p;
-//        gunInfo.speed = s;
-//        gunInfo.spread_setting = b;
-//        gunInfo.recoil = r;
-//        gunInfo.recoil_sneak = r/2;
-//        gunInfo.reloadtime = rt;
-//        gunInfo.scopezoom = cz;
-//        gunInfo.scopezoombase = cz;
-//        gunInfo.scopezoomred = czr;
-//        gunInfo.scopezoomscope = czs;
-//        gunInfo.sound = sd;
-//        gunInfo.soundbase = sd;
-//        gunInfo.soundsu = sds;
-//        gunInfo.soundre = sdre;
-//        gunInfo.cycle = cy;
-//        gunInfo.rendercross = rc;
-//        gunInfo.adstexture = aads;
-//        gunInfo.adstexturer = aadsr;
-//        gunInfo.adstextures = aadss;
-//        gunInfo.magazine = ma;
-//        gunInfo.canobj = cano;
-//        setFull3D();
-//    }
     
     public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4) {
         checkTags(par1ItemStack);
@@ -261,7 +231,7 @@ public class HMGItem_Unified_Guns extends Item {
                             nbt.setBoolean("set_up", true);
                             nbt.setInteger("set_up_cnt", 3);
                         }
-                        if (world.isRemote && (i != -1) && i != -10) {
+                        if (world.isRemote && (i != -1) && i != -10 && ((EntityPlayer) entity).getHeldItem() == itemstack) {
                             if(!guntemp.connectedTurret){
                                 HMG_proxy.force_render_item_position(itemstack, i);
                             }
@@ -294,7 +264,7 @@ public class HMGItem_Unified_Guns extends Item {
                                     HMGPacketHandler.INSTANCE.sendToServer(new PacketSetElevation(entity.getEntityId(),i,guntemp.currentElevation));
                                 }
                             }
-                            if (HMG_proxy.seekerOpenClose()) {
+                            if ( HMG_proxy.seekerOpenClose()) {
                                 nbt.setBoolean("SeekerOpened", !nbt.getBoolean("SeekerOpened"));
                                 HMGPacketHandler.INSTANCE.sendToServer(new PacketSeekerOpen(entity.getEntityId()));
                             }
@@ -332,8 +302,13 @@ public class HMGItem_Unified_Guns extends Item {
                                 HMGPacketHandler.INSTANCE.sendToServer(new PacketChangeMagazineType(entity, selecting));
                             }
                         } else {
-                            if (gunInfo.canlock && nbt.getBoolean("SeekerOpened")) {
-                                lockon(itemstack, world, entity, nbt);
+                            if(guntemp.currentConnectedTurret == null && (((EntityPlayer) entity).getHeldItem() == itemstack || i == -1)){
+                                if (gunInfo.canlock && nbt.getBoolean("SeekerOpened")) {
+                                    lockon(itemstack, world, entity, nbt);
+                                } else if (guntemp.TGT != null) {
+                                    Vector3d frontVec = getjavaxVecObj(getLook(1, entity.getRotationYawHead(), entity.rotationPitch));
+                                    guntemp.TGT = canContinueLock(itemstack, world, entity, frontVec);
+                                }
                             }
                         }
                     }
@@ -476,11 +451,9 @@ public class HMGItem_Unified_Guns extends Item {
                                             nbt.setBoolean("Bursting", true);
                                             nbt.setInteger("RemainBurstround", getburstCount(guntemp.selector));
                                         }
-                                        //�Z�~�I�[�gor�o�[�X�g�Ȃ̂ŘA�˒�~
                                         nbt.setBoolean("TriggerBacked", true);
                                     }
                                     if (getburstCount(guntemp.selector) != -1 && gunInfo.chargeType) {
-                                        //�`���[�W�^�C�v�i�������������C�j�Ȃ̂Ńg���K�[���ꂽ�t���O��true
                                         nbt.setBoolean("TriggerBacked", true);
                                     }
                                     if (!gunInfo.chargeType && !nbt.getBoolean("Bursting") && is_Bolt_shooting_position && isbulletremaining) {
@@ -599,8 +572,7 @@ public class HMGItem_Unified_Guns extends Item {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                //�}�K�W���̃X�^�b�N��nbt�ɕۑ�����d�l�ɕύX�\��
-                if (!world.isRemote) nbt.setFloat("Diffusion", guntemp.tempspreadDiffusion);
+                nbt.setFloat("Diffusion", guntemp.tempspreadDiffusion);
             } else if (itemstack != null) {
                 checkTags(itemstack);
                 NBTTagCompound tagCompound = itemstack.getTagCompound();
@@ -759,7 +731,7 @@ public class HMGItem_Unified_Guns extends Item {
 
                 if (!aEntity.isDead) {
                     if (aEntity.canBeCollidedWith() &&
-                            (!gunInfo.lock_to_Vehicle || aEntity.width > 1.2)) {
+                            (!gunInfo.lock_to_Vehicle || aEntity.width >= 1.5)) {
                         double distsq = entity.getDistanceSqToEntity(aEntity);
                         if (distsq < 16777216) {
                             Vector3d totgtvec = new Vector3d(entity.posX - aEntity.posX, entity.posY - aEntity.posY, entity.posZ - aEntity.posZ);
@@ -769,6 +741,34 @@ public class HMGItem_Unified_Guns extends Item {
                                     double deg = wrapAngleTo180_double(toDegrees(totgtvec.angle(frontVec)));
                                     if (canLock(entity,aEntity) && gunInfo.seekerSize > abs(deg) && (abs(deg) < predeg || predeg == -1)) {
                                         predeg = deg;
+                                        target = aEntity;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return target;
+    }
+    public Entity canContinueLock(ItemStack itemstack,World worldObj,Entity entity,Vector3d frontVec){
+        Entity target = guntemp.TGT;
+        if(gunInfo.canlockEntity && target != null) {
+            {
+                Entity aEntity = target;
+                target = null;
+                if (!aEntity.isDead) {
+                    if (aEntity.canBeCollidedWith() &&
+                            (!gunInfo.lock_to_Vehicle || aEntity.width >= 1.5)) {
+                        double distsq = entity.getDistanceSqToEntity(aEntity);
+                        if (distsq < 16777216) {
+                            Vector3d totgtvec = new Vector3d(entity.posX - aEntity.posX, entity.posY - aEntity.posY, entity.posZ - aEntity.posZ);
+                            if (totgtvec.length() > 1) {
+                                totgtvec.normalize();
+                                if (totgtvec.y < gunInfo.lookDown) {
+                                    double deg = wrapAngleTo180_double(toDegrees(totgtvec.angle(frontVec)));
+                                    if (canLock(entity, aEntity) && gunInfo.seekerSize > abs(deg)) {
                                         target = aEntity;
                                     }
                                 }
@@ -1321,6 +1321,8 @@ public class HMGItem_Unified_Guns extends Item {
             } else if (nbt.getBoolean("IsReloading")) {
                 nbt.setInteger("RloadTime", reloadti);
             }
+        }else{
+            nbt.setInteger("RloadTime", reloadti);
         }
     }
     public void resetReload(ItemStack par1ItemStack, World par2World, Entity entity, int i) {
@@ -1800,13 +1802,13 @@ public class HMGItem_Unified_Guns extends Item {
         return multimap;
     }
     public void setmodelADSPosAndRotation(double px,double py,double pz){
-        gunInfo.sightPosN = new double[]{(-px + 0.694f)*0.2 * gunInfo.inworldScale,(-py + 1.8f)*0.2 * gunInfo.inworldScale,-pz*0.2 * gunInfo.inworldScale};
+        gunInfo.sightPosN = new double[]{(-px)*0.2 * gunInfo.inworldScale,(-py)*0.2 * gunInfo.inworldScale,-pz*0.2 * gunInfo.inworldScale};
     }
     public void setADSoffsetRed(double px,double py,double pz){
-        gunInfo.sightPosR = new double[]{(-px + 0.694f)*0.2 * gunInfo.inworldScale,(-py + 1.8f)*0.2 * gunInfo.inworldScale,-pz*0.2 * gunInfo.inworldScale};
+        gunInfo.sightPosR = new double[]{(-px)*0.2 * gunInfo.inworldScale,(-py)*0.2 * gunInfo.inworldScale,-pz*0.2 * gunInfo.inworldScale};
     }
     public void setADSoffsetScope(double px,double py,double pz){
-        gunInfo.sightPosS = new double[]{(-px + 0.694f)*0.2 * gunInfo.inworldScale,(-py + 1.8f)*0.2 * gunInfo.inworldScale,-pz*0.2 * gunInfo.inworldScale};
+        gunInfo.sightPosS = new double[]{(-px)*0.2 * gunInfo.inworldScale,(-py)*0.2 * gunInfo.inworldScale,-pz*0.2 * gunInfo.inworldScale};
     }
     public double[] getSeatpos(ItemStack itemStack){
         if(guntemp == null)guntemp = new GunTemp();

@@ -113,6 +113,7 @@ public class EntityVehicle extends Entity implements IFF,IVehicle,IMultiTurretVe
 		HMV_Proxy.replaceBoundingbox(this,nboundingbox);
 //		this.applyEntityAttributes2();
 		this.setSize(baseLogic.prefab_vehicle.boundingBoxSizeX, baseLogic.prefab_vehicle.boundingBoxSizeY);
+		this.width = baseLogic.prefab_vehicle.boundingBoxSizeX;
 	}
 	public ModifiedPathNavigater getNavigator()
 	{

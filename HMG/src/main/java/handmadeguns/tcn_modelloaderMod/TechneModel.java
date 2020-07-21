@@ -3,12 +3,13 @@ package handmadeguns.tcn_modelloaderMod;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import handmadeguns.client.render.IModelCustom_HMG;
+import handmadeguns.obj_modelloaderMod.obj.HMGGroupObject;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.model.IModelCustom;
 import net.minecraftforge.client.model.ModelFormatException;
 import org.lwjgl.opengl.GL11;
 import org.w3c.dom.Document;
@@ -31,13 +32,12 @@ import java.util.zip.ZipException;
 import java.util.zip.ZipInputStream;
 
 import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
-import static org.lwjgl.opengl.GL11.GL_FRONT_AND_BACK;
 
 /**
  * Techne model importer, based on iChun's Hats importer
  */
 @SideOnly(Side.CLIENT)
-public class TechneModel extends ModelBase implements IModelCustom {
+public class TechneModel extends ModelBase implements IModelCustom_HMG {
     public static final List<String> cubeTypes = Arrays.asList(
             "d9e621f7-957f-4b77-b1ae-20dcd0da7751",
             "de81aa14-bd60-4228-8d8d-5238bcd3caaa"
@@ -332,9 +332,10 @@ public class TechneModel extends ModelBase implements IModelCustom {
     @Override
     public void renderPart(String partName)
     {
+        current = null;
         GL11.glPushMatrix();
-		GL11.glRotatef(180,0,1,0);
-		GL11.glRotatef(180,0,0,1);
+        GL11.glRotatef(180,0,1,0);
+        GL11.glRotatef(180,0,0,1);
         List<ModelRenderer> part = parts.get(partName);
         GL11.glDisable(GL_CULL_FACE);
         if (part != null)
@@ -346,6 +347,7 @@ public class TechneModel extends ModelBase implements IModelCustom {
         }
         GL11.glEnable(GL_CULL_FACE);
         GL11.glPopMatrix();
+        current = new TechneGroupObject(part);
     }
 
     @Override
@@ -368,5 +370,12 @@ public class TechneModel extends ModelBase implements IModelCustom {
                     renderPart(partnames);
             }
         }
+    }
+
+    HMGGroupObject current;
+    @Override
+    public HMGGroupObject renderPart_getInstance() {
+
+        return current;
     }
 }

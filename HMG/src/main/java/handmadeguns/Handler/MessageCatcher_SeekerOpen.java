@@ -25,7 +25,7 @@ public class MessageCatcher_SeekerOpen implements IMessageHandler<PacketSeekerOp
         try {
             if(world != null){
                 Entity shooter = world.getEntityByID(message.shooterid);
-                if(shooter != null && shooter instanceof EntityLivingBase && ((EntityLivingBase) shooter).getHeldItem().getItem() instanceof HMGItem_Unified_Guns) {
+                if(shooter instanceof EntityLivingBase && ((EntityLivingBase) shooter).getHeldItem() != null && ((EntityLivingBase) shooter).getHeldItem().getItem() instanceof HMGItem_Unified_Guns) {
                     NBTTagCompound nbt = ((EntityLivingBase) shooter).getHeldItem().getTagCompound();
                     if(!nbt.getBoolean("SeekerOpened")){
                         nbt.setBoolean("islockedentity", false);

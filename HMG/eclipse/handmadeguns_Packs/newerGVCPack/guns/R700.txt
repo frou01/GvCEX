@@ -1,0 +1,238 @@
+BulletPower,12
+BulletSpeed,10
+BulletGravity,0.485
+
+BlletSpread,4.0f
+ADS_Spread_coefficient,0.01
+BlletSpreadDiffusion,3,0,2,0.5,4,4
+Cycle,2
+
+Recoil,6
+Recoil_sneaking,5
+
+
+ReloadTime,200
+
+RemainingBullet,5
+
+Attacking,2.0f
+Zoom,4.0f,4.0f,4.0f
+
+ZoomRender,true
+ZoomRenderType,false,false,false
+ZoomRenderTypeTxture,true,true,true
+
+Texture,R700
+GunSound,handmadeguns.fireRifle,handmadeguns.fireRifle
+GunSoundReload,handmadeguns.reload
+GunSoundCooking,handmadeguns.cooking
+CanObj,true
+ObjModel,r700.mqo
+ObjTexture,r700.png
+ModelScala,0.5f
+CustomFlash,arrow,1
+Bursts,1
+Rates,1
+attachRestriction,true
+allowattach,Bullet_AT
+
+ModelEquipped,-0.7f,0.7f,0.0f
+ModelHigh,0.99F,0.99F,0.99F
+ModelWidthX,0.6945f,0.6945f,0.6945f
+ModelWidthZ,0.5f,0.5f,0.5f
+ModelRotationX,180f,180f,180f
+ModelRotationY,45f,45f,45
+ModelRotationZ,180f,180f,180f
+
+ModelArm,true
+ModelArmRotationR,-1.57f,0f,-1.57f
+ModelArmOffsetR,0.4f,0.3f,0.5f
+ModelArmRotationL,-0.0f,-2.3f,2.0f
+ModelArmOffsetL,0.1f,0.5f,-2.2f
+
+SprintingPoint,0.5f,0.0f,0.5f
+SprintingRotation,20f,60f,0f
+
+SoundSpeed,1f
+
+ScopeTexture,scope_r700.png,scope_r700.png,scope_r700.png
+RenderCross,false
+
+Mat22,false
+Mat22Point,0.0f,1.5f,2.0f
+Mat22Rotation,90f,0f,0f
+Mat25Point,0.0f,0.75f,1.1f
+Mat25Rotation,0f,0f,-90f
+CockingTime,20
+
+Magazine,0,HandmadeGuns,7.62mm clip
+MagazineSG,0,HandmadeGuns,bullet_shell_hmg
+MagazineGL,0,HandmadeGuns,bullet_rr_hmg
+
+AddParts,mat1
+	AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+	RenderOnNormal
+	AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+	AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+	AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+	AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+
+	AddReloadMotionKey,0,true,	30
+	AddReloadMotionKey,30,0,0,0,0,0,0,	40,0,0,0,-5,-30,0
+	AddReloadMotionKey,30,0,0,0,-5,-30,0,	190,0,0,0,-5,-30,0
+	AddReloadMotionKey,190,0,0,0,-5,-30,0,	200,0,0,0,0,0,0
+
+	AddChildParts,Larm
+		AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+		AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+		RenderOnNormal
+		AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+		AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+		AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+		AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+	BackParts
+
+	AddChildParts,mat20
+		AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+		RenderOnNormal
+		AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+		AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+		AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+		AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+
+		AddChildParts,cart_ammo
+			AddPartsRotationCenterAndRotationAmount,0,0.4703f,1.1899f,0,0,0
+			RenderOnNormal
+			AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+			AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+			AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+			AddCockMotionKey,0,0,-0.2,-1.2,0,0,0,	  9,0,-0.2,-1.2,0,0,0
+			AddCockMotionKey,9,0,-0.2,-1.2,0,0,0,	  11,0,-0.2,-1.2,-10,0,0
+			AddCockMotionKey,11,0,-0.2,-1.2,-10,0,0,   13,0,0,-0.65,0,0,0
+			AddCockMotionKey,13,0,0,-0.65,0,0,0,		16,0,0,0,0,0,0
+			AddCockMotionKey,18,0,0,0,0,0,0,			20,0,0,0,0,0,0
+
+			AddReloadMotionKey,30,-0.4,-2.5,-4.2,0,0,0,		   40,-0.4,0,-1.2,0,0,0
+			AddReloadMotionKey,40,-0.4,0,-1.2,0,0,0,		   45,0,0,-1.2,0,0,0
+
+			AddReloadMotionKey,60,-0.4,-2.5,-4.2,0,0,0,		   70,-0.4,0,-1.2,0,0,0
+			AddReloadMotionKey,70,-0.4,0,-1.2,0,0,0,		   75,0,0,-1.2,0,0,0
+
+			AddReloadMotionKey,90,-0.4,-2.5,-4.2,0,0,0,		   100,-0.4,0,-1.2,0,0,0
+			AddReloadMotionKey,100,-0.4,0,-1.2,0,0,0,		   105,0,0,-1.2,0,0,0
+
+			AddReloadMotionKey,120,-0.4,-2.5,-4.2,0,0,0,		   130,-0.4,0,-1.2,0,0,0
+			AddReloadMotionKey,130,-0.4,0,-1.2,0,0,0,		   135,0,0,-1.2,0,0,0
+
+			AddReloadMotionKey,150,-0.4,-2.5,-4.2,0,0,0,		   160,-0.4,0,-1.2,0,0,0
+			AddReloadMotionKey,160,-0.4,0,-1.2,0,0,0,		   165,0,0,-1.2,0,0,0
+		BackParts
+
+		//排莢されるカートリッジ
+		AddChildParts,cart
+			AddPartsRotationCenterAndRotationAmount,0,0.4703f,1.1899f,0,0,0
+			AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+			AddCockMotionKey,4,0,0,0,0,0,0,			 9,0,0,-1.2,0,0,0
+			AddCockMotionKey,9,0,0,-1.2,0,0,0,		 12,-0.2,0,-1.2,0,0,0
+			AddCockMotionKey,12,-0.2,0,-1.2,0,0,0,	 14,-0.3,-0.4,-1.2,0,0,0
+		BackParts
+
+		AddChildParts,mat25
+			AddPartsRotationCenterAndRotationAmount,0,1.1,0,0,0,0
+			RenderOnNormal
+			AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+			AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+			AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+			AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+
+			//コッキングモーション
+			AddCockMotionKey,0,0,0,0,0,0,0,		  2,0,0,0,0,0,0
+			//ボルトを左に回して
+			AddCockMotionKey,2,0,0,0,0,0,0,		  4,0,0,0,0,0,-90
+			//引いて
+			AddCockMotionKey,4,0,0,0,0,0,-90,		9,0,0,-1.2,0,0,-90
+			//排莢して
+			AddCockMotionKey,9,0,0,-1.2,0,0,-90,	 11,0,0,-1.2,0,0,-90
+			//戻して
+			AddCockMotionKey,11,0,0,-1.2,0,0,-90,	16,0,0,0,0,0,-90
+			//戻す
+			AddCockMotionKey,16,0,0,0,0,0,-90,	   18,0,0,0,0,0,0
+
+			AddCockMotionKey,18,0,0,0,0,0,0,		 20,0,0,0,0,0,0
+
+
+			AddReloadMotionKey,0,0,0,0,0,0,0,		  4,0,0,0,0,0,0
+			//ボルトを左に回して
+			AddReloadMotionKey,4,0,0,0,0,0,0,		  8,0,0,0,0,0,-90
+			//引いて
+			AddReloadMotionKey,8,0,0,0,0,0,-90,		13,0,0,-1.2,0,0,-90
+
+			AddReloadMotionKey,13,0,0,-1.2,0,0,-90,			175,0,0,-1.2,0,0,-90
+			AddReloadMotionKey,175,0,0,-1.2,0,0,-90,		180,0,0,0,0,0,-90
+			AddReloadMotionKey,180,0,0,0,0,0,-90,			185,0,0,0,0,0,0
+			AddReloadMotionKey,185,0,0,0,0,0,0,			200,0,0,0,0,0,0
+
+			AddChildParts,SYS_Adaptor
+				AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+				RenderOnNormal
+				AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+				AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+				AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+				AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+				AddReloadMotionKey,0,0,0,0,0,0,0,			13,0,0,0,0,0,0
+				AddReloadMotionKey,13,0,0,0,0,0,0,			20,0,0,0,0,0,90
+				AddReloadMotionKey,20,0,0,0,0,0,90,			170,0,0,0,0,0,90
+				AddReloadMotionKey,170,0,0,0,0,0,90,			175,0,0,0,0,0,0
+				AddReloadMotionKey,175,0,0,0,0,0,0,			200,0,0,0,0,0,0
+
+				AddChildParts,Rarm
+					AddPartsRotationCenterAndRotationAmount,0.4f,0.4f,0.5f,0,0,0
+					RenderOnNormal
+					AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+					AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+					AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+					AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+
+					AddCockMotionKey,0,0,0,0,0,0,0,		  2,-0.4,0.8,0,0,0,0
+					AddCockMotionKey,2,-0.4,0.8,0,0,0,0,	 18,-0.4,0.8,0,0,0,0
+					AddCockMotionKey,18,-0.4,0.8,0,0,0,0,	20,0,0,0,0,0,0
+
+					AddReloadMotionKey,0,0,0,0,0,0,0,		  4, -0.4,0.8,0,0,0,0
+					AddReloadMotionKey,4, -0.4,0.8,0,0,0,0,	 13,-0.4,0.8,0,0,0,0
+					AddReloadMotionKey,13,-0.4,0.8,0,0,0,0,		30,0.4,-3,0,	0,0,0
+					AddReloadMotionKey,30,0.4,-3,0,		0,0,0,	40,0.4,-0.5,3,	0,0,0
+					AddReloadMotionKey,40,0.4,-0.5,3,	0,0,0,	45,0.8,-0.5,3,	0,20,0
+					AddReloadMotionKey,45,0.8,-0.5,3,	0,20,0,	50,0.4,-0.5,3,	0,0,0
+
+					AddReloadMotionKey,50,0.4,-0.5,3,	0,0,0,	60,0.4,-3,0,	0,0,0
+					AddReloadMotionKey,60,0.4,-3,0,		0,0,0,	70,0.4,-0.5,3,	0,0,0
+					AddReloadMotionKey,70,0.4,-0.5,3,	0,0,0,	75,0.8,-0.5,3,	0,20,0
+					AddReloadMotionKey,75,0.8,-0.5,3,	0,20,0,	80,0.4,-0.5,3,	0,0,0
+
+					AddReloadMotionKey,80,0.4,-0.5,3,	0,0,0,	90,0.4,-3,0,	0,0,0
+					AddReloadMotionKey,90,0.4,-3,0,		0,0,0,	100,0.4,-0.5,3,	0,0,0
+					AddReloadMotionKey,100,0.4,-0.5,3,	0,0,0,	105,0.8,-0.5,3,	0,20,0
+					AddReloadMotionKey,105,0.8,-0.5,3,	0,20,0,	110,0.4,-0.5,3,	0,0,0
+
+					AddReloadMotionKey,110,0.4,-0.5,3,	0,0,0,	120,0.4,-3,0,	0,0,0
+					AddReloadMotionKey,120,0.4,-3,0,	0,0,0,	130,0.4,-0.5,3,	0,0,0
+					AddReloadMotionKey,130,0.4,-0.5,3,	0,0,0,	135,0.8,-0.5,3,	0,20,0
+					AddReloadMotionKey,135,0.8,-0.5,3,	0,20,0,	140,0.4,-0.5,3,	0,0,0
+
+					AddReloadMotionKey,140,0.4,-0.5,3,	0,0,0,	150,0.4,-3,0,	0,0,0
+					AddReloadMotionKey,150,0.4,-3,0,	0,0,0,	160,0.4,-0.5,3,	0,0,0
+					AddReloadMotionKey,160,0.4,-0.5,3,	0,0,0,	165,0.8,-0.5,3,	0,20,0
+					AddReloadMotionKey,165,0.8,-0.5,3,	0,20,0,	170,0.4,-0.5,3,	0,0,0
+
+					AddReloadMotionKey,170,0.4,-0.5,3,	0,0,0,	175,-0.4,0.8,0,0,0,0
+					AddReloadMotionKey,175,-0.4,0.8,0,	0,0,0,	185,-0.4,0.8,0,0,0,0
+					AddReloadMotionKey,185,-0.4,0.8,0,	0,0,0,	190,0,0,0,0,0,0
+					AddReloadMotionKey,190,0,0,0,		0,0,0,	200,0,0,0,0,0,0
+				BackParts
+			BackParts
+		BackParts
+	BackParts
+
+Tabname,HMG_GVCGuns
+Name,R700
+SR,R700

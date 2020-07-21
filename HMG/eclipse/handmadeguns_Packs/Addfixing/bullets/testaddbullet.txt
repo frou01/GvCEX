@@ -1,0 +1,3 @@
+ObjModel,bullet3d_long.obj
+ObjTexture,bullet3d_long.png
+Name,longbullet

@@ -23,4 +23,9 @@ public class KeyBinding_withStopper {
         } else return false;
     }
 
+    public boolean isKeyDown_noStop(){
+        if(keyBinding.getKeyCode() == Keyboard.KEY_NONE)return false;
+        return Keyboard.isKeyDown(keyBinding.getKeyCode());
+    }
+
 }

@@ -45,14 +45,14 @@ public class GVCItemPMCDefSetter extends Item {
                 }else if(mode == 2){
                     mode = 0;
                     entityPlayer.addChatComponentMessage(new ChatComponentTranslation(
-                            "Defence position setter mode"));
+                            "Position setter mode"));
                 }
             }else {
                 EntityPMCBase target = searchEntity(itemStack, entityPlayer, world);
                 if (target != null) {
                     if (target.getPlatoon() == null)target.makePlatoon();
                     else {
-                        target.enlistPlatoon();
+                        target.enlistPlatoon(false);
                         target = (EntityPMCBase) target.getPlatoon().leader.entity;
                     }
                     switch (mode) {
@@ -100,7 +100,7 @@ public class GVCItemPMCDefSetter extends Item {
     public EntityPMCBase searchEntity(ItemStack itemStack , EntityPlayer entityPlayer, World world)
     {
         if(!world.isRemote) {
-            List list = world.getEntitiesWithinAABBExcludingEntity(entityPlayer, entityPlayer.boundingBox.expand(10, 10, 10));
+            List list = world.getEntitiesWithinAABBExcludingEntity(entityPlayer, entityPlayer.boundingBox.expand(80, 80, 80));
             if (list != null && !list.isEmpty()) {
                 for (Object o : list) {
                     Entity PMC = (Entity) o;

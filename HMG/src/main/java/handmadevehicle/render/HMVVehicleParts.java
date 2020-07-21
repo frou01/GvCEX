@@ -13,13 +13,21 @@ public class HMVVehicleParts extends HMGGunParts {
 	public boolean isTurretParts = false;
 	public boolean isTurret_linkedGunMount = false;
 	public float trackPieceCount;
+	public float trackAnimOffset;
+	public float trackAnimSpeed  = 1;
+	public float idleAnimSpeed = 1;
+	public int idlePieceCount;
+	public float idleAnimOffset;
 	private HMGGunParts_Motion_PosAndRotation peraPosAndRotation;
+	private HMGGunParts_Motion_PosAndRotation idlePosAndRotation;
 	public HMGGunParts_Motions trackPositions = new HMGGunParts_Motions();
-	private HMGGunParts_Motion_PosAndRotation[] somethingPosAndRotation = new HMGGunParts_Motion_PosAndRotation[12];//x,y,z,z2,yaw,pitch,roll,gear,flap,brake,speed
-	private HMGGunParts_Motions[] somethingMotionKey = new HMGGunParts_Motions[13];
+	public HMGGunParts_Motions idlePositions = new HMGGunParts_Motions();
+	private HMGGunParts_Motion_PosAndRotation[] somethingPosAndRotation = new HMGGunParts_Motion_PosAndRotation[17];//x,y,z,z2,yaw,pitch,roll,gear,flap,brake,speed
+	private HMGGunParts_Motions[] somethingMotionKey = new HMGGunParts_Motions[17];
 	public boolean isTrack;
 	public boolean isPera;
-	
+	public boolean isIdleAnim;
+
 	public void AddSomethingMotionKey(String[] type){
 		HMGGunParts_Motion motion = new HMGGunParts_Motion(type);
 		int id = parseInt(type[readerCnt++]);
@@ -31,10 +39,20 @@ public class HMVVehicleParts extends HMGGunParts {
 		trackPositions.addmotion(motion);
 		isbelt = true;
 	}
+	public void AddIdlePositions(String[] type){
+		HMGGunParts_Motion motion = new HMGGunParts_Motion(type);
+		idlePositions.addmotion(motion);
+		isbelt = true;
+	}
 	
 	public void setIsTrack(boolean isPera,int trackPieceCount){
-		this.isPera = isPera;
+		this.isTrack = isPera;
 		this.trackPieceCount = trackPieceCount;
+	}
+
+	public void setIsIdleAnim(boolean isPera,int trackPieceCount){
+		this.isIdleAnim = isPera;
+		this.idlePieceCount = trackPieceCount;
 	}
 	public void setIsPera(boolean isPera){
 		this.isPera = isPera;
@@ -42,6 +60,11 @@ public class HMVVehicleParts extends HMGGunParts {
 	public void setIsTrack_Cloning(boolean isTrack,int trackPieceCount){
 		this.isTrack = isTrack;
 		this.trackPieceCount = trackPieceCount;
+		this.isavatar = true;
+	}
+	public void setIsIdleAnim_Cloning(boolean isPera,int trackPieceCount){
+		this.isIdleAnim = isPera;
+		this.idlePieceCount = trackPieceCount;
 		this.isavatar = true;
 	}
 	
@@ -72,5 +95,13 @@ public class HMVVehicleParts extends HMGGunParts {
 	
 	public HMVVehicleParts(String string, int motherID, HMGGunParts mother) {
 		super(string,motherID,mother);
+	}
+
+	public HMGGunParts_Motion_PosAndRotation getRenderinfOfIdlePosAndRotation() {
+		return idlePosAndRotation;
+	}
+
+	public HMGGunParts_Motion_PosAndRotation getidlePositions(float flame) {
+		return idlePositions.getpartsMotion(flame);
 	}
 }

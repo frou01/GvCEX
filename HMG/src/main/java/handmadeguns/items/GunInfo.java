@@ -75,6 +75,7 @@ public class GunInfo {
 	public String adstexturer = "handmadeguns:textures.misc.reddot";
 	public String adstextures = "handmadeguns:textures.misc.scope";
 	public ResourceLocation lockOnMarker = new ResourceLocation("handmadeguns:textures/items/lockonmarker0.png");
+	public ResourceLocation predictMarker = new ResourceLocation("handmadeguns:textures/items/predictMarker.png");
 	public boolean zoomren = true;
 	public boolean zoomrer = true;
 	public boolean zoomres = true;
@@ -172,6 +173,7 @@ public class GunInfo {
 	public boolean userenderscript = false;
 	public ScriptEngine renderscript;
 	public ScriptEngine script;
+	public ScriptEngine script_withGUI;
 	public float mat31rotex;
 	public float mat31rotey;
 	public float mat31rotez;
@@ -183,7 +185,8 @@ public class GunInfo {
 	public boolean canlock = false;
 	public boolean canlockBlock = false;
 	public boolean canlockEntity = false;
-	public boolean displayPredicate = false;
+	public boolean displayPredict = false;
+	public boolean displayPredict_MoveSight = true;
 	public double seekerSize = 60;
 	public float seekerSize_bullet = 50;
 	public boolean semiActive = false;

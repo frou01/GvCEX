@@ -1,0 +1,12 @@
+Texture,grip
+canobj,true
+Objmodel,ar.obj
+ObjTexture,ar.png
+
+Tabname,HMG_Attachments
+
+Name,ƒOƒŠƒbƒv
+Grip,grip
+AntiRecoil,0.5
+AntiRecoil_ADS,0.5
+addRecipe,grip,1,abc,0e0,000,280,280,280,0,280,0,0,0,0

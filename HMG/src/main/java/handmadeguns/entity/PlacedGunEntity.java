@@ -439,7 +439,7 @@ public class PlacedGunEntity extends Entity implements IEntityAdditionalSpawnDat
         float rotationPitch = this.rotationPitch;
         int currentElevation = gunStack.getTagCompound().getInteger("currentElevation");
         if(currentElevation < 0)currentElevation = 0;
-        if(currentElevation >= gunItem.gunInfo.sightOffset_zeroIn.length)currentElevation = gunItem.gunInfo.sightOffset_zeroIn.length;
+        if(currentElevation >= gunItem.gunInfo.sightOffset_zeroIn.length)currentElevation = gunItem.gunInfo.sightOffset_zeroIn.length-1;
         if(!gunItem.gunInfo.elevationOffsets.isEmpty()){
             rotationPitch += gunItem.gunInfo.elevationOffsets.get(currentElevation);
         }

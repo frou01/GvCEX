@@ -9,13 +9,13 @@ import handmadevehicle.entity.prefab.Prefab_AdditionalBoundingBox;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.model.IModelCustom;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+import javax.script.ScriptException;
 import javax.vecmath.Quat4d;
 import javax.vecmath.Vector3d;
 import java.util.ArrayList;
@@ -95,12 +95,21 @@ public class RenderVehicle extends Render {
 			currentBaseLogic.riderPosUpdate_forRender_withoutPlayer(nowPos,currentquat,partialTicks);
 			GL11.glPushMatrix();
 			GL11.glScalef((float) currentBaseLogic.prefab_vehicle.scale, (float) currentBaseLogic.prefab_vehicle.scale, (float) currentBaseLogic.prefab_vehicle.scale);
+
+			if(currentBaseLogic.prefab_vehicle.script != null) {
+				try {
+					currentBaseLogic.prefab_vehicle.script.invokeFunction("Model_rendering", this);
+				} catch (NoSuchMethodException | ScriptException e) {
+					e.printStackTrace();
+				}
+			}
+
 			if(currentBaseLogic.prefab_vehicle.partslist != null){
 				if(pass == 1) {
 					glEnable(GL_BLEND);
 					glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 					GL11.glDepthMask(false);
-					glAlphaFunc(GL_LESS, 1);
+					glAlphaFunc(GL_LEQUAL, 1);
 				}else {
 					GL11.glDepthMask(true);
 					glAlphaFunc(GL_EQUAL, 1);
@@ -114,7 +123,7 @@ public class RenderVehicle extends Render {
 					glEnable(GL_BLEND);
 					glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 					GL11.glDepthMask(false);
-					glAlphaFunc(GL_LESS, 1);
+					glAlphaFunc(GL_LEQUAL, 1);
 				}else {
 					GL11.glDepthMask(true);
 					glAlphaFunc(GL_EQUAL, 1);
@@ -305,7 +314,7 @@ public class RenderVehicle extends Render {
 		}
 	}
 
-	public void bindEntityTexture_public() {
-		this.bindEntityTexture(currentEntity);
+	public ResourceLocation getEntityTexture() {
+		return getEntityTexture(currentEntity);
 	}
 }

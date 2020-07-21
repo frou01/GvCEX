@@ -72,6 +72,9 @@ public class CommonSideProxyHMG {
 	public boolean seekerOpenClose(){
 		return false;
 	}
+	public boolean seekerOpenClose_NonStop(){
+		return false;
+	}
 	public boolean fixkeydown(){
 		return false;
 	}

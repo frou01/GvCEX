@@ -1,20 +1,13 @@
 package handmadeguns.event;
 
 import handmadeguns.HandmadeGunsCore;
-import handmadeguns.Util.EntityLinkedPos_Motion;
 import handmadeguns.entity.PlacedGunEntity;
 import handmadeguns.items.*;
 import handmadeguns.items.guns.*;
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.potion.Potion;
 import net.minecraft.util.*;
 import org.lwjgl.opengl.GL11;
 
@@ -40,14 +33,12 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import org.lwjgl.util.glu.Project;
 
+import javax.script.Invocable;
+import javax.script.ScriptException;
 import javax.vecmath.Vector3d;
 
-import java.util.ArrayList;
-
 import static handmadeguns.HandmadeGunsCore.HMG_proxy;
-import static handmadevehicle.Utils.RotateVectorAroundX;
-import static handmadevehicle.Utils.RotateVectorAroundY;
-import static java.lang.Math.sin;
+import static handmadevehicle.Utils.*;
 import static net.minecraft.client.gui.Gui.icons;
 import static org.lwjgl.opengl.GL11.*;
 
@@ -137,9 +128,6 @@ public class HMGEventZoom {
 //				System.out.println(entityplayer.getEntityAttribute(SharedMonsterAttributes.movementSpeed).getAttributeValue());
 //				if(isSlowdowned3)event.newfov /= ((gunbase.motion <= 0 ? 0 : gunbase.motion) + 1 )/2;
 //				premotion = gunbase.motion;
-			}else {
-				event.newfov = event.fov;
-//				if(isSlowdowned3)event.newfov /= ((premotion <= 0 ? 0 : premotion) + 1 )/2;
 			}
 		}
 	}
@@ -218,140 +206,175 @@ public class HMGEventZoom {
 					itemstackSight = items[1];
 
 
-					setUp3DView(minecraft,event);
+					setUp3DView(minecraft,event.partialTicks);
 					GL11.glPushMatrix();
 					{
 						GL11.glRotatef(0, 1.0F, 0.0F, 0.0F);
 						GL11.glRotatef(180, 0.0F, 1.0F, 0.0F);
-						// this.modelArmor.aimedBow = true;
 
-						//if (entityplayer.isSneaking())
 
-						if (HandmadeGunsCore.Key_ADS(entityplayer)) {
-							if (itemstackSight != null) {
-								if (itemstackSight.getItem() instanceof HMGItemAttachment_reddot) {
-									if (!gunItem.gunInfo.canobj || !gunItem.gunInfo.zoomrer) {
-										ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer,
-												gunItem.gunInfo.scopezoomred, "cameraZoom", "field_78503_V");
-										needreset = true;
-									}
-									if (gunItem.gunInfo.zoomrert) {
-										renderPumpkinBlur(minecraft, adsr);
-									}
-								} else if (itemstackSight.getItem() instanceof HMGItemAttachment_scope) {
-									if (!gunItem.gunInfo.canobj || !gunItem.gunInfo.zoomres) {
-										ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer,
-												gunItem.gunInfo.scopezoomscope, "cameraZoom", "field_78503_V");
-										needreset = true;
-									}
-									if (gunItem.gunInfo.zoomrest) {
-										renderPumpkinBlur(minecraft, adss);
-									}
-								} else if (itemstackSight.getItem() instanceof HMGItemSightBase) {
-									if (!gunItem.gunInfo.canobj || ((HMGItemSightBase) itemstackSight.getItem()).scopeonly) {
-										ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer,
-												((HMGItemSightBase) itemstackSight.getItem()).zoomlevel, "cameraZoom", "field_78503_V");
-										needreset = true;
-									}
-									if (((HMGItemSightBase) itemstackSight.getItem()).scopetexture != null) {
-										renderPumpkinBlur(minecraft, ((HMGItemSightBase) itemstackSight.getItem()).scopetexture);
-									}
-								}
-							} else {
-								if (!gunItem.gunInfo.canobj || !gunItem.gunInfo.zoomren) {
-									ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer,
-											gunItem.gunInfo.scopezoombase, "cameraZoom", "field_78503_V");
-									needreset = true;
-								}
-								if (gunItem.gunInfo.zoomrent) {
-									renderPumpkinBlur(minecraft, ads);
-								}
+						boolean skipAfter = false;
+						if(gunItem.gunInfo.script != null) {
+							try {
+								skipAfter = (boolean) ((Invocable)gunItem.gunInfo.script).invokeFunction("GUI_rendering_3D", this);
+							} catch (NoSuchMethodException | ScriptException e) {
+								e.printStackTrace();
 							}
-							if (gunItem.gunInfo.renderMCcross) {
-								GuiIngameForge.renderCrosshairs = true;
-							} else {
-								GuiIngameForge.renderCrosshairs = false;
-								GL11.glEnable(GL11.GL_BLEND);
-							}
-							if (gunItem.gunInfo.renderHMGcross && spreadDiffusion > gunItem.gunInfo.spreadDiffusionmin)
-								this.renderCrossHair(minecraft, scaledresolution.getScaledWidth(), scaledresolution.getScaledHeight(), bure);
 						}
-						else {
-							// GuiIngameForge.renderCrosshairs = true;
-							if (gunItem.gunInfo.renderMCcross) {
-								GuiIngameForge.renderCrosshairs = true;
-							} else {
-								GuiIngameForge.renderCrosshairs = false;
-								GL11.glEnable(GL11.GL_BLEND);
-							}
-							if (gunItem.gunInfo.renderHMGcross)
-								this.renderCrossHair(minecraft, scaledresolution.getScaledWidth(), scaledresolution.getScaledHeight(), bure);
-							if (itemstackSight != null) {
-								if (itemstackSight.getItem() instanceof HMGItemAttachment_reddot) {
-									if (!gunItem.gunInfo.canobj || !gunItem.gunInfo.zoomrer) {
-										ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer,
-												1.0d, "cameraZoom", "field_78503_V");
-									}
-								} else if (itemstackSight.getItem() instanceof HMGItemAttachment_scope) {
-									if (!gunItem.gunInfo.canobj || !gunItem.gunInfo.zoomres) {
-										ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer,
-												1.0d, "cameraZoom", "field_78503_V");
-									}
-								} else if (itemstackSight.getItem() instanceof HMGItemSightBase) {
-									if (!gunItem.gunInfo.canobj || ((HMGItemSightBase) itemstackSight.getItem()).scopeonly) {
-										ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer,
-												1.0d, "cameraZoom", "field_78503_V");
-									}
-								}
-							} else {
-								if (!gunItem.gunInfo.canobj || !gunItem.gunInfo.zoomren) {
-									ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer,
-											1.0d, "cameraZoom", "field_78503_V");
-								}
-							}
-							// minecraft.gameSettings.fovSetting = 70.0F;
+						if(!skipAfter) {
+							// this.modelArmor.aimedBow = true;
 
-						}
-						if (gunItem.gunInfo.canlock && nbt != null) {
-							//todo 3Dにしたので根本から作り直し
-							Vector3d vecToLockonPos = null;
-							if (nbt.getBoolean("islockedentity")) {
-								Entity TGT = entityplayer.worldObj.getEntityByID(nbt.getInteger("TGT"));
-								if (TGT != null) {
+							//if (entityplayer.isSneaking())
+
+							if (HandmadeGunsCore.Key_ADS(entityplayer)) {
+								if (itemstackSight != null) {
+									if (itemstackSight.getItem() instanceof HMGItemAttachment_reddot) {
+										if (!gunItem.gunInfo.canobj || !gunItem.gunInfo.zoomrer) {
+											ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer,
+													gunItem.gunInfo.scopezoomred, "cameraZoom", "field_78503_V");
+											needreset = true;
+										}
+										if (gunItem.gunInfo.zoomrert) {
+											renderPumpkinBlur(minecraft, adsr);
+										}
+									} else if (itemstackSight.getItem() instanceof HMGItemAttachment_scope) {
+										if (!gunItem.gunInfo.canobj || !gunItem.gunInfo.zoomres) {
+											ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer,
+													gunItem.gunInfo.scopezoomscope, "cameraZoom", "field_78503_V");
+											needreset = true;
+										}
+										if (gunItem.gunInfo.zoomrest) {
+											renderPumpkinBlur(minecraft, adss);
+										}
+									} else if (itemstackSight.getItem() instanceof HMGItemSightBase) {
+										if (!gunItem.gunInfo.canobj || ((HMGItemSightBase) itemstackSight.getItem()).scopeonly) {
+											ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer,
+													((HMGItemSightBase) itemstackSight.getItem()).zoomlevel, "cameraZoom", "field_78503_V");
+											needreset = true;
+										}
+										if (((HMGItemSightBase) itemstackSight.getItem()).scopetexture != null) {
+											renderPumpkinBlur(minecraft, ((HMGItemSightBase) itemstackSight.getItem()).scopetexture);
+										}
+									}
+								} else {
+									if (!gunItem.gunInfo.canobj || !gunItem.gunInfo.zoomren) {
+										ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer,
+												gunItem.gunInfo.scopezoombase, "cameraZoom", "field_78503_V");
+										needreset = true;
+									}
+									if (gunItem.gunInfo.zoomrent) {
+										renderPumpkinBlur(minecraft, ads);
+									}
+								}
+								if (gunItem.gunInfo.renderMCcross) {
+									GuiIngameForge.renderCrosshairs = true;
+								} else {
+									GuiIngameForge.renderCrosshairs = false;
+									GL11.glEnable(GL11.GL_BLEND);
+								}
+								if (gunItem.gunInfo.renderHMGcross && spreadDiffusion > gunItem.gunInfo.spreadDiffusionmin)
+									this.renderCrossHair(minecraft, scaledresolution.getScaledWidth(), scaledresolution.getScaledHeight(), bure);
+							} else {
+								// GuiIngameForge.renderCrosshairs = true;
+								if (gunItem.gunInfo.renderMCcross) {
+									GuiIngameForge.renderCrosshairs = true;
+								} else {
+									GuiIngameForge.renderCrosshairs = false;
+									GL11.glEnable(GL11.GL_BLEND);
+								}
+								if (gunItem.gunInfo.renderHMGcross)
+									this.renderCrossHair(minecraft, scaledresolution.getScaledWidth(), scaledresolution.getScaledHeight(), bure);
+								if (itemstackSight != null) {
+									if (itemstackSight.getItem() instanceof HMGItemAttachment_reddot) {
+										if (!gunItem.gunInfo.canobj || !gunItem.gunInfo.zoomrer) {
+											ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer,
+													1.0d, "cameraZoom", "field_78503_V");
+										}
+									} else if (itemstackSight.getItem() instanceof HMGItemAttachment_scope) {
+										if (!gunItem.gunInfo.canobj || !gunItem.gunInfo.zoomres) {
+											ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer,
+													1.0d, "cameraZoom", "field_78503_V");
+										}
+									} else if (itemstackSight.getItem() instanceof HMGItemSightBase) {
+										if (!gunItem.gunInfo.canobj || ((HMGItemSightBase) itemstackSight.getItem()).scopeonly) {
+											ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer,
+													1.0d, "cameraZoom", "field_78503_V");
+										}
+									}
+								} else {
+									if (!gunItem.gunInfo.canobj || !gunItem.gunInfo.zoomren) {
+										ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer,
+												1.0d, "cameraZoom", "field_78503_V");
+									}
+								}
+								// minecraft.gameSettings.fovSetting = 70.0F;
+
+							}
+							if (gunItem.gunInfo.canlock && nbt != null) {
+								//todo 3Dにしたので根本から作り直し
+								Vector3d vecToLockonPos = null;
+								if (nbt.getBoolean("islockedentity")) {
+									Entity TGT = entityplayer.worldObj.getEntityByID(nbt.getInteger("TGT"));
+									if (TGT != null) {
+										vecToLockonPos = new Vector3d();
+										vecToLockonPos.set(TGT.posX, TGT.posY + TGT.height / 2, TGT.posZ);
+										vecToLockonPos.sub(new Vector3d(new double[]{entityplayer.posX, entityplayer.posY, entityplayer.posZ}));
+										vecToLockonPos.normalize();
+
+
+										if (gunItem.gunInfo.displayPredict) {
+											Vector3d PredictedTargetPos =
+													LinePrediction(new Vector3d(
+																	minecraft.renderViewEntity.posX,
+																	minecraft.renderViewEntity.posY,
+																	minecraft.renderViewEntity.posZ),
+															new Vector3d(TGT.posX, TGT.posY, TGT.posZ),
+															new Vector3d(
+																	TGT.motionX - minecraft.renderViewEntity.motionX,
+																	TGT.motionY - minecraft.renderViewEntity.motionY,
+																	TGT.motionZ - minecraft.renderViewEntity.motionZ),
+															gunItem.getTerminalspeed());
+
+											Vector3d vecToLockTarget_PredictPos = new Vector3d(PredictedTargetPos.x - minecraft.renderViewEntity.posX
+													, PredictedTargetPos.y - minecraft.renderViewEntity.posY - minecraft.renderViewEntity.getEyeHeight()
+													, PredictedTargetPos.z - minecraft.renderViewEntity.posZ
+											);
+											vecToLockTarget_PredictPos.normalize();
+											RotateVectorAroundY(vecToLockTarget_PredictPos, minecraft.renderViewEntity.rotationYawHead);
+											RotateVectorAroundX(vecToLockTarget_PredictPos, minecraft.renderViewEntity.rotationPitch);
+											renderLockOnMarker(minecraft, gunItem.gunInfo.predictMarker, vecToLockTarget_PredictPos);
+										}
+									}
+								} else if (nbt.getBoolean("islockedblock")) {
 									vecToLockonPos = new Vector3d();
-									vecToLockonPos.set(TGT.posX, TGT.posY + TGT.height / 2, TGT.posZ);
+									vecToLockonPos.set(nbt.getDouble("LockedPosX"), nbt.getDouble("LockedPosY"), nbt.getDouble("LockedPosZ"));
 									vecToLockonPos.sub(new Vector3d(new double[]{entityplayer.posX, entityplayer.posY, entityplayer.posZ}));
 									vecToLockonPos.normalize();
 								}
-							} else if (nbt.getBoolean("islockedblock")) {
-								vecToLockonPos = new Vector3d();
-								vecToLockonPos.set(nbt.getDouble("LockedPosX"), nbt.getDouble("LockedPosY"), nbt.getDouble("LockedPosZ"));
-								vecToLockonPos.sub(new Vector3d(new double[]{entityplayer.posX, entityplayer.posY, entityplayer.posZ}));
-								vecToLockonPos.normalize();
+								if (vecToLockonPos != null) {
+									RotateVectorAroundY(vecToLockonPos, entityplayer.rotationYawHead);
+									RotateVectorAroundX(vecToLockonPos, entityplayer.rotationPitch);
+									renderLockOnMarker(minecraft, gunItem.gunInfo.lockOnMarker, vecToLockonPos);
+								}
 							}
-							if (vecToLockonPos != null) {
-								RotateVectorAroundY(vecToLockonPos, entityplayer.rotationYawHead);
-								RotateVectorAroundX(vecToLockonPos, entityplayer.rotationPitch);
-								renderLockOnMarker(minecraft, gunItem.gunInfo.lockOnMarker, vecToLockonPos);
-							}
+
+
+							// GuiIngameForge.renderCrosshairs = true;
+
+							this.zoomtype = true;
+
+
+							//event.
+							//EntityRenderer.
+							//minecraft.entityRenderer.
+							//	entityplayer.eyeHeight = 10F;
+							//minecraft.entityRenderer.
+
+							//	GL11.glEnable(GL11.GL_BLEND);
 						}
-
-
-						// GuiIngameForge.renderCrosshairs = true;
-
-						this.zoomtype = true;
-
-
-						//event.
-						//EntityRenderer.
-						//minecraft.entityRenderer.
-						//	entityplayer.eyeHeight = 10F;
-						//minecraft.entityRenderer.
-
-						//	GL11.glEnable(GL11.GL_BLEND);
 					}
 					GL11.glPopMatrix();
-					setUp2DView(minecraft,event);
+					setUp2DView(minecraft);
 
 					screenWidth = scaledresolution.getScaledWidth();
 					screenHeight = scaledresolution.getScaledHeight();
@@ -368,47 +391,56 @@ public class HMGEventZoom {
 					GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
 					GL11.glEnable(GL11.GL_BLEND);
 					GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-
-					String d = String.format("%1$3d", gunItem.remain_Bullet(gunstack));
-					String d1 = String.format("%1$3d", gunItem.max_Bullet(gunstack));
-					fontrenderer.drawStringWithShadow(d + " /" + d1, (int)screenWidth - 70, (int)screenHeight - fontrenderer.FONT_HEIGHT * 4, 0xFFFFFF);
-
-					GuiIngame g = minecraft.ingameGUI;
-					//g.drawTexturedModelRectFromIcon(screenWidth-40, screenHeight-33, gunItem.magazine.getIconFromDamage(0), 16, 16);
-					if (gunItem.getcurrentMagazine(gunstack) != null) {
-						int stacksize = 0;
-						minecraft.getTextureManager().bindTexture(TextureMap.locationItemsTexture);
-						g.drawTexturedModelRectFromIcon((int)screenWidth - 70, (int)screenHeight - 53, gunItem.getcurrentMagazine(gunstack).getIconFromDamage(0), 16, 16);
-						for (int is = 0; is < 36; ++is) {
-							InventoryPlayer playerInv = entityplayer.inventory;
-							ItemStack itemi = playerInv.getStackInSlot(is);
-							if (itemi != null && itemi.getItem() == gunItem.getcurrentMagazine(gunstack)) {
-								stacksize += itemi.stackSize;
-							}
+					boolean skipAfter = false;
+					if(gunItem.gunInfo.script != null) {
+						try {
+							skipAfter = (boolean) ((Invocable)gunItem.gunInfo.script).invokeFunction("GUI_rendering_2D", this,gunItem,gunstack);
+						} catch (NoSuchMethodException | ScriptException e) {
+							e.printStackTrace();
 						}
-						String d2 = String.format("%1$3d", stacksize);
-						fontrenderer.drawStringWithShadow("x" + d2, (int)screenWidth - 50, (int)screenHeight - fontrenderer.FONT_HEIGHT * 5, 0xFFFFFF);
 					}
+					if(!skipAfter) {
+						String d = String.format("%1$3d", gunItem.remain_Bullet(gunstack));
+						String d1 = String.format("%1$3d", gunItem.max_Bullet(gunstack));
+						fontrenderer.drawStringWithShadow(d + " /" + d1, (int) screenWidth - 70, (int) screenHeight - fontrenderer.FONT_HEIGHT * 4, 0xFFFFFF);
 
-					if (gunItem.get_selectingMagazine(gunstack) != null && gunItem.getcurrentMagazine(gunstack) != gunItem.get_selectingMagazine(gunstack)) {
-						int stacksize = 0;
-						minecraft.getTextureManager().bindTexture(TextureMap.locationItemsTexture);
-						g.drawTexturedModelRectFromIcon((int)screenWidth - 120, (int)screenHeight - 53, gunItem.get_selectingMagazine(gunstack).getIconFromDamage(0), 16, 16);
-						for (int is = 0; is < 36; ++is) {
-							InventoryPlayer playerInv = entityplayer.inventory;
-							ItemStack itemi = playerInv.getStackInSlot(is);
-							if (itemi != null && itemi.getItem() == gunItem.get_selectingMagazine(gunstack)) {
-								stacksize += itemi.stackSize;
+						GuiIngame g = minecraft.ingameGUI;
+						//g.drawTexturedModelRectFromIcon(screenWidth-40, screenHeight-33, gunItem.magazine.getIconFromDamage(0), 16, 16);
+						if (gunItem.getcurrentMagazine(gunstack) != null) {
+							int stacksize = 0;
+							minecraft.getTextureManager().bindTexture(TextureMap.locationItemsTexture);
+							g.drawTexturedModelRectFromIcon((int) screenWidth - 70, (int) screenHeight - 53, gunItem.getcurrentMagazine(gunstack).getIconFromDamage(0), 16, 16);
+							for (int is = 0; is < 36; ++is) {
+								InventoryPlayer playerInv = entityplayer.inventory;
+								ItemStack itemi = playerInv.getStackInSlot(is);
+								if (itemi != null && itemi.getItem() == gunItem.getcurrentMagazine(gunstack)) {
+									stacksize += itemi.stackSize;
+								}
 							}
+							String d2 = String.format("%1$3d", stacksize);
+							fontrenderer.drawStringWithShadow("x" + d2, (int) screenWidth - 50, (int) screenHeight - fontrenderer.FONT_HEIGHT * 5, 0xFFFFFF);
 						}
-						String d2 = String.format("%1$3d", stacksize);
-						fontrenderer.drawStringWithShadow("x" + d2, (int)screenWidth - 100, (int)screenHeight - fontrenderer.FONT_HEIGHT * 5, 0xFFFFFF);
-						fontrenderer.drawStringWithShadow("next", (int)screenWidth - 120, (int)screenHeight - fontrenderer.FONT_HEIGHT * 5 - 16, 0xFFFFFF);
-					}
-					this.renderBullet(fontrenderer, (int)screenWidth, (int)screenHeight, gunstack);
-					if (gunItem.gunInfo.canlock) {
-						if (nbt.getBoolean("SeekerOpened"))
-							fontrenderer.drawStringWithShadow("Seekeropen", (int)screenWidth - 60, (int)screenHeight - fontrenderer.FONT_HEIGHT * 2, 0xFFFFFF);
+
+						if (gunItem.get_selectingMagazine(gunstack) != null && gunItem.getcurrentMagazine(gunstack) != gunItem.get_selectingMagazine(gunstack)) {
+							int stacksize = 0;
+							minecraft.getTextureManager().bindTexture(TextureMap.locationItemsTexture);
+							g.drawTexturedModelRectFromIcon((int) screenWidth - 120, (int) screenHeight - 53, gunItem.get_selectingMagazine(gunstack).getIconFromDamage(0), 16, 16);
+							for (int is = 0; is < 36; ++is) {
+								InventoryPlayer playerInv = entityplayer.inventory;
+								ItemStack itemi = playerInv.getStackInSlot(is);
+								if (itemi != null && itemi.getItem() == gunItem.get_selectingMagazine(gunstack)) {
+									stacksize += itemi.stackSize;
+								}
+							}
+							String d2 = String.format("%1$3d", stacksize);
+							fontrenderer.drawStringWithShadow("x" + d2, (int) screenWidth - 100, (int) screenHeight - fontrenderer.FONT_HEIGHT * 5, 0xFFFFFF);
+							fontrenderer.drawStringWithShadow("next", (int) screenWidth - 120, (int) screenHeight - fontrenderer.FONT_HEIGHT * 5 - 16, 0xFFFFFF);
+						}
+						this.renderBullet(fontrenderer, (int) screenWidth, (int) screenHeight, gunstack);
+						if (gunItem.gunInfo.canlock) {
+							if (nbt.getBoolean("SeekerOpened"))
+								fontrenderer.drawStringWithShadow("Seekeropen", (int) screenWidth - 60, (int) screenHeight - fontrenderer.FONT_HEIGHT * 2, 0xFFFFFF);
+						}
 					}
 					GL11.glPopMatrix();
 					GL11.glPopAttrib();
@@ -753,16 +785,14 @@ public class HMGEventZoom {
 		Minecraft.getMinecraft().getTextureManager().bindTexture(res);
 	}
 
-	public static void setUp3DView(Minecraft minecraft,RenderGameOverlayEvent.Post event){
-
-		GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
+	public static void setUp3DView(Minecraft minecraft,float partialTicks){
 		GL11.glMatrixMode(GL11.GL_PROJECTION);
 		GL11.glLoadIdentity();
-		Project.gluPerspective(HMG_proxy.getFOVModifier(minecraft,event.partialTicks,true), (float)minecraft.displayWidth / (float)minecraft.displayHeight, 0.05F, 300.0f);
+		Project.gluPerspective(HMG_proxy.getFOVModifier(minecraft,partialTicks,true), (float)minecraft.displayWidth / (float)minecraft.displayHeight, 0.05F, 300.0f);
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 		GL11.glLoadIdentity();
 	}
-	public static void setUp2DView(Minecraft minecraft,RenderGameOverlayEvent.Post event){
+	public static void setUp2DView(Minecraft minecraft){
 		GL11.glViewport(0, 0, minecraft.displayWidth, minecraft.displayHeight);
 		ScaledResolution scaledresolution = new ScaledResolution(minecraft, minecraft.displayWidth, minecraft.displayHeight);
 		GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);

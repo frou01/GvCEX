@@ -27,6 +27,7 @@ import javax.script.ScriptException;
 
 import java.util.ArrayList;
 
+import static handmadeguns.event.HMGEventZoom.setUp3DView;
 import static java.lang.Math.abs;
 import static net.minecraftforge.client.IItemRenderer.ItemRenderType.ENTITY;
 import static net.minecraftforge.client.IItemRenderer.ItemRenderType.EQUIPPED;
@@ -411,8 +412,6 @@ public class HMGRenderItemGun_U implements IItemRenderer {
 		GL11.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		GL11.glShadeModel(GL11.GL_SMOOTH);
 		GL11.glColor4f(1, 1, 1, 1F);
-		float f2 = 1.0F;
-		f2 = 60.0F;
 //		glMaterialf(GL_FRONT_AND_BACK,GL_SHININESS,120);
 		float scala = this.modelscala;
 		HMGItem_Unified_Guns gun;
@@ -462,6 +461,18 @@ public class HMGRenderItemGun_U implements IItemRenderer {
 					break;
 				case EQUIPPED_FIRST_PERSON://first
 				{
+
+					setUp3DView(Minecraft.getMinecraft(),smoothing);
+
+					EntityPlayer entityplayer = (EntityPlayer)Minecraft.getMinecraft().thePlayer;
+					float f1 = entityplayer.distanceWalkedModified - entityplayer.prevDistanceWalkedModified;
+					float f2 = -(entityplayer.distanceWalkedModified + f1 * smoothing);
+					float f3 = entityplayer.prevCameraYaw + (entityplayer.cameraYaw - entityplayer.prevCameraYaw) * smoothing;
+					float f4 = entityplayer.prevCameraPitch + (entityplayer.cameraPitch - entityplayer.prevCameraPitch) * smoothing;
+					GL11.glTranslatef(MathHelper.sin(f2 * (float)Math.PI) * f3 * 0.5F, -Math.abs(MathHelper.cos(f2 * (float)Math.PI) * f3), 0.0F);
+					GL11.glRotatef(MathHelper.sin(f2 * (float)Math.PI) * f3 * 3.0F, 0.0F, 0.0F, 1.0F);
+					GL11.glRotatef(Math.abs(MathHelper.cos(f2 * (float)Math.PI - 0.2F) * f3) * 5.0F, 1.0F, 0.0F, 0.0F);
+					GL11.glRotatef(f4, 1.0F, 0.0F, 0.0F);
 //					boolean cocking = nbt.getBoolean("Cocking");
 					float cockingtime = nbt.getInteger("CockingTime") + smoothing - 1;
 					boolean recoiled = nbt.getBoolean("Recoiled");
@@ -478,7 +489,6 @@ public class HMGRenderItemGun_U implements IItemRenderer {
 						boltoffsetcof = cycle - (cycle - boltprogress);//�{���g�O�i��
 					if (boltoffsetcof < 0) boltoffsetcof = 0;
 					GL11.glPushMatrix();//glstart1
-					EntityPlayer entityplayer = minecraft.thePlayer;
 					ItemStack itemstackSight =null;
 					itemstackSight = items[1];
 					if (itemstackSight == null) {
@@ -1485,6 +1495,15 @@ public class HMGRenderItemGun_U implements IItemRenderer {
 					break;
 				case FIRST_PERSON_MAP:
 					break;
+				case ENTITY:
+					try {
+						invocable.invokeFunction("renderThird",this,gun,item,modeling,data[1],type,data);
+					} catch (ScriptException e) {
+						e.printStackTrace();
+					} catch (NoSuchMethodException e) {
+						e.printStackTrace();
+					}
+					break;
 			}
 			GL11.glDepthMask(true);
 			GL11.glDisable(GL_BLEND);
@@ -1883,24 +1902,21 @@ public class HMGRenderItemGun_U implements IItemRenderer {
 
 	public void glMatrixForRenderInEquipped(float reco) {
 		GL11.glRotatef(180F, 1.0F, 0.0F, 0.0F);
-		GL11.glRotatef(50F, 0.0F, 1.0F, 0.0F);
 		GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
-		GL11.glTranslatef(nox+0.5F, noy, noz+reco);// -0.2F//-0.7,0.7,0
+		GL11.glTranslatef(nox, noy, noz + 1.4f);// -0.2F//-0.7,0.7,0
 	}
 
 	public void glMatrixForRenderInEquipped_reload() {
 		GL11.glRotatef(190F, 1.0F, 0.0F, 0.0F);
-		GL11.glRotatef(40F, 0.0F, 1.0F, 0.0F);
 		GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
-		GL11.glTranslatef(nox+0.5F, noy, noz);
+		GL11.glTranslatef(nox, noy, noz + 1.4f);
 	}
 
 	//ADS
 	public void glMatrixForRenderInEquippedADS(float reco) {
 		GL11.glRotatef(180f, 1.0F, 0.0F, 0.0F);
-		GL11.glRotatef(45f, 0.0F, 1.0F, 0.0F);
 		GL11.glRotatef(180f, 0.0F, 0.0F, 1.0F);
-		GL11.glTranslatef(modelx, modely, modelz + reco);// 0.694,1.03,-1.0//-1.4F
+		GL11.glTranslatef(modelx, modely, modelz + reco + 1.4f);// 0.694,1.03,-1.0//-1.4F
 		GL11.glRotatef(rotationy, 0.0F, 1.0F, 0.0F);
 		GL11.glRotatef(rotationx, 1.0F, 0.0F, 0.0F);
 		GL11.glRotatef(rotationz, 0.0F, 0.0F, 1.0F);

@@ -191,31 +191,31 @@ public class TileEntityFlag extends TileEntity
     }
     public ArrayList getSameALTEntities(Chunk flagChunk,ArrayList nearEntitys,int k){
         if(nearEntitys == null)nearEntitys = new ArrayList();
-        addAllListToArray(nearEntitys, (ArrayList) flagChunk.entityLists[k]);
-        addAllListToArray(nearEntitys, (ArrayList) flagChunk.worldObj.getChunkFromChunkCoords(flagChunk.getChunkCoordIntPair().chunkXPos-1,
+        addAllListToArray(nearEntitys, flagChunk.entityLists[k]);
+        addAllListToArray(nearEntitys, flagChunk.worldObj.getChunkFromChunkCoords(flagChunk.getChunkCoordIntPair().chunkXPos-1,
                 flagChunk.getChunkCoordIntPair().chunkZPos+1).entityLists[k]);
-        addAllListToArray(nearEntitys, (ArrayList) flagChunk.worldObj.getChunkFromChunkCoords(flagChunk.getChunkCoordIntPair().chunkXPos,
+        addAllListToArray(nearEntitys, flagChunk.worldObj.getChunkFromChunkCoords(flagChunk.getChunkCoordIntPair().chunkXPos,
                 flagChunk.getChunkCoordIntPair().chunkZPos+1).entityLists[k]);
-        addAllListToArray(nearEntitys, (ArrayList) flagChunk.worldObj.getChunkFromChunkCoords(flagChunk.getChunkCoordIntPair().chunkXPos+1,
+        addAllListToArray(nearEntitys, flagChunk.worldObj.getChunkFromChunkCoords(flagChunk.getChunkCoordIntPair().chunkXPos+1,
                 flagChunk.getChunkCoordIntPair().chunkZPos+1).entityLists[k]);
 
-        addAllListToArray(nearEntitys, (ArrayList) flagChunk.worldObj.getChunkFromChunkCoords(flagChunk.getChunkCoordIntPair().chunkXPos-1,
+        addAllListToArray(nearEntitys, flagChunk.worldObj.getChunkFromChunkCoords(flagChunk.getChunkCoordIntPair().chunkXPos-1,
                 flagChunk.getChunkCoordIntPair().chunkZPos).entityLists[k]);
-        addAllListToArray(nearEntitys, (ArrayList) flagChunk.worldObj.getChunkFromChunkCoords(flagChunk.getChunkCoordIntPair().chunkXPos,
+        addAllListToArray(nearEntitys, flagChunk.worldObj.getChunkFromChunkCoords(flagChunk.getChunkCoordIntPair().chunkXPos,
                 flagChunk.getChunkCoordIntPair().chunkZPos).entityLists[k]);
-        addAllListToArray(nearEntitys, (ArrayList) flagChunk.worldObj.getChunkFromChunkCoords(flagChunk.getChunkCoordIntPair().chunkXPos+1,
+        addAllListToArray(nearEntitys, flagChunk.worldObj.getChunkFromChunkCoords(flagChunk.getChunkCoordIntPair().chunkXPos+1,
                 flagChunk.getChunkCoordIntPair().chunkZPos).entityLists[k]);
 
-        addAllListToArray(nearEntitys, (ArrayList) flagChunk.worldObj.getChunkFromChunkCoords(flagChunk.getChunkCoordIntPair().chunkXPos-1,
+        addAllListToArray(nearEntitys, flagChunk.worldObj.getChunkFromChunkCoords(flagChunk.getChunkCoordIntPair().chunkXPos-1,
                 flagChunk.getChunkCoordIntPair().chunkZPos-1).entityLists[k]);
-        addAllListToArray(nearEntitys, (ArrayList) flagChunk.worldObj.getChunkFromChunkCoords(flagChunk.getChunkCoordIntPair().chunkXPos,
+        addAllListToArray(nearEntitys, flagChunk.worldObj.getChunkFromChunkCoords(flagChunk.getChunkCoordIntPair().chunkXPos,
                 flagChunk.getChunkCoordIntPair().chunkZPos-1).entityLists[k]);
-        addAllListToArray(nearEntitys, (ArrayList) flagChunk.worldObj.getChunkFromChunkCoords(flagChunk.getChunkCoordIntPair().chunkXPos+1,
+        addAllListToArray(nearEntitys, flagChunk.worldObj.getChunkFromChunkCoords(flagChunk.getChunkCoordIntPair().chunkXPos+1,
                 flagChunk.getChunkCoordIntPair().chunkZPos-1).entityLists[k]);
         return nearEntitys;
     }
 
-    public void addAllListToArray(ArrayList to , ArrayList from){
+    public void addAllListToArray(ArrayList to , List from){
         for(Object a_from : from){
             if(a_from != null)to.add(a_from);
         }
@@ -350,7 +350,7 @@ public class TileEntityFlag extends TileEntity
     public Vector3d findRaiderSpawnPoint(){
         boolean flag = true;
         Vector3d spawningLocation = null;
-        int cnt = 0;
+        int cnt = 4 ;
         while (flag || cnt>50) {
             cnt++;
             flag = false;

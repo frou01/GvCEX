@@ -1,0 +1,3 @@
+name,HMG_Attachments
+Icon,HandmadeGuns:scope
+End

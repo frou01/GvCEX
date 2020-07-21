@@ -57,11 +57,11 @@ public class VehicleEngineSound extends MovingSound
 				disttoPlayer = attachedEntity.getDistanceSqToEntity(HMG_proxy.getMCInstance().renderViewEntity);
 				if(disttoPlayer>64) {
 					this.xPosF = (float) (renderViewEntity.posX + (this.attachedEntity.posX - renderViewEntity.posX) / sqrt(disttoPlayer) * 8);
-					this.yPosF = (float) (renderViewEntity.posY + (this.attachedEntity.posY - renderViewEntity.posY) / sqrt(disttoPlayer) * 8);
+					this.yPosF = (float) (renderViewEntity.posY + (this.attachedEntity.posY + 2 - renderViewEntity.posY) / sqrt(disttoPlayer) * 8);
 					this.zPosF = (float) (renderViewEntity.posZ + (this.attachedEntity.posZ - renderViewEntity.posZ) / sqrt(disttoPlayer) * 8);
 				}else {
 					this.xPosF = (float) (this.attachedEntity.posX);
-					this.yPosF = (float) (this.attachedEntity.posY);
+					this.yPosF = (float) (this.attachedEntity.posY + 2);
 					this.zPosF = (float) (this.attachedEntity.posZ);
 				}
 				float soundpitch = hasLoopSound.getsoundPitch();

@@ -5,6 +5,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import handmadeguns.HMGAddAttachment;
 import handmadeguns.HMGGunMaker;
 import handmadeguns.items.guns.HMGItem_Unified_Guns;
+import hmggvcmob.tile.TileEntityFlag;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
@@ -21,6 +22,8 @@ import net.minecraft.world.biome.BiomeGenBase;
 import java.util.Random;
 
 import static handmadeguns.HandmadeGunsCore.cfg_forceunifiedguns;
+import static hmggvcmob.GVCMobPlus.fn_Guerrillaflag;
+import static hmggvcmob.GVCMobPlus.guerrillas;
 
 public class GVCXBlockFriendCamp extends Block{
     @SideOnly(Side.CLIENT)
@@ -811,21 +814,15 @@ public class GVCXBlockFriendCamp extends Block{
             world.setBlock(i + 11, j + 0, k + 11, Blocks.air );
             world.setBlock(i + 11, j + 0, k + 12, Blocks.bed , 3 , 3);
             world.setBlock(i + 12, j + 0, k + 8, Blocks.bed , 11 , 3);
-            world.setBlock(i + 12, j + 0, k + 9, Blocks.mob_spawner, 2, 2 );
-            TileEntityMobSpawner tileentitymobspawner = (TileEntityMobSpawner)world.getTileEntity(i + 12, j + 0, k + 9);
 
-            if (tileentitymobspawner != null)
-            {
-                tileentitymobspawner.func_145881_a().setEntityName("GVCMob.SysSpawnSoldier");
-            }
+
+            world.setBlock(i + 12, j + 0, k + 9, fn_Guerrillaflag, 2, 2);
+            TileEntityFlag tileEntityFlag = new TileEntityFlag(guerrillas);
+            tileEntityFlag.respawncycle = 20;
+            world.setTileEntity(i + 12, j + 0, k + 9,tileEntityFlag);
+
             world.setBlock(i + 12, j + 0, k + 10, Blocks.bed , 11 , 3);
-            world.setBlock(i + 12, j + 0, k + 11, Blocks.mob_spawner, 2, 2);
-            tileentitymobspawner = (TileEntityMobSpawner)world.getTileEntity(i + 12, j + 0, k + 11);
 
-            if (tileentitymobspawner != null)
-            {
-                tileentitymobspawner.func_145881_a().setEntityName("GVCMob.SysSpawnSoldier");
-            }
             world.setBlock(i + 12, j + 0, k + 12, Blocks.bed , 11 , 3);
             world.setBlock(i + 11, j + 0, k + 13, Blocks.dirt);
             world.setBlock(i + 11, j + 0, k + 14, Blocks.dirt);

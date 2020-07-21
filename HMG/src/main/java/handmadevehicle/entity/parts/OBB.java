@@ -66,7 +66,7 @@ public class OBB {
         if(info.linkedTurret != -1){
             TurretObj linkedTurretObj = baseLogic.allturrets[info.linkedTurret];
             turretRotation = linkedTurretObj.turretRotYaw;
-            turretRotCenter = linkedTurretObj.gunItem.gunInfo.posGetter.turretYawCenterpos;
+            turretRotCenter = linkedTurretObj.prefab_turret.gunInfo.posGetter.turretYawCenterpos;
         }
         update(modifiedBoundingBox);
     }

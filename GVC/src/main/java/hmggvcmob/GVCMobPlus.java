@@ -70,12 +70,10 @@ public class GVCMobPlus
     public static final CreativeTabs tabgvcm = new GVMTab("GVCmobs");
     public static int cfg_creatCamp;
     public static double cfg_guerrillasrach;
-    public static double cfg_guerrillaspawngroup;
     public static int cfg_guerrillaspawnnomal;
     public static int cfg_guerrillaspawntank;
     public static boolean cfg_guerrillaspawndrawn;
     public static float cfg_soldierspawnnormal;
-    public static float cfg_soldierspawntank;
     public static boolean cfg_noVanillaMob;
     public static int cfg_flagspawnlevel;
     public static int cfg_flagspawninterval;
@@ -83,13 +81,11 @@ public class GVCMobPlus
     public static boolean cfg_canspawnsolider;
     public static boolean cfg_cansetIED;
     public static boolean cfg_blockdestory;
-    public static boolean cfg_modelobj;
     public static Map<String, Integer> ignoreSoTargetEntity = new HashMap();
     public static Map<String, CampObj> campsHash = new HashMap();
     public static boolean cfg_throwngrenade;
     public static boolean cfg_canspawnhell;
     public static boolean cfg_canspawnsky;
-    public static boolean cfg_canEjectCartridge;
     public static Block fn_Gcamp;
     public static Block fn_Gcamp2;
     public static Block fn_Gcamp3;
@@ -243,8 +239,7 @@ public class GVCMobPlus
         HMVehicle.cfgVehicleWheel_UpRange = lconf.get("Vehicle", "cfgVehicleWheel_UpRange", 1).getDouble(1);
         HMVehicle.cfgVehicleWheel_DownRange = lconf.get("Vehicle", "cfgVehicleWheel_DownRange", 2).getDouble(2);
         cfg_cansetIED = lconf.get("world", "cfg_CansetIED", true).getBoolean(true);
-        cfg_blockdestory = lconf.get("world", "cfg_BlockDestory", true).getBoolean(true);
-        cfg_canEjectCartridge = lconf.get("Guerrilla", "cfg_canEjectCartridge", true).getBoolean(true);
+        cfg_blockdestory = lconf.get("world", "cfg_BlockDestory", true,"It's only for mob. not for destroying by gun. see HandmadeGuns.cfg").getBoolean(true);
 
         cfg_throwngrenade = lconf.get("Guerrilla", "cfg_throwngrenade", true).getBoolean(true);
 
@@ -746,7 +741,7 @@ public class GVCMobPlus
 
             EntityRegistry.addSpawn(GVCEntityGuerrillaM.class, cfg_guerrillaspawnnomal * 1, cfg_guerrillaspawnnomal * 4, cfg_guerrillaspawnnomal * 4, EnumCreatureType.monster, new BiomeGenBase[] { biome });
 
-            EntityRegistry.addSpawn(GVCEntityGuerrilla_Flamer.class, cfg_guerrillaspawnnomal * 1, cfg_guerrillaspawnnomal * 1, cfg_guerrillaspawnnomal * 1, EnumCreatureType.monster, new BiomeGenBase[] { biome });
+            if(cfg_blockdestory)EntityRegistry.addSpawn(GVCEntityGuerrilla_Flamer.class, cfg_guerrillaspawnnomal * 1, cfg_guerrillaspawnnomal * 1, cfg_guerrillaspawnnomal * 1, EnumCreatureType.monster, new BiomeGenBase[] { biome });
 
             EntityRegistry.addSpawn(GVCEntityGK.class, cfg_guerrillaspawntank * 6, cfg_guerrillaspawntank * 2, cfg_guerrillaspawntank * 3, EnumCreatureType.monster, new BiomeGenBase[] { biome });
 

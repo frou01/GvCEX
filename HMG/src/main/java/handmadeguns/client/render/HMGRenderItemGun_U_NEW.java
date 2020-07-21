@@ -16,6 +16,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.IItemRenderer;
@@ -23,6 +24,8 @@ import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.model.IModelCustom;
 import org.lwjgl.opengl.GL11;
 
+import javax.script.Invocable;
+import javax.script.ScriptException;
 import javax.vecmath.Vector3d;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -30,6 +33,8 @@ import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.Vector;
 
+import static handmadeguns.HandmadeGunsCore.scripts;
+import static handmadeguns.event.HMGEventZoom.setUp3DView;
 import static handmadeguns.event.RenderTickSmoothing.smooth;
 import static handmadeguns.HandmadeGunsCore.HMG_proxy;
 import static java.lang.Math.abs;
@@ -255,17 +260,7 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 	@Override
 	public void renderItem(ItemRenderType type, ItemStack gunstack, Object... data) {
 
-		GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
-		GL11.glShadeModel(GL11.GL_SMOOTH);
-		GL11.glPushMatrix();
-		datas = data;
-		GL11.glEnable(GL_BLEND);
-		GL11.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		GL11.glColor4f(1, 1, 1, 1F);
-		float f2 = 1.0F;
-		f2 = 60.0F;
 //		glMaterialf(GL_FRONT_AND_BACK,GL_SHININESS,120);
-		float scala = this.modelscala;
 		HMGItem_Unified_Guns gunitem;
 		if (gunstack.getItem() instanceof HMGItem_Unified_Guns)
 			gunitem = (HMGItem_Unified_Guns) gunstack.getItem();
@@ -275,6 +270,41 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 			GL11.glDisable(GL_BLEND);
 			return;
 		}
+
+		boolean skipAfter = false;
+		Invocable invocable = (Invocable) gunitem.gunInfo.renderscript;
+		if(invocable != null){
+			try {
+				skipAfter = (boolean) ((Invocable)gunitem.gunInfo.script).invokeFunction("GunModelRender_New", this,gunitem,gunstack);
+			} catch (ScriptException e) {
+				e.printStackTrace();
+			} catch (NoSuchMethodException e) {
+				e.printStackTrace();
+			}
+		}
+		if(!skipAfter)rendering(type,gunstack,data);
+		if(invocable != null){
+			try {
+				((Invocable)gunitem.gunInfo.script).invokeFunction("GunModelRender_New_post", this,gunitem,gunstack);
+			} catch (ScriptException e) {
+				e.printStackTrace();
+			} catch (NoSuchMethodException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	public void rendering(ItemRenderType type, ItemStack gunstack, Object... data){
+		HMGItem_Unified_Guns gunitem;
+		if (gunstack.getItem() instanceof HMGItem_Unified_Guns)
+			gunitem = (HMGItem_Unified_Guns) gunstack.getItem();
+		else {
+
+			GL11.glDepthMask(true);
+			GL11.glDisable(GL_BLEND);
+			return;
+		}
+		datas = data;
+		float scala = this.modelscala;
 		nbt = gunstack.getTagCompound();
 		if (nbt == null) gunitem.checkTags(gunstack);
 
@@ -312,6 +342,12 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 		if(recoileprogress < 0){
 			recoiled = true;
 		}
+		GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
+		GL11.glShadeModel(GL11.GL_SMOOTH);
+		GL11.glPushMatrix();
+		GL11.glEnable(GL_BLEND);
+		GL11.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		GL11.glColor4f(1, 1, 1, 1F);
 		switch (type) {
 			case INVENTORY:
 				glMatrixForRenderInInventory();
@@ -324,7 +360,7 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 						glEnable(GL_BLEND);
 						glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 						GL11.glDepthMask(false);
-						glAlphaFunc(GL_LESS, 1);
+						glAlphaFunc(GL_LEQUAL, 1);
 					} else {
 						GL11.glDepthMask(true);
 						glAlphaFunc(GL_EQUAL, 1);
@@ -433,8 +469,20 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 							onads_modelRotationZ = onads_modelRotationZ_Scope;
 						}
 					}
+					setUp3DView(Minecraft.getMinecraft(),smoothing);
+
+					EntityPlayer entityplayer = (EntityPlayer)Minecraft.getMinecraft().thePlayer;
+					float f1 = entityplayer.distanceWalkedModified - entityplayer.prevDistanceWalkedModified;
+					float f2 = -(entityplayer.distanceWalkedModified + f1 * smoothing);
+					float f3 = entityplayer.prevCameraYaw + (entityplayer.cameraYaw - entityplayer.prevCameraYaw) * smoothing;
+					float f4 = entityplayer.prevCameraPitch + (entityplayer.cameraPitch - entityplayer.prevCameraPitch) * smoothing;
+					GL11.glTranslatef(MathHelper.sin(f2 * (float)Math.PI) * f3 * 0.5F, -Math.abs(MathHelper.cos(f2 * (float)Math.PI) * f3), 0.0F);
+					GL11.glRotatef(MathHelper.sin(f2 * (float)Math.PI) * f3 * 3.0F, 0.0F, 0.0F, 1.0F);
+					GL11.glRotatef(Math.abs(MathHelper.cos(f2 * (float)Math.PI - 0.2F) * f3) * 5.0F, 1.0F, 0.0F, 0.0F);
+					GL11.glRotatef(f4, 1.0F, 0.0F, 0.0F);
+
 					if (isreloading) {
-						this.glMatrixForRenderInEquipped(-0.2f);
+						this.glMatrixForRenderInEquipped(0);
 						GL11.glScalef(scala, scala, scala);
 						int reloadprogress = this.getintfromnbt("RloadTime");
 						partsRender_gun.partSidentification(new GunState[]{GunState.Reload}, (float) reloadprogress, remainbullets);
@@ -473,18 +521,18 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 							int cockingtime = this.getintfromnbt("CockingTime");
 							if (cockingtime > 0) {
 								float cockingprogress = cockingtime + this.getSmoothing() - 1;//�R�b�L���O�J�n����̎��ԁifloat�l�j
-								this.glMatrixForRenderInEquipped(-0.2f);
+								this.glMatrixForRenderInEquipped(0);
 								GL11.glScalef(scala, scala, scala);
 								partsRender_gun.partSidentification(new GunState[]{GunState.Cock}, cockingprogress, remainbullets);
 							} else if (!recoiled) {
 								//�ˌ����1tick���̂݌Ă΂�܂�
-								this.glMatrixForRenderInEquipped(-0.2f);
+								this.glMatrixForRenderInEquipped(0f);
 								GL11.glRotatef(jump * (1 - this.getSmoothing()), 1.0f, 0.0f, 0.0f);//�e�����ˏオ��B���̏�Ԃ��ƃ��f����0,0,0�𒆐S�ɉ�]�B
 								GL11.glScalef(scala, scala, scala);
 								partsRender_gun.partSidentification(new GunState[]{GunState.Recoil}, recoileprogress, remainbullets);
 							} else {
 								//�ʏ���
-								this.glMatrixForRenderInEquipped(-0.2f);
+								this.glMatrixForRenderInEquipped(0);
 								GL11.glScalef(scala, scala, scala);
 								partsRender_gun.partSidentification(new GunState[]{GunState.Default}, (float) 0, remainbullets);
 							}
@@ -502,7 +550,7 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 					glEnable(GL_BLEND);
 					glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 					GL11.glDepthMask(false);
-					glAlphaFunc(GL_LESS, 1);
+					glAlphaFunc(GL_LEQUAL, 1);
 				}else {
 					GL11.glDepthMask(true);
 					glAlphaFunc(GL_EQUAL, 1);
@@ -565,7 +613,7 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 					glEnable(GL_BLEND);
 					glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 					GL11.glDepthMask(false);
-					glAlphaFunc(GL_LESS, 1);
+					glAlphaFunc(GL_LEQUAL, 1);
 				}else {
 					GL11.glDepthMask(true);
 					glAlphaFunc(GL_EQUAL, 1);
@@ -618,23 +666,14 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 	}
 
 	public void glMatrixForRenderInEquipped(float reco) {
-		GL11.glRotatef(180F, 1.0F, 0.0F, 0.0F);
-		GL11.glRotatef(50F, 0.0F, 1.0F, 0.0F);
-		GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
-		GL11.glTranslatef(modelPosX+0.5f, modelPosY, modelPosZ +reco);// -0.2F//-0.7,0.7,0
-	}
-
-	public void glMatrixForRenderInEquipped_reload() {
-		GL11.glRotatef(190F, 1.0F, 0.0F, 0.0F);
-		GL11.glRotatef(40F, 0.0F, 1.0F, 0.0F);
-		GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
-		GL11.glTranslatef(modelPosX+0.5f, modelPosY, modelPosZ);
+		GL11.glRotatef(180f, 1.0F, 0.0F, 0.0F);
+		GL11.glRotatef(180f, 0.0F, 0.0F, 1.0F);
+		GL11.glTranslatef(modelPosX, modelPosY, modelPosZ + 1.4f);// -0.2F//-0.7,0.7,0
 	}
 
 	//ADS
 	public void glMatrixForRenderInEquippedADS(float reco) {
 		GL11.glRotatef(180f, 1.0F, 0.0F, 0.0F);
-		GL11.glRotatef(45f, 0.0F, 1.0F, 0.0F);
 		GL11.glRotatef(180f, 0.0F, 0.0F, 1.0F);
 		if(gunitem != null && nbt != null && gunitem.gunInfo.sightOffset_zeroIn != null && nbt.getInteger("currentElevation") >= 0 && gunitem.gunInfo.sightOffset_zeroIn.length>nbt.getInteger("currentElevation")) {
 			Vector3d sightOffset_zeroIn = gunitem.gunInfo.sightOffset_zeroIn[nbt.getInteger("currentElevation")];
@@ -644,7 +683,7 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 		}
 		GL11.glTranslatef(onads_modelPosX,
 				onads_modelPosY,
-				-1.4f + onads_modelPosZ);// 0.694,1.03,-1.0//-1.4F
+				onads_modelPosZ);// 0.694,1.03,-1.0//-1.4F
 		GL11.glRotatef(onads_modelRotationY, 0.0F, 1.0F, 0.0F);
 		GL11.glRotatef(onads_modelRotationX, 1.0F, 0.0F, 0.0F);
 		GL11.glRotatef(onads_modelRotationZ, 0.0F, 0.0F, 1.0F);
@@ -654,7 +693,7 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 		GL11.glRotatef(190F, 1.0F, 0.0F, 0.0F);
 		GL11.glRotatef(45F, 0.0F, 1.0F, 0.0F);
 		GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
-		GL11.glTranslatef(-1.3f +  + thirdmodelPosX/2, 1.55f + thirdmodelPosY/2, 0.3f + reco + thirdmodelPosZ/2);//-0.4
+		GL11.glTranslatef(-1.3f + thirdmodelPosX/2, 1.55f + thirdmodelPosY/2, 0.3f + reco + thirdmodelPosZ/2);//-0.4
 	}
 
 	public void glMatrixForRenderInEntityPlayer(float reco) {
@@ -1121,7 +1160,7 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 //						glEnable(GL_BLEND);
 //						glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 //						GL11.glDepthMask(false);
-//						glAlphaFunc(GL_LESS, 1);
+//						glAlphaFunc(GL_LEQUAL, 1);
 //					}else {
 //						GL11.glDepthMask(true);
 //						glAlphaFunc(GL_EQUAL, 1);
@@ -1160,7 +1199,7 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 						float lastBrightnessX = OpenGlHelper.lastBrightnessX;
 						float lastBrightnessY = OpenGlHelper.lastBrightnessY;
 						OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
-						model.renderPart(part.partsname + "light");
+						model.renderPart(part.partsname_light);
 						OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)lastBrightnessX, (float)lastBrightnessY);
 						GL11.glPopMatrix();
 					}

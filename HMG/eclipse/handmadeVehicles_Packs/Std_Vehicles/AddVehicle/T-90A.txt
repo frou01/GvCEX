@@ -1,0 +1,156 @@
+Name,T-90A;
+rotcenter,0,0.5,0;
+modelName,T-90A.tcn;
+modelName_texture,T-90A.png;
+scale,0.03;
+health,1000;
+soundname,handmadevehicle:handmadevehicle.T-72;
+LandPreset;
+soundpitch,1;
+throttle_Max,5;
+throttle_min,-1;
+yawspeed_ground,1.55;
+speedfactor_onGround,0.15;
+torque_ground,0.3;
+forced_rudder_effect_OnGround,0.3;
+rotmotion_reduceSpeedRoll_onGround,0.8;
+recoilResist,3000;
+stability_roll_onGround,0.02;
+motionRollResist,15;
+brakefactor_ground,0.01;
+slipresist_onground,0.2;
+
+//prefab_additionalBoundingBoxes_1_Num,2;
+//prefab_additionalBoundingBoxes_2_Set,0,	0,1,4,	1,1,1;
+//prefab_additionalBoundingBoxes_2_Set,1,	0,1,-4,	1,1,1;
+boundingBoxSizeX,3;
+boundingBoxSizeY,1.5;
+
+off_road_followability,1.5;
+off_road_followability_roll,0.8;
+
+ParentWeapons_NUM,1;
+AllWeapons_NUM,3;
+addParentWeapon,0,125mm_2A46,0,0,0,1,1;
+	addBarrelChildWeapon,0,PKM,-0.1,1.0,-1.275,0;
+Set_CurrentTurret_to_Mother;
+	addChildWeapon,0,ZID_KORD_ForVehicle,-0.72,2.4,0,0;
+
+
+SetUpSeat1_NUM,2;
+SetUpSeat2_AddSeat_Normal,0,0.72,2.4,-0.6,		true,true,false,true,0,1;
+SetUpSeat3_AddSeat_Zoom,  0,0.33,1.935,-1.44,		true,true,false,true,0,1;
+SetUpSeat2_AddSeat_Normal,1,0,0,0,		true,true,true,2,-1;
+
+userProtect_maxDamageLevel,0,-1;
+userProtect_maxDamageLevel,1,0;
+
+zoomLevel,0,4;
+
+//userProtect_maxDamageLevel,0,-1;
+userProtect_maxDamageLevel,0,-1;
+userProtect_maxDamageLevel,1,0;
+
+boxes_withInfo,8,
+0,0.8,0,	    0,0,0,	3.0,1.2,6,	1,0,0,0,	40,40,400,200,350,350,-1,
+1.5,0.55,0,	    0,0,0,	0.7,1.3,6,	1,0,0,0,	40,40,400,200,350,350,-1,
+-1.5,0.55,0,	0,0,0,	0.7,1.3,6,	1,0,0,0,	40,40,400,200,350,350,-1,
+0,1.5,-0.2,	    0,0,0,	1.2,0.8,3.2,	0,0,0,0,	100,1000,400,400,400,400,0,
+0.5,1.65,0, 	0.5,1.65,0, 	1,0.5,2.4,	0,1,0,-30,	100,1000,400,400,400,400,0,
+-0.5,1.65,0,	-0.5,1.65,0,	1,0.5,2.4,	0,1,0,30,	100,1000,400,400,400,400,0,
+0.5,1.65,-1, 	0.5,1.65,-1, 	1.2,0.5,1,	0,1,0,20,	100,1000,400,400,400,400,0,
+-0.5,1.65,-1,	-0.5,1.65,-1,	1.2,0.5,1,	0,1,0,-20,	100,1000,400,400,400,400,0;
+
+cargoSlotNum,18;
+
+AddParts,body;
+	AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0;
+	RenderOnNormal;
+	AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0;
+	AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0;
+	AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0;
+	AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0;
+;
+	AddChildParts,head;
+		TurretParts,0;
+		AddPartsRotationCenterAndRotationAmount,0,0,10,0,0,0;
+		RenderOnNormal;
+		AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0;
+		AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0;
+		AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0;
+		AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0;
+		AddYawInfoKey,-360,0,0,0,0,-360,0        ,360,0,0,0,0,360,0;
+		AddChildParts,hatchgun;
+			AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0;
+			RenderOnNormal;
+			AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0;
+			AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0;
+			AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0;
+			AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0;
+		BackParts;
+		AddChildParts,sensor;
+			AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0;
+			RenderOnNormal;
+			AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0;
+			AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0;
+			AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0;
+			AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0;
+		BackParts;
+		AddChildParts,smoke;
+			AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0;
+			RenderOnNormal;
+			AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0;
+			AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0;
+			AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0;
+			AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0;
+		BackParts;
+		AddChildParts,headacsse;
+			AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0;
+			RenderOnNormal;
+			AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0;
+			AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0;
+			AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0;
+			AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0;
+		BackParts;
+
+
+		AddChildParts,cannon;
+			TurretParts,0;
+			AddPartsRotationCenterAndRotationAmount,0,50,51,0,0,0;
+			RenderOnNormal;
+			AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0;
+			AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0;
+			AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0;
+			AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0;
+			AddPitchInfoKey,-360,0,0,0,-360,0,0        ,360,0,0,0,360,0,0;
+		BackParts;
+;
+		AddChildParts,headarmor;
+			AddPartsRotationCenterAndRotationAmount,0,2.7,5,0,0,0;
+			RenderOnNormal;
+			AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0;
+			AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0;
+			AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0;
+			AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0;
+		BackParts;
+;
+		AddChildParts,MGbase;
+			TurretParts,2;
+			SetAsNormalParts;
+			AddPartsRotationCenterAndRotationAmount,-24,0,0,0,0,0;
+			AddYawInfoKey,-360,0,0,0,0,-360,0        ,360,0,0,0,0,360,0;
+			RenderOnNormal;
+			AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0;
+			AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0;
+			AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0;
+			AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0;
+		BackParts;
+		AddChildParts,SYS_MGBase;
+			AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0;
+			RenderOnNormal;
+			SetAsNormalParts;
+			TurretParts,2;
+			isTurret_linkedGunMount;
+		BackParts;
+;
+End;

@@ -1,0 +1,7 @@
+Texture,laser
+Name,Laser Sight
+
+Tabname,HMG_Attachments
+
+Laser,laser
+addRecipe,laser,1,ab0,de0,000,331,265,0,331,265,0,0,0,0

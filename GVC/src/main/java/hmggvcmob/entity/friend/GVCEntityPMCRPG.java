@@ -17,14 +17,6 @@ public class GVCEntityPMCRPG extends EntityPMCBase
         this.setSize(0.6F, 1.8F);
         this.tasks.addTask(2, aiAttackGun = new AIAttackGun(this, 120,20, 10, true,true,new WorldForPathfind(worldObj)));
     }
-    protected void applyEntityAttributes()
-    {
-        super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(movespeed = 0.33000000417232513D);
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(20.0D);
-        this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(60.0D);
-        //this.getEntityAttribute(SharedMonsterAttributes.knockbackResistance).setBaseValue(30.0D);
-    }
     
     public void addRandomArmor()
     {

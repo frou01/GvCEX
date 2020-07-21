@@ -439,18 +439,25 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
         {
             int var2 = this.Bdamege;
 //			System.out.println("debug" + this.thrower +"  "+ var1.entityHit);
-            if(islmmloaded&&(this.thrower instanceof LMM_EntityLittleMaid || this.thrower instanceof LMM_EntityLittleMaidAvatar || this.thrower instanceof LMM_EntityLittleMaidAvatarMP) && HandmadeGunsCore.cfg_FriendFireLMM){
-                if (var1.entityHit instanceof LMM_EntityLittleMaid)
+            if(islmmloaded && HandmadeGunsCore.cfg_FriendFireLMM){
+                if((this.thrower instanceof LMM_EntityLittleMaid || this.thrower instanceof LMM_EntityLittleMaidAvatar || this.thrower instanceof LMM_EntityLittleMaidAvatarMP))
                 {
-                    var2 = 0;
-                }
-                if (var1.entityHit instanceof LMM_EntityLittleMaidAvatar)
-                {
-                    var2 = 0;
-                }
-                if (var1.entityHit instanceof EntityPlayer)
-                {
-                    var2 = 0;
+                    if (var1.entityHit instanceof LMM_EntityLittleMaid) {
+                        var2 = 0;
+                    }
+                    if (var1.entityHit instanceof LMM_EntityLittleMaidAvatar) {
+                        var2 = 0;
+                    }
+                    if (var1.entityHit instanceof EntityPlayer) {
+                        var2 = 0;
+                    }
+                }else if(this.thrower instanceof EntityPlayer){
+                    if (var1.entityHit instanceof LMM_EntityLittleMaid) {
+                        var2 = 0;
+                    }
+                    if (var1.entityHit instanceof LMM_EntityLittleMaidAvatar) {
+                        var2 = 0;
+                    }
                 }
             }
             if(this.thrower instanceof IFF){
@@ -1171,7 +1178,7 @@ public class HMGEntityBulletBase extends Entity implements IEntityAdditionalSpaw
             Vector3d PredictedTargetPos =
             LinePrediction(new Vector3d(this.posX,this.posY,this.posZ),
                     new Vector3d(homingEntity.posX, homingEntity.posY + (homingEntity.height/2), homingEntity.posZ),
-                    new Vector3d(homingEntity.motionX - this.motionX, homingEntity.motionY - this.motionY, homingEntity.motionZ - this.motionZ),
+                    new Vector3d(homingEntity.motionX, homingEntity.motionY, homingEntity.motionZ),
                     this.getTerminalspeed());
 
             towardToPos(PredictedTargetPos.x,

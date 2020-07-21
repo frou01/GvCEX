@@ -38,4 +38,9 @@ public class HMGGunParts_Motion_PosAndRotation {
         this.rotationY =rotationY;
         this.rotationZ =rotationZ;
     }
+
+    public String toString()
+    {
+        return "Position : X " + posX + " , Y " + posY + " , Z " + posZ + " , R " + rotationZ + " , P " + rotationX + " , Y " + rotationY;
+    }
 }

@@ -1,5 +1,6 @@
 package handmadeguns.client.render;
 
+import cpw.mods.fml.client.FMLClientHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
@@ -9,8 +10,13 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.model.IModelCustom;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
+import java.nio.FloatBuffer;
+
+import static handmadeguns.HandmadeGunsCore.cfgRender_useStencil;
+import static handmadeguns.client.render.PartsRender.FBO;
 import static java.lang.Math.abs;
 import static org.lwjgl.opengl.GL11.*;
 
@@ -105,7 +111,7 @@ public class HMGRenderItemCustom extends RenderItem implements IItemRenderer {
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 			GL11.glDepthMask(false);
-			glAlphaFunc(GL_LESS, 1);
+			glAlphaFunc(GL_LEQUAL, 1);
 		}else {
 			GL11.glDepthMask(true);
 			glAlphaFunc(GL_EQUAL, 1);
@@ -124,8 +130,17 @@ public class HMGRenderItemCustom extends RenderItem implements IItemRenderer {
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)lastBrightnessX, (float)lastBrightnessY);
 		RenderHelper.enableStandardItemLighting();
 
-		{
-			glClearStencil(0);
+
+		if(cfgRender_useStencil && pass==1){
+			//INSERT : フレームバッファに描画開始
+			//       : 保険でMatrixを一層深く
+			//       : 銃のテクスチャを再bind
+			FBO.start();
+			GL11.glPushMatrix();
+			FMLClientHandler.instance().getClient().getTextureManager().bindTexture(this.texture);
+			glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+			//INSERT-END
+
 			glClear(GL_STENCIL_BUFFER_BIT);
 			glEnable(GL_STENCIL_TEST);
 			glStencilMask(1);
@@ -138,28 +153,29 @@ public class HMGRenderItemCustom extends RenderItem implements IItemRenderer {
 					GL_KEEP,
 					GL_KEEP,
 					GL_REPLACE);
-			if (pass != 1) {
-				GL11.glDepthMask(false);
-				glAlphaFunc(GL_ALWAYS, 1);
-				glColorMask(
-						false,   // GLboolean red
-						false,   // GLboolean green
-						false,   // GLboolean blue
-						false);
-			}
-			modeling.renderPart("reticlePlate");
-			if (pass != 1) {
-				GL11.glDepthMask(true);
-				glAlphaFunc(GL_EQUAL, 1);
-				glColorMask(
-						true,   // GLboolean red
-						true,   // GLboolean green
-						true,   // GLboolean blue
-						true);
-			}
 
-			GL11.glDisable(GL11.GL_LIGHTING);
-			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
+			GL11.glDepthMask(false);
+			glAlphaFunc(GL_ALWAYS, 1);
+			glColorMask(
+					false,   // GLboolean red
+					false,   // GLboolean green
+					false,   // GLboolean blue
+					false);
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			GL11.glDepthMask(false);
+			glAlphaFunc(GL_GREATER, 0);
+
+			modeling.renderPart("plate");
+
+			GL11.glDepthMask(true);
+			glAlphaFunc(GL_EQUAL, 1);
+			glColorMask(
+					true,   // GLboolean red
+					true,   // GLboolean green
+					true,   // GLboolean blue
+					true);
+
 			glDisable(GL_DEPTH_TEST);
 
 
@@ -169,23 +185,83 @@ public class HMGRenderItemCustom extends RenderItem implements IItemRenderer {
 					~0);// GLuint mask
 
 			glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
-			glAlphaFunc(GL_ALWAYS, 1);
+			glAlphaFunc(GL_GREATER, 0);
 			GL11.glDepthMask(false);
 
 			GL11.glDepthFunc(GL11.GL_ALWAYS);//強制描画
+			GL11.glDisable(GL11.GL_LIGHTING);
+			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
+			modeling.renderPart("reticle_light");
+			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lastBrightnessX, lastBrightnessY);
 			modeling.renderPart("reticle");
 			GL11.glDepthFunc(GL11.GL_LEQUAL);
 			GL11.glDepthMask(true);
 			glDisable(GL_STENCIL_TEST);
 			glEnable(GL_DEPTH_TEST);
+
+
+
+			//INSET : Matrixを上層へ復元
+			//      : FBOからテクスチャIDを取得
+			//      : 画面に出力できるようにMatrixを保存し初期化
+			//      : テクスチャをViwerPortに出力
+			//      : 保存したMatrixを呼び戻す
+			GL11.glPopMatrix();
+			int tex = FBO.end();
+
+			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
+
+			glPushMatrix();
+			glDisable(GL_DEPTH_TEST);
+
+			glMatrixMode(GL_PROJECTION);
+			FloatBuffer projectionMatrix = BufferUtils.createFloatBuffer(16);
+			glGetFloat(GL_PROJECTION_MATRIX, projectionMatrix);
+			glLoadIdentity();
+
+			glMatrixMode(GL_MODELVIEW);
+			FloatBuffer modelViewMatrix = BufferUtils.createFloatBuffer(16);
+			glGetFloat(GL_PROJECTION_MATRIX, modelViewMatrix);
+			glLoadIdentity();
+
+			glOrtho(0,1,1,0,-1,1);
+			glDisable(GL_CULL_FACE);
+			glBindTexture(GL_TEXTURE_2D, tex);
+			glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+			glBegin(GL_QUADS);
+			glTexCoord2d(0.0D, 1.0D);glVertex2d(0.0D, 0.0D);
+			glTexCoord2d(0.0D, 0.0D);glVertex2d(0.0D, 1.0D);
+			glTexCoord2d(1.0D, 0.0D);glVertex2d(1.0D, 1.0D);
+			glTexCoord2d(1.0D, 1.0D);glVertex2d(1.0D, 0.0D);
+			glEnd();
+			glEnable(GL_CULL_FACE);
+
+			glMatrixMode(GL_PROJECTION);
+			glLoadMatrix(projectionMatrix);
+			glMatrixMode(GL_MODELVIEW);
+			glLoadMatrix(modelViewMatrix);
+			glPopMatrix();
+			//INSERT-END
+			FMLClientHandler.instance().getClient().getTextureManager().bindTexture(this.texture);
+			GL11.glDepthFunc(GL11.GL_LEQUAL);
+			glEnable(GL_DEPTH_TEST);
+			if(pass == 1) {
+				glEnable(GL_BLEND);
+				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+				GL11.glDepthMask(false);
+				glAlphaFunc(GL_LEQUAL, 1);
+			}else {
+				GL11.glDepthMask(true);
+				glAlphaFunc(GL_EQUAL, 1);
+			}
+			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)lastBrightnessX, (float)lastBrightnessY);
 			GL11.glEnable(GL11.GL_LIGHTING);
-			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float) lastBrightnessX, (float) lastBrightnessY);
 		}
 		if(pass == 1) {
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 			GL11.glDepthMask(false);
-			glAlphaFunc(GL_LESS, 1);
+			glAlphaFunc(GL_LEQUAL, 1);
 		}else {
 			GL11.glDepthMask(true);
 			glAlphaFunc(GL_EQUAL, 1);

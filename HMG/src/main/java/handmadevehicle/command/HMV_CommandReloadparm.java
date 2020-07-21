@@ -33,10 +33,11 @@ public class HMV_CommandReloadparm extends CommandBase implements ICommand{
     @Override
     public void processCommand(ICommandSender var1, String[] var2) {
         System.out.println(""+var1);
-    
+        System.out.println(""+var2);
+
         File packdir = new File(HMV_Proxy.ProxyFile(), "handmadeVehicles_Packs");
         packdir.mkdirs();
-        {
+        if(var2.length == 0){//full reload
         
             File[] packlist = packdir.listFiles();
             Arrays.sort(packlist, new Comparator<File>() {
@@ -66,6 +67,102 @@ public class HMV_CommandReloadparm extends CommandBase implements ICommand{
                 }
             
                 File vehicleDir = new File(apack, "AddVehicle");
+                File[] fileVehicle = vehicleDir.listFiles();
+                Arrays.sort(fileVehicle, new Comparator<File>() {
+                    public int compare(File file1, File file2) {
+                        return file1.getName().compareTo(file2.getName());
+                    }
+                });
+                for (int num = 0; num < fileVehicle.length; num++) {
+                    if (fileVehicle[num].isFile()) {
+                        try {
+                            new AddNewVehicle().load(true, fileVehicle[num]);
+                        } catch (ModelFormatException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        }else {
+            File targetPack = new File(packdir,var2[0]);
+            if(var2.length >= 2){
+                switch(var2[1]){
+                    case "AddWeapon": {
+                        File weaponDir = new File(targetPack, "AddWeapon");
+                        File[] fileWeapon = weaponDir.listFiles();
+                        Arrays.sort(fileWeapon, new Comparator<File>() {
+                            public int compare(File file1, File file2) {
+                                return file1.getName().compareTo(file2.getName());
+                            }
+                        });
+                        for (int num = 0; num < fileWeapon.length; num++) {
+                            if (fileWeapon[num].isFile()) {
+                                try {
+                                    AddWeapon.load(true, fileWeapon[num]);
+                                } catch (ModelFormatException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    }
+                    break;
+                    case "AddVehicle": {
+                        File vehicleDir = new File(targetPack, "AddVehicle");
+                        File[] fileVehicle = vehicleDir.listFiles();
+                        Arrays.sort(fileVehicle, new Comparator<File>() {
+                            public int compare(File file1, File file2) {
+                                return file1.getName().compareTo(file2.getName());
+                            }
+                        });
+                        for (int num = 0; num < fileVehicle.length; num++) {
+                            if (fileVehicle[num].isFile()) {
+                                try {
+                                    new AddNewVehicle().load(true, fileVehicle[num]);
+                                } catch (ModelFormatException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    }
+                    break;
+                    case "fullPath_Vehicle": {
+                        File vehicleDir = new File(targetPack, "AddVehicle");
+                        try {
+                            new AddNewVehicle().load(true, new File(vehicleDir,var2[2]));
+                        } catch (ModelFormatException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    break;
+                    case "fullPath_Weapon": {
+                        File weaponDir = new File(targetPack, "AddWeapon");
+                        try {
+                            AddWeapon.load(true, new File(weaponDir,var2[2]));
+                        } catch (ModelFormatException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    break;
+                }
+            }else {
+                File weaponDir = new File(targetPack, "AddWeapon");
+                File[] fileWeapon = weaponDir.listFiles();
+                Arrays.sort(fileWeapon, new Comparator<File>() {
+                    public int compare(File file1, File file2) {
+                        return file1.getName().compareTo(file2.getName());
+                    }
+                });
+                for (int num = 0; num < fileWeapon.length; num++) {
+                    if (fileWeapon[num].isFile()) {
+                        try {
+                            AddWeapon.load(true, fileWeapon[num]);
+                        } catch (ModelFormatException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+                File vehicleDir = new File(targetPack, "AddVehicle");
                 File[] fileVehicle = vehicleDir.listFiles();
                 Arrays.sort(fileVehicle, new Comparator<File>() {
                     public int compare(File file1, File file2) {

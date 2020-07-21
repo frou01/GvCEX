@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import handmadeguns.obj_modelloaderMod.obj.HMGGroupObject;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.Vec3;
@@ -14,7 +15,7 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL12.*;
 
 @SideOnly(Side.CLIENT)
-public class MQO_GroupObject
+public class MQO_GroupObject extends HMGGroupObject
 {
 	public String name;
 	public ArrayList[] faces;

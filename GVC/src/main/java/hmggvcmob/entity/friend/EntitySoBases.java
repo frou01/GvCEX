@@ -122,10 +122,7 @@ public abstract class EntitySoBases extends EntityCreature implements INpc ,  IF
     {
         super.readEntityFromNBT(p_70037_1_);
 		seatID = p_70037_1_.getInteger("seatID");
-	    if(p_70037_1_.hasKey("platoonTargetPos")){
-	    	makePlatoon();
-	    	platoonOBJ.setPlatoonTargetPos(p_70037_1_.getIntArray("platoonTargetPos"));
-	    }
+		if(p_70037_1_.hasKey("platoonTargetPos"))getEntityData().setIntArray("platoonTargetPos",p_70037_1_.getIntArray("platoonTargetPos"));
     }
     public void writeEntityToNBT(NBTTagCompound p_70014_1_)
     {
@@ -233,8 +230,16 @@ public abstract class EntitySoBases extends EntityCreature implements INpc ,  IF
 			return Vec3.createVectorHelper((double)(f4 * f5), (double)f6, (double)(f3 * f5));
 		}
 	}
-	
+	boolean platoon_check = false;
 	public void onUpdate() {
+		if(getPlatoon() == null && !platoon_check){
+			platoon_check = true;
+			if(getEntityData().hasKey("platoonTargetPos")){
+				System.out.println("debug");
+				makePlatoon_OnLoading();
+				platoonOBJ.setPlatoonTargetPos(getEntityData().getIntArray("platoonTargetPos"));
+			}
+		}
 
 		if(!worldObj.isRemote && getPlatoon() != null){
 
@@ -437,6 +442,9 @@ public abstract class EntitySoBases extends EntityCreature implements INpc ,  IF
 
 	@Override
 	public boolean canSeeTarget(Entity target) {
+		if(this.ridingEntity instanceof EntityDummy_rider){
+			if(!((EntityDummy_rider) this.ridingEntity).linkedBaseLogic.prefab_vehicle.T_Land_F_Plane)return true;
+		}
 		boolean flag;
 		flag = canhearsound(target);
 		if (!flag) {
@@ -504,7 +512,7 @@ public abstract class EntitySoBases extends EntityCreature implements INpc ,  IF
 							((EntityVehicle) entity).getBaseLogic().health += 0.01;
 						}else {
 							if(cfg_guerrillacanusePlacedGun && canuseAlreadyPlacedGun && !worldObj.isRemote && this.getAttackTarget() != null) {
-								if (entity.riddenByEntity == null && entity instanceof PlacedGunEntity) {
+								if (entity.riddenByEntity == null && entity instanceof PlacedGunEntity) {//TODO プレイヤー指示で搭乗するようにしたい
 									placing++;
 									if (placing > 60) {
 										placing = 0;

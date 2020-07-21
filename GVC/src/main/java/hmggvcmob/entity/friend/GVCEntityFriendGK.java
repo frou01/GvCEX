@@ -68,7 +68,7 @@ public class GVCEntityFriendGK extends EntityPMCBase implements IIRVING
         super.applyEntityAttributes();
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(movespeed = 0.33000000417232513D);
         this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(90.0D);
-        this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(cfg_guerrillasrach);
+        this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(120);
         this.getEntityAttribute(SharedMonsterAttributes.knockbackResistance).setBaseValue(30.0D);
     }
 

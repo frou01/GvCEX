@@ -2,6 +2,8 @@ package hmggvcmob.entity.friend;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import handmadeguns.entity.IFF;
+import handmadeguns.entity.PlacedGunEntity;
+import handmadevehicle.entity.EntityDummy_rider;
 import handmadevehicle.entity.parts.Modes;
 import hmggvcmob.ai.PlatoonOBJ;
 import hmggvcmob.camp.CampObj;
@@ -19,6 +21,7 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.World;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static handmadeguns.HandmadeGunsCore.HMG_proxy;
@@ -41,10 +44,33 @@ public class EntityPMCBase extends EntitySoBases implements IFF,IGVCmob, IflagBa
 			this.setCustomNameTag(platoonName);
 			return true;
 		}
-		if (super.interact(entityPlayer)) {
-			return false;
+
+		List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox.expand(3, 3
+				, 3));
+
+		if (list != null && !list.isEmpty() && cfg_guerrillacanusePlacedGun && canuseAlreadyPlacedGun && !worldObj.isRemote) {
+			for (int i = 0; i < list.size(); ++i) {
+				Entity entity = (Entity) list.get(i);
+				 {
+					if (entity.riddenByEntity == null && entity instanceof PlacedGunEntity) {
+						this.mountEntity((PlacedGunEntity) entity);
+						this.setCurrentItemOrArmor(0, null);
+						break;
+					}
+				}
+			}
 		}
+		super.interact(entityPlayer);
+
 		return false;
+	}
+	protected void applyEntityAttributes()
+	{
+		super.applyEntityAttributes();
+		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(movespeed = 0.33000000417232513D);
+		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(20.0D);
+		this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(cfg_guerrillasrach);
+		//this.getEntityAttribute(SharedMonsterAttributes.knockbackResistance).setBaseValue(30.0D);
 	}
 	public EntityPMCBase(World par1World) {
 		super(par1World);
@@ -55,7 +81,6 @@ public class EntityPMCBase extends EntitySoBases implements IFF,IGVCmob, IflagBa
 		if (platoonOBJ != null && platoonOBJ.platoonTargetEntity == null && leaderEntity_name != null) {
 			platoonOBJ.platoonTargetEntity = worldObj.getPlayerEntityByName(leaderEntity_name);
 		}
-
 		if(!worldObj.isRemote && getPlatoon()!=null){
 			platoonInfoData.isLeader = isPlatoonLeader();
 			platoonInfoData.isOnPlatoon = true;
@@ -94,7 +119,6 @@ public class EntityPMCBase extends EntitySoBases implements IFF,IGVCmob, IflagBa
 	public void readEntityFromNBT(NBTTagCompound p_70037_1_)
 	{
 		super.readEntityFromNBT(p_70037_1_);
-		mode = p_70037_1_.getInteger("mode");
 		leaderEntity_name = p_70037_1_.getString("leaderEntity_name");
 		if(p_70037_1_.hasKey("platoonName")) platoonName = p_70037_1_.getString("platoonName");
 	}
@@ -102,37 +126,48 @@ public class EntityPMCBase extends EntitySoBases implements IFF,IGVCmob, IflagBa
 	public void writeEntityToNBT(NBTTagCompound p_70014_1_)
 	{
 		super.writeEntityToNBT(p_70014_1_);
-		p_70014_1_.setInteger("mode",mode);
 		if(leaderEntity_name != null)p_70014_1_.setString("leaderEntity_name",leaderEntity_name);
 		if(platoonName != null)p_70014_1_.setString("platoonName",platoonName);
 	}
 
 	public String leaderEntity_name;
 
-
 	@Override
 	public void makePlatoon() {
-		System.out.println("debug");
-		setPlatoon(new PlatoonOBJ());
-		enlistPlatoon();
+		this.setPlatoon(new PlatoonOBJ());
+
+		this.enlistPlatoon(false);
 	}
 	@Override
-	public void enlistPlatoon() {
+	public void makePlatoon_OnLoading() {
+		this.setPlatoon(new PlatoonOBJ());
+
+		this.enlistPlatoon(true);
+	}
+	@Override
+	public void enlistPlatoon(boolean force) {
+		ArrayList<EntityPMCBase> newComer = new ArrayList<>();
 		List nearEntities = worldObj.getEntitiesWithinAABBExcludingEntity(this,boundingBox.expand(32,32,32));
+
 		for(Object obj:nearEntities){
 			Entity entity = (Entity)obj;
-			if(entity instanceof EntityPMCBase && canMoveEntity(entity) && platoonMatched(platoonName, (EntityPMCBase) entity) && ((EntityPMCBase) entity).getPlatoon() != this.getPlatoon()){
-				((EntityPMCBase) entity).setPlatoon(this.platoonOBJ);
-				((EntityPMCBase) entity).platoonName = platoonName;
+			if(entity instanceof EntityPMCBase && canMoveEntity(entity)){
+				newComer.add((EntityPMCBase) entity);
 			}
 		}
-
 		List onVehicleEntity = worldObj.getEntitiesWithinAABBExcludingEntity(this,boundingBox.expand(512,512,512));
+
 		for(Object obj:onVehicleEntity){
 			Entity entity = (Entity)obj;
-			if(entity instanceof EntityPMCBase && canMoveEntity(entity) && platoonMatched(platoonName, (EntityPMCBase) entity) && ((EntityPMCBase) entity).getPlatoon() != this.getPlatoon()){
-				((EntityPMCBase) entity).setPlatoon(this.platoonOBJ);
-				((EntityPMCBase) entity).platoonName = platoonName;
+			if(entity instanceof EntityPMCBase && entity.ridingEntity instanceof EntityDummy_rider && canMoveEntity(entity)){
+				newComer.add((EntityPMCBase) entity);
+			}
+		}
+		for(EntityPMCBase entityPMCBase : newComer){
+			//対象の分隊が同名or分隊に未所属時に徴発
+			if(platoonMatched(platoonName, (EntityPMCBase) entityPMCBase) &&(((EntityPMCBase) entityPMCBase).getPlatoon() == null || force)){
+				((EntityPMCBase) entityPMCBase).setPlatoon(this.platoonOBJ);
+				((EntityPMCBase) entityPMCBase).platoonName = platoonName;
 			}
 		}
 

@@ -7,7 +7,8 @@ import hmggvcmob.ai.PlatoonOBJ;
 
 public interface IPlatoonable extends Hasmode {
 	void makePlatoon();//分隊に周囲のエンティティを追加
-	void enlistPlatoon();
+	void makePlatoon_OnLoading();//読み込み時、周囲のエンティティを分隊に追加
+	void enlistPlatoon(boolean force);
 	void setPlatoon(PlatoonOBJ entities);//分隊員に分隊オブジェクトを渡す
 
 	PlatoonOBJ getPlatoon();//分隊オブジェクトを返す

@@ -73,8 +73,17 @@ public class AddWeapon {
 						case "positionLinked":
 							prefab_turret.positionLinked = parseBoolean(type[1]);
 							break;
+						case "onlyAim":
+							prefab_turret.onlyAim = true;
+							break;
 						case "syncTurretAngle":
 							prefab_turret.syncTurretAngle = parseBoolean(type[1]);
+							break;
+						case "lockToPilotAngle":
+							prefab_turret.lockToPilotAngle = parseBoolean(type[1]);
+							break;
+						case "lockOnByVehicle":
+							prefab_turret.lockOnByVehicle = parseBoolean(type[1]);
 							break;
 						case "elevationType":
 							prefab_turret.elevationType = parseInt(type[1]);
@@ -135,6 +144,15 @@ public class AddWeapon {
 							break;
 						case "useGunSight":
 							prefab_turret.useGunSight = parseBoolean(type[1]);
+							break;
+						case "useVehicleRadar":
+							prefab_turret.useVehicleRadar = parseBoolean(type[1]);
+							break;
+						case "forceSyncTarget":
+							prefab_turret.forceSyncTarget = parseBoolean(type[1]);
+							break;
+						case "syncMotherTarget":
+							prefab_turret.syncMotherTarget = parseBoolean(type[1]);
 							break;
 						case "gunStackwhitelist":
 							prefab_turret.gunStackwhitelist = new String[type.length-1];

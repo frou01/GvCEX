@@ -1,0 +1,195 @@
+Name,F-86K;
+modelName,F-86D.mqo;
+modelName_texture,F-86D.png;
+wingUnit,0,519.72,20.42;
+rotcenter,0,1.77,0;
+powerPos_onGround,0,0,0;
+slipresist_onground,0.8;
+motionRollResist,-20;
+gravity,0.0098f;
+rudderSpeed,4;
+onground_pitch,1.2;
+health,250;
+throttle_gearDown,5;
+displayModernHud,true;
+speedfactor,0.089;
+speedfactor_af,0.0015f;
+throttle_AF,9.0;
+turbine_torque,0.0008f;
+torque,0.002f;
+dragfactor_front,0.000008;
+stability_motion,1.8;
+stability_motion3,0.0;
+stability_motion2,0.0;
+stability_roll,0.002;
+rotmotion_reduceSpeed,0.01;
+liftfactor,0.009;
+flapliftfactor,0.000045;
+flapdragfactor,0.000001;
+slipresist,0.6;
+brakedragfactor,0.01;
+brakedragfactor_ground,0.9;
+yawspeed,0.02;
+yawspeed_ground,30;
+rollspeed,0.03;
+pitchspeed,0.016;
+off_road_followability,3;
+soundname,handmadevehicle:handmadevehicle.F-86;
+soundpitch,2;
+//ïêëïí«â¡;
+autoflap,false;
+boundingBoxSizeX,2;
+boundingBoxSizeY,2;
+
+hasFlare;
+flare_Max,4;
+
+maxbank,80;
+minALT,45;
+maxClimb,-30;
+cruiseALT,120;
+startDive,50;
+
+ParentWeapons_NUM,1;
+AllWeapons_NUM,4;
+
+addParentWeapon,0,M39_20mm,0.5368,1.350,-4.491,3;
+addChildWeapon,0,M39_20mm,-0.5368,1.350,-4.491,0;
+Set_CurrentTurret_to_Mother;
+addChildWeapon,1,M39_20mm,0.6376,1.304,-3.757,0;
+Set_CurrentTurret_to_Mother;
+addChildWeapon,2,M39_20mm,-0.6376,1.304,-3.757,0;
+
+//ç¿ê»í«â¡;
+SetUpSeat1_NUM,1;
+SetUpSeat2_AddSeat_Normal,0,0,2.598,-2.5,true,false,false,0,-1;
+camerapos,0,2.598,-3;
+
+userProtect_maxDamageLevel,0,8;
+
+wingVapourTrailPoint_num,2;
+wingVapourTrailPoint_set,0,5,1.3,2.8;
+wingVapourTrailPoint_set,1,-5,1.3,2.8;
+wingVapourTrailStart,0.08f;
+
+thirdPersonDistance,16;
+
+
+addDropItem,1,0.4,minecraft:redstone;
+addDropItem,1,0.4,minecraft:redstone;
+addDropItem,1,0.8,minecraft:iron_block;
+addDropItem,1,0.8,minecraft:iron_block;
+addDropItem,1,0.8,minecraft:iron_block;
+addDropItem,1,0.4,minecraft:redstone;
+
+
+
+//top,bottom,front,back,left,right;
+boxes_withInfo,4,
+0,1.3,-0.1,	0,0,0,	1.1,1.4,10,	1,0,0,0,	12,12,0,0,12,12,-1,
+0,1.5,1.7,		0,0,0,	9.7,0.4,2,	1,0,0,0,	3,3,50,50,50,50,-1,
+0,2.2,3.6,	0,0,0,	3.4,0.12,1.3,	1,0,0,0,	3,3,50,50,50,50,-1,
+0,2.2,3.8,	0,0,0,	0.03,1.4,1.4,	1,0,0,0,	3,3,50,50,50,50,-1;
+
+AddParts,MainBody;
+	AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0;
+	RenderOnNormal;
+	SetAsNormalParts;
+
+	AddChildParts,CockpitInner;
+		SetAsNormalParts;
+	BackParts;
+	AddChildParts,Seat;
+		SetAsNormalParts;
+	BackParts;
+	AddChildParts,MainWing;
+		SetAsNormalParts;
+	BackParts;
+	AddChildParts,TailVert;
+		SetAsNormalParts;
+	BackParts;
+	AddChildParts,Canopi;
+		SetAsNormalParts;
+	BackParts;
+
+
+	AddChildParts,CGearCover1;
+		RenderOnNormal;
+		SetAsNormalParts;
+		AddPartsRotationCenterAndRotationAmount_TypeVector, 0.2727, 0.8384, 3.758 , 0 , -0.1045 , 0.9945 , 0;
+		AddSomeMotion,-1,false       	,1,7;
+		AddSomeMotion,1,0,0,0,-90,0,0        	,20,0,0,0,0,0,0	,7;
+		AddSomeMotion,20,0,0,0,0,0,0        	,20,0,0,0,0,0,0	,7;
+	BackParts;
+	AddChildParts,CGear;
+		RenderOnNormal;
+		SetAsNormalParts;
+		AddPartsRotationCenterAndRotationAmount_TypeVector, 0, 0.9224, 4.4914 , 1 , 0 , 0 , 0;
+		AddSomeMotion,-1,false       	,1,7;
+		AddSomeMotion,1,0,0,0,90,0,0        	,100,0,0,0,0,0,0	,7;
+		AddChildParts,CGearCover2;
+			RenderOnNormal;
+			SetAsNormalParts;
+			AddPartsRotationCenterAndRotationAmount_TypeVector, 0, 0.9224, 4.4914 , 1 , 0 , 0 , 0;
+			AddSomeMotion,-1,false       	,1,7;
+			AddSomeMotion,1,0,0,0,50,0,0        	,100,0,0,0,0,0,0	,7;
+
+			AddChildParts,CGearCover3;
+				RenderOnNormal;
+				SetAsNormalParts;
+				AddPartsRotationCenterAndRotationAmount_TypeVector, 0, 0.7057, 4.7075 , 1 , 0 , 0 , 0;
+				AddSomeMotion,-1,false       	,1,7;
+				AddSomeMotion,1,0,0,0,-60,0,0        	,100,0,0,0,0,0,0	,7;
+			BackParts;
+		BackParts;
+	BackParts;
+
+
+	AddChildParts,LGearCover;
+		RenderOnNormal;
+		SetAsNormalParts;
+		AddPartsRotationCenterAndRotationAmount_TypeVector, 0.0512, 0.7574, 0, 0, 0, 1 , 0;
+		AddSomeMotion,-1,false       	,1,7;
+		AddSomeMotion,1,0,0,0,80,0,0        	,20,0,0,0,0,0,0	,7;
+		AddSomeMotion,20,0,0,0,0,0,0        	,100,0,0,0,0,0,0	,7;
+	BackParts;
+	AddChildParts,LGear;
+		RenderOnNormal;
+		SetAsNormalParts;
+		AddPartsRotationCenterAndRotationAmount_TypeVector, 1.4888, 0.9214, 0, 0, 0, 1 , 0;
+		AddSomeMotion,-1,false       	,20,7;
+		AddSomeMotion,20,0,0,0,-60,0,0        	,100,0,0,0,0,0,0	,7;
+	BackParts;
+
+	AddChildParts,RGearCover;
+		RenderOnNormal;
+		SetAsNormalParts;
+		AddPartsRotationCenterAndRotationAmount_TypeVector, -0.0512, 0.7574, 0, 0, 0, 1 , 0;
+		AddSomeMotion,-1,false       	,1,7;
+		AddSomeMotion,1,0,0,0,-80,0,0        	,20,0,0,0,0,0,0	,7;
+		AddSomeMotion,20,0,0,0,0,0,0        	,100,0,0,0,0,0,0	,7;
+	BackParts;
+	AddChildParts,RGear;
+		RenderOnNormal;
+		SetAsNormalParts;
+		AddPartsRotationCenterAndRotationAmount_TypeVector, -1.4888, 0.9214, 0, 0, 0, 1 , 0;
+		AddSomeMotion,-1,false       	,20,7;
+		AddSomeMotion,20,0,0,0,60,0,0        	,100,0,0,0,0,0,0	,7;
+	BackParts;
+
+
+	AddChildParts,AF;
+		RenderOnNormal;
+		SetAsNormalParts;
+		AddPartsRotationCenterAndRotationAmount_TypeVector, 0, 1.740, -14.02 , 0.001, 0, 1 , 0;
+
+		IsPera,true;
+		AddPartsRenderAsTrackInf,0,0,0,0,0,43200;
+
+
+		AddSomeMotion,-1000,false       	,90,3;
+		AddSomeMotion,90,0,0,0,0,0,0        	,1000,0,0,0,0,0,0	,3;
+	BackParts;
+
+BackParts;
+End;

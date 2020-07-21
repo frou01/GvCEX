@@ -47,6 +47,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeEventFactory;
 
 import javax.vecmath.Vector3d;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -251,6 +252,7 @@ public class EntityGBases extends EntityMob implements IGVCmob, IFF , ITurretUse
     public void writeEntityToNBT(NBTTagCompound p_70014_1_)
     {
         super.writeEntityToNBT(p_70014_1_);
+        if(platoonOBJ != null)p_70014_1_.setIntArray("platoonTargetPos",new int[]{(int) platoonOBJ.PlatoonTargetPos.x,(int) platoonOBJ.PlatoonTargetPos.y,(int) platoonOBJ.PlatoonTargetPos.z});
     }
     protected void entityInit() {
 		super.entityInit();
@@ -262,9 +264,17 @@ public class EntityGBases extends EntityMob implements IGVCmob, IFF , ITurretUse
     public boolean CanAttack(Entity entity){
     	return true;
     }
+    boolean platoon_check;
 	public void onUpdate()
     {
 
+        if(getPlatoon() == null && !platoon_check){
+            platoon_check = true;
+            if(getEntityData().hasKey("platoonTargetPos")){
+                makePlatoon_OnLoading();
+                platoonOBJ.setPlatoonTargetPos(getEntityData().getIntArray("platoonTargetPos"));
+            }
+        }
         if(!worldObj.isRemote && getPlatoon() != null){
 
             if(abs(platoonOBJ.lastUpdatedTick - FMLCommonHandler.instance().getMinecraftServerInstance().getTickCounter()) > 1 || platoonOBJ.leader.entity.isDead || !worldObj.checkChunksExist((int)platoonOBJ.leader.entity.posX,(int)platoonOBJ.leader.entity.posY,(int)platoonOBJ.leader.entity.posZ,(int)platoonOBJ.leader.entity.posX,(int)platoonOBJ.leader.entity.posY,(int)platoonOBJ.leader.entity.posZ)) {
@@ -894,25 +904,39 @@ public class EntityGBases extends EntityMob implements IGVCmob, IFF , ITurretUse
     public void makePlatoon() {
         this.setPlatoon(new PlatoonOBJ());
 
-        this.enlistPlatoon();
+        this.enlistPlatoon(false);
+    }
+    @Override
+    public void makePlatoon_OnLoading() {
+        this.setPlatoon(new PlatoonOBJ());
+
+        this.enlistPlatoon(true);
     }
 
     @Override
-    public void enlistPlatoon() {
+    public void enlistPlatoon(boolean force) {
 
+        ArrayList<EntityGBases> newComer = new ArrayList<>();
         List nearEntities = worldObj.getEntitiesWithinAABBExcludingEntity(this,boundingBox.expand(32,32,32));
+
         for(Object obj:nearEntities){
             Entity entity = (Entity)obj;
-            if(entity instanceof EntityGBase && canMoveEntity(entity) && ((IPlatoonable) entity).getPlatoon() == null){
-                ((EntityGBase) entity).setPlatoon(this.platoonOBJ);
+            if(entity instanceof EntityGBases && canMoveEntity(entity)){
+                newComer.add((EntityGBases) entity);
             }
         }
-
         List onVehicleEntity = worldObj.getEntitiesWithinAABBExcludingEntity(this,boundingBox.expand(512,512,512));
+
         for(Object obj:onVehicleEntity){
             Entity entity = (Entity)obj;
-            if(entity instanceof EntityGBase && canMoveEntity(entity) && ((IPlatoonable) entity).getPlatoon() == null){
-                ((EntityGBase) entity).setPlatoon(this.platoonOBJ);
+            if(entity instanceof EntityGBases && entity.ridingEntity instanceof EntityDummy_rider && canMoveEntity(entity)){
+                newComer.add((EntityGBases) entity);
+            }
+        }
+        for(EntityGBases entityGBases : newComer){
+            //対象の分隊が同名or分隊に未所属時に徴発
+            if(canMoveEntity(entityGBases) && (((EntityGBases) entityGBases).getPlatoon() == null || force)){
+                ((EntityGBases) entityGBases).setPlatoon(this.platoonOBJ);
             }
         }
     }

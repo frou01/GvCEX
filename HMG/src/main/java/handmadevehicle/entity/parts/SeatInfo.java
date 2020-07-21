@@ -25,6 +25,7 @@ public class SeatInfo {
     public Prefab_Seat prefab_seat;
     public boolean gunTrigger1;
     public boolean gunTrigger2;
+    public boolean seekerKey;
 
     public boolean syncToPlayerAngle = true;
 

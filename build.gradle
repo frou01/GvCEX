@@ -64,3 +64,9 @@ processResources
         exclude 'mcmod.info'
     }
 }
+
+allprojects {
+    tasks.withType(JavaExec) {
+        jvmArgs "-Xms4G", "-Xmx4G"
+    }
+}

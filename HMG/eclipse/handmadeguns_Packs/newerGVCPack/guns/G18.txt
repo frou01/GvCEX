@@ -1,0 +1,149 @@
+BulletPower,5
+BulletSpeed,3.375
+BulletGravity,0.485
+Class,0
+BlletSpread,5.0F
+ADS_Spread_coefficient,0.8
+BlletSpreadDiffusion,8,0,4,0.5,4,2
+Cycle,1
+
+Recoil,6
+Recoil_sneaking,6
+
+ReloadTime,30
+
+RemainingBullet,19
+
+Attacking,2.0f
+Zoom,1.0f,1.0f,1.0f
+
+ZoomRender,true
+ZoomRenderType,true,true,true
+ZoomRenderTypeTxture,false,false,false
+
+Texture,G18
+GunSound,handmadeguns.firehg,handmadeguns.firehg
+GunSoundLV,4,4
+GunSoundReload,handmadeguns.reload
+CanObj,true
+ObjModel,g17.mqo
+ObjTexture,g17.png
+ModelScala,0.5f
+CustomFlash,arrow,1
+Bursts,-1,1
+Rates,1,1
+
+attachRestriction,true
+
+ModelEquipped,-0.7f,0.7f,0.0f
+SimpleADSOffsetX,0,0,0
+SimpleADSOffsetY,0.473,0.473,0.473
+SimpleADSOffsetZ,2,2,2
+ModelRotationX,180f,180f,180f
+ModelRotationY,45f,45f,45
+ModelRotationZ,180f,180f,180f
+	
+ModelArm,true
+ModelArmRotationR,-1.57f,0f,-1.57f
+ModelArmOffsetR,0.38F,0.4F,0.5F
+ModelArmRotationL,-0.0f,-2.3f,2.0f
+ModelArmOffsetL,0.1f,0.6F,0.2F
+
+SprintingRotation,-40,0f,0f
+
+SoundSpeed,1.5f
+
+ScopeTexture,null.png,null.png,scope.png
+RenderCross,false
+
+Magazine,0,HandmadeGuns,bullet_hg_hmg
+MagazineSG,0,HandmadeGuns,bullet_shell_hmg
+MagazineGL,0,HandmadeGuns,bullet_rr_hmg
+
+MuzzleJump,-4
+AddParts,mat1
+    AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+    AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+    RenderOnNormal
+    AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+    AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+
+    AddReloadMotionKey,0,0,0,0,0,0,0,             5,0,0,0,0,0,0
+    AddReloadMotionKey,5,0,0,0,0,0,0,             10,0,0,0,-15,0,45
+    AddReloadMotionKey,10,0,0,0,-15,0,45,            25,0,0,0,-15,0,45
+    AddReloadMotionKey,25,0,0,0,-15,0,45,           30,0,0,0,0,0,0
+
+    AddChildParts,Larm
+    	AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+    	AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+    	RenderOnNormal
+    	AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+    	AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+    	AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+    	AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+
+    	AddReloadMotionKey,0,0,0,0,0,0,0,            5,0,0,0,0,0,0
+    	AddReloadMotionKey,5,0,0,0,0,0,0,            10,0,-2,-1,0,0,0
+    	AddReloadMotionKey,10,0,-2,-1,0,0,0,            15,0,-0.5,0,0,0,0
+
+    	AddReloadMotionKey,15,0,-0.5,0,0,0,0,           17,0,-0.5,0,0,0,0
+    	AddReloadMotionKey,17,0,-0.5,0,0,0,0,           20,0,0.75,-0.5,0,0,0
+    	AddReloadMotionKey,20,0,0.75,-0.5,0,0,0,           22,0,0.75,-0.9,0,0,0
+    	AddReloadMotionKey,22,0,0.75,-0.9,0,0,0,           24,0,0.75,-0.5,0,0,0
+    	AddReloadMotionKey,24,0,0.75,-0.5,0,0,0,           30,0,0,0,0,0,0
+    BackParts
+    AddChildParts,Rarm
+    	AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+    	AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+    	RenderOnNormal
+    	AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+    	AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+    	AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+    	AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+
+    	AddReloadMotionKey,0,0,0,0,0,0,0,            5,0,0,0,0,0,0
+    	AddReloadMotionKey,5,0,0,0,0,0,0,            25,0,0,0,0,0,0
+    	AddReloadMotionKey,25,0,0,0,0,0,0,           30,0,0,0,0,0,0
+    BackParts
+
+
+
+
+    AddChildParts,mat3
+        AddPartsRotationCenterAndRotationAmount,0,0,0.0,0,0,0
+        RenderOnNormal
+        AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+
+        AddReloadMotionKey,0,0,0,0,0,0,0,           5,0,-5,-1,0,0,0
+        AddReloadMotionKey,5,false,          10
+        AddReloadMotionKey,10,0,-2,-0.5,0,0,0,          15,0,0,0,0,0,0
+        AddReloadMotionKey,25,0,0,0,0,0,0,          30,0,0,0,0,0,0
+    BackParts
+
+    AddChildParts,mat2
+        AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
+        RenderOnNormal
+        AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
+        AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+        AddRecoilMotionKey,0,0,0,0,0,0,0,           5,0,0,-0.4,0,0,0
+        AddRecoilMotionKey,5,0,0,-0.40,0,0,0,       10,0,0,0,0,0,0
+        AddRecoilMotionKey,10,0,0,-0.40,0,0,0,       12,0,0,0,0,0,0
+
+        AddReloadMotionKey,0,0,0,0,0,0,0,        1,0,0,-0.4,0,0,0
+        AddReloadMotionKey,1,0,0,-0.4,0,0,0,        20,0,0,-0.4,0,0,0
+        AddReloadMotionKey,20,0,0,-0.4,0,0,0,       22,0,0,-0.4,0,0,0
+        AddReloadMotionKey,22,0,0,-0.4,0,0,0,       24,0,0,0,0,0,0
+        AddReloadMotionKey,24,0,0,0,0,0,0,          30,0,0,0,0,0,0
+    BackParts
+Tabname,HMG_GVCGuns
+Name,Glock18
+HG,G18
+
+//addRecipe,AR_sample,1,abc,0ef,000,265,265,265,280,265,280,280,280,280

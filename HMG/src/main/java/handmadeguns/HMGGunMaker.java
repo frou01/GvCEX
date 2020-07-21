@@ -79,9 +79,9 @@ public class HMGGunMaker {
 		float   armoffsetxl;
 		float   armoffsetyl;
 		float   armoffsetzl;
-		float   nox = -0.7F;
-		float   noy = 0.7F;
-		float   noz = 0F;
+		float   nox = -0.694F - 0.7f;
+		float   noy = 0;
+		float   noz = 0;
 		float[] thirdGunOffset = {0,0,0};
 		float   eqrotax = 0;
 		float   eqrotay = 0;
@@ -160,12 +160,6 @@ public class HMGGunMaker {
 		objtexture = "ar.png";
 		BPitemstack = 1;
 		BPaddi = null;
-		modelwidthx = 0.694F;
-		modelwidthxr = 0.694F;
-		modelwidthxs = 0.694F;
-		modelwidthz = 0F;
-		modelwidthzr = 0F;
-		modelwidthzs = 0F;
 
 		arm = false;
 		armrotationxr = -1.57F;
@@ -351,6 +345,13 @@ public class HMGGunMaker {
 								gunInfo.script = doScript(sc);
 								break;
 							}
+							case "GunScript_PathType": {
+								gunInfo.userenderscript = true;
+								type[1] = type[1].replace('\n', File.separatorChar);
+								FileReader sc = new FileReader(new File(HMG_proxy.ProxyFile(),type[1])); // ファイルを開く
+								gunInfo.renderscript = gunInfo.script = gunInfo.script_withGUI = doScript(sc);
+								break;
+							}
 							case "CanObj":
 								gunInfo.canobj = parseBoolean(type[1]);
 								break;
@@ -361,6 +362,11 @@ public class HMGGunMaker {
 								objtexture = type[1];
 								break;
 							case "ModelEquipped":
+								nox = parseFloat(type[1]) - 0.694f;
+								noy = parseFloat(type[2]) - 1.8f;
+								noz = parseFloat(type[3]);
+								break;
+							case "ModelEquipped_Simple":
 								nox = parseFloat(type[1]);
 								noy = parseFloat(type[2]);
 								noz = parseFloat(type[3]);
@@ -375,15 +381,15 @@ public class HMGGunMaker {
 								break;
 							case "ModelHigh":
 							case "ADSOffsetY":
-								modelhigh = parseFloat(type[1]);
-								modelhighr = parseFloat(type[2]);
-								modelhighs = parseFloat(type[3]);
+								modelhigh = parseFloat(type[1]) - 1.8f;
+								modelhighr = parseFloat(type[2]) - 1.8f;
+								modelhighs = parseFloat(type[3]) - 1.8f;
 								break;
 							case "ModelWidthX":
 							case "ADSOffsetX":
-								modelwidthx = parseFloat(type[1]);
-								modelwidthxr = parseFloat(type[2]);
-								modelwidthxs = parseFloat(type[3]);
+								modelwidthx = -0.697f + parseFloat(type[1]);
+								modelwidthxr = -0.697f + parseFloat(type[2]);
+								modelwidthxs = -0.697f + parseFloat(type[3]);
 								break;
 							case "ModelWidthZ":
 							case "ADSOffsetZ":
@@ -393,19 +399,19 @@ public class HMGGunMaker {
 								break;
 
 							case "SimpleADSOffsetX":
-								modelwidthx = 0.694f-parseFloat(type[1]);
-								modelwidthxr = 0.694f-parseFloat(type[2]);
-								modelwidthxs = 0.694f-parseFloat(type[3]);
+								modelwidthx = -parseFloat(type[1]);
+								modelwidthxr = -parseFloat(type[2]);
+								modelwidthxs = -parseFloat(type[3]);
 								break;
 							case "SimpleADSOffsetY":
-								modelhigh = 1.8f-parseFloat(type[1]);
-								modelhighr = 1.8f-parseFloat(type[2]);
-								modelhighs = 1.8f-parseFloat(type[3]);
+								modelhigh = -parseFloat(type[1]);
+								modelhighr = -parseFloat(type[2]);
+								modelhighs = -parseFloat(type[3]);
 								break;
 							case "SimpleADSOffsetZ":
-								modelwidthz = -1.4f + parseFloat(type[1]);
-								modelwidthzr = -1.4f + parseFloat(type[2]);
-								modelwidthzs = -1.4f + parseFloat(type[3]);
+								modelwidthz = parseFloat(type[1]);
+								modelwidthzr = parseFloat(type[2]);
+								modelwidthzs = parseFloat(type[3]);
 								break;
 							case "ModelRotationX":
 								rotationx = -180 + parseFloat(type[1]);
@@ -1558,18 +1564,18 @@ public class HMGGunMaker {
 
 		return false;
 	}
-	public static ScriptEngine doScript(ResourceLocation resource)
-	{
-		try
-		{
-			String script = getText(resource, true);
-			return doScript(script);
-		}
-		catch(IOException e)
-		{
-			throw new RuntimeException("Script load error : " + resource.getResourcePath(), e);
-		}
-	}
+//	public static ScriptEngine doScript(ResourceLocation resource)
+//	{
+//		try
+//		{
+//			String script = getText(resource, true);
+//			return doScript(script);
+//		}
+//		catch(IOException e)
+//		{
+//			throw new RuntimeException("Script load error : " + resource.getResourcePath(), e);
+//		}
+//	}
 	private static String getText(ResourceLocation resource, boolean indention) throws IOException
 	{
 		List<String> list = readText(resource);
@@ -2263,6 +2269,9 @@ public class HMGGunMaker {
 				break;
 			case "canlockEntity":
 				gunInfo.canlockEntity = parseBoolean(type[1]);
+				break;
+			case "displayPredict":
+				gunInfo.displayPredict = parseBoolean(type[1]);
 				break;
 			case "seekerSize":
 				gunInfo.seekerSize = Double.parseDouble(type[1]);

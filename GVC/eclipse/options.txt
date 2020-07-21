@@ -1,6 +1,6 @@
 invertYMouse:false
 mouseSensitivity:0.5
-fov:0.0
+fov:0.05
 gamma:1.0
 saturation:0.0
 renderDistance:16
@@ -11,8 +11,8 @@ anaglyph3d:false
 advancedOpengl:false
 maxFps:60
 fboEnable:true
-difficulty:0
-fancyGraphics:false
+difficulty:2
+fancyGraphics:true
 ao:0
 clouds:true
 resourcePacks:[]
@@ -105,10 +105,10 @@ key_Roll Left/Sus Right:36
 key_Weapon Mode:78
 key_Allow Entity to Ride:56
 key_Change Control:49
-key_Change to Easy/Normal Control:0
+key_Change to Easy/Normal Control:25
 key_Reset Camera Rotation:47
 key_Reload Config Settings:0
-key_Open Vehicle Gui:146
+key_Open Vehicle Gui:39
 key_Gear Down/Up:34
 key_Reload Magazine:19
 key_Fire AttachedGun:33
@@ -123,7 +123,7 @@ key_[Gun Setting]Zero in : reset:35
 key_[Gun Setting]Zero in : decrease:49
 key_[Gun Setting]Seeker Open/Close:46
 key_[Gun Setting]Cycle Selector:41
-soundCategory_master:0.03311258
+soundCategory_master:0.18543047
 soundCategory_music:0.0
 soundCategory_record:1.0
 soundCategory_weather:1.0

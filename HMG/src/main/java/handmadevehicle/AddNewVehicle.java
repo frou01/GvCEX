@@ -304,6 +304,7 @@ public class AddNewVehicle extends HMGGunMaker {
 
 	public void readParts_vehicle(String[] type,ArrayList<HMGGunParts> partslist){
 		readerCnt = 0;
+		boolean noLoop = false;
 		readParts(type,partslist);
 		switch (type[readerCnt++]) {
 			case "AddPartsRenderAsTrackInf":
@@ -312,14 +313,23 @@ public class AddNewVehicle extends HMGGunMaker {
 			case "AddTrackPos":
 				((HMVVehicleParts)currentParts).AddTrackPositions(type);
 				break;
+			case "AddIdlePositions":
+				((HMVVehicleParts)currentParts).AddIdlePositions(type);
+				break;
 			case "IsTrack":
 				((HMVVehicleParts)currentParts).setIsTrack(Boolean.parseBoolean(type[readerCnt++]), parseInt(type[readerCnt++]));
+				break;
+			case "setIsIdleAnim":
+				((HMVVehicleParts)currentParts).setIsIdleAnim(Boolean.parseBoolean(type[readerCnt++]), parseInt(type[readerCnt++]));
 				break;
 			case "IsPera":
 				((HMVVehicleParts)currentParts).setIsPera(Boolean.parseBoolean(type[readerCnt++]));
 				break;
 			case "IsCloningTrack":
 				((HMVVehicleParts)currentParts).setIsTrack_Cloning(Boolean.parseBoolean(type[readerCnt++]), parseInt(type[readerCnt++]));
+				break;
+			case "IsCloningIdleAnim":
+				((HMVVehicleParts)currentParts).setIsIdleAnim_Cloning(Boolean.parseBoolean(type[readerCnt++]), parseInt(type[readerCnt++]));
 				break;
 			case "TurretParts":
 				((HMVVehicleParts)currentParts).isTurretParts = true;
@@ -330,12 +340,13 @@ public class AddNewVehicle extends HMGGunMaker {
 						(float) -weaponPos.z / currentVehicleData.scale,
 						0, 0, 0);
 				break;
+			case "AddCrawlerTrack_noLoop":
+				noLoop = true;
 			case "AddCrawlerTrack=false":
 			case "AddCrawlerTrack=true": {
 				float track_pieceLength = parseFloat(type[readerCnt++]);
 				readerCnt++;//履帯X位置は取得不要
 				//なんで必要だったんだろう？
-
 				float[] posesY = new float[type.length - 3];
 				float[] posesZ = new float[type.length - 3];
 				float[] betweenRot = new float[type.length - 3];
@@ -431,11 +442,14 @@ public class AddNewVehicle extends HMGGunMaker {
 
 					int nextCnt = id + 1;
 					if (nextCnt >= type.length - 3) {
+						if(noLoop)continue;
 						nextCnt = 0;
 					}
+					if(id == type.length - 5 && noLoop) continue;
 
 					int prevCnt = id - 1;
 					if (id == 0) {
+						if(noLoop)continue;
 						prevCnt = type.length - 4;
 					}
 
@@ -532,6 +546,12 @@ public class AddNewVehicle extends HMGGunMaker {
 				((HMVVehicleParts) currentParts).trackPieceCount = flameCounter;
 
 			}
+			break;
+			case "AddCrawlerTrack_Offset":
+				((HMVVehicleParts)currentParts).trackAnimOffset = Float.parseFloat(type[readerCnt++]);
+			break;
+			case "AddCrawlerTrack_trackAnimSpeed":
+				((HMVVehicleParts)currentParts).trackAnimSpeed = Float.parseFloat(type[readerCnt++]);
 			break;
 			case "isTurret_linkedGunMount":
 				((HMVVehicleParts)currentParts).isTurret_linkedGunMount = true;

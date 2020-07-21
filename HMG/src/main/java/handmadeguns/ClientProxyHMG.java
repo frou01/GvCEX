@@ -373,6 +373,11 @@ public class ClientProxyHMG extends CommonSideProxyHMG {
 		//return false;
 	}
 	@Override
+	public boolean seekerOpenClose_NonStop(){
+		return SeekerOpen_Close.isKeyDown_noStop() && keyDown_except_null(gunSetting_modification.getKeyCode());
+		//return false;
+	}
+	@Override
 	public boolean fixkeydown(){
 		return Fix.isKeyDown() && keyDown_except_null(gunPrepare_modification.getKeyCode());
 		//return false;

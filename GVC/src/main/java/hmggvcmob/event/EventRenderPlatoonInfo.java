@@ -52,6 +52,15 @@ public class EventRenderPlatoonInfo {
 				renderString("leader");
 			}
 			GL11.glRotatef(-180 + entityplayer.rotationYawHead,0,1,0);
+			GL11.glDisable(GL11.GL_TEXTURE_2D);
+			GL11.glDisable(GL11.GL_LIGHTING);
+			glLineWidth(0.1f);
+			glBegin(GL_LINE_LOOP);
+			glVertex3f(0 , 0,0);
+			glVertex3d(platoonInfoData.target[0] - entity.posX,platoonInfoData.target[1] - entity.posY,platoonInfoData.target[2] - entity.posZ);
+			glEnd();
+			GL11.glEnable(GL11.GL_TEXTURE_2D);
+			GL11.glEnable(GL11.GL_LIGHTING);
 			GL11.glTranslatef((float)-entity.posX,(float)-entity.posY,(float)-entity.posZ);
 			GL11.glTranslatef((float)platoonInfoData.target[0],(float)platoonInfoData.target[1] + 2,(float)platoonInfoData.target[2]);
 			GL11.glRotatef(180-entityplayer.rotationYawHead,0,1,0);

@@ -25,8 +25,7 @@ public class WorldForPathfind
    public PathEntity getEntityPathToXYZ(Entity entity, int targetX, int targetY, int targetZ, float searchRange, boolean isWoddenDoorAllowed, boolean isMovementBlockAllowed, boolean isPathingInWater, boolean canEntityDrown)
     {
         if(slowPathfinder != null && slowPathfinder.isserchingpath){
-            PathEntity returnval = slowPathfinder.serchPath();
-            return returnval;
+            return slowPathfinder.serchPath();
         }else {
             int l = MathHelper.floor_double(entity.posX);
             int i1 = MathHelper.floor_double(entity.posY);
@@ -51,7 +50,7 @@ public class WorldForPathfind
             if(!slowPathfinder.isserchingpath) {
                 return pathentity;
             }else {
-                return null;
+                return slowPathfinder.serchPath();
             }
         }
     }

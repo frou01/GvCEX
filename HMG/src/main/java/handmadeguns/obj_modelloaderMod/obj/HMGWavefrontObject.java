@@ -2,11 +2,11 @@ package handmadeguns.obj_modelloaderMod.obj;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import handmadeguns.client.render.IModelCustom_HMG;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.model.IModelCustom;
 import net.minecraftforge.client.model.ModelFormatException;
 import net.minecraftforge.client.model.obj.WavefrontObject;
 import org.lwjgl.opengl.GL11;
@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
  *  Wavefront Object importer
  *  Based heavily off of the specifications found at http://en.wikipedia.org/wiki/Wavefront_.obj_file
  */
-public class HMGWavefrontObject extends WavefrontObject implements IModelCustom
+public class HMGWavefrontObject extends WavefrontObject implements IModelCustom_HMG
 {
     private static Pattern vertexPattern = Pattern.compile("(v( (\\-){0,1}\\d+(\\.\\d+)?){3,4} *\\n)|(v( (\\-){0,1}\\d+(\\.\\d+)?){3,4} *$)");
     private static Pattern vertexNormalPattern = Pattern.compile("(vn( (\\-){0,1}\\d+(\\.\\d+)?){3,4} *\\n)|(vn( (\\-){0,1}\\d+(\\.\\d+)?){3,4} *$)");
@@ -222,11 +222,13 @@ public class HMGWavefrontObject extends WavefrontObject implements IModelCustom
     @SideOnly(Side.CLIENT)
     public void renderPart(String partName)
     {
+        current = null;
         for (HMGGroupObject HMGGroupObject : HMGGroupObjects)
         {
             if (partName.equalsIgnoreCase(HMGGroupObject.name))
             {
                 HMGGroupObject.render();
+                current = HMGGroupObject;
             }
         }
     }
@@ -646,5 +648,10 @@ public class HMGWavefrontObject extends WavefrontObject implements IModelCustom
     public String getType()
     {
         return "obj";
+    }
+    HMGGroupObject current;
+    @Override
+    public HMGGroupObject renderPart_getInstance() {
+        return current;
     }
 }

@@ -4,10 +4,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import handmadeguns.client.render.IModelCustom_HMG;
+import handmadeguns.obj_modelloaderMod.obj.HMGGroupObject;
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
@@ -16,14 +17,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.model.IModelCustom;
 import net.minecraftforge.client.model.ModelFormatException;
 
 import static java.lang.Float.parseFloat;
 import static java.lang.Integer.parseInt;
 
 @SideOnly(Side.CLIENT)
-public class MQO_MetasequoiaObject implements IModelCustom
+public class MQO_MetasequoiaObject implements IModelCustom_HMG
 {
 	public ArrayList<MQO_Vertex>		vertices		= new ArrayList<MQO_Vertex>();
 	public ArrayList<MQO_GroupObject>	groupObjects	= new ArrayList<MQO_GroupObject>();
@@ -132,11 +132,13 @@ public class MQO_MetasequoiaObject implements IModelCustom
 	@Override
 	public void renderPart(String partName)
 	{
+		current = null;
 		for (MQO_GroupObject groupObject : groupObjects)
 		{
 			if (partName.equals(groupObject.name))
 			{
 				groupObject.render();
+				current = groupObject;
 			}
 		}
 	}
@@ -687,19 +689,12 @@ public class MQO_MetasequoiaObject implements IModelCustom
 	{
 		MQO_GroupObject group = null;
 
-		if (isValidGroupObjectLine(line))
-		{
-			String s[] = line.split(" ");
-			String trimmedLine = s[1].substring(1, s[1].length()-1);
+		String s[] = line.split(" ");
+		String trimmedLine = s[1].substring(1, s[1].length()-1);
 
-			if (trimmedLine.length() > 0)
-			{
-				group = new MQO_GroupObject(trimmedLine,this);
-			}
-		}
-		else
+		if (trimmedLine.length() > 0)
 		{
-			throw new ModelFormatException("Error parsing entry ('" + line + "'" + ", line " + lineCount + ") in file '" + fileName + "' - Incorrect format");
+			group = new MQO_GroupObject(trimmedLine,this);
 		}
 
 		return group;
@@ -727,5 +722,11 @@ public class MQO_MetasequoiaObject implements IModelCustom
 		if(!s[0].equals("face")) return false;
 
 		return true;
+	}
+
+	HMGGroupObject current;
+	@Override
+	public HMGGroupObject renderPart_getInstance() {
+		return current;
 	}
 }

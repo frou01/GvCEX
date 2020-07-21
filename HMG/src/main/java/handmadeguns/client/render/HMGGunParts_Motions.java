@@ -14,7 +14,7 @@ public class HMGGunParts_Motions {
     }
     public HMGGunParts_Motion getmotionobject(float flame){
         for(HMGGunParts_Motion motion:motions){
-            if(motion.startflame < flame && motion.endflame >= flame){
+            if(motion.startflame <= flame && motion.endflame >= flame){
                 return motion;
             }
         }

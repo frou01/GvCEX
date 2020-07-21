@@ -1,0 +1,5 @@
+Texture,bullet_sub_te
+Stack,1
+Name,Thermobaric Bullet
+BulletTE,Bullet_TE
+addRecipe,Bullet_TE,2,abc,def,000,46,265,46,46,265,46,0,0,0

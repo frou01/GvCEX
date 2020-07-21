@@ -13,6 +13,7 @@ import static handmadevehicle.Utils.canMoveEntity;
 
 public class EntityAndPos {
 	public EntityLiving entity;
+	double currentSpeed = 0;
 	Vector3d pos = new Vector3d();
 	Vector3d randMiserVec;
 	public EntityAndPos(EntityLiving entity){
@@ -35,15 +36,23 @@ public class EntityAndPos {
 	public final void set(Vector3d vector3d,double speed) {
 		if(entity.getAttackTarget() == null && canMoveEntity(entity)) {
 			pos.set(vector3d.x, vector3d.y, vector3d.z);
-			entity.getNavigator().tryMoveToXYZ(vector3d.x, vector3d.y, vector3d.z, speed);
+			entity.getNavigator().tryMoveToXYZ(pos.x, pos.y, pos.z, currentSpeed = speed);
 			if(entity.ridingEntity != null && entity.ridingEntity instanceof EntityDummy_rider){
-				((EntityDummy_rider) entity.ridingEntity).linkedBaseLogic.mc_Entity.getNavigator().tryMoveToXYZ(vector3d.x, vector3d.y, vector3d.z, speed);
-				if(entity.getNavigator().getPath() == null)entity.getNavigator().setPath(((EntityDummy_rider) entity.ridingEntity).linkedBaseLogic.mc_Entity.getNavigator().getPath(),speed);
+				((EntityDummy_rider) entity.ridingEntity).linkedBaseLogic.mc_Entity.getNavigator().tryMoveToXYZ(vector3d.x, vector3d.y, vector3d.z, currentSpeed = speed);
+				if(entity.getNavigator().getPath() == null)entity.getNavigator().setPath(((EntityDummy_rider) entity.ridingEntity).linkedBaseLogic.mc_Entity.getNavigator().getPath(),currentSpeed = speed);
 			}
 		}
 	}
 	public final void set_withRand(Vector3d vector3d,double speed) {
 		vector3d.add(randMiserVec);
 		this.set(vector3d,speed);
+	}
+	public void update(){
+		if(currentSpeed == 0)currentSpeed = 1;
+		entity.getNavigator().tryMoveToXYZ(pos.x, pos.y, pos.z, currentSpeed);
+		if(entity.ridingEntity != null && entity.ridingEntity instanceof EntityDummy_rider){
+			((EntityDummy_rider) entity.ridingEntity).linkedBaseLogic.mc_Entity.getNavigator().tryMoveToXYZ(pos.x, pos.y, pos.z, currentSpeed);
+			if(entity.getNavigator().getPath() == null)entity.getNavigator().setPath(((EntityDummy_rider) entity.ridingEntity).linkedBaseLogic.mc_Entity.getNavigator().getPath(),currentSpeed);
+		}
 	}
 }

@@ -1,0 +1,6 @@
+Texture,bullet_hg
+Stack,64
+Tabname,HMG_Ammo
+Name,ハンドガンマガジン
+Magazine,bullet_hg_hmg
+addRecipe,bullet_hg_hmg,2,a00,0e0,000,265,289,289,289,289,289,289,289,289

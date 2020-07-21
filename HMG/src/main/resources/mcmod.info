@@ -2,13 +2,14 @@
 {
   "modid": "HandmadeGuns",
   "name": "HandMadeGuns&VehicleModEX",
-  "description": "The Addable Gun Mod",
+  "description": "The Addable Gun & Vehicle Mod",
   "version": "EX13.2",
   "mcversion": "1.7.10",
   "url": "",
   "updateUrl": "",
   "authorList": ["frou01"],
-  "credits": "original:SCOPE_MG36 , AK-47:nicoemon2 , pistolet makarova:YouwoSugokusuki , RPG-7:_ryoma489_",
+  "credits": "[original mod & Models author:SCOPE_MG36] , [AK-47,КОРД,M2HB:nicoemon2] , [pistolet makarova:YouwoSugokusuki] , [RPG-7,pakfa(Su-57):_ryoma489_]
+   , [BMP-1,T-90,(unused)WZ-10:SHCshanghaigani] , [Type74:VISTA_analog]",
   "logoFile": "logo.png",
   "screenshots": [],
   "dependencies": []

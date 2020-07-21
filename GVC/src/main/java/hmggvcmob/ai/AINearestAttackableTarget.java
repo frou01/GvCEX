@@ -74,36 +74,30 @@ public class AINearestAttackableTarget extends EntityAITarget {
         else
         {
             double d0 = this.getTargetDistance();
-            List list = this.taskOwner.worldObj.selectEntitiesWithinAABB(this.targetClass, this.taskOwner.boundingBox.expand(d0, d0, d0), this.targetEntitySelector);
+            List list = this.taskOwner.worldObj.selectEntitiesWithinAABB(this.targetClass, this.taskOwner.boundingBox.expand(d0, 512, d0), this.targetEntitySelector);
             Collections.sort(list, this.theNearestAttackableTargetSorter);
 
-            if (list.isEmpty())
-            {
-                return false;
-            }
-            else
-            {
-                Vec3 lookVec = taskOwner.getLookVec();
-                if(taskOwner instanceof IGVCmob)
-                    for(int i = 0;i < list.size();i++) {
+            if (!list.isEmpty()) {
+                if (taskOwner instanceof IGVCmob)
+                    for (int i = 0; i < list.size(); i++) {
                         this.targetEntity = (EntityLivingBase) list.get(i);
                         double dist = taskOwner.getDistanceToEntity(targetEntity);
                         boolean flag;
 
                         flag = ((IGVCmob) taskOwner).canSeeTarget(targetEntity);
-                        if(taskOwner instanceof EntitySoBases){
+                        if (taskOwner instanceof EntitySoBases) {
                             flag &= !ignoreSoTargetEntity.containsKey(EntityList.getEntityString(targetEntity));
                         }
-                        if(taskOwner instanceof IFF){
+                        if (taskOwner instanceof IFF) {
                             flag &= !((IFF) taskOwner).is_this_entity_friend(targetEntity);
                         }
-                        if(flag) {
+                        if (flag) {
                             if ((taskOwner.getEntitySenses().canSee(targetEntity) || ((IGVCmob) taskOwner).canhearsound(targetEntity)) && (targetEntity.riddenByEntity == null || !(targetEntity.riddenByEntity instanceof GVCEntityBox && targetEntity.distanceWalkedModified - targetEntity.prevDistanceWalkedModified < dist / 10)))
                                 return true;
                         }
                     }
-                return false;
             }
+            return false;
         }
     }
 

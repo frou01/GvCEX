@@ -78,6 +78,13 @@ public class MoveHelperForVehicle {
 				if(baseLogic.mc_Entity.getNavigator().getPath() != null){
 					PathPoint pathPoint = baseLogic.mc_Entity.getNavigator().getPath().getFinalPathPoint();
 					distToFinal = baseLogic.mc_Entity.getDistanceSq(pathPoint.xCoord,pathPoint.yCoord,pathPoint.zCoord);
+				} else {
+					baseLogic.setControl_throttle_down(false);
+					baseLogic.setControl_throttle_up(false);
+					baseLogic.setControl_yaw_Right(false);
+					baseLogic.setControl_yaw_Left(false);
+					baseLogic.setControl_Space(true);
+					baseLogic.setControl_brake(true);
 				}
 				this.setToLogic(this.baseLogic.bodyrotationYaw, f,distToFinal);//TODO 距離は必ず最終目的地までで計算するように変えよう
 			}
@@ -91,7 +98,6 @@ public class MoveHelperForVehicle {
 				baseLogic.setControl_brake(false);
 				baseLogic.setControl_Space(false);
 			}
-//			System.out.println("" + dist);
 			if(dist > 36){
 				update = false;
 				if (speed != 0) {
@@ -163,24 +169,26 @@ public class MoveHelperForVehicle {
 					if(reverse){
 						targetThrottle *= -1;
 					}
-					targetThrottle *= dist/100;
+					targetThrottle *= dist/36;
+//					System.out.println("targetThrottle  " + targetThrottle);
+//					System.out.println("dist            " + dist);
+//					System.out.println("debug           " + baseLogic.throttle);
 					if (targetThrottle == 0) {
-						baseLogic.setControl_throttle_down(false);
 						baseLogic.setControl_Space(true);
 					} else if (abs(targetThrottle - baseLogic.throttle) > prefab_vehicle.throttle_speed){
+//						System.out.println("debug");
 						if (baseLogic.throttle > targetThrottle) {
 							baseLogic.setControl_throttle_down(true);
 						} else {
 							baseLogic.setControl_throttle_up(true);
 						}
-						if(abs(baseLogic.throttle) > targetThrottle)baseLogic.setControl_brake(true);
 					}else {
 						baseLogic.throttle = targetThrottle;
 					}
-				}else {
-					baseLogic.setControl_brake(true);
-					baseLogic.setControl_Space(true);
 				}
+			}else {
+				baseLogic.setControl_brake(true);
+				baseLogic.setControl_Space(true);
 			}
 		} else {
 			baseLogic.setControl_brake(false);
@@ -288,7 +296,7 @@ public class MoveHelperForVehicle {
 							cannonPos.z,
 
 							courseVec.x,
-							courseVec.y + 20/getDistanceSq(thisPos,courseVec),
+							courseVec.y + (ATG?(10 - 10/(getDistanceSq(thisPos,courseVec)/20)):0),
 							courseVec.z,mainTurret.gunItem.gunInfo.gravity * (float) HandmadeGunsCore.cfg_defgravitycof,mainTurret.gunItem.gunInfo.speed)[0]);
 				}
 				double angularDifferenceYaw = wrapAngleTo180_double(targetyaw + (noWeapon ? (climbYawDir ? 90 : -90) : 0) - baseLogic.bodyrotationYaw);
@@ -367,7 +375,7 @@ public class MoveHelperForVehicle {
 						}
 						baseLogic.server_easyMode_yawTarget = targetyaw;
 						baseLogic.server_easyMode_pitchTarget = targetpitch;
-						if (abs(angularDifferenceYaw) > 45) {
+						if (abs(angularDifferenceYaw) > 20) {
 							baseLogic.server_easyMode_pitchTarget = targetpitch*(1-(abs(angularDifferenceYaw)-45)/45);
 //							baseLogic.server_easyMode_yawTarget = targetyaw * (5/abs(targetyaw));
 						}

@@ -817,4 +817,22 @@ public class Utils {
         }
         return true;
     }
+    public static Vector3d createVectorFromAngle(float rotationYaw,float rotationPitch){
+        float f1;
+        float f2;
+        float f3;
+        float f4;
+
+
+        f1 = MathHelper.cos(-rotationYaw * 0.017453292F - (float)Math.PI);
+        f2 = MathHelper.sin(-rotationYaw * 0.017453292F - (float)Math.PI);
+        f3 = -MathHelper.cos(-rotationPitch * 0.017453292F);
+        f4 = MathHelper.sin(-rotationPitch * 0.017453292F);
+        return new Vector3d((double)(f2 * f3), (double)f4, (double)(f1 * f3));
+    }
+
+
+    public static double getEntitySpeedSQ(Entity entity){
+        return entity.motionX * entity.motionX + entity.motionY * entity.motionY + entity.motionZ * entity.motionZ;
+    }
 }

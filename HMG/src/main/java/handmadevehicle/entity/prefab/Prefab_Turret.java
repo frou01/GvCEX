@@ -17,9 +17,12 @@ public class Prefab_Turret {
 	public boolean fireAll_child = false;
 	public boolean fireAll_cannon = false;
 	public boolean positionLinked = true;
+	public boolean onlyAim = false;
 
 	public boolean syncTurretAngle = false;
-	
+	public boolean lockToPilotAngle = false;
+	public boolean lockOnByVehicle = false;
+
 	public int elevationType = 0;
 	public String traverseSound = "handmadevehicle:handmadevehicle.traverseSound";
 	public float traversesoundLV = 1;
@@ -42,6 +45,10 @@ public class Prefab_Turret {
 
 	public boolean needGunStack = false;
 	public boolean useGunSight = false;
+
+	public boolean useVehicleRadar = false;
+	public boolean forceSyncTarget = false;
+	public boolean syncMotherTarget = false;
 	public String[] gunStackwhitelist;
 
 	public Prefab_Turret(){
