@@ -38,12 +38,12 @@ maxClimb,-60;
 cruiseALT,130;
 
 addParentWeapon,0,Gsh-30-1,0,2.4,-8,0;
-addParentWeapon,1,	Su27-HardPoint,	-3.518,		2.355,	0.535,0;
-addParentWeapon,2,	Su27-HardPoint,	3.518,		2.355,	0.535,0;
-addParentWeapon,3,	Su27-HardPoint,	-0.3808,	2.160,	0.042,0;
-addParentWeapon,4,	Su27-HardPoint,	0.3808,		2.160,	0.042,0;
-addParentWeapon,5,	Su27-HardPoint,	-0.3808,	2.160,	6.64,0;
-addParentWeapon,6,	Su27-HardPoint,	0.3808,		2.160,	6.64,0;
+addParentWeapon,1,	Su57-HardPoint_bottom,	-0.3501,	2.4224,	7.7044,0;
+addParentWeapon,2,	Su57-HardPoint_bottom,	0.3501 ,	2.4224,	7.7044,0;
+addParentWeapon,3,	Su57-HardPoint_bottom,	-0.3501,	2.4224,	14.6269,0;
+addParentWeapon,4,	Su57-HardPoint_bottom,	0.3501 ,	2.4224,	14.6269,0;
+addParentWeapon,5,	Su57-HardPoint,	-3.8378,	2.4168,	6.2376,0;
+addParentWeapon,6,	Su57-HardPoint,	3.8378,		2.4168,	6.2376,0;
 
 //ç¿ê»í«â¡;
 SetUpSeat1_NUM,1;

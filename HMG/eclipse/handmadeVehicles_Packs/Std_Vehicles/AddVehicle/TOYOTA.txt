@@ -55,7 +55,6 @@ AddParts,body;
 	AddChildParts,wheel;
 		RenderOnNormal;
 		SetAsNormalParts;
-		IsTrack,true,1;
 	BackParts;
 
 	AddChildParts,FrontWheelL;
@@ -63,7 +62,6 @@ AddParts,body;
 		SetAsNormalParts;
 		AddPartsRotationCenterAndRotationAmount,11,18,26,0,0,0;
 		AddSomeMotion,-20,0,0,0,0,20,0        	,20,0,0,0,0,-20,0	,0;
-		IsTrack,true,1;
 	BackParts;
 
 	AddChildParts,FrontWheelR;
@@ -71,7 +69,6 @@ AddParts,body;
 		SetAsNormalParts;
 		AddPartsRotationCenterAndRotationAmount,-11,1.8,26,0,0,0;
 		AddSomeMotion,-20,0,0,0,0,20,0        	,20,0,0,0,0,-20,0	,0;
-		IsTrack,true,1;
 	BackParts;
 
 	AddChildParts,turret;

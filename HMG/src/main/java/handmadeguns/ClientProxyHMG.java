@@ -14,7 +14,6 @@ import handmadeguns.client.audio.ReloadSoundHMG;
 import handmadeguns.emb_modelloader.MQO_ModelLoader;
 import handmadeguns.entity.*;
 import handmadeguns.entity.bullets.*;
-import handmadeguns.event.RenderTickSmoothing;
 import handmadeguns.items.guns.HMGItem_Unified_Guns;
 import handmadeguns.network.PacketSpawnParticle;
 import handmadeguns.client.render.*;
@@ -29,6 +28,7 @@ import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.ForgeHooksClient;
@@ -48,11 +48,12 @@ import cpw.mods.fml.client.registry.RenderingRegistry;
 import org.lwjgl.input.Mouse;
 
 import static handmadeguns.HandmadeGunsCore.HMG_proxy;
+import static handmadeguns.HandmadeGunsCore.cfg_ADS_Toggle;
 
 public class ClientProxyHMG extends CommonSideProxyHMG {
 	public static final KeyBinding				Reload				= new KeyBinding("Reload Magazine", Keyboard.KEY_R, "HandmadeGuns");
 	public static final KeyBinding_withStopper	Fire_AttachedGun	= new KeyBinding_withStopper("Fire AttachedGun", Keyboard.KEY_F, "HandmadeGuns");
-	public static final KeyBinding				ADS					= new KeyBinding("ADS_Key", Keyboard.KEY_V, "HandmadeGuns");
+	public static final KeyBinding_withStopper	ADS					= new KeyBinding_withStopper("ADS_Key", Keyboard.KEY_V, "HandmadeGuns");
 
 	public static final KeyBinding				gunPrepare_modification = new KeyBinding("Gun Prepare Modification Key", Keyboard.KEY_LMENU, "HandmadeGuns");
 	public static final KeyBinding				Attachment			= new KeyBinding("[Gun Prepare]Attachment GUI", Keyboard.KEY_X, "HandmadeGuns");
@@ -77,12 +78,13 @@ public class ClientProxyHMG extends CommonSideProxyHMG {
 	static Field equippedProgress;
 	static Field prevEquippedProgress;
 	static Field itemToRender;
+	static Field previousEquipment;
 	static Field rightClickDelayTimer = null;
 
 	static Field fovModifierHandPrev;
 	static Field fovModifierHand;
-	static Field prevDebugCamFOV;
-	static Field debugCamFOV;
+	static Field prevCamFOV;
+	static Field camFOV;
 
 	static int beforeSlot = -1;
 
@@ -182,7 +184,7 @@ public class ClientProxyHMG extends CommonSideProxyHMG {
 
     	ClientRegistry.registerKeyBinding(Reload);
 	    ClientRegistry.registerKeyBinding(Fire_AttachedGun.keyBinding);
-    	ClientRegistry.registerKeyBinding(ADS);
+    	ClientRegistry.registerKeyBinding(ADS.keyBinding);
     	ClientRegistry.registerKeyBinding(gunPrepare_modification);
     	ClientRegistry.registerKeyBinding(Attachment);
     	ClientRegistry.registerKeyBinding(ChangeMagazineType.keyBinding);
@@ -225,91 +227,56 @@ public class ClientProxyHMG extends CommonSideProxyHMG {
 			}
 
 			try {
-				equippedProgress = ReflectionHelper.findField(HMG_proxy.getMCInstance().entityRenderer.itemRenderer.getClass(), "field_78454_c");
+				equippedProgress = ReflectionHelper.findField(HMG_proxy.getMCInstance().entityRenderer.itemRenderer.getClass(), "field_78454_c","equippedProgress");
 			} catch (Exception e) {
 				e.printStackTrace();
-				try {
-					equippedProgress = ReflectionHelper.findField(HMG_proxy.getMCInstance().entityRenderer.itemRenderer.getClass(), "equippedProgress");
-				} catch (Exception ea) {
-					ea.printStackTrace();
-				}
 			}
 
 			try {
-				prevEquippedProgress = ReflectionHelper.findField(HMG_proxy.getMCInstance().entityRenderer.itemRenderer.getClass(), "field_78451_d");
+				prevEquippedProgress = ReflectionHelper.findField(HMG_proxy.getMCInstance().entityRenderer.itemRenderer.getClass(), "field_78451_d","prevEquippedProgress");
 			} catch (Exception e) {
 				e.printStackTrace();
-				try {
-					prevEquippedProgress = ReflectionHelper.findField(HMG_proxy.getMCInstance().entityRenderer.itemRenderer.getClass(), "prevEquippedProgress");
-				} catch (Exception ea) {
-					ea.printStackTrace();
-				}
 			}
 
 			try {
-				itemToRender = ReflectionHelper.findField(HMG_proxy.getMCInstance().entityRenderer.itemRenderer.getClass(), "field_78453_b");
+				itemToRender = ReflectionHelper.findField(HMG_proxy.getMCInstance().entityRenderer.itemRenderer.getClass(), "field_78453_b","itemToRender");
 			} catch (Exception e) {
 				e.printStackTrace();
-				try {
-					itemToRender = ReflectionHelper.findField(HMG_proxy.getMCInstance().entityRenderer.itemRenderer.getClass(), "itemToRender");
-				} catch (Exception ea) {
-					ea.printStackTrace();
-				}
+			}
+			try {
+				previousEquipment = ReflectionHelper.findField(EntityLivingBase.class, "field_82180_bT","previousEquipment");
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 
 			try {
-				rightClickDelayTimer = ReflectionHelper.findField(HMG_proxy.getMCInstance().getClass(), "field_71467_ac");
+				rightClickDelayTimer = ReflectionHelper.findField(HMG_proxy.getMCInstance().getClass(), "field_71467_ac","rightClickDelayTimer");
 			} catch (Exception e) {
 				e.printStackTrace();
-				try {
-					rightClickDelayTimer = ReflectionHelper.findField(HMG_proxy.getMCInstance().getClass(), "rightClickDelayTimer");
-				} catch (Exception ea) {
-					ea.printStackTrace();
-				}
 			}
 
 			try {
-				fovModifierHandPrev = ReflectionHelper.findField(EntityRenderer.class, "field_78506_S");
+				fovModifierHandPrev = ReflectionHelper.findField(EntityRenderer.class, "field_78506_S","fovModifierHandPrev");
 			} catch (Exception e) {
 				e.printStackTrace();
-				try {
-					fovModifierHandPrev = ReflectionHelper.findField(EntityRenderer.class, "fovModifierHandPrev");
-				} catch (Exception ea) {
-					ea.printStackTrace();
-				}
 			}
 
 			try {
-				fovModifierHand = ReflectionHelper.findField(EntityRenderer.class, "field_78507_R");
+				fovModifierHand = ReflectionHelper.findField(EntityRenderer.class, "field_78507_R","fovModifierHand");
 			} catch (Exception e) {
 				e.printStackTrace();
-				try {
-					fovModifierHand = ReflectionHelper.findField(EntityRenderer.class, "fovModifierHand");
-				} catch (Exception ea) {
-					ea.printStackTrace();
-				}
 			}
 
 			try {
-				prevDebugCamFOV = ReflectionHelper.findField(EntityRenderer.class, "field_78494_N");
+				prevCamFOV = ReflectionHelper.findField(EntityRenderer.class, "field_78494_N","prevDebugCamFOV");
 			} catch (Exception e) {
 				e.printStackTrace();
-				try {
-					prevDebugCamFOV = ReflectionHelper.findField(EntityRenderer.class, "prevDebugCamFOV");
-				} catch (Exception ea) {
-					ea.printStackTrace();
-				}
 			}
 
 			try {
-				debugCamFOV = ReflectionHelper.findField(EntityRenderer.class, "field_78493_M");
+				camFOV = ReflectionHelper.findField(EntityRenderer.class, "field_78493_M","debugCamFOV");
 			} catch (Exception e) {
 				e.printStackTrace();
-				try {
-					debugCamFOV = ReflectionHelper.findField(EntityRenderer.class, "debugCamFOV");
-				} catch (Exception ea) {
-					ea.printStackTrace();
-				}
 			}
 //    	RenderingRegistry.registerEntityRenderingHandler(HMGEntityParticles.class, new HMGRenderParticles());
 			//RenderingRegistry.registerEntityRenderingHandler(HMGEntityParticles.class, new HMGRenderParticles2());
@@ -413,7 +380,7 @@ public class ClientProxyHMG extends CommonSideProxyHMG {
 	}
     @Override
     public boolean ADSclick(){
-		return keyDown(ADS.getKeyCode());
+		return cfg_ADS_Toggle ? ADS.isKeyDown() : ADS.isKeyDown_noStop();
 	}
 	@Override
 	public boolean Reloadkeyispressed(){
@@ -615,7 +582,7 @@ public class ClientProxyHMG extends CommonSideProxyHMG {
 					f1 = f1 * 60.0F / 70.0F;
 				}
 
-				return f1 + prevDebugCamFOV.getFloat(entityRenderer) + (debugCamFOV.getFloat(entityRenderer) - prevDebugCamFOV.getFloat(entityRenderer)) * p_78481_1_;
+				return f1 + prevCamFOV.getFloat(entityRenderer) + (camFOV.getFloat(entityRenderer) - prevCamFOV.getFloat(entityRenderer)) * p_78481_1_;
 			}
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
@@ -623,10 +590,19 @@ public class ClientProxyHMG extends CommonSideProxyHMG {
 		return 0;
 	}
 
+	public ItemStack[] getPrevEquippedItems(EntityLivingBase entityLivingBase){
+		try {
+			return (ItemStack[]) previousEquipment.get(entityLivingBase);
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 
 	public void setUpModels(){
 		for(IModelCustom_HMG modelCustom_hmg : modelList){
-			System.out.println("debug" + modelCustom_hmg.toString());
+//			System.out.println("debug" + modelCustom_hmg.toString());
 			while(!modelCustom_hmg.getLoadThread().isTerminated()){
 				if(modelCustom_hmg.getLoadThread().isTerminated())break;
 			}

@@ -1,12 +1,8 @@
-WeaponName,2A38_30mm
+WeaponName,2A38_30mm_Tunguska
 turretYawCenterpos,0,0,0
 turretPitchCenterpos,0,0,0
-multicannonPos,-0.0462,-0.0368,3.3602,	0.0462,-0.0368,3.3602
-fireAll_cannon,true
-linked_MotherTrigger,true
-fireAll_child,true
-//斉射モード
-positionLinked,false
+multicannonPos,-0.87006,-0.03128,2.85617,   0.87006,-0.03128,2.85617,   -0.79152,-0.03128,2.85617,  0.79152,-0.03128,2.85617
+fire_cannon_perOneShot,2
 //位置リンクを切っておく
 Recoil,1
 BulletNameALL,byfrou01_GreenTracer
@@ -18,16 +14,18 @@ lockSound_NoStop,true
 lockOn_minThrottle,-1
 lock_to_Vehicle,true
 displayPredict,true
-
-syncMotherTarget,true
+turretspeedY,12
+turretspeedP,12
 
 turretanglelimtYawMax,0
 turretanglelimtYawmin,0
+turretanglelimtPitchMax,0
+turretanglelimtPitchmin,-88
 syncTurretAngle,true
 
 BulletPower,70
 BulletSpeed,9.8
-Explosion,2
+Explosion,0.8
 BlockDestory,true
 guntype,10
 BulletSpread,3

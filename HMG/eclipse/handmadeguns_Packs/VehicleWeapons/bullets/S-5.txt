@@ -7,4 +7,11 @@ FlyingSoundSP,1.4
 FlyingSoundmaxdist,128
 FlyingSound_BulletMinSpeed,0
 SmokeGlow,true
+EnableTrail,true
+TrailProbability,1
+TrailLength,600
+animationspeed,600
+TrailWidth,0.5
+Trailtexture,Vapour
+TrailGlow,false
 Name,S-5

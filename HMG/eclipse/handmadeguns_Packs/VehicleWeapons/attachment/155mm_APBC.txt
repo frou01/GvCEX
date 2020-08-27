@@ -1,0 +1,5 @@
+Texture,155mm_APBC
+Stack,64
+Tabname,VehicleWeapons
+Name,155mm_APBC
+Magazine,155mm_APBC

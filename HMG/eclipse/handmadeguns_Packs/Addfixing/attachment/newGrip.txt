@@ -1,4 +1,4 @@
-﻿
+
 Texture,grip
 Name,フォアグリップ
 Model,true

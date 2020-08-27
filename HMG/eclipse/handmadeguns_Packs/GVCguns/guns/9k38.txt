@@ -4,7 +4,7 @@ BlletSpread,4.0f
 BulletGravity,0.485
 ADS_Spread_coefficient,0.5
 BlletSpreadDiffusion,3,0,0.3,0.2,2,0.1
-Acceleration,0.35f
+Acceleration,0.29f
 resistance,0.9f
 Recoil,0.0d
 ReloadTime,0
@@ -51,12 +51,13 @@ BulletNameALL,S-5
 
 ScopeTexture,scope_smaw.png,scope_smaw.png,scope_smaw.png
 RenderCross,false
-Induction_precision,90
+Induction_precision,6
+bulletStability,0.6
 Canlock,true
 lock_to_Vehicle,true
 lockOn_minThrottle,2.5
 seekerSize,5
-seekerSize_bullet,45
+seekerSize_bullet,90
 hasVT,true
 VTRange,25
 VTWidth,180

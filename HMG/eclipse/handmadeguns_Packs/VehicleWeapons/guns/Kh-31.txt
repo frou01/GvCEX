@@ -1,13 +1,14 @@
 guerrila_cant_use_this
 Dont_Be_Inside_Root_Chest
 BulletPower,1500
-damagerange,100
-BulletSpeed,1.5
-Acceleration,2f
+damagerange,10
+BulletSpeed,0
+Acceleration,1.02f
+resistance,0.9f
 ReloadTime,-1
 RemainingBullet,1
 isOneuse,true
-Explosion,25f
+Explosion,3f
 BlockDestory,true
 Texture,Kh-31
 ObjModel,Kh-31.mqo
@@ -19,7 +20,8 @@ Weight,610
 seekerSize_bullet,180
 BulletNameALL,Kh-31AGM
 
-Induction_precision,13
+Induction_precision,2
+bulletStability,0.8
 Canlock,true
 canlockEntity,false
 CanlockBlock,true

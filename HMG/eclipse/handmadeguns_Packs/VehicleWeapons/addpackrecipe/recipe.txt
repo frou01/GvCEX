@@ -8,16 +8,66 @@ Slot8,minecraft:emerald:
 CraftItem,HandmadeGuns:9K114:0:1
 
 AddRecipe
+Slot1,minecraft:glass:
+Slot2,minecraft:glass:
+Slot3,minecraft:glass:
+Slot5,HandmadeGuns:missile:
+Slot7,minecraft:emerald:
+Slot8,minecraft:emerald:
+CraftItem,HandmadeGuns:9K114:0:1
+
+AddRecipe
 Slot1,HandmadeGuns:Prastic:
 Slot2,HandmadeGuns:Prastic:
 Slot3,HandmadeGuns:Prastic:
-Slot4,HandmadeGuns:missile:
-Slot5,HandmadeGuns:missile:
-Slot6,HandmadeGuns:missile:
-Slot7,minecraft:iron_block:
+Slot4,minecraft:iron_ingot:
+Slot5,minecraft:iron_ingot:
+Slot6,minecraft:iron_ingot:
+Slot7,minecraft:emerald:
 Slot8,minecraft:emerald:
 Slot9,minecraft:gunpowder:
 CraftItem,HandmadeGuns:R-3:0:1
+
+AddRecipe
+Slot1,HandmadeGuns:Prastic:
+Slot2,HandmadeGuns:Prastic:
+Slot3,HandmadeGuns:Prastic:
+Slot4,minecraft:iron_ingot:
+Slot5,minecraft:iron_ingot:
+Slot6,minecraft:iron_ingot:
+Slot7,minecraft:emerald:
+Slot8,minecraft:emerald:
+Slot9,minecraft:gunpowder:
+CraftItem,HandmadeGuns:AIM-9E:0:1
+
+AddRecipe
+Slot1,HandmadeGuns:Prastic:
+Slot2,HandmadeGuns:Prastic:
+Slot3,HandmadeGuns:Prastic:
+Slot4,minecraft:iron_block:
+Slot5,minecraft:iron_block:
+Slot6,minecraft:iron_block:
+Slot7,minecraft:emerald:
+Slot8,minecraft:emerald:
+Slot9,minecraft:gunpowder:
+CraftItem,HandmadeGuns:R-73:0:1
+
+AddRecipe
+SET_PATTERN,AAA,0
+SET_PATTERN,CBC,1
+SET_PATTERN,AAA,2
+SLOT_A,minecraft:emerald:
+SLOT_B,HandmadeGuns:R-73:
+SLOT_C,minecraft:iron_block:
+CraftItem,HandmadeGuns:R-37:0:1
+
+AddRecipe
+SET_PATTERN,AAA,0
+SET_PATTERN, B ,1
+SET_PATTERN,AAA,2
+Slot_A,minecraft:emerald:
+Slot_B,HandmadeGuns:R-73:
+CraftItem,HandmadeGuns:R-77:0:1
 
 AddRecipe
 Slot1,HandmadeGuns:bullet_rr_hmg:
@@ -143,7 +193,7 @@ AddRecipe
 Slot1,minecraft:redstone:
 Slot2,minecraft:redstone:
 Slot3,minecraft:iron_block:
-Slot4,minecraft:diamond_block:
+Slot4,minecraft:diamond_ore:
 Slot5,minecraft:iron_block:
 Slot6,minecraft:iron_block:
 Slot7,minecraft:iron_block:
@@ -160,6 +210,16 @@ CraftItem,HMVehicle:Type74:0:1
 AddRecipe
 Slot1,HMVehicle:Type74:
 CraftItem,HMVehicle:KPZ-70:0:1
+
+AddRecipe
+SET_PATTERN,ACA,0
+SET_PATTERN,CBC,1
+SET_PATTERN,ADA,2
+SLOT_A,minecraft:iron_block:
+SLOT_B,HMVehicle:KPZ-70:
+SLOT_C,minecraft:redstone_block:
+SLOT_D,minecraft:diamond_block:
+CraftItem,HMVehicle:T-90A:0:1
 
 AddRecipe
 Slot2,minecraft:iron_block:
@@ -193,6 +253,14 @@ Slot9,minecraft:iron_block:
 CraftItem,HMVehicle:T-34-85_mod:0:1
 
 AddRecipe
+Slot1,HMVehicle:T-34-85_mod:
+CraftItem,HMVehicle:Pz_IV_D_F2:0:1
+
+AddRecipe
+Slot1,HMVehicle:Pz_IV_D_F2:
+CraftItem,HMVehicle:T-34-85_mod:0:1
+
+AddRecipe
 Slot4,minecraft:iron_ingot:
 Slot5,minecraft:iron_ingot:
 Slot6,minecraft:iron_ingot:
@@ -204,8 +272,8 @@ CraftItem,HMVehicle:TOYOTA:0:1
 AddRecipe
 Slot1,minecraft:redstone:
 Slot2,minecraft:redstone:
-Slot3,minecraft:diamond_block:
-Slot4,minecraft:diamond_block:
+Slot3,minecraft:redstone_block:
+Slot4,minecraft:redstone_block:
 Slot5,minecraft:redstone:
 Slot6,minecraft:redstone:
 Slot7,minecraft:iron_block:
@@ -213,6 +281,31 @@ Slot8,minecraft:iron_block:
 Slot9,minecraft:iron_block:
 CraftItem,HMVehicle:MiG-21:0:1
 
+AddRecipe
+SET_PATTERN,AAA,0
+SET_PATTERN,CBC,1
+SET_PATTERN,AAA,2
+SLOT_A,minecraft:emerald:
+SLOT_B,HMVehicle:MiG-21:
+SLOT_C,minecraft:iron_block:
+CraftItem,HMVehicle:MiG-31:0:1
+
+AddRecipe
+SET_PATTERN,AAA,0
+SET_PATTERN,CBC,1
+SET_PATTERN,AAA,2
+SLOT_A,minecraft:iron_block:
+SLOT_B,HMVehicle:MiG-21:
+SLOT_C,minecraft:redstone_block:
+CraftItem,HMVehicle:MiG-29:0:1
+
+AddRecipe
+SET_PATTERN,ACA,0
+SET_PATTERN,CBC,1
+SLOT_A,minecraft:iron_block:
+SLOT_B,HMVehicle:MiG-21:
+SLOT_C,minecraft:redstone_block:
+CraftItem,HMVehicle:SU-25:0:1
 
 AddRecipe
 Slot1,minecraft:redstone:
@@ -224,6 +317,15 @@ Slot7,minecraft:redstone:
 CraftItem,HMVehicle:F-86K:0:1
 
 AddRecipe
+SET_PATTERN, A ,0
+SET_PATTERN,CBC,1
+SET_PATTERN, A ,2
+SLOT_A,minecraft:iron_block:
+SLOT_B,HMVehicle:F-86K:
+SLOT_C,minecraft:redstone_block:
+CraftItem,HMVehicle:F-5A:0:1
+
+AddRecipe
 Slot1,minecraft:iron_ingot:
 Slot2,minecraft:iron_block:
 Slot4,minecraft:iron_block:
@@ -231,6 +333,12 @@ Slot5,minecraft:planks:
 Slot6,minecraft:iron_block:
 CraftItem,HMVehicle:Yak-9:0:1
 
+AddRecipe
+Slot1,HMVehicle:Yak-9:
+CraftItem,HMVehicle:Type0:0:1
+AddRecipe
+Slot1,HMVehicle:Type0:
+CraftItem,HMVehicle:Yak-9:0:1
 
 
 AddRecipe

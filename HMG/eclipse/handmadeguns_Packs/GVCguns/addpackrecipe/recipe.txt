@@ -325,6 +325,15 @@ Slot8,minecraft:beacon:
 Slot9,minecraft:beacon:
 CraftItem,HandmadeGuns:2A115:0:1
 
+AddRecipe
+SET_PATTERN, B ,0
+SET_PATTERN, B ,1
+SET_PATTERN,AAA,2
+SLOT_A,minecraft:iron_block:
+SLOT_B,minecraft:iron_ingot:
+CraftItem,HandmadeGuns:L16Mortar:0:1
+
+
 //AddSmallRecipe
 //Slot1,{modid}:{itemname}
 //Slot2,{modid}:{itemname}:{metadata}

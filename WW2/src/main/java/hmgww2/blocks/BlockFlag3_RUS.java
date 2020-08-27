@@ -1,31 +1,26 @@
 package hmgww2.blocks;
- 
-import hmgww2.Nation;
-import hmgww2.blocks.tile.FlagType;
-import hmgww2.blocks.tile.TileEntityBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.world.World;
-import cpw.mods.fml.relauncher.SideOnly;
+
 import cpw.mods.fml.relauncher.Side;
-import net.minecraft.tileentity.TileEntity;
+import cpw.mods.fml.relauncher.SideOnly;
+import hmgww2.blocks.tile.FlagType;
 import net.minecraft.util.IIcon;
 //import net.minecraft.world.gen.structure.StructureStrongholdPieces;;
 
 
-public class BlockFlag3_RUS extends BlockRUSFlagBase
-{
-    @SideOnly(Side.CLIENT)
-    private IIcon TopIcon;
- 
-    @SideOnly(Side.CLIENT)
-    private IIcon SideIcon;
-    public BlockFlag3_RUS() {
-	
-	    super();
-	    flagType = FlagType.AirBase;
-	    maxs = 10;
-	    spawntime = 1200;
-	    flagRange = 64;
-    }
-	
+public class BlockFlag3_RUS extends BlockRUSFlagBase {
+	@SideOnly(Side.CLIENT)
+	private IIcon TopIcon;
+
+	@SideOnly(Side.CLIENT)
+	private IIcon SideIcon;
+
+	public BlockFlag3_RUS() {
+
+		super();
+		flagType = FlagType.AirBase;
+		maxs = 10;
+		spawntime = 1200;
+		flagRange = 64;
+	}
+
 }

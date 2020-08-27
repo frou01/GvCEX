@@ -7,6 +7,11 @@ import handmadeguns.items.guns.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.IAttributeInstance;
+import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
+import net.minecraft.init.Items;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.*;
 import org.lwjgl.opengl.GL11;
@@ -37,7 +42,10 @@ import javax.script.Invocable;
 import javax.script.ScriptException;
 import javax.vecmath.Vector3d;
 
+import java.util.Iterator;
+
 import static handmadeguns.HandmadeGunsCore.HMG_proxy;
+import static handmadeguns.client.render.HMGRenderItemGun_U_NEW.*;
 import static handmadevehicle.Utils.*;
 import static net.minecraft.client.gui.Gui.icons;
 import static org.lwjgl.opengl.GL11.*;
@@ -62,16 +70,74 @@ public class HMGEventZoom {
 	public static boolean isSlowdowned3;
 	private double premotion;
 
+
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
 	public void renderfov(FOVUpdateEvent event)
 	{
 		//Minecraft minecraft = FMLClientHandler.instance().getClient();
-		//EntityPlayer entityplayer = minecraft.thePlayer;
+		//EntityPlayer entityPlayer = minecraft.thePlayer;
+		EntityPlayer entityPlayer = event.entity;
+
+		IAttributeInstance iattributeinstance = entityPlayer.getEntityAttribute(SharedMonsterAttributes.movementSpeed);
+
+//		System.out.println("speedModify_\t" + iattributeinstance.getAttributeValue());
+//		System.out.println("debug_FOV\t\t" + event.newfov);
+
 		if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
-			EntityPlayer entityplayer = event.entity;
-			ItemStack itemstack = entityplayer.getCurrentEquippedItem();
-			Entity ridingEntity = entityplayer.ridingEntity;
+//			System.out.println("modify\t\t" + HMG_proxy.getCurrentAttributeModifier());
+//			System.out.println("speedModify\t\t" + iattributeinstance.getAttributeValue());
+
+//			if(HMG_proxy.getCurrentAttributeModifier() != null){
+//				flag = true;
+//				if (entityPlayer.getEquipmentInSlot(0) != null && entityPlayer.getEquipmentInSlot(0).getItem() instanceof HMGItem_Unified_Guns){
+//					resetApply = true;
+//				}
+//				entityPlayer.getAttributeMap().removeAttributeModifiers(HMG_proxy.getCurrentAttributeModifier());
+//			}
+
+			{
+
+
+
+				iattributeinstance = entityPlayer.getEntityAttribute(SharedMonsterAttributes.movementSpeed);
+				double value = HMG_proxy.computeMoveSpeed_WithoutGunModifier((ModifiableAttributeInstance) iattributeinstance);
+//				System.out.println("changed\t\t\t" + value);
+				float f = 1.0F;
+
+				if (entityPlayer.capabilities.isFlying)
+				{
+					f *= 1.1F;
+				}
+
+				f = (float)((double)f * ((value / (double)entityPlayer.capabilities.getWalkSpeed() + 1.0D) / 2.0D));
+
+				if (entityPlayer.capabilities.getWalkSpeed() == 0.0F || Float.isNaN(f) || Float.isInfinite(f))
+				{
+					f = 1.0F;
+				}
+
+				if (entityPlayer.isUsingItem() && entityPlayer.getItemInUse().getItem() == Items.bow)
+				{
+					int i = entityPlayer.getItemInUseDuration();
+					float f1 = (float)i / 20.0F;
+
+					if (f1 > 1.0F)
+					{
+						f1 = 1.0F;
+					}
+					else
+					{
+						f1 *= f1;
+					}
+
+					f *= 1.0F - f1 * 0.15F;
+				}
+				event.newfov = f;
+			}
+
+			ItemStack itemstack = entityPlayer.getCurrentEquippedItem();
+			Entity ridingEntity = entityPlayer.ridingEntity;
 			if(ridingEntity instanceof PlacedGunEntity){
 				if(((PlacedGunEntity) ridingEntity).gunStack != null  && ((PlacedGunEntity) ridingEntity).gunStack.getItem() instanceof HMGItem_Unified_Guns){
 					itemstack = ((PlacedGunEntity) ridingEntity).gunStack;
@@ -79,7 +145,7 @@ public class HMGEventZoom {
 			}
 			if (itemstack != null && itemstack.getItem() instanceof HMGItem_Unified_Guns) {
 				HMGItem_Unified_Guns gunbase = (HMGItem_Unified_Guns) itemstack.getItem();
-				if (HandmadeGunsCore.Key_ADS(entityplayer))
+				if (firstPerson_ADSState && prevADSState)
 				{
 					((HMGItem_Unified_Guns) itemstack.getItem()).checkTags(itemstack);
 					ItemStack[] items = new ItemStack[6];
@@ -102,31 +168,31 @@ public class HMGEventZoom {
 					if(itemstackSight != null) {
 						if (itemstackSight.getItem() instanceof HMGItemAttachment_reddot) {
 							if (gunbase.gunInfo.canobj && gunbase.gunInfo.zoomrer) {
-								event.newfov = event.fov / gunbase.gunInfo.scopezoomred;
+								event.newfov = event.newfov / gunbase.gunInfo.scopezoomred;
 							}
 						} else if (itemstackSight.getItem() instanceof HMGItemAttachment_scope) {
 							if (gunbase.gunInfo.canobj && gunbase.gunInfo.zoomres) {
-								event.newfov = event.fov / gunbase.gunInfo.scopezoomscope;
+								event.newfov = event.newfov / gunbase.gunInfo.scopezoomscope;
 							}
 						} else if (itemstackSight.getItem() instanceof HMGItemSightBase) {
 							if (gunbase.gunInfo.canobj && !((HMGItemSightBase) itemstackSight.getItem()).scopeonly) {
-								event.newfov = event.fov / ((HMGItemSightBase) itemstackSight.getItem()).zoomlevel;
+								event.newfov = event.newfov / ((HMGItemSightBase) itemstackSight.getItem()).zoomlevel;
 							}
 						}else {
 							if (gunbase.gunInfo.canobj && gunbase.gunInfo.zoomren) {
-								event.newfov = event.fov / gunbase.gunInfo.scopezoombase;
+								event.newfov = event.newfov / gunbase.gunInfo.scopezoombase;
 							}
 						}
 					} else {
 						if (gunbase.gunInfo.canobj && gunbase.gunInfo.zoomren) {
-							event.newfov = event.fov / gunbase.gunInfo.scopezoombase;
+							event.newfov = event.newfov / gunbase.gunInfo.scopezoombase;
 						}
 					}
 				}
-				if(entityplayer.capabilities.isFlying){
+				if(entityPlayer.capabilities.isFlying){
 					event.newfov /=1.1F;
 				}
-//				System.out.println(entityplayer.getEntityAttribute(SharedMonsterAttributes.movementSpeed).getAttributeValue());
+//				System.out.println(entityPlayer.getEntityAttribute(SharedMonsterAttributes.movementSpeed).getAttributeValue());
 //				if(isSlowdowned3)event.newfov /= ((gunbase.motion <= 0 ? 0 : gunbase.motion) + 1 )/2;
 //				premotion = gunbase.motion;
 			}
@@ -185,7 +251,7 @@ public class HMGEventZoom {
 					}
 					float spreadDiffusion = nbt.getFloat("Diffusion");
 					float bure = gunItem.gunInfo.spread_setting;
-					bure *= HandmadeGunsCore.Key_ADS(entityplayer) ? gunItem.gunInfo.ads_spread_cof : 1;
+					bure *= firstPerson_ADSState && prevADSState ? gunItem.gunInfo.ads_spread_cof : 1;
 					bure += gunItem.gunInfo.spread_setting * spreadDiffusion;
 					((HMGItem_Unified_Guns) gunstack.getItem()).checkTags(gunstack);
 					ItemStack[] items = new ItemStack[6];
@@ -227,7 +293,7 @@ public class HMGEventZoom {
 
 							//if (entityplayer.isSneaking())
 
-							if (HandmadeGunsCore.Key_ADS(entityplayer)) {
+							if (firstPerson_ADSState && prevADSState) {
 								if (itemstackSight != null) {
 									if (itemstackSight.getItem() instanceof HMGItemAttachment_reddot) {
 										if (!gunItem.gunInfo.canobj || !gunItem.gunInfo.zoomrer) {
@@ -489,6 +555,8 @@ public class HMGEventZoom {
 			GL11.glPopMatrix();
 			previtemstack = gunstack;
 		}
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
 		Minecraft.getMinecraft().renderEngine.bindTexture(icons);
 	}
@@ -635,10 +703,6 @@ public class HMGEventZoom {
 
 	public static void renderPumpkinBlur(Minecraft minecraft,ResourceLocation adsr)
 	{
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		GL11.glPushMatrix();
 		GL11.glDisable(GL_DEPTH_TEST);
 		GL11.glEnable(GL_BLEND);
@@ -653,6 +717,10 @@ public class HMGEventZoom {
 //		GL11.glScalef((float)anti_fov, (float)anti_fov, 1);
 //		GL11.glTranslatef(-(float)scaledresolution.getScaledWidth() / 2, -(float)scaledresolution.getScaledHeight() / 2, 0.0F);
 		minecraft.getTextureManager().bindTexture(adsr);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		Tessellator tessellator = Tessellator.instance;
 		tessellator.startDrawingQuads();
 		float width = 256;

@@ -1,13 +1,11 @@
 package handmadeguns.client.render;
 
-import cpw.mods.fml.relauncher.ReflectionHelper;
 import handmadeguns.HandmadeGunsCore;
 import handmadeguns.event.RenderTickSmoothing;
 import handmadeguns.items.*;
 import handmadeguns.items.guns.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
-import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.entity.Entity;
@@ -18,7 +16,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.model.IModelCustom;
@@ -27,20 +24,21 @@ import org.lwjgl.opengl.GL11;
 import javax.script.Invocable;
 import javax.script.ScriptException;
 import javax.vecmath.Vector3d;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.nio.FloatBuffer;
-import java.util.ArrayList;
-import java.util.Vector;
 
-import static handmadeguns.HandmadeGunsCore.scripts;
+import static handmadeguns.HandmadeGunsCore.HMG_proxy;
 import static handmadeguns.event.HMGEventZoom.setUp3DView;
 import static handmadeguns.event.RenderTickSmoothing.smooth;
-import static handmadeguns.HandmadeGunsCore.HMG_proxy;
 import static java.lang.Math.abs;
 import static org.lwjgl.opengl.GL11.*;
 
 public class HMGRenderItemGun_U_NEW implements IItemRenderer {
+	public static boolean firstPerson_SprintState = false;
+	public static boolean prevSprintState = false;
+	public static boolean firstPerson_ADSState = false;
+	public static boolean prevADSState = false;
+	public static boolean firstPerson_ReloadState = false;
+	public static boolean prevReloadState = false;
 	private static FloatBuffer colorBuffer = GLAllocation.createDirectFloatBuffer(16);
 	private IModelCustom model;
 	private ResourceLocation guntexture;
@@ -350,7 +348,7 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 					Minecraft.getMinecraft().renderEngine.bindTexture(guntexture);
 					GL11.glPushMatrix();
 					ItemStack itemstackSight = items[1];
-					if (HandmadeGunsCore.Key_ADS(entity)) {
+					if (firstPerson_ADSState && prevADSState) {
 						if (itemstackSight != null && itemstackSight.getItem() instanceof HMGItemSightBase) {
 							if (((HMGItemSightBase) itemstackSight.getItem()).scopeonly) {
 								GL11.glPopMatrix();//glend1
@@ -458,36 +456,28 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 					GL11.glRotatef(f4, 1.0F, 0.0F, 0.0F);
 
 					boolean isreloading = this.getbooleanfromnbt("IsReloading");
-					boolean recoiled = this.getbooleanfromnbt("Recoiled");
-
-					if (isreloading) {
-						this.glMatrixForRenderInEquipped(0);
-					} else if (HandmadeGunsCore.Key_ADS(entity)) {
-						int cockingtime = this.getintfromnbt("CockingTime");
-						if (cockingtime > 0) {
-							this.glMatrixForRenderInEquippedADS(-1.4f);
-						} else if (!recoiled) {
-							this.glMatrixForRenderInEquippedADS(-1.4f);
-						} else {
-							this.glMatrixForRenderInEquippedADS(-1.4f);
+					if(firstPerson_ReloadState) {
+						if (prevReloadState) {//リロード中
+							this.setUpGunPos_equipe(0);
+						} else if (prevSprintState) {//スプリント中にリロード開始
+							this.setUpGunPos_equipe_sprint(0,1 - smoothing);
+						} else if (prevADSState) {//ADS中にリロード開始
+							this.setUpGunPos_ADS(-1.4f, 1 - smoothing);
 						}
-					} else {
-						if (this.isentitysprinting(entity)) {
-							this.glMatrixForRenderInEquipped(0);
-							GL11.glRotatef(Sprintrotationx, 1.0f, 0.0f, 0.0f);
-							GL11.glRotatef(Sprintrotationy, 0.0f, 1.0f, 0.0f);
-							GL11.glRotatef(Sprintrotationz, 0.0f, 0.0f, 1.0f);
-							GL11.glTranslatef(Sprintoffsetx, Sprintoffsety, Sprintoffsetz);
-						} else {
-							int cockingtime = this.getintfromnbt("CockingTime");
-							if (cockingtime > 0) {
-								this.glMatrixForRenderInEquipped(0);
-							} else if (!recoiled) {
-								this.glMatrixForRenderInEquipped(0f);
-							} else {
-								this.glMatrixForRenderInEquipped(0);
-							}
-						}
+					}else if (firstPerson_ADSState && prevADSState) {//リロードは初期位置で行っているのでリロード終了時移動の必要は無し
+						this.setUpGunPos_ADS(-1.4f);
+					} else if(firstPerson_ADSState){//走り始め
+						this.setUpGunPos_ADS(-1.4f,smoothing);
+					} else if(prevADSState){//走り終わり
+						this.setUpGunPos_ADS(-1.4f,1-smoothing);
+					}else if (firstPerson_SprintState && prevSprintState) {
+						this.setUpGunPos_equipe_sprint(0,1);
+					} else if(firstPerson_SprintState){//走り始め
+						this.setUpGunPos_equipe_sprint(0,smoothing);
+					} else if(prevSprintState){//走り終わり
+						this.setUpGunPos_equipe_sprint(0,1-smoothing);
+					}else {
+						this.setUpGunPos_equipe(0);
 					}
 					GL11.glScalef(this.modelscala, this.modelscala, this.modelscala);
 					rendering_situation(gunstack,entity);
@@ -565,14 +555,25 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 		GL11.glTranslatef(-0.8F, -1.2F, -0.1F);
 	}
 
-	public void glMatrixForRenderInEquipped(float reco) {
+	public void setUpGunPos_equipe(float reco) {
 		GL11.glRotatef(180f, 1.0F, 0.0F, 0.0F);
 		GL11.glRotatef(180f, 0.0F, 0.0F, 1.0F);
 		GL11.glTranslatef(modelPosX, modelPosY, modelPosZ + 1.4f);// -0.2F//-0.7,0.7,0
 	}
 
+	public void setUpGunPos_equipe_sprint(float reco, float interPole) {
+		GL11.glRotatef(180f, 1.0F, 0.0F, 0.0F);
+		GL11.glRotatef(180f, 0.0F, 0.0F, 1.0F);
+		GL11.glTranslatef(modelPosX, modelPosY, modelPosZ + 1.4f);// -0.2F//-0.7,0.7,0
+
+		GL11.glRotatef(Sprintrotationx * interPole, 1.0f, 0.0f, 0.0f);
+		GL11.glRotatef(Sprintrotationy * interPole, 0.0f, 1.0f, 0.0f);
+		GL11.glRotatef(Sprintrotationz * interPole, 0.0f, 0.0f, 1.0f);
+		GL11.glTranslatef(Sprintoffsetx * interPole, Sprintoffsety * interPole, Sprintoffsetz * interPole);
+	}
+
 	//ADS
-	public void glMatrixForRenderInEquippedADS(float reco) {
+	public void setUpGunPos_ADS(float reco) {
 		GL11.glRotatef(180f, 1.0F, 0.0F, 0.0F);
 		GL11.glRotatef(180f, 0.0F, 0.0F, 1.0F);
 		if(gunitem != null && nbt != null && gunitem.gunInfo.sightOffset_zeroIn != null && nbt.getInteger("currentElevation") >= 0 && gunitem.gunInfo.sightOffset_zeroIn.length>nbt.getInteger("currentElevation")) {
@@ -587,6 +588,24 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 		GL11.glRotatef(onads_modelRotationY, 0.0F, 1.0F, 0.0F);
 		GL11.glRotatef(onads_modelRotationX, 1.0F, 0.0F, 0.0F);
 		GL11.glRotatef(onads_modelRotationZ, 0.0F, 0.0F, 1.0F);
+	}
+	public void setUpGunPos_ADS(float reco,float interPole) {
+		GL11.glRotatef(180f, 1.0F, 0.0F, 0.0F);
+		GL11.glRotatef(180f, 0.0F, 0.0F, 1.0F);
+		GL11.glTranslatef(modelPosX * (1 - interPole), modelPosY * (1 - interPole), (modelPosZ + 1.4f) * (1 - interPole));// -0.2F//-0.7,0.7,0
+
+		if(gunitem != null && nbt != null && gunitem.gunInfo.sightOffset_zeroIn != null && nbt.getInteger("currentElevation") >= 0 && gunitem.gunInfo.sightOffset_zeroIn.length>nbt.getInteger("currentElevation")) {
+			Vector3d sightOffset_zeroIn = gunitem.gunInfo.sightOffset_zeroIn[nbt.getInteger("currentElevation")];
+			GL11.glTranslatef((float) sightOffset_zeroIn.x / modelscala * interPole,
+					(float) sightOffset_zeroIn.y / modelscala * interPole,
+					(float) sightOffset_zeroIn.z / modelscala * interPole);// 0.694,1.03,-1.0//-1.4F
+		}
+		GL11.glTranslatef(onads_modelPosX * interPole,
+				onads_modelPosY * interPole,
+				onads_modelPosZ * interPole);// 0.694,1.03,-1.0//-1.4F
+		GL11.glRotatef(onads_modelRotationY * interPole, 0.0F, 1.0F, 0.0F);
+		GL11.glRotatef(onads_modelRotationX * interPole, 1.0F, 0.0F, 0.0F);
+		GL11.glRotatef(onads_modelRotationZ * interPole, 0.0F, 0.0F, 1.0F);
 	}
 
 	public void glMatrixForRenderInEntity(float reco) {
@@ -710,7 +729,7 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 //		}
 //	}
 
-	public boolean isentitysprinting(Entity entity){
+	public static boolean isentitysprinting(Entity entity){
 		return entity != null && (entity.isSprinting() && !nbt.getBoolean("set_up"));
 	}
 	private static FloatBuffer setColorBuffer(float p_74521_0_, float p_74521_1_, float p_74521_2_, float p_74521_3_) {
@@ -745,7 +764,7 @@ public class HMGRenderItemGun_U_NEW implements IItemRenderer {
 			float reloadprogress = this.getintfromnbt("RloadTime") + smoothing;
 			if(reloadprogress + smoothing >= gunitem.reloadTime(gunstack)-1)reloadprogress = gunitem.reloadTime(gunstack);
 			partsRender_gun.partSidentification(new GunState[]{GunState.Reload}, (float) reloadprogress, remainbullets);
-		} else if (HandmadeGunsCore.Key_ADS(entity)) {
+		} else if ((entity != HMG_proxy.getEntityPlayerInstance() && HandmadeGunsCore.Key_ADS(entity)) || firstPerson_ADSState || prevADSState) {
 			GunState[] state = new GunState[2];
 			state[1] = GunState.ADS;
 			int cockingtime = this.getintfromnbt("CockingTime");

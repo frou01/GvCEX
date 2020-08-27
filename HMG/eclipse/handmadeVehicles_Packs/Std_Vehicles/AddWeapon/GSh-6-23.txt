@@ -8,6 +8,15 @@ linked_MotherTrigger,true
 Recoil,0.01
 BulletNameALL,byfrou01_GreenTracer
 
+useVehicleInventory,true
+useVehicleRadar,true
+Canlock,true
+lockSound_entity,handmadeguns:handmadeguns.missileLockOn
+lockSound_NoStop,true
+lockOn_minThrottle,2.5
+lock_to_Vehicle,true
+displayPredict,true
+
 BulletPower,45
 BulletSpeed,7.2
 Explosion,1

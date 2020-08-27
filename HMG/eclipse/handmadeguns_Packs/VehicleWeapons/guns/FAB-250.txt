@@ -1,9 +1,9 @@
 guerrila_cant_use_this
 Dont_Be_Inside_Root_Chest
 BulletSpeed,0
-BulletPower,2500
-BulletGravity,0.485
-damagerange,25
+BulletPower,1000
+BulletGravity,0.0485
+damagerange,30
 ReloadTime,-1
 RemainingBullet,1
 isOneuse,true

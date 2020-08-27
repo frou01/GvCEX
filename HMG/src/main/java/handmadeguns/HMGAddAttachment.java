@@ -263,7 +263,7 @@ public class HMGAddAttachment
 							}else{
 								LanguageRegistry.instance().addNameForObject(newitem, "en_US", GunName);
 							}
-							System.out.println("" + GunName);
+//							System.out.println("" + GunName);
 							Attach.add(newitem);
 						}else if(type[0].equals("RedDot")){
 							GunName = type[1];
@@ -278,7 +278,7 @@ public class HMGAddAttachment
 							}else{
 								LanguageRegistry.instance().addNameForObject(newitem, "en_US", GunName);
 							}
-							System.out.println("" + GunName);
+//							System.out.println("" + GunName);
 							Attach.add(newitem);
 						}else if(type[0].equals("SCOPE")){
 							GunName = type[1];
@@ -293,7 +293,7 @@ public class HMGAddAttachment
 							}else{
 								LanguageRegistry.instance().addNameForObject(newitem, "en_US", GunName);
 							}
-							System.out.println("" + GunName);
+//							System.out.println("" + GunName);
 							Attach.add(newitem);
 						}else if(type[0].equals("Suppressor")){
 							GunName = type[1];
@@ -305,7 +305,7 @@ public class HMGAddAttachment
 							}else{
 								LanguageRegistry.instance().addNameForObject(newitem, "en_US", GunName);
 							}
-							System.out.println("" + GunName);
+//							System.out.println("" + GunName);
 							Attach.add(newitem);
 						}else if(type[0].equals("Laser")){
 							GunName = type[1];
@@ -317,7 +317,7 @@ public class HMGAddAttachment
 							}else{
 								LanguageRegistry.instance().addNameForObject(newitem, "en_US", GunName);
 							}
-							System.out.println("" + GunName);
+//							System.out.println("" + GunName);
 							Attach.add(newitem);
 						}else if(type[0].equals("Model_Laser")){
 							GunName = type[1];
@@ -329,7 +329,7 @@ public class HMGAddAttachment
 							}else{
 								LanguageRegistry.instance().addNameForObject(newitem, "en_US", GunName);
 							}
-							System.out.println("" + GunName);
+//							System.out.println("" + GunName);
 							Attach.add(newitem);
 						}else if(type[0].equals("Right")){
 							GunName = type[1];
@@ -341,7 +341,7 @@ public class HMGAddAttachment
 							}else{
 								LanguageRegistry.instance().addNameForObject(newitem, "en_US", GunName);
 							}
-							System.out.println("" + GunName);
+//							System.out.println("" + GunName);
 							Attach.add(newitem);
 						}else if(type[0].equals("Light")){
 							GunName = type[1];
@@ -353,7 +353,7 @@ public class HMGAddAttachment
 							}else{
 								LanguageRegistry.instance().addNameForObject(newitem, "en_US", GunName);
 							}
-							System.out.println("" + GunName);
+//							System.out.println("" + GunName);
 							Attach.add(newitem);
 						}else if(type[0].equals("Model_Light")){
 							GunName = type[1];
@@ -365,7 +365,7 @@ public class HMGAddAttachment
 							}else{
 								LanguageRegistry.instance().addNameForObject(newitem, "en_US", GunName);
 							}
-							System.out.println("" + GunName);
+//							System.out.println("" + GunName);
 							Attach.add(newitem);
 						}else if(type[0].equals("Grip")){
 							GunName = type[1];
@@ -382,7 +382,7 @@ public class HMGAddAttachment
 							}else{
 								LanguageRegistry.instance().addNameForObject(newitem, "en_US", GunName);
 							}
-							System.out.println("" + GunName);
+//							System.out.println("" + GunName);
 							Attach.add(newitem);
 						}else if(type[0].equals("Model_Grip")){
 							GunName = type[1];
@@ -400,7 +400,7 @@ public class HMGAddAttachment
 							}else{
 								LanguageRegistry.instance().addNameForObject(newitem, "en_US", GunName);
 							}
-							System.out.println("" + GunName);
+//							System.out.println("" + GunName);
 							Attach.add(newitem);
 						}
 						else if(type[0].equals("Magazine")){
@@ -413,7 +413,7 @@ public class HMGAddAttachment
 							}else{
 								LanguageRegistry.instance().addNameForObject(newitem, "en_US", GunName);
 							}
-							System.out.println("" + GunName);
+//							System.out.println("" + GunName);
 							Magazines.add(newitem);
 						}
 						else if(type[0].equals("CustomMagazine")){
@@ -507,7 +507,7 @@ public class HMGAddAttachment
 						if (newitem != null) {
 							try {
 								if (canobj && isClient) {
-									System.out.println("" + objmodel);
+//									System.out.println("" + objmodel);
 									IModelCustom attach = AdvancedModelLoader
 											.loadModel(new ResourceLocation("handmadeguns:textures/model/" + objmodel));
 									ResourceLocation attachtexture = new ResourceLocation("handmadeguns:textures/model/" + objtexture);

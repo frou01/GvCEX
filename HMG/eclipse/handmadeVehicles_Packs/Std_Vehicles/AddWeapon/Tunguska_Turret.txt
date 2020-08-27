@@ -1,19 +1,10 @@
 WeaponName,Tunguska_Turret
-turretYawCenterpos,0,0,-0.5350
+turretYawCenterpos,0,0,-0.45475
 turretPitchCenterpos,0,0,0
 //斉射モード
-fireAll_child,true
-useVehicleInventory,true
-useVehicleRadar,true
-forceSyncTarget,true
-Canlock,true
-lockSound_entity,handmadeguns:handmadeguns.missileLockOn
-lockSound_NoStop,true
-lockOn_minThrottle,-1
-lock_to_Vehicle,true
-syncTurretAngle,true
 onlyAim
-turretspeedY,16
+turretspeedY,6
+turretspeedP,6
 
 
 

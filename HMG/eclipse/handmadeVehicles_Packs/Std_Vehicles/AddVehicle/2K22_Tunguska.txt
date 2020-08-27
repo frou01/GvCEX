@@ -2,6 +2,7 @@ Name,2K22_Tunguska;
 rotcenter,0,1,0;
 modelName,2k22.mqo;
 modelName_texture,2k22.png;
+scale,0.85;
 health,350;
 soundname,handmadevehicle:handmadevehicle.BMPTrack;
 soundpitch,1;
@@ -10,7 +11,7 @@ TankPreset;
 soundpitch,1;
 throttle_Max,4;
 throttle_min,-4;
-yawspeed_ground,4;
+yawspeed_ground,16;
 speedfactor,0;
 speedfactor_af,0;
 forced_rudder_effect_OnGround,0;
@@ -22,6 +23,7 @@ dragfactor_inwater,0.0001;
 dragfactor_front,0;
 Has_acquisition_radar,true;
 idleAnimSpeed,18;
+max_pera_trackPos,120;
 
 speedfactor_onGround,0.14;
 powerPos_Inwater,0,1,0;
@@ -34,29 +36,42 @@ rotmotion_reduceSpeedRoll_inWater,0.008;
 off_road_followability_roll,0.7;
 //武装追加;
 ParentWeapons_NUM,1;
-AllWeapons_NUM,7;
-addParentWeapon,0,	Tunguska_Turret	,0,0,0,2;
-	addChildWeapon,0,	2A38_30mm	,-0.9774,3.0727,0.7845,1,1;
-		addChildWeapon,0,	2A38_30mm	,0.9774,3.0727,0.7845,0;
-			Set_CurrentTurret_to_Mother;
-		addBarrelChildWeapon,0,2K22HardPoint_AAM,0,1.5,0.5,3;
-			addChildWeapon,0,2K22HardPoint_AAM,0,1.5,0.5,0;
+AllWeapons_NUM,10;
+addParentWeapon,0,	Tunguska_Turret	,0,0,0,1;
+	addChildWeapon,0,	2A38_30mm_Tunguska	,0,2.611795,0.666825,0,1;
+		addBarrelChildWeapon,   0,2K22HardPoint_AAM,1.01456,2.45956,-1.717765,0,7;
+			addBarrelChildWeapon,     0,2K22HardPoint_AAM,1.205045,2.45956,-1.717765,0;
 				Set_CurrentTurret_to_Mother;
-			addChildWeapon,1,2K22HardPoint_AAM,0,1.5,0.5,0;
+			addBarrelChildWeapon,     1,2K22HardPoint_AAM,-1.01456,2.45956,-1.717765,0;
 				Set_CurrentTurret_to_Mother;
-			addChildWeapon,2,2K22HardPoint_AAM,0,1.5,0.5,0;
-//todo
+			addBarrelChildWeapon,     2,2K22HardPoint_AAM,-1.205045,2.45956,-1.717765,0;
+				Set_CurrentTurret_to_Mother;
+			addBarrelChildWeapon,     3,2K22HardPoint_AAM,1.01456,2.26559,-1.717765,0;
+				Set_CurrentTurret_to_Mother;
+			addBarrelChildWeapon,     4,2K22HardPoint_AAM,1.205045,2.26559,-1.717765,0;
+				Set_CurrentTurret_to_Mother;
+			addBarrelChildWeapon,     5,2K22HardPoint_AAM,-1.01456,2.26559,-1.717765,0;
+				Set_CurrentTurret_to_Mother;
+			addBarrelChildWeapon,     6,2K22HardPoint_AAM,-1.205045,2.26559,-1.717765,0;
+
+//↓親ID,子ID...;
+LinkedTriggers,2,
+				3,4,5,6,7,8,9;
+LinkTriggers_FireBlank,2,
+				20;
 //座席追加;
 SetUpSeat1_NUM,1;
-SetUpSeat2_AddSeat_Normal,	0 , -0.2251,3.565,-1.236	,  			true,true,false,true,0,3;
-SetUpSeat3_AddSeat_Zoom,	0 , 0.3729,3.637,-0.4281     ,   			true,true,false,true,0,4;
+SetUpSeat2_AddSeat_Normal,	0 , -0.191335,3.03025,-1.0506	,  			true,true,false,true,0,-1;
+SetUpSeat4_AddSeat_AdditionalTurret,0,1,2;
+SetUpSeat5_AddSeat_ExtraSettings,0,0,0;
+SetUpSeat3_AddSeat_Zoom,	0 , 0.316965,3.09145,-0.363885     ,   			true,true,false,true,0,4;
 
 userProtect_maxDamageLevel,0,-1;
 
 //top,bottom,front,back,left,right;
 boxes_withInfo,2,
-0,0.5,0,	    0,0,0,	2.4,1,5,	0,0,0,1,	12,7,12,4,12,12,-1,
-0,1.25,0,	    0,0,0,	1,0.5,1,	0,0,0,1,	20,40,90,25,50,50,0;
+0,0.96,0,	    0,0,0,	3.10,1.90,7.905,	0,0,0,1,	12,7,12,4,12,12,-1,
+0,2.47,0,	    0,0,0,	1.35,1.35,3.19,	0,0,0,1,	20,40,90,25,50,50,0;
 
 sightTex,handmadevehicle:textures/misc/pr_2k22scope.png;
 
@@ -71,6 +86,100 @@ AddParts,bodyL;
 BackParts;
 AddParts,bodyR;
 	SetAsNormalParts;
+BackParts;
+AddParts,track_roller0;
+	SetAsNormalParts;
+BackParts;
+AddParts,track_roller1;
+	SetAsNormalParts;
+BackParts;
+AddParts,track_roller2;
+	SetAsNormalParts;
+BackParts;
+AddParts,track_roller3;
+	SetAsNormalParts;
+BackParts;
+AddParts,track_roller4;
+	SetAsNormalParts;
+BackParts;
+AddParts,track_roller5;
+	SetAsNormalParts;
+BackParts;
+AddParts,track_roller6;
+	SetAsNormalParts;
+BackParts;
+AddParts,track_roller7;
+	SetAsNormalParts;
+BackParts;
+
+
+AddParts,track_roller8;
+	SetAsNormalParts;
+BackParts;
+AddParts,track_roller9;
+	SetAsNormalParts;
+BackParts;
+AddParts,track_roller10;
+	SetAsNormalParts;
+BackParts;
+AddParts,track_roller11;
+	SetAsNormalParts;
+BackParts;
+AddParts,track_roller12;
+	SetAsNormalParts;
+BackParts;
+AddParts,track_roller13;
+	SetAsNormalParts;
+BackParts;
+AddParts,track_roller14;
+	SetAsNormalParts;
+BackParts;
+AddParts,track_roller15;
+	SetAsNormalParts;
+BackParts;
+
+
+AddParts,$crawler_track0;
+	SetAsNormalParts;
+	AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0;
+	AddCrawlerTrack_trackAnimSpeed,24;
+	AddCrawlerTrack=true,0.2251,0,
+	
+0.0150/2.5940 ,
+0.0150/-2.6560 ,
+0.1520/-2.9870 ,
+0.6565/-4.1201 ,
+0.9245/-4.2311 ,
+1.1926/-4.1201 ,
+1.3036/-3.8520  ,
+1.2036/-2.8520  ,
+1.2036/2.5046  ,
+1.3036/3.5046  ,
+1.1926/3.7727  ,
+0.9245/3.8837  ,
+0.6565/3.7727  ,
+0.1520/2.9249;
+AddParts,$crawler_track1;
+	SetAsNormalParts;
+	AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0;
+	AddCrawlerTrack_trackAnimSpeed,24;
+	AddCrawlerTrack=true,0.2251,0,
+	
+0.0150/2.5940 ,
+0.0150/-2.6560 ,
+0.1520/-2.9870 ,
+0.6565/-4.1201 ,
+0.9245/-4.2311 ,
+1.1926/-4.1201 ,
+1.3036/-3.8520  ,
+1.2036/-2.8520  ,
+1.2036/2.5046  ,
+1.3036/3.5046  ,
+1.1926/3.7727  ,
+0.9245/3.8837  ,
+0.6565/3.7727  ,
+0.1520/2.9249;
+
 BackParts;
 AddParts,weapon0;
 	SetAsNormalParts;
@@ -91,7 +200,7 @@ AddParts,weapon0;
 		BackParts;
 	BackParts;
 	AddChildParts,weapon0_3;
-		TurretParts,2;
+		TurretParts,1;
 		SetAsNormalParts;
 		AddPartsRotationCenterAndRotationAmount,0,3.073,-0.7845,0,0,0;
 		AddPitchInfoKey,-360,0,0,0,-360,0,0        ,360,0,0,0,360,0,0;
@@ -103,7 +212,7 @@ AddParts,weapon0;
 		BackParts;
 	BackParts;
 	AddChildParts,weapon0_6;
-		TurretParts,0;
+		TurretParts,1;
 		SetAsNormalParts;
 		RenderOnNormal;
 		AddPartsRotationCenterAndRotationAmount,0,2.9571,2.1397,0,0,0;

@@ -1,0 +1,13 @@
+Texture,ger20mm
+Stack,64
+Name,germany 20mm AA magazine
+BulletRound,80
+CustomMagazine,ger20mm
+
+Recipe1,aba
+Recipe2,aaa
+Recipe3,bbc
+ItemA,minecraft,iron_block
+ItemB,minecraft,gunpowder
+ItemC,minecraft,emerald
+addNewRecipe,HandmadeGuns,ger20mm,1

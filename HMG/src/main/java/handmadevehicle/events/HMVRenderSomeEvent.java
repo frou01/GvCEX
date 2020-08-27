@@ -82,13 +82,14 @@ public class HMVRenderSomeEvent {
 			if(rc) zooming = !zooming;
 
 			if(HMV_Proxy.iszooming()) {
-
 				TurretObj turretObj = getPlayerUsingMainTurret(entityplayer);
 				if(turretObj != null) {
 					if (turretObj.gunItem != null && turretObj.gunItem.gunInfo.scopezoombase != 1) {
-						event.newfov = event.fov / turretObj.gunItem.gunInfo.scopezoombase;
+						ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer,
+								turretObj.gunItem.gunInfo.scopezoombase, "cameraZoom", "field_78503_V");
 					} else if (((IVehicle) entityplayer.ridingEntity).getBaseLogic().prefab_vehicle.prefab_seats.length > playerSeatID) {
-						event.newfov = event.fov / ((IVehicle) entityplayer.ridingEntity).getBaseLogic().prefab_vehicle.prefab_seats[playerSeatID].zoomLevel;
+						ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer,
+								((IVehicle) entityplayer.ridingEntity).getBaseLogic().prefab_vehicle.prefab_seats[playerSeatID].zoomLevel, "cameraZoom", "field_78503_V");
 					}
 				}
 			}
@@ -153,6 +154,8 @@ public class HMVRenderSomeEvent {
 					ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer, 0, "camRoll", "R", "field_78495_O");
 					ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer, 0, "prevCamRoll", "R", "field_78495_O");
 					ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer, 4, "thirdPersonDistance", "E", "field_78490_B");
+					ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, minecraft.entityRenderer,
+							1.0d, "cameraZoom", "field_78503_V");
 					needrest = false;
 					if ((minecraft.renderViewEntity instanceof EntityCameraDummy)) minecraft.renderViewEntity = entityplayer;
 				}
@@ -623,6 +626,8 @@ public class HMVRenderSomeEvent {
 			minecraft.getTextureManager().bindTexture(Gui.icons);
 			boolean rc = HMV_Proxy.zoomclick();
 			if (rc) zooming = !zooming;
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		}
 	}
 	public void displayGunState(TurretObj turretObj,FontRenderer fontrenderer,int i,int j,int posx,int posy,String name){

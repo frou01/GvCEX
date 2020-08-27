@@ -1,4 +1,4 @@
-﻿
+
 Texture,laser
 Name,レーザーサイト
 Model,true

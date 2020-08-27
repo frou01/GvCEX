@@ -9,6 +9,7 @@ TrailLength,30
 animationspeed,30
 TrailWidth,1.4
 Trailtexture,Vapour
+TrailGlow,false
 
 ObjModel,NONE.mqo
 ObjTexture,NONE.png

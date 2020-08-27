@@ -3,7 +3,7 @@ mouseSensitivity:0.5
 fov:0.1
 gamma:1.0
 saturation:0.0
-renderDistance:16
+renderDistance:2
 guiScale:0
 particles:0
 bobView:false
@@ -39,7 +39,7 @@ chatHeightUnfocused:0.44366196
 chatScale:1.0
 chatWidth:1.0
 showInventoryAchievementHint:false
-mipmapLevels:4
+mipmapLevels:0
 anisotropicFiltering:1
 streamBytesPerPixel:0.5
 streamMicVolume:1.0
@@ -85,38 +85,45 @@ key_key.hotbar.6:7
 key_key.hotbar.7:8
 key_key.hotbar.8:9
 key_key.hotbar.9:10
+key_throttle UP:0
+key_throttle Down:0
+key_Yaw Left:0
+key_Yaw Right:0
+key_Throttle Brake:0
+key_Fire1:0
+key_Fire2:0
 key_CannonCamera:44
-key_throttle UP:17
-key_throttle Down:31
-key_Yaw Left:30
-key_Yaw Right:32
-key_Throttle Brake:57
-key_Fire1:-99
-key_Fire2:-100
 key_Flap:33
-key_Air Brake:45
+key_Air Brake/Wheel Brake:45
+key_Flare/Smoke:146
 key_Change to Next Seat:21
 key_Change to Previous Seat:35
-key_Pitch Up:23
-key_Pitch Down:37
-key_Roll Right:38
-key_Roll Left:36
+key_Pitch Up/Sus Up:23
+key_Pitch Down/Sus Down:37
+key_Roll Right/Sus Right:38
+key_Roll Left/Sus Right:36
 key_Weapon Mode:78
 key_Allow Entity to Ride:56
 key_Change Control:49
+key_Change to Easy/Normal Control:0
 key_Reset Camera Rotation:47
 key_Reload Config Settings:0
-key_Open Vehicle Gui:39
+key_Open Vehicle Gui:146
 key_Gear Down/Up:34
 key_Reload Magazine:19
-key_Change Magazine Type:48
-key_Seeker Open/Close:46
-key_Attachment:45
 key_Fire AttachedGun:33
 key_ADS_Key:47
-key_Mode_Key:41
-key_Fix Gun:35
-soundCategory_master:1.0
+key_Gun Prepare Modification Key:56
+key_[Gun Prepare]Attachment GUI:45
+key_[Gun Prepare]Change Magazine Type:48
+key_[Gun Prepare]Fix Gun:35
+key_Gun Setting Modification:0
+key_[Gun Setting]Zero in : increase:21
+key_[Gun Setting]Zero in : reset:35
+key_[Gun Setting]Zero in : decrease:49
+key_[Gun Setting]Seeker Open/Close:46
+key_[Gun Setting]Cycle Selector:41
+soundCategory_master:0.28476822
 soundCategory_music:0.0
 soundCategory_record:1.0
 soundCategory_weather:1.0

@@ -1,8 +1,8 @@
 Dont_Be_Inside_Root_Chest
-BulletPower,300
-BulletSpeed,0.1
-Acceleration,0.8f
-resistance,0.93f
+BulletPower,500
+BulletSpeed,4.5
+Acceleration,1.02f
+resistance,0.9f
 ReloadTime,-1
 RemainingBullet,1
 lookDown,90
@@ -11,24 +11,29 @@ Explosion,5.5f
 BlockDestory,true
 Texture,9M335
 ModelScala,0.5f
-GunSound,handmadeguns.null,handmadeguns.null
+GunSound_FullName,handmadevehicle:handmadevehicle.Tube_missileLauch,handmadevehicle:handmadevehicle.Tube_missileLauch
 GunSoundReload,handmadeguns.null
 Weight,31.4
 seekerSize,10
 BulletNameALL,S-5
+CanObj,false
+OnEntity_BarrelPoint,0,0,0
 
 lockSound_entity,handmadeguns:handmadeguns.missileLockOn
 lockSound_NoStop,true
 
-Induction_precision,6.5
+Induction_precision,8
+bulletStability,0.8
 hasVT,true
 VTRange,100
-VTWidth,180
+VTWidth,30
 damagerange,10
 Canlock,true
 lock_to_Vehicle,true
-seekerSize_bullet,15
+seekerSize_bullet,30
 seekerSize,15
+
+semiActive,true
 
 NeedFix,true
 

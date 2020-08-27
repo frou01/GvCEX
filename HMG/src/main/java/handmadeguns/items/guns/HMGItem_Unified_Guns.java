@@ -3,6 +3,7 @@ package handmadeguns.items.guns;
 import com.google.common.collect.Multimap;
 import handmadeguns.HMGPacketHandler;
 import handmadeguns.HandmadeGunsCore;
+import handmadeguns.StackTracer;
 import handmadeguns.Util.GunsUtils;
 import handmadeguns.Util.StackAndSlot;
 import handmadeguns.entity.HMGEntityLaser;
@@ -11,6 +12,7 @@ import handmadeguns.entity.PlacedGunEntity;
 import handmadeguns.entity.bullets.*;
 import handmadeguns.items.*;
 import handmadeguns.network.*;
+import handmadevehicle.NanMadeException;
 import handmadevehicle.Utils;
 import handmadevehicle.entity.EntityDummy_rider;
 import handmadevehicle.entity.EntityVehicle;
@@ -996,7 +998,7 @@ public class HMGItem_Unified_Guns extends Item {
 		    iy = vec.yCoord;
 		    iz = vec.zCoord;
 		    if (entity.riddenByEntity != null) bulletBase.thrower = entity.riddenByEntity;
-		    bulletBase.setLocationAndAngles(entity.posX + ix, entity.posY + entity.getEyeHeight() + iy, entity.posZ + iz, ((PlacedGunEntity) entity).rotationYawGun, entity.rotationPitch);
+		    bulletBase.setLocationAndAngles(entity.posX + ix, entity.posY + entity.height * 0.85F + iy, entity.posZ + iz, ((PlacedGunEntity) entity).rotationYawGun, entity.rotationPitch);
 	    } else {
 		    int barrelId = nbt.getInteger("barrelId");
 		    barrelId++;
@@ -1678,7 +1680,7 @@ public class HMGItem_Unified_Guns extends Item {
                     guntemp.muzzle = gunInfo.muzzleflash;
                 }
                 if (guntemp.items[4] != null && guntemp.items[4].getItem() instanceof HMGItemAttachment_grip) {
-                    if(HandmadeGunsCore.Key_ADS(entity)){
+                    if(HandmadeGunsCore.Key_ADS(entity) || (entity instanceof EntityPlayer && entity.boundingBox.maxY - entity.boundingBox.minY < 1.5)){
                         guntemp.tempspread *= ((HMGItemAttachment_grip) guntemp.items[4].getItem()).reduceSpreadLevel_ADS;
                     }else {
                         guntemp.tempspread *= ((HMGItemAttachment_grip) guntemp.items[4].getItem()).reduceSpreadLevel;
@@ -1811,9 +1813,11 @@ public class HMGItem_Unified_Guns extends Item {
         }catch (NullPointerException e){
             e.printStackTrace();
         }
+        AttributeModifier gunMoveFactor = new AttributeModifier(gunInfo.field_110179_h,"GunMoveFactor", gunInfo.motion-1,1);
         Multimap multimap = super.getItemAttributeModifiers();
         multimap.put(SharedMonsterAttributes.attackDamage.getAttributeUnlocalizedName(), new AttributeModifier(field_111210_e, "Weapon modifier", (double) gunInfo.foruseattackDamage, 0));
-        multimap.put(SharedMonsterAttributes.movementSpeed.getAttributeUnlocalizedName(), new AttributeModifier(gunInfo.field_110179_h,"GunMoveFactor", gunInfo.motion-1,1));
+        multimap.put(SharedMonsterAttributes.movementSpeed.getAttributeUnlocalizedName(), gunMoveFactor);
+
         return multimap;
     }
     public void setmodelADSPosAndRotation(double px,double py,double pz){

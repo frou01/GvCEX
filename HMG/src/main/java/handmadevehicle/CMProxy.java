@@ -200,7 +200,6 @@ public class CMProxy {
 				} catch (IllegalAccessException e1) {
 					e1.printStackTrace();
 				}
-				e.printStackTrace();
 			} catch (IllegalAccessException e) {
 				e.printStackTrace();
 			}

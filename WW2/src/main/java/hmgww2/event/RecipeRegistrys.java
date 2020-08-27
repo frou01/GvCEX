@@ -8,7 +8,7 @@ import net.minecraft.item.ItemStack;
 
 public class RecipeRegistrys {
 
-	public static void recipe(){
+	public static void recipe() {
 		int D = Short.MAX_VALUE;
 //		GameRegistry.addRecipe(new ItemStack(mod_GVCWW2.b_magazinehg, 2),
 //				"ig",
@@ -33,33 +33,33 @@ public class RecipeRegistrys {
 //		GameRegistry.addShapelessRecipe(new ItemStack(mod_GVCWW2.b_magazine, 4), new ItemStack(mod_GVCWW2.b_magazinerpg, 1,D));
 //		GameRegistry.addShapelessRecipe(new ItemStack(mod_GVCWW2.gun_grenadet, 1), new ItemStack(mod_GVCWW2.gun_grenade, 1,D)
 //				, new ItemStack(mod_GVCWW2.gun_grenade, 1,D), new ItemStack(mod_GVCWW2.gun_grenade, 1,D), new ItemStack(mod_GVCWW2.gun_grenade, 1,D));
-		
+
 		GameRegistry.addRecipe(new ItemStack(mod_GVCWW2.armor_jpn, 1),
 				"iii",
-				"isi", 
+				"isi",
 				'i', Items.iron_ingot,
 				's', new ItemStack(Items.dye, 1, 15)
 		);
 		GameRegistry.addRecipe(new ItemStack(mod_GVCWW2.armor_usa, 1),
 				"iii",
-				"isi", 
+				"isi",
 				'i', Items.iron_ingot,
 				's', new ItemStack(Items.dye, 1, 2)
 		);
 		GameRegistry.addRecipe(new ItemStack(mod_GVCWW2.armor_ger, 1),
 				"iii",
-				"isi", 
+				"isi",
 				'i', Items.iron_ingot,
 				's', new ItemStack(Items.dye, 1, 7)
 		);
 		GameRegistry.addRecipe(new ItemStack(mod_GVCWW2.armor_rus, 1),
 				"iii",
-				"isi", 
+				"isi",
 				'i', Items.iron_ingot,
 				's', new ItemStack(Items.dye, 1, 1)
 		);
-		
-		
+
+
 //		//jpn
 //		GameRegistry.addRecipe(new ItemStack(mod_GVCWW2.gun_type38, 1),
 //				"iii",
@@ -256,115 +256,115 @@ public class RecipeRegistrys {
 		GameRegistry.addRecipe(new ItemStack(mod_GVCWW2.spawn_jpn_fighter, 1),
 				" a ",
 				"ibi",
-				" e ", 
+				" e ",
 				'a', mod_GVCWW2.armor_jpn,
 				'b', Blocks.iron_block,
 				'i', Items.iron_door,
 				'e', Items.egg
 		);
 		GameRegistry.addShapelessRecipe(new ItemStack(mod_GVCWW2.spawn_jpn_attcker, 1), new ItemStack(mod_GVCWW2.spawn_jpn_fighter, 1));
-		
+
 		//usa
-				GameRegistry.addRecipe(new ItemStack(mod_GVCWW2.spawn_usa_s, 1),
-						"a",
-						"e", 
-						'a', mod_GVCWW2.armor_usa,
-						'e', Items.egg
-				);
-				GameRegistry.addRecipe(new ItemStack(mod_GVCWW2.spawn_usa_tank, 1),
-						" a ",
-						"bbb",
-						" e ", 
-						'a', mod_GVCWW2.armor_usa,
-						'b', Blocks.iron_block,
-						'e', Items.egg
-				);
-				GameRegistry.addShapelessRecipe(new ItemStack(mod_GVCWW2.spawn_usa_tankaa, 1), new ItemStack(mod_GVCWW2.spawn_usa_tank, 1));
-				GameRegistry.addShapelessRecipe(new ItemStack(mod_GVCWW2.spawn_usa_tankspg, 1), new ItemStack(mod_GVCWW2.spawn_usa_tankaa, 1));
-				GameRegistry.addShapelessRecipe(new ItemStack(mod_GVCWW2.spawn_usa_tank, 1), new ItemStack(mod_GVCWW2.spawn_usa_tankspg, 1));
-				GameRegistry.addRecipe(new ItemStack(mod_GVCWW2.spawn_usa_fighter, 1),
-						" a ",
-						"ibi",
-						" e ", 
-						'a', mod_GVCWW2.armor_usa,
-						'b', Blocks.iron_block,
-						'i', Items.iron_door,
-						'e', Items.egg
-				);
-				GameRegistry.addShapelessRecipe(new ItemStack(mod_GVCWW2.spawn_usa_attcker, 1), new ItemStack(mod_GVCWW2.spawn_usa_fighter, 1));
-		
-				//ger
-				GameRegistry.addRecipe(new ItemStack(mod_GVCWW2.spawn_ger_s, 1),
-						"a",
-						"e", 
-						'a', mod_GVCWW2.armor_ger,
-						'e', Items.egg
-				);
-				GameRegistry.addRecipe(new ItemStack(mod_GVCWW2.spawn_ger_tank, 1),
-						" a ",
-						"bbb",
-						" e ", 
-						'a', mod_GVCWW2.armor_ger,
-						'b', Blocks.iron_block,
-						'e', Items.egg
-				);
-				GameRegistry.addShapelessRecipe(new ItemStack(mod_GVCWW2.spawn_ger_tankaa, 1), new ItemStack(mod_GVCWW2.spawn_ger_tank, 1));
-				GameRegistry.addShapelessRecipe(new ItemStack(mod_GVCWW2.spawn_ger_tankspg, 1), new ItemStack(mod_GVCWW2.spawn_ger_tankaa, 1));
-				GameRegistry.addShapelessRecipe(new ItemStack(mod_GVCWW2.spawn_ger_tank, 1), new ItemStack(mod_GVCWW2.spawn_ger_tankspg, 1));
-				GameRegistry.addRecipe(new ItemStack(mod_GVCWW2.spawn_ger_tankh, 1),
-						" a ",
-						"bbb",
-						"beb", 
-						'a', mod_GVCWW2.armor_ger,
-						'b', Blocks.iron_block,
-						'e', Items.egg
-				);
-				GameRegistry.addRecipe(new ItemStack(mod_GVCWW2.spawn_ger_fighter, 1),
-						" a ",
-						"ibi",
-						" e ", 
-						'a', mod_GVCWW2.armor_ger,
-						'b', Blocks.iron_block,
-						'i', Items.iron_door,
-						'e', Items.egg
-				);
-				GameRegistry.addShapelessRecipe(new ItemStack(mod_GVCWW2.spawn_ger_attcker, 1), new ItemStack(mod_GVCWW2.spawn_ger_fighter, 1));
-				
-				//rus
-				GameRegistry.addRecipe(new ItemStack(mod_GVCWW2.spawn_rus_s, 1),
-						"a",
-						"e", 
-						'a', mod_GVCWW2.armor_rus,
-						'e', Items.egg
-				);
-				GameRegistry.addRecipe(new ItemStack(mod_GVCWW2.spawn_rus_tank, 1),
-						" a ",
-						"bbb",
-						" e ", 
-						'a', mod_GVCWW2.armor_rus,
-						'b', Blocks.iron_block,
-						'e', Items.egg
-				);
-				GameRegistry.addShapelessRecipe(new ItemStack(mod_GVCWW2.spawn_rus_tankaa, 1), new ItemStack(mod_GVCWW2.spawn_rus_tank, 1));
-				GameRegistry.addShapelessRecipe(new ItemStack(mod_GVCWW2.spawn_rus_tankspg, 1), new ItemStack(mod_GVCWW2.spawn_rus_tankaa, 1));
-				GameRegistry.addShapelessRecipe(new ItemStack(mod_GVCWW2.spawn_rus_tank, 1), new ItemStack(mod_GVCWW2.spawn_rus_tankspg, 1));
-				GameRegistry.addRecipe(new ItemStack(mod_GVCWW2.spawn_rus_tankh, 1),
-						" a ",
-						"bbb",
-						"beb", 
-						'a', mod_GVCWW2.armor_rus,
-						'b', Blocks.iron_block,
-						'e', Items.egg
-				);
-				GameRegistry.addRecipe(new ItemStack(mod_GVCWW2.spawn_rus_fighter, 1),
-						" a ",
-						"ibi",
-						" e ", 
-						'a', mod_GVCWW2.armor_rus,
-						'b', Blocks.iron_block,
-						'i', Items.iron_door,
-						'e', Items.egg
-				);
-				GameRegistry.addShapelessRecipe(new ItemStack(mod_GVCWW2.spawn_rus_attcker, 1), new ItemStack(mod_GVCWW2.spawn_rus_fighter, 1));
+		GameRegistry.addRecipe(new ItemStack(mod_GVCWW2.spawn_usa_s, 1),
+				"a",
+				"e",
+				'a', mod_GVCWW2.armor_usa,
+				'e', Items.egg
+		);
+		GameRegistry.addRecipe(new ItemStack(mod_GVCWW2.spawn_usa_tank, 1),
+				" a ",
+				"bbb",
+				" e ",
+				'a', mod_GVCWW2.armor_usa,
+				'b', Blocks.iron_block,
+				'e', Items.egg
+		);
+		GameRegistry.addShapelessRecipe(new ItemStack(mod_GVCWW2.spawn_usa_tankaa, 1), new ItemStack(mod_GVCWW2.spawn_usa_tank, 1));
+		GameRegistry.addShapelessRecipe(new ItemStack(mod_GVCWW2.spawn_usa_tankspg, 1), new ItemStack(mod_GVCWW2.spawn_usa_tankaa, 1));
+		GameRegistry.addShapelessRecipe(new ItemStack(mod_GVCWW2.spawn_usa_tank, 1), new ItemStack(mod_GVCWW2.spawn_usa_tankspg, 1));
+		GameRegistry.addRecipe(new ItemStack(mod_GVCWW2.spawn_usa_fighter, 1),
+				" a ",
+				"ibi",
+				" e ",
+				'a', mod_GVCWW2.armor_usa,
+				'b', Blocks.iron_block,
+				'i', Items.iron_door,
+				'e', Items.egg
+		);
+		GameRegistry.addShapelessRecipe(new ItemStack(mod_GVCWW2.spawn_usa_attcker, 1), new ItemStack(mod_GVCWW2.spawn_usa_fighter, 1));
+
+		//ger
+		GameRegistry.addRecipe(new ItemStack(mod_GVCWW2.spawn_ger_s, 1),
+				"a",
+				"e",
+				'a', mod_GVCWW2.armor_ger,
+				'e', Items.egg
+		);
+		GameRegistry.addRecipe(new ItemStack(mod_GVCWW2.spawn_ger_tank, 1),
+				" a ",
+				"bbb",
+				" e ",
+				'a', mod_GVCWW2.armor_ger,
+				'b', Blocks.iron_block,
+				'e', Items.egg
+		);
+		GameRegistry.addShapelessRecipe(new ItemStack(mod_GVCWW2.spawn_ger_tankaa, 1), new ItemStack(mod_GVCWW2.spawn_ger_tank, 1));
+		GameRegistry.addShapelessRecipe(new ItemStack(mod_GVCWW2.spawn_ger_tankspg, 1), new ItemStack(mod_GVCWW2.spawn_ger_tankaa, 1));
+		GameRegistry.addShapelessRecipe(new ItemStack(mod_GVCWW2.spawn_ger_tank, 1), new ItemStack(mod_GVCWW2.spawn_ger_tankspg, 1));
+		GameRegistry.addRecipe(new ItemStack(mod_GVCWW2.spawn_ger_tankh, 1),
+				" a ",
+				"bbb",
+				"beb",
+				'a', mod_GVCWW2.armor_ger,
+				'b', Blocks.iron_block,
+				'e', Items.egg
+		);
+		GameRegistry.addRecipe(new ItemStack(mod_GVCWW2.spawn_ger_fighter, 1),
+				" a ",
+				"ibi",
+				" e ",
+				'a', mod_GVCWW2.armor_ger,
+				'b', Blocks.iron_block,
+				'i', Items.iron_door,
+				'e', Items.egg
+		);
+		GameRegistry.addShapelessRecipe(new ItemStack(mod_GVCWW2.spawn_ger_attcker, 1), new ItemStack(mod_GVCWW2.spawn_ger_fighter, 1));
+
+		//rus
+		GameRegistry.addRecipe(new ItemStack(mod_GVCWW2.spawn_rus_s, 1),
+				"a",
+				"e",
+				'a', mod_GVCWW2.armor_rus,
+				'e', Items.egg
+		);
+		GameRegistry.addRecipe(new ItemStack(mod_GVCWW2.spawn_rus_tank, 1),
+				" a ",
+				"bbb",
+				" e ",
+				'a', mod_GVCWW2.armor_rus,
+				'b', Blocks.iron_block,
+				'e', Items.egg
+		);
+		GameRegistry.addShapelessRecipe(new ItemStack(mod_GVCWW2.spawn_rus_tankaa, 1), new ItemStack(mod_GVCWW2.spawn_rus_tank, 1));
+		GameRegistry.addShapelessRecipe(new ItemStack(mod_GVCWW2.spawn_rus_tankspg, 1), new ItemStack(mod_GVCWW2.spawn_rus_tankaa, 1));
+		GameRegistry.addShapelessRecipe(new ItemStack(mod_GVCWW2.spawn_rus_tank, 1), new ItemStack(mod_GVCWW2.spawn_rus_tankspg, 1));
+		GameRegistry.addRecipe(new ItemStack(mod_GVCWW2.spawn_rus_tankh, 1),
+				" a ",
+				"bbb",
+				"beb",
+				'a', mod_GVCWW2.armor_rus,
+				'b', Blocks.iron_block,
+				'e', Items.egg
+		);
+		GameRegistry.addRecipe(new ItemStack(mod_GVCWW2.spawn_rus_fighter, 1),
+				" a ",
+				"ibi",
+				" e ",
+				'a', mod_GVCWW2.armor_rus,
+				'b', Blocks.iron_block,
+				'i', Items.iron_door,
+				'e', Items.egg
+		);
+		GameRegistry.addShapelessRecipe(new ItemStack(mod_GVCWW2.spawn_rus_attcker, 1), new ItemStack(mod_GVCWW2.spawn_rus_fighter, 1));
 	}
 }

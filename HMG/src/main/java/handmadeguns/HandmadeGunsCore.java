@@ -28,6 +28,7 @@ import handmadeguns.event.RenderTickSmoothing;
 import handmadeguns.items.HMGItemBullet;
 import handmadeguns.items.guns.HMGItem_Unified_Guns;
 import net.minecraft.block.Block;
+import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraftforge.client.model.ModelFormatException;
 import org.apache.commons.io.FileUtils;
 
@@ -61,6 +62,7 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
+import static handmadeguns.client.render.HMGRenderItemGun_U_NEW.isentitysprinting;
 
 
 @Mod(
@@ -102,6 +104,7 @@ public class HandmadeGunsCore {
 	public static boolean cfg_forceunifiedguns = true;
 
 	public static int cfg_ADS_Sneaking;
+	public static boolean cfg_ADS_Toggle;
 	public static String cfg_Avoid_Hit_Entitys;
 	public static boolean cfg_ThreadHitCheck;
 	public static int cfg_ThreadHitCheck_split_length;
@@ -174,6 +177,7 @@ public class HandmadeGunsCore {
 		cfg_Cartridgetime	= lconf.get("Cartridge", "cfg_Cartridgetime", 200).getInt(200);
 		cfg_muzzleflash	= lconf.get("Gun", "cfg_MuzzleFlash", true).getBoolean(true);
 		cfg_ADS_Sneaking	= lconf.get("Gun", "cfg_ADS_Sneaking",  0).getInt(0);
+		cfg_ADS_Toggle	= lconf.get("Gun", "cfg_ADS_Sneaking",  false).getBoolean(false);
 		cfg_blockdestroy = lconf.get("Gun", "cfg_blockdestroy",  true).getBoolean(true);
 		cfg_Avoid_Hit_Entitys = lconf.getString("Gun", "cfg_AvoidHit",  "","");
 		cfg_ThreadHitCheck = lconf.get("Gun", "cfg_ThreadHitCheck", true).getBoolean(true);
@@ -713,13 +717,18 @@ public class HandmadeGunsCore {
 					&& !((EntityPlayer) entityplayer).getHeldItem().getTagCompound().getBoolean("Cocking")){
 				return false;
 			}
+			boolean flag;
 			if(cfg_ADS_Sneaking == 1){
-				return HMG_proxy.ADSclick();
+				flag = HMG_proxy.ADSclick();
 			}else if(cfg_ADS_Sneaking == 2) {
-				return entityplayer.isSneaking();
+				flag = entityplayer.isSneaking();
 			}else{
-				return HMG_proxy.ADSclick() || entityplayer.isSneaking();
+				flag = HMG_proxy.ADSclick() || entityplayer.isSneaking();
 			}
+
+			if(HMG_proxy.ADSclick() && HMG_proxy.getEntityPlayerInstance() == entityplayer &&
+					!isentitysprinting(HMG_proxy.getEntityPlayerInstance()))((EntityClientPlayerMP) HMG_proxy.getEntityPlayerInstance()).movementInput.sneak = true;
+			return flag;
 		}else if(entityplayer instanceof PlacedGunEntity){
 			return true;
 		}else{
@@ -761,7 +770,7 @@ public class HandmadeGunsCore {
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event)
 	{
-		System.out.println("debug");
+//		System.out.println("debug");
 		islmmloaded = Loader.isModLoaded("lmmx");
 		isgvcloaded = Loader.isModLoaded("GVCMob");
 

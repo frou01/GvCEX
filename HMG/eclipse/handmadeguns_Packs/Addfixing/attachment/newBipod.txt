@@ -1,4 +1,4 @@
-﻿
+
 Texture,bipod
 Name,バイポッド
 Model,true

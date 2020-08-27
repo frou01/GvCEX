@@ -1,0 +1,9 @@
+ObjModel,mk82_Forbullet.mqo
+ObjTexture,mk8x.png
+Objscale,1
+FlyingSoundName,bombdrops
+FlyingSoundLV,4
+FlyingSoundSP,1
+FlyingSoundmaxdist,1024
+FlyingSound_BulletMinSpeed,0.1
+Name,Mk82

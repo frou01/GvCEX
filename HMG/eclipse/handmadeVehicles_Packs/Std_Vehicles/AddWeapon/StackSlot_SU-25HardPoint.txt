@@ -5,7 +5,7 @@ cannonPos,0,0,0
 turretspeedY,0
 turretspeedP,0
 linked_MotherTrigger,true
-fireAll_child,true
+salvo_fire_child,true
 //トリガーは親に連動
 //斉射式
 positionLinked,false
@@ -14,6 +14,6 @@ canReloadAirBone,false
 
 needGunStack,true
 useVehicleInventory,true
-gunStackwhitelist,R-3,UB-32,UPK-23,FAB-250
+gunStackwhitelist,R-73,UB-32,UPK-23,FAB-250
 
 End

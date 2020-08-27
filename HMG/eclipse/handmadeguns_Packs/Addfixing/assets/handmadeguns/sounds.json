@@ -31,5 +31,7 @@
   "handmadeguns.9k38Launch": {"category": "neutral","sounds": ["9k38Launch"]},
   "handmadeguns.9k38Lock": {"category": "neutral","sounds": ["9k38Lock"]},
   "handmadeguns.missileLockOn": {"category": "neutral","sounds": ["missileLockOn"]},
+  "handmadeguns.81Motar": {"category": "neutral","sounds": ["81Motar"]},
+  "handmadeguns.155mm_Fire": {"category": "neutral","sounds": ["155mm_Fire"]},
   "handmadeguns.nulls": {"category": "neutral","sounds": ["nulls"]}
 }

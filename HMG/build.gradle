@@ -6,7 +6,7 @@ tasks.withType(Jar) {
     compileApiJava.options.encoding = 'UTF-8'
 }
 dependencies {
-    compile project(':Depend')
+    compile project(':depend')
     compile fileTree(dir: 'lib', include: '*.jar')
     compile 'javax.vecmath:vecmath:1.5.2'
 }

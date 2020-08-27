@@ -35,7 +35,7 @@ rollspeed,0.04;
 pitchspeed,0.017;
 off_road_followability,3;
 soundname,handmadevehicle:handmadevehicle.SU-25;
-soundpitch,2.5;
+soundpitch,1.5;
 //•‘•’Ç‰Á;
 autoflap,false;
 boundingBoxSizeX,3;

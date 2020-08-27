@@ -1,8 +1,5 @@
 package hmgww2.blocks.tile;
 
-import java.util.List;
-import java.util.Random;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import hmgww2.Nation;
@@ -21,6 +18,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 
+import java.util.List;
+import java.util.Random;
+
 import static hmgww2.mod_GVCWW2.*;
 
 /*
@@ -31,89 +31,88 @@ import static hmgww2.mod_GVCWW2.*;
  * ただしこのクラス内で行われた処理やデータは基本的にサーバ側にしかないので、
  * 同期処理についてよく考えて実装する必要があります。
  */
-public class TileEntityBase extends TileEntity
-{
+public class TileEntityBase extends TileEntity {
 	private int invasion;
 	public boolean spawn = true;
-	
+
 	//public int mobkazu;
 	//public int soldierkazu;
 	//public int vkazu;
-	
+
 	public int ticks;
 	public int maxs = 30;
 	public int spawntime = 600;
-	public int[] spawnoffset = {0,0,0};
+	public int[] spawnoffset = {0, 0, 0};
 	public int flagRange = 15;
-	
+
 	Random rnd = new Random();
-	
+
 	public Nation nation;
 	public FlagType flagType;
-	
-	
-	public TileEntityBase(){
-	
+
+
+	public TileEntityBase() {
+
 	}
-	
-	public TileEntityBase(Nation nation,FlagType flagType,int maxs,int spawntime){
+
+	public TileEntityBase(Nation nation, FlagType flagType, int maxs, int spawntime) {
 		this.nation = nation;
 		this.flagType = flagType;
 		this.maxs = maxs;
 		this.spawntime = spawntime;
 		ticks = spawntime;
 	}
-	public TileEntityBase(Nation nation,FlagType flagType,int maxs,int spawntime,int[] offset,int range){
-		this(nation,flagType,maxs,spawntime);
+
+	public TileEntityBase(Nation nation, FlagType flagType, int maxs, int spawntime, int[] offset, int range) {
+		this(nation, flagType, maxs, spawntime);
 		spawnoffset = offset;
 		flagRange = range;
 	}
-	
+
 	NationEntityList USAlist = new NationEntityList(new Class[]{EntityUSA_S.class},
-			                                               new Class[]{EntityUSA_S.class,EntityUSA_Tank.class,EntityUSA_TankAA.class,EntityUSA_TankSPG.class},
-			                                               new Class[]{EntityUSA_S.class,EntityUSA_TankAA.class,
-					                                               EntityUSA_Fighter.class,EntityUSA_FighterA.class,
-					                                               EntityUSA_Fighter.class,
-					                                               EntityUSA_Fighter.class,
-					                                               EntityUSA_Fighter.class,
-					                                               EntityUSA_Tank.class},
-			                                               new Class[]{EntityUSA_S.class,EntityUSA_S.class,EntityUSA_S.class,EntityUSA_ShipD.class},
-			                                               new Class[]{EntityUSA_S.class,EntityUSA_S.class,EntityUSA_S.class,EntityUSA_Tank.class});
-	
+			new Class[]{EntityUSA_S.class, EntityUSA_Tank.class, EntityUSA_TankAA.class, EntityUSA_TankSPG.class},
+			new Class[]{EntityUSA_S.class, EntityUSA_TankAA.class,
+					EntityUSA_Fighter.class, EntityUSA_FighterA.class,
+					EntityUSA_Fighter.class,
+					EntityUSA_Fighter.class,
+					EntityUSA_Fighter.class,
+					EntityUSA_Tank.class},
+			new Class[]{EntityUSA_S.class, EntityUSA_S.class, EntityUSA_S.class, EntityUSA_ShipD.class},
+			new Class[]{EntityUSA_S.class, EntityUSA_S.class, EntityUSA_S.class, EntityUSA_Tank.class});
+
 	NationEntityList USSRlist = new NationEntityList(new Class[]{EntityUSSR_S.class},
-			                                                new Class[]{EntityUSSR_S.class,EntityUSSR_Tank.class,EntityUSSR_TankAA.class,EntityUSSR_TankSPG.class,EntityUSSR_TankH.class},
-			                                                new Class[]{EntityUSSR_S.class,EntityUSSR_TankAA.class,
-					                                                EntityUSSR_Fighter.class,EntityUSSR_FighterA.class,
-					                                                EntityUSSR_Fighter.class,
-					                                                EntityUSSR_Fighter.class,
-					                                                EntityUSSR_Fighter.class,
-					                                                EntityUSSR_Tank.class},
-			                                                new Class[]{EntityUSSR_S.class,EntityUSSR_S.class,EntityUSSR_S.class,EntityUSSR_TankH.class},
-			                                                new Class[]{EntityUSSR_S.class,EntityUSSR_S.class,EntityUSSR_S.class,EntityUSSR_Tank.class});
+			new Class[]{EntityUSSR_S.class, EntityUSSR_Tank.class, EntityUSSR_TankAA.class, EntityUSSR_TankSPG.class, EntityUSSR_TankH.class},
+			new Class[]{EntityUSSR_S.class, EntityUSSR_TankAA.class,
+					EntityUSSR_Fighter.class, EntityUSSR_FighterA.class,
+					EntityUSSR_Fighter.class,
+					EntityUSSR_Fighter.class,
+					EntityUSSR_Fighter.class,
+					EntityUSSR_Tank.class},
+			new Class[]{EntityUSSR_S.class, EntityUSSR_S.class, EntityUSSR_S.class, EntityUSSR_TankH.class},
+			new Class[]{EntityUSSR_S.class, EntityUSSR_S.class, EntityUSSR_S.class, EntityUSSR_Tank.class});
 	NationEntityList GERlist = new NationEntityList(new Class[]{EntityGER_S.class},
-			                                               new Class[]{EntityGER_S.class,EntityGER_Tank.class,EntityGER_TankAA.class,EntityGER_TankSPG.class,EntityGER_TankH.class},
-			                                               new Class[]{EntityGER_S.class,EntityGER_TankAA.class,
-					                                               EntityGER_Fighter.class,EntityGER_FighterA.class,
-					                                               EntityGER_Fighter.class,
-					                                               EntityGER_Fighter.class,
-					                                               EntityGER_Fighter.class,
-					                                               EntityGER_Tank.class},
-			                                               new Class[]{EntityGER_S.class,EntityGER_S.class,EntityGER_S.class,EntityGER_ShipSUB.class},
-			                                               new Class[]{EntityGER_S.class,EntityGER_S.class,EntityGER_S.class,EntityGER_Tank.class});
+			new Class[]{EntityGER_S.class, EntityGER_Tank.class, EntityGER_TankAA.class, EntityGER_TankSPG.class, EntityGER_TankH.class},
+			new Class[]{EntityGER_S.class, EntityGER_TankAA.class,
+					EntityGER_Fighter.class, EntityGER_FighterA.class,
+					EntityGER_Fighter.class,
+					EntityGER_Fighter.class,
+					EntityGER_Fighter.class,
+					EntityGER_Tank.class},
+			new Class[]{EntityGER_S.class, EntityGER_S.class, EntityGER_S.class, EntityGER_ShipSUB.class},
+			new Class[]{EntityGER_S.class, EntityGER_S.class, EntityGER_S.class, EntityGER_Tank.class});
 	NationEntityList JPNlist = new NationEntityList(new Class[]{EntityJPN_S.class},
-			                                               new Class[]{EntityJPN_S.class,EntityJPN_Tank.class,/*EntityJPN_TankAA.class,*/EntityJPN_TankSPG.class},
-			                                               new Class[]{EntityJPN_S.class,/*EntityJPN_TankAA.class,*/
-					                                               EntityJPN_Fighter.class,EntityJPN_FighterA.class,
-					                                               EntityJPN_Fighter.class,
-					                                               EntityJPN_Fighter.class,
-					                                               EntityJPN_Fighter.class,
-					                                               EntityJPN_Tank.class},
-			                                               new Class[]{EntityJPN_S.class,EntityJPN_S.class,EntityJPN_S.class,EntityJPN_ShipD.class},
-			                                               new Class[]{EntityJPN_S.class,EntityJPN_S.class,EntityJPN_S.class,EntityJPN_Tank.class});
-	
-	
-	public void readFromNBT(NBTTagCompound par1NBTTagCompound)
-	{
+			new Class[]{EntityJPN_S.class, EntityJPN_Tank.class,/*EntityJPN_TankAA.class,*/EntityJPN_TankSPG.class},
+			new Class[]{EntityJPN_S.class,/*EntityJPN_TankAA.class,*/
+					EntityJPN_Fighter.class, EntityJPN_FighterA.class,
+					EntityJPN_Fighter.class,
+					EntityJPN_Fighter.class,
+					EntityJPN_Fighter.class,
+					EntityJPN_Tank.class},
+			new Class[]{EntityJPN_S.class, EntityJPN_S.class, EntityJPN_S.class, EntityJPN_ShipD.class},
+			new Class[]{EntityJPN_S.class, EntityJPN_S.class, EntityJPN_S.class, EntityJPN_Tank.class});
+
+
+	public void readFromNBT(NBTTagCompound par1NBTTagCompound) {
 		super.readFromNBT(par1NBTTagCompound);
 		setInvasionSet(par1NBTTagCompound.getInteger("InvasionSet"));
 		this.spawn = par1NBTTagCompound.getBoolean("SpawnSoldier");
@@ -125,9 +124,8 @@ public class TileEntityBase extends TileEntity
 		this.spawnoffset[1] = par1NBTTagCompound.getInteger("spawnoffset2");
 		this.spawnoffset[2] = par1NBTTagCompound.getInteger("spawnoffset3");
 	}
-	
-	public void writeToNBT(NBTTagCompound par1NBTTagCompound)
-	{
+
+	public void writeToNBT(NBTTagCompound par1NBTTagCompound) {
 		super.writeToNBT(par1NBTTagCompound);
 		par1NBTTagCompound.setInteger("InvasionSet", getInvasion());
 		par1NBTTagCompound.setBoolean("SpawnSoldier", spawn);
@@ -139,32 +137,31 @@ public class TileEntityBase extends TileEntity
 		par1NBTTagCompound.setInteger("spawnoffset2", spawnoffset[1]);
 		par1NBTTagCompound.setInteger("spawnoffset3", spawnoffset[2]);
 	}
-	
+
 	/*
-		* パケットの送信・受信処理。
-		* カスタムパケットは使わず、バニラのパケット送受信処理を使用。
-		*/
+	 * パケットの送信・受信処理。
+	 * カスタムパケットは使わず、バニラのパケット送受信処理を使用。
+	 */
 	@Override
 	public Packet getDescriptionPacket() {
 		NBTTagCompound nbtTagCompound = new NBTTagCompound();
 		this.writeToNBT(nbtTagCompound);
 		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 1, nbtTagCompound);
 	}
-	
+
 	@Override
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
 		this.readFromNBT(pkt.func_148857_g());
 	}/**/
-	
-	
-	public void updateEntity()
-	{
+
+
+	public void updateEntity() {
 		super.updateEntity();
 		{
 			Block nowBlock = worldObj.getBlock(xCoord,
 					yCoord,
 					zCoord);
-			
+
 			Block must_block = null;
 			switch (flagType) {
 				case Barrack:
@@ -182,19 +179,19 @@ public class TileEntityBase extends TileEntity
 				case Fort:
 					break;
 			}
-			if(nowBlock != must_block){
+			if (nowBlock != must_block) {
 				worldObj.setBlock(xCoord,
 						yCoord,
-						zCoord,must_block);
+						zCoord, must_block);
 			}
 		}
-		
-		if(!worldObj.isRemote) {
+
+		if (!worldObj.isRemote) {
 			++ticks;
 			int k = xCoord;
 			int l = yCoord;
 			int i = zCoord;
-			
+
 			WW2PacketFlagSync packetFlagSync = new WW2PacketFlagSync();
 			packetFlagSync.x = xCoord;
 			packetFlagSync.y = yCoord;
@@ -205,7 +202,7 @@ public class TileEntityBase extends TileEntity
 			AxisAlignedBB axisalignedbb2 = AxisAlignedBB.getBoundingBox(
 					(double) (k), (double) (l), (double) (i),
 					(double) (k), (double) (l + 1), (double) (i))
-					                               .expand(flagRange, 128, flagRange);
+					.expand(flagRange, 128, flagRange);
 			List llist1 = this.worldObj.getEntitiesWithinAABBExcludingEntity(null, axisalignedbb2);
 			int nearEnemySize = 0;
 			int[] solSize_nation = new int[4];
@@ -226,7 +223,7 @@ public class TileEntityBase extends TileEntity
 				}
 			}
 			if ((ticks >= spawntime) && spawn) {//周辺の兵士の数がスポーン最大数以下ならスポーン処理
-				if((nearEnemySize <= 0 || nearEnemySize < nearAlliesSize) && nearAlliesSize + nearEnemySize < maxs){
+				if ((nearEnemySize <= 0 || nearEnemySize < nearAlliesSize) && nearAlliesSize + nearEnemySize < maxs) {
 					NationEntityList nationEntityList = null;
 					switch (nation) {
 						case USA: {
@@ -269,7 +266,7 @@ public class TileEntityBase extends TileEntity
 							EntityBases entity_willSpawn = (EntityBases) classes[rnd.nextInt(classes.length)].getConstructor(World.class).newInstance(worldObj);
 							int ix = rnd.nextInt(10) - 5 + spawnoffset[0];
 							int iz = rnd.nextInt(10) - 5 + spawnoffset[1];
-							int iy = (entity_willSpawn instanceof EntityBases_Plane ?60:0) + spawnoffset[2];
+							int iy = (entity_willSpawn instanceof EntityBases_Plane ? 60 : 0) + spawnoffset[2];
 							entity_willSpawn.setLocationAndAngles(this.xCoord + ix, this.yCoord + iy, this.zCoord + 0.5 + iz, rnd.nextInt(360) - 180, 0.0F);
 							{//search flag
 								double disttoflag = -1;
@@ -285,7 +282,7 @@ public class TileEntityBase extends TileEntity
 											targetflag = temptile;
 										}
 									}
-									
+
 								}
 								(entity_willSpawn).mode = 1;
 								if (targetflag != null && rnd.nextBoolean()) {
@@ -298,11 +295,11 @@ public class TileEntityBase extends TileEntity
 									(entity_willSpawn).homeposZ = (int) this.zCoord;
 								}
 							}
-							
+
 							entity_willSpawn.addRandomArmor();
 							worldObj.spawnEntityInWorld(entity_willSpawn);
 						}
-						
+
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -336,11 +333,11 @@ public class TileEntityBase extends TileEntity
 //					}
 //				}
 //			}
-				}else {
+				} else {
 					ticks = 0;
 				}
 			}
-			
+
 			if (nearEnemySize == 0) {
 				this.setInvasionSet(0);
 			} else if (nearAlliesSize > nearEnemySize) {
@@ -384,33 +381,30 @@ public class TileEntityBase extends TileEntity
 			}
 		}
 	}
-	
+
 	public int getInvasion() {
 		return invasion;
 	}
-	
+
 	public void setInvasionSet(int i) {
 		this.invasion = i;
 	}
-	
-	
-	public Nation getnation(){
+
+
+	public Nation getnation() {
 		return nation;
 	}
-	
+
 	@SideOnly(Side.CLIENT)
-	public AxisAlignedBB getRenderBoundingBox()
-	{
+	public AxisAlignedBB getRenderBoundingBox() {
 		AxisAlignedBB bb = INFINITE_EXTENT_AABB;
 		Block type = getBlockType();
-		if (type != null && type != Blocks.beacon)
-		{
+		if (type != null && type != Blocks.beacon) {
 			AxisAlignedBB cbb = type.getCollisionBoundingBoxFromPool(worldObj, xCoord, yCoord, zCoord);
-			if (cbb != null)
-			{
+			if (cbb != null) {
 				bb = cbb;
 			}
-			bb = bb.expand(3,3,3);
+			bb = bb.expand(3, 3, 3);
 		}
 		return bb;
 	}

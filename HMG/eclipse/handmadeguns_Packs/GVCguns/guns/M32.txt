@@ -1,7 +1,9 @@
 BulletPower,10
 bulletFuse,40
-BulletSpeed,3.0f
+BulletSpeed,0.8f
 BlletSpread,7.0f
+BlletSpreadDiffusion,10,0,1.8,0.2,3,0.6
+Cycle,10
 Recoil,1.5d
 ReloadTime,80
 RemainingBullet,6

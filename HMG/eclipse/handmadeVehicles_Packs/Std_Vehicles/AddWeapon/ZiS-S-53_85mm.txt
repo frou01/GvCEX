@@ -20,7 +20,7 @@ BulletSpread,1
 ReloadTime,100
 RemainingBullet,1
 Magazine,0,HandmadeGuns,ZiS-S-53Ammo
-Rates,4
+Rates,12
 GunSound_FullName,handmadevehicle:handmadevehicle.zis-5-85mm,handmadevehicle:handmadevehicle.zis-5-85mm
 SoundSpeed,1
 GunSoundLV,8,8

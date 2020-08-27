@@ -31,5 +31,8 @@
  "handmadevehicle.SU-25": {"category":"ambient","sounds": ["SU-25"]},
  "handmadevehicle.23mmFire": {"category": "neutral","sounds": ["23mmFire"]},
  "handmadevehicle.23mmFire_3r": {"category": "neutral","sounds": ["23mmFire_3r"]},
+ "handmadevehicle.F-5AEngine": {"category": "neutral","sounds": ["F-5AEngine"]},
+ "handmadevehicle.F-5AEngineAF": {"category": "neutral","sounds": ["F-5AEngineAF"]},
+ "handmadevehicle.Tube_missileLauch": {"category": "neutral","sounds": ["Tube_missileLauch"]},
  "handmadevehicle.nulls": {"category":"ambient","sounds": ["nulls"]}
 }

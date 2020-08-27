@@ -46,6 +46,7 @@ userProtect_maxDamageLevel,0,-1;
 userProtect_maxDamageLevel,1,0;
 
 zoomLevel,0,4;
+sightTex,handmadevehicle:textures/misc/1G46.png;
 
 //userProtect_maxDamageLevel,0,-1;
 userProtect_maxDamageLevel,0,-1;

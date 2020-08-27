@@ -7,7 +7,6 @@ turretspeedY,2
 turretspeedP,1
 syncTurretAngle,true
 Recoil,100
-traverseSound,handmadevehicle:handmadevehicle.T-34traverse
 linked_MotherTrigger,false
 turretanglelimtPitchMax,5
 turretanglelimtPitchmin,-20
@@ -19,9 +18,9 @@ guntype,3
 BulletSpread,1
 ReloadTime,100
 RemainingBullet,1
-Magazine,0,HandmadeGuns,ZiS-S-53Ammo
+Magazine,0,HandmadeGuns,7.5cm_KwK_40_Ammo
 Rates,4
-GunSound_FullName,handmadevehicle:handmadevehicle.zis-5-85mm,handmadevehicle:handmadevehicle.zis-5-85mm
+GunSound_FullName,handmadevehicle:handmadevehicle.75mmfire,handmadevehicle:handmadevehicle.75mmfire
 SoundSpeed,1
 GunSoundLV,8,8
 GunSoundReload_FullPath,handmadevehicle:handmadevehicle.CannonLoad

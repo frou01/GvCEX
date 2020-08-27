@@ -11,16 +11,17 @@ import static handmadeguns.HandmadeGunsCore.HMG_proxy;
 
 public class WW2HandleFlagSync implements IMessageHandler<WW2PacketFlagSync, IMessage> {
 	@Override
-	public IMessage onMessage(WW2PacketFlagSync message, MessageContext messageContext) {World world;
+	public IMessage onMessage(WW2PacketFlagSync message, MessageContext messageContext) {
+		World world;
 //        System.out.println("debug");
-		if(messageContext.side.isServer()) {
+		if (messageContext.side.isServer()) {
 			world = messageContext.getServerHandler().playerEntity.worldObj;
-		}else{
+		} else {
 			world = HMG_proxy.getCilentWorld();
 		}
-		if(world!=null){
-			TileEntity tile = world.getTileEntity(message.x,message.y,message.z);
-			if(tile instanceof TileEntityBase){
+		if (world != null) {
+			TileEntity tile = world.getTileEntity(message.x, message.y, message.z);
+			if (tile instanceof TileEntityBase) {
 				((TileEntityBase) tile).setInvasionSet(message.inv);
 				((TileEntityBase) tile).nation = message.nation;
 			}

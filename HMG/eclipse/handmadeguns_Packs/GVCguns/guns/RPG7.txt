@@ -1,9 +1,10 @@
 BulletPower,300
-BulletSpeed,4
+BulletSpeed,1
 BlletSpread,10.0f
 ADS_Spread_coefficient,0.5
 BlletSpreadDiffusion,10,0,1.8,0.2,3,0.6
-Acceleration,0.25f
+Acceleration,0.15f
+resistance,0.9f
 Recoil,2.0d
 ReloadTime,50
 RemainingBullet,1
@@ -30,7 +31,7 @@ Motion,0.9
 ModelEquipped,-0.7f,0.7f,1.0f
 ModelHigh,0.775f,0.50f,0.85f
 ModelWidthX,0.694f,0.694f,0.694f
-ModelWidthZ,-2.3,-2.3,-2.3
+ModelWidthZ,1.2f,1.2f,1.2f
 ModelRotationX,180f,180f,180f
 ModelRotationY,45f,45f,45
 ModelRotationZ,180f,180f,180f

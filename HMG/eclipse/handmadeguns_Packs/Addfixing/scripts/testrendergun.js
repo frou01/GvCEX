@@ -41,5 +41,9 @@ function GUI_rendering_2D(ins , gunItem , gunstack){
 function GUI_rendering_3D(ins , gunItem , gunstack){
 	return true;//これをtrueにすると通常のマーカー/スコープテクスチャが消える
 }
+function init(event){
+}
+function postInit(event){
+}
 function preInit(event){
 }

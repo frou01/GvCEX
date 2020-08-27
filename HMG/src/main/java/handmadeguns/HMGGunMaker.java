@@ -82,7 +82,7 @@ public class HMGGunMaker {
 		float   armoffsetyl;
 		float   armoffsetzl;
 		float   nox = -1.4F;
-		float   noy = 0.7f;
+		float   noy = -1.1f;
 		float   noz = 0;
 		float[] thirdGunOffset = {0,0,0};
 		float   eqrotax = 0;
@@ -958,7 +958,7 @@ public class HMGGunMaker {
 									else if(check instanceof HMGItem_Unified_Guns){
 										newgun = (HMGItem_Unified_Guns) check;
 									}
-									System.out.println("debug loading " + newgun.getUnlocalizedName());
+//									System.out.println("debug loading " + newgun.getUnlocalizedName());
 								}catch (Exception e){
 									System.out.println("Warning! Error!" + newgun.getUnlocalizedName());
 									e.printStackTrace();
@@ -1456,90 +1456,60 @@ public class HMGGunMaker {
 								}
 							}
 
-							System.out.println("AddRecipe----------------------------------------------------------------------------------------------------------------------------");
-							for(int count = 0; count < itemlist.size() ; count++){
-								System.out.println("Item [" + count + "] : " + (Object)itemlist.get(count));
-							}
-							if(!recipeType) {
-								switch (isfixationrecipe) {
-									case 0:
-										System.out.println("Recipe1 : " + String.valueOf(new char[]{rf[0], rf[1], rf[2]}));
-										System.out.println("Recipe2 : " + String.valueOf(new char[]{rf[3], rf[4], rf[5]}));
-										System.out.println("Recipe3 : " + String.valueOf(new char[]{rf[6], rf[7], rf[8]}));
-										break;
-									case 1:
-										System.out.println("Recipe1 : " + String.valueOf(new char[]{rf[0], rf[1]}));
-										System.out.println("Recipe2 : " + String.valueOf(new char[]{rf[2], rf[3]}));
-										break;
-								}
-							}else {
-								System.out.println("Recipe1 : " + pattern[0]);
-								System.out.println("Recipe2 : " + pattern[1]);
-								System.out.println("Recipe3 : " + pattern[2]);
-							}
 
-							System.out.println(new ItemStack(GameRegistry.findItem(itemids[0], itemids[1]), parseInt(itemids[3]), parseInt(itemids[2])));
 
 							if(isfixationrecipe == 0){
-								try{
-									if(recipeType){
-										GameRegistry.addRecipe(
-												new ItemStack(GameRegistry.findItem(itemids[0], itemids[1]), parseInt(itemids[3]), parseInt(itemids[2])),
-												pattern[0],pattern[1],pattern[2],
-												'A', itemlist.get(0),
-												'B', itemlist.get(1),
-												'C', itemlist.get(2),
-												'D', itemlist.get(3),
-												'E', itemlist.get(4),
-												'F', itemlist.get(5),
-												'G', itemlist.get(6),
-												'H', itemlist.get(7),
-												'I', itemlist.get(8)
-										);
-									}else {
-										GameRegistry.addRecipe(
-												new ItemStack(GameRegistry.findItem(itemids[0], itemids[1]), parseInt(itemids[3]), parseInt(itemids[2])),
-												String.valueOf(new char[]{rf[0], rf[1], rf[2]}),
-												String.valueOf(new char[]{rf[3], rf[4], rf[5]}),
-												String.valueOf(new char[]{rf[6], rf[7], rf[8]}),
-												'a', itemlist.get(0),
-												'b', itemlist.get(1),
-												'c', itemlist.get(2),
-												'd', itemlist.get(3),
-												'e', itemlist.get(4),
-												'f', itemlist.get(5),
-												'g', itemlist.get(6),
-												'h', itemlist.get(7),
-												'i', itemlist.get(8)
-										);
-									}
-								}catch(Exception e){
-									e.printStackTrace();
+								if(recipeType){
+									GameRegistry.addRecipe(
+											new ItemStack(GameRegistry.findItem(itemids[0], itemids[1]), parseInt(itemids[3]), parseInt(itemids[2])),
+											pattern[0],pattern[1],pattern[2],
+											'A', itemlist.get(0),
+											'B', itemlist.get(1),
+											'C', itemlist.get(2),
+											'D', itemlist.get(3),
+											'E', itemlist.get(4),
+											'F', itemlist.get(5),
+											'G', itemlist.get(6),
+											'H', itemlist.get(7),
+											'I', itemlist.get(8)
+									);
+								}else {
+									GameRegistry.addRecipe(
+											new ItemStack(GameRegistry.findItem(itemids[0], itemids[1]), parseInt(itemids[3]), parseInt(itemids[2])),
+											String.valueOf(new char[]{rf[0], rf[1], rf[2]}),
+											String.valueOf(new char[]{rf[3], rf[4], rf[5]}),
+											String.valueOf(new char[]{rf[6], rf[7], rf[8]}),
+											'a', itemlist.get(0),
+											'b', itemlist.get(1),
+											'c', itemlist.get(2),
+											'd', itemlist.get(3),
+											'e', itemlist.get(4),
+											'f', itemlist.get(5),
+											'g', itemlist.get(6),
+											'h', itemlist.get(7),
+											'i', itemlist.get(8)
+									);
 								}
 							}else if(isfixationrecipe == 1){
-								try{
-									if(recipeType){
-										GameRegistry.addRecipe(
-												new ItemStack(GameRegistry.findItem(itemids[0], itemids[1]), parseInt(itemids[3]), parseInt(itemids[2])),
-												pattern[0],pattern[1],
-												'A', itemlist.get(0),
-												'B', itemlist.get(1),
-												'C', itemlist.get(2),
-												'D', itemlist.get(3)
-										);
-									}else {
-										GameRegistry.addRecipe(
-												new ItemStack(GameRegistry.findItem(itemids[0], itemids[1]), parseInt(itemids[3]), parseInt(itemids[2])),
-												String.valueOf(new char[]{rf[0], rf[1]}),
-												String.valueOf(new char[]{rf[2], rf[3]}),
-												'a', itemlist.get(0),
-												'b', itemlist.get(1),
-												'c', itemlist.get(2),
-												'd', itemlist.get(3)
-										);
-									}
-								}catch(Exception e){
-									e.printStackTrace();
+								if(recipeType){
+									GameRegistry.addRecipe(
+											new ItemStack(GameRegistry.findItem(itemids[0], itemids[1]), parseInt(itemids[3]), parseInt(itemids[2])),
+											pattern[0],pattern[1],
+											'A', itemlist.get(0),
+											'B', itemlist.get(1),
+											'C', itemlist.get(2),
+											'D', itemlist.get(3)
+									);
+								}else {
+									GameRegistry.addRecipe(
+											new ItemStack(GameRegistry.findItem(itemids[0], itemids[1]), parseInt(itemids[3]), parseInt(itemids[2])),
+											String.valueOf(new char[]{rf[0], rf[1]}),
+											String.valueOf(new char[]{rf[2], rf[3]}),
+											'a', itemlist.get(0),
+											'b', itemlist.get(1),
+											'c', itemlist.get(2),
+											'd', itemlist.get(3)
+									);
 								}
 							}else if(isfixationrecipe == 2){
 								List<Object> recipeitems = new ArrayList<Object>(9);
@@ -1549,14 +1519,10 @@ public class HMGGunMaker {
 										recipeitems.add(object);
 									}
 								}
-								try{
-									GameRegistry.addShapelessRecipe(
-											new ItemStack(GameRegistry.findItem(itemids[0], itemids[1]), parseInt(itemids[3]), parseInt(itemids[2])),
-											recipeitems.toArray(new Object[recipeitems.size()])
-									);
-								}catch(Exception e){
-									e.printStackTrace();
-								}
+								GameRegistry.addShapelessRecipe(
+										new ItemStack(GameRegistry.findItem(itemids[0], itemids[1]), parseInt(itemids[3]), parseInt(itemids[2])),
+										recipeitems.toArray(new Object[recipeitems.size()])
+								);
 							}
 							onslot[0]=onslot[1]=onslot[2]=onslot[3]=onslot[4]=onslot[5]=onslot[6]=onslot[7]=onslot[8]=false;
 							items = new Item[9];
@@ -1581,14 +1547,11 @@ public class HMGGunMaker {
 	}
 	public static void setSlot(int index,String[] type, boolean[] onslot ,Item[] items, ItemStack[] itemstacks){
 		if(type[1] != null){
-			System.out.println("debug Recipe Item " + type[1]);
 			String[] itemids = type[1].split(":");
 			if(itemids.length == 2){
-				System.out.println("debug Recipe modId " + itemids[0]);
 				items[index] = GameRegistry.findItem(itemids[0], itemids[1]);
 				itemstacks[index] = null;
 				if(items[index] == null){
-					System.out.println("debug : BlockMode");
 					itemstacks[index] = new ItemStack(GameRegistry.findBlock(itemids[0], itemids[1]));
 				}
 			}

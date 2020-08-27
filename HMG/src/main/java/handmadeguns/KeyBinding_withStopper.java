@@ -28,4 +28,11 @@ public class KeyBinding_withStopper {
         return Keyboard.isKeyDown(keyBinding.getKeyCode());
     }
 
+    boolean toggle = false;
+    public boolean isKeyDown_toggle(){
+        if(keyBinding.getKeyCode() == Keyboard.KEY_NONE)return false;
+        if(this.isKeyDown())toggle = !toggle;
+        return toggle;
+    }
+
 }

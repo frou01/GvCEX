@@ -1,25 +1,24 @@
 package hmgww2.event;
 
-import hmgww2.Nation;
-import hmgww2.entity.*;
-import hmgww2.entity.planes.*;
-import hmgww2.items.ItemIFFArmor;
-import net.minecraft.entity.Entity;
-import net.minecraft.item.Item;
-import org.lwjgl.opengl.GL11;
-
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import hmgww2.Nation;
+import hmgww2.entity.*;
+import hmgww2.entity.planes.*;
+import hmgww2.items.ItemIFFArmor;
 import hmgww2.mod_GVCWW2;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiIngame;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import org.lwjgl.opengl.GL11;
 
 import java.util.List;
 
@@ -29,31 +28,30 @@ public class EventOverlay {
 	public void renderover(RenderGameOverlayEvent.Text event) {
 		Minecraft minecraft = FMLClientHandler.instance().getClient();
 		EntityPlayer entityplayer = minecraft.thePlayer;
-		
+
 		ScaledResolution scaledresolution = new ScaledResolution(minecraft, minecraft.displayWidth,
-				                                                        minecraft.displayHeight);
+				minecraft.displayHeight);
 		int i = scaledresolution.getScaledWidth();
 		int j = scaledresolution.getScaledHeight();
-		
+
 		RenderHUD(minecraft, entityplayer, scaledresolution);
 	}
-	
-	public static void RenderHUD(Minecraft minecraft, EntityPlayer entityplayer, ScaledResolution scaledresolution){
+
+	public static void RenderHUD(Minecraft minecraft, EntityPlayer entityplayer, ScaledResolution scaledresolution) {
 		int i = scaledresolution.getScaledWidth();
 		int j = scaledresolution.getScaledHeight();
 		FontRenderer fontrenderer = minecraft.fontRenderer;
-		
+
 		int s = 0;
 		int tank = 0;
 		int tankaa = 0;
 		int tankspg = 0;
 		int f = 0;
 		int a = 0;
-		
-		
-		
-		if(entityplayer.getEquipmentInSlot(4) != null && entityplayer.getEquipmentInSlot(4).getItem() instanceof ItemIFFArmor) {
-			
+
+
+		if (entityplayer.getEquipmentInSlot(4) != null && entityplayer.getEquipmentInSlot(4).getItem() instanceof ItemIFFArmor) {
+
 			Nation playernation = ((ItemIFFArmor) entityplayer.getEquipmentInSlot(4).getItem()).nation;
 			List llist1 = entityplayer.worldObj.getEntitiesWithinAABBExcludingEntity(null,
 					entityplayer.boundingBox.addCoord(entityplayer.motionX, entityplayer.motionY, entityplayer.motionZ).expand(40D, 40D, 40D));
@@ -69,14 +67,11 @@ public class EventOverlay {
 									if (entity1 instanceof EntityJPN_S) {
 										++s;
 									}
-								}else
-								if (entity1 instanceof EntityJPN_Tank) {
+								} else if (entity1 instanceof EntityJPN_Tank) {
 									++tank;
-								}else
-								if (entity1 instanceof EntityJPN_TankAA) {
+								} else if (entity1 instanceof EntityJPN_TankAA) {
 									++tankaa;
-								}else
-								if (entity1 instanceof EntityJPN_TankSPG) {
+								} else if (entity1 instanceof EntityJPN_TankSPG) {
 									++tankspg;
 								}
 							}
@@ -108,14 +103,11 @@ public class EventOverlay {
 									if (entity1 instanceof EntityUSA_S) {
 										++s;
 									}
-								}else
-								if (entity1 instanceof EntityUSA_Tank) {
+								} else if (entity1 instanceof EntityUSA_Tank) {
 									++tank;
-								}else
-								if (entity1 instanceof EntityUSA_TankAA) {
+								} else if (entity1 instanceof EntityUSA_TankAA) {
 									++tankaa;
-								}else
-								if (entity1 instanceof EntityUSA_TankSPG) {
+								} else if (entity1 instanceof EntityUSA_TankSPG) {
 									++tankspg;
 								}
 							}
@@ -145,14 +137,11 @@ public class EventOverlay {
 							if (entity1.canBeCollidedWith()) {
 								if (entity1 instanceof EntityGER_S) {
 									++s;
-								}else
-								if (entity1 instanceof EntityGER_Tank) {
+								} else if (entity1 instanceof EntityGER_Tank) {
 									++tank;
-								}else
-								if (entity1 instanceof EntityGER_TankAA) {
+								} else if (entity1 instanceof EntityGER_TankAA) {
 									++tankaa;
-								}else
-								if (entity1 instanceof EntityGER_TankSPG) {
+								} else if (entity1 instanceof EntityGER_TankSPG) {
 									++tankspg;
 								}
 							}
@@ -162,8 +151,7 @@ public class EventOverlay {
 							if (entity1.canBeCollidedWith()) {
 								if (entity1 instanceof EntityGER_Fighter) {
 									++f;
-								}else
-								if (entity1 instanceof EntityGER_FighterA) {
+								} else if (entity1 instanceof EntityGER_FighterA) {
 									++a;
 								}
 							}
@@ -182,14 +170,11 @@ public class EventOverlay {
 							if (entity1.canBeCollidedWith()) {
 								if (entity1 instanceof EntityUSSR_S) {
 									++s;
-								}else
-								if (entity1 instanceof EntityUSSR_Tank) {
+								} else if (entity1 instanceof EntityUSSR_Tank) {
 									++tank;
-								}else
-								if (entity1 instanceof EntityUSSR_TankAA) {
+								} else if (entity1 instanceof EntityUSSR_TankAA) {
 									++tankaa;
-								}else
-								if (entity1 instanceof EntityUSSR_TankSPG) {
+								} else if (entity1 instanceof EntityUSSR_TankSPG) {
 									++tankspg;
 								}
 							}
@@ -199,8 +184,7 @@ public class EventOverlay {
 							if (entity1.canBeCollidedWith()) {
 								if (entity1 instanceof EntityUSSR_Fighter) {
 									++f;
-								}else
-								if (entity1 instanceof EntityUSSR_FighterA) {
+								} else if (entity1 instanceof EntityUSSR_FighterA) {
 									++a;
 								}
 							}
@@ -217,9 +201,9 @@ public class EventOverlay {
 			}
 		}
 	}
-	
-	public static void rendericon(Minecraft minecraft, Item item, int kazu, int width){
-		GuiIngame g  = minecraft.ingameGUI;
+
+	public static void rendericon(Minecraft minecraft, Item item, int kazu, int width) {
+		GuiIngame g = minecraft.ingameGUI;
 		FontRenderer fontrenderer = minecraft.fontRenderer;
 		GL11.glPushMatrix();//21
 		GL11.glEnable(GL11.GL_BLEND);
@@ -284,7 +268,7 @@ public class EventOverlay {
 //		}//1
 //	}
 //	/**/
-	
+
 //	@SideOnly(Side.CLIENT)
 //	@SubscribeEvent
 //	public void renderover(RenderGameOverlayEvent.Text event) {

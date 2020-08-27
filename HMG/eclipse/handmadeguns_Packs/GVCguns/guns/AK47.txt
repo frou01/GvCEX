@@ -40,7 +40,7 @@ allowattach,byfrou01_Bayonet
 
 ModelEquipped,-0.7f,0.7f,0.0f
 ModelHigh,0.9601,0.9601,0.9601
-ModelWidthX,0.697f,0.697f,0.697f
+SimpleADSOffsetX,0,0,0
 ModelWidthZ,0.3f,0.3f,0.3f
 ModelRotationX,180f,180f,180f
 ModelRotationY,45f,45f,45

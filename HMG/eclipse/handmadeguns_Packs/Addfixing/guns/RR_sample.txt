@@ -18,7 +18,7 @@ Texture,RR_sample
 GunSound,handmadeguns.fire,handmadeguns.supu
 GunSoundReload,handmadeguns.reload
 CanObj,true
-ObjModel,rpg7.obj
+ObjModel,rpg7.mqo
 ObjTexture,rpg7.png
 ModelScala,0.5f
 

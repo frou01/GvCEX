@@ -2,16 +2,23 @@ package handmadeguns;
 
 import java.io.File;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.Iterator;
 
+import com.google.common.collect.Multimap;
 import cpw.mods.fml.common.registry.GameRegistry;
-import handmadeguns.client.render.IModelCustom_HMG;
+import cpw.mods.fml.relauncher.ReflectionHelper;
 import handmadeguns.event.GunSoundEvent;
+import handmadeguns.items.GunInfo;
 import handmadeguns.network.PacketSpawnParticle;
 import handmadeguns.tile.TileMounter;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.IAttribute;
+import net.minecraft.entity.ai.attributes.IAttributeInstance;
+import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -135,9 +142,53 @@ public class CommonSideProxyHMG {
 		return 0;
 	}
 
+	public ItemStack[] getPrevEquippedItems(EntityLivingBase entityLivingBase){
+		return null;
+	}
 	public void setUpModels(){
 
 	}
 	public void AddModel(Object o){
+	}
+	static Field genericAttribute_field;
+	public double computeMoveSpeed_WithoutGunModifier(ModifiableAttributeInstance iattributeinstance){
+		double d0 = iattributeinstance.getBaseValue();
+		AttributeModifier attributemodifier;
+
+		for (Iterator iterator = iattributeinstance.getModifiersByOperation(0).iterator(); iterator.hasNext(); d0 += attributemodifier.getAmount())
+		{
+			attributemodifier = (AttributeModifier)iterator.next();
+		}
+
+		double d1 = d0;
+		Iterator iterator1;
+		AttributeModifier attributemodifier1;
+
+		for (iterator1 = iattributeinstance.getModifiersByOperation(1).iterator(); iterator1.hasNext(); d1 += d0 * attributemodifier1.getAmount())
+		{
+			attributemodifier1 = (AttributeModifier)iterator1.next();
+			if(attributemodifier1.getID() == GunInfo.field_110179_h){
+				if(iterator1.hasNext())attributemodifier1 = (AttributeModifier)iterator1.next();//スキップ
+				else break;
+			}
+		}
+
+		for (iterator1 = iattributeinstance.getModifiersByOperation(2).iterator(); iterator1.hasNext(); d1 *= 1.0D + attributemodifier1.getAmount())
+		{
+			attributemodifier1 = (AttributeModifier)iterator1.next();
+		}
+
+		if(genericAttribute_field == null){
+			genericAttribute_field = ReflectionHelper.findField(ModifiableAttributeInstance.class, "field_111136_b","genericAttribute");
+		}
+
+		try {
+			IAttribute genericAttribute = (IAttribute) genericAttribute_field.get(iattributeinstance);
+
+			return genericAttribute.clampValue(d1);
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
+		return 1;
 	}
 }

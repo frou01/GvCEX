@@ -1,3 +1,6 @@
-
+sourceSets.main {
+    java.srcDirs project.projectDir.name
+    resources.srcDirs project.projectDir.name
+}
 tasks.withType(Jar) {compileJava.options.encoding = 'UTF-8'}
 tasks.withType(Jar) {compileApiJava.options.encoding = 'UTF-8'}

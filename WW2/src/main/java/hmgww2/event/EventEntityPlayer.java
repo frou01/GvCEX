@@ -10,16 +10,15 @@ import net.minecraft.util.DamageSource;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 
 public class EventEntityPlayer {
-	
+
 	@SubscribeEvent
 	public void onHurtEventMob(LivingHurtEvent event) {
 		EntityLivingBase target = event.entityLiving;
 		DamageSource source = event.source;
 		float damage = event.ammount;
 		ItemStack hold = null;
-		
-		if (target instanceof EntityJPNBase)
-		{
+
+		if (target instanceof EntityJPNBase) {
 			if (source.getEntity() instanceof EntityJPNBase) {
 				EntityJPNBase attacker = (EntityJPNBase) source.getEntity();
 				if (attacker != null) {
@@ -30,8 +29,7 @@ public class EventEntityPlayer {
 				event.ammount = 0;
 			}
 		}
-		if (target instanceof EntityUSABase)
-		{
+		if (target instanceof EntityUSABase) {
 			if (source.getEntity() instanceof EntityUSABase) {
 				EntityUSABase attacker = (EntityUSABase) source.getEntity();
 				if (attacker != null) {
@@ -42,8 +40,7 @@ public class EventEntityPlayer {
 				event.ammount = 0;
 			}
 		}
-		if (target instanceof EntityGERBase)
-		{
+		if (target instanceof EntityGERBase) {
 			if (source.getEntity() instanceof EntityGERBase) {
 				EntityGERBase attacker = (EntityGERBase) source.getEntity();
 				if (attacker != null) {
@@ -54,8 +51,7 @@ public class EventEntityPlayer {
 				event.ammount = 0;
 			}
 		}
-		if (target.ridingEntity instanceof EntityUSSRBase)
-		{
+		if (target.ridingEntity instanceof EntityUSSRBase) {
 			if (source.getEntity() instanceof EntityUSSRBase) {
 				EntityUSSRBase attacker = (EntityUSSRBase) source.getEntity();
 				if (attacker != null) {
@@ -86,7 +82,7 @@ public class EventEntityPlayer {
 			}
 		}
 	}*/
-	
+
 	@SubscribeEvent
 	public void onHurtEvent(LivingHurtEvent event) {
 		EntityLivingBase target = event.entityLiving;
@@ -94,8 +90,7 @@ public class EventEntityPlayer {
 		float damage = event.ammount;
 		ItemStack hold = null;
 
-		if (target instanceof EntityPlayer)
-		{
+		if (target instanceof EntityPlayer) {
 			EntityPlayer entityplayer = (EntityPlayer) target;
 			if (entityplayer.getEquipmentInSlot(4) != null
 					&& (entityplayer.getEquipmentInSlot(4).getItem() == mod_GVCWW2.armor_jpn)) {
@@ -146,9 +141,8 @@ public class EventEntityPlayer {
 				}
 			}
 		}
-		
-		if (target.ridingEntity instanceof EntityBases && target.ridingEntity != null)
-		{
+
+		if (target.ridingEntity instanceof EntityBases && target.ridingEntity != null) {
 			EntityBases en = (EntityBases) target.ridingEntity;
 			if (source.getEntity() instanceof EntityLivingBase) {
 				EntityLivingBase attacker = (EntityLivingBase) source.getEntity();
@@ -160,6 +154,6 @@ public class EventEntityPlayer {
 				event.ammount = 0;
 			}
 		}
-		
+
 	}
 }

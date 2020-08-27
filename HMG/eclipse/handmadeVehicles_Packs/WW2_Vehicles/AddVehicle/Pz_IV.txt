@@ -12,26 +12,30 @@ throttle_min,-1.5;
 yawspeed_ground,9;
 speedfactor,0;
 speedfactor_af,0;
-speedfactor_onGround,0.065;
+speedfactor_onGround,0.1;
 torque_ground,0.9;
 rotmotion_reduceSpeed,0.1;
 recoilResist,2500;
 //ïêëïí«â¡;
-ParentWeapons_NUM,1;
-AllWeapons_NUM,2;
+ParentWeapons_NUM,2;
+AllWeapons_NUM,3;
 addParentWeapon,0,7.5_cm_KwK_40,0,0,0,0,1;
-addBarrelChildWeapon,0,StackSlot_noTriggerLink,0.1,2.07,-2.08,0,0;
+addBarrelChildWeapon,0,MG34,-0.2671872,1.652256,-0.2,0,0;
+addParentWeapon,1,MG34,-0.6386688,1.0923072,-1.2350656,0,1;
+
+
 //ç¿ê»í«â¡;
-SetUpSeat1_NUM,3;
+SetUpSeat1_NUM,4;
 SetUpSeat2_AddSeat_Normal,0,0.0768,3.1024,0.7827,true,true,false,true,0,1;
 SetUpSeat3_AddSeat_Zoom,0,0.6171,1.945,-1.0119,true,true,true,0,1;
-SetUpSeat2_AddSeat_Normal,1,1.274,1.629,1.415,false,false,false,-1,-1;
-SetUpSeat2_AddSeat_Normal,2,-1.274,1.629,1.415,false,false,false,-1,-1;
+SetUpSeat2_AddSeat_Normal,1,-0.7117056,1.8128,-1.116672,true,true,false,2,-1;
+SetUpSeat2_AddSeat_Normal,2,1.274,1.629,1.415,false,false,false,-1,-1;
+SetUpSeat2_AddSeat_Normal,3,-1.274,1.629,1.415,false,false,false,-1,-1;
 
 scale,0.768;
 
 
-max_pera_trackPos,6;
+max_pera_trackPos,24;
 
 zoomLevel,0,4;
 
@@ -39,13 +43,12 @@ userProtect_maxDamageLevel,0,-1;
 userProtect_maxDamageLevel,1,0;
 userProtect_maxDamageLevel,2,0;
 //top,bottom,front,back,left,right;
-boxes_withInfo,6,
-0,1.0,-2.0,	0,1.0,-2.0,	1.8,0.5,1.6,	1,0,0,-0.261799,		170,40,90,25,50,50,-1,
-0,0.9,2.2,	0,0.9,2.2,	1.8,0.6,1.4,	1,0,0,0.3926991,	100,40,90,25,50,50,-1,
-0,0.8,0,	0,0.8,0,	1.8,1.2,3.75,	1,0,0,0,		20,40,90,25,100,100,-1,
+boxes_withInfo,5,
+0,0.8,0,	0,0.8,0,	1.8,0.8,5,	1,0,0,0,		20,40,90,25,100,100,-1,
+0,1.2,0.5,	0,0.8,0,	1.8,0.8,4,	1,0,0,0,		20,40,90,25,100,100,-1,
 1.4,0.625,0,	0,0,0,		0.8,1.25,6,	1,0,0,0,		20,40,90,25,50,50,-1,
 -1.4,0.625,0,	0,0,0,		0.8,1.25,6,	1,0,0,0,		20,40,90,25,50,50,-1,
-0,2.2,-0.7,	0,0,-0.7,	1.8,1,3,	1,0,0,0,		20,40,90,25,50,50,0;
+0,2.0,0,	0,0,-0.7,	1.8,1,2,	1,0,0,0,		20,40,90,25,50,50,0;
 
 cargoSlotNum,4;
 
@@ -66,20 +69,45 @@ AddParts,chassis;
 	AddChildParts,accessory;
 		SetAsNormalParts;
 	BackParts;
-
+			
+	AddChildParts,ChassisGun;
+		RenderOnNormal;
+		SetAsNormalParts;
+		TurretParts,2;
+		isTurret_linkedGunMount;
+	BackParts;
+	
 	AddChildParts,wheels;
 		SetAsNormalParts;
 	BackParts;
-
+	
 	AddChildParts,track;
-		AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0;
+		AddPartsRotationCenterAndRotationAmount,0,0.4815,0.0060,0,0,0;
 		RenderOnNormal;
 		AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0;
 		AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0;
 		AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0;
 		AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0;
+		AddPartsRotationDefOffset,0,0.3857,2.996,-37.894736842105263157894736842106,0,0;
+		AddPartsRenderAsTrackInf,0,0,0,-18.947368421052631578947368421053,0,0;
+		IsCloningTrack,true,8;
+		AddCrawlerTrack_trackAnimSpeed,19;
+	BackParts;
+	
+	AddChildParts,track;
+		AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0;
+		RenderOnNormal;
+		AddCrawlerTrack_trackAnimSpeed,19;
+		AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0;
+		AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0;
+		AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0;
+		AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0;
+		AddCrawlerTrack_noLoop, 0.15, 0,
 
-		AddCrawlerTrack=false, 0.13, 0,
+0.5395/3.3537 , 
+0.4831/3.2919 , 
+0.4430/3.2285 , 
+0.0215/2.3457 , 
 0.0215/-2.4098 , 
 0.3107/-3.3589 , 
 0.3943/-3.5324 , 
@@ -90,25 +118,26 @@ AddParts,chassis;
 1.1543/-3.3589 , 
 1.2692/-2.0553 , 
 1.3211/-0.7754 , 
-
 1.3408/2.9288 , 
-1.3469/3.0040 , 
-1.3388/3.0869 , 
-1.3201/3.1598 , 
-1.2855/3.2358 , 
-1.1868/3.3593 , 
-1.1274/3.4051 , 
-1.0533/3.4441 , 
-0.8995/3.4810 , 
-0.8246/3.4803 , 
-0.7421/3.4659 , 
-0.6715/3.4408 , 
-0.5981/3.4005 , 
-0.5395/3.3537 , 
-0.4831/3.2919 , 
-0.4430/3.2285 , 
+1.3469/3.0040;
 
-0.0215/2.3457;
+
+//1.3408/2.9288 , ;
+//1.3469/3.0040 , ;
+//1.3388/3.0869 , ;
+//1.3201/3.1598 , ;
+//1.2855/3.2358 , ;
+//1.1868/3.3593 , ;
+//1.1274/3.4051 , ;
+//1.0533/3.4441 , ;
+//0.8995/3.4810 , ;
+//0.8246/3.4803 , ;
+//0.7421/3.4659 , ;
+//0.6715/3.4408 , ;
+//0.5981/3.4005 , ;
+//0.5395/3.3537 , ;
+//0.4831/3.2919 , ;
+//0.4430/3.2285 , ;
 
 	BackParts;
 
@@ -116,14 +145,188 @@ AddParts,chassis;
 	AddChildParts,drive_wheel;
 		SetAsNormalParts;
 		AddPartsRotationCenterAndRotationAmount,0,0.8672,3.0016,0,0,0;
-		AddPartsRenderAsTrackInf,0,0,0,15.502392344497607655502392344498,0,0;
+		AddPartsRenderAsTrackInf,0,0,0,360,0,0;
+		AddPartsRotationDefOffset,0,0,0,6,0,0;
 		IsTrack,true,1;
 	BackParts;
 
 	AddChildParts,Idler_wheel;
 		SetAsNormalParts;
 		AddPartsRotationCenterAndRotationAmount,0,0.7325,-3.2627,0,0,0;
-		AddPartsRenderAsTrackInf,0,0,0,14.266620822574,0,0;
+		AddPartsRenderAsTrackInf,0,0,0,360,0,0;
+		IsTrack,true,1;
+	BackParts;
+
+
+	AddChildParts,Under_roller;
+		SetAsNormalParts;
+		AddPartsRotationDefOffset,1.7298,0.3250,2.2475,	0,0,0;
+		AddPartsRenderAsTrackInf,0,0,0,720,0,0;
+		IsTrack,true,1;
+	BackParts;
+
+	AddChildParts,Under_roller;
+		SetAsNormalParts;
+		AddPartsRotationDefOffset,1.7298,0.3250,1.5705,	0,0,0;
+		AddPartsRenderAsTrackInf,0,0,0,720,0,0;
+		IsTrack,true,1;
+	BackParts;
+
+	AddChildParts,Under_roller;
+		SetAsNormalParts;
+		AddPartsRotationDefOffset,1.7298,0.3250,0.9235,	0,0,0;
+		AddPartsRenderAsTrackInf,0,0,0,720,0,0;
+		IsTrack,true,1;
+	BackParts;
+
+	AddChildParts,Under_roller;
+		SetAsNormalParts;
+		AddPartsRotationDefOffset,1.7298,0.3250,0.2965,	0,0,0;
+		AddPartsRenderAsTrackInf,0,0,0,720,0,0;
+		IsTrack,true,1;
+	BackParts;
+
+	AddChildParts,Under_roller;
+		SetAsNormalParts;
+		AddPartsRotationDefOffset,1.7298,0.3250,-0.3505,0,0,0;
+		AddPartsRenderAsTrackInf,0,0,0,720,0,0;
+		IsTrack,true,1;
+	BackParts;
+
+	AddChildParts,Under_roller;
+		SetAsNormalParts;
+		AddPartsRotationDefOffset,1.7298,0.3250,-0.9975,0,0,0;
+		AddPartsRenderAsTrackInf,0,0,0,720,0,0;
+		IsTrack,true,1;
+	BackParts;
+
+	AddChildParts,Under_roller;
+		SetAsNormalParts;
+		AddPartsRotationDefOffset,1.7298,0.3250,-1.6645,0,0,0;
+		AddPartsRenderAsTrackInf,0,0,0,720,0,0;
+		IsTrack,true,1;
+	BackParts;
+
+	AddChildParts,Under_roller;
+		SetAsNormalParts;
+		AddPartsRotationDefOffset,1.7298,0.3250,-2.3115,0,0,0;
+		AddPartsRenderAsTrackInf,0,0,0,720,0,0;
+		IsTrack,true,1;
+	BackParts;
+
+	AddChildParts,Upper_roller;
+		SetAsNormalParts;
+		AddPartsRotationDefOffset,1.6775,1.1525,1.7143,0,0,0;
+		AddPartsRenderAsTrackInf,0,0,0,720,0,0;
+		IsTrack,true,1;
+	BackParts;
+
+	AddChildParts,Upper_roller;
+		SetAsNormalParts;
+		AddPartsRotationDefOffset,1.6775,1.1525,0.5257,0,0,0;
+		AddPartsRenderAsTrackInf,0,0,0,720,0,0;
+		IsTrack,true,1;
+	BackParts;
+
+	AddChildParts,Upper_roller;
+		SetAsNormalParts;
+		AddPartsRotationDefOffset,1.6775,1.1525,-0.7203,0,0,0;
+		AddPartsRenderAsTrackInf,0,0,0,720,0,0;
+		IsTrack,true,1;
+	BackParts;
+
+	AddChildParts,Upper_roller;
+		SetAsNormalParts;
+		AddPartsRotationDefOffset,1.6775,1.1006,-2.0002,0,0,0;
+		AddPartsRenderAsTrackInf,0,0,0,720,0,0;
+		IsTrack,true,1;
+	BackParts;
+	
+	
+
+
+	AddChildParts,Under_roller;
+		SetAsNormalParts;
+		AddPartsRotationDefOffset,-1.7298,0.3250,2.2475,	0,180,0;
+		AddPartsRenderAsTrackInf,0,0,0,-720,0,0;
+		IsTrack,true,1;
+	BackParts;
+
+	AddChildParts,Under_roller;
+		SetAsNormalParts;
+		AddPartsRotationDefOffset,-1.7298,0.3250,1.5705,	0,180,0;
+		AddPartsRenderAsTrackInf,0,0,0,-720,0,0;
+		IsTrack,true,1;
+	BackParts;
+
+	AddChildParts,Under_roller;
+		SetAsNormalParts;
+		AddPartsRotationDefOffset,-1.7298,0.3250,0.9235,	0,180,0;
+		AddPartsRenderAsTrackInf,0,0,0,-720,0,0;
+		IsTrack,true,1;
+	BackParts;
+
+	AddChildParts,Under_roller;
+		SetAsNormalParts;
+		AddPartsRotationDefOffset,-1.7298,0.3250,0.2965,	0,180,0;
+		AddPartsRenderAsTrackInf,0,0,0,-720,0,0;
+		IsTrack,true,1;
+	BackParts;
+
+	AddChildParts,Under_roller;
+		SetAsNormalParts;
+		AddPartsRotationDefOffset,-1.7298,0.3250,-0.3505,	0,180,0;
+		AddPartsRenderAsTrackInf,0,0,0,-720,0,0;
+		IsTrack,true,1;
+	BackParts;
+
+	AddChildParts,Under_roller;
+		SetAsNormalParts;
+		AddPartsRotationDefOffset,-1.7298,0.3250,-0.9975,	0,180,0;
+		AddPartsRenderAsTrackInf,0,0,0,-720,0,0;
+		IsTrack,true,1;
+	BackParts;
+
+	AddChildParts,Under_roller;
+		SetAsNormalParts;
+		AddPartsRotationDefOffset,-1.7298,0.3250,-1.6645,	0,180,0;
+		AddPartsRenderAsTrackInf,0,0,0,-720,0,0;
+		IsTrack,true,1;
+	BackParts;
+
+	AddChildParts,Under_roller;
+		SetAsNormalParts;
+		AddPartsRotationDefOffset,-1.7298,0.3250,-2.3115,	0,180,0;
+		AddPartsRenderAsTrackInf,0,0,0,-720,0,0;
+		IsTrack,true,1;
+	BackParts;
+
+
+	AddChildParts,Upper_roller;
+		SetAsNormalParts;
+		AddPartsRotationDefOffset,-1.6775,1.1525,1.7143,	0,180,0;
+		AddPartsRenderAsTrackInf,0,0,0,-720,0,0;
+		IsTrack,true,1;
+	BackParts;
+
+	AddChildParts,Upper_roller;
+		SetAsNormalParts;
+		AddPartsRotationDefOffset,-1.6775,1.1525,0.5257,	0,180,0;
+		AddPartsRenderAsTrackInf,0,0,0,-720,0,0;
+		IsTrack,true,1;
+	BackParts;
+
+	AddChildParts,Upper_roller;
+		SetAsNormalParts;
+		AddPartsRotationDefOffset,-1.6775,1.1525,-0.7203,	0,180,0;
+		AddPartsRenderAsTrackInf,0,0,0,-720,0,0;
+		IsTrack,true,1;
+	BackParts;
+
+	AddChildParts,Upper_roller;
+		SetAsNormalParts;
+		AddPartsRotationDefOffset,-1.6775,1.1006,-2.0002,	0,180,0;
+		AddPartsRenderAsTrackInf,0,0,0,-720,0,0;
 		IsTrack,true,1;
 	BackParts;
 
@@ -158,6 +361,13 @@ AddParts,chassis;
         			AddReloadMotionKey,0,0,0,0,0,0,0,	2,0,0,-0.4,0,0,0;
         			AddReloadMotionKey,2,0,0,-0.4,0,0,0,	60,0,0,0,0,0,0;
         			AddReloadMotionKey,60,0,0,0,0,0,0,	100,0,0,0,0,0,0;
+			BackParts;
+			
+			AddChildParts,BarrelGun;
+				RenderOnNormal;
+				SetAsNormalParts;
+				TurretParts,1;
+				isTurret_linkedGunMount;
 			BackParts;
 		BackParts;
 

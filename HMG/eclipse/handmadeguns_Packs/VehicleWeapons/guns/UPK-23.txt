@@ -12,7 +12,7 @@ Texture,UPK-23
 ObjModel,UPK-23.mqo
 ObjTexture,UPK-23.png
 ModelScala,0.5f
-GunSound,handmadeguns.23mmFire,handmadeguns.23mmFire
+GunSound_FullName,handmadevehicle:handmadevehicle.23mmFire,handmadevehicle:handmadevehicle.23mmFire
 GunSoundReload,handmadeguns.null
 Weight,218
 BulletNameALL,byfrou01_GreenTracer

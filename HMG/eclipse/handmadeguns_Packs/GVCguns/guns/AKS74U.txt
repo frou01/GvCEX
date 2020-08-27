@@ -26,8 +26,8 @@ GunSound,handmadeguns.fire,handmadeguns.fire
 GunSoundLV,4,4
 GunSoundReload,handmadeguns.reload
 CanObj,true
-ObjModel,AKS74U.mqo
-ObjTexture,AKS74U.png
+ObjModel,AK74.mqo
+ObjTexture,AK74.png
 ModelScala,0.5
 CustomFlash,arrow,1
 Bursts,1,-1
@@ -42,117 +42,99 @@ UseUnderGun'smodel,true
 UnderGunRotation,0,0,0
 UnderGunOffset,0f,0.6555f,5.2f
 
+
 AddParts,mat1
-    AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
-    RenderOnNormal
-    AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
-    AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
-    AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
-    AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+	SetAsNormalParts
+	AddReloadMotionKey,0 ,0,0,0,0,0,0,		5 ,0,0,0,0,0,0
+	AddReloadMotionKey,5 ,0,0,0,0,0,0,		15,0,0,0,15,0,30
+	AddReloadMotionKey,15,0,0,0,15,0,30,		30,0,0,0,15,0,30
+	AddReloadMotionKey,30,0,0,0,15,0,30,		35,0,0,0,-15,-20,-80
+	AddReloadMotionKey,35,0,0,0,-15,-20,-80,	45,0,0,0,-15,-20,-80
+	AddReloadMotionKey,45,0,0,0,-15,-20,-80,	50,0,0,0,0,0,0
+	
+	AddChildParts,HandGuard
+		SetAsNormalParts
+	BackParts
+	AddChildParts,KRINKOV_Stock
+		SetAsNormalParts
+	BackParts
+	AddChildParts,barrelShort
+		SetAsNormalParts
+	BackParts
+	AddChildParts,dustCover
+		SetAsNormalParts
+	BackParts
+	AddChildParts,Selector
+		SetAsNormalParts
+		AddPartsRotationCenterAndRotationAmount,0,0.8354,0.0678,0,0,0
+		
+		AddSomeMotion,0,	0,0,0,	0,0,0,		1,	0,0,0,	10,0,0,	1
+		AddSomeMotion,1,	0,0,0,	10,0,0,		2,	0,0,0,	12,0,0,	1
+		AddSomeMotion,2,	0,0,0,	12,0,0,		3,	0,0,0,	12,0,0,	1
+	BackParts
 
-    AddReloadMotionKey,0 ,0,0,0,0,0,0,            5 ,0,0,0,0,0,0
-    AddReloadMotionKey,5 ,0,0,0,0,0,0,            15,0,0,0,15,0,30
-    AddReloadMotionKey,15,0,0,0,15,0,30,          30,0,0,0,15,0,30
-    AddReloadMotionKey,30,0,0,0,15,0,30,          35,0,0,0,15,0,-60
-    AddReloadMotionKey,35,0,0,0,15,0,-60,          45,0,0,0,15,0,-60
-    AddReloadMotionKey,45,0,0,0,15,0,-60,          50,0,0,0,0,0,0
+	AddChildParts,Larm
+		SetAsNormalParts
 
-    AddChildParts,Larm
-    	AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
-    	AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
-    	RenderOnNormal
-    	AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
-    	AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
-    	AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
-    	AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+		AddReloadMotionKey,0,0,0,0,0,0,0,			5,0,0,0,0,0,0
+		AddReloadMotionKey,5,0,0,0,0,0,0,			10,0,-2,-1,0,0,0
+		AddReloadMotionKey,10,0,-2,-1,0,0,0,		 30,0,0,-1,0,0,0
 
-    	AddReloadMotionKey,0,0,0,0,0,0,0,            5,0,0,0,0,0,0
-    	AddReloadMotionKey,5,0,0,0,0,0,0,            10,0,-2,-1,0,0,0
-    	AddReloadMotionKey,10,0,-2,-1,0,0,0,         30,0,0,-1,0,0,0
+		AddReloadMotionKey,30,0  ,0   ,-1,	0,0, 0,	38,0.2,1.4,-1,0,0,90
+		AddReloadMotionKey,38,0.2,1.4,-1,	0,0,90,	41,0.2,1.4,-2,	0,0,90
+		AddReloadMotionKey,41,0.2,1.4,-2,	0,0,90,	45,0.2,1.4,-1,	0,0,90
+		AddReloadMotionKey,45,0.2,1.4,-1,	0,0,90,	50,0,0,0		,0,0,0
+	BackParts
+	AddChildParts,Rarm
+		SetAsNormalParts
 
-    	AddReloadMotionKey,30,0,0   ,-1  ,0,0, 0,    38,0,1.65,-1.8,0,0,90
-    	AddReloadMotionKey,38,0,1.65,-1.8,0,0,90,    41,0,1.65,-2.8,0,0,90
-    	AddReloadMotionKey,41,0,1.65,-2.8,0,0,90,    45,0,1.65,-1.8,0,0,90
-    	AddReloadMotionKey,45,0,1.65,-1.8,0,0,90,    50,0,0   ,0   ,0,0,0
-    BackParts
-    AddChildParts,Rarm
-    	AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
-    	AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
-    	RenderOnNormal
-    	AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
-    	AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
-    	AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
-    	AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+		AddReloadMotionKey,0,0,0,0,0,0,0,			50,0,0,0,0,0,0
+	BackParts
+	AddChildParts,mat4
+		SetAsNormalParts
+		attachpart
+		dot
+		reticleAndPlate
+	BackParts
+	AddChildParts,mat41
+		SetAsNormalParts
+		attachpart
+		dot
+	BackParts
+	AddChildParts,mat5
+		SetAsNormalParts
+		attachpart
+		scope
+	BackParts
+	AddChildParts,SYS_BAYONETBASE
+		SetAsNormalParts
+		attachpart
+		swordbase
+	BackParts
+	AddChildParts,mat3
+		SetAsNormalParts
 
-    	AddReloadMotionKey,0,0,0,0,0,0,0,            50,0,0,0,0,0,0
-    BackParts
-    AddChildParts,mat4
-    	AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
-    	AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
-    	RenderOnNormal
-    	AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
-    	AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
-    	AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
-    	AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
-        attachpart
-        dot
-        reticleAndPlate
-    BackParts
-    AddChildParts,mat5
-    	AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
-    	AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
-    	RenderOnNormal
-    	AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
-    	AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
-    	AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
-    	AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
-        attachpart
-        scope
-    BackParts
-    AddChildParts,SYS_BAYONETBASE
-        AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
-        RenderOnNormal
-        AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
-        AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
-        AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
-        AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
-        attachpart
-        swordbase
-    BackParts
-    AddChildParts,mat3
-        AddPartsRotationCenterAndRotationAmount,0,0,0.0,0,0,0
-        RenderOnNormal
-        AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
-        AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
-        AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
-        AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
+		AddReloadMotionKey,0,0,0,0,0,0,0,		   5,0,-5,-1,0,0,0
+		AddReloadMotionKey,5,false,		  10
+		AddReloadMotionKey,10,0,-2,-0.5,0,0,0,	  30,0,0,0,0,0,0
+		AddReloadMotionKey,30,0,0,0,0,0,0,		  50,0,0,0,0,0,0
+	BackParts
+	AddChildParts,Bolt
+		SetAsNormalParts
+		AddRecoilMotionKey,0,0,0,0,0,0,0,		   5,0,0,-1.3,0,0,0
+		AddRecoilMotionKey,5,0,0,-1.30,0,0,0,	   10,0,0,0,0,0,0
+		AddRecoilMotionKey,10,0,0,0,0,0,0,	   12,0,0,0,0,0,0
 
-        AddReloadMotionKey,0,0,0,0,0,0,0,           5,0,-5,-1,0,0,0
-        AddReloadMotionKey,5,false,          10
-        AddReloadMotionKey,10,0,-2,-0.5,0,0,0,      30,0,0,0,0,0,0
-        AddReloadMotionKey,30,0,0,0,0,0,0,          50,0,0,0,0,0,0
-    BackParts
-    AddChildParts,mat2
-        AddPartsRotationCenterAndRotationAmount,0,0,0,0,0,0
-        RenderOnNormal
-        AddPartsOnADSOffsetAndRotation,0,0,0,0,0,0
-        AddPartsOnRecoilOffsetAndRotation,0,0,0,0,0,0
-        AddPartsOnCockOffsetAndRotation,0,0,0,0,0,0
-        AddPartsOnReloadOffsetAndRotation,0,0,0,0,0,0
-        AddRecoilMotionKey,0,0,0,0,0,0,0,           5,0,0,-1.2,0,0,0
-        AddRecoilMotionKey,5,0,0,-1.20,0,0,0,       10,0,0,0,0,0,0
-        AddRecoilMotionKey,10,0,0,-1.20,0,0,0,       12,0,0,0,0,0,0
-
-        AddReloadMotionKey,0,0,0,0,0,0,0,           38,0,0,0,0,0,0
-        AddReloadMotionKey,38,0,0,0,0,0,0,          41,0,0,-1.20,0,0,0
-        AddReloadMotionKey,41,0,0,-1.20,0,0,0,       45,0,0,0,0,0,0
-        AddReloadMotionKey,45,0,0,0,0,0,0,          50,0,0,0,0,0,0
-    BackParts
+		AddReloadMotionKey,0,0,0,0,0,0,0,		   38,0,0,0,0,0,0
+		AddReloadMotionKey,38,0,0,0,0,0,0,		  41,0,0,-1.30,0,0,0
+		AddReloadMotionKey,41,0,0,-1.30,0,0,0,	   45,0,0,0,0,0,0
+		AddReloadMotionKey,45,0,0,0,0,0,0,		  50,0,0,0,0,0,0
+	BackParts
 
 ModelEquipped,-0.7f,0.7f,0.0f
-ModelHigh,1.10415f,0.9520,0.85f
-ModelWidthX,0.697f,0.697f,0.697f
-ModelWidthZ,0.9f,0.9f,0.9f
+SimpleADSOffsetY,0.71715,0.862,0.85f
+SimpleADSOffsetX,0,0,0
+ModelWidthZ,0,0,0
 ModelRotationX,180f,180f,180f
 ModelRotationY,45f,45f,45
 ModelRotationZ,180f,180f,180f

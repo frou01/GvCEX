@@ -1,4 +1,4 @@
-Name,ReiSiki;
+Name,Type0;
 modelName,type0.mqo;
 modelName_texture,type0.png;
 wingUnit,0,268.39,11.26;

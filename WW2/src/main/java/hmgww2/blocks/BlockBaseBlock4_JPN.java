@@ -1,14 +1,14 @@
 package hmgww2.blocks;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import hmgww2.mod_GVCWW2;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.world.World;
-import cpw.mods.fml.relauncher.SideOnly;
-import hmgww2.mod_GVCWW2;
-import cpw.mods.fml.relauncher.Side;
 import net.minecraft.util.IIcon;
+import net.minecraft.world.World;
 //import net.minecraft.world.gen.structure.StructureStrongholdPieces;;
 
 
@@ -27,7 +27,7 @@ public class BlockBaseBlock4_JPN extends Block {
 	}
 
 	public void onBlockHarvested(World p_149681_1_, int p_149681_2_, int p_149681_3_, int p_149681_4_, int p_149681_5_,
-			EntityPlayer p_149681_6_) {
+	                             EntityPlayer p_149681_6_) {
 	}
 
 	public void onBlockAdded(World par1World, int par1, int par2, int par3) {
@@ -60,12 +60,12 @@ public class BlockBaseBlock4_JPN extends Block {
 					}
 					for (int i0 = 0; i0 < 16; ++i0) {
 						for (int i2 = 0; i2 < 32; ++i2) {
-							par1World.setBlock(par1 + i0, par2 - l, par3 + i2+31, Blocks.stone);
+							par1World.setBlock(par1 + i0, par2 - l, par3 + i2 + 31, Blocks.stone);
 						}
 					}
 					for (int i0 = 0; i0 < 16; ++i0) {
 						for (int i2 = 0; i2 < 32; ++i2) {
-							par1World.setBlock(par1 + i0+48, par2 - l, par3 + i2+31, Blocks.stone);
+							par1World.setBlock(par1 + i0 + 48, par2 - l, par3 + i2 + 31, Blocks.stone);
 						}
 					}
 				}
@@ -73,7 +73,7 @@ public class BlockBaseBlock4_JPN extends Block {
 
 			this.BuildTent(par1World, par1 + 53, par2 + 1, par3 + 7);
 			this.BuildTent(par1World, par1 + 53, par2 + 1, par3 + 24);
-			
+
 			this.BuildTent2(par1World, par1 + 16, par2 + 1, par3 + 16);
 			this.BuildTent2(par1World, par1 + 33, par2 + 1, par3 + 16);
 
@@ -90,78 +90,78 @@ public class BlockBaseBlock4_JPN extends Block {
 
 			par1World.setBlock(par1 + 56, par2 + 1, par3 + 42, mod_GVCWW2.b_flag4_jpn);
 			par1World.setBlock(par1 + 6, par2 + 1, par3 + 60, mod_GVCWW2.b_flag4_jpn);
-		}else{
+		} else {
 			par1World.setBlock(par1 + 0, par2 + 0, par3 + 0, Blocks.air);
 		}
 	}
 
-	public void BuildTent(World par1World, int par1, int par2, int par3){
-    	for (int i0 = 0; i0 < 9; ++i0){
-    		for (int i1 = 0; i1 < 5; ++i1){
-    			for (int i2 = 0; i2 < 13; ++i2){
-    				{
-    					par1World.setBlock(par1+i0, par2+i1, par3+i2, Blocks.stonebrick);
-    				}
-    			}
-    		}
-    	}
-    	for (int i0 = 0; i0 < 8; ++i0){
-    		for (int i1 = 0; i1 < 4; ++i1){
-    			for (int i2 = 0; i2 < 11; ++i2){
-    				{
-    					par1World.setBlock(par1+i0, par2+i1, par3+i2+1, Blocks.air);
-    				}
-    			}
-    		}
-    	}
-    	for (int i0 = 0; i0 < 9; ++i0){
-    			for (int i2 = 0; i2 < 13; ++i2){
-    				{
-    					par1World.setBlock(par1+i0, par2+5, par3+i2, Blocks.wool,0,2);
-    				}
-    			}
-    	}
-    	par1World.setBlock(par1+1, par2+4, par3+1, Blocks.glowstone);
-    	par1World.setBlock(par1+1, par2+4, par3+11, Blocks.glowstone);
-    	par1World.setBlock(par1+7, par2+4, par3+1, Blocks.glowstone);
-    	par1World.setBlock(par1+7, par2+4, par3+11, Blocks.glowstone);
-    }
-	
-	public void BuildTent2(World par1World, int par1, int par2, int par3){
-    	for (int i0 = 0; i0 < 15; ++i0){
-    		for (int i1 = 0; i1 < 6; ++i1){
-    			for (int i2 = 0; i2 < 10; ++i2){
-    				{
-    					par1World.setBlock(par1+i0, par2+i1, par3+i2, Blocks.stonebrick);
-    				}
-    			}
-    		}
-    	}
-    	for (int i0 = 0; i0 < 13; ++i0){
-    		for (int i1 = 0; i1 < 5; ++i1){
-    			for (int i2 = 0; i2 < 9; ++i2){
-    				{
-    					par1World.setBlock(par1+i0+1, par2+i1, par3+i2+1, Blocks.air);
-    				}
-    			}
-    		}
-    	}
-    	for (int i0 = 0; i0 < 15; ++i0){
-    			for (int i2 = 0; i2 < 10; ++i2){
-    				{
-    					par1World.setBlock(par1+i0, par2+6, par3+i2, Blocks.wool,0,2);
-    				}
-    			}
-    	}
-    	par1World.setBlock(par1+1, par2+5, par3+1, Blocks.glowstone);
-    	par1World.setBlock(par1+1, par2+5, par3+8, Blocks.glowstone);
-    	par1World.setBlock(par1+13, par2+5, par3+1, Blocks.glowstone);
-    	par1World.setBlock(par1+13, par2+5, par3+8, Blocks.glowstone);
-    	par1World.setBlock(par1+7, par2+5, par3+1, Blocks.glowstone);
-    	par1World.setBlock(par1+8, par2+5, par3+1, Blocks.glowstone);
-    	par1World.setBlock(par1+7, par2+5, par3+8, Blocks.glowstone);
-    	par1World.setBlock(par1+8, par2+5, par3+8, Blocks.glowstone);
-    }
+	public void BuildTent(World par1World, int par1, int par2, int par3) {
+		for (int i0 = 0; i0 < 9; ++i0) {
+			for (int i1 = 0; i1 < 5; ++i1) {
+				for (int i2 = 0; i2 < 13; ++i2) {
+					{
+						par1World.setBlock(par1 + i0, par2 + i1, par3 + i2, Blocks.stonebrick);
+					}
+				}
+			}
+		}
+		for (int i0 = 0; i0 < 8; ++i0) {
+			for (int i1 = 0; i1 < 4; ++i1) {
+				for (int i2 = 0; i2 < 11; ++i2) {
+					{
+						par1World.setBlock(par1 + i0, par2 + i1, par3 + i2 + 1, Blocks.air);
+					}
+				}
+			}
+		}
+		for (int i0 = 0; i0 < 9; ++i0) {
+			for (int i2 = 0; i2 < 13; ++i2) {
+				{
+					par1World.setBlock(par1 + i0, par2 + 5, par3 + i2, Blocks.wool, 0, 2);
+				}
+			}
+		}
+		par1World.setBlock(par1 + 1, par2 + 4, par3 + 1, Blocks.glowstone);
+		par1World.setBlock(par1 + 1, par2 + 4, par3 + 11, Blocks.glowstone);
+		par1World.setBlock(par1 + 7, par2 + 4, par3 + 1, Blocks.glowstone);
+		par1World.setBlock(par1 + 7, par2 + 4, par3 + 11, Blocks.glowstone);
+	}
+
+	public void BuildTent2(World par1World, int par1, int par2, int par3) {
+		for (int i0 = 0; i0 < 15; ++i0) {
+			for (int i1 = 0; i1 < 6; ++i1) {
+				for (int i2 = 0; i2 < 10; ++i2) {
+					{
+						par1World.setBlock(par1 + i0, par2 + i1, par3 + i2, Blocks.stonebrick);
+					}
+				}
+			}
+		}
+		for (int i0 = 0; i0 < 13; ++i0) {
+			for (int i1 = 0; i1 < 5; ++i1) {
+				for (int i2 = 0; i2 < 9; ++i2) {
+					{
+						par1World.setBlock(par1 + i0 + 1, par2 + i1, par3 + i2 + 1, Blocks.air);
+					}
+				}
+			}
+		}
+		for (int i0 = 0; i0 < 15; ++i0) {
+			for (int i2 = 0; i2 < 10; ++i2) {
+				{
+					par1World.setBlock(par1 + i0, par2 + 6, par3 + i2, Blocks.wool, 0, 2);
+				}
+			}
+		}
+		par1World.setBlock(par1 + 1, par2 + 5, par3 + 1, Blocks.glowstone);
+		par1World.setBlock(par1 + 1, par2 + 5, par3 + 8, Blocks.glowstone);
+		par1World.setBlock(par1 + 13, par2 + 5, par3 + 1, Blocks.glowstone);
+		par1World.setBlock(par1 + 13, par2 + 5, par3 + 8, Blocks.glowstone);
+		par1World.setBlock(par1 + 7, par2 + 5, par3 + 1, Blocks.glowstone);
+		par1World.setBlock(par1 + 8, par2 + 5, par3 + 1, Blocks.glowstone);
+		par1World.setBlock(par1 + 7, par2 + 5, par3 + 8, Blocks.glowstone);
+		par1World.setBlock(par1 + 8, par2 + 5, par3 + 8, Blocks.glowstone);
+	}
 
 	public void BuildTower(World par1World, int par1, int par2, int par3) {
 		for (int i0 = 0; i0 < 8; ++i0) {

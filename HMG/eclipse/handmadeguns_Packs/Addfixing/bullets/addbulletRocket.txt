@@ -3,5 +3,13 @@ FlyingSoundLV,16
 FlyingSoundSP,1.4
 FlyingSoundmaxdist,128
 FlyingSound_BulletMinSpeed,0
+
+EnableTrail,true
+TrailProbability,1
+TrailLength,20
+animationspeed,20
+TrailWidth,1
+Trailtexture,Vapour
+TrailGlow,false
 SmokeGlow,true
 Name,byfrou01_Rocket
