@@ -6,6 +6,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import handmadeguns.client.render.IModelCustom_HMG;
 import handmadeguns.obj_modelloaderMod.obj.HMGGroupObject;
@@ -19,8 +21,10 @@ import net.minecraft.client.resources.IResource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelFormatException;
 
+import static handmadeguns.HandmadeGunsCore.HMG_proxy;
 import static java.lang.Float.parseFloat;
 import static java.lang.Integer.parseInt;
+import static java.lang.Math.toRadians;
 
 @SideOnly(Side.CLIENT)
 public class MQO_MetasequoiaObject implements IModelCustom_HMG
@@ -48,20 +52,39 @@ public class MQO_MetasequoiaObject implements IModelCustom_HMG
 	public float	sizeY = 0;
 	public float	sizeZ = 0;
 
+	public boolean endLoad = false;
+	ExecutorService es;
 	public MQO_MetasequoiaObject(ResourceLocation resource) throws ModelFormatException
 	{
+		HMG_proxy.AddModel(this);
 		this.fileName = resource.toString();
-		try
-		{
-			IResource res = Minecraft.getMinecraft().getResourceManager().getResource(resource);
-			loadObjModel(res.getInputStream());
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
+		es = Executors.newCachedThreadPool();
+		es.execute(() -> {
+			try
+			{
+				IResource res = Minecraft.getMinecraft().getResourceManager().getResource(resource);
+				loadObjModel(res.getInputStream());
+			}
+			catch (Throwable e)
+			{
+				es.shutdown();
+				e.printStackTrace();
+			}
+			endLoad = true;
+			es.shutdown();
+		});
 	}
 
+	@Override
+	public ExecutorService getLoadThread() {
+		return es;
+	}
+
+
+	@Override
+	public boolean isReady() {
+		return endLoad;
+	}
 	@Override
 	public String getType()
 	{
@@ -133,13 +156,15 @@ public class MQO_MetasequoiaObject implements IModelCustom_HMG
 	public void renderPart(String partName)
 	{
 		current = null;
-		for (MQO_GroupObject groupObject : groupObjects)
-		{
-			if (partName.equals(groupObject.name))
-			{
-				groupObject.render();
-				current = groupObject;
+		try {
+			for (MQO_GroupObject groupObject : groupObjects) {
+				if (partName.equals(groupObject.name)) {
+					groupObject.render();
+					current = groupObject;
+				}
 			}
+		}catch (Exception e){
+			e.printStackTrace();
 		}
 	}
 
@@ -257,7 +282,7 @@ public class MQO_MetasequoiaObject implements IModelCustom_HMG
 
 					boolean mirror = false;
 
-					double  facet   = Math.cos(45 * 3.1415926535 / 180.0);
+					double  facet   = Math.cos(59.5 * 3.1415926535 / 180.0);
 					boolean shading = false;
 
 					// シェーディングの設定と頂点数読み込み
@@ -278,7 +303,7 @@ public class MQO_MetasequoiaObject implements IModelCustom_HMG
 						String s[] = currentLine.split(" ");
 						if(s.length==2 && s[0].equals("facet"))
 						{
-							facet   = Math.cos(Double.parseDouble(s[1]) * 3.1415926535 / 180.0);
+							facet   = Math.cos(toRadians(Double.parseDouble(s[1])));
 						}
 
 						if(isValidVertexLine(currentLine))
@@ -383,8 +408,6 @@ public class MQO_MetasequoiaObject implements IModelCustom_HMG
 					materials = parseMaterial(currentLine,reader);
 				}
 			}
-
-			renderAll();
 		}
 		catch (IOException e)
 		{
@@ -434,13 +457,12 @@ public class MQO_MetasequoiaObject implements IModelCustom_HMG
 				for(int i=0; i<f.verticesID.length; i++)
 				{
 					MQO_Vertex vn = getVerticesNormalFromFace(f.faceNormal, f.verticesID[i], group, (float)facet);
-					vn.normalize();
 
 
 
 					if(shading)
 					{
-						if(f.faceNormal.x * vn.x + f.faceNormal.y * vn.y + f.faceNormal.z * vn.z >= facet)
+						if(f.faceNormal.angle(vn) >= facet)
 						{
 							f.vertexNormals[i] = vn;
 						}
@@ -728,5 +750,8 @@ public class MQO_MetasequoiaObject implements IModelCustom_HMG
 	@Override
 	public HMGGroupObject renderPart_getInstance() {
 		return current;
+	}
+	public String toString(){
+		return fileName;
 	}
 }

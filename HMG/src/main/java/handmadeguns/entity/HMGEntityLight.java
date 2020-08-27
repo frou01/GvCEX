@@ -108,9 +108,6 @@ public class HMGEntityLight extends Entity
         this.setLocationAndAngles(p_i1756_2_.posX + ix, p_i1756_2_.posY + yy + p_i1756_2_.getEyeHeight(),p_i1756_2_.posZ + iz, p_i1756_2_.rotationYaw, p_i1756_2_.rotationPitch);
         this.setPosition(this.posX, this.posY, this.posZ);
         this.yOffset = 0.0F;
-        this.motionX = (double)(-MathHelper.sin(this.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI));
-        this.motionZ = (double)(MathHelper.cos(this.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI));
-        this.motionY = (double)(-MathHelper.sin(this.rotationPitch / 180.0F * (float)Math.PI));
         this.setThrowableHeading(this.motionX, this.motionY, this.motionZ, p_i1756_3_ * 1.5F, 1.0F);
         this.shootingEntity = p_i1756_2_;
         this.fuse = 10;

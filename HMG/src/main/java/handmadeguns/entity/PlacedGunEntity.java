@@ -57,7 +57,7 @@ public class PlacedGunEntity extends Entity implements IEntityAdditionalSpawnDat
     public PlacedGunEntity(World p_i1582_1_) {
         super(p_i1582_1_);
         ignoreFrustumCheck = true;
-        renderDistanceWeight = 4096;
+        renderDistanceWeight = Double.MAX_VALUE;
     }
     public PlacedGunEntity(World p_i1582_1_,ItemStack stack) {
         this(p_i1582_1_);
@@ -131,8 +131,10 @@ public class PlacedGunEntity extends Entity implements IEntityAdditionalSpawnDat
             prevRiddenByEntityPosZ = riddenByEntity.posZ;
         }
     }
-
     public void onUpdate(){
+        if(worldObj.isRemote && HMG_proxy.getEntityPlayerInstance() != null && HMG_proxy.getEntityPlayerInstance().isDead){
+            this.setDead();
+        }
         prevrotationYawGun = rotationYawGun;
         this.prevRotationPitch = this.rotationPitch;
 

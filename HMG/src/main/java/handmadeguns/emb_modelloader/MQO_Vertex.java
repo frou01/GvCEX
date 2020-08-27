@@ -23,10 +23,13 @@ public class MQO_Vertex
 	
 	public void normalize()
 	{
-		double d = Math.sqrt(x*x + y*y + z*z);
+		double d = length();
 		this.x /= d;
 		this.y /= d;
 		this.z /= d;
+	}
+	public double length(){
+		return Math.sqrt(x*x + y*y + z*z);
 	}
 	
 	public void add(MQO_Vertex v)
@@ -39,5 +42,11 @@ public class MQO_Vertex
 	public boolean equal(MQO_Vertex v)
 	{
 		return this.x==v.x && this.y==v.y && this.z==v.z;
+	}
+	public double angle(MQO_Vertex v){
+		return this.dot(v)/this.length()/v.length();
+	}
+	public double dot(MQO_Vertex v){
+		return this.x * v.x + this.y * v.y + this.z * v.z;
 	}
 }

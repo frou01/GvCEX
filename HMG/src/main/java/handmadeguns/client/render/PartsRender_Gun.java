@@ -92,7 +92,7 @@ public class PartsRender_Gun extends PartsRender {
 			case Cock:
 				if (parts.rendering_Cock) {
 					if (parts.hasMotionCock) {
-						HMGGunParts_Motion_PosAndRotation OffsetAndRotation = parts.getcockmotion(flame + smooth);
+						HMGGunParts_Motion_PosAndRotation OffsetAndRotation = parts.getcockmotion(flame);
 						
 						PartSidentification_Attach(parts, state, flame, remainbullets, OffsetAndRotation);
 						return true;
@@ -107,7 +107,7 @@ public class PartsRender_Gun extends PartsRender {
 			case Reload:
 				if (parts.rendering_Reload) {
 					if (parts.hasMotionReload) {
-						HMGGunParts_Motion_PosAndRotation OffsetAndRotation = parts.getReloadmotion(flame + smooth);
+						HMGGunParts_Motion_PosAndRotation OffsetAndRotation = parts.getReloadmotion(flame);
 						
 						PartSidentification_Attach(parts, state, flame, remainbullets, OffsetAndRotation);
 						return true;

@@ -1,13 +1,13 @@
 package handmadevehicle.SlowPathFinder;
 
+import handmadevehicle.entity.parts.IDriver;
 import net.minecraft.entity.Entity;
 import net.minecraft.pathfinding.PathEntity;
-import net.minecraft.pathfinding.PathFinder;
 import net.minecraft.util.MathHelper;
-import net.minecraft.world.ChunkCache;
 import net.minecraft.world.World;
 
-import javax.vecmath.Vector3d;
+import static java.lang.Math.sqrt;
+import static net.minecraft.util.MathHelper.floor_double;
 
 public class WorldForPathfind
 {
@@ -22,17 +22,20 @@ public class WorldForPathfind
     public int serchingposZ;
 
 
-   public PathEntity getEntityPathToXYZ(Entity entity, int targetX, int targetY, int targetZ, float searchRange, boolean isWoddenDoorAllowed, boolean isMovementBlockAllowed, boolean isPathingInWater, boolean canEntityDrown)
-    {
+    public PathEntity getEntityPathToXYZ(Entity entity, int targetX, int targetY, int targetZ, float searchRange, boolean isWoddenDoorAllowed, boolean isMovementBlockAllowed, boolean isPathingInWater, boolean canEntityDrown) {
+
+        if(entity instanceof IDriver && ((IDriver) entity).getLinkedVehicle()!= null && !((IDriver) entity).getLinkedVehicle().prefab_vehicle.T_Land_F_Plane){
+            return null;
+        }
         if(slowPathfinder != null && slowPathfinder.isserchingpath){
             return slowPathfinder.serchPath();
         }else {
-            int l = MathHelper.floor_double(entity.posX);
-            int i1 = MathHelper.floor_double(entity.posY);
-            int j1 = MathHelper.floor_double(entity.posZ);
-            serchingposX = MathHelper.floor_double(entity.posX);
-            serchingposY = MathHelper.floor_double(entity.posY);
-            serchingposZ = MathHelper.floor_double(entity.posZ);
+            int l = floor_double(entity.posX);
+            int i1 = floor_double(entity.posY);
+            int j1 = floor_double(entity.posZ);
+            serchingposX = floor_double(entity.posX);
+            serchingposY = floor_double(entity.posY);
+            serchingposZ = floor_double(entity.posZ);
             int k1 = (int) (searchRange + 8.0F);//検索範囲
             int l1 = l - k1;
             int i2 = i1 - k1;
@@ -46,6 +49,13 @@ public class WorldForPathfind
             if(slowPathfinder != null)backup = slowPathfinder.currentReturnVal;
             slowPathfinder = new SlowPathfinder(chunkcache, isWoddenDoorAllowed, isMovementBlockAllowed, isPathingInWater, canEntityDrown);
             slowPathfinder.currentReturnVal = backup;
+            double dist = entity.getDistanceSq(targetX, targetY, targetZ);
+            if(dist>400) {
+                dist = sqrt(dist);
+                targetX = floor_double(l + (targetX - l)/(dist/20));
+                targetY = floor_double(i1 + (targetY - i1)/(dist/20));
+                targetZ = floor_double(j1 + (targetZ - j1)/(dist/20));
+            }
             PathEntity pathentity = slowPathfinder.createEntityPathTo(entity, targetX, targetY, targetZ, searchRange);
             if(!slowPathfinder.isserchingpath) {
                 return pathentity;
@@ -58,9 +68,9 @@ public class WorldForPathfind
 
     public PathEntity getPathEntityToEntity(Entity p_72865_1_, Entity p_72865_2_, float searchRange, boolean isWoddenDoorAllowed, boolean isMovementBlockAllowed, boolean isPathingInWater, boolean canEntityDrown)
     {
-        int i = MathHelper.floor_double(p_72865_1_.posX);
-        int j = MathHelper.floor_double(p_72865_1_.posY + 1.0D);
-        int k = MathHelper.floor_double(p_72865_1_.posZ);
+        int i = floor_double(p_72865_1_.posX);
+        int j = floor_double(p_72865_1_.posY + 1.0D);
+        int k = floor_double(p_72865_1_.posZ);
         int l = (int)(searchRange + 16.0F);
         int i1 = i - l;
         int j1 = j - l;

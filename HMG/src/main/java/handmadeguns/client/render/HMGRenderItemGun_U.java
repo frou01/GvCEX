@@ -418,7 +418,6 @@ public class HMGRenderItemGun_U implements IItemRenderer {
 		if (item.getItem() instanceof HMGItem_Unified_Guns)
 			gun = (HMGItem_Unified_Guns) item.getItem();
 		else {
-
 			GL11.glDepthMask(true);
 			GL11.glDisable(GL_BLEND);
 			return;
@@ -624,8 +623,7 @@ public class HMGRenderItemGun_U implements IItemRenderer {
 
 					GL11.glScalef(scala, scala, scala);
 					if (nbt.getBoolean("IsReloading")) {
-						//�����[�h��
-						if (reloadanim) {
+						if (reloadanim && !nbt.getBoolean("WaitReloading")) {
 							float reloadti = nbt.getInteger("RloadTime");
 							Float[] tgt = new Float[]{0f,
 									0f, 0f, 0f, 0f, 0f, 0f,
@@ -1323,6 +1321,17 @@ public class HMGRenderItemGun_U implements IItemRenderer {
 					break;
 				}
 				case ENTITY: {
+
+					int pass = MinecraftForgeClient.getRenderPass();
+					if(pass == 1) {
+						glEnable(GL_BLEND);
+						glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+						GL11.glDepthMask(false);
+						glAlphaFunc(GL_LEQUAL, 1);
+					}else {
+						GL11.glDepthMask(true);
+						glAlphaFunc(GL_EQUAL, 1);
+					}
 					GL11.glEnable(GL12.GL_RESCALE_NORMAL);
 					int cockingtime = nbt.getInteger("CockingTime");
 					boolean recoiled = nbt.getBoolean("Recoiled");
@@ -1512,7 +1521,7 @@ public class HMGRenderItemGun_U implements IItemRenderer {
 
 		GL11.glDepthMask(true);
 		GL11.glDisable(GL_BLEND);
-		GL11.glShadeModel(GL11.GL_FLAT);
+		GL11.glShadeModel(GL11.GL_SMOOTH);
 	}
 	public void renderatunder(ItemRenderType type, ItemStack item, Object... data){
 		float scala = this.modelscala;

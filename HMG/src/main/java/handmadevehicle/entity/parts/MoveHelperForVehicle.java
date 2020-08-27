@@ -278,6 +278,8 @@ public class MoveHelperForVehicle {
 							courseVec.add(PredictedOffset);
 						}
 					}
+				}else {
+					(pilot).setAttackTarget(null);
 				}
 //						double angletocourse = toDegrees(bodyvector.angle(courseVec));
 //						System.out.println("" + angletocourse);

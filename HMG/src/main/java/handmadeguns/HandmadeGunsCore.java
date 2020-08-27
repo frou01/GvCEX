@@ -103,6 +103,8 @@ public class HandmadeGunsCore {
 
 	public static int cfg_ADS_Sneaking;
 	public static String cfg_Avoid_Hit_Entitys;
+	public static boolean cfg_ThreadHitCheck;
+	public static int cfg_ThreadHitCheck_split_length;
 	public static double cfg_defgravitycof = 0.1;
 	public static boolean cfg_blockdestroy;
 	public static boolean cfg_Flash;
@@ -174,6 +176,8 @@ public class HandmadeGunsCore {
 		cfg_ADS_Sneaking	= lconf.get("Gun", "cfg_ADS_Sneaking",  0).getInt(0);
 		cfg_blockdestroy = lconf.get("Gun", "cfg_blockdestroy",  true).getBoolean(true);
 		cfg_Avoid_Hit_Entitys = lconf.getString("Gun", "cfg_AvoidHit",  "","");
+		cfg_ThreadHitCheck = lconf.get("Gun", "cfg_ThreadHitCheck", true).getBoolean(true);
+		cfg_ThreadHitCheck_split_length = lconf.get("Gun", "cfg_ThreadHitCheck_split_length", 10).getInt(10);
 		cfg_Flash	= lconf.get("Render", "cfg_Flash", true).getBoolean(true);
 		cfg_defaultknockback = lconf.get("Gun", "cfg_KnockBack", 0.05).getDouble(0.05);
 		cfg_defaultknockbacky = lconf.get("Gun", "cfg_KnockBackY", 0.01).getDouble(0.01);
@@ -217,22 +221,19 @@ public class HandmadeGunsCore {
 		// ResourceLocation aa = new ResourceLocation("handmadeguns").getResourceDomain();
 		FMLCommonHandler.instance().bus().register(this);
 		HMG_proxy.setuprender();
-		File packdir = new File(HMG_proxy.ProxyFile(), "handmadeguns_Packs");
-		packdir.mkdirs();
-		readPack(packdir,pEvent.getSide().isClient());
+		File packdir_normal = new File(HMG_proxy.ProxyFile(), "handmadeguns_Packs");
+		packdir_normal.mkdirs();
+		readPackResource(packdir_normal,pEvent.getSide().isClient());
 
 		String filepath = "mods/handmadeguns/addgun";
-		packdir = new File(HMG_proxy.ProxyFile(), filepath);
-		packdir.mkdirs();
-		readPack(packdir,pEvent.getSide().isClient());
+		File packdir_old = new File(HMG_proxy.ProxyFile(), filepath);
+		readPackResource(packdir_old,pEvent.getSide().isClient());
 
-
-		packdir = new File(HMG_proxy.ProxyFile(), "handmadeguns_Packs");
-		packdir.mkdirs();
-
+		readPack(packdir_normal,pEvent.getSide().isClient());
+		readPack(packdir_old,pEvent.getSide().isClient());
 
 		//TODO:INJECT_FUNCTION
-		File[] packlist = packdir.listFiles();
+		File[] packlist = packdir_normal.listFiles();
 		Arrays.sort(packlist, new Comparator<File>() {
 			public int compare(File file1, File file2){
 				return file1.getName().compareTo(file2.getName());
@@ -300,111 +301,122 @@ public class HandmadeGunsCore {
 		//END
 
 	}
+	public void readPackResource(File packdir,boolean isClient){
+		File[] packlist = packdir.listFiles();
+		if(packlist == null)return;
+		Arrays.sort(packlist, new Comparator<File>() {
+			public int compare(File file1, File file2){
+				return file1.getName().compareTo(file2.getName());
+			}
+		});
+		for (File apack : packlist) {
+			if (apack.isDirectory()) {
+				String assetsdirstring = apack.getName() + File.separatorChar + "assets" + File.separatorChar + "handmadeguns" + File.separatorChar;
+				File diremodel = new File(apack, "addmodel");
+				File[] filemodel = diremodel.listFiles();
+				if(filemodel != null) {
+					for (int ii = 0; ii < filemodel.length; ii++) {
+						if (filemodel[ii].isFile()) {
+							File directory111 = new File(packdir, assetsdirstring +
+									"textures" + File.separatorChar + "model" + File.separatorChar + filemodel[ii].getName());
+							try {
+								FileUtils.copyFile(filemodel[ii], directory111);
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+						}
+					}
+				}
+				File diretexture = new File(apack, "addtexture");
+				File[] filetexture = diretexture.listFiles();
+				if(filetexture != null) {
+					for (int ii = 0; ii < filetexture.length; ii++) {
+						if (filetexture[ii].isFile()) {
+							File directory111 = new File(packdir, assetsdirstring +
+									"textures" + File.separatorChar + "items" + File.separatorChar + filetexture[ii].getName());
+							try {
+								FileUtils.copyFile(filetexture[ii], directory111);
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+						}
+					}
+				}
+				File diresighttexture = new File(apack, "addsighttex");
+				File[] filesighttexture = diresighttexture.listFiles();
+				if (filesighttexture != null) {
+					for (int ii = 0; ii < filesighttexture.length; ii++) {
+						if (filesighttexture[ii].isFile()) {
+							File directory111 = new File(packdir,assetsdirstring +
+									"textures" + File.separatorChar + "misc" + File.separatorChar + filesighttexture[ii].getName());
+							try {
+								FileUtils.copyFile(filesighttexture[ii], directory111);
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+						}
+					}
+				}
+				File diresound = new File(apack, "addsounds");
+				File[] filesound = diresound.listFiles();
+				if (filesound != null) {
+					for (int ii = 0; ii < filesound.length; ii++) {
+						if (filesound[ii].isFile()) {
+							File directory111 = new File(packdir,assetsdirstring +
+									"sounds" + File.separatorChar + filesound[ii].getName());
+							try {
+								FileUtils.copyFile(filesound[ii], directory111);
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+						}
+					}/**/
+				}
+				HMGAddSounds.load(new File(packdir,assetsdirstring +
+						"sounds"),new File(packdir,assetsdirstring));
+			}
+		}
+
+		for (File file : packdir.listFiles())
+		{
+			if (file.isDirectory())
+			{
+				try
+				{
+					if(isClient) {
+						HashMap<String, Object> map = new HashMap<String, Object>();
+						map.put("modid", "HandmadeGuns");
+						map.put("name", "HandmadeGuns");
+						map.put("version", "1");
+						FMLModContainer container = new FMLModContainer("handmadeguns.HandmadeGunsCore", new ModCandidate(file, file, file.isDirectory() ? ContainerType.DIR : ContainerType.JAR), map);
+						container.bindMetadata(MetadataCollection.from(null, ""));
+						FMLClientHandler.instance().addModAsResource(container);
+					}
+				} catch (Exception e)
+				{
+					System.out.println("Failed to load resource " + file.getName());
+					e.printStackTrace();
+				}
+				// Add the directory to the content pack list
+				System.out.println("Loaded content pack resource : " + file.getName());
+			}
+		}
+		if(isClient){
+			Minecraft.getMinecraft().refreshResources();
+		}
+	}
 
 	public void readPack(File packdir,boolean isClient){
+		File[] packlist = packdir.listFiles();
+		if(packlist == null)return;
+		Arrays.sort(packlist, new Comparator<File>() {
+			public int compare(File file1, File file2){
+				return file1.getName().compareTo(file2.getName());
+			}
+		});
 
 		{
-			File[] packlist = packdir.listFiles();
-			Arrays.sort(packlist, new Comparator<File>() {
-				public int compare(File file1, File file2){
-					return file1.getName().compareTo(file2.getName());
-				}
-			});
-			for (File apack : packlist) {
-				if (apack.isDirectory()) {
-					String assetsdirstring = apack.getName() + File.separatorChar + "assets" + File.separatorChar + "handmadeguns" + File.separatorChar;
-					File diremodel = new File(apack, "addmodel");
-					File[] filemodel = diremodel.listFiles();
-					if(filemodel != null) {
-						for (int ii = 0; ii < filemodel.length; ii++) {
-							if (filemodel[ii].isFile()) {
-								File directory111 = new File(packdir, assetsdirstring +
-										"textures" + File.separatorChar + "model" + File.separatorChar + filemodel[ii].getName());
-								try {
-									FileUtils.copyFile(filemodel[ii], directory111);
-								} catch (IOException e) {
-									e.printStackTrace();
-								}
-							}
-						}
-					}
-					File diretexture = new File(apack, "addtexture");
-					File[] filetexture = diretexture.listFiles();
-					if(filetexture != null) {
-						for (int ii = 0; ii < filetexture.length; ii++) {
-							if (filetexture[ii].isFile()) {
-								File directory111 = new File(packdir, assetsdirstring +
-										"textures" + File.separatorChar + "items" + File.separatorChar + filetexture[ii].getName());
-								try {
-									FileUtils.copyFile(filetexture[ii], directory111);
-								} catch (IOException e) {
-									e.printStackTrace();
-								}
-							}
-						}
-					}
-					File diresighttexture = new File(apack, "addsighttex");
-					File[] filesighttexture = diresighttexture.listFiles();
-					if (filesighttexture != null) {
-						for (int ii = 0; ii < filesighttexture.length; ii++) {
-							if (filesighttexture[ii].isFile()) {
-								File directory111 = new File(packdir,assetsdirstring +
-										"textures" + File.separatorChar + "misc" + File.separatorChar + filesighttexture[ii].getName());
-								try {
-									FileUtils.copyFile(filesighttexture[ii], directory111);
-								} catch (IOException e) {
-									e.printStackTrace();
-								}
-							}
-						}
-					}
-					File diresound = new File(apack, "addsounds");
-					File[] filesound = diresound.listFiles();
-					if (filesound != null) {
-						for (int ii = 0; ii < filesound.length; ii++) {
-							if (filesound[ii].isFile()) {
-								File directory111 = new File(packdir,assetsdirstring +
-										"sounds" + File.separatorChar + filesound[ii].getName());
-								try {
-									FileUtils.copyFile(filesound[ii], directory111);
-								} catch (IOException e) {
-									e.printStackTrace();
-								}
-							}
-						}/**/
-					}
-					HMGAddSounds.load(new File(packdir,assetsdirstring +
-							"sounds"),new File(packdir,assetsdirstring));
-				}
-			}
 
-			for (File file : packdir.listFiles())
-			{
-				if (file.isDirectory())
-				{
-					try
-					{
-						if(isClient) {
-							HashMap<String, Object> map = new HashMap<String, Object>();
-							map.put("modid", "HandmadeGuns");
-							map.put("name", "HandmadeGuns");
-							map.put("version", "1");
-							FMLModContainer container = new FMLModContainer("handmadeguns.HandmadeGunsCore", new ModCandidate(file, file, file.isDirectory() ? ContainerType.DIR : ContainerType.JAR), map);
-							container.bindMetadata(MetadataCollection.from(null, ""));
-							FMLClientHandler.instance().addModAsResource(container);
-						}
-					} catch (Exception e)
-					{
-						System.out.println("Failed to load resource " + file.getName());
-						e.printStackTrace();
-					}
-					// Add the directory to the content pack list
-					System.out.println("Loaded content pack resource : " + file.getName());
-				}
-			}
-			if(isClient){
-				Minecraft.getMinecraft().refreshResources();
-			}
 			Arrays.sort(packlist);
 			for (File apack : packlist) {
 				if (apack.isDirectory()) {
@@ -585,10 +597,10 @@ public class HandmadeGunsCore {
 		EntityRegistry.registerModEntity(HMGEntityItemMount2.class, "HMGEntityItemMount2", 202, this, 128, 5, true);
 
 		//EntityRegistry.instance()ry.registerModEntity(HGEntityBullet.class, "BulletHG", 150, this, 128, 5, true);
-		EntityRegistry.registerModEntity(HMGEntityBullet.class, "Bullet_HMG", 260, this, 4096, 5, false);
-		EntityRegistry.registerModEntity(HMGEntityBulletRocket.class, "BulletRPG_HMG", 261, this, 4096, 5, false);
-		EntityRegistry.registerModEntity(HMGEntityBulletExprode.class, "BulletGrenade_HMG", 262, this, 4096, 5, false);
-		EntityRegistry.registerModEntity(HMGEntityBulletTorp.class, "BulletTorp_HMG", 262, this, 4096, 5, false);
+		EntityRegistry.registerModEntity(HMGEntityBullet.class, "Bullet_HMG", 260, this, 65536, 5, false);
+		EntityRegistry.registerModEntity(HMGEntityBulletRocket.class, "BulletRPG_HMG", 261, this, 65536, 5, false);
+		EntityRegistry.registerModEntity(HMGEntityBulletExprode.class, "BulletGrenade_HMG", 262, this, 65536, 5, false);
+		EntityRegistry.registerModEntity(HMGEntityBulletTorp.class, "BulletTorp_HMG", 262, this, 65536, 5, false);
 		EntityRegistry.registerModEntity(HMGEntityLight.class, "Right_HMG", 263, this, 128, 5, true);
 		EntityRegistry.registerModEntity(HMGEntityLight2.class, "Right2_HMG", 264, this, 128, 5, false);
 		EntityRegistry.registerModEntity(HMGEntityLaser.class, "Laser_HMG", 265, this, 128, 5, false);
@@ -773,11 +785,13 @@ public class HandmadeGunsCore {
 		readPackRecipe(new File(HMG_proxy.ProxyFile(), "handmadeguns_Packs"));
 		String filepath = "mods/handmadeguns/addgun";
 		readPackRecipe(new File(HMG_proxy.ProxyFile(), filepath));
+		HMG_proxy.setUpModels();
 	}
 
 	public void readPackRecipe(File packdir){
 
 		File[] packlist = packdir.listFiles();
+		if(packlist == null)return;
 		Arrays.sort(packlist, new Comparator<File>() {
 			public int compare(File file1, File file2){
 				return file1.getName().compareTo(file2.getName());

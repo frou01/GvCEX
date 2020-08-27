@@ -29,6 +29,7 @@ public class HMGRenderBulletExplode extends Render
     public void doRender(HMGEntityBulletBase entity, double p_180551_2_, double p_180551_4_, double p_180551_6_, float p_180551_8_, float partialTicks)
     {
         GL11.glPushMatrix();
+        GL11.glEnable(GL12.GL_RESCALE_NORMAL);
         if(entity.modelid == -1) {
             this.bindEntityTexture(entity);
             GL11.glTranslatef((float)p_180551_2_, (float)p_180551_4_, (float)p_180551_6_);

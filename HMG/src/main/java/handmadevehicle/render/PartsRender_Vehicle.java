@@ -249,17 +249,17 @@ public class PartsRender_Vehicle extends PartsRender {
 				if(peraOffset<0)peraOffset = peraOffset + currentBaseLogic.prefab_vehicle.max_pera_trackPos;
 				HMGGunParts_Motion_PosAndRotation peraPosAndRotation = ((HMVVehicleParts) parts).getRenderinfOfPeraPosAndRotation();
 				if(peraPosAndRotation != null) {
-					GL11.glTranslatef(peraPosAndRotation.posX * peraOffset, peraPosAndRotation.posY * peraOffset, peraPosAndRotation.posZ * peraOffset);
+					glTranslatef(peraPosAndRotation.posX * peraOffset, peraPosAndRotation.posY * peraOffset, peraPosAndRotation.posZ * peraOffset);
 					if(parts.rotateTypeIsVector){
-						GL11.glTranslatef(rotationCenterAndRotation.posX, rotationCenterAndRotation.posY, rotationCenterAndRotation.posZ);
-						GL11.glRotatef(peraPosAndRotation.rotationX * peraOffset, rotationCenterAndRotation.rotateVec.x, rotationCenterAndRotation.rotateVec.y, rotationCenterAndRotation.rotateVec.z);
-						GL11.glTranslatef(-rotationCenterAndRotation.posX, -rotationCenterAndRotation.posY, -rotationCenterAndRotation.posZ);
+						glTranslatef(rotationCenterAndRotation.posX, rotationCenterAndRotation.posY, rotationCenterAndRotation.posZ);
+						glRotatef(peraPosAndRotation.rotationX * peraOffset, rotationCenterAndRotation.rotateVec.x, rotationCenterAndRotation.rotateVec.y, rotationCenterAndRotation.rotateVec.z);
+						glTranslatef(-rotationCenterAndRotation.posX, -rotationCenterAndRotation.posY, -rotationCenterAndRotation.posZ);
 					}else {
-						GL11.glTranslatef(rotationCenterAndRotation.posX, rotationCenterAndRotation.posY, rotationCenterAndRotation.posZ);
-						GL11.glRotatef(peraPosAndRotation.rotationY * peraOffset, 0, 1, 0);
-						GL11.glRotatef(peraPosAndRotation.rotationX * peraOffset, 1, 0, 0);
-						GL11.glRotatef(peraPosAndRotation.rotationZ * peraOffset, 0, 0, 1);
-						GL11.glTranslatef(-rotationCenterAndRotation.posX, -rotationCenterAndRotation.posY, -rotationCenterAndRotation.posZ);
+						glTranslatef(rotationCenterAndRotation.posX, rotationCenterAndRotation.posY, rotationCenterAndRotation.posZ);
+						glRotatef(peraPosAndRotation.rotationY * peraOffset, 0, 1, 0);
+						glRotatef(peraPosAndRotation.rotationX * peraOffset, 1, 0, 0);
+						glRotatef(peraPosAndRotation.rotationZ * peraOffset, 0, 0, 1);
+						glTranslatef(-rotationCenterAndRotation.posX, -rotationCenterAndRotation.posY, -rotationCenterAndRotation.posZ);
 					}
 				}
 			}
@@ -269,17 +269,17 @@ public class PartsRender_Vehicle extends PartsRender {
 					float idleOffset = (currentBaseLogic.prev_idleAnimCNT + (currentBaseLogic.idleAnimCNT - currentBaseLogic.prev_idleAnimCNT) * smooth)/currentBaseLogic.prefab_vehicle.max_idleAnimCNT;
 					idleOffset = idleOffset%currentBaseLogic.prefab_vehicle.max_idleAnimCNT;
 					if(idleOffset<0)idleOffset = idleOffset + currentBaseLogic.prefab_vehicle.max_idleAnimCNT;
-					GL11.glTranslatef(idlePosAndRotation.posX * idleOffset, idlePosAndRotation.posY * idleOffset, idlePosAndRotation.posZ * idleOffset);
+					glTranslatef(idlePosAndRotation.posX * idleOffset, idlePosAndRotation.posY * idleOffset, idlePosAndRotation.posZ * idleOffset);
 					if(parts.rotateTypeIsVector){
-						GL11.glTranslatef(rotationCenterAndRotation.posX, rotationCenterAndRotation.posY, rotationCenterAndRotation.posZ);
-						GL11.glRotatef(idlePosAndRotation.rotationX * idleOffset, rotationCenterAndRotation.rotateVec.x, rotationCenterAndRotation.rotateVec.y, rotationCenterAndRotation.rotateVec.z);
-						GL11.glTranslatef(-rotationCenterAndRotation.posX, -rotationCenterAndRotation.posY, -rotationCenterAndRotation.posZ);
+						glTranslatef(rotationCenterAndRotation.posX, rotationCenterAndRotation.posY, rotationCenterAndRotation.posZ);
+						glRotatef(idlePosAndRotation.rotationX * idleOffset, rotationCenterAndRotation.rotateVec.x, rotationCenterAndRotation.rotateVec.y, rotationCenterAndRotation.rotateVec.z);
+						glTranslatef(-rotationCenterAndRotation.posX, -rotationCenterAndRotation.posY, -rotationCenterAndRotation.posZ);
 					}else {
-						GL11.glTranslatef(rotationCenterAndRotation.posX, rotationCenterAndRotation.posY, rotationCenterAndRotation.posZ);
-						GL11.glRotatef(idlePosAndRotation.rotationY * idleOffset, 0, 1, 0);
-						GL11.glRotatef(idlePosAndRotation.rotationX * idleOffset, 1, 0, 0);
-						GL11.glRotatef(idlePosAndRotation.rotationZ * idleOffset, 0, 0, 1);
-						GL11.glTranslatef(-rotationCenterAndRotation.posX, -rotationCenterAndRotation.posY, -rotationCenterAndRotation.posZ);
+						glTranslatef(rotationCenterAndRotation.posX, rotationCenterAndRotation.posY, rotationCenterAndRotation.posZ);
+						glRotatef(idlePosAndRotation.rotationY * idleOffset, 0, 1, 0);
+						glRotatef(idlePosAndRotation.rotationX * idleOffset, 1, 0, 0);
+						glRotatef(idlePosAndRotation.rotationZ * idleOffset, 0, 0, 1);
+						glTranslatef(-rotationCenterAndRotation.posX, -rotationCenterAndRotation.posY, -rotationCenterAndRotation.posZ);
 					}
 				}
 			}
@@ -301,15 +301,16 @@ public class PartsRender_Vehicle extends PartsRender {
 					if(pass == 1) {
 						glEnable(GL_BLEND);
 						glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-						GL11.glDepthMask(false);
+						glDepthMask(false);
 						glAlphaFunc(GL_LEQUAL, 1);
 					}else {
-						GL11.glDepthMask(true);
+						glDepthMask(true);
 						glAlphaFunc(GL_EQUAL, 1);
 					}
 					renderLinkedStack(currentBaseLogic.allturrets[((HMVVehicleParts) parts).linkedTurretID],
 							currentBaseLogic.allturrets[((HMVVehicleParts) parts).linkedTurretID]
 									.gunStack);
+					mother.rebindEntityTexture(currentEntity);
 				}
 			}
 		}

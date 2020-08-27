@@ -75,11 +75,15 @@ public class GVCItemPMCDefSetter extends Item {
                             playerlook = Vec3.createVectorHelper(playerlook.xCoord * 256, playerlook.yCoord * 256, playerlook.zCoord * 256);
 
                             Vec3 vec31 = Vec3.createVectorHelper(entityPlayer.posX + playerlook.xCoord, entityPlayer.posY + entityPlayer.getEyeHeight() + playerlook.yCoord, entityPlayer.posZ + playerlook.zCoord);
-                            MovingObjectPosition movingobjectposition = GunsUtils.getmovingobjectPosition_forBlock(world,vec3, vec31, false, true, false);//衝突するブロックを調べる
+                            MovingObjectPosition movingobjectposition = GunsUtils.getmovingobjectPosition_forBlock(world,vec3, vec31);//衝突するブロックを調べる
                             if(movingobjectposition != null && movingobjectposition.hitVec != null) {
                                 target.getPlatoon().setPlatoonTargetPos(new double[]{movingobjectposition.blockX,
                                         movingobjectposition.blockY,
                                         movingobjectposition.blockZ});
+                            }else {
+                                target.getPlatoon().setPlatoonTargetPos(new double[]{vec31.xCoord,
+                                        vec31.yCoord,
+                                        vec31.zCoord});
                             }
                             target.changePlatoonOrder(Modes.Go);
                             entityPlayer.addChatComponentMessage(new ChatComponentTranslation(

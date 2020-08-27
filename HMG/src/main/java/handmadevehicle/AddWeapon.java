@@ -1,7 +1,6 @@
 package handmadevehicle;
 
 import handmadevehicle.entity.parts.turrets.FireRist;
-import handmadevehicle.entity.prefab.Prefab_Vehicle_Base;
 import handmadevehicle.entity.prefab.Prefab_Turret;
 
 import javax.vecmath.Vector3d;
@@ -54,21 +53,37 @@ public class AddWeapon {
 							break;
 						case "cannonPos":
 							prefab_turret.gunInfo.posGetter.cannonPos = new Vector3d(parseDouble(type[1]),parseDouble(type[2]),parseDouble(type[3]));
+							prefab_turret.gunInfo.posGetter.cartPos = new Vector3d(parseDouble(type[1]),parseDouble(type[2]),parseDouble(type[3]));
 							break;
 						case "multicannonPos":
-							prefab_turret.gunInfo.posGetter.multicannonPos = new Vector3d[(type.length-1)/3];
-							for(int id = 0;id < prefab_turret.gunInfo.posGetter.multicannonPos.length; id++){
-								prefab_turret.gunInfo.posGetter.multicannonPos[id] = new Vector3d(parseDouble(type[id * 3 + 1]),parseDouble(type[id * 3 + 2]),parseDouble(type[id * 3 + 3]));
+							prefab_turret.gunInfo.posGetter.multiCannonPos = new Vector3d[(type.length-1)/3];
+							prefab_turret.gunInfo.posGetter.multiCartPos = new Vector3d[(type.length-1)/3];
+							for(int id = 0; id < prefab_turret.gunInfo.posGetter.multiCannonPos.length; id++){
+								prefab_turret.gunInfo.posGetter.multiCannonPos[id] = new Vector3d(parseDouble(type[id * 3 + 1]),parseDouble(type[id * 3 + 2]),parseDouble(type[id * 3 + 3]));
+								prefab_turret.gunInfo.posGetter.multiCartPos[id] = new Vector3d(parseDouble(type[id * 3 + 1]),parseDouble(type[id * 3 + 2]),parseDouble(type[id * 3 + 3]));
+							}
+							break;
+						case "cartPos":
+							prefab_turret.gunInfo.posGetter.cartPos = new Vector3d(parseDouble(type[1]),parseDouble(type[2]),parseDouble(type[3]));
+							break;
+						case "multiCartPos":
+							prefab_turret.gunInfo.posGetter.multiCartPos = new Vector3d[(type.length-1)/3];
+							for(int id = 0; id < prefab_turret.gunInfo.posGetter.multiCartPos.length; id++){
+								prefab_turret.gunInfo.posGetter.multiCartPos[id] = new Vector3d(parseDouble(type[id * 3 + 1]),parseDouble(type[id * 3 + 2]),parseDouble(type[id * 3 + 3]));
 							}
 							break;
 						case "linked_MotherTrigger":
 							prefab_turret.linked_MotherTrigger = parseBoolean(type[1]);
 							break;
 						case "fireAll_child":
-							prefab_turret.fireAll_child = parseBoolean(type[1]);
+						case "salvo_fire_child":
+							prefab_turret.salvo_fire_child = parseBoolean(type[1]);
 							break;
 						case "fireAll_cannon":
 							prefab_turret.fireAll_cannon = parseBoolean(type[1]);
+							break;
+						case "fire_cannon_perOneShot":
+							prefab_turret.fire_cannon_perOneShot = parseInt(type[1]);
 							break;
 						case "positionLinked":
 							prefab_turret.positionLinked = parseBoolean(type[1]);

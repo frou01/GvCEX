@@ -20,7 +20,10 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class HMGEntityFallingBlockModified extends Entity implements IEntityAdditionalSpawnData {
 
@@ -120,7 +123,6 @@ public class HMGEntityFallingBlockModified extends Entity implements IEntityAddi
 						this.motionX *= 0.699999988079071D;
 						this.motionZ *= 0.699999988079071D;
 					}
-					this.motionY *= -0.5D;
 
 					if (this.worldObj.getBlock(i, j, k) != Blocks.piston_extension)
 					{
@@ -168,7 +170,24 @@ public class HMGEntityFallingBlockModified extends Entity implements IEntityAddi
 								this.entityDropItem(new ItemStack(this.block, 1, this.block.damageDropped(this.Data)), 0.0F);
 							}
 						}else {
-							motionY = 0.7 + (this.posY - (j + 0.5))/3;
+							int[][] tryToMove = this.tryToMove.clone();
+							shuffle(tryToMove);
+							boolean flag = false;
+							for(int[] offset : tryToMove){
+								if(flag = checkNearSpace(i,j,k,offset[0],offset[1],offset[2])){
+									posX = i + offset[0];
+									posY = j + offset[1];
+									posZ = k + offset[2];
+									break;
+								}
+							}
+							if(!flag){
+								this.setDead();
+								if (this.DropItem && !this.field_145808_f) {
+									this.entityDropItem(new ItemStack(this.block, 1, this.block.damageDropped(this.Data)), 0.0F);
+								}
+							}
+
 						}
 					}
 				}
@@ -186,6 +205,41 @@ public class HMGEntityFallingBlockModified extends Entity implements IEntityAddi
 		}
 	}
 
+	int[][] tryToMove = {
+			{ 1, 1, 1},{ 0, 1, 1},{-1, 1, 1},
+			{ 1, 1, 0},{ 0, 1, 0},{-1, 1, 0},
+			{ 1, 1,-1},{ 0, 1,-1},{-1, 1,-1},
+
+			{ 1, 0, 1},{ 0, 0, 1},{-1, 0, 1},
+			{ 1, 0, 0},{ 0, 0, 0},{-1, 0, 0},
+			{ 1, 0,-1},{ 0, 0,-1},{-1, 0,-1},
+
+			{ 1,-1, 1},{ 0,-1, 1},{-1,-1, 1},
+			{ 1,-1, 0},{ 0,-1, 0},{-1,-1, 0},
+			{ 1,-1,-1},{ 0,-1,-1},{-1,-1,-1},
+	};
+
+	private boolean checkNearSpace(int i,int j, int k, int offsetX,int offsetY,int offsetZ){
+		return this.worldObj.canPlaceEntityOnSide(this.block, i, j, k, true, 1, (Entity) null, (ItemStack) null) &&
+				!BlockFalling.func_149831_e(this.worldObj, i, j - 1, k);
+	}
+	public static void shuffle(int[][] array) {
+		//from https://blog.y-yuki.net/entry/2018/08/22/094000
+		// 配列が空か１要素ならシャッフルしようがないので、そのままreturn
+		if (array.length <= 1) {
+			return;
+		}
+
+		// Fisher–Yates shuffle
+		Random rnd = ThreadLocalRandom.current();
+		for (int i = array.length - 1; i > 0; i--) {
+			int index = rnd.nextInt(i + 1);
+			// 要素入れ替え(swap)
+			int[] tmp = array[index];
+			array[index] = array[i];
+			array[i] = tmp;
+		}
+	}
 	/**
 	 * Called when the mob is falling. Calculates and applies fall damage.
 	 */

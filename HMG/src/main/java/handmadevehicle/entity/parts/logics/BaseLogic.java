@@ -40,10 +40,13 @@ import net.minecraft.world.World;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 
+import javax.script.Invocable;
 import javax.script.ScriptException;
 import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Quat4d;
 import javax.vecmath.Vector3d;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -54,6 +57,7 @@ import static handmadeguns.Util.GunsUtils.isCollidableBlock;
 import static handmadevehicle.HMVehicle.*;
 import static handmadevehicle.Utils.*;
 import static handmadevehicle.entity.parts.turrets.TurretObj.getActiveTurret;
+import static handmadevehicle.entity.prefab.Prefab_Vehicle_Base.doScript;
 import static java.lang.Math.*;
 import static java.lang.Math.toRadians;
 import static net.minecraft.util.MathHelper.wrapAngleTo180_double;
@@ -86,6 +90,9 @@ public class BaseLogic implements IbaseLogic,IneedMouseTrack,MultiRiderLogics {
 	public Quat4d prevbodyRot = new Quat4d(0,0,0,1);
 	public Vector3d receivedPosition;
 	public Vector3d receivedMotion;
+	public Vector3d positionVec = new Vector3d();
+	public Vector3d motionvec = new Vector3d();
+
 	public Vector3d prevPos = null;
 
 	public Vector3d[] prevAdditionalBoxPoses;
@@ -110,6 +117,7 @@ public class BaseLogic implements IbaseLogic,IneedMouseTrack,MultiRiderLogics {
 	public Vector3d localMotionVec = new Vector3d();
 	public Vector3d prevlocalMotionVec = new Vector3d();
 	private int nextStepDistance = 1;
+	public Invocable script_local;
 
 
 
@@ -714,6 +722,11 @@ public class BaseLogic implements IbaseLogic,IneedMouseTrack,MultiRiderLogics {
 	
 	public void setinfo(Prefab_Vehicle_Base info) {
 		this.prefab_vehicle = info;
+		try {
+			if(info.script_local != null)this.script_local = (Invocable) doScript(new FileReader(info.script_local));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 		this.allturrets = new TurretObj[info.prefab_attachedWeapons_all.length];
 		this.turrets = new TurretObj[info.prefab_attachedWeapons.length];//数カウンタだけで良さそうな気はする
 		int cnt = 0;
@@ -797,104 +810,192 @@ public class BaseLogic implements IbaseLogic,IneedMouseTrack,MultiRiderLogics {
 		for (Entity entity : riddenByEntities) {
 			if (entity != null) {
 				isRidden = true;
-				if((mc_Entity.worldObj.isRemote && entity == HMV_Proxy.getEntityPlayerInstance())) {
+				if ((mc_Entity.worldObj.isRemote && entity == HMV_Proxy.getEntityPlayerInstance())) {
 					HMV_Proxy.setPlayerSeatID(cnt);
 					entity.ridingEntity = mc_Entity;
-					if(HMV_Proxy.isSneaking())
-						HMVPacketHandler.INSTANCE.sendToServer(new HMVPacketDisMountEntity(mc_Entity.getEntityId(),entity.getEntityId()));
-				}else
-				if(!mc_Entity.worldObj.isRemote) {
+					if (HMV_Proxy.isSneaking())
+						HMVPacketHandler.INSTANCE.sendToServer(new HMVPacketDisMountEntity(mc_Entity.getEntityId(), entity.getEntityId()));
+				} else if (!mc_Entity.worldObj.isRemote) {
 					if (entity.isDead) {
 //						System.out.println("debug");
-						if(entity.ridingEntity != null)entity.ridingEntity.setDead();
+						if (entity.ridingEntity != null) entity.ridingEntity.setDead();
 						riddenByEntities[cnt] = null;
 						entity.ridingEntity = null;
 					} else {
-						if(!(entity.ridingEntity instanceof EntityDummy_rider)){
-							entity.ridingEntity = new EntityDummy_rider(worldObj, this,cnt);
+						if (!(entity.ridingEntity instanceof EntityDummy_rider)) {
+							entity.ridingEntity = new EntityDummy_rider(worldObj, this, cnt);
 							entity.ridingEntity.riddenByEntity = entity;
-							entity.ridingEntity.setPosition(entity.posX,entity.posY,entity.posZ);
+							entity.ridingEntity.setPosition(entity.posX, entity.posY, entity.posZ);
 						}
 					}
-				}else{
+				} else {
 					entity.rotationYaw = entity.getRotationYawHead();
 					if (entity.isDead) {
 //						System.out.println("debug");
 						riddenByEntities[cnt] = null;
 						entity.ridingEntity = null;
-					}else entity.ridingEntity = mc_Entity;
+					} else entity.ridingEntity = mc_Entity;
 				}
 
-			}
 
-			TurretObj seatmaingun = null;
-			if(seatInfos[cnt].maingun != null)seatmaingun = seatInfos[cnt].maingun[seatInfos[cnt].currentWeaponMode];
-			TurretObj seatsubgun = seatInfos[cnt].subgun;
-			if (worldObj.isRemote) {
-				if (entity != null && entity == HMV_Proxy.getEntityPlayerInstance()) {
-					if (HMV_Proxy.weapon_Mode_click() || (HMV_Proxy.leftclick() && seatInfos[cnt].maingun != null && getActiveTurret(seatInfos[cnt].maingun[seatInfos[cnt].currentWeaponMode]) == null)){
-						seatInfos[cnt].currentWeaponMode++;
+				TurretObj seatmaingun = null;
+				if (seatInfos[cnt].maingun != null)
+					seatmaingun = seatInfos[cnt].maingun[seatInfos[cnt].currentWeaponMode];
+				TurretObj seatsubgun = seatInfos[cnt].subgun;
+				if (worldObj.isRemote) {
+					if (entity != null && entity == HMV_Proxy.getEntityPlayerInstance()) {
+						if (HMV_Proxy.weapon_Mode_click() || (HMV_Proxy.leftclick() && seatInfos[cnt].maingun != null && getActiveTurret(seatInfos[cnt].maingun[seatInfos[cnt].currentWeaponMode]) == null)) {
+							seatInfos[cnt].currentWeaponMode++;
 //						System.out.println("" + prefab_vehicle.weaponModeSound);
-						HMG_proxy.playGUISound(prefab_vehicle.weaponModeSound, 1.0F);
-					}
-					if (seatInfos[cnt].maingun == null || seatInfos[cnt].currentWeaponMode >= seatInfos[cnt].maingun.length) {
-						seatInfos[cnt].currentWeaponMode = 0;
-					}
-					if(HMV_Proxy.changeControlclick()){
-						seatInfos[cnt].syncToPlayerAngle = !seatInfos[cnt].syncToPlayerAngle;
+							HMG_proxy.playGUISound(prefab_vehicle.weaponModeSound, 1.0F);
+						}
+						if (seatInfos[cnt].maingun == null || seatInfos[cnt].currentWeaponMode >= seatInfos[cnt].maingun.length) {
+							seatInfos[cnt].currentWeaponMode = 0;
+						}
+						if (HMV_Proxy.changeControlclick()) {
+							seatInfos[cnt].syncToPlayerAngle = !seatInfos[cnt].syncToPlayerAngle;
 
-						String message;
-						if(seatInfos[cnt].syncToPlayerAngle){
-							message = "Aim : On";
-						}else {
-							message = "Aim : Off";
+							String message;
+							if (seatInfos[cnt].syncToPlayerAngle) {
+								message = "Aim : On";
+							} else {
+								message = "Aim : Off";
+							}
+							((EntityPlayer) entity).addChatComponentMessage(new ChatComponentTranslation(message));
 						}
-						((EntityPlayer)entity).addChatComponentMessage(new ChatComponentTranslation(message));
-					}
 
-					if(HMG_proxy.getMCInstance().inGameHasFocus && HMG_proxy.getMCInstance().currentScreen == null) {
-						if (seatmaingun != null || seatsubgun != null)
-							HMVPacketHandler.INSTANCE.sendToServer(new HMVPacketTriggerSeatGun(HMV_Proxy.leftclick(), HMV_Proxy.rightclick(),HMG_proxy.seekerOpenClose_NonStop(),seatInfos[cnt].syncToPlayerAngle, seatInfos[cnt].currentWeaponMode, mc_Entity.getEntityId(), cnt));
-						if (HMV_Proxy.next_Seatclick())
-							HMVPacketHandler.INSTANCE.sendToServer(new HMVPacketChangeSeat(mc_Entity.getEntityId(), cnt, true));
-						else if (HMV_Proxy.previous_Seatclick())
-							HMVPacketHandler.INSTANCE.sendToServer(new HMVPacketChangeSeat(mc_Entity.getEntityId(), cnt, false));
-					}
-				}
-			} else {
-				if (seatmaingun != null) {
-					if (seatInfos[cnt].gunTrigger1) {
-						seatmaingun.fireall();
-					}
-					if(seatInfos[cnt].seekerKey){
-						//TODO 車両側でターゲットロックを行う方式を作る
-						if(seatmaingun.prefab_turret.useVehicleRadar){
-							lockOnByVehicleRadar();//TODO とりあえず一つ 独立させてレーダー/ターゲティングポッドは別に実装しても良いかもしれない
-							seatmaingun.target = target;
-						}else {
-							seatmaingun.seekerUpdateSwitch = true;
+						if (HMG_proxy.getMCInstance().inGameHasFocus && HMG_proxy.getMCInstance().currentScreen == null) {
+							if (seatmaingun != null || seatsubgun != null)
+								HMVPacketHandler.INSTANCE.sendToServer(new HMVPacketTriggerSeatGun(HMV_Proxy.leftclick(), HMV_Proxy.rightclick(), HMG_proxy.seekerOpenClose_NonStop(), seatInfos[cnt].syncToPlayerAngle, seatInfos[cnt].currentWeaponMode, mc_Entity.getEntityId(), cnt));
+							if (HMV_Proxy.next_Seatclick())
+								HMVPacketHandler.INSTANCE.sendToServer(new HMVPacketChangeSeat(mc_Entity.getEntityId(), cnt, true));
+							else if (HMV_Proxy.previous_Seatclick())
+								HMVPacketHandler.INSTANCE.sendToServer(new HMVPacketChangeSeat(mc_Entity.getEntityId(), cnt, false));
 						}
 					}
+				} else {
+					if (seatmaingun != null) {
+						if(entity instanceof EntityLiving){
+							TurretObj currentTurret = seatmaingun.getAvailableTurret();
+							int mainGunID = seatInfos[cnt].prefab_seat.mainid[seatInfos[cnt].currentWeaponMode];
+							if(prefab_vehicle.linkedTriggers != null && prefab_vehicle.linkedTriggers.containsKey(mainGunID)) {
+								for (int linkedID : prefab_vehicle.linkedTriggers.get(mainGunID)) {
+									if(allturrets[linkedID] != null && !allturrets[linkedID].isreloading())currentTurret = allturrets[linkedID];
+								}
+							}
+							if(currentTurret == null || currentTurret.isreloading() || rand.nextInt(300) == 0){
+								seatInfos[cnt].currentWeaponMode++;
+							}
+							if (seatInfos[cnt].maingun == null || seatInfos[cnt].currentWeaponMode >= seatInfos[cnt].maingun.length) {
+								seatInfos[cnt].currentWeaponMode = 0;
+							}
+						}
+						seatmaingun.playerControl = true;
+						if (seatInfos[cnt].gunTrigger1) {
+							if (seatInfos[cnt].gunTrigger1Freeze < 0) {
+								boolean succeedFire = false;
+								int mainGunID = seatInfos[cnt].prefab_seat.mainid[seatInfos[cnt].currentWeaponMode];
+
+								if(entity instanceof EntityLiving){
+									seatInfos[cnt].gunTrigger1 = false;
+									if(seatmaingun.readyaim)succeedFire = seatmaingun.fireall();
+									int fireBlank = -1;
+									if (prefab_vehicle.linkTriggers_FireBlank != null &&
+											prefab_vehicle.linkTriggers_FireBlank.containsKey(mainGunID)) {
+										fireBlank = prefab_vehicle.linkTriggers_FireBlank.get(mainGunID);
+									}
+
+									if ((!succeedFire || fireBlank < 0) && seatInfos[cnt].gunTrigger1Freeze < 0 && prefab_vehicle.linkedTriggers != null && prefab_vehicle.linkedTriggers.containsKey(mainGunID)) {
+										for (int linkedID : prefab_vehicle.linkedTriggers.get(mainGunID)) {
+											if(allturrets[linkedID].readyaim)succeedFire |= allturrets[linkedID].fireall();
+											if((succeedFire && fireBlank >= 0))break;
+										}
+									}
+									seatInfos[cnt].gunTrigger1Freeze = fireBlank;
+								}else {
+									succeedFire = seatmaingun.fireall();
+									int fireBlank = -1;
+									if (prefab_vehicle.linkTriggers_FireBlank != null &&
+											prefab_vehicle.linkTriggers_FireBlank.containsKey(mainGunID)) {
+										fireBlank = prefab_vehicle.linkTriggers_FireBlank.get(mainGunID);
+									}
+
+									if ((!succeedFire || fireBlank < 0) && seatInfos[cnt].gunTrigger1Freeze < 0 && prefab_vehicle.linkedTriggers != null && prefab_vehicle.linkedTriggers.containsKey(mainGunID)) {
+										for (int linkedID : prefab_vehicle.linkedTriggers.get(mainGunID)) {
+											succeedFire |= allturrets[linkedID].fireall();
+											if ((succeedFire && fireBlank >= 0)) break;
+										}
+									}
+									seatInfos[cnt].gunTrigger1Freeze = fireBlank;
+								}
+							} else {
+								seatInfos[cnt].gunTrigger1Freeze -= 1;
+							}
+						} else {
+							seatInfos[cnt].gunTrigger1Freeze = -1;
+						}
+						if (seatInfos[cnt].seekerKey || entity instanceof EntityLiving) {
+							//TODO 車両側でターゲットロックを行う方式を作る
+							if (seatmaingun.prefab_turret.useVehicleRadar) {
+								lockOnByVehicleRadar();//TODO とりあえず一つ 独立させてレーダー/ターゲティングポッドは別に実装しても良いかもしれない
+								seatmaingun.target = target;
+								seatmaingun.lockedBlockPos = getMinecraftVecObj(targetBlock);
+							} else {
+								seatmaingun.seekerUpdateSwitch = true;
+							}
+						}
 //					System.out.println("" + riddenByEntitiesInfo[cnt].gunTrigger1);
-				}
-				if (seatsubgun != null) {
-					if (seatInfos[cnt].gunTrigger2) {
-						seatsubgun.fireall();
-					}
-					if(seatInfos[cnt].seekerKey){
-						if(seatsubgun.prefab_turret.useVehicleRadar){
-							lockOnByVehicleRadar();
-							seatsubgun.target = target;
-						}else {
-							seatsubgun.seekerUpdateSwitch = true;
+					}else {
+
+						if(entity instanceof EntityLiving){
+							seatInfos[cnt].currentWeaponMode++;
+							if (seatInfos[cnt].maingun == null || seatInfos[cnt].currentWeaponMode >= seatInfos[cnt].maingun.length) {
+								seatInfos[cnt].currentWeaponMode = 0;
+							}
 						}
 					}
+					if (seatsubgun != null) {
+						seatsubgun.playerControl = true;
+						if (seatInfos[cnt].gunTrigger2) {
+							if (seatInfos[cnt].gunTrigger2Freeze < 0) {
+								boolean succeedFire = false;
+								int subGunID = seatInfos[cnt].prefab_seat.subid;
+								succeedFire = seatsubgun.fireall();
+								int fireBlank = -1;
+								if (prefab_vehicle.linkTriggers_FireBlank != null &&
+										prefab_vehicle.linkTriggers_FireBlank.containsKey(subGunID)) {
+									fireBlank = prefab_vehicle.linkTriggers_FireBlank.get(subGunID);
+								}
+//							System.out.println("" + seatInfos[cnt].gunTrigger2Freeze);
+
+								if ((!succeedFire || fireBlank < 0) && seatInfos[cnt].gunTrigger2Freeze < 0 && prefab_vehicle.linkedTriggers != null && prefab_vehicle.linkedTriggers.containsKey(subGunID)) {
+									for (int linkedID : prefab_vehicle.linkedTriggers.get(subGunID)) {
+										succeedFire |= allturrets[linkedID].fireall();
+										if ((succeedFire && fireBlank >= 0)) break;
+									}
+								}
+								seatInfos[cnt].gunTrigger2Freeze = fireBlank;
+							} else {
+								seatInfos[cnt].gunTrigger2Freeze -= 1;
+							}
+						} else {
+							seatInfos[cnt].gunTrigger2Freeze = -1;
+						}
+						if (seatInfos[cnt].seekerKey || entity instanceof EntityLiving) {
+							if (seatsubgun.prefab_turret.useVehicleRadar) {
+								lockOnByVehicleRadar();
+								seatsubgun.target = target;
+								seatsubgun.lockedBlockPos = getMinecraftVecObj(targetBlock);
+							} else {
+								seatsubgun.seekerUpdateSwitch = true;
+							}
+						}
 //					System.out.println("" + riddenByEntitiesInfo[cnt].gunTrigger1);
+					}
 				}
-				if(entity == null){
-					seatInfos[cnt].gunTrigger1 = false;
-					seatInfos[cnt].gunTrigger2 = false;
-				}
+			}else {
+				seatInfos[cnt].gunTrigger1 = false;
+				seatInfos[cnt].gunTrigger2 = false;
 			}
 
 			cnt ++;
@@ -920,48 +1021,81 @@ public class BaseLogic implements IbaseLogic,IneedMouseTrack,MultiRiderLogics {
 //			temp.add(playeroffsetter);
 //			System.out.println(temp);
 				TurretObj seatmaingun = null;
+
 				if(seatInfos[cnt].maingun != null)seatmaingun = seatInfos[cnt].maingun[seatInfos[cnt].currentWeaponMode];
 				TurretObj seatsubgun = seatInfos[cnt].subgun;
-				if(entity instanceof ITurretUser)((ITurretUser) entity).setSeatID(cnt);
+				if(entity instanceof IDriver)((IDriver) entity).setSeatID(cnt);
 				if(seatmaingun != null) {
 					seatmaingun.currentEntity = entity;
 					if(seatInfos[cnt].prefab_seat.aimMainGun && !worldObj.isRemote) {
-						if((entity instanceof ITurretUser))
-							((ITurretUser) entity).setTurretMain(seatmaingun);
+						if(seatInfos[cnt].prefab_seat.aimingMainTurret != -1){
+							TurretObj aimingGun = turrets[seatInfos[cnt].prefab_seat.aimingMainTurret];
+							if(seatInfos[cnt].syncToPlayerAngle)
+								if(entity instanceof EntityPlayer)
+									aimingGun.aimtoAngle(((EntityPlayer) entity).rotationYaw, entity.rotationPitch);
+								else if(entity instanceof EntityLiving && entity instanceof IDriver && ((IDriver) entity).getAimPos() != null){
+									aimingGun.aimToPos(
+											((IDriver) entity).getAimPos().x,
+											((IDriver) entity).getAimPos().y,
+											((IDriver) entity).getAimPos().z);
+								}
+						}
+
+						if((entity instanceof IDriver)) {
+							((IDriver) entity).setTurretMain(seatmaingun);
+							if(seatInfos[cnt].syncToPlayerAngle && entity instanceof EntityLiving && ((IDriver) entity).getAimPos() != null){
+								int mainGunID = seatInfos[cnt].prefab_seat.mainid[seatInfos[cnt].currentWeaponMode];
+								seatmaingun.aimToPos(
+										((IDriver) entity).getAimPos().x,
+										((IDriver) entity).getAimPos().y,
+										((IDriver) entity).getAimPos().z);
+								if(prefab_vehicle.linkedTriggers != null && prefab_vehicle.linkedTriggers.containsKey(mainGunID)) {
+									for (int linkedID : prefab_vehicle.linkedTriggers.get(mainGunID)) {
+										if(allturrets[linkedID]!=null && ((IDriver) entity).getAimPos() != null){
+											allturrets[linkedID].aimToPos(
+													((IDriver) entity).getAimPos().x,
+													((IDriver) entity).getAimPos().y,
+													((IDriver) entity).getAimPos().z);
+										}
+									}
+								}
+							}
+						}
 						else if(entity instanceof EntityPlayer)
 							if(seatInfos[cnt].syncToPlayerAngle)seatmaingun.aimtoAngle(((EntityPlayer) entity).rotationYaw, entity.rotationPitch);
 
-						if(seatInfos[cnt].prefab_seat.aimingMainTurret != -1){
-							seatmaingun = seatInfos[cnt].maingun[seatInfos[cnt].prefab_seat.aimingMainTurret];
-							if((entity instanceof ITurretUser))
-								((ITurretUser) entity).setTurretMain(seatmaingun);
-							else if(entity instanceof EntityPlayer)
-								if(seatInfos[cnt].syncToPlayerAngle)seatmaingun.aimtoAngle(((EntityPlayer) entity).rotationYaw, entity.rotationPitch);
-						}
+
 						if(seatInfos[cnt].maingun != null)seatmaingun = seatInfos[cnt].maingun[seatInfos[cnt].currentWeaponMode];
 					}
 					if(seatsubgun!=null){
 						seatsubgun.currentEntity = entity;
                         if(!worldObj.isRemote) {
 	                        if (seatInfos[cnt].prefab_seat.aimSubGun) {
-		                        if ((entity instanceof ITurretUser))
-			                        ((ITurretUser) entity).setTurretSub(seatsubgun);
-		                        else if (entity instanceof EntityPlayer)
+		                        if ((entity instanceof IDriver)) {
+									((IDriver) entity).setTurretSub(seatsubgun);
+									if (!seatsubgun.noTraverse && entity instanceof EntityLiving && ((IDriver) entity).getAimPos() != null) {
+										seatsubgun.aimToPos(
+												((IDriver) entity).getAimPos().x,
+												((IDriver) entity).getAimPos().y,
+												((IDriver) entity).getAimPos().z);
+									}
+								}else if (entity instanceof EntityPlayer)
 			                        if(seatInfos[cnt].syncToPlayerAngle)seatsubgun.aimtoAngle(((EntityPlayer) entity).rotationYaw, entity.rotationPitch);
 	                        } else {
-		                        if ((entity instanceof ITurretUser))
-			                        ((ITurretUser) entity).setTurretSub(seatsubgun);
+		                        if ((entity instanceof IDriver))
+			                        ((IDriver) entity).setTurretSub(seatsubgun);
 		                        seatsubgun.noTraverse = true;
 	                        }
                         }
 					}
 					if(seatInfos[cnt].prefab_seat.seatOnTurret) {
+						TurretObj sittingGun = seatmaingun;
 						if(seatInfos[cnt].prefab_seat.sittingMainTurret != -1){
-							seatmaingun = seatInfos[cnt].maingun[seatInfos[cnt].prefab_seat.sittingMainTurret];
+							sittingGun = turrets[seatInfos[cnt].prefab_seat.sittingMainTurret];
 						}
-						Vector3d temp = new Vector3d(seatmaingun.pos);
+						Vector3d temp = new Vector3d(sittingGun.pos);
 						Vector3d tempplayerPos = new Vector3d(entity == HMV_Proxy.getEntityPlayerInstance() && HMV_Proxy.iszooming() && seatInfos_zoom.length > cnt && seatInfos_zoom[cnt] != null ? seatInfos_zoom[cnt].pos : seatInfos[cnt].pos);
-						Vector3d temp2 = seatmaingun.getGlobalVector_fromLocalVector_onTurretPoint(tempplayerPos);
+						Vector3d temp2 = sittingGun.getGlobalVector_fromLocalVector_onTurretPoint(tempplayerPos);
 						temp.add(temp2);
 						transformVecforMinecraft(temp);
 //			System.out.println(temp);
@@ -1373,9 +1507,9 @@ public class BaseLogic implements IbaseLogic,IneedMouseTrack,MultiRiderLogics {
 		camera = new EntityCameraDummy(this.worldObj);
 	}
 	public void onUpdate(){
-		if(prefab_vehicle.script != null) {
+		if(prefab_vehicle.script_global != null) {
 			try {
-				prefab_vehicle.script.invokeFunction("update_Pre", this);
+				prefab_vehicle.script_global.invokeFunction("update_Pre", this);
 			} catch (NoSuchMethodException | ScriptException e) {
 				e.printStackTrace();
 			}
@@ -1565,9 +1699,9 @@ public class BaseLogic implements IbaseLogic,IneedMouseTrack,MultiRiderLogics {
 		riderPosUpdate();
 
 
-		if(prefab_vehicle.script != null) {
+		if(prefab_vehicle.script_global != null) {
 			try {
-				prefab_vehicle.script.invokeFunction("update_Post", this);
+				prefab_vehicle.script_global.invokeFunction("update_Post", this);
 			} catch (NoSuchMethodException | ScriptException e) {
 				e.printStackTrace();
 			}
@@ -1869,6 +2003,7 @@ public class BaseLogic implements IbaseLogic,IneedMouseTrack,MultiRiderLogics {
 	}
 	public ArrayList<EntityLinkedPos_Motion> detectedList = new ArrayList<>();
 	public Entity target = null;
+	public Vector3d targetBlock = null;
 
 	public void acquisition_radar(){//捜索レーダー処理
 		detectedList.clear();
@@ -1879,7 +2014,7 @@ public class BaseLogic implements IbaseLogic,IneedMouseTrack,MultiRiderLogics {
 				Vec3 vec3 = Vec3.createVectorHelper(mc_Entity.posX, mc_Entity.posY + mc_Entity.getEyeHeight(), mc_Entity.posZ);
 				Vec3 vec31 = Vec3.createVectorHelper(mc_Entity.posX, mc_Entity.posY + mc_Entity.getEyeHeight(), mc_Entity.posZ);
 
-				MovingObjectPosition movingobjectposition = GunsUtils.getmovingobjectPosition_forBlock(worldObj,vec3, vec31, false, true, false);
+				MovingObjectPosition movingobjectposition = GunsUtils.getmovingobjectPosition_forBlock(worldObj,vec3, vec31);
 				if(movingobjectposition == null){
 					detectedList.add(new EntityLinkedPos_Motion(aEntity,cnt));
 					cnt++;
@@ -1892,15 +2027,26 @@ public class BaseLogic implements IbaseLogic,IneedMouseTrack,MultiRiderLogics {
 	}
 
 	public void lockOnByVehicleRadar(){
-		Vector3d radarVector = new Vector3d(prefab_vehicle.vehicleRadar_OffsetVector);
-		Utils.RotateVectorAroundX(radarVector,cameraPitch);
-		Utils.RotateVectorAroundY(radarVector,cameraYaw);
-		if(prefab_vehicle.vehicleRadar_FixedVector != null)
-			radarVector.add(prefab_vehicle.vehicleRadar_FixedVector);
-		radarVector = transformVecByQuat(radarVector,bodyRot);
+		Vector3d radarVector;
+		if(riddenByEntities[0] instanceof EntityPlayer) {
+			radarVector = new Vector3d(prefab_vehicle.vehicleRadar_OffsetVector);
+			Utils.RotateVectorAroundX(radarVector, -cameraPitch);
+			Utils.RotateVectorAroundY(radarVector, cameraYaw);
+			if (prefab_vehicle.vehicleRadar_FixedVector != null)
+				radarVector.add(prefab_vehicle.vehicleRadar_FixedVector);
+			radarVector = transformVecByQuat(radarVector, bodyRot);
+		}else if(riddenByEntities[0] != null){
+			radarVector = new Vector3d(prefab_vehicle.vehicleRadar_OffsetVector);
+			Utils.RotateVectorAroundX(radarVector, riddenByEntities[0].rotationPitch);
+			Utils.RotateVectorAroundY(radarVector, riddenByEntities[0].getRotationYawHead());
+		}else return;
+
+
 
 		transformVecforMinecraft(radarVector);
 		lockOnByVehicleRadar_toEntity(radarVector);
+		lockOnByVehicleRadar_toBlock(radarVector);
+
 
 	}
 	public void lockOnByVehicleRadar_toEntity(Vector3d radarVector){
@@ -1928,6 +2074,33 @@ public class BaseLogic implements IbaseLogic,IneedMouseTrack,MultiRiderLogics {
 							}
 						}
 					}
+				}
+			}
+		}
+	}
+	public void lockOnByVehicleRadar_toBlock(Vector3d radarVector){
+		targetBlock = null;
+		{
+			Vec3 playerlook = getMinecraftVecObj(radarVector);
+
+			playerlook.xCoord *= -1;
+			playerlook.yCoord *= -1;
+			playerlook.zCoord *= -1;
+
+			Vec3 vec3 = Vec3.createVectorHelper(mc_Entity.posX, mc_Entity.posY + mc_Entity.getEyeHeight(), mc_Entity.posZ);
+			playerlook = Vec3.createVectorHelper(playerlook.xCoord * 256, playerlook.yCoord * 256, playerlook.zCoord * 256);
+
+			Vec3 vec31 = Vec3.createVectorHelper(mc_Entity.posX + playerlook.xCoord, mc_Entity.posY + mc_Entity.getEyeHeight() + playerlook.yCoord, mc_Entity.posZ + playerlook.zCoord);
+			MovingObjectPosition movingobjectposition = GunsUtils.getmovingobjectPosition_forBlock(worldObj,vec3, vec31);//衝突するブロックを調べる
+			if(movingobjectposition != null && movingobjectposition.hitVec != null) {
+				targetBlock = new Vector3d(movingobjectposition.blockX,
+				movingobjectposition.blockY,
+				movingobjectposition.blockZ);
+			}else{
+				if(bodyrotationPitch > 10){
+					targetBlock = new Vector3d(radarVector);
+					targetBlock.scale(abs(mc_Entity.posY/(sin(toRadians(bodyrotationPitch)))));
+					targetBlock.add(new Vector3d(mc_Entity.posX, mc_Entity.posY + mc_Entity.getEyeHeight(), mc_Entity.posZ));
 				}
 			}
 		}
@@ -1964,7 +2137,7 @@ public class BaseLogic implements IbaseLogic,IneedMouseTrack,MultiRiderLogics {
 		}
 		double rollDiff = wrapAngleTo180_double(rollTarget-bodyrotationRoll)/prefab_vehicle.rollspeed / 100;
 
-		rollRudder_Target+=rollDiff;
+		rollRudder_Target+=rollDiff + localMotionVec.x * 20;
 		double[] xyz = eulerfromQuat((rotationmotion));
 
 		Vector3d motionvec = new Vector3d(mc_Entity.motionX, mc_Entity.motionY, mc_Entity.motionZ);
@@ -2356,7 +2529,6 @@ public class BaseLogic implements IbaseLogic,IneedMouseTrack,MultiRiderLogics {
 //		}
 //	}
 
-	public Vector3d motionvec = new Vector3d();
 	void motionUpdate(Vector3d mainwingvector,Vector3d tailwingvector,Vector3d bodyvector){
 		NaNCheck(tailwingvector);
 		NaNCheck(bodyvector);
@@ -2401,7 +2573,7 @@ public class BaseLogic implements IbaseLogic,IneedMouseTrack,MultiRiderLogics {
 				serverSideRotationmotion = null;
 			}
 		}
-		motionvec = new Vector3d(mc_Entity.motionX, mc_Entity.motionY, mc_Entity.motionZ);
+		motionvec.set(mc_Entity.motionX, mc_Entity.motionY, mc_Entity.motionZ);
 
 		Vector3d windvec = new Vector3d(motionvec);
 		if (mc_Entity.onGround && windvec.y < 0) windvec.y = 0;
@@ -2528,7 +2700,6 @@ public class BaseLogic implements IbaseLogic,IneedMouseTrack,MultiRiderLogics {
 
 			windvec = new Vector3d(motionvec);
 			if (mc_Entity.onGround && windvec.y < 0) windvec.y = 0;
-			bodyRot.mul(rotationmotion);
 			if(getQuat4DLength(rotationmotion)>0) {
 				if (!mc_Entity.onGround && !inWater){
 					double cos = prefab_vehicle.forced_rotmotion_reduceSpeed - ((1 - prefab_vehicle.forced_rotmotion_reduceSpeed) * angle_cos(bodyvector, motionvec)) * prefab_vehicle.rotmotion_reduceSpeed;
@@ -2575,6 +2746,7 @@ public class BaseLogic implements IbaseLogic,IneedMouseTrack,MultiRiderLogics {
 					}
 				}
 			}
+			bodyRot.mul(rotationmotion);
 			NaNCheck(rotationmotion);
 
 			if (!Double.isNaN(motionvec.x) && !Double.isNaN(motionvec.y) && !Double.isNaN(motionvec.z)) {
@@ -2833,6 +3005,7 @@ public class BaseLogic implements IbaseLogic,IneedMouseTrack,MultiRiderLogics {
 		if(mc_Entity.onGround && abs(bodyrotationRoll) > 45){
 			mc_Entity.attackEntityFrom(DamageSource.inWall, (float) (abs(bodyrotationRoll) - 45)*0.1f*prefab_vehicle.antiGroundHitCof);
 		}
+		positionVec.set(mc_Entity.posX, mc_Entity.posY, mc_Entity.posZ);
 	}
 	public void rotationBySomeFactor(Vector3d factor,Vector3d factorPos){
 		if(factor.lengthSquared() > 0) {
@@ -3025,13 +3198,20 @@ public class BaseLogic implements IbaseLogic,IneedMouseTrack,MultiRiderLogics {
 			return prefab_vehicle.OnDying_soundname;
 		}
 		if(prefab_vehicle.throttle_AF > 0 && throttle > prefab_vehicle.throttle_AF){
-			return prefab_vehicle.AFsoundname;
-		}else
-		return prefab_vehicle.soundname;
+			return prefab_vehicle.AFSoundName;
+		}else if(throttle != 0 || prefab_vehicle.IdleSoundName == null) {
+			return prefab_vehicle.SoundName;
+		}else {
+			return prefab_vehicle.IdleSoundName;
+		}
 	}
 	
 	public float getsoundPitch(){
-		return health < 0 ? 1 : abs(throttle / prefab_vehicle.throttle_Max* prefab_vehicle.soundpitch);
+		if(throttle != 0 || prefab_vehicle.IdleSoundName == null){
+			return health < 0 ? 1 : abs(throttle / prefab_vehicle.throttle_Max* prefab_vehicle.soundpitch);
+		}else {
+			return 1;
+		}
 	}
 	String playingSound;
 	public void yourSoundIsremain(String playingSound){

@@ -3,6 +3,7 @@ package hmggvcmob.ai;
 import cpw.mods.fml.common.FMLCommonHandler;
 import handmadevehicle.entity.EntityDummy_rider;
 import handmadevehicle.entity.EntityVehicle;
+import handmadevehicle.entity.parts.IDriver;
 import handmadevehicle.entity.parts.Modes;
 import handmadevehicle.entity.parts.Type;
 import handmadevehicle.entity.parts.logics.BaseLogic;
@@ -64,7 +65,10 @@ public class PlatoonOBJ implements IUpdatePlayerListBox {
 		vehicleDriver.clear();
 		planeDriver.clear();
 		normalSoldier.clear();
-		for(EntityAndPos entityAndPos : platoonMembers)sortMember(entityAndPos);
+		int cnt = 0;
+		for(EntityAndPos entityAndPos : platoonMembers){
+			sortMember(entityAndPos);
+		}
 
 		platoonMembers.removeAll(removeQue);
 		for(EntityAndPos entityAndPos : removeQue){
@@ -352,22 +356,35 @@ public class PlatoonOBJ implements IUpdatePlayerListBox {
 		platoonMembers.add(entityAndPos);
 		return true;
 	}
+	boolean noPlatoonLeader;
 	public void sortMember(EntityAndPos entityAndPos){
 		EntityLiving entity = entityAndPos.entity;
-		if(!entity.isDead && canMoveEntity(entity)){
+		if(!entity.isDead && canMoveEntity(entity) && entity instanceof IDriver){
 			if(entityAndPos == leader) {
 				platoonType = Infantry;
-				if (entity.ridingEntity instanceof EntityDummy_rider) {
-					if(((EntityDummy_rider) entity.ridingEntity).linkedBaseLogic.prefab_vehicle.T_Land_F_Plane) {
+				if (((IDriver) entity).getLinkedVehicle() != null) {
+					if(((IDriver) entity).getLinkedVehicle().prefab_vehicle.T_Land_F_Plane) {
 						platoonType = Tank;
 					}else {
 						platoonType = Plane;
 					}
 				}
+				noPlatoonLeader = false;
+			}else if(noPlatoonLeader){
+				leader = entityAndPos;
+				platoonType = Infantry;
+				if (((IDriver) entity).getLinkedVehicle() != null) {
+					if(((IDriver) entity).getLinkedVehicle().prefab_vehicle.T_Land_F_Plane) {
+						platoonType = Tank;
+					}else {
+						platoonType = Plane;
+					}
+				}
+				noPlatoonLeader = false;
 			}
-			if(canMoveEntity(entityAndPos.entity)){
-				if (entity.ridingEntity instanceof EntityDummy_rider) {
-					if (((EntityDummy_rider) entity.ridingEntity).linkedBaseLogic.prefab_vehicle.T_Land_F_Plane) {
+			{
+				if (((IDriver) entity).getLinkedVehicle() != null) {
+					if (((IDriver) entity).getLinkedVehicle().prefab_vehicle.T_Land_F_Plane) {
 						if (platoonType == Tank) {
 							normalSoldier.add(entityAndPos);
 						} else {
@@ -387,8 +404,12 @@ public class PlatoonOBJ implements IUpdatePlayerListBox {
 						removeQue.add(entityAndPos);
 					}
 				}
-			}else {
-				removeQue.add(entityAndPos);
+			}
+		}else{
+			removeQue.add(entityAndPos);
+			if(entityAndPos == leader) {
+				leader = null;
+				noPlatoonLeader = true;
 			}
 		}
 
@@ -397,5 +418,9 @@ public class PlatoonOBJ implements IUpdatePlayerListBox {
 	@Override
 	public void update() {
 		PlatoonFormationUpdate();
+	}
+
+	public boolean checkLeaderAlive() {
+		return leader == null || leader.entity.isDead;
 	}
 }

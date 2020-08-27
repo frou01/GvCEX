@@ -2,6 +2,7 @@ package hmggvcmob.tile;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import hmggvcmob.entity.IGVCmob;
 import hmggvcmob.entity.IflagBattler;
 import hmggvcmob.block.GVCBlockFlag;
 import hmggvcmob.camp.CampObj;
@@ -40,7 +41,7 @@ public class TileEntityFlag extends TileEntity
     Random rnd = new Random();
     public int flagHeight;
     public int respawncycle;
-    private int nextSpawnGroupnm;
+    private int nextSpawnGroupNum;
 	public CampObj campObj;
 	public CampObjAndPos campObjAndPos;
     WorldSavedData_Flag worldSavedData_flag;
@@ -246,6 +247,8 @@ public class TileEntityFlag extends TileEntity
     }
 
     public void removeFlagData(){
+        if(worldSavedData_flag == null) worldSavedData_flag = WorldSavedData_Flag.get(worldObj);
+        if(worldSavedData_flag == null)return;
         worldSavedData_flag.setDirty(true);
         Chunk flagChunk = worldObj.getChunkFromBlockCoords(xCoord,zCoord);
         ChunkCoordIntPair flagChunkCoordIntPair = flagChunk.getChunkCoordIntPair();
@@ -265,7 +268,7 @@ public class TileEntityFlag extends TileEntity
         if(campObj.isRaidType && raidMode){
             for(int gnum = 0 ; gnum < campObj.raiderGroupNum;gnum++) {
                 raidMode = false;
-                nextSpawnGroupnm = campObj.spawnRaiderEntitiesAve - 4 + rnd.nextInt(8);
+                nextSpawnGroupNum = campObj.spawnRaiderEntitiesAve - 4 + rnd.nextInt(8);
                 Vector3d spawningLocation = findRaiderSpawnPoint();
                 if(spawningLocation != null) {
                     for (Object obj : worldObj.playerEntities) {
@@ -276,7 +279,7 @@ public class TileEntityFlag extends TileEntity
                     }
                     int hegiht = worldObj.getHeightValue(MathHelper.floor_double(spawningLocation.x),
                             MathHelper.floor_double(spawningLocation.z));
-                    for (int cnt = 0; cnt < nextSpawnGroupnm; cnt++) {
+                    for (int cnt = 0; cnt < nextSpawnGroupNum; cnt++) {
                         int entityType = rnd.nextInt(campObj.teamEntityClasses.length);
                         Entity newEntity;
                         try {
@@ -287,7 +290,7 @@ public class TileEntityFlag extends TileEntity
                             if (newEntity instanceof EntityLiving) {
                                 ((EntityLiving) newEntity).onSpawnWithEgg(null);
                             }
-                            if (newEntity instanceof IHasVehicleGacha) {//�ԗ��K�`���̂�����
+                            if (newEntity instanceof IHasVehicleGacha) {
                                 Random rand = new Random();
                                 if (((IHasVehicleGacha) newEntity).getVehicleGacha_rate_sum() > 0) {
                                     int currentRate = rand.nextInt(((IHasVehicleGacha) newEntity).getVehicleGacha_rate_sum());
@@ -302,8 +305,12 @@ public class TileEntityFlag extends TileEntity
                                     }
                                 }
                             }
-                            if (!newEntity.isEntityInsideOpaqueBlock())
+                            if (!newEntity.isEntityInsideOpaqueBlock()){
                                 worldObj.spawnEntityInWorld(newEntity);
+                                if(newEntity instanceof IGVCmob){
+                                    ((IGVCmob) newEntity).setCanDespawn(false);
+                                }
+                            }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -312,8 +319,8 @@ public class TileEntityFlag extends TileEntity
             }
         } else {
             if(campObj.isRaidType)raidMode = true;
-            nextSpawnGroupnm = campObj.spawnEntitiesAve - 4 + rnd.nextInt(8);
-            for (int cnt = 0; cnt < nextSpawnGroupnm; cnt++) {
+            nextSpawnGroupNum = campObj.spawnEntitiesAve - 4 + rnd.nextInt(8);
+            for (int cnt = 0; cnt < nextSpawnGroupNum; cnt++) {
                 int entityType = rnd.nextInt(campObj.teamEntityClasses.length);
                 Entity newEntity;
                 try {

@@ -4,6 +4,7 @@ import java.io.File;
 import java.lang.reflect.Field;
 
 import cpw.mods.fml.common.registry.GameRegistry;
+import handmadeguns.client.render.IModelCustom_HMG;
 import handmadeguns.event.GunSoundEvent;
 import handmadeguns.network.PacketSpawnParticle;
 import handmadeguns.tile.TileMounter;
@@ -132,5 +133,11 @@ public class CommonSideProxyHMG {
 
 	public float getFOVModifier(Minecraft mc,float p_78481_1_, boolean p_78481_2_) {
 		return 0;
+	}
+
+	public void setUpModels(){
+
+	}
+	public void AddModel(Object o){
 	}
 }

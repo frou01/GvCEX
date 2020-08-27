@@ -1,11 +1,15 @@
 package handmadeguns.client.render;
 
+import javax.script.ScriptEngine;
+import java.io.FileReader;
 import java.util.ArrayList;
 
 import static handmadeguns.HMGGunMaker.readerCnt;
 import static java.lang.Integer.parseInt;
 
 public class HMGGunParts {
+    public int partsID = 0;
+    public ScriptEngine script_global;
     public boolean rotateTypeIsVector = false;
     public String partsname;
     public String partsname_reticlePlate;

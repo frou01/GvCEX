@@ -134,7 +134,7 @@ public class GVCEntityAAG extends EntityGBase
 
     public void readEntityFromNBT(NBTTagCompound p_70037_1_)
     {
-        candespawn = p_70037_1_.getBoolean("candespawn");
+        canDespawn = p_70037_1_.getBoolean("candespawn");
         super.readEntityFromNBT(p_70037_1_);
     }
     /**
@@ -142,12 +142,12 @@ public class GVCEntityAAG extends EntityGBase
      */
     public void writeEntityToNBT(NBTTagCompound p_70014_1_)
     {
-        p_70014_1_.setBoolean("candespawn" ,candespawn);
+        p_70014_1_.setBoolean("candespawn" , canDespawn);
         super.writeEntityToNBT(p_70014_1_);
     }
     protected boolean canDespawn()
     {
-        return candespawn;
+        return canDespawn;
     }
 	public boolean isConverting() {
 		return false;

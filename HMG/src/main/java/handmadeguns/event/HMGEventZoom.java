@@ -41,6 +41,7 @@ import static handmadeguns.HandmadeGunsCore.HMG_proxy;
 import static handmadevehicle.Utils.*;
 import static net.minecraft.client.gui.Gui.icons;
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL12.GL_CLAMP_TO_EDGE;
 
 public class HMGEventZoom {
 	static boolean updated = false;
@@ -131,7 +132,7 @@ public class HMGEventZoom {
 			}
 		}
 	}
-
+//todo onRenderTickStartでマウス感度を下げ、onRenderTickEndで復帰させればズーム時の照準が楽になるだろう
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
 	public void displayHUD(RenderGameOverlayEvent.Post event) {
@@ -634,11 +635,14 @@ public class HMGEventZoom {
 
 	public static void renderPumpkinBlur(Minecraft minecraft,ResourceLocation adsr)
 	{
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		GL11.glPushMatrix();
-		GL11.glDisable(2929);
-		GL11.glDisable(3008);
-		GL11.glEnable(3042);
-		GL11.glBlendFunc(770, 771);
+		GL11.glDisable(GL_DEPTH_TEST);
+		GL11.glEnable(GL_BLEND);
+		GL11.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
 //		GL11.glTranslatef((float)scaledresolution.getScaledWidth() / 2, (float)scaledresolution.getScaledHeight() / 2, 0.0F);
@@ -675,8 +679,10 @@ public class HMGEventZoom {
 		tessellator.draw();
 //		GL11.glScalef((float)(1/anti_fov), (float)(1/anti_fov), 1);
 		GL11.glPopMatrix();
-		GL11.glEnable(2929);
-		GL11.glEnable(3008);
+		GL11.glEnable(GL_DEPTH_TEST);
+		GL11.glEnable(GL_ALPHA_TEST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	}
 	public static void renderPumpkinBlur(Minecraft minecraft, String adss)
 	{
@@ -686,15 +692,14 @@ public class HMGEventZoom {
 	@SideOnly(Side.CLIENT)
 	public static void renderLockOnMarker(Minecraft minecraft, ResourceLocation adsr,Vector3d markerPos)
 	{
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		GL11.glPushMatrix();
 		GL11.glDisable(2929);
 		GL11.glDisable(3008);
 		GL11.glEnable(3042);
 		GL11.glBlendFunc(770, 771);
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		double cameraZoom = ObfuscationReflectionHelper.getPrivateValue(EntityRenderer.class, minecraft.entityRenderer,
-				"cameraZoom", "field_78503_V");
-		GL11.glScaled(cameraZoom,cameraZoom, 1.0D);
 
 //		GL11.glTranslatef((float)scaledresolution.getScaledWidth() / 2, (float)scaledresolution.getScaledHeight() / 2, 0.0F);
 //		IAttributeInstance iattributeinstance = minecraft.thePlayer.getEntityAttribute(SharedMonsterAttributes.movementSpeed);
@@ -710,10 +715,10 @@ public class HMGEventZoom {
 		minecraft.getTextureManager().bindTexture(adsr);
 		Tessellator tessellator = Tessellator.instance;
 		tessellator.startDrawingQuads();
-		tessellator.addVertexWithUV(-0.05/cameraZoom, 0.05 /cameraZoom, 0.0D, 1.0D, 0.0D);
-		tessellator.addVertexWithUV(0.05 /cameraZoom, 0.05 /cameraZoom, 0.0D, 0.0D, 0.0D);
-		tessellator.addVertexWithUV(0.05 /cameraZoom, -0.05/cameraZoom, 0.0D, 0.0D, 1.0D);
-		tessellator.addVertexWithUV(-0.05/cameraZoom, -0.05/cameraZoom, 0.0D, 1.0D, 1.0D);
+		tessellator.addVertexWithUV(-0.05, 0.05 , 0.0D, 1.0D, 0.0D);
+		tessellator.addVertexWithUV(0.05 , 0.05 , 0.0D, 0.0D, 0.0D);
+		tessellator.addVertexWithUV(0.05 , -0.05, 0.0D, 0.0D, 1.0D);
+		tessellator.addVertexWithUV(-0.05, -0.05, 0.0D, 1.0D, 1.0D);
 
 		tessellator.draw();
 //		GL11.glScalef((float)(1/anti_fov), (float)(1/anti_fov), 1);

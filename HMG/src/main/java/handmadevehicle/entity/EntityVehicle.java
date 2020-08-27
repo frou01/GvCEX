@@ -34,6 +34,7 @@ import javax.vecmath.Vector3d;
 
 import static cpw.mods.fml.common.network.ByteBufUtils.readTag;
 import static cpw.mods.fml.common.network.ByteBufUtils.writeTag;
+import static handmadeguns.HandmadeGunsCore.HMG_proxy;
 import static handmadeguns.Util.GunsUtils.getmovingobjectPosition_forBlock;
 import static handmadevehicle.HMVehicle.HMV_Proxy;
 import static handmadevehicle.HMVehicle.itemWrench;
@@ -51,7 +52,7 @@ public class EntityVehicle extends Entity implements IFF,IVehicle,IMultiTurretVe
 	private WorldForPathfind worldForPathfind;
 	private ModifiedPathNavigater modifiedPathNavigater;
 	public boolean canUseByMob = false;
-	public boolean despawn = false;
+	public boolean canDespawn = false;
 
 	BaseLogic baseLogic;
 	MoveHelperForVehicle moveHelperForVehicle;
@@ -61,8 +62,8 @@ public class EntityVehicle extends Entity implements IFF,IVehicle,IMultiTurretVe
 		super(par1World);
 		this.modifiedPathNavigater = new ModifiedPathNavigater(this, worldObj,worldForPathfind = new WorldForPathfind(worldObj),64);
 		//AI入りはこのmodでは実装しない！良いな！
-		
-		renderDistanceWeight = 16384;
+
+		renderDistanceWeight = Double.MAX_VALUE;
 		if(this.worldObj instanceof WorldServer) {
 			EntityTracker entitytracker = ((WorldServer) this.worldObj).getEntityTracker();
 			ObfuscationReflectionHelper.setPrivateValue(EntityTracker.class, entitytracker, 1048576, "entityViewDistance", "E", "field_72792_d");
@@ -81,7 +82,7 @@ public class EntityVehicle extends Entity implements IFF,IVehicle,IMultiTurretVe
 	static public EntityVehicle EntityVehicle_spawnByMob(World par1World,String typename) {
 		EntityVehicle bespawningEntity = new EntityVehicle(par1World,typename);
 		bespawningEntity.canUseByMob = true;
-		bespawningEntity.despawn = true;
+		bespawningEntity.canDespawn = true;
 		return bespawningEntity;
 	}
 	public void init_2(String typename) {
@@ -129,8 +130,12 @@ public class EntityVehicle extends Entity implements IFF,IVehicle,IMultiTurretVe
 	{
 		return this.height/2;
 	}
-	
+
+	public int chunkCheckCNT = 20;
 	public void onUpdate() {
+		if(worldObj.isRemote && HMG_proxy.getEntityPlayerInstance() != null && HMG_proxy.getEntityPlayerInstance().isDead){
+			this.setDead();
+		}
 		modifiedPathNavigater.onUpdateNavigation();
 		moveHelperForVehicle.onUpdateMoveHelper();
 		boolean onground = this.onGround;
@@ -232,7 +237,7 @@ public class EntityVehicle extends Entity implements IFF,IVehicle,IMultiTurretVe
 	
 	protected boolean canDespawn()
 	{
-		return despawn && rider_canDespawn();
+		return canDespawn && rider_canDespawn();
 	}
 	protected boolean rider_canDespawn(){
 		for(Entity entity:baseLogic.riddenByEntities){
@@ -437,7 +442,7 @@ public class EntityVehicle extends Entity implements IFF,IVehicle,IMultiTurretVe
 	{
 		Vec3 startpos = Vec3.createVectorHelper(this.posX, this.posY + (double) this.getEyeHeight(), this.posZ);
 		Vec3 targetpos = Vec3.createVectorHelper(p_70685_1_.posX, p_70685_1_.posY + (double) p_70685_1_.getEyeHeight(), p_70685_1_.posZ);
-		MovingObjectPosition movingobjectposition = getmovingobjectPosition_forBlock(worldObj,startpos, targetpos, false, true, false);
+		MovingObjectPosition movingobjectposition = getmovingobjectPosition_forBlock(worldObj,startpos, targetpos);
 		if(movingobjectposition!=null) {
 			return false;
 		}
@@ -538,7 +543,7 @@ public class EntityVehicle extends Entity implements IFF,IVehicle,IMultiTurretVe
 	{
 		typename = p_70037_1_.getString("typename");
 		canUseByMob = p_70037_1_.getBoolean("canUseByMob");
-		despawn = p_70037_1_.getBoolean("despawn");
+		canDespawn = p_70037_1_.getBoolean("despawn");
 		init_2(typename);
 //		super.readEntityFromNBT(p_70037_1_);
 		baseLogic.readFromTag(p_70037_1_);
@@ -551,7 +556,7 @@ public class EntityVehicle extends Entity implements IFF,IVehicle,IMultiTurretVe
 //		super.writeEntityToNBT(p_70014_1_);
 		p_70014_1_.setString("typename",typename);
 		p_70014_1_.setBoolean("canUseByMob",canUseByMob);
-		p_70014_1_.setBoolean("despawn",despawn);
+		p_70014_1_.setBoolean("despawn", canDespawn);
 		baseLogic.saveToTag(p_70014_1_);
 	}
 	public boolean writeMountToNBT(NBTTagCompound p_98035_1_)

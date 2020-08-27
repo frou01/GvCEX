@@ -47,12 +47,20 @@ public class EntityAndPos {
 		vector3d.add(randMiserVec);
 		this.set(vector3d,speed);
 	}
+	public int repathCool = 0;
 	public void update(){
-		if(currentSpeed == 0)currentSpeed = 1;
-		entity.getNavigator().tryMoveToXYZ(pos.x, pos.y, pos.z, currentSpeed);
-		if(entity.ridingEntity != null && entity.ridingEntity instanceof EntityDummy_rider){
-			((EntityDummy_rider) entity.ridingEntity).linkedBaseLogic.mc_Entity.getNavigator().tryMoveToXYZ(pos.x, pos.y, pos.z, currentSpeed);
-			if(entity.getNavigator().getPath() == null)entity.getNavigator().setPath(((EntityDummy_rider) entity.ridingEntity).linkedBaseLogic.mc_Entity.getNavigator().getPath(),currentSpeed);
+		if(repathCool<0 || entity.getNavigator().noPath()) {
+			repathCool = 10;
+			if (currentSpeed == 0) currentSpeed = 1;
+			entity.getNavigator().tryMoveToXYZ(pos.x, pos.y, pos.z, currentSpeed);
+			if (entity.ridingEntity != null && entity.ridingEntity instanceof EntityDummy_rider) {
+				((EntityDummy_rider) entity.ridingEntity).linkedBaseLogic.mc_Entity.getNavigator().tryMoveToXYZ(pos.x, pos.y, pos.z, currentSpeed);
+				if (entity.getNavigator().getPath() == null) {
+					entity.getNavigator().setPath(((EntityDummy_rider) entity.ridingEntity).linkedBaseLogic.mc_Entity.getNavigator().getPath(), currentSpeed);
+				}
+			}
+		}else {
+			repathCool--;
 		}
 	}
 }

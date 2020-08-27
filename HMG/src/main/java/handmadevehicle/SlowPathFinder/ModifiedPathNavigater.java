@@ -167,7 +167,9 @@ public class ModifiedPathNavigater extends PathNavigate{
 	public boolean tryMoveToXYZ(double p_75492_1_, double p_75492_3_, double p_75492_5_, double p_75492_7_)
 	{
 		PathEntity pathentity = this.getPathToXYZ(MathHelper.floor_double(p_75492_1_), ((int)p_75492_3_), MathHelper.floor_double(p_75492_5_));
-		return this.setPath(pathentity, p_75492_7_);
+		if(worldForPathfind.slowPathfinder == null || !worldForPathfind.slowPathfinder.isserchingpath)
+			return this.setPath(pathentity, p_75492_7_);
+		else return false;
 	}
 	
 	/**
@@ -267,6 +269,8 @@ public class ModifiedPathNavigater extends PathNavigate{
 						((IhasMoveHelper) this.theEntity).getmoveHelper().setMoveTo(vec3.xCoord, vec3.yCoord, vec3.zCoord, this.speed);
 					}
 				}
+			}else {
+				this.clearPathEntity();
 			}
 		}
 	}

@@ -71,7 +71,7 @@ public class MQO_GroupObject extends HMGGroupObject
 
 				if (currentMaterial != null) {
 					GL11.glLight(GL11.GL_LIGHT1, GL11.GL_SPECULAR, setColorBuffer(1, 1, 1, 1));
-					GL11.glLight(GL11.GL_LIGHT0, GL11.GL_SPECULAR, setColorBuffer(0, 0, 0, 1));
+					GL11.glLight(GL11.GL_LIGHT0, GL11.GL_SPECULAR, setColorBuffer(0, 0, 0, 0));
 					GL11.glLight(GL11.GL_LIGHT1, GL11.GL_DIFFUSE, setColorBuffer(0.4F, 0.4F, 0.4F, 1.0F));
 					GL11.glLight(GL11.GL_LIGHT0, GL11.GL_DIFFUSE, setColorBuffer(0.6F, 0.6F, 0.6F, 1.0F));
 

@@ -1,14 +1,12 @@
-sourceSets.main {
-    java.srcDirs project.projectDir.name
-    resources.srcDirs project.projectDir.name
+
+version = "EX13.7"
+
+tasks.withType(Jar) {
+    compileJava.options.encoding = 'UTF-8'
+    compileApiJava.options.encoding = 'UTF-8'
 }
-version = "EX13.62"
-
-
-
-tasks.withType(Jar) {compileJava.options.encoding = 'UTF-8'}
-tasks.withType(Jar) {compileApiJava.options.encoding = 'UTF-8'}
 dependencies {
     compile project(':Depend')
-    compile group: 'javax.vecmath', name: 'vecmath', version: '1.5.2'
+    compile fileTree(dir: 'lib', include: '*.jar')
+    compile 'javax.vecmath:vecmath:1.5.2'
 }

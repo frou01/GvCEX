@@ -16,8 +16,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static handmadeguns.HandmadeGunsCore.HMG_proxy;
 
 /**
  *  Wavefront Object importer
@@ -34,9 +38,9 @@ public class HMGWavefrontObject extends WavefrontObject implements IModelCustom_
     private static Pattern face_V_Pattern = Pattern.compile("(f( \\d+){3,4} *\\n)|(f( \\d+){3,4} *$)");
     private static Pattern groupObjectPattern = Pattern.compile("([go]( [\\w\\d\\.]+) *\\n)|([go]( [\\w\\d\\.]+) *$)");
 
-    private static Matcher vertexMatcher, vertexNormalMatcher, textureCoordinateMatcher;
-    private static Matcher face_V_VT_VN_Matcher, face_V_VT_Matcher, face_V_VN_Matcher, face_V_Matcher;
-    private static Matcher groupObjectMatcher;
+    private Matcher vertexMatcher, vertexNormalMatcher, textureCoordinateMatcher;
+    private Matcher face_V_VT_VN_Matcher, face_V_VT_Matcher, face_V_VN_Matcher, face_V_Matcher;
+    private Matcher groupObjectMatcher;
 
     public ArrayList<HMGVertex> vertices = new ArrayList<HMGVertex>();
     public ArrayList<HMGVertex> HMGVertexNormals = new ArrayList<HMGVertex>();
@@ -45,20 +49,35 @@ public class HMGWavefrontObject extends WavefrontObject implements IModelCustom_
     private HMGGroupObject currentHMGGroupObject;
     private String fileName;
 
+    public boolean endLoad = false;
+
+    ExecutorService es;
     public HMGWavefrontObject(ResourceLocation resource) throws ModelFormatException
     {
         super(resource);
+        HMG_proxy.AddModel(this);
         this.fileName = resource.toString();
 
-        try
-        {
-            IResource res = Minecraft.getMinecraft().getResourceManager().getResource(resource);
-            loadObjModel(res.getInputStream());
-        }
-        catch (IOException e)
-        {
-            throw new ModelFormatException("IO Exception reading model format", e);
-        }
+        es = Executors.newCachedThreadPool();
+        es.execute(() -> {
+            try
+            {
+                IResource res = Minecraft.getMinecraft().getResourceManager().getResource(resource);
+                loadObjModel(res.getInputStream());
+            }
+            catch (Throwable e)
+            {
+                es.shutdown();
+                e.printStackTrace();
+            }
+            endLoad = true;
+            es.shutdown();
+        });
+    }
+
+    @Override
+    public ExecutorService getLoadThread() {
+        return es;
     }
 
     public HMGWavefrontObject(String filename, InputStream inputStream) throws ModelFormatException
@@ -144,7 +163,6 @@ public class HMGWavefrontObject extends WavefrontObject implements IModelCustom_
             }
 
             HMGGroupObjects.add(currentHMGGroupObject);
-            renderAll();
         }
         catch (IOException e)
         {
@@ -511,7 +529,7 @@ public class HMGWavefrontObject extends WavefrontObject implements IModelCustom_
      * @param line the line being validated
      * @return true if the line is a valid vertex, false otherwise
      */
-    private static boolean isValidVertexLine(String line)
+    private boolean isValidVertexLine(String line)
     {
         if (vertexMatcher != null)
         {
@@ -527,7 +545,7 @@ public class HMGWavefrontObject extends WavefrontObject implements IModelCustom_
      * @param line the line being validated
      * @return true if the line is a valid vertex normal, false otherwise
      */
-    private static boolean isValidVertexNormalLine(String line)
+    private boolean isValidVertexNormalLine(String line)
     {
         if (vertexNormalMatcher != null)
         {
@@ -543,7 +561,7 @@ public class HMGWavefrontObject extends WavefrontObject implements IModelCustom_
      * @param line the line being validated
      * @return true if the line is a valid texture coordinate, false otherwise
      */
-    private static boolean isValidTextureCoordinateLine(String line)
+    private boolean isValidTextureCoordinateLine(String line)
     {
         if (textureCoordinateMatcher != null)
         {
@@ -559,7 +577,7 @@ public class HMGWavefrontObject extends WavefrontObject implements IModelCustom_
      * @param line the line being validated
      * @return true if the line is a valid face that matches the format "f v1/vt1/vn1 ..." (with a minimum of 3 points in the face, and a maximum of 4), false otherwise
      */
-    private static boolean isValidFace_V_VT_VN_Line(String line)
+    private boolean isValidFace_V_VT_VN_Line(String line)
     {
         if (face_V_VT_VN_Matcher != null)
         {
@@ -575,7 +593,7 @@ public class HMGWavefrontObject extends WavefrontObject implements IModelCustom_
      * @param line the line being validated
      * @return true if the line is a valid face that matches the format "f v1/vt1 ..." (with a minimum of 3 points in the face, and a maximum of 4), false otherwise
      */
-    private static boolean isValidFace_V_VT_Line(String line)
+    private boolean isValidFace_V_VT_Line(String line)
     {
         if (face_V_VT_Matcher != null)
         {
@@ -591,7 +609,7 @@ public class HMGWavefrontObject extends WavefrontObject implements IModelCustom_
      * @param line the line being validated
      * @return true if the line is a valid face that matches the format "f v1//vn1 ..." (with a minimum of 3 points in the face, and a maximum of 4), false otherwise
      */
-    private static boolean isValidFace_V_VN_Line(String line)
+    private boolean isValidFace_V_VN_Line(String line)
     {
         if (face_V_VN_Matcher != null)
         {
@@ -607,7 +625,7 @@ public class HMGWavefrontObject extends WavefrontObject implements IModelCustom_
      * @param line the line being validated
      * @return true if the line is a valid face that matches the format "f v1 ..." (with a minimum of 3 points in the face, and a maximum of 4), false otherwise
      */
-    private static boolean isValidFace_V_Line(String line)
+    private boolean isValidFace_V_Line(String line)
     {
         if (face_V_Matcher != null)
         {
@@ -623,7 +641,7 @@ public class HMGWavefrontObject extends WavefrontObject implements IModelCustom_
      * @param line the line being validated
      * @return true if the line is a valid face that matches any of the valid face formats, false otherwise
      */
-    private static boolean isValidFaceLine(String line)
+    private boolean isValidFaceLine(String line)
     {
         return isValidFace_V_VT_VN_Line(line) || isValidFace_V_VT_Line(line) || isValidFace_V_VN_Line(line) || isValidFace_V_Line(line);
     }
@@ -633,7 +651,7 @@ public class HMGWavefrontObject extends WavefrontObject implements IModelCustom_
      * @param line the line being validated
      * @return true if the line is a valid group (or object), false otherwise
      */
-    private static boolean isValidGroupObjectLine(String line)
+    private boolean isValidGroupObjectLine(String line)
     {
         if (groupObjectMatcher != null)
         {
@@ -653,5 +671,14 @@ public class HMGWavefrontObject extends WavefrontObject implements IModelCustom_
     @Override
     public HMGGroupObject renderPart_getInstance() {
         return current;
+    }
+
+    @Override
+    public boolean isReady() {
+        return endLoad;
+    }
+
+    public String toString(){
+        return fileName;
     }
 }

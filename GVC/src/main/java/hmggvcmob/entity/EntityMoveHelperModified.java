@@ -3,6 +3,7 @@ package hmggvcmob.entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityMoveHelper;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.MathHelper;
 
 import static java.lang.Math.abs;
@@ -56,7 +57,7 @@ public class EntityMoveHelperModified extends EntityMoveHelper
 	{
 		this.entity.setMoveForward(0.0F);
 
-		if (this.update || (!this.entity.onGround && !this.entity.isInWater()))
+		if (this.update || !(this.entity.onGround || this.entity.isInWater()))
 		{
 			this.update = false;
 			int i = MathHelper.floor_double(this.entity.boundingBox.minY);
@@ -72,13 +73,12 @@ public class EntityMoveHelperModified extends EntityMoveHelper
 
 			if (d3 >= 0)
 			{
-				float f = (float)(Math.atan2(d1, d0) * 180.0D / Math.PI) - 90.0F;
-				this.entity.rotationYaw = f;
+				this.entity.rotationYaw = (float)(Math.atan2(d1, d0) * 180.0D / Math.PI) - 90.0F;
 				this.entity.setAIMoveSpeed((float)(this.speed * this.entity.getEntityAttribute(SharedMonsterAttributes.movementSpeed).getAttributeValue()));
 
 				if (d2 >= this.entity.stepHeight && abs(d0) < (entity.width + 0.4) && abs(d1) < (entity.width + 0.4))
 				{
-					if(!entity.worldObj.isAirBlock(i2,j-1,k))this.entity.getJumpHelper().setJumping();
+					if(entity.worldObj.getBlock(i2,j-1,k)!=null && entity.worldObj.getBlock(i2,j-1,k).getCollisionBoundingBoxFromPool(entity.worldObj, i2,j-1,k) != null && entity.worldObj.getBlock(i2,j-1,k) != Blocks.tallgrass)this.entity.getJumpHelper().setJumping();
 				}
 			}
 		}

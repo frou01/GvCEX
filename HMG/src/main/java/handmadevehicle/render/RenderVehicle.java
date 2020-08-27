@@ -31,7 +31,7 @@ public class RenderVehicle extends Render {
 	
 	private ResourceLocation skeletonTexturesz;
 	private IModelCustom vehicleModel;
-	private float partialTicks;
+	public static float partialTicks;
 	public static BaseLogic currentBaseLogic;
 	public static Entity currentEntity;
 	public PartsRender_Vehicle partsRender_vehicle = new PartsRender_Vehicle();
@@ -96,9 +96,9 @@ public class RenderVehicle extends Render {
 			GL11.glPushMatrix();
 			GL11.glScalef((float) currentBaseLogic.prefab_vehicle.scale, (float) currentBaseLogic.prefab_vehicle.scale, (float) currentBaseLogic.prefab_vehicle.scale);
 
-			if(currentBaseLogic.prefab_vehicle.script != null) {
+			if(currentBaseLogic.prefab_vehicle.script_global != null) {
 				try {
-					currentBaseLogic.prefab_vehicle.script.invokeFunction("Model_rendering", this);
+					currentBaseLogic.prefab_vehicle.script_global.invokeFunction("Model_rendering", this);
 				} catch (NoSuchMethodException | ScriptException e) {
 					e.printStackTrace();
 				}
@@ -316,5 +316,9 @@ public class RenderVehicle extends Render {
 
 	public ResourceLocation getEntityTexture() {
 		return getEntityTexture(currentEntity);
+	}
+
+	public void rebindEntityTexture(Entity entity){
+		this.bindEntityTexture(entity);
 	}
 }

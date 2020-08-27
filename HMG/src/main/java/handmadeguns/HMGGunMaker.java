@@ -38,6 +38,8 @@ public class HMGGunMaker {
 
 	public static int currentIndex = 0;
 	public static HMGGunParts currentParts = null;
+	public static ScriptEngine currentScript;
+	public static FileReader currentScriptFile;
 
 
 
@@ -79,8 +81,8 @@ public class HMGGunMaker {
 		float   armoffsetxl;
 		float   armoffsetyl;
 		float   armoffsetzl;
-		float   nox = -0.694F - 0.7f;
-		float   noy = 0;
+		float   nox = -1.4F;
+		float   noy = 0.7f;
 		float   noz = 0;
 		float[] thirdGunOffset = {0,0,0};
 		float   eqrotax = 0;
@@ -350,6 +352,8 @@ public class HMGGunMaker {
 								type[1] = type[1].replace('\n', File.separatorChar);
 								FileReader sc = new FileReader(new File(HMG_proxy.ProxyFile(),type[1])); // ファイルを開く
 								gunInfo.renderscript = gunInfo.script = gunInfo.script_withGUI = doScript(sc);
+								currentScript = gunInfo.renderscript;
+								currentScriptFile = sc;
 								break;
 							}
 							case "CanObj":
@@ -387,15 +391,15 @@ public class HMGGunMaker {
 								break;
 							case "ModelWidthX":
 							case "ADSOffsetX":
-								modelwidthx = -0.697f + parseFloat(type[1]);
-								modelwidthxr = -0.697f + parseFloat(type[2]);
-								modelwidthxs = -0.697f + parseFloat(type[3]);
+								modelwidthx = -0.693f + parseFloat(type[1]);
+								modelwidthxr = -0.693f + parseFloat(type[2]);
+								modelwidthxs = -0.693f + parseFloat(type[3]);
 								break;
 							case "ModelWidthZ":
 							case "ADSOffsetZ":
-								modelwidthz = parseFloat(type[1]);
-								modelwidthzr = parseFloat(type[2]);
-								modelwidthzs = parseFloat(type[3]);
+								modelwidthz = parseFloat(type[1]) + 0.5f;
+								modelwidthzr = parseFloat(type[2]) + 0.5f;
+								modelwidthzs = parseFloat(type[3]) + 0.5f;
 								break;
 
 							case "SimpleADSOffsetX":
@@ -1371,6 +1375,8 @@ public class HMGGunMaker {
 		String[] itemids;
 		byte isfixationrecipe = 0;
 		List<Object> itemlist = new ArrayList<Object>(Arrays.asList(new Object[9]));
+		boolean recipeType = false;//false:スロット直接指定,true:マイクラ同型
+		String[] pattern = new String[3];
 
 		try{
 			File file = file1;
@@ -1382,7 +1388,8 @@ public class HMGGunMaker {
 					str_Debug = str;
 					l++;
 					String[] type = str.split(",");
-					int index;
+
+
 					if(type[0] == null){
 					}else switch(type[0].toUpperCase()){
 						case "ADDRECIPE":
@@ -1394,31 +1401,44 @@ public class HMGGunMaker {
 						case "ADDSHAPELESSRECIPE":
 							isfixationrecipe = 2;
 							break;
+						case "SET_PATTERN":
+							recipeType = true;
+							setPattern(pattern,type[1],parseInt(type[2]));
+							break;
 						case "SLOT1":
+						case "SLOT_A":
 							setSlot(0, type, onslot, items, itemstacks);
 							break;
 						case "SLOT2":
+						case "SLOT_B":
 							setSlot(1, type, onslot, items, itemstacks);
 							break;
 						case "SLOT3":
+						case "SLOT_C":
 							setSlot(2, type, onslot, items, itemstacks);
 							break;
 						case "SLOT4":
+						case "SLOT_D":
 							setSlot(3, type, onslot, items, itemstacks);
 							break;
 						case "SLOT5":
+						case "SLOT_E":
 							setSlot(4, type, onslot, items, itemstacks);
 							break;
 						case "SLOT6":
+						case "SLOT_F":
 							setSlot(5, type, onslot, items, itemstacks);
 							break;
 						case "SLOT7":
+						case "SLOT_G":
 							setSlot(6, type, onslot, items, itemstacks);
 							break;
 						case "SLOT8":
+						case "SLOT_H":
 							setSlot(7, type, onslot, items, itemstacks);
 							break;
 						case "SLOT9":
+						case "SLOT_I":
 							setSlot(8, type, onslot, items, itemstacks);
 							break;
 						case "CRAFTITEM":
@@ -1440,51 +1460,84 @@ public class HMGGunMaker {
 							for(int count = 0; count < itemlist.size() ; count++){
 								System.out.println("Item [" + count + "] : " + (Object)itemlist.get(count));
 							}
-							switch(isfixationrecipe){
-								case 0:
-									System.out.println("Recipe1 : " + String.valueOf(new char[]{rf[0], rf[1], rf[2]}));
-									System.out.println("Recipe2 : " + String.valueOf(new char[]{rf[3], rf[4], rf[5]}));
-									System.out.println("Recipe3 : " + String.valueOf(new char[]{rf[6], rf[7], rf[8]}));
-									break;
-								case 1:
-									System.out.println("Recipe1 : " + String.valueOf(new char[]{rf[0], rf[1]}));
-									System.out.println("Recipe2 : " + String.valueOf(new char[]{rf[2], rf[3]}));
-									break;
+							if(!recipeType) {
+								switch (isfixationrecipe) {
+									case 0:
+										System.out.println("Recipe1 : " + String.valueOf(new char[]{rf[0], rf[1], rf[2]}));
+										System.out.println("Recipe2 : " + String.valueOf(new char[]{rf[3], rf[4], rf[5]}));
+										System.out.println("Recipe3 : " + String.valueOf(new char[]{rf[6], rf[7], rf[8]}));
+										break;
+									case 1:
+										System.out.println("Recipe1 : " + String.valueOf(new char[]{rf[0], rf[1]}));
+										System.out.println("Recipe2 : " + String.valueOf(new char[]{rf[2], rf[3]}));
+										break;
+								}
+							}else {
+								System.out.println("Recipe1 : " + pattern[0]);
+								System.out.println("Recipe2 : " + pattern[1]);
+								System.out.println("Recipe3 : " + pattern[2]);
 							}
 
 							System.out.println(new ItemStack(GameRegistry.findItem(itemids[0], itemids[1]), parseInt(itemids[3]), parseInt(itemids[2])));
 
 							if(isfixationrecipe == 0){
 								try{
-									GameRegistry.addRecipe(
-											new ItemStack(GameRegistry.findItem(itemids[0], itemids[1]), parseInt(itemids[3]), parseInt(itemids[2])),
-											String.valueOf(new char[]{rf[0], rf[1], rf[2]}),
-											String.valueOf(new char[]{rf[3], rf[4], rf[5]}),
-											String.valueOf(new char[]{rf[6], rf[7], rf[8]}),
-											'a',itemlist.get(0),
-											'b',itemlist.get(1),
-											'c',itemlist.get(2),
-											'd',itemlist.get(3),
-											'e',itemlist.get(4),
-											'f',itemlist.get(5),
-											'g',itemlist.get(6),
-											'h',itemlist.get(7),
-											'i',itemlist.get(8)
-									);
+									if(recipeType){
+										GameRegistry.addRecipe(
+												new ItemStack(GameRegistry.findItem(itemids[0], itemids[1]), parseInt(itemids[3]), parseInt(itemids[2])),
+												pattern[0],pattern[1],pattern[2],
+												'A', itemlist.get(0),
+												'B', itemlist.get(1),
+												'C', itemlist.get(2),
+												'D', itemlist.get(3),
+												'E', itemlist.get(4),
+												'F', itemlist.get(5),
+												'G', itemlist.get(6),
+												'H', itemlist.get(7),
+												'I', itemlist.get(8)
+										);
+									}else {
+										GameRegistry.addRecipe(
+												new ItemStack(GameRegistry.findItem(itemids[0], itemids[1]), parseInt(itemids[3]), parseInt(itemids[2])),
+												String.valueOf(new char[]{rf[0], rf[1], rf[2]}),
+												String.valueOf(new char[]{rf[3], rf[4], rf[5]}),
+												String.valueOf(new char[]{rf[6], rf[7], rf[8]}),
+												'a', itemlist.get(0),
+												'b', itemlist.get(1),
+												'c', itemlist.get(2),
+												'd', itemlist.get(3),
+												'e', itemlist.get(4),
+												'f', itemlist.get(5),
+												'g', itemlist.get(6),
+												'h', itemlist.get(7),
+												'i', itemlist.get(8)
+										);
+									}
 								}catch(Exception e){
 									e.printStackTrace();
 								}
 							}else if(isfixationrecipe == 1){
 								try{
-									GameRegistry.addRecipe(
-											new ItemStack(GameRegistry.findItem(itemids[0], itemids[1]), parseInt(itemids[3]), parseInt(itemids[2])),
-											String.valueOf(new char[]{rf[0], rf[1]}),
-											String.valueOf(new char[]{rf[2], rf[3]}),
-											'a',itemlist.get(0),
-											'b',itemlist.get(1),
-											'c',itemlist.get(2),
-											'd',itemlist.get(3)
-									);
+									if(recipeType){
+										GameRegistry.addRecipe(
+												new ItemStack(GameRegistry.findItem(itemids[0], itemids[1]), parseInt(itemids[3]), parseInt(itemids[2])),
+												pattern[0],pattern[1],
+												'A', itemlist.get(0),
+												'B', itemlist.get(1),
+												'C', itemlist.get(2),
+												'D', itemlist.get(3)
+										);
+									}else {
+										GameRegistry.addRecipe(
+												new ItemStack(GameRegistry.findItem(itemids[0], itemids[1]), parseInt(itemids[3]), parseInt(itemids[2])),
+												String.valueOf(new char[]{rf[0], rf[1]}),
+												String.valueOf(new char[]{rf[2], rf[3]}),
+												'a', itemlist.get(0),
+												'b', itemlist.get(1),
+												'c', itemlist.get(2),
+												'd', itemlist.get(3)
+										);
+									}
 								}catch(Exception e){
 									e.printStackTrace();
 								}
@@ -1509,6 +1562,7 @@ public class HMGGunMaker {
 							items = new Item[9];
 							itemstacks = new ItemStack[9];
 							itemlist = new ArrayList<Object>(Arrays.asList(new Object[9]));
+							recipeType = false;
 							break;
 					}
 				}
@@ -1522,7 +1576,9 @@ public class HMGGunMaker {
 			e.printStackTrace();
 		}
 	}
-
+	public static void setPattern(String[] pattern, String string,int line){
+		pattern[line] = string;
+	}
 	public static void setSlot(int index,String[] type, boolean[] onslot ,Item[] items, ItemStack[] itemstacks){
 		if(type[1] != null){
 			System.out.println("debug Recipe Item " + type[1]);
@@ -1647,12 +1703,18 @@ public class HMGGunMaker {
 				break;
 		}
 	}
+	int newerID = 0;
 	public void readParts(String[] type,ArrayList<HMGGunParts> partslist){
 		switch (type[0]) {
 
 			case "AddParts":
 				currentIndex = partslist.size();
 				partslist.add(currentParts = createGunPart(type));
+				currentParts.partsID = newerID;
+				newerID++;
+				break;
+			case "AttachScript":
+				currentParts.script_global = currentScript;
 				break;
 			case "SetAsNormalParts":
 				currentParts.rendering_Def = true;
@@ -1822,11 +1884,15 @@ public class HMGGunMaker {
 			case "AddChildParts":
 				currentIndex = currentParts.childs.size();
 				currentParts.childs.add(currentParts = createGunPart(type, currentIndex, currentParts));
+				currentParts.partsID = newerID;
+				newerID++;
 				break;
 			case "AddReticleChildParts":
 				if(currentParts.reticleChild == null)currentParts.reticleChild = new ArrayList<>();
 				currentIndex = currentParts.reticleChild.size();
 				currentParts.reticleChild.add(currentParts = createGunPart(type, currentIndex, currentParts));
+				currentParts.partsID = newerID;
+				newerID++;
 				break;
 			case "BackParts":
 				currentIndex = currentParts.motherIndex;
@@ -2245,6 +2311,9 @@ public class HMGGunMaker {
 				gunInfo.knockback = parseDouble(type[1]);
 				gunInfo.knockbackY = parseDouble(type[2]);
 				break;
+			case "bulletStability":
+				gunInfo.bulletStability = parseDouble(type[1]);
+				break;
 			case "isOneuse":
 				gunInfo.isOneuse = parseBoolean(type[1]);
 				break;
@@ -2265,6 +2334,7 @@ public class HMGGunMaker {
 				gunInfo.soldiercanstorage = false;
 				break;
 			case "Canlock":
+				gunInfo.isActive = true;
 				gunInfo.canlock = gunInfo.canlockEntity = parseBoolean(type[1]);
 				break;
 			case "canlockEntity":
@@ -2284,6 +2354,13 @@ public class HMGGunMaker {
 				break;
 			case "lock_to_Vehicle":
 				gunInfo.lock_to_Vehicle = parseBoolean(type[1]);
+				break;
+			case "semiActive":
+				gunInfo.semiActive = parseBoolean(type[1]);
+				gunInfo.isActive = false;
+				break;
+			case "isActive":
+				gunInfo.isActive = parseBoolean(type[1]);
 				break;
 			case "lookDown":
 				gunInfo.lookDown = sin(toRadians(parseFloat(type[1])));
@@ -2339,10 +2416,12 @@ public class HMGGunMaker {
 			case "OnEntity_BarrelPoint":
 				gunInfo.posGetter.barrelpos = new double[]{parseDouble(type[1]), parseDouble(type[2]), parseDouble(type[3])};
 				gunInfo.posGetter.cannonPos = new Vector3d(gunInfo.posGetter.barrelpos);
+				gunInfo.posGetter.cartPos = new Vector3d(gunInfo.posGetter.barrelpos);
 				break;
 			case "OnEntity_multi_BarrelPoint":
 				gunInfo.posGetter.multi_barrelpos = new double[parseInt(type[1])][3];
-				gunInfo.posGetter.multicannonPos = new Vector3d[parseInt(type[1])];
+				gunInfo.posGetter.multiCannonPos = new Vector3d[parseInt(type[1])];
+				gunInfo.posGetter.multiCartPos = new Vector3d[parseInt(type[1])];
 				int id = 0;
 				double[][] multi_barrelpos = gunInfo.posGetter.multi_barrelpos;
 				for (int i = 0; i < multi_barrelpos.length; i++) {
@@ -2350,7 +2429,8 @@ public class HMGGunMaker {
 					aBarrelPos[0] = parseDouble(type[id * 3 + 2]);
 					aBarrelPos[1] = parseDouble(type[id * 3 + 3]);
 					aBarrelPos[2] = parseDouble(type[id * 3 + 4]);
-					gunInfo.posGetter.multicannonPos[i] = new Vector3d(aBarrelPos);
+					gunInfo.posGetter.multiCannonPos[i] = new Vector3d(aBarrelPos);
+					gunInfo.posGetter.multiCartPos[i] = new Vector3d(aBarrelPos);
 					id++;
 				}
 				break;

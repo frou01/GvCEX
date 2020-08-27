@@ -215,7 +215,13 @@ public class GVCMobPlus
         }
         {
 
-            String[] types = lconf.get("Vehicle", "cfg_Soldier_VehicleType",new String[]{"10","T-90A:15","BMP-1:20","BRDM-2:5","Mi-24:15","MiG-21:1","SU-25:10"}).getStringList();
+            String[] types = lconf.get("Vehicle", "cfg_Soldier_VehicleType",new String[]{"10",
+                    "BMP-1:30",
+                    "Mi-24:30",
+                    "T-90A:15",
+                    "SU-25:10",
+                    "BRDM-2:5",
+                    "MiG-21:1"}).getStringList();
             GVCEntitySoldierRPG.vehicleSpawnGachaOBJ = new VehicleSpawnGachaOBJ[types.length];
             int cnt = 0;
             for(String atype:types){
@@ -225,7 +231,10 @@ public class GVCMobPlus
             }
         }
         {
-            String[] types = lconf.get("Vehicle", "cfg_Guerrilla_VehicleType",new String[]{"50","T-34-85_mod:10","TOYOTA:30","F-86K:5"}).getStringList();
+            String[] types = lconf.get("Vehicle", "cfg_Guerrilla_VehicleType",new String[]{"50",
+                    "T-34-85_mod:10",
+                    "TOYOTA:30",
+                    "F-86K:5"}).getStringList();
             GVCEntityGuerrillaRPG.vehicleSpawnGachaOBJ = new VehicleSpawnGachaOBJ[types.length];
             int cnt = 0;
             for(String atype:types){
@@ -234,10 +243,8 @@ public class GVCMobPlus
                 cnt++;
             }
         }
-        cfg_flagspawnlevel = lconf.get("Guerrilla", "cfg_FlagSpawnLevel", 180).getInt(180);
-        cfg_flagspawninterval = lconf.get("Guerrilla", "cfg_Flagspawninterval", 2400).getInt(2400);
-        HMVehicle.cfgVehicleWheel_UpRange = lconf.get("Vehicle", "cfgVehicleWheel_UpRange", 1).getDouble(1);
-        HMVehicle.cfgVehicleWheel_DownRange = lconf.get("Vehicle", "cfgVehicleWheel_DownRange", 2).getDouble(2);
+        cfg_flagspawnlevel = lconf.get("Guerrilla", "cfg_FlagSpawnLevel", 16).getInt(16);
+        cfg_flagspawninterval = lconf.get("Guerrilla", "cfg_Flagspawninterval", 2000).getInt(2000);
         cfg_cansetIED = lconf.get("world", "cfg_CansetIED", true).getBoolean(true);
         cfg_blockdestory = lconf.get("world", "cfg_BlockDestory", true,"It's only for mob. not for destroying by gun. see HandmadeGuns.cfg").getBoolean(true);
 

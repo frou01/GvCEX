@@ -314,10 +314,12 @@ public class DungeonData {
                             maxx = Integer.parseInt(calm[0]) > maxx ? Integer.parseInt(calm[0]) : maxx;
                             maxy = Integer.parseInt(calm[1]) > maxy ? Integer.parseInt(calm[1]) : maxy;
                             maxz = Integer.parseInt(calm[2]) > maxz ? Integer.parseInt(calm[2]) : maxz;
-                            if (calm.length > 4)
-                                temp.setBlock(Integer.parseInt(calm[0]), Integer.parseInt(calm[1]), Integer.parseInt(calm[2]), GameRegistry.findBlock(block[0], block[1]), Integer.parseInt(calm[4]));
-                            else
-                                temp.setBlock(Integer.parseInt(calm[0]), Integer.parseInt(calm[1]), Integer.parseInt(calm[2]), GameRegistry.findBlock(block[0], block[1]), 0);
+                            if (GameRegistry.findBlock(block[0], block[1]) != null)
+                                if (calm.length > 4) {
+                                    temp.setBlock(Integer.parseInt(calm[0]), Integer.parseInt(calm[1]), Integer.parseInt(calm[2]), GameRegistry.findBlock(block[0], block[1]), Integer.parseInt(calm[4]));
+                                } else {
+                                    temp.setBlock(Integer.parseInt(calm[0]), Integer.parseInt(calm[1]), Integer.parseInt(calm[2]), GameRegistry.findBlock(block[0], block[1]), 0);
+                                }
                             prevBlockPos = new BlockPos(Integer.parseInt(calm[0]), Integer.parseInt(calm[1]), Integer.parseInt(calm[2]));
                         }
                     }

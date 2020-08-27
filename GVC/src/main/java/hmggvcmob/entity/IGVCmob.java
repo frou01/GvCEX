@@ -17,4 +17,6 @@ public interface IGVCmob {
         return null;
     }
     AIAttackGun getAttackGun();
+
+    void setCanDespawn(boolean canDespawn);
 }

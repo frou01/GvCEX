@@ -7,7 +7,9 @@ public class PlaceGunShooterPosGetter {
     public double barrelpos[] = new double[]{0,0.25,0.5};
     public double multi_barrelpos[][];
     public Vector3d cannonPos = new Vector3d();
-    public Vector3d[] multicannonPos = null;
+    public Vector3d[] multiCannonPos = null;
+    public Vector3d cartPos = new Vector3d();
+    public Vector3d[] multiCartPos = null;
 
     public double turretRotationYawPoint[] = new double[]{0,0,0};
     public Vector3d turretYawCenterpos = new Vector3d();

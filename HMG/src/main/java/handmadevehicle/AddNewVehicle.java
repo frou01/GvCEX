@@ -2,7 +2,6 @@ package handmadevehicle;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import handmadeguns.HMGGunMaker;
-import handmadeguns.HandmadeGunsCore;
 import handmadeguns.client.render.HMGGunParts;
 import handmadeguns.client.render.HMGGunParts_Motion;
 import handmadeguns.items.guns.HMGItem_Unified_Guns;
@@ -20,7 +19,6 @@ import static handmadeguns.HandmadeGunsCore.tabshmg;
 import static handmadevehicle.AddWeapon.prefab_turretHashMap;
 import static handmadevehicle.HMVehicle.tabHMV;
 import static java.lang.Boolean.parseBoolean;
-import static java.lang.Double.NaN;
 import static java.lang.Float.parseFloat;
 import static java.lang.Double.parseDouble;
 import static java.lang.Integer.parseInt;
@@ -84,8 +82,11 @@ public class AddNewVehicle extends HMGGunMaker {
 									currentVehicleData.maxhealth = parseFloat(type[1]);
 									break;
 								case "soundname":
-									currentVehicleData.soundname = type[1];
-									currentVehicleData.AFsoundname = type[1] + "AF";
+									currentVehicleData.SoundName = type[1];
+									currentVehicleData.AFSoundName = type[1] + "AF";
+									break;
+								case "IdleSoundName":
+									currentVehicleData.IdleSoundName = type[1];
 									break;
 								case "soundpitch":
 									currentVehicleData.soundpitch = parseFloat(type[1]);
@@ -115,10 +116,11 @@ public class AddNewVehicle extends HMGGunMaker {
 									currentVehicleData.splashsound = type[1];
 									break;
 								case "sightTex":
-									currentVehicleData.sightTex = type[1];
+									currentVehicleData.sightTex[0] = type[1];
 									break;
-								//LandOnly
-								//AirOnly
+								case "sightTex_toSeat":
+									currentVehicleData.sightTex[parseInt(type[1])] = type[2];
+									break;
 								case "ParentWeapons_NUM":
 									currentVehicleData.prefab_attachedWeapons = new Prefab_AttachedWeapon[parseInt(type[1])];
 									break;
@@ -208,9 +210,20 @@ public class AddNewVehicle extends HMGGunMaker {
 									rootTurretID_current--;
 									break;
 
+								case "LinkedTriggers":
+									if(currentVehicleData.linkedTriggers == null)currentVehicleData.linkedTriggers = new HashMap<>();
+									int[] linked = new int[type.length-2];
+									for(int i = 2; i < type.length;i ++){
+										linked[i-2] = parseInt(type[i]);
+									}
+									currentVehicleData.linkedTriggers.put(parseInt(type[1]),linked);
+								case "LinkTriggers_FireBlank":
+									if(currentVehicleData.linkTriggers_FireBlank == null)currentVehicleData.linkTriggers_FireBlank = new HashMap<>();
+									currentVehicleData.linkTriggers_FireBlank.put(parseInt(type[1]),parseInt(type[2]));
 								case "SetUpSeat1_NUM":
 									currentVehicleData.prefab_seats = new Prefab_Seat[parseInt(type[1])];
 									currentVehicleData.prefab_seats_zoom = new Prefab_Seat[parseInt(type[1])];
+									currentVehicleData.sightTex = new String[parseInt(type[1])];
 									break;
 								case "SetUpSeat2_AddSeat_Normal":
 									if(type.length < 11)currentVehicleData.prefab_seats_zoom[parseInt(type[1])] = currentVehicleData.prefab_seats[parseInt(type[1])] =

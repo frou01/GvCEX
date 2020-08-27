@@ -109,7 +109,7 @@ public class Utils {
         }
         return agl;
     }
-    public static double[] CalculateGunElevationAngle(double posX,double posY,double posZ, double targetX,double targetY,double targetZ, float m_gravity, float energy){
+    public static double[] CalculateGunElevationAngle(double posX,double posY,double posZ, double targetX,double targetY,double targetZ, double m_gravity, double energy){
         
         m_gravity *=-1;
         double dist_y = ((targetY)-(posY));
@@ -212,6 +212,30 @@ public class Utils {
             f3 = -MathHelper.cos(-rotationPitchin * 0.017453292F);
             f4 = MathHelper.sin(-rotationPitchin * 0.017453292F);
             return Vec3.createVectorHelper((double)(f2 * f3)*p_70676_1_, (double)f4*p_70676_1_, (double)(f1 * f3)*p_70676_1_);
+        }
+    }
+    public static Vector3d getLook2(float p_70676_1_, float rotationYawin, float rotationPitchin)
+    {
+        float f1;
+        float f2;
+        float f3;
+        float f4;
+
+        if (p_70676_1_ == 1.0F)
+        {
+            f1 = MathHelper.cos(-rotationYawin * 0.017453292F - (float)Math.PI);
+            f2 = MathHelper.sin(-rotationYawin * 0.017453292F - (float)Math.PI);
+            f3 = -MathHelper.cos(-rotationPitchin * 0.017453292F);
+            f4 = MathHelper.sin(-rotationPitchin * 0.017453292F);
+            return new Vector3d((double)(f2 * f3), (double)f4, (double)(f1 * f3));
+        }
+        else
+        {
+            f1 = MathHelper.cos(-rotationYawin * 0.017453292F - (float)Math.PI);
+            f2 = MathHelper.sin(-rotationYawin * 0.017453292F - (float)Math.PI);
+            f3 = -MathHelper.cos(-rotationPitchin * 0.017453292F);
+            f4 = MathHelper.sin(-rotationPitchin * 0.017453292F);
+            return new Vector3d((double)(f2 * f3)*p_70676_1_, (double)f4*p_70676_1_, (double)(f1 * f3)*p_70676_1_);
         }
     }
     public static Vec3 rotationVector_byAxisVector(Vec3 axis,Vec3 tovec, float angle)
@@ -747,15 +771,20 @@ public class Utils {
     }
     public static Block getBlock(World world, Vector3d vector3d){
         int[] pos = getIntPosesFromVector(vector3d);
+        return getBlock(world,pos);
+    }
+    public static Block getBlock(World world, int[] pos){
         return world.getBlock(pos[0],pos[1],pos[2]);
     }
     public static float getBlockHardness(World world, Vector3d vector3d){
         int[] pos = getIntPosesFromVector(vector3d);
         return world.getBlock(pos[0],pos[1],pos[2]).getBlockHardness(world,pos[0],pos[1],pos[2]);
     }
-    public static void setBlock(World world, Vector3d vector3d,Block block,boolean replace){
+    public static void setBlock(World world, Vector3d vector3d,Block block,boolean replace,boolean floating){
         int[] pos = getIntPosesFromVector(vector3d);
-        if(replace || !getBlock(world,vector3d).getMaterial().isSolid())world.setBlock(pos[0],pos[1],pos[2],block);
+        if((floating || getBlock(world,new int[]{pos[0],pos[1],pos[2]}).getMaterial().isSolid()) && (replace || !getBlock(world,pos).getMaterial().isSolid())){
+            world.setBlock(pos[0],pos[1],pos[2],block);
+        }
     }
     public static void playBlockDestroyEffect(World world, Vector3d vector3d){
         int[] pos = getIntPosesFromVector(vector3d);

@@ -22,8 +22,7 @@ import net.minecraft.world.biome.BiomeGenBase;
 import java.util.Random;
 
 import static handmadeguns.HandmadeGunsCore.cfg_forceunifiedguns;
-import static hmggvcmob.GVCMobPlus.fn_Guerrillaflag;
-import static hmggvcmob.GVCMobPlus.guerrillas;
+import static hmggvcmob.GVCMobPlus.*;
 
 public class GVCXBlockFriendCamp extends Block{
     @SideOnly(Side.CLIENT)
@@ -816,8 +815,8 @@ public class GVCXBlockFriendCamp extends Block{
             world.setBlock(i + 12, j + 0, k + 8, Blocks.bed , 11 , 3);
 
 
-            world.setBlock(i + 12, j + 0, k + 9, fn_Guerrillaflag, 2, 2);
-            TileEntityFlag tileEntityFlag = new TileEntityFlag(guerrillas);
+            world.setBlock(i + 12, j + 0, k + 9, fn_SoldierFlag, 2, 2);
+            TileEntityFlag tileEntityFlag = new TileEntityFlag(soldiers);
             tileEntityFlag.respawncycle = 20;
             world.setTileEntity(i + 12, j + 0, k + 9,tileEntityFlag);
 

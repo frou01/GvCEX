@@ -11,6 +11,9 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 
 import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class SlowPathfinder {
 
@@ -19,7 +22,7 @@ public class SlowPathfinder {
     private boolean isPathingInWater;
     private boolean isMovementBlockAllowed;
     private boolean isWoddenDoorAllowed;
-    private Path_forSlow path =  new Path_forSlow();
+    private final Path_forSlow path =  new Path_forSlow();
     private IntHashMap pointMap = new IntHashMap();
     private PathPoint_slow[] pathOptions = new PathPoint_slow[32];
     public boolean isserchingpath;
@@ -118,7 +121,7 @@ public class SlowPathfinder {
     public PathEntity currentReturnVal;
     public PathEntity serchPath(){
         retrycount++;
-        int cntmax = new Random().nextInt(20) + 20;
+        int cntmax = 30;
         for(int cnt = 0; cnt<cntmax; cnt++) {
             if (!this.path.isPathEmpty()) {
 //                System.out.println("debug" + path);

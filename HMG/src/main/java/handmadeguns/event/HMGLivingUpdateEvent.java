@@ -19,7 +19,7 @@ public class HMGLivingUpdateEvent {
         if(event.entity instanceof HMGEntityBulletBase){
             event.entity.setDead();
         }
-        if(event.entity instanceof EntityVehicle && ((EntityVehicle) event.entity).despawn){
+        if(event.entity instanceof EntityVehicle && ((EntityVehicle) event.entity).canDespawn){
             event.entity.setDead();
         }
     }

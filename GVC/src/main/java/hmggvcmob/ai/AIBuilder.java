@@ -88,7 +88,7 @@ public class AIBuilder extends EntityAIBase {
 					Vector3d temporary = new Vector3d(toTargetPos);
 					temporary.scale(length);
 					temporary.add(entityPos);
-					setBlock(worldObj, temporary, Blocks.dirt, false);
+					setBlock(worldObj, temporary, Blocks.dirt, false,false);
 				}
 				Vector3d temporary = new Vector3d(toTargetPos);
 				temporary.scale(3);
@@ -137,7 +137,7 @@ public class AIBuilder extends EntityAIBase {
 					this.entityBuilder.worldObj.destroyBlockInWorldPartially(this.entityBuilder.getEntityId(), pos[0],pos[1],pos[2], i);
 					this.digingLevel = i;
 				}
-				setBlock(worldObj, temporary, Blocks.air, true);
+				setBlock(worldObj, temporary, Blocks.air, true,true);
 				return true;
 			}
 			return false;

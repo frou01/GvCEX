@@ -1,6 +1,5 @@
 package hmggvcmob.entity.friend;
 
-import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.common.eventhandler.Event;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -13,7 +12,7 @@ import handmadeguns.items.guns.HMGItem_Unified_Guns;
 import handmadevehicle.SlowPathFinder.WorldForPathfind;
 import handmadevehicle.entity.EntityDummy_rider;
 import handmadevehicle.entity.EntityVehicle;
-import handmadevehicle.entity.parts.ITurretUser;
+import handmadevehicle.entity.parts.IDriver;
 import handmadevehicle.entity.parts.Modes;
 import handmadevehicle.entity.parts.logics.BaseLogic;
 import handmadevehicle.entity.parts.turrets.TurretObj;
@@ -23,7 +22,6 @@ import hmggvcmob.GVCMobPlus;
 import hmggvcmob.entity.*;
 import handmadevehicle.SlowPathFinder.ModifiedPathNavigater;
 import hmggvcmob.ai.*;
-import hmggvcmob.camp.CampObj;
 import hmggvcmob.entity.guerrilla.EntityGBase;
 import hmggvcmob.entity.guerrilla.EntityGBases;
 import littleMaidMobX.LMM_EntityLittleMaid;
@@ -36,26 +34,22 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.pathfinding.PathNavigate;
-import net.minecraft.scoreboard.Team;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
-import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeEventFactory;
 
 import javax.vecmath.Vector3d;
-import java.util.Iterator;
 import java.util.List;
 
+import static handmadeguns.HandmadeGunsCore.HMG_proxy;
 import static handmadeguns.HandmadeGunsCore.islmmloaded;
 import static handmadeguns.Util.GunsUtils.getmovingobjectPosition_forBlock;
-import static handmadevehicle.Utils.canMoveEntity;
 import static handmadevehicle.entity.EntityVehicle.EntityVehicle_spawnByMob;
 import static hmggvcmob.GVCMobPlus.*;
 import static java.lang.Math.abs;
 
-public abstract class EntitySoBases extends EntityCreature implements INpc ,  IFF, IGVCmob, ITurretUser , IPlatoonable {
+public abstract class EntitySoBases extends EntityCreature implements INpc ,  IFF, IGVCmob, IDriver, IPlatoonable {
 	private EntityBodyHelper_modified bodyHelper;
 	public String summoningVehicle = null;
 
@@ -68,6 +62,7 @@ public abstract class EntitySoBases extends EntityCreature implements INpc ,  IF
 	public EntityAISwimming aiSwimming;
 	public AIAttackGun aiAttackGun;
 	public AITargetFlag aiTargetFlag;
+	public boolean canDespawn = true;
 	public static int spawnedcount;
 
 	public int rideCool = 0;
@@ -76,7 +71,7 @@ public abstract class EntitySoBases extends EntityCreature implements INpc ,  IF
 		super(par1World);
 		this.moveHelper = new EntityMoveHelperModified(this);
 		this.bodyHelper = new EntityBodyHelper_modified(this);
-		renderDistanceWeight = 16384;
+		renderDistanceWeight = Double.MAX_VALUE;
 		this.worldForPathfind = new WorldForPathfind(worldObj);
 		this.modifiedPathNavigater = new ModifiedPathNavigater(this, worldObj,worldForPathfind);
 
@@ -122,11 +117,13 @@ public abstract class EntitySoBases extends EntityCreature implements INpc ,  IF
     {
         super.readEntityFromNBT(p_70037_1_);
 		seatID = p_70037_1_.getInteger("seatID");
+	    canDespawn = p_70037_1_.getBoolean("canDespawn");
 		if(p_70037_1_.hasKey("platoonTargetPos"))getEntityData().setIntArray("platoonTargetPos",p_70037_1_.getIntArray("platoonTargetPos"));
     }
     public void writeEntityToNBT(NBTTagCompound p_70014_1_)
     {
         super.writeEntityToNBT(p_70014_1_);
+	    p_70014_1_.setBoolean("canDespawn",canDespawn);
         if(platoonOBJ != null)p_70014_1_.setIntArray("platoonTargetPos",new int[]{(int) platoonOBJ.PlatoonTargetPos.x,(int) platoonOBJ.PlatoonTargetPos.y,(int) platoonOBJ.PlatoonTargetPos.z});
 	    spawnedcount--;
     }
@@ -231,7 +228,12 @@ public abstract class EntitySoBases extends EntityCreature implements INpc ,  IF
 		}
 	}
 	boolean platoon_check = false;
+	private int reArmCnt;
+	public int chunkCheckCNT = 20;
 	public void onUpdate() {
+		if(worldObj.isRemote && HMG_proxy.getEntityPlayerInstance() != null && HMG_proxy.getEntityPlayerInstance().isDead){
+			this.setDead();
+		}
 		if(getPlatoon() == null && !platoon_check){
 			platoon_check = true;
 			if(getEntityData().hasKey("platoonTargetPos")){
@@ -241,10 +243,37 @@ public abstract class EntitySoBases extends EntityCreature implements INpc ,  IF
 			}
 		}
 
+		if(currentMainTurret != null && currentMainTurret.motherEntity != null){
+			if(getAttackTarget() == null){
+				aimPos = null;
+				reArmCnt--;
+				if(reArmCnt == 0) {
+					Prefab_Vehicle_Base prefab_vehicle = ((EntityVehicle) currentMainTurret.motherEntity).getBaseLogic().prefab_vehicle;
+					for (int slotID = 0; slotID < prefab_vehicle.weaponSlotNum; slotID++) {
+						if (prefab_vehicle.weaponSlot_linkedTurret_StackWhiteList.get(slotID) != null) {
+							int randUsingSlot = rand.nextInt(prefab_vehicle.weaponSlot_linkedTurret_StackWhiteList.get(slotID).length);
+							String whiteList = prefab_vehicle.weaponSlot_linkedTurret_StackWhiteList.get(slotID)[randUsingSlot];
+							System.out.println("" + whiteList);
+							Item check = GameRegistry.findItem("HandmadeGuns", whiteList);
+							if (check instanceof HMGItem_Unified_Guns && ((HMGItem_Unified_Guns) check).gunInfo.guerrila_can_use) {
+								((EntityVehicle) currentMainTurret.motherEntity).getBaseLogic().inventoryVehicle.setInventorySlotContents(slotID, new ItemStack(check));
+							}
+						} else {
+							int randUsingSlot = rand.nextInt(GVCMobPlus.Guns_CanUse.size());
+							Item choosenGun = GVCMobPlus.Guns_CanUse.get(randUsingSlot);
+							((EntityVehicle) currentMainTurret.motherEntity).getBaseLogic().inventoryVehicle.setInventorySlotContents(slotID, new ItemStack(choosenGun));
+						}
+					}
+				}
+			}else {
+				reArmCnt = 20;
+			}
+		}
+
 		if(!worldObj.isRemote && getPlatoon() != null){
 
-			if(abs(platoonOBJ.lastUpdatedTick - FMLCommonHandler.instance().getMinecraftServerInstance().getTickCounter()) > 2 || platoonOBJ.leader.entity.isDead || !worldObj.checkChunksExist((int)platoonOBJ.leader.entity.posX,(int)platoonOBJ.leader.entity.posY,(int)platoonOBJ.leader.entity.posZ,(int)platoonOBJ.leader.entity.posX,(int)platoonOBJ.leader.entity.posY,(int)platoonOBJ.leader.entity.posZ)) {
-				platoonOBJ.leader.entity = this;//落ち着け、ジーン！指揮を引き継げ！
+			if(platoonOBJ.checkLeaderAlive()) {
+				platoonOBJ.update();
 			}
 
 			if(isPlatoonLeader()){
@@ -267,11 +296,11 @@ public abstract class EntitySoBases extends EntityCreature implements INpc ,  IF
 			bespawningEntity.noDrop = true;
 			bespawningEntity.setLocationAndAngles(this.posX, this.posY, this.posZ, var12 , 0.0F);
 			if((!bespawningEntity.getBaseLogic().prefab_vehicle.T_Land_F_Plane && this.worldObj.canBlockSeeTheSky(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ))) || bespawningEntity.checkObstacle()) {
-				if(bespawningEntity.pickupEntity(this,0)) {
+				if(bespawningEntity.pickupEntity(this,0)){
 					this.setCurrentItemOrArmor(0,null);
 				}
 				bespawningEntity.canUseByMob = true;
-				bespawningEntity.despawn = true;
+				bespawningEntity.canDespawn = true;
 				Prefab_Vehicle_Base prefab_vehicle = bespawningEntity.getBaseLogic().prefab_vehicle;
 				for(int slotID = 0 ;slotID < prefab_vehicle.weaponSlotNum;slotID++) {
 					if(prefab_vehicle.weaponSlot_linkedTurret_StackWhiteList.get(slotID) != null) {
@@ -350,6 +379,7 @@ public abstract class EntitySoBases extends EntityCreature implements INpc ,  IF
 		this.getEntityData().setBoolean("HMGisUsingItem",false);
 		if(modifiedPathNavigater.getSpeed() < 0 && rand.nextInt(10)==0 && this.getAttackTarget() == null)modifiedPathNavigater.setSpeed(1);
 
+
 	}
 
 
@@ -388,7 +418,23 @@ public abstract class EntitySoBases extends EntityCreature implements INpc ,  IF
 	}
 	public void moveEntityWithHeading(float p_70612_1_, float p_70612_2_){
 		this.rotationYaw = moveToDir;
-		super.moveEntityWithHeading(p_70612_1_,p_70612_2_);
+		if(!worldObj.isRemote){
+			super.moveEntityWithHeading(p_70612_1_,p_70612_2_);
+		}else {
+			double motionXBackUp = motionX;
+			double motionYBackUp = motionY;
+			double motionZBackUp = motionZ;
+			double posXBackUp = posX;
+			double posYBackUp = posY;
+			double posZBackUp = posZ;
+			super.moveEntityWithHeading(p_70612_1_,p_70612_2_);
+			motionX = motionXBackUp;
+			motionY = motionYBackUp;
+			motionZ = motionZBackUp;
+			posX = posXBackUp;
+			posY = posYBackUp;
+			posZ = posZBackUp;
+		}
 	}
 	
 	public void moveFlying(float p_70060_1_, float p_70060_2_, float p_70060_3_)
@@ -468,8 +514,7 @@ public abstract class EntitySoBases extends EntityCreature implements INpc ,  IF
 		Vec3 vec3 = Vec3.createVectorHelper(this.posX, this.posY + this.getEyeHeight(), this.posZ);
 		Vec3 vec31 = Vec3.createVectorHelper(p_70685_1_.posX, p_70685_1_.posY + p_70685_1_.getEyeHeight(), p_70685_1_.posZ);
 
-		MovingObjectPosition movingobjectposition = GunsUtils.getmovingobjectPosition_forBlock(worldObj,vec3, vec31, false, true, false);
-		return movingobjectposition == null && canSeeTarget(p_70685_1_);
+		return GunsUtils.getMovingObjectPosition_forBlock_CheckEmpty(worldObj,vec3, vec31,10) && canSeeTarget(p_70685_1_);
 	}
 
 	@Override
@@ -485,6 +530,10 @@ public abstract class EntitySoBases extends EntityCreature implements INpc ,  IF
 		return aiAttackGun;
 	}
 
+	@Override
+	public void setCanDespawn(boolean canDespawn) {
+		this.canDespawn = canDespawn;
+	}
 
 	public boolean canuseAlreadyPlacedGun = true;
 	public int placing;
@@ -640,5 +689,23 @@ public abstract class EntitySoBases extends EntityCreature implements INpc ,  IF
 	@Override
 	public Vector3d getMoveToPos() {
 		return myPos.getPos();
+	}
+	Vector3d aimPos;
+	public void setAimPos(Vector3d aimPos){
+		this.aimPos = aimPos;
+	}
+	public Vector3d getAimPos(){
+		return this.aimPos;
+	}
+
+	BaseLogic linkedLogic;
+	@Override
+	public void setLinkedVehicle(BaseLogic baseLogic) {
+		linkedLogic = baseLogic;
+	}
+
+	@Override
+	public BaseLogic getLinkedVehicle() {
+		return linkedLogic;
 	}
 }

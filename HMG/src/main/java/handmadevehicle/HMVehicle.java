@@ -45,8 +45,8 @@ public class HMVehicle {
 	public static ItemWrench itemWrench;
 	public static boolean isDebugMessage = true;
 	public static final CreativeTabs tabHMV = new HMVDefaultTab("HMV");
-	public static double cfgVehicleWheel_UpRange = 1;
-	public static double cfgVehicleWheel_DownRange = 2;
+	public static double cfgVehicleWheel_UpRange = 2;
+	public static double cfgVehicleWheel_DownRange = 4;
 	public static boolean cfgControl_useStick = false;
 	public static int cfgControl_axisXID = 0;
 	public static int cfgControl_axisYID = 1;

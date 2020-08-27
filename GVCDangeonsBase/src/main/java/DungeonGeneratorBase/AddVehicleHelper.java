@@ -22,7 +22,7 @@ public class AddVehicleHelper {
 	}
 	public void setVehicle(World world, double x, double y, double z){
 		EntityVehicle bespawningEntity = EntityVehicle_spawnByMob(world,vehicleType);
-		bespawningEntity.despawn = false;
+		bespawningEntity.canDespawn = false;
 		Random rand = new Random();
 		Prefab_Vehicle_Base prefab_vehicle = bespawningEntity.getBaseLogic().prefab_vehicle;
 		for(int slotID = 0 ;slotID < prefab_vehicle.weaponSlotNum;slotID++) {

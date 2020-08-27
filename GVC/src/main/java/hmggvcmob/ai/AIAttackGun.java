@@ -150,7 +150,7 @@ public class AIAttackGun extends EntityAIBase {
                     }else {
                         lookAround();
                     }
-                    if(refindpath < 0 || (shooter.getHeldItem() == null || !(shooter.getHeldItem().getItem() instanceof HMGItem_Unified_Guns))){
+                    if(refindpath < 0|| shooter.getNavigator().noPath() || (shooter.getHeldItem() == null || !(shooter.getHeldItem().getItem() instanceof HMGItem_Unified_Guns))){
                         setPath(currentAttackToPosition,tocurrentAttackToPosition,canSee);
                         refindpath = 10;
                     }

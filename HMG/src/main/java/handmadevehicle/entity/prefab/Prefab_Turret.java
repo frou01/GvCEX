@@ -14,8 +14,9 @@ public class Prefab_Turret {
 	public String turretName;
 	
 	public boolean linked_MotherTrigger = true;
-	public boolean fireAll_child = false;
+	public boolean salvo_fire_child = false;
 	public boolean fireAll_cannon = false;
+	public int fire_cannon_perOneShot = 1;
 	public boolean positionLinked = true;
 	public boolean onlyAim = false;
 
@@ -50,6 +51,8 @@ public class Prefab_Turret {
 	public boolean forceSyncTarget = false;
 	public boolean syncMotherTarget = false;
 	public String[] gunStackwhitelist;
+	public String[] damageSound = {"gvcmob:gvcmob.armorhit"};
+	public String[] bounceSound = {"gvcmob:gvcmob.ArmorBounce"};
 
 	public Prefab_Turret(){
 		gunInfo = new GunInfo();

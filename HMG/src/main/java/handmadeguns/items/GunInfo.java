@@ -151,6 +151,7 @@ public class GunInfo {
 	public int fuse = 0;
 	public double knockback = cfg_defaultknockback;
 	public double knockbackY =cfg_defaultknockbacky;
+	public double bulletStability =0;
 	public float  bouncerate = 0.3f;
 	public float  bouncelimit = 90;
 	public float  resistance = 0.99f;
@@ -188,8 +189,9 @@ public class GunInfo {
 	public boolean displayPredict = false;
 	public boolean displayPredict_MoveSight = true;
 	public double seekerSize = 60;
-	public float seekerSize_bullet = 50;
+	public float seekerSize_bullet = 90;
 	public boolean semiActive = false;
+	public boolean isActive = false;
 	public boolean lock_to_Vehicle = false;
 	public double lookDown = 1;
 	public double radarRange = 1200 * 1200;

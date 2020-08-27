@@ -80,6 +80,11 @@ public class HMGExplosion extends Explosion {
 							{
 								hashset.add(new ChunkPosition(j1, k1, l1));
 							}
+							if (block.getMaterial() != Material.air)
+							{
+								float f3 = block.getExplosionResistance(this.exploder, worldObj, j1, k1, l1, explosionX, explosionY, explosionZ);
+								f1 -= (f3 + 0.3F) * f2;
+							}
 
 							d5 += d0 * (double)f2;
 							d6 += d1 * (double)f2;
@@ -123,9 +128,15 @@ public class HMGExplosion extends Explosion {
 					double d11 = (1.0D - d4) * d10;
 					entity.attackEntityFrom(DamageSource.setExplosionSource(this), (float)((int)((d11 * d11 + d11) / 2.0D * 8.0D * (double)this.explosionSize + 1.0D)));
 					double d8 = EnchantmentProtection.func_92092_a(entity, d11);
-					entity.addVelocity(d5 * d8,
-							d6 * d8,
-							d7 * d8);
+					if(entity instanceof HMGEntityFallingBlockModified || entity instanceof EntityFallingBlock) {
+						entity.addVelocity(d5 * d8/100,
+								d6 * d8/100,
+								d7 * d8/100);
+					}else {
+						entity.addVelocity(d5 * d8,
+								d6 * d8,
+								d7 * d8);
+					}
 
 					if (entity instanceof EntityPlayer)
 					{
@@ -199,7 +210,6 @@ public class HMGExplosion extends Explosion {
 					Vector3d zeroToBlockVec = new Vector3d(i+0.5 - this.explosionX,
 							j+0.5 - this.explosionY,
 							k+0.5 - this.explosionZ);
-
 					if(zeroToBlockVec.lengthSquared() < explosionSize/10 || block != Blocks.grass && block != Blocks.dirt && block != Blocks.sand && block != Blocks.cobblestone){
 						if (block.canDropFromExplosion(this))
 						{
@@ -210,9 +220,11 @@ public class HMGExplosion extends Explosion {
 						block.onBlockExploded(this.worldObj, i, j, k, this);
 					}else {
 						HMGEntityFallingBlockModified entityFallingBlock = new HMGEntityFallingBlockModified(worldObj,i + 0.5, j + 0.5, k + 0.5,block,worldObj.getBlockMetadata(i,j,k));
+						double distFromGroundZero = zeroToBlockVec.lengthSquared();
 						zeroToBlockVec.scale(0.1 * explosionSize/(1+zeroToBlockVec.lengthSquared()));
+
 						entityFallingBlock.motionX = zeroToBlockVec.x;
-						entityFallingBlock.motionY = zeroToBlockVec.length() + zeroToBlockVec.y;
+						entityFallingBlock.motionY = 0.3/(1+distFromGroundZero) + zeroToBlockVec.y;
 						entityFallingBlock.motionZ = zeroToBlockVec.z;
 						worldObj.spawnEntityInWorld(entityFallingBlock);
 						worldObj.setBlockToAir(i, j, k);

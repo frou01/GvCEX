@@ -4,6 +4,7 @@ package handmadeguns;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 
 import cpw.mods.fml.relauncher.ReflectionHelper;
 import handmadeguns.client.audio.BulletSoundHMG;
@@ -84,6 +85,8 @@ public class ClientProxyHMG extends CommonSideProxyHMG {
 	static Field debugCamFOV;
 
 	static int beforeSlot = -1;
+
+	public static ArrayList<IModelCustom_HMG> modelList = new ArrayList<>();
 //	public static final KeyBinding Fire2 = new KeyBinding("ADS_Key",-100 , "HandmadeGuns");
 	//public static final KeyBinding Jump = new KeyBinding("Jump", Keyboard.KEY_X, "HandmadeGuns");
 
@@ -618,5 +621,20 @@ public class ClientProxyHMG extends CommonSideProxyHMG {
 			e.printStackTrace();
 		}
 		return 0;
+	}
+
+
+	public void setUpModels(){
+		for(IModelCustom_HMG modelCustom_hmg : modelList){
+			System.out.println("debug" + modelCustom_hmg.toString());
+			while(!modelCustom_hmg.getLoadThread().isTerminated()){
+				if(modelCustom_hmg.getLoadThread().isTerminated())break;
+			}
+			modelCustom_hmg.renderAll();
+		}
+		modelList.clear();
+	}
+	public void AddModel(Object o){
+		modelList.add((IModelCustom_HMG) o);
 	}
 }

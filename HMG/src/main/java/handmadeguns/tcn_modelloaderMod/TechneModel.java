@@ -27,10 +27,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipInputStream;
 
+import static handmadeguns.HandmadeGunsCore.HMG_proxy;
 import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
 
 /**
@@ -51,20 +54,33 @@ public class TechneModel extends ModelBase implements IModelCustom_HMG {
     private Dimension textureDims = null;
     private int textureName;
     private boolean textureNameSet = false;
+    public boolean endLoad = false;
+    ExecutorService es;
 
     public TechneModel(ResourceLocation resource) throws ModelFormatException
     {
+        HMG_proxy.AddModel(this);
         this.fileName = resource.toString();
+        es = Executors.newCachedThreadPool();
+        es.execute(() -> {
+            try
+            {
+                IResource res = Minecraft.getMinecraft().getResourceManager().getResource(resource);
+                loadTechneModel(res.getInputStream());
+            }
+            catch (Throwable e)
+            {
+                es.shutdown();
+                throw new ModelFormatException("IO Exception reading model format", e);
+            }
+            endLoad = true;
+            es.shutdown();
+        });
+    }
 
-        try
-        {
-            IResource res = Minecraft.getMinecraft().getResourceManager().getResource(resource);
-            loadTechneModel(res.getInputStream());
-        }
-        catch (IOException e)
-        {
-            throw new ModelFormatException("IO Exception reading model format", e);
-        }
+    @Override
+    public ExecutorService getLoadThread() {
+        return es;
     }
     
     private void loadTechneModel(InputStream stream) throws ModelFormatException
@@ -377,5 +393,13 @@ public class TechneModel extends ModelBase implements IModelCustom_HMG {
     public HMGGroupObject renderPart_getInstance() {
 
         return current;
+    }
+
+    @Override
+    public boolean isReady() {
+        return endLoad;
+    }
+    public String toString(){
+        return fileName;
     }
 }
